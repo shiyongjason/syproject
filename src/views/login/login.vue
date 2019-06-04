@@ -1,15 +1,25 @@
 <template>
     <div class="page-body">
         <div class="page-body-bg">
-            <div class="login-window" :class="isLogin?'fadeIn':'fadeOut'">
+            <div
+                class="login-window"
+                :class="isLogin?'fadeIn':'fadeOut'"
+            >
                 <div class="logo">
                     <div class="web-logo">
-                        <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo">
+                        <img
+                            src="../../assets/images/hosjoy_logo48@2x.png"
+                            alt="logo"
+                        >
                     </div>
                     <div class="web-name">B2b后台管理系统</div>
                 </div>
                 <div class="login-form">
-                    <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
+                    <el-form
+                        ref="loginForm"
+                        :model="loginForm"
+                        :rules="loginRules"
+                    >
                         <el-form-item prop="username">
                             <span class="form-icon">
                                 <i class="iconfont icon-hosjoy_account"></i>
@@ -28,7 +38,14 @@
                                 v-model.trim="loginForm.password"
                                 type="password"
                                 placeholder="密码"
-                            ></el-input>
+                            >
+                                <i
+                                    class="el-icon-edit el-input__icon"
+                                    slot="suffix"
+                                    @click="handleIconClick"
+                                >
+                                </i>
+                            </el-input>
                         </el-form-item>
                         <el-form-item prop="verificationCode">
                             <el-input
@@ -36,12 +53,21 @@
                                 placeholder="验证码"
                                 maxlength="4"
                             ></el-input>
-                            <span class="resetVerifica" @click="resetVerifica">
-                                <img :src="'data:image/jpeg;base64,' + verificaImg" alt="验证码">
+                            <span
+                                class="resetVerifica"
+                                @click="resetVerifica"
+                            >
+                                <img
+                                    :src="'data:image/jpeg;base64,' + verificaImg"
+                                    alt="验证码"
+                                >
                             </span>
                         </el-form-item>
                         <el-form-item>
-                            <el-button name="hosjoy-color" @click="onLogin">登录</el-button>
+                            <el-button
+                                name="hosjoy-color"
+                                @click="onLogin"
+                            >登录</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -49,7 +75,10 @@
                     <span @click="toForget">忘记密码</span>
                 </div>
             </div>
-            <div class="forget-window" :class="isForget?'fadeIn':'fadeOut'">
+            <div
+                class="forget-window"
+                :class="isForget?'fadeIn':'fadeOut'"
+            >
                 <div class="title">
                     <span @click="backLogin">
                         <i class="iconfont icon-hosjoy_return"></i>
@@ -57,9 +86,17 @@
                     <span>忘记密码</span>
                 </div>
                 <div class="forget-form">
-                    <el-form ref="forgetForm" :model="forgetForm" :rules="forgetRules">
+                    <el-form
+                        ref="forgetForm"
+                        :model="forgetForm"
+                        :rules="forgetRules"
+                    >
                         <el-form-item prop="mobile">
-                            <el-input v-model="forgetForm.mobile" placeholder="手机号" maxlength="11">
+                            <el-input
+                                v-model="forgetForm.mobile"
+                                placeholder="手机号"
+                                maxlength="11"
+                            >
                                 <template slot="suffix">
                                     <i class="el-icon-success mr5"></i>
                                 </template>
@@ -82,12 +119,18 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item class="mt40">
-                            <el-button name="hosjoy-color" @click="toReset">验证</el-button>
+                            <el-button
+                                name="hosjoy-color"
+                                @click="toReset"
+                            >验证</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
             </div>
-            <div class="reset-window" :class="isReset?'fadeIn':'fadeOut'">
+            <div
+                class="reset-window"
+                :class="isReset?'fadeIn':'fadeOut'"
+            >
                 <div class="title">
                     <span @click="backForget">
                         <i class="iconfont icon-hosjoy_return"></i>
@@ -95,7 +138,11 @@
                     <span>重置密码</span>
                 </div>
                 <div class="reset-form">
-                    <el-form ref="resetForm" :model="resetForm" :rules="resetRules">
+                    <el-form
+                        ref="resetForm"
+                        :model="resetForm"
+                        :rules="resetRules"
+                    >
                         <el-form-item prop="newPassword">
                             <el-input
                                 v-model="resetForm.newPassword"
@@ -111,7 +158,10 @@
                             ></el-input>
                         </el-form-item>
                         <el-form-item class="mt40">
-                            <el-button name="hosjoy-color" @click="toLogin">重置</el-button>
+                            <el-button
+                                name="hosjoy-color"
+                                @click="toLogin"
+                            >重置</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -164,7 +214,7 @@ export default {
                     { validator: Password, trigger: 'blur' },
                     { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
                 ],
-                verificationCode: [ { required: true, message: '请输入验证码', trigger: 'blur' } ]
+                verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
             },
             forgetRules: {
                 mobile: [
@@ -195,33 +245,38 @@ export default {
         }
     },
     methods: {
+        handleIconClick () {
+
+        },
         async getVerifica () {
             const { data } = await getVerifica()
             this.verificaImg = data.verificationCodeBase64
             this.loginForm.signCode = data.signCode
         },
         async onLogin () {
-            this.$refs[ 'loginForm' ].validate(async (valid) => {
-                if (valid) {
-                    const { data } = await login(this.loginForm)
-                    const userInfo = jwtDecode(data.access_token)
-                    sessionStorage.setItem('token', data.access_token)
-                    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-                    this.setUserInfo(userInfo)
-                    this.$router.push('/')
-                }
-            })
+            console.log(1)
+            // this.$refs['loginForm'].validate(async (valid) => {
+            //     if (valid) {
+            //         const { data } = await login(this.loginForm)
+            //         const userInfo = jwtDecode(data.access_token)
+            //         sessionStorage.setItem('token', data.access_token)
+            //         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+            //         this.setUserInfo(userInfo)
+            //         this.$router.push('/')
+            //     }
+            // })
+            this.$router.push('/')
         },
         resetVerifica () {
             this.getVerifica()
         },
         toForget () {
-            this.$refs[ 'forgetForm' ].resetFields()
+            this.$refs['forgetForm'].resetFields()
             this.isLogin = false
             this.isForget = true
         },
         onMobileVerifica () {
-            this.$refs[ 'forgetForm' ].validateField('mobile', async (valid) => {
+            this.$refs['forgetForm'].validateField('mobile', async (valid) => {
                 if (!valid) {
                     this.after = false
                     this.content = '重新发送 ' + this.time
@@ -250,8 +305,8 @@ export default {
             }
         },
         toReset () {
-            this.$refs[ 'resetForm' ].resetFields()
-            this.$refs[ 'forgetForm' ].validate(async (valid) => {
+            this.$refs['resetForm'].resetFields()
+            this.$refs['forgetForm'].validate(async (valid) => {
                 if (valid) {
                     const { data } = await confirmMobileVerifica(this.forgetForm)
                     this.resetForm.key = data.key
@@ -262,7 +317,7 @@ export default {
             })
         },
         async toLogin () {
-            this.$refs[ 'resetForm' ].validate(async (valid) => {
+            this.$refs['resetForm'].validate(async (valid) => {
                 if (valid) {
                     await resetPassword({ key: this.resetForm.key, mobile: this.resetForm.mobile, newPassword: this.resetForm.newPassword })
                     this.$message.success('密码重置成功！')

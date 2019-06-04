@@ -51,7 +51,7 @@ export default {
         }
     },
     mounted () {
-        this.userName = this.userInfo.principal.name
+        // this.userName = this.userInfo.principal.name
     }
 }
 </script>

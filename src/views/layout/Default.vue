@@ -16,8 +16,6 @@
                     element-loading-background="rgba(0, 0, 0, 0.5)"
                 >
                     <keep-alive
-                        :include="cachedInclude.join(',')"
-                        :exclude="cachedExclude.join(',')"
                     >
                         <router-view></router-view>
                     </keep-alive>
@@ -46,9 +44,7 @@ export default {
     },
     computed: {
         ...mapState({
-            loading: state => state.loading,
-            cachedInclude: state => state.cachedInclude,
-            cachedExclude: state => state.cachedExclude
+            loading: state => state.loading
         })
     },
     methods: {

@@ -15,6 +15,7 @@ const routerMapping = [
             icon: 'icon-hosjoy_home',
             isMenu: true,
             role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+
         },
         children: [
             {
@@ -52,29 +53,29 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    const isLogin = to.name === 'login'
-    const is403 = to.name === '403'
-    let userInfo = sessionStorage.getItem('userInfo')
-    userInfo = userInfo && JSON.parse(userInfo)
-    // 非登录的情况下
-    if (!isLogin) {
-        if (!userInfo) {
-            return next({
-                name: 'login'
-            })
-        } else if (!is403) {
-            const menuRoles = to.meta.role
-            const userRoles = userInfo.authorities
-            const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
-            if (resultRole.length <= 0) {
-                return next('/403')
-            }
-        }
-    } else {
-        if (userInfo) {
-            return next('index')
-        }
-    }
+    // const isLogin = to.name === 'login'
+    // const is403 = to.name === '403'
+    // let userInfo = sessionStorage.getItem('userInfo')
+    // userInfo = userInfo && JSON.parse(userInfo)
+    // // 非登录的情况下
+    // if (!isLogin) {
+    //     if (!userInfo) {
+    //         return next({
+    //             name: 'login'
+    //         })
+    //     } else if (!is403) {
+    //         const menuRoles = to.meta.role
+    //         const userRoles = userInfo.authorities
+    //         const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
+    //         if (resultRole.length <= 0) {
+    //             return next('/403')
+    //         }
+    //     }
+    // } else {
+    //     if (userInfo) {
+    //         return next('index')
+    //     }
+    // }
     next()
 })
 
