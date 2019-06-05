@@ -27,6 +27,48 @@ const routerMapping = [
                 component: () => import('./views/index/index')
             }
         ]
+    },
+    {
+        path: '/editPassword',
+        component: Layout,
+        name: 'editPassword',
+        meta: {
+            title: '金云平台',
+            icon: 'icon-hosjoy_set',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+        },
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/index/index')
+            }
+        ]
+    },
+    {
+        path: '/editPassword',
+        component: Layout,
+        name: 'editPassword',
+        meta: {
+            title: '修改密码',
+            icon: 'icon-hosjoy_set',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+        },
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/index/index')
+            }
+        ]
     }
 ]
 const router = new Router({
