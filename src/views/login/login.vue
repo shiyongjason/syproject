@@ -6,12 +6,6 @@
                     <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo">
                     好享家运营后台
                 </div>
-                <div class="logo">
-                    <div class="web-logo">
-
-                    </div>
-                    <div class="web-name"></div>
-                </div>
                 <div class="login-form">
                     <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
                         <el-form-item prop="username">
@@ -30,11 +24,11 @@
                             </span>
                             <el-input
                                 v-model.trim="loginForm.password"
-                                type="password"
+                                :type="passwordType? 'password' : 'text'"
                                 placeholder="请输入您的密码"
                             ></el-input>
-                            <span class="form-icon-end">
-                                <i class="iconfont hosjoy_eye_close"></i>
+                            <span class="form-icon-end" @click="passwordType = !passwordType">
+                                <i class="iconfont" :class="passwordType? 'hosjoy_eye_close' : 'hosjoy_eye'"></i>
                             </span>
                         </el-form-item>
                         <el-form-item>
@@ -47,7 +41,7 @@
     </div>
 </template>
 <script>
-import { getVerifica, getMobileVerifica, resetPassword, login } from './api/index'
+import { login } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone, Password } from '@/utils/rules'
 import { mapMutations } from 'vuex'
@@ -64,23 +58,10 @@ export default {
         }
         return {
             checked: true,
-            verificaImg: '',
-            imgStyle: '',
+            passwordType: true, // true password false text
             loginForm: {
                 username: '',
                 password: '',
-                verificationCode: '',
-                signCode: ''
-            },
-            forgetForm: {
-                mobile: '',
-                smsCode: ''
-            },
-            resetForm: {
-                key: '',
-                mobile: '',
-                newPassword: '',
-                checkPassword: ''
             },
             loginRules: {
                 username: [
@@ -91,44 +72,13 @@ export default {
                     { required: true, message: '请输入密码', trigger: 'blur' },
                     { validator: Password, trigger: 'blur' },
                     { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
-                ],
-                verificationCode: [ { required: true, message: '请输入验证码', trigger: 'blur' } ]
-            },
-            forgetRules: {
-                mobile: [
-                    { required: true, message: '请输入手机号', trigger: 'blur' },
-                    { validator: Phone, trigger: 'blur' }
-                ],
-                smsCode: [
-                    { required: true, message: '请输入短信验证码', trigger: 'blur' }
                 ]
             },
-            resetRules: {
-                newPassword: [
-                    { required: true, message: '请输入新密码', trigger: 'blur' },
-                    { validator: Password, trigger: 'blur' },
-                    { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
-                ],
-                checkPassword: [
-                    { required: true, validator: checkPassword, trigger: 'blur' },
-                    { validator: Password, trigger: 'blur' }
-                ]
-            },
-            isAgreement: false,
-            isForget: false,
-            isReset: false,
             isLogin: true,
-            after: true,
-            content: '获取验证码',
             userInfo: ''
         }
     },
     methods: {
-        async getVerifica () {
-            const { data } = await getVerifica()
-            this.verificaImg = data.verificationCodeBase64
-            this.loginForm.signCode = data.signCode
-        },
         async onLogin () {
             if (sessionStorage.getItem('userInfo')) {
                 this.$router.push('/')
@@ -136,64 +86,36 @@ export default {
                 this.$refs[ 'loginForm' ].validate(async (valid) => {
                     if (valid) {
                         const { data } = await login(this.loginForm)
-                        const userInfo = jwtDecode(data.access_token)
-                        this.userInfo = jwtDecode(data.access_token)
+
+                        // const userInfo = jwtDecode(data.access_token)
+                        // this.userInfo = jwtDecode(data.access_token)
                         sessionStorage.setItem('token', data.access_token)
-                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-                        this.setUserInfo(userInfo)
-                        if (userInfo.authorities.includes('ROLE_ADMIN')) {
-                            const { data: read } = await isRead({ userId: userInfo.principal.id })
-                            if (!read.isRead) {
-                                this.isLogin = false
-                                this.isAgreement = true
-                            } else {
-                                this.$router.push('/')
-                            }
-                        } else {
-                            this.$router.push('/')
-                        }
+                        sessionStorage.setItem('userInfo', JSON.stringify(data))
+                        this.setUserInfo(data)
+                        // if (userInfo.authorities.includes('ROLE_ADMIN')) {
+                        //     const { data: read } = await isRead({ userId: userInfo.principal.id })
+                        //     if (!read.isRead) {
+                        //         this.isLogin = false
+                        //         this.isAgreement = true
+                        //     } else {
+                        //         this.$router.push('/')
+                        //     }
+                        // } else {
+                        //     this.$router.push('/')
+                        // }
                     }
                 })
             }
-        },
-        async getMobileVerifica () {
-            try {
-                await getMobileVerifica({ mobile: this.forgetForm.mobile })
-            } catch (error) {
-                clearInterval(this.clock)
-                this.content = '获取验证码'
-                this.time = 60
-                this.after = true
-            }
-        },
-        async toLogin () {
-            this.$refs[ 'resetForm' ].validate(async (valid) => {
-                if (valid) {
-                    await resetPassword({ key: this.resetForm.key, mobile: this.resetForm.mobile, newPassword: this.resetForm.newPassword })
-                    this.$message.success('密码重置成功！')
-                    this.isReset = false
-                    this.isLogin = true
-                }
-            })
-        },
-        async onRead () {
-            if (this.userInfo != '') {
-                await asRead({ userId: this.userInfo.principal.id })
-            }
-            this.isAgreement = false
-            this.isLogin = true
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO'
         })
     },
     mounted () {
-        this.getVerifica()
-        let that = this
-        document.onkeypress = function (e) {
+        document.onkeypress = (e) => {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {
-                that.onLogin()
+                this.onLogin()
             }
         }
     }
