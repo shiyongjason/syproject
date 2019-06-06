@@ -1,10 +1,54 @@
 <template>
-    <div class="login">
+    <div class="page-body">
+        <div class="page-body-bg">
+            <div class="login-window">
+                <div class="title">
+                    <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo">
+                    好享家运营后台
+                </div>
+                <div class="logo">
+                    <div class="web-logo">
 
+                    </div>
+                    <div class="web-name"></div>
+                </div>
+                <div class="login-form">
+                    <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
+                        <el-form-item prop="username">
+                            <span class="form-icon">
+                                <i class="iconfont hosjoy_account"></i>
+                            </span>
+                            <el-input
+                                v-model="loginForm.username"
+                                placeholder="请输入您的手机号码"
+                                maxlength="11"
+                            ></el-input>
+                        </el-form-item>
+                        <el-form-item prop="password">
+                            <span class="form-icon">
+                                <i class="iconfont hosjoy_password"></i>
+                            </span>
+                            <el-input
+                                v-model.trim="loginForm.password"
+                                type="password"
+                                placeholder="请输入您的密码"
+                            ></el-input>
+                            <span class="form-icon-end">
+                                <i class="iconfont hosjoy_eye_close"></i>
+                            </span>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button name="hosjoy-color" @click="onLogin" :disabled="!checked">登录</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
-import { getVerifica, getMobileVerifica, confirmMobileVerifica, resetPassword, login } from './api/index'
+import { getVerifica, getMobileVerifica, resetPassword, login } from './api/index'
+import jwtDecode from 'jwt-decode'
 import { Phone, Password } from '@/utils/rules'
 import { mapMutations } from 'vuex'
 export default {
@@ -19,6 +63,7 @@ export default {
             }
         }
         return {
+            checked: true,
             verificaImg: '',
             imgStyle: '',
             loginForm: {
@@ -47,7 +92,7 @@ export default {
                     { validator: Password, trigger: 'blur' },
                     { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
                 ],
-                verificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+                verificationCode: [ { required: true, message: '请输入验证码', trigger: 'blur' } ]
             },
             forgetRules: {
                 mobile: [
@@ -69,63 +114,47 @@ export default {
                     { validator: Password, trigger: 'blur' }
                 ]
             },
+            isAgreement: false,
             isForget: false,
             isReset: false,
             isLogin: true,
             after: true,
             content: '获取验证码',
-            time: 60
+            userInfo: ''
         }
     },
     methods: {
-        handleIconClick () {
-
-        },
         async getVerifica () {
             const { data } = await getVerifica()
             this.verificaImg = data.verificationCodeBase64
             this.loginForm.signCode = data.signCode
         },
         async onLogin () {
-            console.log(1)
-            // this.$refs['loginForm'].validate(async (valid) => {
-            //     if (valid) {
-            //         const { data } = await login(this.loginForm)
-            //         const userInfo = jwtDecode(data.access_token)
-            //         sessionStorage.setItem('token', data.access_token)
-            //         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-            //         this.setUserInfo(userInfo)
-            //         this.$router.push('/')
-            //     }
-            // })
-            this.$router.push('/')
-        },
-        resetVerifica () {
-            this.getVerifica()
-        },
-        toForget () {
-            this.$refs['forgetForm'].resetFields()
-            this.isLogin = false
-            this.isForget = true
-        },
-        onMobileVerifica () {
-            this.$refs['forgetForm'].validateField('mobile', async (valid) => {
-                if (!valid) {
-                    this.after = false
-                    this.content = '重新发送 ' + this.time
-                    this.getMobileVerifica()
-                    this.clock = setInterval(() => {
-                        this.time--
-                        this.content = '重新发送' + this.time
-                        if (this.time <= 0) {
-                            clearInterval(this.clock)
-                            this.content = '获取验证码'
-                            this.time = 60
-                            this.after = true
+            if (sessionStorage.getItem('userInfo')) {
+                this.$router.push('/')
+            } else {
+                this.$refs[ 'loginForm' ].validate(async (valid) => {
+                    if (valid) {
+                        const { data } = await login(this.loginForm)
+                        const userInfo = jwtDecode(data.access_token)
+                        this.userInfo = jwtDecode(data.access_token)
+                        sessionStorage.setItem('token', data.access_token)
+                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+                        this.setUserInfo(userInfo)
+                        if (userInfo.authorities.includes('ROLE_ADMIN')) {
+                            const { data: read } = await isRead({ userId: userInfo.principal.id })
+                            if (!read.isRead) {
+                                this.isLogin = false
+                                this.isAgreement = true
+                            } else {
+                                this.$router.push('/')
+                            }
+                        } else {
+                            this.$router.push('/')
                         }
-                    }, 1000)
-                }
-            })
+                    }
+                })
+            }
         },
         async getMobileVerifica () {
             try {
@@ -137,20 +166,8 @@ export default {
                 this.after = true
             }
         },
-        toReset () {
-            this.$refs['resetForm'].resetFields()
-            this.$refs['forgetForm'].validate(async (valid) => {
-                if (valid) {
-                    const { data } = await confirmMobileVerifica(this.forgetForm)
-                    this.resetForm.key = data.key
-                    this.resetForm.mobile = data.mobile
-                    this.isForget = false
-                    this.isReset = true
-                }
-            })
-        },
         async toLogin () {
-            this.$refs['resetForm'].validate(async (valid) => {
+            this.$refs[ 'resetForm' ].validate(async (valid) => {
                 if (valid) {
                     await resetPassword({ key: this.resetForm.key, mobile: this.resetForm.mobile, newPassword: this.resetForm.newPassword })
                     this.$message.success('密码重置成功！')
@@ -159,13 +176,12 @@ export default {
                 }
             })
         },
-        backLogin () {
-            this.isForget = false
+        async onRead () {
+            if (this.userInfo != '') {
+                await asRead({ userId: this.userInfo.principal.id })
+            }
+            this.isAgreement = false
             this.isLogin = true
-        },
-        backForget () {
-            this.isReset = false
-            this.isForget = true
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO'
@@ -184,269 +200,146 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-body-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    min-width: 1280px;
-    z-index: -10;
-    background-image: url("../../assets/images/login_bg@2x.png");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center 0;
-
-    img {
-        z-index: 0;
-    }
-}
-.login-window,
-.forget-window,
-.reset-window {
-    position: absolute;
-    top: 50%;
-    margin-left: -240px;
-    margin-top: -240px;
-    width: 480px;
-    height: 480px;
-    background: $whiteColor;
-    z-index: 1;
-}
-
-.fadeIn {
-    left: 50%;
-    opacity: 0.96;
-    transition: 1s;
-}
-
-.fadeOut {
-    left: 75%;
-    opacity: 0;
-    transition: 1s;
-}
-
-// 登录窗口
-.logo {
-    margin-top: 44px;
-    padding: 0 97px;
-    height: 48px;
-
-    .web-logo {
-        float: left;
-        width: 48px;
-        height: 48px;
+    .page-body-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        min-width: 1280px;
+        z-index: -10;
+        background-image: url("../../assets/images/login_bg@2x.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center 0;
 
         img {
-            width: 100%;
-            height: 100%;
+            z-index: 0;
         }
     }
-
-    .web-name {
-        float: left;
-        margin-left: 16px;
-        height: 48px;
-        line-height: 48px;
+    .login-window {
+        position: absolute;
+        top: 50%;
+        margin-left: -240px;
+        margin-top: -240px;
+        width: 480px;
+        background: $whiteColor;
+        z-index: 1;
+        left: 50%;
+        padding: 70px;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
+    .title{
+        text-align: center;
+        color: #000000;
         font-size: 28px;
-        color: $blackColor;
+        line-height: 48px;
+        img{
+            margin-right: 16px;
+            width: 48px;
+            vertical-align: bottom;
+        }
     }
-}
+    .login-form {
+        margin-top: 70px;
+        .el-form-item {
+            margin-bottom: 36px;
 
-.login-form {
-    margin-top: 60px;
-    padding: 0 70px;
-
-    .el-form-item {
-        margin-bottom: 16px;
-
-        .form-icon {
-            position: absolute;
-            top: 1px;
-            left: 1px;
-            z-index: 99;
-            width: 42px;
-            height: 42px;
-            color: $blackLight;
-            text-align: center;
-            background: linear-gradient(
-                180deg,
-                rgba(255, 255, 255, 1) 0%,
-                rgba(245, 245, 245, 1) 100%
-            );
-            border-radius: 4px 0px 0px 4px;
-            border-right: 1px solid rgba(229, 229, 234, 1);
-        }
-        .el-input {
-            width: 100%;
-            float: left;
-
-            &:not(:first-child) {
-                margin-left: 0;
+            .form-icon {
+                position: absolute;
+                top: 1px;
+                left: 1px;
+                z-index: 99;
+                width: 42px;
+                height: 42px;
+                color: $blackLight;
+                text-align: center;
+                background: linear-gradient(
+                        180deg,
+                        rgba(255, 255, 255, 1) 0%,
+                        rgba(245, 245, 245, 1) 100%
+                );
+                border-radius: 4px 0px 0px 4px;
+                border-right: 1px solid rgba(229, 229, 234, 1);
             }
-
-            /deep/ .el-input__inner {
-                padding-left: 57px;
-                height: 44px;
+            .form-icon-end {
+                position: absolute;
+                top: 1px;
+                right: 1px;
+                z-index: 99;
+                width: 42px;
+                height: 42px;
+                color: $blackLight;
+                text-align: center;
+                cursor: pointer;
             }
-        }
-
-        &:nth-child(3) {
             .el-input {
-                width: 196px;
+                width: 100%;
+                float: left;
+
+                &:not(:first-child) {
+                    margin-left: 0;
+                }
 
                 /deep/ .el-input__inner {
-                    padding-left: 15px;
+                    padding-left: 57px;
                     height: 44px;
-                    border-radius: 4px;
                 }
             }
 
-            span {
-                margin-left: 16px;
-                float: left;
-                width: 128px;
-                height: 44px;
-                cursor: pointer;
+            &:nth-child(3) {
+                .el-input {
+                    width: 196px;
 
-                img {
-                    width: 100%;
-                    height: 100%;
+                    /deep/ .el-input__inner {
+                        padding-left: 15px;
+                        height: 44px;
+                        border-radius: 4px;
+                    }
                 }
-            }
-        }
 
-        .el-button {
-            width: 100%;
-        }
-    }
-}
+                span {
+                    margin-left: 16px;
+                    float: left;
+                    width: 128px;
+                    height: 44px;
+                    cursor: pointer;
 
-.forget {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    margin-left: -28px;
-    color: $hosjoyColor;
-    font-size: 14px;
-
-    span {
-        cursor: pointer;
-    }
-}
-
-// 忘记密码窗口
-.forget-form {
-    margin-top: 100px;
-    padding: 0 70px;
-
-    .el-form-item {
-        margin-bottom: 16px;
-
-        .el-input {
-            width: 100%;
-            float: left;
-
-            /deep/ .el-input__inner {
-                height: 44px;
-            }
-        }
-
-        &:nth-child(1) {
-            .el-input {
-                width: 196px;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
             }
 
             .el-button {
-                float: right;
-                width: 128px;
-                height: 44px;
-                padding: 0;
-            }
-        }
-
-        .el-button {
-            width: 100%;
-        }
-    }
-}
-
-// 重置密码窗口
-.reset-form {
-    margin-top: 100px;
-    padding: 0 70px;
-
-    .el-form-item {
-        margin-bottom: 16px;
-
-        .el-input {
-            float: left;
-            width: 100%;
-
-            /deep/ .el-input__inner {
+                width: 100%;
                 height: 44px;
             }
         }
-
-        .el-button {
-            width: 100%;
+        .el-form-item:last-child{
+            margin-bottom: 0;
         }
     }
-}
 
-//忘记和重置公共style
-.title {
-    margin-top: 40px;
-    padding: 0 70px;
-    text-align: center;
-    height: 28px;
-    line-height: 28px;
-
-    i {
-        float: left;
-        font-size: 18px;
-        cursor: pointer;
-        // margin-top: 6px;
+    /deep/ .el-form-item {
+        &.is-error {
+            margin-bottom: 36px;
+            transition: 0.3s;
+        }
+        &.is-error .el-form-item__error {
+            color: $hosjoyColor;
+            padding: 5px 0;
+        }
     }
-
-    span {
-        font-size: 20px;
+    /deep/ .el-icon-success {
+        display: none;
+        color: #67c23a;
     }
-}
-
-.getBefore {
-    float: right;
-    width: 128px !important;
-    border: 1px solid $hosjoyColor;
-    color: $hosjoyColor;
-    background: $whiteColor;
-}
-
-.getAfter {
-    float: right;
-    width: 128px !important;
-    border: 1px solid $hosjoyColor;
-    color: $hosjoyColor;
-    background: $whiteColor;
-}
-
-/deep/ .el-form-item {
-    &.is-error {
-        margin-bottom: 32px;
-        transition: 0.3s;
+    /deep/ .el-form-item.is-success {
+        .el-icon-success {
+            display: inline;
+        }
     }
-    &.is-error .el-form-item__error {
-        color: $hosjoyColor;
-        padding: 10px 0;
-    }
-}
-/deep/ .el-icon-success {
-    display: none;
-    color: #67c23a;
-}
-/deep/ .el-form-item.is-success {
-    .el-icon-success {
-        display: inline;
-    }
-}
 </style>
