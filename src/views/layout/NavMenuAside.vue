@@ -48,7 +48,7 @@ export default {
                 if (item.children && item.children.length > 0) {
                     item.children = this.resolveMenus(item.children)
                 }
-                const menuRoles = item.meta.role
+                // const menuRoles = item.meta.role
                 // const userRoles = this.userInfo.authorities
                 // const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
                 return item.meta.isMenu
