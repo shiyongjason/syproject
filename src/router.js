@@ -12,7 +12,7 @@ const routerMapping = [
         name: 'index',
         meta: {
             title: '首页',
-            icon: 'icon-hosjoy_home',
+            icon: 'hosjoy_home',
             isMenu: true,
             role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
 
@@ -29,12 +29,54 @@ const routerMapping = [
         ]
     },
     {
-        path: '/editPassword',
+        path: '/jinyunPlatform',
         component: Layout,
-        name: 'editPassword',
+        name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
-            icon: 'icon-hosjoy_set',
+            icon: 'hosjoy_cloud_service',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+        },
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/jinyunplatform/index')
+            }
+        ]
+    },
+    {
+        path: '/oldsystem',
+        component: Layout,
+        name: 'oldsystem',
+        meta: {
+            title: '老系统',
+            icon: 'hosjoy_goods',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+        },
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/index/index')
+            }
+        ]
+    },
+    {
+        path: '/userManage',
+        component: Layout,
+        name: 'userManage',
+        meta: {
+            title: '用户/机构管理',
+            icon: 'hosjoy_permissions',
             isMenu: true,
             role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
         },
@@ -56,7 +98,7 @@ const routerMapping = [
         meta: {
             title: '修改密码',
             icon: 'icon-hosjoy_set',
-            isMenu: true,
+            isMenu: false,
             role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
         },
         children: [
@@ -66,7 +108,7 @@ const routerMapping = [
                     isMenu: false,
                     role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
                 },
-                component: () => import('./views/index/index')
+                component: () => import('./views/passwordManage/editPassword')
             }
         ]
     }
