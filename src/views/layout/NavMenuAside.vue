@@ -3,7 +3,7 @@
         <Sidebar :menus="menus" mode="vertical" :collapse="isCollapse"/>
         <div class="menusSwitch" :class="isCollapse?'close':'open'">
             <div @click="onSwitch">
-                <i :class="isCollapse?'iconfont icon-hosjoy_outdent':'iconfont icon-hosjoy_indent'"></i>
+                <i :class="isCollapse?'iconfont hosjoy_indent':'iconfont hosjoy_outdent'"></i>
                 <span>收起</span>
             </div>
         </div>

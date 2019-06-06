@@ -4,7 +4,7 @@
             <div class="head-logo-img">
                 <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo">
             </div>
-            <div class="head-logo-name">B2b后台管理系统</div>
+            <div class="head-logo-name">好享家运营后台</div>
         </div>
         <div class="user-info flr">
             <div class="user-info-select">
