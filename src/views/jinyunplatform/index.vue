@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body">in111111111111111111111111dex</div>
+    <div class="page-body"></div>
 </template>
 <script>
 export default {

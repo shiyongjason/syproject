@@ -3,7 +3,7 @@
         <Sidebar :menus="menus" mode="vertical" :collapse="isCollapse"/>
         <div class="menusSwitch" :class="isCollapse?'close':'open'">
             <div @click="onSwitch">
-                <i :class="isCollapse?'iconfont icon-hosjoy_outdent':'iconfont icon-hosjoy_indent'"></i>
+                <i :class="isCollapse?'iconfont hosjoy_indent':'iconfont hosjoy_outdent'"></i>
                 <span>收起</span>
             </div>
         </div>
@@ -48,7 +48,7 @@ export default {
                 if (item.children && item.children.length > 0) {
                     item.children = this.resolveMenus(item.children)
                 }
-                const menuRoles = item.meta.role
+                // const menuRoles = item.meta.role
                 // const userRoles = this.userInfo.authorities
                 // const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
                 return item.meta.isMenu
