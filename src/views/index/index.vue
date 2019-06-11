@@ -34,7 +34,6 @@ export default {
         text-align: center;
         align-items: center;
         justify-content: center;
-        text-align: center;
     }
 }
 .jinyun {

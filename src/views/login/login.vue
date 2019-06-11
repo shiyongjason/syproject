@@ -47,21 +47,12 @@ import { Phone, Password } from '@/utils/rules'
 import { mapMutations } from 'vuex'
 export default {
     data () {
-        const checkPassword = (rule, value, callback) => {
-            if (value === '') {
-                callback(new Error('请再次输入密码'))
-            } else if (value !== this.resetForm.newPassword) {
-                callback(new Error('两次密码不一致'))
-            } else {
-                callback()
-            }
-        }
         return {
             checked: true,
             passwordType: true, // true password false text
             loginForm: {
                 username: '',
-                password: '',
+                password: ''
             },
             loginRules: {
                 username: [
@@ -80,32 +71,24 @@ export default {
     },
     methods: {
         async onLogin () {
-            if (sessionStorage.getItem('userInfo')) {
-                this.$router.push('/')
-            } else {
-                this.$refs[ 'loginForm' ].validate(async (valid) => {
-                    if (valid) {
+            this.$refs[ 'loginForm' ].validate(async (valid) => {
+                if (valid) {
+                    try {
                         const { data } = await login(this.loginForm)
-
-                        // const userInfo = jwtDecode(data.access_token)
-                        // this.userInfo = jwtDecode(data.access_token)
+                        const userInfo = jwtDecode(data.access_token)
+                        this.userInfo = jwtDecode(data.access_token)
                         sessionStorage.setItem('token', data.access_token)
-                        sessionStorage.setItem('userInfo', JSON.stringify(data))
-                        this.setUserInfo(data)
-                        // if (userInfo.authorities.includes('ROLE_ADMIN')) {
-                        //     const { data: read } = await isRead({ userId: userInfo.principal.id })
-                        //     if (!read.isRead) {
-                        //         this.isLogin = false
-                        //         this.isAgreement = true
-                        //     } else {
-                        //         this.$router.push('/')
-                        //     }
-                        // } else {
-                        //     this.$router.push('/')
-                        // }
+                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+                        this.setUserInfo(userInfo)
+                        this.$router.push('/')
+                    } catch (e) {
+                        this.$message({
+                            type: 'error',
+                            message: '用户名或密码错误！'
+                        })
                     }
-                })
-            }
+                }
+            })
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO'

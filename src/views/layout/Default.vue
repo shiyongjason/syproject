@@ -1,7 +1,7 @@
 <template>
     <el-container class="body-container">
         <el-header class="header">
-            <NavMenuHead/>
+            <NavMenuHead @editPassword="editPasswordShow"/>
         </el-header>
         <el-container class="container clearfix">
             <el-aside class="aside" :class="isCollapse?'close':'open'">
@@ -22,6 +22,42 @@
                 </div>
             </el-main>
         </el-container>
+        <el-dialog title="密码修改" :visible.sync="editPasswordVisible">
+            <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
+                <el-form-item prop="username" label="登陆手机号" label-width="132px">
+                    <el-input
+                        v-model="editPassword.username"
+                        placeholder="请输入您的手机号码"
+                        maxlength="11"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item prop="password" label="旧密码" label-width="132px">
+                    <el-input
+                        v-model="editPassword.username"
+                        placeholder="请输入您的旧密码"
+                        maxlength="16"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item prop="password" label="新密码" label-width="132px">
+                    <el-input
+                        v-model="editPassword.username"
+                        placeholder="请输入8-16位密码"
+                        maxlength="16"
+                    ></el-input>
+                </el-form-item>
+                <el-form-item prop="password" label="确认新密码" label-width="132px">
+                    <el-input
+                        v-model="editPassword.username"
+                        placeholder="请再次输入你的新密码"
+                        maxlength="16"
+                    ></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editPasswordVisible = false">取 消</el-button>
+                <el-button type="primary" @click="editPasswordVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </el-container>
 </template>
 
@@ -39,7 +75,17 @@ export default {
     },
     data () {
         return {
-            isCollapse: false
+            isCollapse: false,
+            editPasswordVisible: true,
+            editPassword: {},
+            passwordRules: {
+                username: [
+                    { required: true, message: '请输入登录帐号', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -50,6 +96,9 @@ export default {
     methods: {
         menuBack (val) {
             this.isCollapse = val
+        },
+        editPasswordShow (show) {
+            this.editPasswordVisible = show
         }
     },
     mounted () {
@@ -117,4 +166,37 @@ export default {
     -webkit-transition: opacity 0.3s;
     transition: opacity 0.3s;
 }
+    .edit-password{
+        padding: 34px 0;
+    }
+</style>
+<style  lang="scss">
+    .el-form .el-form-item__label{
+        color: #000000;
+    }
+    .el-form .el-input__inner{
+        border: 1px solid #E5E5EA;
+        /*width: 224px;*/
+        /*line-height: 40px;*/
+    }
+    .dialog-footer {
+        .el-button{
+            border: 1px solid #E5E5EA;
+            border-radius: 4px;
+            color: #666666;
+        }
+        .el-button--primary{
+            border: 1px solid #FF7A45;
+            background: #FF7A45;
+            color: #ffffff;
+        }
+        .el-button--primary:hover{
+            border: 1px solid #FF7A45;
+            background: #FF7A45;
+            color: #ffffff;
+        }
+    }
+    .el-form-item.is-error .el-input__inner{
+        border: 1px solid #E02020;
+    }
 </style>

@@ -10,9 +10,6 @@ import {
 } from 'element-ui'
 import store from '@/store/index'
 
-const NO_LOADING_REQ = [
-    // { method: 'get', url: '/product/api/products/product-group' }
-]
 // 配置全局axios请求前缀
 axios.defaults.baseURL = interfaceUrl
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -25,10 +22,10 @@ axios.interceptors.request.use(function (config) {
     if (config.method === 'get') {
         config.url += '?t=' + new Date().getTime()
     }
-    const showLoading = NO_LOADING_REQ.filter(item => item.method == config.method && config.url.indexOf(item.url) > -1)
-    if (showLoading.length < 0) {
-        store.commit('LOAD_STATE', true)
-    }
+    // const showLoading = NO_LOADING_REQ.filter(item => item.method == config.method && config.url.indexOf(item.url) > -1)
+    // if (showLoading.length < 0) {
+    //     store.commit('LOAD_STATE', true)
+    // }
     return config
 }, function (error) {
     return Promise.reject(error)
