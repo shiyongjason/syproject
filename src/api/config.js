@@ -13,7 +13,7 @@ switch (env) {
         uploadUrl = 'http://172.16.168.8:30000/tms'
         break
     case 'dev':
-        interfaceUrl = 'http://172.16.168.8:40000/'
+        interfaceUrl = 'http://172.16.168.8:30000/'
         ossUrl = 'http://172.16.168.8:8089/'
         uploadUrl = 'http://172.16.168.8:30000/tms'
         break
