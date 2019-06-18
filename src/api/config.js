@@ -4,7 +4,7 @@
 let interfaceUrl = ''
 let uploadUrl = ''
 let ossUrl = ''
-var env = process.env.NODE_ENV === 'development' ? 'development' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production'
+var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
         interfaceUrl = 'http://172.16.168.8:30000/'
