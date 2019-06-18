@@ -6,7 +6,7 @@
                     <div class="jinyun"><i class="iconfont hosjoy_cloud_service"></i><span>金云平台</span></div>
                 </section>
                 <section>
-                    <div class="oldsys"><i class="iconfont hosjoy_goods"></i><span>老系统</span></div>
+                    <div class="oldsys" @click="onClikUrl('oldsys')"><i class="iconfont hosjoy_goods"></i><span>老系统</span></div>
                 </section>
                 <section>
                     <div class="other"><i class="iconfont hosjoy_stay_online"></i><span>待上线</span></div>
@@ -20,6 +20,13 @@
 export default {
     data () {
         return {}
+    },
+    methods: {
+        onClikUrl (type) {
+            if (type == 'oldsys') {
+                window.location.href = 'https://boss.hosjoy.com/default.html#/index/'
+            }
+        }
     }
 }
 </script>

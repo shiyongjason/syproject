@@ -41,7 +41,7 @@
     </div>
 </template>
 <script>
-import { login } from './api/index'
+import { login, getUserdata } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone, Password } from '@/utils/rules'
 import { mapMutations } from 'vuex'
@@ -80,6 +80,9 @@ export default {
                         sessionStorage.setItem('token', data.access_token)
                         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.setUserInfo(userInfo)
+                        const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                        sessionStorage.setItem('user_data', JSON.stringify(userData.data))
+                        sessionStorage.setItem('listAuth_data', JSON.stringify(userData.data.listAuth))
                         this.$router.push('/')
                     } catch (e) {
                         this.$message({
