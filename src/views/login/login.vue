@@ -81,11 +81,12 @@ export default {
                         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.setUserInfo(userInfo)
                         const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                        document.domain = 'hosjoy.com'
                         sessionStorage.setItem('user_data', JSON.stringify(userData.data))
                         sessionStorage.setItem('listAuth_data', JSON.stringify(userData.data.listAuth))
-                        document.domain = 'devcrm.hosjoy.com'
                         this.$router.push('/')
                     } catch (e) {
+                        console.log(e)
                         this.$message({
                             type: 'error',
                             message: '用户名或密码错误！'
