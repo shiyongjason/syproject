@@ -66,7 +66,7 @@ const routerMapping = [
                     isMenu: false,
                     role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
                 },
-                component: () => import('./views/index/index')
+                component: () => import('./views/jinyunplatform/index')
             }
         ]
     },
@@ -87,7 +87,7 @@ const routerMapping = [
                     isMenu: false,
                     role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
                 },
-                component: () => import('./views/index/index')
+                component: () => import('./views/jinyunplatform/index')
             }
         ]
     },

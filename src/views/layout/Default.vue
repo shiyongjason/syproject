@@ -128,7 +128,7 @@ export default {
             this.$refs[ 'editPassword' ].validate(async (valid) => {
                 if (valid) {
                     try {
-                        const {...params} = this.editPassword
+                        const { ...params } = this.editPassword
                         delete params.confirmPassword
                         await changePassword(params)
                         this.$message({

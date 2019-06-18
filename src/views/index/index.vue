@@ -24,7 +24,8 @@ export default {
     methods: {
         onClikUrl (type) {
             if (type == 'oldsys') {
-                window.location.href = 'https://boss.hosjoy.com/default.html#/index/'
+                // window.location.href = 'https://boss.hosjoy.com/default.html#/index/'
+                window.location.href = 'http://devcrm.hosjoy.com/ossV3/default.html#/index'
             }
         }
     }
