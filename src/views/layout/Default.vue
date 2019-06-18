@@ -87,7 +87,7 @@ export default {
 
         return {
             isCollapse: false,
-            editPasswordVisible: true,
+            editPasswordVisible: false,
             editPassword: {
                 telephone: '',
                 currentPassword: '',
