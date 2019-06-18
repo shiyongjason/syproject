@@ -35,6 +35,7 @@
                         placeholder="请输入您的旧密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
                 <el-form-item prop="newPassword" label="新密码" label-width="132px">
                     <el-input
@@ -43,6 +44,7 @@
                         placeholder="请输入8-16位密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
                 <el-form-item prop="confirmPassword" label="确认新密码" label-width="132px">
                     <el-input
@@ -51,6 +53,7 @@
                         placeholder="请再次输入你的新密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -219,7 +222,10 @@ export default {
     .edit-password{
         padding: 34px 0;
     }
-    .recharge{
+    .hosjoy_right1{
+        color: #52c41a;
+        margin-left: 12px;
+        display: none;
     }
 </style>
 <style  lang="scss">
@@ -250,5 +256,8 @@ export default {
     }
     .el-form-item.is-error .el-input__inner{
         border: 1px solid #E02020;
+    }
+    .el-form-item.is-success  .hosjoy_right1{
+        display: inline-block;
     }
 </style>
