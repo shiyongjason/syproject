@@ -109,7 +109,7 @@ export default {
                         // document.cookie = 'aaa=333;domain=hosjoy.com'
                         // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
 
-                        this.$router.push('/')
+                        // this.$router.push('/')
                     } catch (e) {
                         console.log(e)
                         this.$message({
