@@ -81,9 +81,8 @@ export default {
                         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.setUserInfo(userInfo)
                         const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                        localStorage.setItem('user_data', JSON.stringify(userData.data))
-                        localStorage.setItem('listAuth_data', JSON.stringify(userData.data.listAuth))
                         document.domain = 'hosjoy.com'
+                        document.Cookie = 'name=value'
                         this.$router.push('/')
                     } catch (e) {
                         console.log(e)
