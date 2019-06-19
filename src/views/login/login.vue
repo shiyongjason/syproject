@@ -83,7 +83,7 @@ export default {
                         const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
                         localStorage.setItem('user_data', JSON.stringify(userData.data))
                         // document.cookie = 'aaa=333;domain=hosjoy.com'
-                        document.cookie = 'loginTyoe=BossLgin;domain=hosjoy.com'
+                        document.cookie = 'loginTyoe=BossLogin;domain=hosjoy.com'
 
                         this.$router.push('/')
                     } catch (e) {
