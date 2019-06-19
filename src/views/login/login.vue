@@ -81,7 +81,7 @@ export default {
                         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.setUserInfo(userInfo)
                         const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                        document.cookie = 'aaa=bbb;domain=jd.com'
+                        document.cookie = 'aaa=bbb;domain=hosjoy.com'
                         this.$router.push('/')
                     } catch (e) {
                         console.log(e)
