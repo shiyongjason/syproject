@@ -74,11 +74,11 @@ export default {
         }
     },
     methods: {
-        sendMessage () {
+        sendMessage (userData) {
             // 外部vue向iframe内部传数据
             this.iframeWin.postMessage({
                 cmd: 'getFormJson',
-                params: {}
+                params: userData
             }, '*')
         },
         handleMessage (event) {
@@ -108,7 +108,7 @@ export default {
                         localStorage.setItem('user_data', JSON.stringify(userData.data))
                         // document.cookie = 'aaa=333;domain=hosjoy.com'
                         // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
-                        this.sendMessage()
+                        this.sendMessage(userData)
                         // this.$router.push('/')
                     } catch (e) {
                         console.log(e)
