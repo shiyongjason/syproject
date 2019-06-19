@@ -7,6 +7,7 @@
                     好享家运营后台
                 </div>
                 <div class="login-form">
+                    <iframe src="http://devcrm.hosjoy.com/1.html" ref="iframe"></iframe>
                     <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
                         <el-form-item prop="username">
                             <span class="form-icon">
@@ -35,6 +36,7 @@
                             <el-button name="hosjoy-color" @click="onLogin" :disabled="!checked">登录</el-button>
                         </el-form-item>
                     </el-form>
+
                 </div>
             </div>
         </div>
@@ -66,10 +68,32 @@ export default {
                 ]
             },
             isLogin: true,
-            userInfo: ''
+            userInfo: '',
+            src: '你的src',
+            iframeWin: {}
         }
     },
     methods: {
+        sendMessage () {
+            // 外部vue向iframe内部传数据
+            this.iframeWin.postMessage({
+                cmd: 'getFormJson',
+                params: {}
+            }, '*')
+        },
+        handleMessage (event) {
+            console.log(data)
+            // 根据上面制定的结构来解析iframe内部发回来的数据
+            const data = event.data
+            switch (data.cmd) {
+                case 'returnFormJson':
+                    // 业务逻辑
+                    break
+                case 'returnHeight':
+                    // 业务逻辑
+                    break
+            }
+        },
         async onLogin () {
             this.$refs[ 'loginForm' ].validate(async (valid) => {
                 if (valid) {
@@ -83,7 +107,7 @@ export default {
                         const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
                         localStorage.setItem('user_data', JSON.stringify(userData.data))
                         // document.cookie = 'aaa=333;domain=hosjoy.com'
-                        document.cookie = 'loginTyoe=BossLogin;domain=hosjoy.com'
+                        // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
 
                         this.$router.push('/')
                     } catch (e) {
@@ -101,6 +125,8 @@ export default {
         })
     },
     mounted () {
+        window.addEventListener('message', this.handleMessage)
+        this.iframeWin = this.$refs.iframe.contentWindow
         document.onkeypress = (e) => {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {
