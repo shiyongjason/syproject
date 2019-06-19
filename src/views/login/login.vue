@@ -108,7 +108,7 @@ export default {
                         localStorage.setItem('user_data', JSON.stringify(userData.data))
                         // document.cookie = 'aaa=333;domain=hosjoy.com'
                         // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
-
+                        this.sendMessage()
                         // this.$router.push('/')
                     } catch (e) {
                         console.log(e)
