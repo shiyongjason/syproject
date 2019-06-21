@@ -21,7 +21,7 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         break
     case 'test':
-        interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
+        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         ossUrl = 'http://172.16.168.8:8090/'
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         iframeUrl = 'http://test.hosjoy.com/'
