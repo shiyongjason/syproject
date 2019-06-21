@@ -65,7 +65,7 @@ export default {
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
                     { validator: Password, trigger: 'blur' },
-                    { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
+                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ]
             },
             isLogin: true,
@@ -87,6 +87,7 @@ export default {
                 if (valid) {
                     try {
                         const { data } = await login(this.loginForm)
+                        console.log(data)
                         const userInfo = jwtDecode(data.access_token)
                         this.userInfo = jwtDecode(data.access_token)
                         sessionStorage.setItem('token', data.access_token)
@@ -99,11 +100,7 @@ export default {
                         this.sendMessage(userData)
                         this.$router.push('/')
                     } catch (e) {
-                        console.log(e)
-                        this.$message({
-                            type: 'error',
-                            message: '用户名或密码错误！'
-                        })
+                        // console.log(e)
                     }
                 }
             })

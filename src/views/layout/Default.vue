@@ -103,7 +103,7 @@ export default {
                 ],
                 newPassword: [
                     { required: true, message: '请输入您的密码', trigger: 'blur' },
-                    { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
+                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ],
                 confirmPassword: [
                     { required: true, validator: checkPassword, trigger: 'blur' }
@@ -130,25 +130,23 @@ export default {
                     try {
                         const { ...params } = this.editPassword
                         delete params.confirmPassword
+                        params.telephone = this.userInfo.user_name
                         await changePassword(params)
-                        this.$message({
-                            type: 'success',
-                            message: '修改密码成功！'
-                        })
+                        // this.$message({
+                        //     type: 'success',
+                        //     message: '修改密码成功！'
+                        // })
                         this.editPasswordVisible = false
                         sessionStorage.removeItem('token')
                         sessionStorage.removeItem('userInfo')
+                        this.$refs.editPassword.resetFields()
                         this.$alert('密码修改成功，现在去登陆！', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
-                                this.$router.push('/')
+                                this.$router.push('/login')
                             }
                         })
                     } catch (e) {
-                        this.$message({
-                            type: 'error',
-                            message: '修改密码错误，请稍后重试！'
-                        })
                     }
                 }
             })
