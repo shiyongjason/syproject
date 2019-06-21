@@ -19,9 +19,9 @@ axios.interceptors.request.use(function (config) {
     if (token) {
         config.headers['Authorization'] = 'Bearer ' + token
     }
-    if (config.method === 'get') {
-        config.url += '?t=' + new Date().getTime()
-    }
+    // if (config.method === 'get') {
+    //     config.url += '?t=' + new Date().getTime()
+    // }
     // const showLoading = NO_LOADING_REQ.filter(item => item.method == config.method && config.url.indexOf(item.url) > -1)
     // if (showLoading.length < 0) {
     //     store.commit('LOAD_STATE', true)

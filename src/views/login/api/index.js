@@ -1,4 +1,6 @@
 import axios from 'axios'
-
+import { ossUrl } from '@/api/config'
 // 登录
-export const login = (params) => axios.post('http://192.168.27.226:31000/auth/login', params)
+export const login = (params) => axios.post('/api/auth/login', params)
+// 获取老boss用户信息
+export const getUserdata = (params) => axios.get(ossUrl + '/api/login/bossLogin', { params })

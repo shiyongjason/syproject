@@ -8,6 +8,7 @@
                 <NavMenuAside @back-event="menuBack"/>
             </el-aside>
             <el-main class="content">
+
                 <Breadcrumb :class="isCollapse?'minLeft':'maxLeft'"/>
                 <div
                     v-loading="loading"
@@ -22,46 +23,49 @@
                 </div>
             </el-main>
         </el-container>
-        <el-dialog title="密码修改" :visible.sync="editPasswordVisible">
+        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password">
             <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
-                <el-form-item prop="username" label="登陆手机号" label-width="132px">
-                    <el-input
-                        v-model="editPassword.username"
-                        placeholder="请输入您的手机号码"
-                        maxlength="11"
-                    ></el-input>
+                <el-form-item label="登陆手机号" label-width="132px">
+                    {{userInfo.user_name}}
                 </el-form-item>
-                <el-form-item prop="password" label="旧密码" label-width="132px">
+                <el-form-item prop="currentPassword" label="旧密码" label-width="132px">
                     <el-input
-                        v-model="editPassword.username"
+                        type="password"
+                        v-model="editPassword.currentPassword"
                         placeholder="请输入您的旧密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item prop="password" label="新密码" label-width="132px">
+                <el-form-item prop="newPassword" label="新密码" label-width="132px">
                     <el-input
-                        v-model="editPassword.username"
+                        type="password"
+                        v-model="editPassword.newPassword"
                         placeholder="请输入8-16位密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item prop="password" label="确认新密码" label-width="132px">
+                <el-form-item prop="confirmPassword" label="确认新密码" label-width="132px">
                     <el-input
-                        v-model="editPassword.username"
+                        type="password"
+                        v-model="editPassword.confirmPassword"
                         placeholder="请再次输入你的新密码"
                         maxlength="16"
                     ></el-input>
+                    <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editPasswordVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editPasswordVisible = false">确 定</el-button>
+                <el-button type="primary" @click="onChangePassword">确 定</el-button>
             </span>
         </el-dialog>
     </el-container>
 </template>
 
 <script>
+import { changePassword } from './api/index'
 import NavMenuHead from './NavMenuHead'
 import NavMenuAside from './NavMenuAside'
 import Breadcrumb from '@/components/Breadcrumb'
@@ -74,23 +78,43 @@ export default {
         Breadcrumb
     },
     data () {
+        const checkPassword = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入您的新密码'))
+            } else if (value !== this.editPassword.newPassword) {
+                callback(new Error('两次密码不一致'))
+            } else {
+                callback()
+            }
+        }
+
         return {
             isCollapse: false,
-            editPasswordVisible: true,
-            editPassword: {},
+            editPasswordVisible: false,
+            editPassword: {
+                telephone: '',
+                currentPassword: '',
+                newPassword: '',
+                confirmPassword: ''
+            },
             passwordRules: {
-                username: [
-                    { required: true, message: '请输入登录帐号', trigger: 'blur' }
+                currentPassword: [
+                    { required: true, message: '请输入您的旧密码', trigger: 'blur' }
                 ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
+                newPassword: [
+                    { required: true, message: '请输入您的密码', trigger: 'blur' },
+                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
+                ],
+                confirmPassword: [
+                    { required: true, validator: checkPassword, trigger: 'blur' }
                 ]
             }
         }
     },
     computed: {
         ...mapState({
-            loading: state => state.loading
+            loading: state => state.loading,
+            userInfo: state => state.userInfo
         })
     },
     methods: {
@@ -99,6 +123,33 @@ export default {
         },
         editPasswordShow (show) {
             this.editPasswordVisible = show
+        },
+        async onChangePassword () {
+            this.$refs[ 'editPassword' ].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        const { ...params } = this.editPassword
+                        delete params.confirmPassword
+                        params.telephone = this.userInfo.user_name
+                        await changePassword(params)
+                        // this.$message({
+                        //     type: 'success',
+                        //     message: '修改密码成功！'
+                        // })
+                        this.editPasswordVisible = false
+                        sessionStorage.removeItem('token')
+                        sessionStorage.removeItem('userInfo')
+                        this.$refs.editPassword.resetFields()
+                        this.$alert('密码修改成功，现在去登陆！', '提示', {
+                            confirmButtonText: '确定',
+                            callback: action => {
+                                this.$router.push('/login')
+                            }
+                        })
+                    } catch (e) {
+                    }
+                }
+            })
         }
     },
     mounted () {
@@ -169,6 +220,11 @@ export default {
     .edit-password{
         padding: 34px 0;
     }
+    .hosjoy_right1{
+        color: #52c41a;
+        margin-left: 12px;
+        display: none;
+    }
 </style>
 <style  lang="scss">
     .el-form .el-form-item__label{
@@ -198,5 +254,8 @@ export default {
     }
     .el-form-item.is-error .el-input__inner{
         border: 1px solid #E02020;
+    }
+    .el-form-item.is-success  .hosjoy_right1{
+        display: inline-block;
     }
 </style>

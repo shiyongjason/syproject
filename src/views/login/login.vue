@@ -7,6 +7,7 @@
                     好享家运营后台
                 </div>
                 <div class="login-form">
+                    <iframe :src="src" ref="iframe" style="display:none"></iframe>
                     <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
                         <el-form-item prop="username">
                             <span class="form-icon">
@@ -35,16 +36,18 @@
                             <el-button name="hosjoy-color" @click="onLogin" :disabled="!checked">登录</el-button>
                         </el-form-item>
                     </el-form>
+
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { login } from './api/index'
+import { login, getUserdata } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone, Password } from '@/utils/rules'
 import { mapMutations } from 'vuex'
+import { iframeUrl } from '@/api/config'
 export default {
     data () {
         return {
@@ -62,30 +65,42 @@ export default {
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
                     { validator: Password, trigger: 'blur' },
-                    { min: 6, max: 20, message: '长度为6-20位数字或字母', trigger: 'blur' }
+                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ]
             },
             isLogin: true,
-            userInfo: ''
+            userInfo: '',
+            src: iframeUrl,
+            iframeWin: {}
         }
     },
     methods: {
+        sendMessage (userData) {
+            // 外部vue向iframe内部传数据
+            this.iframeWin.postMessage({
+                cmd: 'getFormJson',
+                params: userData
+            }, '*')
+        },
         async onLogin () {
             this.$refs[ 'loginForm' ].validate(async (valid) => {
                 if (valid) {
                     try {
                         const { data } = await login(this.loginForm)
+                        console.log(data)
                         const userInfo = jwtDecode(data.access_token)
                         this.userInfo = jwtDecode(data.access_token)
                         sessionStorage.setItem('token', data.access_token)
                         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                         this.setUserInfo(userInfo)
+                        const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                        localStorage.setItem('user_data', JSON.stringify(userData.data))
+                        // document.cookie = 'aaa=333;domain=hosjoy.com'
+                        // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
+                        this.sendMessage(userData)
                         this.$router.push('/')
                     } catch (e) {
-                        this.$message({
-                            type: 'error',
-                            message: '用户名或密码错误！'
-                        })
+                        // console.log(e)
                     }
                 }
             })
@@ -95,6 +110,9 @@ export default {
         })
     },
     mounted () {
+        // window.addEventListener('message', this.handleMessage)
+        // 获取iframe 对象
+        this.iframeWin = this.$refs.iframe.contentWindow
         document.onkeypress = (e) => {
             const keyCode = document.all ? event.keyCode : e.which
             if (keyCode === 13) {

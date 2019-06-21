@@ -45,7 +45,7 @@ export default {
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true
                 // this.$router.push('/editPassword')
-                this.$emit('editPassword',true)
+                this.$emit('editPassword', true)
             }
         },
         onBackIndex () {
