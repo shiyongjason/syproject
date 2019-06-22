@@ -22,16 +22,16 @@ switch (env) {
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        ossUrl = 'http://172.16.168.8:8090/'
+        ossUrl = 'https://testroute.hosjoy.com:4832/'
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         iframeUrl = 'https://test.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
-        interfaceUrl = 'https://b2b-gateway.hosjoy.com/'
-        ossUrl = 'http://172.16.168.8:8090/'
+        interfaceUrl = 'https://hbp.hosjoy.com/'
+        ossUrl = 'https://route.hosjoy.com:4832/'
         uploadUrl = 'https://hbp.hosjoy.com/tms'
-        iframeUrl = 'http://boss.hosjoy.com/'
+        iframeUrl = 'https://boss.hosjoy.com/'
         break
 }
 export {
