@@ -84,9 +84,11 @@ export default {
 }
 .user-info {
     .user-info-select {
+        font-family: "Microsoft YaHei";
         float: left;
         margin-left: 40px;
         .el-dropdown {
+            font-family: "Microsoft YaHei";
             span {
                 font-size: 12px;
                 color: #bfbfbf;
@@ -106,6 +108,7 @@ export default {
     opacity: 0.9;
     z-index: 100000 !important;
     .el-dropdown-menu__item {
+        font-family: "Microsoft YaHei";
         color: #bfbfbf;
         font-size: 12px;
     }

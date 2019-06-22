@@ -23,12 +23,12 @@
                 </div>
             </el-main>
         </el-container>
-        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password">
+        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
             <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
-                <el-form-item label="登陆手机号" label-width="132px">
+                <el-form-item label="登陆手机号：" label-width="132px">
                     {{userInfo.user_name}}
                 </el-form-item>
-                <el-form-item prop="currentPassword" label="旧密码" label-width="132px">
+                <el-form-item prop="currentPassword" label="旧密码：" label-width="132px">
                     <el-input
                         type="password"
                         v-model="editPassword.currentPassword"
@@ -37,7 +37,7 @@
                     ></el-input>
                     <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item prop="newPassword" label="新密码" label-width="132px">
+                <el-form-item prop="newPassword" label="新密码：" label-width="132px">
                     <el-input
                         type="password"
                         v-model="editPassword.newPassword"
@@ -46,7 +46,7 @@
                     ></el-input>
                     <i  class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item prop="confirmPassword" label="确认新密码" label-width="132px">
+                <el-form-item prop="confirmPassword" label="确认新密码：" label-width="132px">
                     <el-input
                         type="password"
                         v-model="editPassword.confirmPassword"
@@ -57,7 +57,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editPasswordVisible = false">取 消</el-button>
+                <el-button @click="closePassword">取 消</el-button>
                 <el-button type="primary" @click="onChangePassword">确 定</el-button>
             </span>
         </el-dialog>
@@ -118,6 +118,10 @@ export default {
         })
     },
     methods: {
+        closePassword () {
+            this.editPasswordVisible = false
+            this.$refs.editPassword.resetFields()
+        },
         menuBack (val) {
             this.isCollapse = val
         },
@@ -248,7 +252,12 @@ export default {
         }
         .el-button--primary:hover{
             border: 1px solid #FF7A45;
-            background: #FF7A45;
+            background: rgba(229,109,61,1);
+            color: #ffffff;
+        }
+        .el-button--primary:focus{
+            border: 1px solid #FF7A45;
+            background: rgba(229,109,61,1);
             color: #ffffff;
         }
     }
