@@ -24,7 +24,7 @@ switch (env) {
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         ossUrl = 'https://testroute.hosjoy.com:4832/'
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
-        iframeUrl = 'https://test.hosjoy.com/'
+        iframeUrl = 'https://test.hosjoy.com:4832/'
         break
     case 'production':
         // TODO: 给产品调用

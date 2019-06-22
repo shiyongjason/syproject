@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-    import { iframeUrl } from '@/api/config'
+import { iframeUrl } from '@/api/config'
 export default {
     data () {
         return {}
