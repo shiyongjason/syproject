@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+    import { iframeUrl } from '@/api/config'
 export default {
     data () {
         return {}
@@ -25,7 +26,7 @@ export default {
         onClikUrl (type) {
             if (type == 'oldsys') {
                 // window.location.href = 'https://boss.hosjoy.com/default.html#/index/'
-                window.location.href = 'http://devcrm.hosjoy.com/ossV3/default.html#/index'
+                window.location.href = `${iframeUrl}/default.html#/index`
             }
         }
     }

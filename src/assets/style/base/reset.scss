@@ -173,6 +173,9 @@
     color: $hosjoyColor;
 }
 
+.el-message{
+    top: 150px;
+}
 .el-message-box {
     margin-bottom: 0;
 }
@@ -221,6 +224,11 @@
             background: $hosjoyColorHover;
         }
     }
+}
+.el-button:focus, .el-button:hover{
+    background: rgba(255,244,240,1);
+    border: 1px solid rgba(255,148,106,1);
+    color: #FF7A45;
 }
 
 

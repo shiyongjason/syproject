@@ -36,6 +36,7 @@ axios.interceptors.response.use(function (response) {
     store.commit('LOAD_STATE', false)
     return response
 }, function (error) {
+    if (error.request.status === 0) Message({ message: '网络异常，请检查网络链接', type: 'error' })
     store.commit('LOAD_STATE', false)
     const data = error.response.data
     let message = '服务器响应错误：' + error
