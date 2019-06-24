@@ -45,7 +45,7 @@
 <script>
 import { login, getUserdata } from './api/index'
 import jwtDecode from 'jwt-decode'
-import { Phone, Password } from '@/utils/rules'
+import { Phone } from '@/utils/rules'
 import { mapMutations } from 'vuex'
 import { iframeUrl } from '@/api/config'
 export default {
@@ -64,7 +64,7 @@ export default {
                 ],
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
-                    { validator: Password, trigger: 'blur' },
+                    // { validator: Password, trigger: 'blur' },
                     { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ]
             },
