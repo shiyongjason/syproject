@@ -43,16 +43,7 @@ export default {
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
             console.log(menus)
-            // 将router中非菜单的排除掉
-            return menus.filter((item) => {
-                if (item.children && item.children.length > 0) {
-                    item.children = this.resolveMenus(item.children)
-                }
-                // const menuRoles = item.meta.role
-                // const userRoles = this.userInfo.authorities
-                // const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
-                return item.meta.isMenu
-            })
+            return menus
         }
     }
 }
