@@ -42,7 +42,6 @@ export default {
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            console.log(menus)
             return menus
         }
     }

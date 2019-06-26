@@ -44,10 +44,16 @@
 
 <script>
 import bus from './bus'
+import { mapState } from 'vuex'
 export default {
     data () {
         return {
             tagsList: []
+        }
+    },
+    computed: {
+        showTags () {
+            return this.tagsList.length > 0
         }
     },
     methods: {
@@ -56,7 +62,6 @@ export default {
         },
         // 关闭单个标签
         closeTags (index) {
-            console.log(0, index)
             const delItem = this.tagsList.splice(index, 1)[0]
             const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1]
             if (item) {
@@ -93,14 +98,8 @@ export default {
             command === 'other' ? this.closeOther() : this.closeAll()
         }
     },
-    computed: {
-        showTags () {
-            return this.tagsList.length > 0
-        }
-    },
     watch: {
         $route (newValue, oldValue) {
-            console.log(newValue)
             this.setTags(newValue)
         }
     },
