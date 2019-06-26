@@ -25,7 +25,7 @@
         </el-container>
         <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
             <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
-                <el-form-item label="登陆手机号：" label-width="132px">
+                <el-form-item label="登录手机号：" label-width="132px">
                     {{userInfo.user_name}}
                 </el-form-item>
                 <el-form-item prop="currentPassword" label="旧密码：" label-width="132px">
@@ -82,7 +82,7 @@ export default {
             if (value === '') {
                 callback(new Error('请再次输入您的新密码'))
             } else if (value !== this.editPassword.newPassword) {
-                callback(new Error('两次密码不一致'))
+                callback(new Error('两次输入的新密码不相同'))
             } else {
                 callback()
             }
@@ -98,9 +98,9 @@ export default {
                 confirmPassword: ''
             },
             passwordRules: {
-                currentPassword: [
-                    { required: true, message: '请输入您的旧密码', trigger: 'blur' }
-                ],
+                // currentPassword: [
+                //     { required: true, message: '请输入您的旧密码', trigger: 'blur' }
+                // ],
                 newPassword: [
                     { required: true, message: '请输入您的密码', trigger: 'blur' },
                     { min: 8, max: 16, message: '长度为8-16位字符', trigger: 'blur' }
@@ -144,7 +144,7 @@ export default {
                         sessionStorage.removeItem('token')
                         sessionStorage.removeItem('userInfo')
                         this.$refs.editPassword.resetFields()
-                        this.$alert('密码修改成功，现在去登陆！', '提示', {
+                        this.$alert('密码修改成功，现在去登录！', '提示', {
                             confirmButtonText: '确定',
                             callback: action => {
                                 this.$router.push('/login')
