@@ -108,7 +108,6 @@ export default {
         const  newBossTags= sessionStorage.getItem('newBossTags')
         if(newBossTags){
             this.tagsList = JSON.parse(newBossTags)
-            console.log(this.tagsList)
         }
         this.setTags(this.$route)
     }
