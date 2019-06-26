@@ -103,7 +103,7 @@ export default {
                 // ],
                 newPassword: [
                     { required: true, message: '请输入您的密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '长度为8-16位字符', trigger: 'blur' }
+                    { min: 8, max: 16, message: '请输入8-16位密码', trigger: 'blur' }
                 ],
                 confirmPassword: [
                     { required: true, validator: checkPassword, trigger: 'blur' }

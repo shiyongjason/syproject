@@ -42,7 +42,6 @@ export default {
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            console.log(menus)
             // 将router中非菜单的排除掉
             return menus.filter((item) => {
                 if (item.children && item.children.length > 0) {
