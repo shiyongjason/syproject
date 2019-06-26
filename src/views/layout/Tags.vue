@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import bus from './bus'
-import { mapState } from 'vuex'
 export default {
     data () {
         return {
@@ -69,10 +67,12 @@ export default {
             } else {
                 this.$router.push('/')
             }
+            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
         },
         // 关闭全部标签
         closeAll () {
             this.tagsList = []
+            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
             this.$router.push('/')
         },
         // 关闭其他标签
@@ -81,6 +81,7 @@ export default {
                 return item.path === this.$route.fullPath
             })
             this.tagsList = curItem
+            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
         },
         // 设置标签
         setTags (route) {
@@ -92,7 +93,7 @@ export default {
                 path: route.fullPath,
                 name: route.matched[1].components.default.name
             })
-            bus.$emit('tags', this.tagsList)
+            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
         },
         handleTags (command) {
             command === 'other' ? this.closeOther() : this.closeAll()
@@ -104,6 +105,11 @@ export default {
         }
     },
     created () {
+        const  newBossTags= sessionStorage.getItem('newBossTags')
+        if(newBossTags){
+            this.tagsList = JSON.parse(newBossTags)
+            console.log(this.tagsList)
+        }
         this.setTags(this.$route)
     }
 }
