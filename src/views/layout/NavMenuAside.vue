@@ -2,7 +2,7 @@
     <div class="nav-menu-aside">
         <Sidebar :menus="menus" mode="vertical" :collapse="isCollapse"/>
         <div class="menusSwitch" :class="isCollapse?'close':'open'">
-            <div @click="onSwitch">
+            <div @click="onSwitch" class="hand">
                 <i :class="isCollapse?'iconfont hosjoy_indent':'iconfont hosjoy_outdent'"></i>
                 <span>收起</span>
             </div>
@@ -42,7 +42,6 @@ export default {
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            console.log(menus)
             // 将router中非菜单的排除掉
             return menus.filter((item) => {
                 if (item.children && item.children.length > 0) {
@@ -130,6 +129,9 @@ export default {
         margin-right: 10px;
     }
 }
+    .hand{
+        cursor: pointer;
+    }
 </style>
 <style lang="scss">
 .el-menu--vertical ul {

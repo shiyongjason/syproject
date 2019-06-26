@@ -1,4 +1,5 @@
 <script>
+    import { iframeUrl } from '@/api/config'
 export default {
     props: {
         menus: {
@@ -22,7 +23,7 @@ export default {
                 if (item.children && item.children.length > 0) {
                     const children = this.generateSidebar(item.children, path)
                     result.push((
-                        <el-submenu index={path}>
+                        <el-submenu index={path} >
                             <template slot="title">
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                 <span>{item.meta.title}</span>
@@ -30,12 +31,22 @@ export default {
                         </el-submenu>
                     ))
                 } else {
-                    result.push(
-                        <el-menu-item index={path}>
-                            {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                            <span>{item.meta.title}</span>
-                        </el-menu-item>
-                    )
+
+                    if(item.path === '/oldsystem'){
+                        result.push(
+                            <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} style={`display:block`}>
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                            </a>
+                        )
+                    }else{
+                        result.push(
+                            <el-menu-item index={path}>
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                                </el-menu-item>
+                        )
+                    }
                 }
             })
             return result

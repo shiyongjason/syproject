@@ -8,7 +8,7 @@
         </div>
         <div class="user-info flr">
             <div class="user-info-select">
-                <el-dropdown trigger="click" @command="handleCommand">
+                <el-dropdown trigger="click" @command="handleCommand" class="hand">
                         <span class="el-dropdown-link">
                             {{userName}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -53,7 +53,7 @@ export default {
         }
     },
     mounted () {
-        // this.userName = this.userInfo.principal.name
+        this.userName = this.userInfo.user_name
     }
 }
 </script>
@@ -125,4 +125,7 @@ export default {
 .el-popper[x-placement^="bottom"] .popper__arrow {
     display: none;
 }
+    .hand{
+        cursor: pointer;
+    }
 </style>

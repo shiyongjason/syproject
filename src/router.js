@@ -70,27 +70,27 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/userManage',
-        component: Layout,
-        name: 'userManage',
-        meta: {
-            title: '用户/机构管理',
-            icon: 'hosjoy_permissions',
-            isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-        },
-        children: [
-            {
-                path: '',
-                meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
+    // { 产品要求屏蔽
+    //     path: '/userManage',
+    //     component: Layout,
+    //     name: 'userManage',
+    //     meta: {
+    //         title: '用户/机构管理',
+    //         icon: 'hosjoy_permissions',
+    //         isMenu: true,
+    //         role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+    //     },
+    //     children: [
+    //         {
+    //             path: '',
+    //             meta: {
+    //                 isMenu: false,
+    //                 role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+    //             },
+    //             component: () => import('./views/jinyunplatform/index')
+    //         }
+    //     ]
+    // },
     {
         path: '/editPassword',
         component: Layout,

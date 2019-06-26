@@ -63,9 +63,9 @@ export default {
                     { validator: Phone, trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
+                    { required: true, message: '请输入密码', trigger: 'blur' }
                     // { validator: Password, trigger: 'blur' },
-                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
+                    // { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ]
             },
             isLogin: true,
