@@ -29,7 +29,7 @@ switch (env) {
     case 'production':
         // TODO: 给产品调用
         interfaceUrl = 'https://hbp.hosjoy.com/'
-        ossUrl = 'https://route.hosjoy.com:4832/'
+        ossUrl = 'https://route.hosjoy.com/'
         uploadUrl = 'https://hbp.hosjoy.com/tms'
         iframeUrl = 'https://boss.hosjoy.com/'
         break
