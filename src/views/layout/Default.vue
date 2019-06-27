@@ -136,20 +136,20 @@ export default {
                         delete params.confirmPassword
                         params.telephone = this.userInfo.user_name
                         await changePassword(params)
-                        // this.$message({
-                        //     type: 'success',
-                        //     message: '修改密码成功！'
-                        // })
-                        this.editPasswordVisible = false
-                        sessionStorage.removeItem('token')
-                        sessionStorage.removeItem('userInfo')
-                        this.$refs.editPassword.resetFields()
-                        this.$alert('密码修改成功，现在去登录！', '提示', {
-                            confirmButtonText: '确定',
-                            callback: action => {
-                                this.$router.push('/login')
-                            }
+                        this.$message({
+                            type: 'success',
+                            message: '修改密码成功！'
                         })
+                        this.editPasswordVisible = false
+                        // sessionStorage.removeItem('token')
+                        // sessionStorage.removeItem('userInfo')
+                        this.$refs.editPassword.resetFields()
+                        // this.$alert('密码修改成功，现在去登录！', '提示', {
+                        //     confirmButtonText: '确定',
+                        //     callback: action => {
+                        //         this.$router.push('/login')
+                        //     }
+                        // })
                     } catch (e) {
                     }
                 }
