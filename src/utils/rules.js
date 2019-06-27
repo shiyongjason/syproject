@@ -1,7 +1,7 @@
 export const Phone = (rule, value, callback) => {
     const Reg = /^1\d{10}$/
     if (value && !(Reg.test(value))) {
-        return callback(new Error('手机号码格式不正确'))
+        return callback(new Error('请输入正确的手机号码'))
     }
     callback()
 }
