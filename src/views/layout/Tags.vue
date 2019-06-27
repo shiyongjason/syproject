@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
     data () {
         return {
@@ -55,6 +56,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            tagsInfo: 'TAGS_INFO'
+        }),
         isActive (path) {
             return path === this.$route.fullPath
         },
@@ -67,12 +71,11 @@ export default {
             } else {
                 this.$router.push('/')
             }
-            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
         },
         // 关闭全部标签
         closeAll () {
             this.tagsList = []
-            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
+            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
             this.$router.push('/')
         },
         // 关闭其他标签
@@ -81,7 +84,7 @@ export default {
                 return item.path === this.$route.fullPath
             })
             this.tagsList = curItem
-            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
+            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
         },
         // 设置标签
         setTags (route) {
@@ -93,7 +96,7 @@ export default {
                 path: route.fullPath,
                 name: route.matched[1].components.default.name
             })
-            sessionStorage.setItem('newBossTags',JSON.stringify(this.tagsList))
+            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
         },
         handleTags (command) {
             command === 'other' ? this.closeOther() : this.closeAll()
@@ -105,8 +108,8 @@ export default {
         }
     },
     created () {
-        const  newBossTags= sessionStorage.getItem('newBossTags')
-        if(newBossTags){
+        const newBossTags = sessionStorage.getItem('newBossTags')
+        if (newBossTags) {
             this.tagsList = JSON.parse(newBossTags)
         }
         this.setTags(this.$route)
@@ -155,8 +158,8 @@ export default {
 
 .tags-li.active {
     color: #fff;
-       border: 1px solid #409eff;
-        background-color: #409eff;
+    border: 1px solid #409eff;
+    background-color: #409eff;
 }
 
 .tags-li-title {
@@ -186,5 +189,4 @@ export default {
     box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
     z-index: 10;
 }
-
 </style>

@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     state: {
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
-        'isSaving': false
+        'isSaving': false,
+        'tagsInfo': {}
 
     },
     mutations,

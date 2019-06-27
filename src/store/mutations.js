@@ -1,5 +1,5 @@
 import {
-    LOAD_STATE, IS_SAVING, USER_INFO
+    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO
 } from './const'
 
 export default {
@@ -11,6 +11,9 @@ export default {
     },
     [USER_INFO] (state, payload) {
         state.userInfo = payload
+    },
+    [TAGS_INFO] (state, payload) {
+        state.tagsInfo = payload
     }
 
 }
