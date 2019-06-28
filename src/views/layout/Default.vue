@@ -25,22 +25,9 @@
                 </div>
             </el-main>
         </el-container>
-        <el-dialog
-            title="密码修改"
-            :visible.sync="editPasswordVisible"
-            class="recharge-password"
-            :before-close="closePassword"
-        >
-            <el-form
-                ref="editPassword"
-                :model="editPassword"
-                :rules="passwordRules"
-                class="edit-password"
-            >
-                <el-form-item
-                    label="登陆手机号："
-                    label-width="132px"
-                >
+        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
+            <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
+                <el-form-item label="登录手机号：" label-width="132px">
                     {{userInfo.user_name}}
                 </el-form-item>
                 <el-form-item
@@ -117,7 +104,7 @@ export default {
             if (value === '') {
                 callback(new Error('请再次输入您的新密码'))
             } else if (value !== this.editPassword.newPassword) {
-                callback(new Error('两次密码不一致'))
+                callback(new Error('两次输入的新密码不相同'))
             } else {
                 callback()
             }
@@ -133,12 +120,12 @@ export default {
                 confirmPassword: ''
             },
             passwordRules: {
-                currentPassword: [
-                    { required: true, message: '请输入您的旧密码', trigger: 'blur' }
-                ],
+                // currentPassword: [
+                //     { required: true, message: '请输入您的旧密码', trigger: 'blur' }
+                // ],
                 newPassword: [
                     { required: true, message: '请输入您的密码', trigger: 'blur' },
-                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
+                    { min: 8, max: 16, message: '请输入8-16位密码', trigger: 'blur' }
                 ],
                 confirmPassword: [
                     { required: true, validator: checkPassword, trigger: 'blur' }
@@ -171,20 +158,20 @@ export default {
                         delete params.confirmPassword
                         params.telephone = this.userInfo.user_name
                         await changePassword(params)
-                        // this.$message({
-                        //     type: 'success',
-                        //     message: '修改密码成功！'
-                        // })
-                        this.editPasswordVisible = false
-                        sessionStorage.removeItem('token')
-                        sessionStorage.removeItem('userInfo')
-                        this.$refs.editPassword.resetFields()
-                        this.$alert('密码修改成功，现在去登陆！', '提示', {
-                            confirmButtonText: '确定',
-                            callback: action => {
-                                this.$router.push('/login')
-                            }
+                        this.$message({
+                            type: 'success',
+                            message: '修改密码成功！'
                         })
+                        this.editPasswordVisible = false
+                        // sessionStorage.removeItem('token')
+                        // sessionStorage.removeItem('userInfo')
+                        this.$refs.editPassword.resetFields()
+                        // this.$alert('密码修改成功，现在去登录！', '提示', {
+                        //     confirmButtonText: '确定',
+                        //     callback: action => {
+                        //         this.$router.push('/login')
+                        //     }
+                        // })
                     } catch (e) {
                     }
                 }
