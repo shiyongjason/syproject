@@ -8,7 +8,7 @@ let iframeUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
-        interfaceUrl = 'http://192.168.20.242:30000/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
         ossUrl = 'http://192.168.20.248:8089/'
         // interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         uploadUrl = 'http://192.168.20.248:30000/tms'
