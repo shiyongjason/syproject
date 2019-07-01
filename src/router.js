@@ -24,6 +24,15 @@ const routerMapping = [
             icon: 'hosjoy_cloud_service'
         },
         component: () => import('./views/jinyunplatform/index')
+    },
+    {
+        path: '/oldsystem',
+        name: 'oldsystem',
+        meta: {
+            title: '老系统',
+            icon: 'hosjoy_cloud_service'
+        },
+        component: () => import('./views/jinyunplatform/index')
     }
 
 ]

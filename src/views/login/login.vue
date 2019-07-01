@@ -46,7 +46,7 @@
 import { login, getUserdata } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 export default {
     data () {
@@ -107,9 +107,13 @@ export default {
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO'
+        }),
+        ...mapActions({
+            resetVuex: 'resetVuex'
         })
     },
     mounted () {
+        this.resetVuex()
         // window.addEventListener('message', this.handleMessage)
         // 获取iframe 对象
         this.iframeWin = this.$refs.iframe.contentWindow
@@ -119,6 +123,9 @@ export default {
                 this.onLogin()
             }
         }
+    },
+    created () {
+
     }
 }
 </script>

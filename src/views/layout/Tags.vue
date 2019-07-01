@@ -18,6 +18,7 @@
                 </router-link>
                 <span
                     class="tags-li-icon"
+                    v-show="item.title!='首页'"
                     @click="closeTags(index)"
                 ><i class="el-icon-close"></i></span>
             </li>
@@ -35,7 +36,6 @@
                     slot="dropdown"
                 >
                     <el-dropdown-item command="other">关闭其他</el-dropdown-item>
-                    <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
     data () {
         return {
@@ -53,7 +53,10 @@ export default {
     computed: {
         showTags () {
             return this.tagsList.length > 0
-        }
+        },
+        ...mapState({
+            newTags: state => state.tagsInfo
+        })
     },
     methods: {
         ...mapMutations({
@@ -75,7 +78,7 @@ export default {
         // 关闭全部标签
         closeAll () {
             this.tagsList = []
-            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
+            this.tagsInfo(this.tagsList)
             this.$router.push('/')
         },
         // 关闭其他标签
@@ -84,19 +87,29 @@ export default {
                 return item.path === this.$route.fullPath
             })
             this.tagsList = curItem
-            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
+            this.tagsInfo(this.tagsList)
         },
         // 设置标签
         setTags (route) {
+            console.log(route)
             const isExist = this.tagsList.some(item => {
                 return item.path === route.fullPath
             })
             !isExist && this.tagsList.push({
                 title: route.meta.title,
                 path: route.fullPath,
-                name: route.matched[1].components.default.name
+                name: route.name
             })
-            sessionStorage.setItem('newBossTags', JSON.stringify(this.tagsList))
+
+            // this.tagsList = this.tagsList.filter(item =>
+            //     item.name != 'index'
+            // ).push({
+            //     title: '首页',
+            //     path: '/index',
+            //     name: 'index'
+            // })
+            console.log(this.tagsList)
+            this.tagsInfo(this.tagsList)
         },
         handleTags (command) {
             command === 'other' ? this.closeOther() : this.closeAll()
@@ -107,11 +120,17 @@ export default {
             this.setTags(newValue)
         }
     },
-    created () {
-        const newBossTags = sessionStorage.getItem('newBossTags')
-        if (newBossTags) {
-            this.tagsList = JSON.parse(newBossTags)
-        }
+    mounted () {
+        const isExist = this.newTags.some(item => {
+            return item.path == '/'
+        })
+        !isExist && this.newTags.push({
+            title: '首页',
+            path: '/',
+            name: 'index'
+        })
+        this.tagsList = this.newTags
+        console.log(this.tagsList)
         this.setTags(this.$route)
     }
 }

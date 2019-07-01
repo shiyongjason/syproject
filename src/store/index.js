@@ -12,11 +12,16 @@ const store = new Vuex.Store({
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
         'isSaving': false,
-        'tagsInfo': {}
+        'tagsInfo': []
 
     },
     mutations,
-    actions: {},
+    actions: {
+        resetVuex (context) {
+            console.log(context, this.state)
+            this.state.tagsInfo = []
+        }
+    },
     modules: {
         // 视图的 store
     }

@@ -15,5 +15,4 @@ export default {
     [TAGS_INFO] (state, payload) {
         state.tagsInfo = payload
     }
-
 }
