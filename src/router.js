@@ -12,17 +12,18 @@ const routerMapping = [
         name: 'index',
         meta: {
             title: '首页',
-            icon: 'hosjoy_cloud_service',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_home'
         },
         children: [
             {
                 path: '',
+                name: 'home',
                 meta: {
-                    isMenu: false,
+                    title: '首页',
                     tagName: '首页',
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    isMenu: false,
+                    icon: 'hosjoy_home'
                 },
                 component: () => import('./views/index/index')
             }
@@ -33,22 +34,23 @@ const routerMapping = [
         name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
-            icon: 'hosjoy_cloud_service',
-            isMenu: true
+            isMenu: true,
+            icon: 'hosjoy_cloud_service'
         },
         component: Layout,
         children: [
             {
                 path: '',
+                name: 'home',
                 meta: {
+                    title: '金云平台',
                     tagName: '金云平台',
                     isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    icon: 'hosjoy_home'
                 },
                 component: () => import('./views/jinyunplatform/index')
             }
         ]
-
     },
     {
         path: '/oldsystem',
@@ -58,44 +60,42 @@ const routerMapping = [
             isMenu: true,
             icon: 'hosjoy_cloud_service'
         },
-        children: [
-            {
-                path: '',
-                meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-
-        ]
+        component: () => import('./views/jinyunplatform/index')
     },
     {
-        path: '/member',
-        name: 'member',
-        component: Layout,
+        path: '/auth',
+        name: 'auth',
         meta: {
-            title: '会员管理',
-            redirect: 'noredirect',
-            icon: 'hosjoy_cloud_service',
+            title: '权限管理',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_FINANCE]
+            icon: 'hosjoy_cloud_service'
         },
+        component: Layout,
         children: [
             {
-                path: 'memberInfo',
-                name: 'memberInfo',
+                path: 'organization',
+                name: 'organization',
                 meta: {
-                    title: '会员信息',
-                    tagName: '会员信息',
+                    title: '机构/人员管理',
+                    tagName: '机构/人员管理',
                     isMenu: true,
-                    role: [ROLE_ADMIN, ROLE_TRADER]
+                    icon: 'hosjoy_cloud_service'
                 },
-                component: () => import('./views/jinyunplatform/index')
+                component: () => import('./views/auth/organization')
+            },
+            {
+                path: '',
+                name: 'jinyunPlatform',
+                meta: {
+                    title: '角色模版设置',
+                    tagName: '角色模版设置',
+                    isMenu: true,
+                    icon: 'hosjoy_cloud_service'
+                },
+                component: () => import('./views/auth/role')
             }
         ]
     }
-
 ]
 const router = new Router({
     mode: 'history',
