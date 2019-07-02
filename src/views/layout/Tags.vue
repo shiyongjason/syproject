@@ -36,6 +36,7 @@
                     slot="dropdown"
                 >
                     <el-dropdown-item command="other">关闭其他</el-dropdown-item>
+                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -77,7 +78,11 @@ export default {
         },
         // 关闭全部标签
         closeAll () {
-            this.tagsList = []
+            this.tagsList = [{
+                title: '首页',
+                path: '/',
+                name: 'index'
+            }]
             this.tagsInfo(this.tagsList)
             this.$router.push('/')
         },
@@ -87,6 +92,7 @@ export default {
                 return item.path === this.$route.fullPath
             })
             this.tagsList = curItem
+
             this.tagsInfo(this.tagsList)
         },
         // 设置标签
@@ -96,7 +102,7 @@ export default {
                 return item.path === route.fullPath
             })
             !isExist && this.tagsList.push({
-                title: route.meta.title,
+                title: route.meta.tagName,
                 path: route.fullPath,
                 name: route.name
             })
@@ -108,7 +114,7 @@ export default {
             //     path: '/index',
             //     name: 'index'
             // })
-            console.log(this.tagsList)
+
             this.tagsInfo(this.tagsList)
         },
         handleTags (command) {
@@ -137,7 +143,7 @@ export default {
 
 </script>
 
-<style>
+<style  lang="scss">
 .tags {
     position: relative;
     height: 30px;
@@ -177,8 +183,8 @@ export default {
 
 .tags-li.active {
     color: #fff;
-    border: 1px solid #409eff;
-    background-color: #409eff;
+    border: 1px solid #ff7a45;
+    background-color: #ff7a45;
 }
 
 .tags-li-title {
@@ -207,5 +213,10 @@ export default {
     background: #fff;
     box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
     z-index: 10;
+}
+
+/deep/.el-button--primary{
+    background-color: #ff7a45;
+    border-color: #ff7a45;
 }
 </style>

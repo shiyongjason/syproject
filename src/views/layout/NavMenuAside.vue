@@ -25,6 +25,7 @@ export default {
     },
     computed: {
         menus () {
+            console.log(this.resolveMenus(routerMapping))
             return this.resolveMenus(routerMapping)
         },
         ...mapState({
@@ -42,7 +43,12 @@ export default {
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            return menus
+            return menus.filter((item) => {
+                if (item.children && item.children.length > 0) {
+                    item.children = this.resolveMenus(item.children)
+                }
+                return item.meta.isMenu
+            })
         }
     }
 }

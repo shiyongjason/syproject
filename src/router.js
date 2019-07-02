@@ -6,33 +6,94 @@ import { ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE } 
 Vue.use(Router)
 
 const routerMapping = [
-
     {
         path: '/',
+        component: Layout,
         name: 'index',
         meta: {
             title: '首页',
-            icon: 'hosjoy_home'
+            icon: 'hosjoy_cloud_service',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
         },
-        component: () => import('./views/index/index')
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    tagName: '首页',
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/index/index')
+            }
+        ]
     },
     {
         path: '/jinyunPlatform',
         name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_cloud_service',
+            isMenu: true
         },
-        component: () => import('./views/jinyunplatform/index')
+        component: Layout,
+        children: [
+            {
+                path: '',
+                meta: {
+                    tagName: '金云平台',
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/jinyunplatform/index')
+            }
+        ]
+
     },
     {
         path: '/oldsystem',
         name: 'oldsystem',
         meta: {
             title: '老系统',
+            isMenu: true,
             icon: 'hosjoy_cloud_service'
         },
-        component: () => import('./views/jinyunplatform/index')
+        children: [
+            {
+                path: '',
+                meta: {
+                    isMenu: false,
+                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                },
+                component: () => import('./views/jinyunplatform/index')
+            }
+
+        ]
+    },
+    {
+        path: '/member',
+        name: 'member',
+        component: Layout,
+        meta: {
+            title: '会员管理',
+            redirect: 'noredirect',
+            icon: 'hosjoy_cloud_service',
+            isMenu: true,
+            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_FINANCE]
+        },
+        children: [
+            {
+                path: 'memberInfo',
+                name: 'memberInfo',
+                meta: {
+                    title: '会员信息',
+                    tagName: '会员信息',
+                    isMenu: true,
+                    role: [ROLE_ADMIN, ROLE_TRADER]
+                },
+                component: () => import('./views/jinyunplatform/index')
+            }
+        ]
     }
 
 ]
@@ -55,11 +116,7 @@ const router = new Router({
             component: () => import('./views/error/403'),
             hidden: true
         },
-        {
-            path: '/',
-            component: Layout,
-            children: routerMapping
-        }
+        ...routerMapping
     ]
 })
 
