@@ -12,7 +12,7 @@
 <script>
 import Sidebar from './Sidebar'
 import { routerMapping } from '@/router.js'
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 export default {
     name: 'NavMenuHead',
     components: {
@@ -38,8 +38,12 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            setCollapse: 'IS_COLLAPSE'
+        }),
         onSwitch () {
             this.isCollapse = !this.isCollapse
+            this.setCollapse(this.isCollapse)
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
