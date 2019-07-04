@@ -12,13 +12,13 @@ const store = new Vuex.Store({
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
         'isSaving': false,
-        'tagsInfo': [],
-        'isCollapse': false
+        'tagsInfo': []
 
     },
     mutations,
     actions: {
         resetVuex (context) {
+            console.log(context, this.state)
             this.state.tagsInfo = []
         }
     },

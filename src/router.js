@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE } from '@/common/const'
+import { findMenuList } from '@/views/layout/api'
 
 Vue.use(Router)
 
@@ -9,7 +9,6 @@ const routerMapping = [
     {
         path: '/',
         component: Layout,
-        name: 'index',
         meta: {
             title: '首页',
             isMenu: true,
@@ -23,7 +22,8 @@ const routerMapping = [
                     title: '首页',
                     tagName: '首页',
                     isMenu: false,
-                    icon: 'hosjoy_home'
+                    icon: 'hosjoy_home',
+                    component: './views/index/index'
                 },
                 component: () => import('./views/index/index')
             }
@@ -31,17 +31,17 @@ const routerMapping = [
     },
     {
         path: '/jinyunPlatform',
-        name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_cloud_service',
+            component: './views/jinyunplatform/index'
         },
         component: Layout,
         children: [
             {
                 path: '',
-                name: 'home',
+                name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
                     tagName: '金云平台',
@@ -58,13 +58,12 @@ const routerMapping = [
         meta: {
             title: '老系统',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
-        },
-        component: () => import('./views/jinyunplatform/index')
+            icon: 'hosjoy_cloud_service',
+            component: './views/jinyunplatform/index'
+        }
     },
     {
         path: '/auth',
-        name: 'auth',
         meta: {
             title: '权限管理',
             isMenu: true,
@@ -79,24 +78,27 @@ const routerMapping = [
                     title: '机构/人员管理',
                     tagName: '机构/人员管理',
                     isMenu: true,
-                    icon: 'hosjoy_cloud_service'
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/auth/organization'
                 },
                 component: () => import('./views/auth/organization')
             },
             {
-                path: '',
+                path: 'role',
                 name: 'jinyunPlatform',
                 meta: {
                     title: '角色模版设置',
                     tagName: '角色模版设置',
                     isMenu: true,
-                    icon: 'hosjoy_cloud_service'
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/auth/role'
                 },
                 component: () => import('./views/auth/role')
             }
         ]
     }
 ]
+
 const router = new Router({
     mode: 'history',
     routes: [
@@ -109,20 +111,35 @@ const router = new Router({
         {
             path: '/403',
             name: '403',
-            meta: {
-                isMenu: false,
-                role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-            },
             component: () => import('./views/error/403'),
             hidden: true
         },
-        ...routerMapping
+        {
+            path: '/',
+            component: Layout
+        }
     ]
 })
 
-router.beforeEach((to, from, next) => {
+async function getMenu () {
+    const { data } = await findMenuList()
+    let authMenuTemp = routerMapping.filter((value1) => {
+        let valueTemp = false
+        data.forEach((value2) => {
+            if (value2.authUri === value1.path) {
+                value1.meta.id = value2.id
+                value1.meta.auth = true
+                valueTemp = value1
+            }
+        })
+        return valueTemp
+    })
+    router.addRoutes(authMenuTemp)
+}
+
+let isFirst = true
+router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
-    // const is403 = to.name === '403'  暂时没有
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非登录的情况下
     if (!isLogin) {
@@ -131,6 +148,12 @@ router.beforeEach((to, from, next) => {
                 name: 'login'
             })
         }
+    }
+    // 不加这个判断，路由会陷入死循环
+    if (isFirst) {
+        await getMenu()
+        isFirst = false
+        next({ ...to, replace: true })
     }
     next()
 })

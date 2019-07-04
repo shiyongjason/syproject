@@ -11,6 +11,3 @@ export const REMOVE_CACHED_EXCLUDE = 'REMOVE_CACHED_EXCLUDE'
 
 // tags缓存机制
 export const TAGS_INFO = 'TAGS_INFO'
-
-// 左侧菜单收缩 数据
-export const IS_COLLAPSE = 'IS_COLLAPSE'

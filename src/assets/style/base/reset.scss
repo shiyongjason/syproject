@@ -229,10 +229,20 @@ ul,li{
         }
     }
 }
+.el-button--primary{
+    background: #FF7A45;
+    border: 1px solid #FF7A45;
+    font-size: 14px;
+    color: #FFFFFF;
+    padding: 12px 30px;
+    box-sizing: border-box;
+}
 .el-button:focus, .el-button:hover{
-    background: rgba(255,244,240,1);
+    background: rgba(255,148,106,1);
     border: 1px solid rgba(255,148,106,1);
-    color: #FF7A45;
+    color: #FFFFFF;
+    box-sizing: border-box;
+    padding: 12px 30px;
 }
 
 
@@ -398,4 +408,25 @@ a {
 ul,
 li {
     list-style: none;
+}
+// 表格样式 重置
+.el-table__body, .el-table__footer, .el-table__header{
+    border-collapse: collapse;
+}
+.el-table td{
+    border: 1px solid rgba(229,229,234,1);
+}
+.el-table th {
+    background: rgba(242,242,244,1);
+    padding: 12px 0;
+    font-size: 12px;
+    color: #000000;
+    border: 1px solid rgba(229,229,234,1);
+}
+.el-table th>.cell, .el-table .cell{
+    text-align: center;
+}
+.el-table--fit{
+    border-right: 1px solid rgba(229,229,234,1);
+    border-bottom: 1px solid rgba(229,229,234,1);
 }

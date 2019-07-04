@@ -109,7 +109,6 @@ export default {
         },
         // 设置标签
         setTags (route) {
-            console.log(route)
             const isExist = this.tagsList.some(item => {
                 return item.path === route.fullPath
             })
@@ -148,7 +147,6 @@ export default {
             name: 'index'
         })
         this.tagsList = this.newTags
-        console.log(this.tagsList)
         this.setTags(this.$route)
     }
 }
