@@ -17,6 +17,7 @@
                     <el-button type="primary" v-if="true">搜索</el-button>
                 </div>
                 <div class="result">
+                    {{menuList}}
                     <OrganizationTable></OrganizationTable>
                 </div>
             </div>
@@ -26,10 +27,16 @@
 
 <script>
 import OrganizationTable from './components/organizationTable'
+import { mapState } from 'vuex'
 export default {
     name: 'index',
     components: {
         OrganizationTable
+    },
+    computed:{
+        ...mapState({
+            menuList: state => state.menuList
+        })
     },
     data () {
         return {

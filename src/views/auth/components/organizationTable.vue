@@ -29,7 +29,7 @@
             </el-table-column>
         </el-table>
         <div>
-            <!--<Pagination></Pagination>-->
+            <Pagination></Pagination>
         </div>
     </div>
 </template>
