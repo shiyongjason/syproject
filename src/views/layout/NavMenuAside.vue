@@ -11,8 +11,9 @@
 </template>
 <script>
 import Sidebar from './Sidebar'
-import { routerMapping } from '@/router.js'
-import { mapState } from 'vuex'
+// import { routerMapping } from '@/router.js'
+import { mapState, mapActions } from 'vuex'
+
 export default {
     name: 'NavMenuHead',
     components: {
@@ -20,22 +21,25 @@ export default {
     },
     data () {
         return {
-            isCollapse: false
+            isCollapse: false,
+            menus: []
         }
     },
     computed: {
-        menus () {
-            console.log(this.resolveMenus(routerMapping))
-            return this.resolveMenus(routerMapping)
-        },
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            menuList: state => state.menuList
         })
     },
     watch: {
         isCollapse (val) {
             this.$emit('back-event', val)
         }
+    },
+    async mounted () {
+        await this.findMenuList()
+        // this.$router.addRoutes(this.menuList)
+        this.menus = this.resolveMenus(this.menuList)
     },
     methods: {
         onSwitch () {
@@ -49,7 +53,10 @@ export default {
                 }
                 return item.meta.isMenu
             })
-        }
+        },
+        ...mapActions([
+            'findMenuList'
+        ])
     }
 }
 </script>
