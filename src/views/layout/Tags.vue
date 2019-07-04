@@ -1,5 +1,16 @@
 <template>
-    <div
+<!-- <el-tabs v-model="editableTabsValue" type="card"  @tab-remove="closeTags">
+  <el-tab-pane
+    v-for="(item, index) in tagsList"
+    :key="item.name"
+    :label="item.title"
+    :name="item.name"
+    :closable="item.name!='index'"
+  >
+
+  </el-tab-pane>
+</el-tabs> -->
+  <div
         class="tags"
         v-if="showTags"
     >
@@ -23,7 +34,7 @@
                 ><i class="el-icon-close"></i></span>
             </li>
         </ul>
-        <div class="tags-close-box">
+       <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <el-button
                     size="mini"
@@ -35,7 +46,7 @@
                     size="small"
                     slot="dropdown"
                 >
-                    <el-dropdown-item command="other">关闭其他</el-dropdown-item>
+                    <!-- <el-dropdown-item command="other">关闭其他</el-dropdown-item> -->
                      <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
@@ -48,7 +59,8 @@ import { mapState, mapMutations } from 'vuex'
 export default {
     data () {
         return {
-            tagsList: []
+            tagsList: [],
+            editableTabsValue: '首页'
         }
     },
     computed: {
@@ -113,7 +125,7 @@ export default {
             //     path: '/index',
             //     name: 'index'
             // })
-
+            this.editableTabsValue = route.name
             this.tagsInfo(this.tagsList)
         },
         handleTags (command) {
@@ -148,12 +160,14 @@ export default {
     overflow: hidden;
     background: #fff;
     padding-right: 120px;
+
 }
 
 .tags ul {
     box-sizing: border-box;
     width: 100%;
     height: 100%;
+    overflow-x: inherit;
 }
 
 .tags-li {

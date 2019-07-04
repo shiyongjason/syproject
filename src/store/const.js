@@ -11,6 +11,3 @@ export const REMOVE_CACHED_EXCLUDE = 'REMOVE_CACHED_EXCLUDE'
 
 // tags缓存机制
 export const TAGS_INFO = 'TAGS_INFO'
-
-// 菜单列表
-export const MENU_LIST = 'MENU_LIST'

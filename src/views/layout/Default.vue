@@ -11,8 +11,11 @@
                 <NavMenuAside @back-event="menuBack" />
             </el-aside>
             <el-main class="content">
-                <H-tags></H-tags>
-                <Breadcrumb :class="isCollapse?'minLeft':'maxLeft'" />
+                <div  :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
+                      <H-tags></H-tags>
+                <Breadcrumb  />
+                </div>
+
                 <div
                     v-loading="loading"
                     element-loading-text="处理中"
@@ -186,6 +189,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.headdiv{
+    position: fixed;  left:0;  right: 0;z-index:99
+}
 .header {
     position: fixed;
     top: 0;
