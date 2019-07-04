@@ -32,29 +32,32 @@
                     </thead>
                     <tbody>
                         <template v-for="(item) in tableList">
-                            <template v-for="(itema) in item.itemArr">
-                                <tr v-for="(itemb,indexb) in itema.itemArr" :key="itemb.total">
+                            <template v-for="(itema) in item.childAuthList">
+                                <tr
+                                    v-for="(itemb,indexb) in itema.childAuthList"
+                                    :key="'sort_'+item.id+itemb.sort"
+                                >
                                     <td
                                         :rowspan="item.total"
-                                        v-if="itemb.sindex==0"
+                                        v-if="itemb.sort==0"
                                     >
-                                        <el-checkbox v-model="checked">{{item.name}}{{indexb}}</el-checkbox>
+                                        <el-checkbox v-model="item.have" v-if="item.authName">{{item.authName}}</el-checkbox>
                                     </td>
                                     <td
-                                        :rowspan="itema.itemArr.length"
+                                        :rowspan="itema.childAuthList.length"
                                         v-if="indexb==0"
                                     >
-                                        <el-checkbox v-model="checked">{{itema.name}}</el-checkbox>
+                                        <el-checkbox v-model="checked"  v-if="item.authName">{{itema.authName}}</el-checkbox>
                                     </td>
                                     <td>
-                                        <el-checkbox v-model="checked">{{itemb.name}}</el-checkbox>
+                                        <el-checkbox v-model="checked">{{itemb.authName}}</el-checkbox>
                                     </td>
                                     <td>
                                         <el-checkbox v-model="checked">查询{{indexb}}</el-checkbox>
                                         <el-radio-group
                                             v-model="radio1"
                                             size="mini"
-                                             @change="changeDialg()"
+                                            @change="changeDialg()"
                                         >
                                             <el-radio-button label="全部"></el-radio-button>
                                             <el-radio-button label="配置"></el-radio-button>
@@ -87,19 +90,24 @@
             <el-button name="hosjoy-color">保存</el-button>
 
         </div>
-        <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
 
-<el-dialog
-  title="提示"
-  :visible.sync="dialogVisible"
-  width="30%"
-  :before-close="handleClose">
-  <span>这是一段信息</span>
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
-</el-dialog>
+        <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="30%"
+        >
+            <span>这是一段信息</span>
+            <span
+                slot="footer"
+                class="dialog-footer"
+            >
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button
+                    type="primary"
+                    @click="dialogVisible = false"
+                >确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -109,27 +117,232 @@ export default {
     name: 'role',
     data () {
         return {
-
+            dialogVisible: false,
             radio1: '全部',
             checked: true,
-            tableList: [{ name: '一级菜单A',
-                total: 5,
-                itemArr: [{ name: '二级菜单A', sindex: 0, total: 2, itemArr: [{ name: '模块A', title: '操作类型', sindex: 0 }, { name: '模块B', title: '操作类型', sindex: 1 }] },
-                    { name: '二级菜单Aa', sindex: 1, total: 3, itemArr: [{ name: '模块A', title: '操作类型', sindex: 2 }, { name: '模块B', title: '操作类型', sindex: 3 }, { name: '模块c', title: '操作类型', sindex: 4 }] }
-                ]
-            },
-            { name: '一级菜单A',
-                total: 4,
-                itemArr: [{ name: '二级菜单A', sindex: 0, total: 1, itemArr: [{ name: '模块A', title: '操作类型', sindex: 0 }] },
-                    { name: '二级菜单Aa', sindex: 1, total: 3, itemArr: [{ name: '模块A', title: '操作类型', sindex: 1 }, { name: '模块B', title: '操作类型', sindex: 2 }, { name: '模块c', title: '操作类型', sindex: 3 }] }
-                ]
-            },
-            { name: '一级菜单A',
-                total: 4,
-                itemArr: [{ name: '二级菜单A', sindex: 0, total: 2, itemArr: [{ name: '模块A', title: '操作类型', sindex: 0 }, { name: '模块B', title: '操作类型', sindex: 1 }] },
-                    { name: '二级菜单Aa', sindex: 1, total: 2, itemArr: [{ name: '模块A', title: '操作类型', sindex: 2 }, { name: '模块B', title: '操作类型', sindex: 3 }] }
-                ]
-            }
+            tableList: [
+                {
+                    'id': 1,
+                    'authName': '首页',
+                    'menuType': 1,
+                    'authUri': '/',
+                    'authLevel': 0,
+                    'sort': 1,
+                    'pageConfig': [
+
+                    ],
+                    'childAuthList': [
+                        {
+                            'id': null,
+                            'authName': null,
+                            'menuType': null,
+                            'authUri': null,
+                            'authLevel': null,
+                            'sort': 0,
+                            'pageConfig': null,
+                            'childAuthList': [
+                                {
+                                    'id': null,
+                                    'authName': null,
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 0,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': null,
+                            'total': 1
+                        }
+                    ],
+                    'have': true,
+                    'total': 1
+                },
+                {
+                    'id': 51,
+                    'authName': '金云平台',
+                    'menuType': 1,
+                    'authUri': '/jinyunPlatform',
+                    'authLevel': 0,
+                    'sort': 2,
+                    'pageConfig': [
+
+                    ],
+                    'childAuthList': [
+                        {
+                            'id': null,
+                            'authName': null,
+                            'menuType': null,
+                            'authUri': null,
+                            'authLevel': null,
+                            'sort': 0,
+                            'pageConfig': null,
+                            'childAuthList': [
+                                {
+                                    'id': null,
+                                    'authName': null,
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 0,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': null,
+                            'total': 1
+                        }
+                    ],
+                    'have': true,
+                    'total': 1
+                },
+                {
+                    'id': 101,
+                    'authName': '老系统',
+                    'menuType': 1,
+                    'authUri': '/oldsystem',
+                    'authLevel': 0,
+                    'sort': 3,
+                    'pageConfig': [
+
+                    ],
+                    'childAuthList': [
+                        {
+                            'id': null,
+                            'authName': null,
+                            'menuType': null,
+                            'authUri': null,
+                            'authLevel': null,
+                            'sort': 0,
+                            'pageConfig': null,
+                            'childAuthList': [
+                                {
+                                    'id': null,
+                                    'authName': null,
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 0,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': null,
+                            'total': 1
+                        }
+                    ],
+                    'have': true,
+                    'total': 1
+                },
+                {
+                    'id': 151,
+                    'authName': '权限管理',
+                    'menuType': 1,
+                    'authUri': '/auth',
+                    'authLevel': 0,
+                    'sort': 4,
+                    'pageConfig': [
+
+                    ],
+                    'childAuthList': [
+                        {
+                            'id': 1511,
+                            'authName': '机构/人员管理',
+                            'menuType': 1,
+                            'authUri': 'organization',
+                            'authLevel': 0,
+                            'sort': 1,
+                            'pageConfig': [
+                                {
+                                    'id': 1,
+                                    'authId': 1511,
+                                    'fieldShowName': null,
+                                    'field': 'a',
+                                    'sort': 1,
+                                    'have': true
+                                },
+                                {
+                                    'id': 2,
+                                    'authId': 1511,
+                                    'fieldShowName': null,
+                                    'field': 'b',
+                                    'sort': 2,
+                                    'have': true
+                                },
+                                {
+                                    'id': 3,
+                                    'authId': 1511,
+                                    'fieldShowName': null,
+                                    'field': 'c',
+                                    'sort': 3,
+                                    'have': false
+                                }
+                            ],
+                            'childAuthList': [
+                                {
+                                    'id': null,
+                                    'authName': null,
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 0,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': true,
+                            'total': 1
+                        },
+                        {
+                            'id': 1512,
+                            'authName': '角色模版设置',
+                            'menuType': 1,
+                            'authUri': 'role',
+                            'authLevel': 0,
+                            'sort': 2,
+                            'pageConfig': [
+
+                            ],
+                            'childAuthList': [
+                                {
+                                    'id': null,
+                                    'authName': null,
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 1,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': false,
+                            'total': 1
+                        }
+                    ],
+                    'have': true,
+                    'total': 2
+                }
             ]
         }
     },
