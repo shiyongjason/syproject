@@ -1,5 +1,5 @@
 import {
-    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO
+    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, IS_COLLAPSE, MENU_LIST
 } from './const'
 
 export default {
@@ -14,5 +14,11 @@ export default {
     },
     [TAGS_INFO] (state, payload) {
         state.tagsInfo = payload
+    },
+    [IS_COLLAPSE] (state, payload) {
+        state.isCollapse = payload
+    },
+    [MENU_LIST] (state, v) {
+        state.menuList = v
     }
 }
