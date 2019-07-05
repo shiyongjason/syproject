@@ -32,7 +32,7 @@
                     </thead>
                     <tbody>
                         <template v-for="(item) in tableList">
-                            <template v-for="(itema) in item.childAuthList">
+                            <template v-for="(itema,childIndex) in item.childAuthList">
                                 <tr
                                     v-for="(itemb,indexb) in itema.childAuthList"
                                     :key="'sort_'+item.id+itemb.sort"
@@ -41,19 +41,21 @@
                                         :rowspan="item.total"
                                         v-if="itemb.sort==0"
                                     >
-                                        <el-checkbox v-model="item.have" v-if="item.authName">{{item.authName}}</el-checkbox>
+                                        <el-checkbox v-model="item.have" >{{item.authName}}</el-checkbox>
                                     </td>
                                     <td
                                         :rowspan="itema.childAuthList.length"
                                         v-if="indexb==0"
                                     >
-                                        <el-checkbox v-model="checked"  v-if="item.authName">{{itema.authName}}</el-checkbox>
+                                     <div  v-if="itema.authName" :class="!item.have?'gryrole':''"><el-checkbox v-model="itema.have" >{{itema.authName}}</el-checkbox></div>
                                     </td>
                                     <td>
-                                        <el-checkbox v-model="checked">{{itemb.authName}}</el-checkbox>
+                                      <div  :class="!(item.have&&itema.have)?'gryrole':''" v-if="itemb.authName">  <el-checkbox v-model="itemb.have"   @change="onChangeThree(childIndex,item,itemb.have)">{{itemb.authName}}</el-checkbox>
+                                   </div>
                                     </td>
                                     <td>
-                                        <el-checkbox v-model="checked">查询{{indexb}}</el-checkbox>
+                                         <div  :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
+                                        <el-checkbox v-model="checked">查询</el-checkbox>
                                         <el-radio-group
                                             v-model="radio1"
                                             size="mini"
@@ -62,8 +64,10 @@
                                             <el-radio-button label="全部"></el-radio-button>
                                             <el-radio-button label="配置"></el-radio-button>
                                         </el-radio-group>
+                                         </div>
                                     </td>
                                     <td>
+                                         <div  :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
                                         <el-checkbox v-model="checked">操作</el-checkbox>
                                         <el-radio-group
                                             v-model="radio1"
@@ -72,6 +76,7 @@
                                             <el-radio-button label="全部"></el-radio-button>
                                             <el-radio-button label="配置"></el-radio-button>
                                         </el-radio-group>
+                                        </div>
                                     </td>
                                 </tr>
                             </template>
@@ -87,10 +92,8 @@
         >
             <el-button name="white-color">取消</el-button>
             <el-button name="green-color">另存为模板</el-button>
-            <el-button name="hosjoy-color">保存</el-button>
-
+            <el-button name="hosjoy-color" @click="onSaveRole()">保存</el-button>
         </div>
-
         <el-dialog
             title="提示"
             :visible.sync="dialogVisible"
@@ -160,7 +163,7 @@ export default {
                             'total': 1
                         }
                     ],
-                    'have': true,
+                    'have': false,
                     'total': 1
                 },
                 {
@@ -202,7 +205,7 @@ export default {
                             'total': 1
                         }
                     ],
-                    'have': true,
+                    'have': false,
                     'total': 1
                 },
                 {
@@ -244,7 +247,7 @@ export default {
                             'total': 1
                         }
                     ],
-                    'have': true,
+                    'have': false,
                     'total': 1
                 },
                 {
@@ -272,7 +275,7 @@ export default {
                                     'fieldShowName': null,
                                     'field': 'a',
                                     'sort': 1,
-                                    'have': true
+                                    'have': false
                                 },
                                 {
                                     'id': 2,
@@ -293,8 +296,8 @@ export default {
                             ],
                             'childAuthList': [
                                 {
-                                    'id': null,
-                                    'authName': null,
+                                    'id': 333,
+                                    'authName': '模块A',
                                     'menuType': null,
                                     'authUri': null,
                                     'authLevel': null,
@@ -305,25 +308,10 @@ export default {
                                     ],
                                     'have': null,
                                     'total': 0
-                                }
-                            ],
-                            'have': true,
-                            'total': 1
-                        },
-                        {
-                            'id': 1512,
-                            'authName': '角色模版设置',
-                            'menuType': 1,
-                            'authUri': 'role',
-                            'authLevel': 0,
-                            'sort': 2,
-                            'pageConfig': [
-
-                            ],
-                            'childAuthList': [
+                                },
                                 {
-                                    'id': null,
-                                    'authName': null,
+                                    'id': 3334,
+                                    'authName': '模块AV',
                                     'menuType': null,
                                     'authUri': null,
                                     'authLevel': null,
@@ -338,10 +326,39 @@ export default {
                             ],
                             'have': false,
                             'total': 1
+                        },
+                        {
+                            'id': 1512,
+                            'authName': '角色模版设置',
+                            'menuType': 1,
+                            'authUri': 'role',
+                            'authLevel': 0,
+                            'sort': 2,
+                            'pageConfig': [
+
+                            ],
+                            'childAuthList': [
+                                {
+                                    'id': 23,
+                                    'authName': '摩卡d',
+                                    'menuType': null,
+                                    'authUri': null,
+                                    'authLevel': null,
+                                    'sort': 2,
+                                    'pageConfig': null,
+                                    'childAuthList': [
+
+                                    ],
+                                    'have': null,
+                                    'total': 0
+                                }
+                            ],
+                            'have': false,
+                            'total': 1
                         }
                     ],
-                    'have': true,
-                    'total': 2
+                    'have': false,
+                    'total': 3
                 }
             ]
         }
@@ -352,11 +369,32 @@ export default {
         })
     },
     mounted () {
-        console.log(this.tableList)
+
     },
     methods: {
         changeDialg () {
-            console.log(1)
+
+        },
+        onSaveRole () {
+
+        },
+        onChangeThree (cindex, val, bol) {
+            // const childList = val.childAuthList[cindex].childAuthList
+            // const pchildList = val.childAuthList
+            // const newchildBol = childList && childList.filter(val => {
+            //     return val.have
+            // }).length > 0
+            // this.$set(val.childAuthList[cindex], 'have', newchildBol)
+            // const newparentBol = pchildList && pchildList.filter(val => {
+            //     return val.have
+            // }).length > 0
+            // // 这里
+            // val.childAuthList[cindex].have = newchildBol
+            // if (bol) {
+            //     val.have = newchildBol
+            // } else {
+            //     val.have = newparentBol
+            // }
         }
     }
 }
@@ -432,5 +470,22 @@ export default {
 .maxLeft {
     left: 200px;
     transition: 0.3s;
+}
+.gryrole{
+  /deep/  .el-checkbox__input.is-checked .el-checkbox__inner{
+            background-color: #dddddd;
+             border-color: #dddddd;
+    }
+/deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: #dddddd;
+}
+/deep/ .el-checkbox{
+     color: #dddddd;
+}
+/deep/ .el-radio-button__orig-radio:checked+.el-radio-button__inner{
+    background-color: #dddddd;
+    border-color: #dddddd;
+    box-shadow: -1px 0 0 0 #dddddd;
+}
 }
 </style>
