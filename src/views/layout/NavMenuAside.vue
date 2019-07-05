@@ -12,7 +12,7 @@
 <script>
 import Sidebar from './Sidebar'
 import { routerMapping } from '@/router.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions} from 'vuex'
 export default {
     name: 'NavMenuHead',
     components: {
@@ -25,7 +25,6 @@ export default {
     },
     computed: {
         menus () {
-            console.log(this.resolveMenus(routerMapping))
             return this.resolveMenus(routerMapping)
         },
         ...mapState({
@@ -49,7 +48,14 @@ export default {
                 }
                 return item.meta.isMenu
             })
-        }
+        },
+        ...mapActions([
+            'findMenuList'
+        ])
+    },
+    mounted() {
+        // 全局初始化vuex menuList
+        this.findMenuList()
     }
 }
 </script>
