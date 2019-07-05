@@ -3,11 +3,11 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :current-page="paginationData.pageNumber"
+            :page-sizes="paginationDataOther.pageSizes"
+            :page-size="paginationDataOther.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="paginationData.totalElements">
         </el-pagination>
     </div>
 </template>
@@ -15,6 +15,28 @@
 <script>
 export default {
     name: 'HPagination',
+    props: {
+        paginationData: {
+            type: Object,
+            required: true,
+            default () {
+                return {
+                    pageNumber: 1,
+                    totalElements: 0
+                }
+            }
+        },
+        paginationDataOther: {
+            type: Object,
+            required: false,
+            default () {
+                return {
+                    pageSizes: [10, 20, 50, 100],
+                    pageSize: 0
+                }
+            }
+        }
+    },
     data () {
         return {
             total: 400
@@ -22,13 +44,10 @@ export default {
     },
     methods: {
         handleSizeChange (value) {
-            console.log(value)
+            this.$emit('onSizeChange', value)
         },
         handleCurrentChange (value) {
-            console.log(value)
-        },
-        currentPage4 (value) {
-            console.log(value)
+            this.$emit('onCurrentChange', value)
         }
     }
 }

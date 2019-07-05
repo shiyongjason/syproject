@@ -1,7 +1,6 @@
 <template>
     <div class="page-body">
         <div class="index h-content">
-
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
                 <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
@@ -17,7 +16,6 @@
                     <el-button type="primary" v-if="true">搜索</el-button>
                 </div>
                 <div class="result">
-                    {{menuList}}
                     <OrganizationTable></OrganizationTable>
                 </div>
             </div>
@@ -33,7 +31,7 @@ export default {
     components: {
         OrganizationTable
     },
-    computed:{
+    computed: {
         ...mapState({
             menuList: state => state.menuList
         })

@@ -37,7 +37,6 @@ const store = new Vuex.Store({
                 return valueTemp
             })
             // sessionStorage.setItem('menuList', JSON.stringify(data))
-            console.log('-----',authMenuTemp)
             commit('MENU_LIST', authMenuTemp)
         }
     },

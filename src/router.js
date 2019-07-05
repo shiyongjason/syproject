@@ -96,6 +96,29 @@ const routerMapping = [
                 component: () => import('./views/auth/role')
             }
         ]
+    },
+    {
+        path: '/wisdom',
+        meta: {
+            title: '好智慧-经营分析',
+            isMenu: true,
+            icon: 'hosjoy_cloud_service'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'platformTarget',
+                name: 'platformTarget',
+                meta: {
+                    title: '平台目标管理',
+                    tagName: '平台目标管理',
+                    isMenu: true,
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/wisdom/platformTarget'
+                },
+                component: () => import('./views/wisdom/platformTarget')
+            }
+        ]
     }
 ]
 
