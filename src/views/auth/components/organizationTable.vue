@@ -29,7 +29,7 @@
                 prop="address"
                 label="操作">
                 <template>
-                    <a href="" class="modify">修改</a>
+                    <span class="modify">修改</span>
                 </template>
             </el-table-column>
         </el-table>
@@ -81,5 +81,6 @@ export default {
         border:1px solid rgba(255,122,69,1);
         font-size: 12px;
         color: #FF7A45;
+        cursor: pointer;
     }
 </style>
