@@ -48,6 +48,7 @@ import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
 import { mapMutations } from 'vuex'
 import { iframeUrl } from '@/api/config'
+import { tracking } from '@/api/index'
 export default {
     data () {
         return {
@@ -85,23 +86,23 @@ export default {
         async onLogin () {
             this.$refs[ 'loginForm' ].validate(async (valid) => {
                 if (valid) {
-                    try {
-                        const { data } = await login(this.loginForm)
-                        console.log(data)
-                        const userInfo = jwtDecode(data.access_token)
-                        this.userInfo = jwtDecode(data.access_token)
-                        sessionStorage.setItem('token', data.access_token)
-                        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-                        this.setUserInfo(userInfo)
-                        const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                        localStorage.setItem('user_data', JSON.stringify(userData.data))
-                        // document.cookie = 'aaa=333;domain=hosjoy.com'
-                        // document.cookie = 'loginType=BossLogin;domain=hosjoy.com'
-                        this.sendMessage(userData)
-                        this.$router.push('/')
-                    } catch (e) {
-                        // console.log(e)
-                    }
+                    const { data } = await login(this.loginForm)
+                    const userInfo = jwtDecode(data.access_token)
+                    this.userInfo = jwtDecode(data.access_token)
+                    sessionStorage.setItem('token', data.access_token)
+                    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+                    this.setUserInfo(userInfo)
+                    tracking({
+                        type: 1,
+                        user_name: userInfo.employeeName,
+                        login_name: userInfo.user_name,
+                        job_number: userInfo.jobNumber,
+                        user_agent: navigator.userAgent
+                    })
+                    const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
+                    localStorage.setItem('user_data', JSON.stringify(userData.data))
+                    this.sendMessage(userData)
+                    this.$router.push('/')
                 }
             })
         },

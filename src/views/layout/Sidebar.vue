@@ -1,5 +1,5 @@
 <script>
-    import { iframeUrl } from '@/api/config'
+import { iframeUrl } from '@/api/config'
 export default {
     props: {
         menus: {
@@ -31,20 +31,19 @@ export default {
                         </el-submenu>
                     ))
                 } else {
-
-                    if(item.path === '/oldsystem'){
+                    if (item.path === '/oldsystem') {
                         result.push(
                             <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} style={`display:block`}>
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                 <span>{item.meta.title}</span>
                             </a>
                         )
-                    }else{
+                    } else {
                         result.push(
                             <el-menu-item index={path}>
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                 <span>{item.meta.title}</span>
-                                </el-menu-item>
+                            </el-menu-item>
                         )
                     }
                 }
