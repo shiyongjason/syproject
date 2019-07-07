@@ -20,13 +20,11 @@ export default {
     },
     data () {
         return {
-            isCollapse: false
+            isCollapse: false,
+            menus: []
         }
     },
     computed: {
-        menus () {
-            return this.resolveMenus(routerMapping)
-        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -53,10 +51,12 @@ export default {
             'findMenuList'
         ])
     },
-    mounted () {
+    async mounted () {
         // 全局初始化vuex menuList
-        this.findMenuList()
-        console.log(1)
+        await this.findMenuList()
+        routerMapping = []
+        console.log(routerMapping)
+        // this.resolveMenus(routerMapping)
     }
 }
 </script>

@@ -6,21 +6,23 @@ import { routerMapping } from '../router'
 
 Vue.use(Vuex)
 
-function makeMenus (arr, arr2) {
-    return arr.filter((value1) => {
+function makeMenus (Route, Data) {
+    return Route.filter((value1) => {
         let valueTemp = false
-        arr2.forEach((value2) => {
+        Data.forEach((value2) => {
+            // console.log(value2)
             if (value2.authUri === value1.path) {
-                value1.meta.id = value2.id
-                value1.meta.auth = true
                 if (value1.children) {
                     value1.children = makeMenus(value1.children, value2.childAuthList)
                 }
-                valueTemp = value1
+                valueTemp = value2.have
             }
         })
-        delete valueTemp.component
-        return valueTemp
+        if (valueTemp) {
+            delete value1.component
+            return value1
+        }
+        return false
     })
 }
 
@@ -43,21 +45,9 @@ const store = new Vuex.Store({
         },
         async findMenuList ({ commit }) {
             const { data } = await findMenuList()
-            // console.log(data)
-            // let authMenuTemp = routerMapping.filter((value1) => {
-            //     let valueTemp = false
-            //     data.forEach((value2) => {
-            //         if (value2.authUri === value1.path) {
-            //             value1.meta.id = value2.id
-            //             value1.meta.auth = true
-            //             valueTemp = value1
-            //         }
-            //     })
-            //     return valueTemp
-            // })
-            // sessionStorage.setItem('menuList', JSON.stringify(data))
-            var a = makeMenus(routerMapping, data)
-            console.log(a)
+            sessionStorage.setItem('menuList', JSON.stringify(data))
+            // console.log(routerMapping)
+            // console.log(makeMenus(routerMapping, data))
             commit('MENU_LIST', makeMenus(routerMapping, data))
         }
     },

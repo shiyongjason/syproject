@@ -53,18 +53,18 @@ export default {
             default () {
                 return {
                     pageSize: 10,
-                    pageNumber: 1,
+                    pageNumber: 1
                 }
             }
         }
     },
     methods: {
         indexMethod (index) {
-            return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
+            return this.paginationData.pageSize * (this.paginationData.pageNum - 1) + index + 1
         },
         goTo (id) {
             this.$router.push({
-                path: '/role', query: {id: id}
+                path: '/role', query: { id: id }
             })
         }
     }

@@ -1,5 +1,6 @@
 <template>
     <div class="page-body">
+        {{menuList}}
         <div class="page-body-cont">
             <div class="page-header">
                 <el-breadcrumb separator="/">
@@ -7,7 +8,8 @@
                     <el-breadcrumb-item>平台目标管理</el-breadcrumb-item>
                 </el-breadcrumb>
             </div>
-            <div class="page-wrap flex-wrap-col">
+            {{MODULE.indexOf(WISDOM_MODULE_BASE)> -1}}
+            <div class="page-wrap flex-wrap-col" v-if="MODULE.indexOf(WISDOM_MODULE_BASE)> -1">
                 <div class="flex-wrap-row">
                     <div class="flex-wrap-box" v-if="userInfo.companyCode==='top'">
                         <div class="flex-wrap-title">分部：</div>
@@ -103,14 +105,18 @@
                         </div>
                     </div>
                     <div class="flex-wrap-box pl20">
+                        {{BUTTON.indexOf(WISDOM_BUTTON_SELECT)> -1}}
                         <el-button
                             type="primary"
                             @click="onFindTableList()"
+                            v-if="BUTTON.indexOf(WISDOM_BUTTON_SELECT)> -1"
                         >搜索
                         </el-button>
+                        {{BUTTON.indexOf(WISDOM_BUTTON_DOWNLOAD)> -1}}
                         <el-button
                             type="primary"
                             @click="onExport()"
+                            v-if="BUTTON.indexOf(WISDOM_BUTTON_DOWNLOAD)> -1"
                         >导出
                         </el-button>
                     </div>
@@ -142,6 +148,7 @@
                 </div>
             </div>
             <div class="page-box">
+                {{TITLE.indexOf(WISDOM_TITLE_NAME)> -1}}
                 <div class="page-table">
                     <el-table
                         :data="tableData"
@@ -152,6 +159,7 @@
                         <el-table-column
                             prop="companyShortName"
                             label="公司简称"
+                            v-if="TITLE.indexOf(WISDOM_TITLE_NAME)> -1"
                         >
                         </el-table-column>
                         <el-table-column
@@ -229,6 +237,7 @@
 </template>
 <script>
 import { findSubsectionList, findTableList } from './api/index.js'
+import * as Auth from './authConfig/index'
 // import HLongSearch from '@/components/HLongSearch'
 import { mapState } from 'vuex'
 import Pagination from '@/components/pagination/HPagination'
@@ -273,7 +282,8 @@ export default {
                 }
             },
             tableData: [],
-            paginationData: {}
+            paginationData: {},
+            ...Auth
         }
     },
     // components: {
@@ -281,7 +291,8 @@ export default {
     // },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            menuList: state => state.menuList
         })
     },
     mounted () {
@@ -292,6 +303,40 @@ export default {
         this.cityData.params.companyCode = this.userInfo.companyCode
         this.onFindBranchList(this.userInfo.companyCode)
         this.onFindTableList()
+        this.$nextTick(value => {
+            // console.log(this.$route)
+            const route = this.$route.path
+            const subRoute = route.split('/').slice(-1)[0]
+            const MENULIST = JSON.parse(sessionStorage.getItem('menuList'))
+            MENULIST.forEach(value => {
+                if (route.indexOf(value.authUri) > -1) {
+                    if (value.childAuthList.length > 0) {
+                        value.childAuthList.forEach(value2 => {
+                            if (subRoute === value2.authUri) { // 这里限定只能是2级路由
+                                if (value2.childAuthList.length > 0) {
+                                    if (value2.childAuthList[0].have) {
+                                        this.MODULE.push(value2.childAuthList[0].authCode)
+                                    }
+                                    value2.childAuthList[0].childAuthList.forEach(btn => {
+                                        // console.log(btn)
+                                        if (btn.have) {
+                                            this.BUTTON.push(btn.authCode)
+                                        }
+                                    })
+                                    value2.childAuthList[0].pageConfig.forEach(title => {
+                                        // console.log(title)
+                                        if (title.have) {
+                                            this.TITLE.push(title.id)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    }
+                }
+            })
+            // console.log(this.BUTTON, this.TITLE, this.MODULE)
+        })
     },
     watch: {
         // 'searchParams.subsectionCode' (newV, oldV) {
