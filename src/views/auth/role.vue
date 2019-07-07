@@ -174,7 +174,7 @@
                 <el-button
                     type="primary"
                     @click="dialogVisible = false"
-                >确 定</el-button>
+                >保 存</el-button>
             </span>
         </el-dialog>
         <el-dialog
@@ -216,7 +216,7 @@
                 <el-button
                     type="primary"
                     @click="twodialogVisible = false"
-                >确 定</el-button>
+                >保 存</el-button>
             </span>
         </el-dialog>
     </div>
@@ -254,7 +254,7 @@ export default {
         })
     },
     async mounted () {
-        const jobNumber = '10030418'
+        const jobNumber = this.$route.jobNumber
         const { data } = await findMenuList()
         // console.log(data)
         this.tableList = this.restArr(data)
@@ -325,7 +325,6 @@ export default {
                     })
                 }
             }
-
             // todo pageCofig
             // this.restPageConfig(itemArr[len - 1].pageConfig, value)
         },
@@ -368,18 +367,12 @@ export default {
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
                 this.$confirm('取消后录入的数据将无法保存?', '取消确认', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消'
+                    confirmButtonText: '继续填写',
+                    cancelButtonText: '确认取消'
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除成功!'
-                    })
+
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    })
+                    this.$router.push({ path: '/auth/organization' })
                 })
             }
         },
