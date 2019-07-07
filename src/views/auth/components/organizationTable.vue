@@ -1,86 +1,91 @@
 <template>
-    <div class="table">
+    <div class="content">
         <el-table
             :data="tableData"
             style="width: 100%">
             <el-table-column
+                type="index"
+                :index="indexMethod"
                 prop="date"
                 label="序号">
             </el-table-column>
             <el-table-column
-                prop="name"
+                prop="psncode"
                 label="工号">
             </el-table-column>
             <el-table-column
-                prop="address"
+                prop="psnname"
                 label="姓名">
             </el-table-column>
             <el-table-column
-                prop="address"
+                prop="psnname"
                 label="登录名">
             </el-table-column>
             <el-table-column
-                prop="address"
                 label="更新时间">
+                <template slot-scope="scope">{{ scope.row.ts| formatterTime }}</template>
             </el-table-column>
             <el-table-column
                 prop="address"
                 label="操作">
+                <template slot-scope="scope">
+                    <span class="modify" @click="goTo(scope.row.psncode)">修改</span>
+                </template>
             </el-table-column>
         </el-table>
-        <div>
-            <Pagination :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></Pagination>
-        </div>
     </div>
 </template>
 
 <script>
-import Pagination from '@/components/pagination/HPagination'
 export default {
     name: 'organizationTable',
-    components: {
-        Pagination
-    },
-    data () {
-        return {
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-            }],
-            paginationData: {
-                pageNumber: 1,
-                totalElements: 0
+    props: {
+        tableData: {
+            type: Array,
+            required: false,
+            default () {
+                return []
+            }
+        },
+        paginationData: {
+            type: Object,
+            required: false,
+            default () {
+                return {
+                    pageSize: 10,
+                    pageNumber: 1
+                }
             }
         }
     },
     methods: {
-        onSizeChange (val) {
-            console.log(val)
+        indexMethod (index) {
+            return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
         },
-        onCurrentChange (val) {
-            console.log(val)
+        goTo (id) {
+            this.$router.push({
+                path: '/role', query: { id: id }
+            })
         }
     }
 }
 </script>
 
 <style scoped>
-.table{
+.content{
     padding-top: 20px;
     padding-right: 12px;
     box-sizing: border-box;
 }
+    .modify{
+        display: inline-block;
+        width:68px;
+        height:24px;
+        line-height: 24px;
+        border-radius:4px;
+        border:1px solid rgba(255,122,69,1);
+        font-size: 12px;
+        color: #FF7A45;
+        cursor: pointer;
+    }
 </style>

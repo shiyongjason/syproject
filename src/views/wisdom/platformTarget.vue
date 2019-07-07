@@ -211,26 +211,15 @@
                         </el-table-column>
                         <el-table-column label="最近操作时间">
                             <template slot-scope="scope">
-                                {{scope.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                                {{scope.row.updateTime | formatterTime}}
                             </template>
 
                         </el-table-column>
 
                     </el-table>
-                    <div
-                        class="page clearfix"
-                        style="text-align: center"
-                    >
-                        <el-pagination
-                            class="el-page"
-                            background
-                            @size-change="handleSizeChange"
-                            @current-change="handleCurrentChange"
-                            :current-page="paginationData.pageNumber"
-                            layout="total, sizes, prev, pager, next, jumper"
-                            :total="paginationData.totalElements"
-                        >
-                        </el-pagination>
+                    <div  class="page clearfix"
+                          style="text-align: center">
+                        <Pagination :paginationData="paginationData" @onSizeChange="handleSizeChange" @onCurrentChange="handleCurrentChange"></Pagination>
                     </div>
                 </div>
             </div>
@@ -242,7 +231,11 @@
 import { findSubsectionList, findTableList } from './api/index.js'
 // import HLongSearch from '@/components/HLongSearch'
 import { mapState } from 'vuex'
+import Pagination from '@/components/pagination/HPagination'
 export default {
+    components: {
+        Pagination
+    },
     data () {
         return {
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
