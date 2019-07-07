@@ -7,12 +7,12 @@
             </div>
             <div class="h-page-flex">
                 <div class="flex-col">
-                    <div class="flex-row">姓名：11</div>
-                    <div class="flex-row">姓名：11</div>
+                    <div class="flex-row">姓名：{{roleInfo.psnname}}</div>
+                    <div class="flex-row">工号：{{roleInfo.psncode}}</div>
                 </div>
                 <div class="flex-col">
-                    <div class="flex-row">姓名：11</div>
-                    <div class="flex-row">姓名：11</div>
+                    <div class="flex-row">用户名：{{roleInfo.mobile}}</div>
+                    <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
                 </div>
             </div>
             <div class="h-page-title">
@@ -32,50 +32,89 @@
                     </thead>
                     <tbody>
                         <template v-for="(item) in tableList">
-                            <template v-for="(itema,childIndex) in item.childAuthList">
+                            <template v-for="(itema) in item.childAuthList">
                                 <tr
                                     v-for="(itemb,indexb) in itema.childAuthList"
-                                    :key="'sort_'+item.id+itemb.sort"
+                                    :key="indexb+'_'+itemb.id?itemb.id:item.id"
                                 >
                                     <td
                                         :rowspan="item.total"
                                         v-if="itemb.sort==0"
                                     >
-                                        <el-checkbox v-model="item.have" >{{item.authName}}</el-checkbox>
+                                        <el-checkbox
+                                            v-model="item.have"
+                                            @change="onCheckboxChange([item], item.have)"
+                                        >{{item.authName}}</el-checkbox>
                                     </td>
                                     <td
                                         :rowspan="itema.childAuthList.length"
                                         v-if="indexb==0"
                                     >
-                                     <div  v-if="itema.authName" :class="!item.have?'gryrole':''"><el-checkbox v-model="itema.have" >{{itema.authName}}</el-checkbox></div>
+                                        <div v-if="itema.authName">
+                                            <el-checkbox
+                                                v-model="itema.have"
+                                                @change="onCheckboxChange([item, itema], itema.have)"
+                                            >{{itema.authName}}</el-checkbox>
+                                        </div>
                                     </td>
                                     <td>
-                                      <div  :class="!(item.have&&itema.have)?'gryrole':''" v-if="itemb.authName">  <el-checkbox v-model="itemb.have"   @change="onChangeThree(childIndex,item,itemb.have)">{{itemb.authName}}</el-checkbox>
-                                   </div>
+                                        <div v-if="itemb.authName">
+                                            <el-checkbox
+                                                v-model="itemb.have"
+                                                @change="onCheckboxChange([item, itema, itemb], itemb.have)"
+                                            >{{itemb.authName}}</el-checkbox>
+                                        </div>
                                     </td>
                                     <td>
-                                         <div  :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
-                                        <el-checkbox v-model="checked">查询</el-checkbox>
-                                        <el-radio-group
-                                            v-model="radio1"
-                                            size="mini"
-                                            @change="changeDialg()"
-                                        >
-                                            <el-radio-button label="全部"></el-radio-button>
-                                            <el-radio-button label="配置"></el-radio-button>
-                                        </el-radio-group>
-                                         </div>
+                                        <div :class="!(item.have&&(itema.authName?itema.have:true)&&(itemb.authName?itemb.have:true))?'gryrole':''">
+                                            <el-checkbox
+                                                v-if="itemb.childAuthList.length>0"
+                                                v-model="itemb.childAuthList[0].allhave"
+                                                @change="onSearchRole(itemb.childAuthList[0].allhave,itemb)"
+                                                :disabled="!itemb.have"
+                                            >查询</el-checkbox>
+                                            <div class="el-radio-group">
+                                                <button
+                                                 :disabled="!itemb.childAuthList[0].allhave"
+                                                    v-if="itemb.childAuthList[0]"
+                                                    class="el-radio-button__inner"
+                                                    :class="itemb.childAuthList[0].status==0?'taborg':''"
+                                                    @click="changeTabs(0,itemb)"
+                                                >全部</button>
+                                                <button
+                                                  :disabled="!itemb.childAuthList[0].allhave"
+                                                    v-if="itemb.childAuthList[0]"
+                                                    class="el-radio-button__inner"
+                                                    :class="itemb.childAuthList[0].status==1?'taborg':''"
+                                                    @click="changeTabs(1,itemb)"
+                                                >配置</button>
+                                            </div>
+                                        </div>
                                     </td>
                                     <td>
-                                         <div  :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
-                                        <el-checkbox v-model="checked">操作</el-checkbox>
-                                        <el-radio-group
-                                            v-model="radio1"
-                                            size="mini"
-                                        >
-                                            <el-radio-button label="全部"></el-radio-button>
-                                            <el-radio-button label="配置"></el-radio-button>
-                                        </el-radio-group>
+                                        <div :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
+                                            <el-checkbox
+                                                v-if="itemb.childAuthList.length>0"
+                                                v-model="itemb.childAuthList[1].operateHave"
+                                                @change="onOperateRole(itemb.childAuthList[1].operateHave,itemb)"
+                                                :disabled="!itemb.have"
+                                            >操作</el-checkbox>
+                                            <div class="el-radio-group">
+                                                <button
+                                                  :disabled="!itemb.childAuthList[1].operateHave"
+                                                    v-if="itemb.childAuthList[1]"
+                                                    class="el-radio-button__inner"
+                                                    :class="itemb.childAuthList[1].status==0?'taborg':''"
+                                                    @click="changeTwoTabs(0,itemb,itema)"
+                                                >全部</button>
+                                                <button
+                                                 :disabled="!itemb.childAuthList[1].operateHave"
+                                                    v-if="itemb.childAuthList[1]"
+                                                    class="el-radio-button__inner"
+                                                    :class="itemb.childAuthList[1].status==1?'taborg':''"
+                                                    @click="changeTwoTabs(1,itemb,itema)"
+                                                >配置</button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -90,24 +129,93 @@
             class="h-foot"
             :class="isCollapse?'minLeft':'maxLeft'"
         >
-            <el-button name="white-color">取消</el-button>
+            <el-button name="white-color"   @click="onCancelRole()">取消</el-button>
             <el-button name="green-color">另存为模板</el-button>
-            <el-button name="hosjoy-color" @click="onSaveRole()">保存</el-button>
+            <el-button
+                name="hosjoy-color"
+                @click="onSaveRole()"
+            >保存</el-button>
         </div>
         <el-dialog
-            title="提示"
+            title="查询配置"
             :visible.sync="dialogVisible"
             width="30%"
+            :close-on-click-modal='false'
         >
-            <span>这是一段信息</span>
+            <div class="h-dialog">
+                <table class="tablelist">
+                    <thead>
+                        <tr>
+                            <td width="20%">菜单</td>
+                            <td width="80%">权限</td>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{authName}}</td>
+                            <td style="text-align:left">
+                                <el-checkbox
+                                    v-model="item.have"
+                                    :label="item.fieldShowName"
+                                    v-for="(item,index) in pageConfig"
+                                    :key="index"
+                                ></el-checkbox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <span
                 slot="footer"
                 class="dialog-footer"
             >
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="onCancelCongifg(),dialogVisible = false">取 消</el-button>
                 <el-button
                     type="primary"
                     @click="dialogVisible = false"
+                >确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+            title="操作配置"
+            :visible.sync="twodialogVisible"
+            width="30%"
+            :close-on-click-modal='false'
+        >
+            <div class="h-dialog">
+                <table class="tablelist">
+                    <thead>
+                        <tr>
+                            <td width="20%">菜单</td>
+                            <td width="80%">权限</td>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{authName}}</td>
+                            <td style="text-align:left">
+                                <el-checkbox
+
+                                    v-model="item.have"
+                                    :label="item.authName"
+                                    v-for="(item,index) in operateConfig"
+                                    :key="index"
+                                ></el-checkbox>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span
+                slot="footer"
+                class="dialog-footer"
+            >
+                <el-button @click="onCanceloperateCongifg(),twodialogVisible = false">取 消</el-button>
+                <el-button
+                    type="primary"
+                    @click="twodialogVisible = false"
                 >确 定</el-button>
             </span>
         </el-dialog>
@@ -115,286 +223,200 @@
 </template>
 
 <script>
+import { findMenuList, saveAuthRole, getRoleInfo } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
     data () {
         return {
             dialogVisible: false,
+            twodialogVisible: false,
             radio1: '全部',
             checked: true,
-            tableList: [
-                {
-                    'id': 1,
-                    'authName': '首页',
-                    'menuType': 1,
-                    'authUri': '/',
-                    'authLevel': 0,
-                    'sort': 1,
-                    'pageConfig': [
-
-                    ],
-                    'childAuthList': [
-                        {
-                            'id': null,
-                            'authName': null,
-                            'menuType': null,
-                            'authUri': null,
-                            'authLevel': null,
-                            'sort': 0,
-                            'pageConfig': null,
-                            'childAuthList': [
-                                {
-                                    'id': null,
-                                    'authName': null,
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 0,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                }
-                            ],
-                            'have': null,
-                            'total': 1
-                        }
-                    ],
-                    'have': false,
-                    'total': 1
-                },
-                {
-                    'id': 51,
-                    'authName': '金云平台',
-                    'menuType': 1,
-                    'authUri': '/jinyunPlatform',
-                    'authLevel': 0,
-                    'sort': 2,
-                    'pageConfig': [
-
-                    ],
-                    'childAuthList': [
-                        {
-                            'id': null,
-                            'authName': null,
-                            'menuType': null,
-                            'authUri': null,
-                            'authLevel': null,
-                            'sort': 0,
-                            'pageConfig': null,
-                            'childAuthList': [
-                                {
-                                    'id': null,
-                                    'authName': null,
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 0,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                }
-                            ],
-                            'have': null,
-                            'total': 1
-                        }
-                    ],
-                    'have': false,
-                    'total': 1
-                },
-                {
-                    'id': 101,
-                    'authName': '老系统',
-                    'menuType': 1,
-                    'authUri': '/oldsystem',
-                    'authLevel': 0,
-                    'sort': 3,
-                    'pageConfig': [
-
-                    ],
-                    'childAuthList': [
-                        {
-                            'id': null,
-                            'authName': null,
-                            'menuType': null,
-                            'authUri': null,
-                            'authLevel': null,
-                            'sort': 0,
-                            'pageConfig': null,
-                            'childAuthList': [
-                                {
-                                    'id': null,
-                                    'authName': null,
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 0,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                }
-                            ],
-                            'have': null,
-                            'total': 1
-                        }
-                    ],
-                    'have': false,
-                    'total': 1
-                },
-                {
-                    'id': 151,
-                    'authName': '权限管理',
-                    'menuType': 1,
-                    'authUri': '/auth',
-                    'authLevel': 0,
-                    'sort': 4,
-                    'pageConfig': [
-
-                    ],
-                    'childAuthList': [
-                        {
-                            'id': 1511,
-                            'authName': '机构/人员管理',
-                            'menuType': 1,
-                            'authUri': 'organization',
-                            'authLevel': 0,
-                            'sort': 1,
-                            'pageConfig': [
-                                {
-                                    'id': 1,
-                                    'authId': 1511,
-                                    'fieldShowName': null,
-                                    'field': 'a',
-                                    'sort': 1,
-                                    'have': false
-                                },
-                                {
-                                    'id': 2,
-                                    'authId': 1511,
-                                    'fieldShowName': null,
-                                    'field': 'b',
-                                    'sort': 2,
-                                    'have': true
-                                },
-                                {
-                                    'id': 3,
-                                    'authId': 1511,
-                                    'fieldShowName': null,
-                                    'field': 'c',
-                                    'sort': 3,
-                                    'have': false
-                                }
-                            ],
-                            'childAuthList': [
-                                {
-                                    'id': 333,
-                                    'authName': '模块A',
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 0,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                },
-                                {
-                                    'id': 3334,
-                                    'authName': '模块AV',
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 1,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                }
-                            ],
-                            'have': false,
-                            'total': 1
-                        },
-                        {
-                            'id': 1512,
-                            'authName': '角色模版设置',
-                            'menuType': 1,
-                            'authUri': 'role',
-                            'authLevel': 0,
-                            'sort': 2,
-                            'pageConfig': [
-
-                            ],
-                            'childAuthList': [
-                                {
-                                    'id': 23,
-                                    'authName': '摩卡d',
-                                    'menuType': null,
-                                    'authUri': null,
-                                    'authLevel': null,
-                                    'sort': 2,
-                                    'pageConfig': null,
-                                    'childAuthList': [
-
-                                    ],
-                                    'have': null,
-                                    'total': 0
-                                }
-                            ],
-                            'have': false,
-                            'total': 1
-                        }
-                    ],
-                    'have': false,
-                    'total': 3
-                }
-            ]
+            tableList: [],
+            newTableList: [],
+            changeTab: 1,
+            pageConfig: [],
+            authName: '',
+            operateConfig: [],
+            roleInfo: {
+                deptName: '',
+                mobile: '',
+                psncode: '',
+                psnname: ''
+            }
         }
     },
     computed: {
         ...mapState({
-            isCollapse: state => state.isCollapse
+            isCollapse: state => state.isCollapse,
+            menuList: state => state.menuList
         })
     },
-    mounted () {
-
+    async mounted () {
+        const jobNumber = '10030418'
+        const { data } = await findMenuList()
+        // console.log(data)
+        this.tableList = this.restArr(data)
+        this.newTableList = JSON.parse(JSON.stringify(data))
+        const { data: roleInfo } = await getRoleInfo(jobNumber)
+        this.roleInfo = roleInfo
     },
     methods: {
-        changeDialg () {
-
+        restArr (data) {
+            return data.map(item => {
+                item.allhave = !!((item.status == 0 || item.status == 1))
+                item.operateHave = item.status == 0 || item.status == 1
+                if (item.childAuthList) {
+                    item.childAuthList = this.restArr(item.childAuthList)
+                }
+                return item
+            })
         },
-        onSaveRole () {
-
+        restPageConfig (data, val) {
+            console.log(2, data, val)
+            return data && data.map(item => {
+                if (item.pageConfig) {
+                    item.pageConfig.map(item => {
+                        item.have = val
+                    })
+                }
+                return item
+            })
         },
-        onChangeThree (cindex, val, bol) {
-            // const childList = val.childAuthList[cindex].childAuthList
-            // const pchildList = val.childAuthList
-            // const newchildBol = childList && childList.filter(val => {
-            //     return val.have
-            // }).length > 0
-            // this.$set(val.childAuthList[cindex], 'have', newchildBol)
-            // const newparentBol = pchildList && pchildList.filter(val => {
-            //     return val.have
-            // }).length > 0
-            // // 这里
-            // val.childAuthList[cindex].have = newchildBol
-            // if (bol) {
-            //     val.have = newchildBol
-            // } else {
-            //     val.have = newparentBol
-            // }
+        changeChildHave (itemArr, value) {
+            // console.log(1, itemArr, value)
+            return itemArr.map(item => {
+                item.have = value
+                item.allhave = value
+                item.operateHave = value
+                item.status = 0
+                item.pageConfig && item.pageConfig.filter(item => {
+                    item.have = value
+                })
+                if (item.childAuthList) {
+                    this.changeChildHave(item.childAuthList, value)
+                }
+                return item
+            })
+        },
+        onCheckboxChange (itemArr, value) {
+            const len = itemArr.length
+            this.changeChildHave(itemArr[len - 1].childAuthList, value)
+            // TODO 每一层赋值 changeChildHave 没执行
+            itemArr = itemArr.map((item) => {
+                item.allhave = value
+                item.operateHave = value
+                return item
+            })
+            // 重置 pageConfig 权限
+            this.restPageConfig(itemArr, value)
+            if (value) {
+                itemArr = itemArr.map((item) => {
+                    item.have = value
+                    return item
+                })
+            } else {
+                if (len > 1) {
+                    itemArr = itemArr.slice(0, len - 1).reverse()
+                    //  console.log(itemArr)
+                    itemArr = itemArr.map(item => {
+                        item.have = item.childAuthList.filter(itemC => itemC.have == true).length > 0
+                    })
+                }
+            }
+
+            // todo pageCofig
+            // this.restPageConfig(itemArr[len - 1].pageConfig, value)
+        },
+        onSearchRole (val, item) {
+            val = !val
+            if (val) {
+                item.childAuthList[0].status = 3
+            } else {
+                item.childAuthList[0].status = 0
+            }
+            // 查询 权限
+            item.pageConfig && item.pageConfig.filter(item => {
+                item.have = !val
+            })
+        },
+        onOperateRole (val, item) {
+            val = !val
+            if (val) {
+                item.childAuthList[1].status = 3
+            } else {
+                item.childAuthList[1].status = 0
+            }
+            // 操作 权限
+            item.childAuthList && item.childAuthList.filter(item => {
+                if (item.menuType == 2) {
+                    item.have = !val
+                }
+            })
+        },
+        async  onSaveRole () {
+            const isHave = this.tableList && this.tableList.filter(item => item.have == true).length > 0
+            if (!isHave) {
+                this.$message({ message: '请先设置权限', type: 'warning' })
+            } else {
+                const params = { employeeAuthLists: this.tableList, jobNumber: '1001' }
+                await saveAuthRole(params)
+                this.$message({ message: '权限保存成功', type: 'success' })
+            }
+        },
+        onCancelRole () {
+            if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
+                this.$confirm('取消后录入的数据将无法保存?', '取消确认', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    })
+                })
+            }
+        },
+        changeTabs (val, item) {
+            // this.restChildAuth(item)
+            if (val == 0) {
+                item.pageConfig && item.pageConfig.filter(item => {
+                    item.have = true
+                })
+            }
+            item.childAuthList[0].status = val
+            this.dialogVisible = !!val
+            this.newCongig = JSON.parse(JSON.stringify(item.pageConfig))
+            this.pageConfig = item.pageConfig
+            this.authName = item.authName
+            // TOdo 取消回到默认结构
+            this.newItem = item
+        },
+        changeTwoTabs (val, item, itema) {
+            if (val == 0) {
+                item.childAuthList && item.childAuthList.filter(item => {
+                    item.have = true
+                })
+            }
+            item.childAuthList[1].status = val
+            this.twodialogVisible = !!val
+            this.operateConfig = item.childAuthList && item.childAuthList.filter(item => item.menuType == 2)
+            this.newchildAuthList = JSON.parse(JSON.stringify(item.childAuthList))
+            this.authName = itema.authName
+            // TOdo 取消回到默认结构
+            this.newItem = item
+        },
+        onCancelCongifg () {
+            this.newItem.pageConfig = this.newCongig
+        },
+        onCanceloperateCongifg () {
+            this.newItem.childAuthList = this.newchildAuthList
         }
     }
 }
@@ -471,21 +493,61 @@ export default {
     left: 200px;
     transition: 0.3s;
 }
-.gryrole{
-  /deep/  .el-checkbox__input.is-checked .el-checkbox__inner{
-            background-color: #dddddd;
-             border-color: #dddddd;
+.gryrole {
+    /deep/ .el-checkbox__input.is-checked .el-checkbox__inner {
+        background-color: #dddddd;
+        border-color: #dddddd;
     }
-/deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
-    color: #dddddd;
+    /deep/ .el-checkbox__input.is-checked + .el-checkbox__label {
+        color: #dddddd;
+    }
+    /deep/ .el-checkbox {
+        color: #dddddd;
+    }
+    .el-radio-button__inner {
+        color: #dddddd;
+        border: 1px solid #dddddd;
+        border-left: 1px solid #dddddd !important;
+        border-right: 1px solid #dddddd !important;
+    }
 }
-/deep/ .el-checkbox{
-     color: #dddddd;
+/deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+    background-color: transparent;
+    color: #ff7a45;
+    border-color: #ff7a45;
+    box-shadow: -1px 0 0 0 #ff7a45;
 }
-/deep/ .el-radio-button__orig-radio:checked+.el-radio-button__inner{
-    background-color: #dddddd;
-    border-color: #dddddd;
-    box-shadow: -1px 0 0 0 #dddddd;
+.el-radio-group {
+    button {
+        // background-color: #dddddd;
+        // border-color: #dddddd;
+        // -webkit-box-shadow: -1px 0 0 0 #dddddd;
+        // box-shadow: -1px 0 0 0 #dddddd;
+
+        padding: 7px 20px;
+        font-size: 12px;
+        border-left: 1px solid #dcdfe6;
+        border-radius: 4px 0 0 4px;
+        &:first-child {
+            border-right: none;
+        }
+        &:last-child {
+            // border-right: 1px solid #DCDFE6;
+            border-radius: 0 4px 4px 0;
+            // border-left: none;
+        }
+    }
 }
+.taborg {
+    color: #ff7a45;
+    border-color: #ff7a45;
+    border-left: 1px solid #ff7a45 !important;
+    border-right: 1px solid #ff7a45 !important;
+}
+.h-dialog {
+    margin-top: 20px;
+    .el-checkbox {
+        margin-left: 10px;
+    }
 }
 </style>

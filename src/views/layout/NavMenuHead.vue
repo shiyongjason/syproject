@@ -53,7 +53,7 @@ export default {
         }
     },
     mounted () {
-        this.userName = this.userInfo.user_name
+        this.userName = this.userInfo.employeeName + '/' + this.userInfo.user_name
     }
 }
 </script>
