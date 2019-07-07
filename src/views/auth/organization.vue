@@ -132,6 +132,24 @@ export default {
     mounted() {
         this.findBOSSOrganization()
         this.findOrganizationEmployee()
+        const ID = this.$route.meta.id
+        this.menuList.forEach(value => {
+            if(value.meta.id === ID) {
+                BUTTON = value.childAuthList[0].childAuthList[0].childAuthList
+                TH = value.childAuthList[0].childAuthList[0].pageConfig
+            }
+            if (value.children) {
+                value.children.forEach(value2=>{
+                    if(value.meta.id === ID) {
+                        BUTTON = value.childAuthList[0].childAuthList
+                        TH = value.childAuthList[0].pageConfig
+                    }
+                })
+            }
+        })
+
+        console.log(this.menuList)
+        console.log(this.$route)
     }
 }
 </script>

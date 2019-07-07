@@ -421,12 +421,18 @@ li {
     padding: 12px 0;
     font-size: 12px;
     color: #000000;
-    border: 1px solid rgba(229,229,234,1);
+    border-right: 1px solid rgba(229,229,234,1);
+    border-top: 1px solid rgba(229,229,234,1);
+}
+.el-table td{
+    border-right: 1px solid rgba(229,229,234,1);
+    border-bottom: 1px solid rgba(229,229,234,1);
+    border-left: 0;
 }
 .el-table th>.cell, .el-table .cell{
     text-align: center;
 }
 .el-table--fit{
     border-right: 1px solid rgba(229,229,234,1);
-    border-bottom: 1px solid rgba(229,229,234,1);
+    border-left: 1px solid rgba(229,229,234,1);
 }

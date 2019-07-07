@@ -56,6 +56,7 @@ export default {
     mounted () {
         // 全局初始化vuex menuList
         this.findMenuList()
+        console.log(1)
     }
 }
 </script>

@@ -28,8 +28,8 @@
             <el-table-column
                 prop="address"
                 label="操作">
-                <template>
-                    <span class="modify">修改</span>
+                <template slot-scope="scope">
+                    <span class="modify" @click="goTo(scope.row.psncode)">修改</span>
                 </template>
             </el-table-column>
         </el-table>
@@ -61,6 +61,11 @@ export default {
     methods: {
         indexMethod (index) {
             return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
+        },
+        goTo (id) {
+            this.$router.push({
+                path: '/role', query: {id: id}
+            })
         }
     }
 }
