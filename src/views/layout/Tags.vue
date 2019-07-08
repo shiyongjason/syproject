@@ -1,5 +1,5 @@
 <template>
-<!-- <el-tabs v-model="editableTabsValue" type="card"  @tab-remove="closeTags">
+    <!-- <el-tabs v-model="editableTabsValue" type="card"  @tab-remove="closeTags">
   <el-tab-pane
     v-for="(item, index) in tagsList"
     :key="item.name"
@@ -10,7 +10,7 @@
 
   </el-tab-pane>
 </el-tabs> -->
-  <div
+    <div
         class="tags"
         v-if="showTags"
     >
@@ -29,24 +29,21 @@
                 </router-link>
                 <span
                     class="tags-li-icon"
-                    v-show="item.title!='首页'"
                     @click="closeTags(index)"
                 ><i class="el-icon-close"></i></span>
             </li>
         </ul>
-       <div class="tags-close-box">
+        <div class="tags-close-box">
             <el-dropdown @command="handleTags">
-                <div
-                   class="tags-li active"
-                >
+                <div class="tags-li active">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
                 </div>
                 <el-dropdown-menu
                     size="small"
                     slot="dropdown"
                 >
-                    <!-- <el-dropdown-item command="other">关闭其他</el-dropdown-item> -->
-                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+                    <el-dropdown-item command="other">关闭其他</el-dropdown-item>
+                    <!-- <el-dropdown-item command="all">关闭所有</el-dropdown-item> -->
                 </el-dropdown-menu>
             </el-dropdown>
         </div>
@@ -89,11 +86,12 @@ export default {
         },
         // 关闭全部标签
         closeAll () {
-            this.tagsList = [{
-                title: '首页',
-                path: '/',
-                name: 'index'
-            }]
+            // this.tagsList = [{
+            //     title: '首页',
+            //     path: '/',
+            //     name: 'index'
+            // }]
+            this.tagsList = []
             this.tagsInfo(this.tagsList)
             this.$router.push('/')
         },
@@ -133,18 +131,20 @@ export default {
     },
     watch: {
         $route (newValue, oldValue) {
+            console.log(newValue)
             this.setTags(newValue)
         }
     },
     mounted () {
-        const isExist = this.newTags.some(item => {
-            return item.path == '/'
-        })
-        !isExist && this.newTags.push({
-            title: '首页',
-            path: '/',
-            name: 'index'
-        })
+        console.log(this.newTags)
+        // const isExist = this.newTags.some(item => {
+        //     return item.path == '/'
+        // })
+        // !isExist && this.newTags.push({
+        //     title: '首页',
+        //     path: '/',
+        //     name: 'index'
+        // })
         this.tagsList = this.newTags
         this.setTags(this.$route)
     }
@@ -159,7 +159,6 @@ export default {
     overflow: hidden;
     background: #fff;
     padding-right: 120px;
-
 }
 
 .tags ul {
@@ -225,7 +224,7 @@ export default {
     z-index: 10;
 }
 
-/deep/.el-button--primary{
+/deep/.el-button--primary {
     background-color: #ff7a45;
     border-color: #ff7a45;
 }
