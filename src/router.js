@@ -161,14 +161,14 @@ function makeMenus (Route, Data) {
         return false
     })
 }
-function makeIndex (data,next) {
+function makeIndex (data, next) {
     console.log(data)
     let index = ''
     data.forEach(value => {
         console.log(value)
         index = value.path
-        if(value.children){
-            if(value.children.length>0){
+        if (value.children) {
+            if (value.children.length > 0) {
                 index += ('/' + value.children[0].path)
             }
         }
@@ -199,8 +199,8 @@ async function getMenu (next) {
     //     return valueTemp
     // })
     // console.log(authMenuTemp)
-    const menu = makeMenus(routerMapping,data)
-    makeIndex(menu,next)
+    const menu = makeMenus(routerMapping, data)
+    makeIndex(menu, next)
     // console.log(menu)
     router.addRoutes(menu)
 }
@@ -219,6 +219,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             console.log('-------')
             if (isFirst) {
+                console.log(222)
                 await getMenu(next)
                 isFirst = false
                 next({ ...to, replace: true })
