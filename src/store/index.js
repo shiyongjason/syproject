@@ -8,13 +8,14 @@ Vue.use(Vuex)
 
 function makeMenus (Route, Data) {
     return Route.filter((value1) => {
-        let valueTemp = false
+        let valueTemp = true
         Data.forEach((value2) => {
             // console.log(value2)
             if (value2.authUri === value1.path) {
                 if (value1.children) {
                     value1.children = makeMenus(value1.children, value2.childAuthList)
                 }
+                value1.meta.have = value2.have
                 valueTemp = value2.have
             }
         })
@@ -40,7 +41,6 @@ const store = new Vuex.Store({
     mutations,
     actions: {
         resetVuex (context) {
-            console.log(context, this.state)
             this.state.tagsInfo = []
         },
         async findMenuList ({ commit }) {

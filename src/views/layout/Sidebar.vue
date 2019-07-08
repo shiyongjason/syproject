@@ -22,29 +22,33 @@ export default {
                 const path = parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`
                 if (item.children && item.children.length > 0) {
                     const children = this.generateSidebar(item.children, path)
-                    result.push((
-                        <el-submenu index={path} >
-                            <template slot="title">
+                    if(item.meta.have) {
+                        result.push((
+                                <el-submenu index={path}>
+                                <template slot="title">
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                <span>{item.meta.title}</span>
+                            <span>{item.meta.title}</span>
                             </template>{children}
-                        </el-submenu>
-                    ))
+                            </el-submenu>
+                        ))
+                    }
                 } else {
-                    if (item.path === '/oldsystem') {
-                        result.push(
+                    if(item.meta.have){
+                        if (item.path === '/oldsystem') {
+                            result.push(
                             <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} style={`display:block`}>
-                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                <span>{item.meta.title}</span>
+                            {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                            <span>{item.meta.title}</span>
                             </a>
-                        )
-                    } else {
-                        result.push(
+                            )
+                        } else {
+                            result.push(
                             <el-menu-item index={path}>
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                <span>{item.meta.title}</span>
+                            <span>{item.meta.title}</span>
                             </el-menu-item>
                         )
+                        }
                     }
                 }
             })

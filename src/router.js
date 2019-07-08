@@ -104,6 +104,7 @@ const routerMapping = [
             isMenu: true,
             icon: 'hosjoy_cloud_service'
         },
+        // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
         children: [
             {
@@ -140,39 +141,89 @@ const router = new Router({
     ]
 })
 
-async function getMenu () {
-    const { data } = await findMenuList()
-    let authMenuTemp = routerMapping.filter((value1) => {
-        let valueTemp = false
-        data.forEach((value2) => {
+function makeMenus (Route, Data) {
+    return Route.filter((value1) => {
+        let valueTemp = true
+        Data.forEach((value2) => {
+            // console.log(value2)
             if (value2.authUri === value1.path) {
-                value1.meta.id = value2.id
-                value1.meta.auth = true
-                valueTemp = value1
+                if (value1.children) {
+                    value1.children = makeMenus(value1.children, value2.childAuthList)
+                }
+                value1.meta.have = value2.have
+                valueTemp = value2.have
             }
         })
-        return valueTemp
+        if (valueTemp) {
+            // delete value1.component
+            return value1
+        }
+        return false
     })
-    router.addRoutes(authMenuTemp)
+}
+function makeIndex (data,next) {
+    console.log(data)
+    let index = ''
+    data.forEach(value => {
+        console.log(value)
+        index = value.path
+        if(value.children){
+            if(value.children.length>0){
+                index += ('/' + value.children[0].path)
+            }
+        }
+    })
+    next({
+        path: index
+    })
+    console.log(index)
+}
+async function getMenu (next) {
+    const { data } = await findMenuList()
+    // console.log(data)
+    // let authMenuTemp = routerMapping.filter((value1) => {
+    //     let valueTemp = false
+    //     data.forEach((value2) => {
+    //         if (value2.authUri === value1.path) {
+    //             if (value1.children) {
+    //                 if(value1.children.length>0){
+    //
+    //                     console.log(value1.children,value1)
+    //                     // value1.children = getMenu(value1.children, value2.childAuthList)
+    //                 }
+    //             }
+    //             value1.meta.have = value2.have
+    //             valueTemp = value2.have
+    //         }
+    //     })
+    //     return valueTemp
+    // })
+    // console.log(authMenuTemp)
+    const menu = makeMenus(routerMapping,data)
+    makeIndex(menu,next)
+    // console.log(menu)
+    router.addRoutes(menu)
 }
 
 let isFirst = true
 router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    // 非登录的情况下
+    // 非/login下需要验证
     if (!isLogin) {
+        // 非登录的情况下
         if (!userInfo) {
             return next({
                 name: 'login'
             })
+        } else {
+            console.log('-------')
+            if (isFirst) {
+                await getMenu(next)
+                isFirst = false
+                next({ ...to, replace: true })
+            }
         }
-    }
-    // 不加这个判断，路由会陷入死循环
-    if (isFirst) {
-        await getMenu()
-        isFirst = false
-        next({ ...to, replace: true })
     }
     next()
 })
