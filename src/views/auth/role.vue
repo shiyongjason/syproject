@@ -449,6 +449,7 @@ export default {
     border: 1px solid #dddddd;
     border-collapse: collapse;
     width: 100%;
+
     thead {
         background: #fafafa;
     }
@@ -459,12 +460,14 @@ export default {
     td {
         border: 1px solid #dddddd;
         line-height: 40px;
-        text-align: center;
+        padding-left: 40px;
     }
     tbody {
         td {
             width: 20%;
         }
+            min-width: 1280px;
+    overflow-x: scroll;
     }
 }
 .h-foot {
