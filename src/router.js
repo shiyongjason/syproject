@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE } from '@/common/const'
+import { findMenuList } from '@/views/layout/api'
 
 Vue.use(Router)
 
@@ -9,20 +9,21 @@ const routerMapping = [
     {
         path: '/',
         component: Layout,
-        name: 'index',
         meta: {
             title: '首页',
-            icon: 'hosjoy_home',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-
+            icon: 'hosjoy_home'
         },
         children: [
             {
                 path: '',
+                name: 'home',
                 meta: {
+                    title: '首页',
+                    tagName: '首页',
                     isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    icon: 'hosjoy_home',
+                    component: './views/index/index'
                 },
                 component: () => import('./views/index/index')
             }
@@ -30,20 +31,22 @@ const routerMapping = [
     },
     {
         path: '/jinyunPlatform',
-        component: Layout,
-        name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
-            icon: 'hosjoy_cloud_service',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_cloud_service',
+            component: './views/jinyunplatform/index'
         },
+        component: Layout,
         children: [
             {
-                path: '',
+                path: 'jinyunplatform',
+                name: 'jinyunplatform',
                 meta: {
+                    title: '金云平台',
+                    tagName: '金云平台',
                     isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    icon: 'hosjoy_home'
                 },
                 component: () => import('./views/jinyunplatform/index')
             }
@@ -51,68 +54,87 @@ const routerMapping = [
     },
     {
         path: '/oldsystem',
-        component: Layout,
         name: 'oldsystem',
         meta: {
             title: '老系统',
-            icon: 'hosjoy_goods',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_cloud_service',
+            component: './views/jinyunplatform/index'
+        }
+    },
+    {
+        path: '/auth',
+        meta: {
+            title: '权限管理',
+            isMenu: true,
+            icon: 'hosjoy_cloud_service'
         },
+        component: Layout,
         children: [
             {
-                path: '',
+                path: 'organization',
+                name: 'organization',
                 meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    title: '机构/人员管理',
+                    tagName: '机构/人员管理',
+                    isMenu: true,
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/auth/organization'
                 },
-                component: () => import('./views/jinyunplatform/index')
+                component: () => import('./views/auth/organization')
+            },
+            {
+                path: 'role',
+                name: 'role',
+                meta: {
+                    title: '角色模版设置',
+                    tagName: '角色模版设置',
+                    isMenu: false,
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/auth/role'
+                },
+                component: () => import('./views/auth/role')
             }
+            // {
+            //     path: 'role',
+            //     name: 'jinyunPlatform',
+            //     meta: {
+            //         title: '角色模版设置',
+            //         tagName: '角色模版设置',
+            //         isMenu: true,
+            //         icon: 'hosjoy_cloud_service',
+            //         component: './views/auth/role'
+            //     },
+            //     component: () => import('./views/auth/role')
+            // }
         ]
     },
     {
-        path: '/userManage',
-        component: Layout,
-        name: 'userManage',
+        path: '/wisdom',
         meta: {
-            title: '用户/机构管理',
-            icon: 'hosjoy_permissions',
+            title: '好智慧-经营分析',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_cloud_service'
         },
-        children: [
-            {
-                path: '',
-                meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
-    {
-        path: '/editPassword',
+        // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
-        name: 'editPassword',
-        meta: {
-            title: '修改密码',
-            icon: 'icon-hosjoy_set',
-            isMenu: false,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-        },
         children: [
             {
-                path: '',
+                path: 'platformTarget',
+                name: 'platformTarget',
                 meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    title: '平台目标管理',
+                    tagName: '平台目标管理',
+                    isMenu: true,
+                    icon: 'hosjoy_cloud_service',
+                    component: './views/wisdom/platformTarget'
                 },
-                component: () => import('./views/passwordManage/editPassword')
+                component: () => import('./views/wisdom/platformTarget')
             }
         ]
     }
 ]
+
 const router = new Router({
     mode: 'history',
     routes: [
@@ -125,27 +147,72 @@ const router = new Router({
         {
             path: '/403',
             name: '403',
-            meta: {
-                isMenu: false,
-                role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-            },
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
+// 这边是动态添加路由  未来还可以和渲染菜单一起优化
+function makeMenus (Route, Data) {
+    return Route.filter((value1) => {
+        let valueTemp = true
+        Data.forEach((value2) => {
+            if (value2.authUri === value1.path) {
+                if (value1.children) {
+                    value1.children = makeMenus(value1.children, value2.childAuthList)
+                }
+                value1.meta.have = value2.have
+                valueTemp = value2.have
+            }
+        })
+        if (valueTemp) {
+            return value1
+        }
+        return false
+    })
+}
+function makeIndex (data, next) {
+    let index = ''
+    if (data.length > 0) {
+        data.forEach(value => {
+            index = value.path
+            if (value.children) {
+                if (value.children.length > 0) {
+                    index += ('/' + value.children[0].path)
+                }
+            }
+        })
+        return next({
+            path: index
+        })
+    }
+}
 
-router.beforeEach((to, from, next) => {
+// 导航route抖动 ？？？
+async function getMenu (next) {
+    const { data } = await findMenuList()
+    const menu = makeMenus(routerMapping, data)
+    makeIndex(menu, next)
+    router.addRoutes(menu)
+}
+
+let isFirst = true
+router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
-    // const is403 = to.name === '403'  暂时没有
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    // 非登录的情况下
+    // 非/login下需要验证
     if (!isLogin) {
+        // 非登录的情况下
         if (!userInfo) {
             return next({
                 name: 'login'
             })
+        } else {
+            if (isFirst) {
+                isFirst = false
+                await getMenu(next)
+                next({ ...to, replace: true })
+            }
         }
     }
     next()

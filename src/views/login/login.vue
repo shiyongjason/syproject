@@ -45,8 +45,8 @@
 <script>
 import { login, getUserdata } from './api/index'
 import jwtDecode from 'jwt-decode'
-import { Phone, Password } from '@/utils/rules'
-import { mapMutations } from 'vuex'
+import { Phone } from '@/utils/rules'
+import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 export default {
     data () {
@@ -63,9 +63,9 @@ export default {
                     { validator: Phone, trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { validator: Password, trigger: 'blur' },
-                    { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                    // { validator: Password, trigger: 'blur' },
+                    // { min: 8, max: 16, message: '长度为8-16位数字或字母', trigger: 'blur' }
                 ]
             },
             isLogin: true,
@@ -107,9 +107,13 @@ export default {
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO'
+        }),
+        ...mapActions({
+            resetVuex: 'resetVuex'
         })
     },
     mounted () {
+        this.resetVuex()
         // window.addEventListener('message', this.handleMessage)
         // 获取iframe 对象
         this.iframeWin = this.$refs.iframe.contentWindow
@@ -119,6 +123,9 @@ export default {
                 this.onLogin()
             }
         }
+    },
+    created () {
+
     }
 }
 </script>

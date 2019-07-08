@@ -2,7 +2,7 @@
     <div class="nav-menu-aside">
         <Sidebar :menus="menus" mode="vertical" :collapse="isCollapse"/>
         <div class="menusSwitch" :class="isCollapse?'close':'open'">
-            <div @click="onSwitch">
+            <div @click="onSwitch" class="hand">
                 <i :class="isCollapse?'iconfont hosjoy_indent':'iconfont hosjoy_outdent'"></i>
                 <span>收起</span>
             </div>
@@ -12,7 +12,7 @@
 <script>
 import Sidebar from './Sidebar'
 import { routerMapping } from '@/router.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'NavMenuHead',
     components: {
@@ -25,6 +25,7 @@ export default {
     },
     computed: {
         menus () {
+            console.log(this.resolveMenus(routerMapping))
             return this.resolveMenus(routerMapping)
         },
         ...mapState({
@@ -39,21 +40,28 @@ export default {
     methods: {
         onSwitch () {
             this.isCollapse = !this.isCollapse
+            this.setCollapse(this.isCollapse)
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            console.log(menus)
-            // 将router中非菜单的排除掉
             return menus.filter((item) => {
                 if (item.children && item.children.length > 0) {
                     item.children = this.resolveMenus(item.children)
                 }
-                // const menuRoles = item.meta.role
-                // const userRoles = this.userInfo.authorities
-                // const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
                 return item.meta.isMenu
             })
-        }
+        },
+        ...mapMutations({
+            setCollapse: 'IS_COLLAPSE'
+
+        }),
+        ...mapActions([
+            'findMenuList'
+        ])
+    },
+    mounted () {
+        // 全局初始化vuex menuList
+        this.findMenuList()
     }
 }
 </script>
@@ -130,6 +138,9 @@ export default {
         margin-right: 10px;
     }
 }
+    .hand{
+        cursor: pointer;
+    }
 </style>
 <style lang="scss">
 .el-menu--vertical ul {

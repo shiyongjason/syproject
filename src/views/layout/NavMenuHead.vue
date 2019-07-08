@@ -8,7 +8,7 @@
         </div>
         <div class="user-info flr">
             <div class="user-info-select">
-                <el-dropdown trigger="click" @command="handleCommand">
+                <el-dropdown trigger="click" @command="handleCommand" class="hand">
                         <span class="el-dropdown-link">
                             {{userName}}
                             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -41,6 +41,7 @@ export default {
             if (command === 'exit') {
                 sessionStorage.removeItem('userInfo')
                 sessionStorage.removeItem('token')
+                sessionStorage.removeItem('tagsList')
                 this.$router.push('/login')
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true
@@ -53,7 +54,7 @@ export default {
         }
     },
     mounted () {
-        // this.userName = this.userInfo.principal.name
+        this.userName = this.userInfo.employeeName + '/' + this.userInfo.user_name
     }
 }
 </script>
@@ -125,4 +126,7 @@ export default {
 .el-popper[x-placement^="bottom"] .popper__arrow {
     display: none;
 }
+    .hand{
+        cursor: pointer;
+    }
 </style>
