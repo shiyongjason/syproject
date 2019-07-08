@@ -1,5 +1,5 @@
-export function authToggle(RoutePath) {
-    const route = RoutePath
+export function authToggle () {
+    const route = this.$route.path
     const subRoute = route.split('/').slice(-1)[0]
     const MENULIST = JSON.parse(sessionStorage.getItem('menuList'))
     MENULIST.forEach(value => {

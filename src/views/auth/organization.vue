@@ -11,7 +11,7 @@
                 <div class="demo-input-suffix">
                     <el-input
                         placeholder="请输入工号\姓名\登陆名进行检索"
-                        v-model="queryParams.keywords" class="keywords" @keyup.enter.native="findOrganizationEmployee">
+                        v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                     <el-button type="primary" v-if="true" @click="findOrganizationEmployee">搜索</el-button>
@@ -54,15 +54,13 @@ export default {
             queryParams: {
                 pageSize: 10,
                 pageNum: 1,
-                keywords: '',
+                keyWord: '',
                 pkDeptdoc: '1050V3100000000F6H0B' // 公司主键 感觉没必要放在前端
             },
             paginationData: {},
             tableData: [],
             lastTime: null,
-            timeout: null,
-            BUTTON: [],
-            TH: []
+            timeout: null
         }
     },
     methods: {
@@ -135,8 +133,6 @@ export default {
     mounted () {
         this.findBOSSOrganization()
         this.findOrganizationEmployee()
-        console.log(this.BUTTON)
-        console.log(this.TH)
     }
 }
 </script>
