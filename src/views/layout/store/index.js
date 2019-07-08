@@ -7,10 +7,8 @@ export default {
     },
     actions: {
         async findMenusList ({ commit }) {
-            console.log(111)
-            const {data} = await findMenusList()
-            console.log(data)
-            commit('MENU_LIST',data)
+            const { data } = await findMenusList()
+            commit('MENU_LIST', data)
         }
     },
     mutations: {

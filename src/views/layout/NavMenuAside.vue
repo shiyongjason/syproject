@@ -12,7 +12,7 @@
 <script>
 import Sidebar from './Sidebar'
 import { routerMapping } from '@/router.js'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 export default {
     name: 'NavMenuHead',
     components: {
@@ -20,11 +20,13 @@ export default {
     },
     data () {
         return {
-            isCollapse: false,
-            menus: []
+            isCollapse: false
         }
     },
     computed: {
+        menus () {
+            return this.resolveMenus(routerMapping)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -37,6 +39,7 @@ export default {
     methods: {
         onSwitch () {
             this.isCollapse = !this.isCollapse
+            this.setCollapse(this.isCollapse)
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
@@ -47,16 +50,17 @@ export default {
                 return item.meta.isMenu
             })
         },
+        ...mapMutations({
+            setCollapse: 'IS_COLLAPSE'
+
+        }),
         ...mapActions([
             'findMenuList'
         ])
     },
-    async mounted () {
+    mounted () {
         // 全局初始化vuex menuList
-        await this.findMenuList()
-        routerMapping = []
-        console.log(routerMapping)
-        // this.resolveMenus(routerMapping)
+        this.findMenuList()
     }
 }
 </script>
