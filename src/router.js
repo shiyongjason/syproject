@@ -39,7 +39,7 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: '',
+                path: 'jinyunplatform',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
@@ -84,16 +84,28 @@ const routerMapping = [
             },
             {
                 path: 'role',
-                name: 'jinyunPlatform',
+                name: 'role',
                 meta: {
                     title: '角色模版设置',
                     tagName: '角色模版设置',
-                    isMenu: true,
+                    isMenu: false,
                     icon: 'hosjoy_cloud_service',
                     component: './views/auth/role'
                 },
                 component: () => import('./views/auth/role')
             }
+            // {
+            //     path: 'role',
+            //     name: 'jinyunPlatform',
+            //     meta: {
+            //         title: '角色模版设置',
+            //         tagName: '角色模版设置',
+            //         isMenu: true,
+            //         icon: 'hosjoy_cloud_service',
+            //         component: './views/auth/role'
+            //     },
+            //     component: () => import('./views/auth/role')
+            // }
         ]
     },
     {
