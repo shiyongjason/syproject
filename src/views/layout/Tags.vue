@@ -52,7 +52,6 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { toASCII } from 'punycode'
 export default {
     data () {
         return {
