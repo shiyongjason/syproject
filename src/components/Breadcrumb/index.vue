@@ -30,13 +30,12 @@ export default {
         getBreadcrumb () {
             const routerFunc = this.$route.meta.func
             let matched = this.$route.matched.filter(item => {
-                if (item.meta.title && item.meta.isMenu) {
+                if (item.meta.isMenu) {
                     return true
                 }
             })
             routerFunc && routerFunc(matched, this.$route)
             this.levelList = matched
-            console.log(1, this.$route.matched)
         }
     },
     mounted () {

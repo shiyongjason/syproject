@@ -25,7 +25,6 @@ export default {
     },
     computed: {
         menus () {
-            console.log(this.resolveMenus(routerMapping))
             return this.resolveMenus(routerMapping)
         },
         ...mapState({
