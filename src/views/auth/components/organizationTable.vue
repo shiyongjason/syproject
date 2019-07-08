@@ -60,7 +60,7 @@ export default {
     },
     methods: {
         indexMethod (index) {
-            return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
+            return this.paginationData.pageSize * (this.paginationData.pageNum - 1) + index + 1
         },
         goTo (id) {
             this.$router.push({

@@ -3,7 +3,7 @@
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="paginationData.pageNumber"
+            :current-page="paginationData.pageNum"
             :page-sizes="paginationDataOther.pageSizes"
             :page-size="paginationDataOther.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
@@ -21,7 +21,7 @@ export default {
             required: true,
             default () {
                 return {
-                    pageNumber: 1,
+                    pageNum: 1,
                     totalElements: 0
                 }
             }
