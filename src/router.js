@@ -140,7 +140,7 @@ const router = new Router({
         }
     ]
 })
-
+// 这边是动态添加路由  未来还可以和渲染菜单一起优化
 function makeMenus (Route, Data) {
     return Route.filter((value1) => {
         let valueTemp = true
@@ -175,6 +175,8 @@ function makeIndex (data, next) {
         })
     }
 }
+
+// 导航route抖动 ？？？
 async function getMenu (next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
