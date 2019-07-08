@@ -52,7 +52,6 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
-import { toASCII } from 'punycode'
 export default {
     data () {
         return {
@@ -108,7 +107,6 @@ export default {
         },
         // 设置标签
         setTags (route) {
-            console.log(route)
             const isExist = this.tagsList.some(item => {
                 return item.path === route.fullPath
             })
