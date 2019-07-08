@@ -75,14 +75,14 @@
                                             >查询</el-checkbox>
                                             <div class="el-radio-group">
                                                 <button
-                                                 :disabled="!itemb.childAuthList[0].allhave"
+                                                    :disabled="!itemb.childAuthList[0].allhave"
                                                     v-if="itemb.childAuthList[0]"
                                                     class="el-radio-button__inner"
                                                     :class="itemb.childAuthList[0].status==0?'taborg':''"
                                                     @click="changeTabs(0,itemb)"
                                                 >全部</button>
                                                 <button
-                                                  :disabled="!itemb.childAuthList[0].allhave"
+                                                    :disabled="!itemb.childAuthList[0].allhave"
                                                     v-if="itemb.childAuthList[0]"
                                                     class="el-radio-button__inner"
                                                     :class="itemb.childAuthList[0].status==1?'taborg':''"
@@ -101,14 +101,14 @@
                                             >操作</el-checkbox>
                                             <div class="el-radio-group">
                                                 <button
-                                                  :disabled="!itemb.childAuthList[1].operateHave"
+                                                    :disabled="!itemb.childAuthList[1].operateHave"
                                                     v-if="itemb.childAuthList[1]"
                                                     class="el-radio-button__inner"
                                                     :class="itemb.childAuthList[1].status==0?'taborg':''"
                                                     @click="changeTwoTabs(0,itemb,itema)"
                                                 >全部</button>
                                                 <button
-                                                 :disabled="!itemb.childAuthList[1].operateHave"
+                                                    :disabled="!itemb.childAuthList[1].operateHave"
                                                     v-if="itemb.childAuthList[1]"
                                                     class="el-radio-button__inner"
                                                     :class="itemb.childAuthList[1].status==1?'taborg':''"
@@ -129,7 +129,10 @@
             class="h-foot"
             :class="isCollapse?'minLeft':'maxLeft'"
         >
-            <el-button name="white-color"   @click="onCancelRole()">取消</el-button>
+            <el-button
+                name="white-color"
+                @click="onCancelRole()"
+            >取消</el-button>
             <el-button name="green-color">另存为模板</el-button>
             <el-button
                 name="hosjoy-color"
@@ -143,7 +146,7 @@
             :close-on-click-modal='false'
         >
             <div class="h-dialog">
-                <table class="tablelist">
+                <table class="tablelist textCenter">
                     <thead>
                         <tr>
                             <td width="20%">菜单</td>
@@ -184,7 +187,7 @@
             :close-on-click-modal='false'
         >
             <div class="h-dialog">
-                <table class="tablelist">
+                <table class="tablelist textCenter">
                     <thead>
                         <tr>
                             <td width="20%">菜单</td>
@@ -197,7 +200,6 @@
                             <td>{{authName}}</td>
                             <td style="text-align:left">
                                 <el-checkbox
-
                                     v-model="item.have"
                                     :label="item.authName"
                                     v-for="(item,index) in operateConfig"
@@ -469,8 +471,14 @@ export default {
         td {
             width: 20%;
         }
-            min-width: 1280px;
-    overflow-x: scroll;
+        min-width: 1280px;
+        overflow-x: scroll;
+    }
+}
+.textCenter {
+    td {
+        text-align: center;
+        padding: 0;
     }
 }
 .h-foot {

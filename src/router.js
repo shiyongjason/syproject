@@ -19,7 +19,6 @@ const routerMapping = [
                 path: '',
                 name: 'home',
                 meta: {
-                    title: '首页',
                     tagName: '首页',
                     isMenu: false,
                     icon: 'hosjoy_home',
@@ -161,14 +160,12 @@ function makeMenus (Route, Data) {
         return false
     })
 }
-function makeIndex (data,next) {
-    console.log(data)
+function makeIndex (data, next) {
     let index = ''
     data.forEach(value => {
-        console.log(value)
         index = value.path
-        if(value.children){
-            if(value.children.length>0){
+        if (value.children) {
+            if (value.children.length > 0) {
                 index += ('/' + value.children[0].path)
             }
         }
@@ -176,7 +173,6 @@ function makeIndex (data,next) {
     next({
         path: index
     })
-    console.log(index)
 }
 async function getMenu (next) {
     const { data } = await findMenuList()
@@ -199,8 +195,8 @@ async function getMenu (next) {
     //     return valueTemp
     // })
     // console.log(authMenuTemp)
-    const menu = makeMenus(routerMapping,data)
-    makeIndex(menu,next)
+    const menu = makeMenus(routerMapping, data)
+    makeIndex(menu, next)
     // console.log(menu)
     router.addRoutes(menu)
 }
@@ -217,7 +213,6 @@ router.beforeEach(async (to, from, next) => {
                 name: 'login'
             })
         } else {
-            console.log('-------')
             if (isFirst) {
                 await getMenu(next)
                 isFirst = false

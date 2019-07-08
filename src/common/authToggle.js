@@ -1,4 +1,4 @@
-export function authToggle(RoutePath) {
+export function authToggle (RoutePath) {
     const route = RoutePath
     const subRoute = route.split('/').slice(-1)[0]
     const MENULIST = JSON.parse(sessionStorage.getItem('menuList'))
