@@ -144,7 +144,6 @@ function makeMenus (Route, Data) {
     return Route.filter((value1) => {
         let valueTemp = true
         Data.forEach((value2) => {
-            // console.log(value2)
             if (value2.authUri === value1.path) {
                 if (value1.children) {
                     value1.children = makeMenus(value1.children, value2.childAuthList)
@@ -154,7 +153,6 @@ function makeMenus (Route, Data) {
             }
         })
         if (valueTemp) {
-            // delete value1.component
             return value1
         }
         return false
@@ -162,42 +160,24 @@ function makeMenus (Route, Data) {
 }
 function makeIndex (data, next) {
     let index = ''
-    data.forEach(value => {
-        index = value.path
-        if (value.children) {
-            if (value.children.length > 0) {
-                index += ('/' + value.children[0].path)
+    if (data.length > 0) {
+        data.forEach(value => {
+            index = value.path
+            if (value.children) {
+                if (value.children.length > 0) {
+                    index += ('/' + value.children[0].path)
+                }
             }
-        }
-    })
-    next({
-        path: index
-    })
+        })
+        return next({
+            path: index
+        })
+    }
 }
 async function getMenu (next) {
     const { data } = await findMenuList()
-    // console.log(data)
-    // let authMenuTemp = routerMapping.filter((value1) => {
-    //     let valueTemp = false
-    //     data.forEach((value2) => {
-    //         if (value2.authUri === value1.path) {
-    //             if (value1.children) {
-    //                 if(value1.children.length>0){
-    //
-    //                     console.log(value1.children,value1)
-    //                     // value1.children = getMenu(value1.children, value2.childAuthList)
-    //                 }
-    //             }
-    //             value1.meta.have = value2.have
-    //             valueTemp = value2.have
-    //         }
-    //     })
-    //     return valueTemp
-    // })
-    // console.log(authMenuTemp)
     const menu = makeMenus(routerMapping, data)
     makeIndex(menu, next)
-    // console.log(menu)
     router.addRoutes(menu)
 }
 
@@ -214,8 +194,8 @@ router.beforeEach(async (to, from, next) => {
             })
         } else {
             if (isFirst) {
-                await getMenu(next)
                 isFirst = false
+                await getMenu(next)
                 next({ ...to, replace: true })
             }
         }
