@@ -19,6 +19,7 @@ const routerMapping = [
                 path: '',
                 name: 'home',
                 meta: {
+                    title: '首页',
                     tagName: '首页',
                     isMenu: false,
                     icon: 'hosjoy_home',

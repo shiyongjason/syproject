@@ -256,10 +256,10 @@ export default {
         })
     },
     async mounted () {
+        this.tableList = []
         const jobNumber = this.$route.query.jobNumber
-        console.log(jobNumber)
         const { data } = await findMenuList(jobNumber)
-        // console.log(data)
+        console.log(data)
         this.tableList = this.restArr(data)
         this.newTableList = JSON.parse(JSON.stringify(data))
         const { data: roleInfo } = await getRoleInfo(jobNumber)
@@ -277,7 +277,6 @@ export default {
             })
         },
         restPageConfig (data, val) {
-            console.log(2, data, val)
             return data && data.map(item => {
                 if (item.pageConfig) {
                     item.pageConfig.map(item => {

@@ -41,6 +41,7 @@ export default {
             if (command === 'exit') {
                 sessionStorage.removeItem('userInfo')
                 sessionStorage.removeItem('token')
+                sessionStorage.removeItem('tagsList')
                 this.$router.push('/login')
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true

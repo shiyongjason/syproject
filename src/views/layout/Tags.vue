@@ -52,6 +52,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import { toASCII } from 'punycode'
 export default {
     data () {
         return {
@@ -101,16 +102,18 @@ export default {
                 return item.path === this.$route.fullPath
             })
             this.tagsList = curItem
-
-            this.tagsInfo(this.tagsList)
+            // TODO  session
+            // this.tagsInfo(this.tagsList)
+            sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
         },
         // 设置标签
         setTags (route) {
+            console.log(route)
             const isExist = this.tagsList.some(item => {
                 return item.path === route.fullPath
             })
             !isExist && this.tagsList.push({
-                title: route.meta.tagName,
+                title: route.meta.title,
                 path: route.fullPath,
                 name: route.name
             })
@@ -123,7 +126,8 @@ export default {
             //     name: 'index'
             // })
             this.editableTabsValue = route.name
-            this.tagsInfo(this.tagsList)
+            // this.tagsInfo(this.tagsList)
+            sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
         },
         handleTags (command) {
             command === 'other' ? this.closeOther() : this.closeAll()
@@ -131,12 +135,11 @@ export default {
     },
     watch: {
         $route (newValue, oldValue) {
-            console.log(newValue)
             this.setTags(newValue)
         }
     },
     mounted () {
-        console.log(this.newTags)
+        const tags = JSON.parse(sessionStorage.getItem('tagsList'))
         // const isExist = this.newTags.some(item => {
         //     return item.path == '/'
         // })
@@ -145,7 +148,7 @@ export default {
         //     path: '/',
         //     name: 'index'
         // })
-        this.tagsList = this.newTags
+        this.tagsList = tags || []
         this.setTags(this.$route)
     }
 }
