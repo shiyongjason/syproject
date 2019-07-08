@@ -254,8 +254,9 @@ export default {
         })
     },
     async mounted () {
-        const jobNumber = this.$route.jobNumber
-        const { data } = await findMenuList()
+        const jobNumber = this.$route.query.jobNumber
+        console.log(jobNumber)
+        const { data } = await findMenuList(jobNumber)
         // console.log(data)
         this.tableList = this.restArr(data)
         this.newTableList = JSON.parse(JSON.stringify(data))
@@ -374,6 +375,8 @@ export default {
                 }).catch(() => {
                     this.$router.push({ path: '/auth/organization' })
                 })
+            } else {
+                this.$router.push({ path: '/auth/organization' })
             }
         },
         changeTabs (val, item) {

@@ -64,7 +64,7 @@ export default {
         },
         goTo (id) {
             this.$router.push({
-                path: '/role', query: { id: id }
+                path: '/auth/role', query: { jobNumber: id }
             })
         }
     }
