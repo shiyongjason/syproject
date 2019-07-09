@@ -72,7 +72,8 @@ export default {
             tagsInfo: 'TAGS_INFO'
         }),
         isActive (path) {
-            return path === this.$route.fullPath
+            console.log(this.$route)
+            return path === (this.$route.fullPath).split('?')[0]
         },
         // 关闭单个标签
         closeTags (index) {
@@ -108,11 +109,11 @@ export default {
         // 设置标签
         setTags (route) {
             const isExist = this.tagsList.some(item => {
-                return item.path === route.fullPath
+                return item.path === (route.fullPath).split('?')[0]
             })
             !isExist && this.tagsList.push({
                 title: route.meta.title,
-                path: route.fullPath,
+                path: (route.fullPath).split('?')[0],
                 name: route.name
             })
 

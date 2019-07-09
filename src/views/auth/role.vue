@@ -67,12 +67,13 @@
                                     </td>
                                     <td>
                                         <div :class="!(item.have&&(itema.authName?itema.have:true)&&(itemb.authName?itemb.have:true))?'gryrole':''">
+                                          <div v-if="itemb.pageConfig&&itemb.pageConfig.length>0">
                                             <el-checkbox
                                                 v-if="itemb.childAuthList.length>0"
                                                 v-model="itemb.childAuthList[0].allhave"
                                                 @change="onSearchRole(itemb.childAuthList[0].allhave,itemb)"
                                                 :disabled="!itemb.have"
-                                            >查询</el-checkbox>
+                                            >敏感字段</el-checkbox>
                                             <div class="el-radio-group">
                                                 <button
                                                     :disabled="!itemb.childAuthList[0].allhave"
@@ -90,15 +91,17 @@
                                                 >配置</button>
                                             </div>
                                         </div>
+                                        </div>
                                     </td>
                                     <td>
                                         <div :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
+                                             <div v-if="itemb.childAuthList&&itemb.childAuthList[2]">
                                             <el-checkbox
                                                 v-if="itemb.childAuthList.length>0"
                                                 v-model="itemb.childAuthList[1].operateHave"
                                                 @change="onOperateRole(itemb.childAuthList[1].operateHave,itemb)"
                                                 :disabled="!itemb.have"
-                                            >操作</el-checkbox>
+                                            >敏感操作</el-checkbox>
                                             <div class="el-radio-group">
                                                 <button
                                                     :disabled="!itemb.childAuthList[1].operateHave"
@@ -115,6 +118,7 @@
                                                     @click="changeTwoTabs(1,itemb,itema)"
                                                 >配置</button>
                                             </div>
+                                             </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -246,7 +250,8 @@ export default {
                 mobile: '',
                 psncode: '',
                 psnname: ''
-            }
+            },
+            jobNumber: ''
         }
     },
     computed: {
@@ -257,12 +262,11 @@ export default {
     },
     async mounted () {
         this.tableList = []
-        const jobNumber = this.$route.query.jobNumber
-        const { data } = await findMenuList(jobNumber)
-        console.log(data)
+        this.jobNumber = this.$route.query.jobNumber
+        const { data } = await findMenuList(this.jobNumber)
         this.tableList = this.restArr(data)
         this.newTableList = JSON.parse(JSON.stringify(data))
-        const { data: roleInfo } = await getRoleInfo(jobNumber)
+        const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
     },
     methods: {
@@ -361,9 +365,10 @@ export default {
             if (!isHave) {
                 this.$message({ message: '请先设置权限', type: 'warning' })
             } else {
-                const params = { employeeAuthLists: this.tableList, jobNumber: '1001' }
+                const params = { employeeAuthLists: this.tableList, jobNumber: this.jobNumber }
                 await saveAuthRole(params)
                 this.$message({ message: '权限保存成功', type: 'success' })
+                this.$router.push({ path: '/auth/organization' })
             }
         },
         onCancelRole () {
