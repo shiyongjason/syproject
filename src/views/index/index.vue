@@ -25,7 +25,6 @@ export default {
     methods: {
         onClikUrl (type) {
             if (type == 'oldsys') {
-                // window.location.href = 'https://boss.hosjoy.com/default.html#/index/'
                 window.location.href = `${iframeUrl}/default.html#/index`
             }
         }

@@ -34,13 +34,12 @@ const routerMapping = [
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service',
-            component: './views/jinyunplatform/index'
+            icon: 'hosjoy_cloud_service'
         },
         component: Layout,
         children: [
             {
-                path: 'jinyunplatform',
+                path: '',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
@@ -58,7 +57,7 @@ const routerMapping = [
         meta: {
             title: '老系统',
             isMenu: true,
-            icon: 'hosjoy_cloud_service',
+            icon: 'hosjoy_goods',
             component: './views/jinyunplatform/index'
         }
     },
@@ -67,7 +66,7 @@ const routerMapping = [
         meta: {
             title: '权限管理',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_permissions'
         },
         component: Layout,
         children: [
@@ -78,7 +77,7 @@ const routerMapping = [
                     title: '机构/人员管理',
                     tagName: '机构/人员管理',
                     isMenu: true,
-                    icon: 'hosjoy_cloud_service',
+                    icon: '',
                     component: './views/auth/organization'
                 },
                 component: () => import('./views/auth/organization')
@@ -88,9 +87,8 @@ const routerMapping = [
                 name: 'role',
                 meta: {
                     title: '角色模版设置',
-                    tagName: '角色模版设置',
                     isMenu: false,
-                    icon: 'hosjoy_cloud_service',
+                    icon: '',
                     component: './views/auth/role'
                 },
                 component: () => import('./views/auth/role')
