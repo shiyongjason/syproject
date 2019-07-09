@@ -10,7 +10,7 @@
                 <h2 class="h-h2">人员/账号</h2>
                 <div class="demo-input-suffix">
                     <el-input
-                        placeholder="请输入工号\姓名\登陆名进行检索"
+                        placeholder="请输入工号\姓名\登录名进行检索"
                         v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
@@ -133,6 +133,7 @@ export default {
     mounted () {
         this.findBOSSOrganization()
         this.findOrganizationEmployee()
+        // console.log(this.$route)
     }
 }
 </script>
@@ -147,7 +148,7 @@ export default {
 
         }
         .table{
-            width: 810px;
+            /*width: 810px;*/
             margin-left: 340px;
             padding-left: 24px;
             box-sizing: border-box;
