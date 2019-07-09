@@ -72,7 +72,6 @@ export default {
             tagsInfo: 'TAGS_INFO'
         }),
         isActive (path) {
-            console.log(this.$route)
             return path === (this.$route.fullPath).split('?')[0]
         },
         // 关闭单个标签

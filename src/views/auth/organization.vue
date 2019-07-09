@@ -133,6 +133,7 @@ export default {
     mounted () {
         this.findBOSSOrganization()
         this.findOrganizationEmployee()
+        // console.log(this.$route)
     }
 }
 </script>
@@ -147,7 +148,7 @@ export default {
 
         }
         .table{
-            width: 810px;
+            /*width: 810px;*/
             margin-left: 340px;
             padding-left: 24px;
             box-sizing: border-box;

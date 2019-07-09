@@ -166,7 +166,7 @@ function makeMenus (Route, Data) {
             }
         })
         if (valueTemp) {
-            return value1
+            return true
         }
         return false
     })
