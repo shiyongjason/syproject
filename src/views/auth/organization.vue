@@ -10,7 +10,7 @@
                 <h2 class="h-h2">人员/账号</h2>
                 <div class="demo-input-suffix">
                     <el-input
-                        placeholder="请输入工号\姓名\登录名进行检索"
+                        placeholder="请输入工号/姓名/登录名进行检索"
                         v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
