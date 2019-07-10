@@ -22,7 +22,8 @@ const routerMapping = [
                     title: '首页',
                     tagName: '首页',
                     isMenu: false,
-                    icon: 'hosjoy_home',
+                    isShow: true,
+                    icon: '',
                     component: './views/index/index'
                 },
                 component: () => import('./views/index/index')
@@ -44,8 +45,9 @@ const routerMapping = [
                 meta: {
                     title: '金云平台',
                     tagName: '金云平台',
+                    isShow: true,
                     isMenu: false,
-                    icon: 'hosjoy_home'
+                    icon: ''
                 },
                 component: () => import('./views/jinyunplatform/index')
             }
@@ -66,7 +68,8 @@ const routerMapping = [
         meta: {
             title: '权限管理',
             isMenu: true,
-            icon: 'hosjoy_permissions'
+            icon: 'hosjoy_permissions',
+            redirect: 'noredirect'
         },
         component: Layout,
         children: [
@@ -84,27 +87,24 @@ const routerMapping = [
             },
             {
                 path: 'role',
-                name: 'role',
+                name: 'jinyunPlatform',
                 meta: {
-                    title: '角色模版设置',
+                    title: '角色修改',
                     isMenu: false,
                     icon: '',
-                    component: './views/auth/role'
+                    component: './views/auth/role',
+                    func: (menus, route) => {
+                        const len = menus.length
+                        menus.splice(len - 1, 0, {
+                            path: '/auth/organization',
+                            meta: {
+                                title: '机构/人员管理'
+                            }
+                        })
+                    }
                 },
                 component: () => import('./views/auth/role')
             }
-            // {
-            //     path: 'role',
-            //     name: 'jinyunPlatform',
-            //     meta: {
-            //         title: '角色模版设置',
-            //         tagName: '角色模版设置',
-            //         isMenu: true,
-            //         icon: 'hosjoy_cloud_service',
-            //         component: './views/auth/role'
-            //     },
-            //     component: () => import('./views/auth/role')
-            // }
         ]
     },
     {
@@ -112,7 +112,7 @@ const routerMapping = [
         meta: {
             title: '好智慧-经营分析',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_operation'
         },
         // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
@@ -124,7 +124,7 @@ const routerMapping = [
                     title: '平台目标管理',
                     tagName: '平台目标管理',
                     isMenu: true,
-                    icon: 'hosjoy_cloud_service',
+                    icon: '',
                     component: './views/wisdom/platformTarget'
                 },
                 component: () => import('./views/wisdom/platformTarget')

@@ -74,7 +74,6 @@ export default {
 <style scoped>
 .content{
     padding-top: 20px;
-    padding-right: 12px;
     box-sizing: border-box;
 }
     .modify{

@@ -1,6 +1,5 @@
 <template>
     <div class="page-body">
-
         <div class="role">
             <div class="h-page-title">
                 基本信息
