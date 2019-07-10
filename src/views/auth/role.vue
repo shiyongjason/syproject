@@ -373,12 +373,17 @@ export default {
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
                 this.$confirm('取消后录入的数据将无法保存?', '取消确认', {
+                    distinguishCancelAndClose: true,
                     confirmButtonText: '继续填写',
                     cancelButtonText: '确认取消'
                 }).then(() => {
 
-                }).catch(() => {
-                    this.$router.push({ path: '/auth/organization' })
+                }).catch(action => {
+                    if (action === 'cancel') {
+                        this.$router.push({ path: '/auth/organization' })
+                    } else {
+
+                    }
                 })
             } else {
                 this.$router.push({ path: '/auth/organization' })
