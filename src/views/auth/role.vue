@@ -21,10 +21,10 @@
                 <table class="tablelist">
                     <thead>
                         <tr>
-                            <td width="20%">一级菜单</td>
-                            <td width="20%">二级菜单</td>
+                            <td width="">一级菜单</td>
+                            <td width="">二级菜单</td>
                             <td
-                                width="60%"
+                                width=""
                                 colspan=3
                             >权限</td>
                         </tr>
@@ -372,7 +372,7 @@ export default {
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
-                this.$confirm('取消后录入的数据将无法保存?', '取消确认', {
+                this.$confirm('取消后录入的数据将无法保存!', '取消确认', {
                     distinguishCancelAndClose: true,
                     confirmButtonText: '继续填写',
                     cancelButtonText: '确认取消'
@@ -447,7 +447,7 @@ export default {
     height: 120px;
     padding: 0 10px;
     .flex-col {
-        height: 60px;
+        height: 45px;
         align-items: center;
         display: flex;
         .flex-row {
@@ -475,11 +475,11 @@ export default {
     td {
         border: 1px solid #dddddd;
         line-height: 40px;
-        padding-left: 40px;
+        padding-left: 10px;
     }
     tbody {
         td {
-            width: 20%;
+
         }
         min-width: 1280px;
         overflow-x: scroll;
