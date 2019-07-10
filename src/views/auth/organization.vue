@@ -3,8 +3,8 @@
         <div class="index h-content">
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
-                <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick"
-                         :default-expanded-keys="['好享家']" node-key="label"></el-tree>
+                <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false"
+                         :default-expanded-keys="['1050V3100000000F6H0B']" node-key="id" :highlight-current="true"></el-tree>
             </div>
             <div class="table">
                 <h2 class="h-h2">人员/账号</h2>
@@ -89,6 +89,9 @@ export default {
                 treeList.push(this.makeTreeList(value))
             })
             this.treeList = [{ label: '好享家', id: '1050V3100000000F6H0B', children: treeList }]
+            this.$nextTick(function () {
+                this.$refs.tree.setCurrentKey({ id: '1050V3100000000F6H0B' })
+            })
         },
         async findOrganizationEmployee () {
             const { ...params } = this.queryParams
