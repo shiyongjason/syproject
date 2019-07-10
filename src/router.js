@@ -40,7 +40,7 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: '',
+                path: 'jinyunplatform',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
@@ -170,18 +170,20 @@ function makeMenus (Route, Data) {
     })
 }
 function makeIndex (data, next) {
-    let index = ''
+    let index = []
     if (data.length > 0) {
-        data.forEach(value => {
-            index = value.path
-            if (value.children) {
-                if (value.children.length > 0) {
-                    index += ('/' + value.children[0].path)
+        for (let i = 0; i < data.length; i++) {
+            index.push(data[i].path.replace('/', ''))
+            if (data[i].children) {
+                if (data[i].children.length > 0) {
+                    index.push(data[i].children[0].path.replace('/', ''))
                 }
             }
-        })
-        return next({
-            path: index
+            break
+        }
+        console.log(index)
+        next({
+            path: index.join('/')
         })
     }
 }
@@ -190,8 +192,8 @@ function makeIndex (data, next) {
 async function getMenu (next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
-    makeIndex(menu, next)
     router.addRoutes(menu)
+    makeIndex(menu, next)
 }
 
 let isFirst = true
@@ -209,7 +211,6 @@ router.beforeEach(async (to, from, next) => {
             if (isFirst) {
                 isFirst = false
                 await getMenu(next)
-                next({ ...to, replace: true })
             }
         }
     }
