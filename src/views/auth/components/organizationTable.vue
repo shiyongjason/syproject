@@ -29,7 +29,7 @@
                 prop="address"
                 label="操作">
                 <template slot-scope="scope">
-                    <span class="modify" @click="goTo(scope.row.psncode)">修改</span>
+                    <el-button type="primary" size="mini" plain @click="goTo(scope.row.psncode)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
