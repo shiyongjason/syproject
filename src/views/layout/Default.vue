@@ -13,7 +13,7 @@
             <el-main class="content">
                 <div  :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
                       <H-tags></H-tags>
-                <Breadcrumb  />
+
                 </div>
 
                 <div
@@ -89,7 +89,7 @@
 import { changePassword } from './api/index'
 import NavMenuHead from './NavMenuHead'
 import NavMenuAside from './NavMenuAside'
-import Breadcrumb from '@/components/Breadcrumb'
+
 import HTags from './Tags'
 import { mapState } from 'vuex'
 export default {
@@ -97,7 +97,6 @@ export default {
     components: {
         NavMenuHead,
         NavMenuAside,
-        Breadcrumb,
         HTags
     },
     data () {

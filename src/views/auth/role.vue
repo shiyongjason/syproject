@@ -10,7 +10,7 @@
                     <div class="flex-row">工号：{{roleInfo.psncode}}</div>
                 </div>
                 <div class="flex-col">
-                    <div class="flex-row">用户名：{{roleInfo.mobile}}</div>
+                    <div class="flex-row">登录名：{{roleInfo.mobile}}</div>
                     <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
                 </div>
             </div>
@@ -525,7 +525,7 @@ export default {
         color: #dddddd;
         border: 1px solid #dddddd;
         border-left: 1px solid #dddddd !important;
-        border-right: 1px solid #dddddd !important;
+        // border-right: 1px solid #dddddd !important;
     }
 }
 /deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
@@ -555,6 +555,13 @@ export default {
             // border-right: 1px solid #DCDFE6;
             border-radius: 0 4px 4px 0;
             // border-left: none;
+        }
+    }
+    button[disabled]{
+        cursor: not-allowed;
+        color: #dddddd;
+        &:hover{
+            color:#dddddd
         }
     }
 }
