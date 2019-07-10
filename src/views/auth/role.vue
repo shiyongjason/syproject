@@ -525,7 +525,6 @@ export default {
         color: #dddddd;
         border: 1px solid #dddddd;
         border-left: 1px solid #dddddd !important;
-        // border-right: 1px solid #dddddd !important;
     }
 }
 /deep/ .el-radio-button__orig-radio:checked + .el-radio-button__inner {
