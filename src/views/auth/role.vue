@@ -1,6 +1,5 @@
 <template>
     <div class="page-body">
-
         <div class="role">
             <div class="h-page-title">
                 基本信息
@@ -134,27 +133,26 @@
             :class="isCollapse?'minLeft':'maxLeft'"
         >
             <el-button
-                name="white-color"
                 @click="onCancelRole()"
-            >取消</el-button>
-            <el-button name="green-color">另存为模板</el-button>
+            >取 消</el-button>
             <el-button
-                name="hosjoy-color"
+                 type="primary"
                 @click="onSaveRole()"
-            >保存</el-button>
+            >保  存</el-button>
         </div>
         <el-dialog
             title="查询配置"
             :visible.sync="dialogVisible"
-            width="30%"
+            width="40%"
             :close-on-click-modal='false'
+             :before-close="onCancelCongifg"
         >
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
                         <tr>
-                            <td width="20%">菜单</td>
-                            <td width="80%">权限</td>
+                            <td width="30%">菜单</td>
+                            <td width="70%">权限</td>
 
                         </tr>
                     </thead>
@@ -187,15 +185,16 @@
         <el-dialog
             title="操作配置"
             :visible.sync="twodialogVisible"
-            width="30%"
+            width="40%"
             :close-on-click-modal='false'
+             :before-close="onCanceloperateCongifg"
         >
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
                         <tr>
-                            <td width="20%">菜单</td>
-                            <td width="80%">权限</td>
+                            <td width="30%">菜单</td>
+                            <td width="70%">权限</td>
 
                         </tr>
                     </thead>
@@ -415,10 +414,12 @@ export default {
             this.newItem = item
         },
         onCancelCongifg () {
-            this.newItem.pageConfig = this.newCongig
+            this.newItem.pageConfig = this.newCongig ? this.newCongig : []
+            this.dialogVisible = false
         },
         onCanceloperateCongifg () {
-            this.newItem.childAuthList = this.newchildAuthList
+            this.newItem.childAuthList = this.newchildAuthList ? this.newchildAuthList : []
+            this.twodialogVisible = false
         }
     }
 }
@@ -527,6 +528,9 @@ export default {
     color: #ff7a45;
     border-color: #ff7a45;
     box-shadow: -1px 0 0 0 #ff7a45;
+}
+.el-radio-button__inner:hover{
+    color: #ff7a45
 }
 .el-radio-group {
     button {

@@ -5,7 +5,7 @@
             <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
                 <i v-if="item.meta.icon" :class="'iconfont ' + `${item.meta.icon}`"></i>
                 <span
-                    v-if="item.meta.redirect == 'noredirect'|| index == levelList.length-2"
+                    v-if="item.meta.redirect == 'noredirect'|| index == levelList.length-1"
                     class="no-redirect"
                 >{{item.meta.title}}</span>
                 <router-link v-else :to="item.redirect || item.path">{{item.meta.title}}</router-link>
@@ -30,12 +30,13 @@ export default {
         getBreadcrumb () {
             const routerFunc = this.$route.meta.func
             let matched = this.$route.matched.filter(item => {
-                if (item.meta.isMenu) {
+                if (item.meta.title) {
                     return true
                 }
             })
             routerFunc && routerFunc(matched, this.$route)
             this.levelList = matched
+            console.log(this.levelList)
         }
     },
     mounted () {

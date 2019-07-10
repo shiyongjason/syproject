@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body"></div>
+    <div class="page-body">待上线</div>
 </template>
 <script>
 export default {

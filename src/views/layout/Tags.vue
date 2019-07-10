@@ -107,14 +107,17 @@ export default {
         },
         // 设置标签
         setTags (route) {
-            const isExist = this.tagsList.some(item => {
-                return item.path === (route.fullPath).split('?')[0]
-            })
-            !isExist && this.tagsList.push({
-                title: route.meta.title,
-                path: (route.fullPath).split('?')[0],
-                name: route.name
-            })
+            console.log(route)
+            if (route.meta.tagName) {
+                const isExist = this.tagsList.some(item => {
+                    return (item.path === (route.fullPath).split('?')[0])
+                })
+                !isExist && this.tagsList.push({
+                    title: route.meta.tagName,
+                    path: (route.fullPath).split('?')[0],
+                    name: route.name
+                })
+            }
 
             // this.tagsList = this.tagsList.filter(item =>
             //     item.name != 'index'
@@ -149,6 +152,20 @@ export default {
         this.tagsList = tags || []
         this.setTags(this.$route)
     }
+    // updated () {
+    //     console.log(2)
+    //     const tags = JSON.parse(sessionStorage.getItem('tagsList'))
+    //     // const isExist = this.newTags.some(item => {
+    //     //     return item.path == '/'
+    //     // })
+    //     // !isExist && this.newTags.push({
+    //     //     title: '首页',
+    //     //     path: '/',
+    //     //     name: 'index'
+    //     // })
+    //     this.tagsList = tags || []
+    //     this.setTags(this.$route)
+    // }
 }
 
 </script>
