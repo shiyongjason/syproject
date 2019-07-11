@@ -39,7 +39,7 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: 'jinyunplatform',
+                path: '',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
