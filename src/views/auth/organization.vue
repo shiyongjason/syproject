@@ -4,7 +4,7 @@
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
                 <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false"
-                         :default-expanded-keys="['hosjoy']" node-key="id" :highlight-current="true"></el-tree>
+                         :default-expanded-keys="['']" node-key="id" :highlight-current="true"></el-tree>
             </div>
             <div class="table">
                 <h2 class="h-h2">人员/账号</h2>
@@ -80,7 +80,7 @@ export default {
         },
         handleNodeClick (data) {
             this.queryParams.pkDeptdoc = data.id
-            this.debounce(this.findOrganizationEmployee, 800)()
+            this.debounce(this.findOrganizationEmployee, 500)()
         },
         async findBOSSOrganization () {
             const { data } = await findBOSSOrganization()
@@ -88,9 +88,9 @@ export default {
             data.departmentNodeVOS.forEach(value => {
                 treeList.push(this.makeTreeList(value))
             })
-            this.treeList = [{ label: '好享家', id: 'hosjoy', children: treeList }]
+            this.treeList = [{ label: '好享家', id: '', children: treeList }]
             this.$nextTick(function () {
-                this.$refs.tree.setCurrentKey({ id: 'hosjoy' })
+                this.$refs.tree.setCurrentKey({ id: '' })
             })
         },
         async findOrganizationEmployee () {
