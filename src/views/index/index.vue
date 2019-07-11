@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="hos-box">
                 <section>
-                    <div class="jinyun"><i class="iconfont hosjoy_cloud_service"></i><span>金云平台</span></div>
+                    <div class="jinyun" @click="onClikUrl('jinyun')"><i class="iconfont hosjoy_cloud_service"></i><span>金云平台</span></div>
                 </section>
                 <section>
                     <div class="oldsys" @click="onClikUrl('oldsys')"><i class="iconfont hosjoy_goods"></i><span>老系统</span></div>
@@ -18,14 +18,25 @@
 </template>
 <script>
 import { iframeUrl } from '@/api/config'
+import { mapState } from 'vuex'
 export default {
-    data () {
-        return {}
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         onClikUrl (type) {
             if (type == 'oldsys') {
-                window.location.href = `${iframeUrl}/default.html#/index`
+                // window.location.href = `${iframeUrl}/default.html#/index`
+                window.open(`${iframeUrl}default.html#/index`)
+            }
+            if (type === 'jinyun') {
+                let token = sessionStorage.getItem('token')
+                if (token) {
+                    token = 'Bearer ' + token
+                }
+                window.location.href = 'http://192.168.26.171:8180/bossLogin.do?mobileNo=' + '18502526429' + '&token=' + token
             }
         }
     }

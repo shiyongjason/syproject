@@ -22,7 +22,6 @@ const routerMapping = [
                     title: '首页',
                     tagName: '首页',
                     isMenu: false,
-                    isShow: true,
                     icon: '',
                     component: './views/index/index'
                 },
@@ -40,12 +39,11 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: '',
+                path: 'jinyunplatform',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
                     tagName: '金云平台',
-                    isShow: true,
                     isMenu: false,
                     icon: ''
                 },
@@ -150,38 +148,34 @@ const router = new Router({
         }
     ]
 })
-// 这边是动态添加路由  未来还可以和渲染菜单一起优化
+// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
 function makeMenus (Route, Data) {
-    return Route.filter((value1) => {
-        let valueTemp = true
-        Data.forEach((value2) => {
-            if (value2.authUri === value1.path) {
-                if (value1.children) {
-                    value1.children = makeMenus(value1.children, value2.childAuthList)
-                }
-                value1.meta.have = value2.have
-                valueTemp = value2.have
-            }
-        })
-        if (valueTemp) {
+    return Route.filter(value => {
+        if (value.path === '') {
             return true
         }
-        return false
+        const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        if (value.children && authArr.length > 0) {
+            value.children = makeMenus(value.children, authArr[0].childAuthList)
+        }
+        return authArr.length > 0
     })
 }
 function makeIndex (data, next) {
-    let index = ''
+    let index = []
     if (data.length > 0) {
-        data.forEach(value => {
-            index = value.path
-            if (value.children) {
-                if (value.children.length > 0) {
-                    index += ('/' + value.children[0].path)
+        for (let i = 0; i < data.length; i++) {
+            index.push(data[i].path.replace('/', ''))
+            if (data[i].children) {
+                if (data[i].children.length > 0) {
+                    index.push(data[i].children[0].path.replace('/', ''))
                 }
             }
-        })
-        return next({
-            path: index
+            break
+        }
+        console.log(index)
+        next({
+            path: index.join('/')
         })
     }
 }
@@ -190,8 +184,8 @@ function makeIndex (data, next) {
 async function getMenu (next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
-    makeIndex(menu, next)
     router.addRoutes(menu)
+    makeIndex(menu, next)
 }
 
 let isFirst = true
@@ -209,7 +203,6 @@ router.beforeEach(async (to, from, next) => {
             if (isFirst) {
                 isFirst = false
                 await getMenu(next)
-                next({ ...to, replace: true })
             }
         }
     }

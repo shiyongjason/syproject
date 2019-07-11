@@ -33,7 +33,7 @@
                 ><i class="el-icon-close"></i></span>
             </li>
         </ul>
-        <div class="tags-close-box">
+        <!-- <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <div class="tags-li active">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -41,12 +41,13 @@
                 <el-dropdown-menu
                     size="small"
                     slot="dropdown"
+                    background-color="#545c64"
                 >
                     <el-dropdown-item command="other">关闭其他</el-dropdown-item>
-                    <!-- <el-dropdown-item command="all">关闭所有</el-dropdown-item> -->
+                   <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -107,7 +108,6 @@ export default {
         },
         // 设置标签
         setTags (route) {
-            console.log(route)
             if (route.meta.tagName) {
                 const isExist = this.tagsList.some(item => {
                     return (item.path === (route.fullPath).split('?')[0])
@@ -173,9 +173,10 @@ export default {
 <style  lang="scss">
 .tags {
     position: relative;
-    height: 30px;
+
     overflow: hidden;
-    background: #fff;
+    // background: #fff;
+    padding-left: 10px;
     padding-right: 120px;
 }
 
@@ -188,13 +189,12 @@ export default {
 
 .tags-li {
     float: left;
-    margin: 3px 5px 2px 3px;
-    border-radius: 3px;
+    margin: 0px 2px 0px 0px;
     font-size: 12px;
     overflow: hidden;
     cursor: pointer;
-    height: 23px;
-    line-height: 23px;
+    height: 28px;
+    line-height: 28px;
     border: 1px solid #e9eaec;
     background: #fff;
     padding: 0 5px 0 12px;
@@ -221,7 +221,8 @@ export default {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin-right: 5px;
+    // margin-right: 5px;
+    margin: 0 10px;
     color: #666;
 }
 
@@ -236,9 +237,9 @@ export default {
     box-sizing: border-box;
     padding-top: 1px;
     text-align: center;
-    width: 110px;
+    width: 109px;
     height: 30px;
-    background: #fff;
+    // background: #fff;
     z-index: 10;
 }
 
@@ -246,4 +247,5 @@ export default {
     background-color: #ff7a45;
     border-color: #ff7a45;
 }
+
 </style>

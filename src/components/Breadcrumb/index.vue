@@ -36,7 +36,6 @@ export default {
             })
             routerFunc && routerFunc(matched, this.$route)
             this.levelList = matched
-            console.log(this.levelList)
         }
     },
     mounted () {

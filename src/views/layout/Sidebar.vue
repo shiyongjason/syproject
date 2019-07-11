@@ -22,33 +22,29 @@ export default {
                 const path = parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`
                 if (item.children && item.children.length > 0) {
                     const children = this.generateSidebar(item.children, path)
-                    if (item.meta.have) {
-                        result.push((
-                            <el-submenu index={path}>
-                                <template slot="title">
-                                    {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                    <span>{item.meta.title}</span>
-                                </template>{children}
-                            </el-submenu>
-                        ))
-                    }
+                    result.push((
+                        <el-submenu index={path}>
+                            <template slot="title">
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                            </template>{children}
+                        </el-submenu>
+                    ))
                 } else {
-                    if (item.meta.have) {
-                        if (item.path === '/oldsystem') {
-                            result.push(
-                                <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} style={`display:block`}>
-                                    {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                    <span>{item.meta.title}</span>
-                                </a>
-                            )
-                        } else {
-                            result.push(
-                                <el-menu-item index={path}>
-                                    {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                                    <span>{item.meta.title}</span>
-                                </el-menu-item>
-                            )
-                        }
+                    if (item.path === '/oldsystem') {
+                        result.push(
+                            <a href={`${iframeUrl}/default.html#/index`} target="_blank" class={`el-menu-item `} style={`display:block`}>
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                            </a>
+                        )
+                    } else {
+                        result.push(
+                            <el-menu-item index={path}>
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                            </el-menu-item>
+                        )
                     }
                 }
             })
