@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import { findMenuList } from '../views/layout/api'
-import { routerMapping } from '../router'
 
 Vue.use(Vuex)
 //

@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import { login, getUserdata,findMenuList } from './api/index'
+import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
 import { mapState, mapMutations, mapActions } from 'vuex'
