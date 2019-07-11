@@ -7,13 +7,13 @@ import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
 import '../src/theme/index.css'
 import '@/assets/style/common.scss'
-import HosjoyUI from 'hosjoy-ui'
+// import HosjoyUI from 'hosjoy-ui'
 import filters from './utils/filters'
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
-Vue.use(HosjoyUI)
+// Vue.use(HosjoyUI)
 
 // 过滤器
 Object.keys(filters).forEach(key => {

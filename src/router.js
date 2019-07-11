@@ -161,30 +161,12 @@ function makeMenus (Route, Data) {
         return authArr.length > 0
     })
 }
-function makeIndex (data, next) {
-    let index = []
-    if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-            index.push(data[i].path.replace('/', ''))
-            if (data[i].children) {
-                if (data[i].children.length > 0) {
-                    index.push(data[i].children[0].path.replace('/', ''))
-                }
-            }
-            break
-        }
-        next({
-            path: index.join('/')
-        })
-    }
-}
 
-// 导航route抖动 ？？？
-async function getMenu (next) {
+async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
     router.addRoutes(menu)
-    makeIndex(menu, next)
+    next({ ...to, replace: true })
 }
 
 let isFirst = true
@@ -201,7 +183,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             if (isFirst) {
                 isFirst = false
-                await getMenu(next)
+                await getMenu(to, next)
             }
         }
     }

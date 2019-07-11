@@ -4,7 +4,7 @@
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
                 <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false"
-                         :default-expanded-keys="['1050V3100000000F6H0B']" node-key="id" :highlight-current="true"></el-tree>
+                         :default-expanded-keys="['']" node-key="id" :highlight-current="true"></el-tree>
             </div>
             <div class="table">
                 <h2 class="h-h2">人员/账号</h2>
@@ -55,7 +55,7 @@ export default {
                 pageSize: 10,
                 pageNum: 1,
                 keyWord: '',
-                pkDeptdoc: '1050V3100000000F6H0B' // 公司主键 感觉没必要放在前端
+                pkDeptdoc: '' // 公司主键
             },
             paginationData: {},
             tableData: [],
@@ -80,7 +80,7 @@ export default {
         },
         handleNodeClick (data) {
             this.queryParams.pkDeptdoc = data.id
-            this.debounce(this.findOrganizationEmployee, 800)()
+            this.debounce(this.findOrganizationEmployee, 500)()
         },
         async findBOSSOrganization () {
             const { data } = await findBOSSOrganization()
@@ -88,9 +88,9 @@ export default {
             data.departmentNodeVOS.forEach(value => {
                 treeList.push(this.makeTreeList(value))
             })
-            this.treeList = [{ label: '好享家', id: '1050V3100000000F6H0B', children: treeList }]
+            this.treeList = [{ label: '好享家', id: '', children: treeList }]
             this.$nextTick(function () {
-                this.$refs.tree.setCurrentKey({ id: '1050V3100000000F6H0B' })
+                this.$refs.tree.setCurrentKey({ id: '' })
             })
         },
         async findOrganizationEmployee () {
