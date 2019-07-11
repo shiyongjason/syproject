@@ -22,7 +22,6 @@ const routerMapping = [
                     title: '首页',
                     tagName: '首页',
                     isMenu: false,
-                    isShow: true,
                     icon: '',
                     component: './views/index/index'
                 },
@@ -45,7 +44,6 @@ const routerMapping = [
                 meta: {
                     title: '金云平台',
                     tagName: '金云平台',
-                    isShow: true,
                     isMenu: false,
                     icon: ''
                 },

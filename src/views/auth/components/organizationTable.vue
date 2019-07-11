@@ -24,7 +24,7 @@
                 label="姓名">
             </el-table-column>
             <el-table-column
-                prop="psnname"
+                prop="mobile"
                  align="center"
                  width="180"
                 label="登录名">
