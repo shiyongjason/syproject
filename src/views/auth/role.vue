@@ -360,15 +360,16 @@ export default {
             })
         },
         async  onSaveRole () {
-            const isHave = this.tableList && this.tableList.filter(item => item.have == true).length > 0
-            if (!isHave) {
-                this.$message({ message: '请先设置权限', type: 'warning' })
-            } else {
-                const params = { employeeAuthLists: this.tableList, jobNumber: this.jobNumber }
-                await saveAuthRole(params)
-                this.$message({ message: '权限保存成功', type: 'success' })
-                this.$router.push({ path: '/auth/organization' })
-            }
+            // const isHave = this.tableList && this.tableList.filter(item => item.have == true).length > 0
+            // if (!isHave) {
+            //     this.$message({ message: '请先设置权限', type: 'warning' })
+            // } else {
+
+            // }
+            const params = { employeeAuthLists: this.tableList, jobNumber: this.jobNumber }
+            await saveAuthRole(params)
+            this.$message({ message: '权限保存成功', type: 'success' })
+            this.$router.push({ path: '/auth/organization' })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
@@ -559,8 +560,13 @@ export default {
     button[disabled]{
         cursor: not-allowed;
         color: #dddddd;
+        // border-left: 1px solid #dcdfe6 !important;
+    border-right: 1px solid #ffffff !important;
         &:hover{
             color:#dddddd
+        }
+        &:last-child{
+             border-right: 1px solid #dcdfe6 !important;
         }
     }
 }
