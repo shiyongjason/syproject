@@ -2,15 +2,34 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import { findMenuList } from '../views/layout/api'
-import { routerMapping } from '../router'
+import { routerMapping, router } from '../router'
 
 Vue.use(Vuex)
-
+//
+// function makeMenus (Route, Data) {
+//     return Route.filter((value1) => {
+//         let valueTemp = true
+//         Data.forEach((value2) => {
+//             // console.log(value2)
+//             if (value2.authUri === value1.path) {
+//                 if (value1.children) {
+//                     value1.children = makeMenus(value1.children, value2.childAuthList)
+//                 }
+//                 value1.meta.have = value2.have
+//                 valueTemp = value2.have
+//             }
+//         })
+//         if (valueTemp) {
+//             delete value1.component
+//             return value1
+//         }
+//         return false
+//     })
+// }
 function makeMenus (Route, Data) {
     return Route.filter((value1) => {
         let valueTemp = true
         Data.forEach((value2) => {
-            // console.log(value2)
             if (value2.authUri === value1.path) {
                 if (value1.children) {
                     value1.children = makeMenus(value1.children, value2.childAuthList)
@@ -20,8 +39,7 @@ function makeMenus (Route, Data) {
             }
         })
         if (valueTemp) {
-            delete value1.component
-            return value1
+            return true
         }
         return false
     })
@@ -48,7 +66,9 @@ const store = new Vuex.Store({
             sessionStorage.setItem('menuList', JSON.stringify(data))
             // console.log(routerMapping)
             // console.log(makeMenus(routerMapping, data))
-            commit('MENU_LIST', makeMenus(routerMapping, data))
+            const menu = makeMenus(routerMapping, data)
+            router.addRoutes(menu)
+            commit('MENU_LIST', menu)
         }
     },
     modules: {
