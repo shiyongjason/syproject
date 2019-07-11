@@ -80,7 +80,7 @@ export default {
         },
         handleNodeClick (data) {
             this.queryParams.pkDeptdoc = data.id
-            this.debounce(this.findOrganizationEmployee, 1200)()
+            this.debounce(this.findOrganizationEmployee, 800)()
         },
         async findBOSSOrganization () {
             const { data } = await findBOSSOrganization()
