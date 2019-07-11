@@ -59,7 +59,6 @@ export default {
             menu = JSON.parse(menu)
         }
         this.menus = this.resolveMenus(menu)
-        console.log(this.menus)
     }
 }
 </script>

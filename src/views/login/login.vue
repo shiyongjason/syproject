@@ -150,12 +150,8 @@ export default {
             })
         },
         async next () {
-            // await this.findMenuList()
-            console.log(routerMapping)
             const { data } = await findMenuList()
-            console.log(data)
             const menu = this.makeMenus(routerMapping, data)
-            // console.log(menu)
             this.$router.addRoutes(menu)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
@@ -168,7 +164,7 @@ export default {
         })
     },
     mounted () {
-        console.log(routerMapping)
+        sessionStorage.removeItem('token')
         this.resetVuex()
         // window.addEventListener('message', this.handleMessage)
         // 获取iframe 对象
