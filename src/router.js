@@ -22,7 +22,6 @@ const routerMapping = [
                     title: '首页',
                     tagName: '首页',
                     isMenu: false,
-                    isShow: true,
                     icon: '',
                     component: './views/index/index'
                 },
@@ -45,7 +44,6 @@ const routerMapping = [
                 meta: {
                     title: '金云平台',
                     tagName: '金云平台',
-                    isShow: true,
                     isMenu: false,
                     icon: ''
                 },
@@ -190,8 +188,8 @@ function makeIndex (data, next) {
 async function getMenu (next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
-    makeIndex(menu, next)
     router.addRoutes(menu)
+    makeIndex(menu, next)
 }
 
 let isFirst = true
@@ -209,7 +207,9 @@ router.beforeEach(async (to, from, next) => {
             if (isFirst) {
                 isFirst = false
                 await getMenu(next)
-                next({ ...to, replace: true })
+                // next({ ...to, replace: true })
+            } else {
+                next()
             }
         }
     }

@@ -25,7 +25,8 @@ export default {
     methods: {
         onClikUrl (type) {
             if (type == 'oldsys') {
-                window.location.href = `${iframeUrl}/default.html#/index`
+                // window.location.href = `${iframeUrl}/default.html#/index`
+                window.open(`${iframeUrl}default.html#/index`)
             }
         }
     }

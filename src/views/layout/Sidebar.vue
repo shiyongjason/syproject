@@ -36,7 +36,7 @@ export default {
                     if (item.meta.have) {
                         if (item.path === '/oldsystem') {
                             result.push(
-                                <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} style={`display:block`}>
+                                <a href={`${iframeUrl}/default.html#/index`} class={`el-menu-item `} target="_blank" style={`display:block`}>
                                     {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                     <span>{item.meta.title}</span>
                                 </a>
