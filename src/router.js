@@ -174,18 +174,16 @@ function makeIndex (data, next) {
             break
         }
         console.log(index)
-        next({
-            path: index.join('/')
-        })
+        next()
     }
 }
 
 // 导航route抖动 ？？？
-async function getMenu (next) {
+async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
     router.addRoutes(menu)
-    makeIndex(menu, next)
+    next({ ...to, replace: true })
 }
 
 let isFirst = true
@@ -202,7 +200,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             if (isFirst) {
                 isFirst = false
-                await getMenu(next)
+                await getMenu(to, next)
             }
         }
     }
