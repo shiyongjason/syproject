@@ -39,7 +39,7 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: 'jinyunplatform',
+                path: '',
                 name: 'jinyunplatform',
                 meta: {
                     title: '金云平台',
@@ -173,7 +173,6 @@ function makeIndex (data, next) {
             }
             break
         }
-        console.log(index)
         next({
             path: index.join('/')
         })
