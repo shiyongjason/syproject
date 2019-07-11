@@ -161,24 +161,7 @@ function makeMenus (Route, Data) {
         return authArr.length > 0
     })
 }
-function makeIndex (data, next) {
-    let index = []
-    if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
-            index.push(data[i].path.replace('/', ''))
-            if (data[i].children) {
-                if (data[i].children.length > 0) {
-                    index.push(data[i].children[0].path.replace('/', ''))
-                }
-            }
-            break
-        }
-        console.log(index)
-        next()
-    }
-}
 
-// 导航route抖动 ？？？
 async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
