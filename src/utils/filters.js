@@ -6,8 +6,8 @@ const formatterTime = function (time) {
     const date = (data.getDate()) < 10 ? '0' + (data.getDate()) : data.getDate()
     const hour = (data.getHours()) < 10 ? '0' + (data.getHours()) : data.getHours()
     const minute = (data.getMinutes()) < 10 ? '0' + (data.getMinutes()) : data.getMinutes()
-
-    return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute) : '-'
+    const second = (data.getSeconds()) < 10 ? '0' + (data.getSeconds()) : data.getSeconds()
+    return time ? (year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second) : '-'
 }
 
 // new Data()过后的时间转YYYY-MM-DD HH:mm
