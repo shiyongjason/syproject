@@ -150,23 +150,17 @@ const router = new Router({
         }
     ]
 })
-// 这边是动态添加路由  未来还可以和渲染菜单一起优化
+// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
 function makeMenus (Route, Data) {
-    return Route.filter((value1) => {
-        let valueTemp = true
-        Data.forEach((value2) => {
-            if (value2.authUri === value1.path) {
-                if (value1.children) {
-                    value1.children = makeMenus(value1.children, value2.childAuthList)
-                }
-                value1.meta.have = value2.have
-                valueTemp = value2.have
-            }
-        })
-        if (valueTemp) {
+    return Route.filter(value => {
+        if (value.path === '') {
             return true
         }
-        return false
+        const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        if (value.children && authArr.length > 0) {
+            value.children = makeMenus(value.children, authArr[0].childAuthList)
+        }
+        return authArr.length > 0
     })
 }
 function makeIndex (data, next) {

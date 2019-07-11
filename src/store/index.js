@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import { findMenuList } from '../views/layout/api'
-import { routerMapping, router } from '../router'
+import { routerMapping } from '../router'
 
 Vue.use(Vuex)
 //
@@ -26,24 +26,6 @@ Vue.use(Vuex)
 //         return false
 //     })
 // }
-function makeMenus (Route, Data) {
-    return Route.filter((value1) => {
-        let valueTemp = true
-        Data.forEach((value2) => {
-            if (value2.authUri === value1.path) {
-                if (value1.children) {
-                    value1.children = makeMenus(value1.children, value2.childAuthList)
-                }
-                value1.meta.have = value2.have
-                valueTemp = value2.have
-            }
-        })
-        if (valueTemp) {
-            return true
-        }
-        return false
-    })
-}
 
 const userInfo = sessionStorage.getItem('userInfo')
 const store = new Vuex.Store({
@@ -63,12 +45,11 @@ const store = new Vuex.Store({
         },
         async findMenuList ({ commit }) {
             const { data } = await findMenuList()
-            sessionStorage.setItem('menuList', JSON.stringify(data))
+            // sessionStorage.setItem('menuList', JSON.stringify(data))
             // console.log(routerMapping)
             // console.log(makeMenus(routerMapping, data))
-            const menu = makeMenus(routerMapping, data)
-            router.addRoutes(menu)
-            commit('MENU_LIST', menu)
+            // const menu = makeMenus(routerMapping, data)
+            commit('MENU_LIST', data)
         }
     },
     modules: {

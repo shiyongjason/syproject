@@ -11,8 +11,8 @@
 </template>
 <script>
 import Sidebar from './Sidebar'
-import { routerMapping } from '@/router.js'
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+
 export default {
     name: 'NavMenuHead',
     components: {
@@ -20,13 +20,11 @@ export default {
     },
     data () {
         return {
-            isCollapse: false
+            isCollapse: false,
+            menus: []
         }
     },
     computed: {
-        menus () {
-            return this.resolveMenus(routerMapping)
-        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -53,14 +51,15 @@ export default {
         ...mapMutations({
             setCollapse: 'IS_COLLAPSE'
 
-        }),
-        ...mapActions([
-            'findMenuList'
-        ])
+        })
     },
     mounted () {
-        // 全局初始化vuex menuList
-        this.findMenuList()
+        let menu = sessionStorage.getItem('menuList')
+        if (menu) {
+            menu = JSON.parse(menu)
+        }
+        this.menus = this.resolveMenus(menu)
+        console.log(this.menus)
     }
 }
 </script>
