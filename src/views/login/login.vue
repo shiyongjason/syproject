@@ -43,12 +43,14 @@
     </div>
 </template>
 <script>
-import { login, getUserdata } from './api/index'
+import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
-import { mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
+import { routerMapping } from '../../router'
+
 export default {
     data () {
         return {
@@ -74,6 +76,11 @@ export default {
             src: iframeUrl,
             iframeWin: {}
         }
+    },
+    computed: {
+        ...mapState({
+            menuList: state => state.menuList
+        })
     },
     methods: {
         sendMessage (userData) {
@@ -102,15 +109,63 @@ export default {
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
                     localStorage.setItem('user_data', JSON.stringify(userData.data))
                     this.sendMessage(userData)
-                    this.$router.push('/')
+                    // await this.findMenuList()
+                    await this.next()
+                    // this.$router.push('/')
                 }
             })
         },
+        makeIndex (data) {
+            let index = []
+            if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    index.push(data[i].path.replace('/', ''))
+                    if (data[i].children) {
+                        if (data[i].children.length > 0) {
+                            index.push(data[i].children[0].path.replace('/', ''))
+                        }
+                    }
+                    break
+                }
+                let path = index.join('/')
+                if (!path) {
+                    path = '/'
+                }
+                this.$router.push({
+                    path: path
+                })
+            }
+        },
+        makeMenus (Route, Data) {
+            // console.log(Route, Data)
+            return Route.filter(value => {
+                if (value.path == '') {
+                    return true
+                }
+                const authArr = Data.filter(item => item.authUri === value.path && item.have)
+                if (value.children && authArr.length > 0) {
+                    value.children = this.makeMenus(value.children, authArr[0].childAuthList)
+                }
+                return authArr.length > 0
+            })
+        },
+        async next () {
+            const { data } = await findMenuList()
+            const menu = this.makeMenus(routerMapping, data)
+            this.$router.addRoutes(menu)
+            sessionStorage.setItem('menuList', JSON.stringify(menu))
+            this.makeIndex(menu)
+        },
         ...mapMutations({
             setUserInfo: 'USER_INFO'
+        }),
+        ...mapActions({
+            resetVuex: 'resetVuex'
         })
     },
     mounted () {
+        sessionStorage.removeItem('token')
+        this.resetVuex()
         // window.addEventListener('message', this.handleMessage)
         // 获取iframe 对象
         this.iframeWin = this.$refs.iframe.contentWindow
@@ -120,6 +175,9 @@ export default {
                 this.onLogin()
             }
         }
+    },
+    created () {
+
     }
 }
 </script>

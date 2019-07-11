@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
-
-// import editData from '@/views/goodsManage/store/index'
+import { findMenuList } from '../views/layout/api'
 
 Vue.use(Vuex)
 
@@ -11,11 +10,22 @@ const store = new Vuex.Store({
     state: {
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
-        'isSaving': false
+        'isSaving': false,
+        'tagsInfo': [],
+        'menuList': [],
+        'isCollapse': false
 
     },
     mutations,
-    actions: {},
+    actions: {
+        resetVuex (context) {
+            this.state.tagsInfo = []
+        },
+        async findMenuList ({ commit }) {
+            const { data } = await findMenuList()
+            commit('MENU_LIST', data)
+        }
+    },
     modules: {
         // 视图的 store
     }

@@ -41,6 +41,7 @@ export default {
             if (command === 'exit') {
                 sessionStorage.removeItem('userInfo')
                 sessionStorage.removeItem('token')
+                sessionStorage.removeItem('tagsList')
                 this.$router.push('/login')
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true
@@ -53,7 +54,8 @@ export default {
         }
     },
     mounted () {
-        this.userName = this.userInfo.user_name
+        this.userName = this.userInfo.employeeName + '/' +
+                            this.userInfo.deptName + '/好享家'
     }
 }
 </script>

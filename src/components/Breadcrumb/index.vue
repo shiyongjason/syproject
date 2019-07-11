@@ -1,5 +1,6 @@
 <template>
     <el-breadcrumb class="breadcrumb-container" separator-class="el-icon-arrow-right">
+
         <transition-group name="breadcrumb">
             <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
                 <i v-if="item.meta.icon" :class="'iconfont ' + `${item.meta.icon}`"></i>

@@ -11,8 +11,8 @@
 </template>
 <script>
 import Sidebar from './Sidebar'
-import { routerMapping } from '@/router.js'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
+
 export default {
     name: 'NavMenuHead',
     components: {
@@ -20,13 +20,11 @@ export default {
     },
     data () {
         return {
-            isCollapse: false
+            isCollapse: false,
+            menus: []
         }
     },
     computed: {
-        menus () {
-            return this.resolveMenus(routerMapping)
-        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -39,20 +37,28 @@ export default {
     methods: {
         onSwitch () {
             this.isCollapse = !this.isCollapse
+            this.setCollapse(this.isCollapse)
         },
         resolveMenus (menus) {
             menus = JSON.parse(JSON.stringify(menus))
-            // 将router中非菜单的排除掉
             return menus.filter((item) => {
                 if (item.children && item.children.length > 0) {
                     item.children = this.resolveMenus(item.children)
                 }
-                // const menuRoles = item.meta.role
-                // const userRoles = this.userInfo.authorities
-                // const resultRole = userRoles.filter(item => menuRoles && menuRoles.includes(item))
                 return item.meta.isMenu
             })
+        },
+        ...mapMutations({
+            setCollapse: 'IS_COLLAPSE'
+
+        })
+    },
+    mounted () {
+        let menu = sessionStorage.getItem('menuList')
+        if (menu) {
+            menu = JSON.parse(menu)
         }
+        this.menus = this.resolveMenus(menu)
     }
 }
 </script>

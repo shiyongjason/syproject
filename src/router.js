@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE } from '@/common/const'
+import { findMenuList } from '@/views/layout/api'
 
 Vue.use(Router)
 
@@ -9,20 +9,21 @@ const routerMapping = [
     {
         path: '/',
         component: Layout,
-        name: 'index',
         meta: {
             title: '首页',
-            icon: 'hosjoy_home',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-
+            icon: 'hosjoy_home'
         },
         children: [
             {
                 path: '',
+                name: 'home',
                 meta: {
+                    title: '首页',
+                    tagName: '首页',
                     isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    icon: '',
+                    component: './views/index/index'
                 },
                 component: () => import('./views/index/index')
             }
@@ -30,20 +31,21 @@ const routerMapping = [
     },
     {
         path: '/jinyunPlatform',
-        component: Layout,
-        name: 'jinyunPlatform',
         meta: {
             title: '金云平台',
-            icon: 'hosjoy_cloud_service',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_cloud_service'
         },
+        component: Layout,
         children: [
             {
                 path: '',
+                name: 'jinyunplatform',
                 meta: {
+                    title: '金云平台',
+                    tagName: '金云平台',
                     isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    icon: ''
                 },
                 component: () => import('./views/jinyunplatform/index')
             }
@@ -51,68 +53,84 @@ const routerMapping = [
     },
     {
         path: '/oldsystem',
-        component: Layout,
         name: 'oldsystem',
         meta: {
             title: '老系统',
-            icon: 'hosjoy_goods',
             isMenu: true,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            icon: 'hosjoy_goods',
+            component: './views/jinyunplatform/index'
+        }
+    },
+    {
+        path: '/auth',
+        meta: {
+            title: '权限管理',
+            isMenu: true,
+            icon: 'hosjoy_permissions',
+            redirect: 'noredirect'
         },
+        component: Layout,
         children: [
             {
-                path: '',
+                path: 'organization',
+                name: 'organization',
                 meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    title: '机构/人员管理',
+                    tagName: '机构/人员管理',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/auth/organization'
                 },
-                component: () => import('./views/jinyunplatform/index')
+                component: () => import('./views/auth/organization')
+            },
+            {
+                path: 'role',
+                name: 'jinyunPlatform',
+                meta: {
+                    title: '角色修改',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/auth/role',
+                    func: (menus, route) => {
+                        const len = menus.length
+                        menus.splice(len - 1, 0, {
+                            path: '/auth/organization',
+                            meta: {
+                                title: '机构/人员管理'
+                            }
+                        })
+                    }
+                },
+                component: () => import('./views/auth/role')
             }
         ]
     },
-    // { 产品要求屏蔽
-    //     path: '/userManage',
-    //     component: Layout,
-    //     name: 'userManage',
-    //     meta: {
-    //         title: '用户/机构管理',
-    //         icon: 'hosjoy_permissions',
-    //         isMenu: true,
-    //         role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-    //     },
-    //     children: [
-    //         {
-    //             path: '',
-    //             meta: {
-    //                 isMenu: false,
-    //                 role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-    //             },
-    //             component: () => import('./views/jinyunplatform/index')
-    //         }
-    //     ]
-    // },
     {
-        path: '/editPassword',
-        component: Layout,
-        name: 'editPassword',
+        path: '/wisdom',
         meta: {
-            title: '修改密码',
-            icon: 'icon-hosjoy_set',
-            isMenu: false,
-            role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+            title: '好智慧-经营分析',
+            isMenu: true,
+            icon: 'hosjoy_operation'
         },
+        // redirect: '/wisdom/' + this.children[0].path,
+        component: Layout,
         children: [
             {
-                path: '',
+                path: 'platformTarget',
+                name: 'platformTarget',
                 meta: {
-                    isMenu: false,
-                    role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
+                    title: '平台目标管理',
+                    tagName: '平台目标管理',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/platformTarget'
                 },
-                component: () => import('./views/passwordManage/editPassword')
+                component: () => import('./views/wisdom/platformTarget')
             }
         ]
     }
 ]
+
 const router = new Router({
     mode: 'history',
     routes: [
@@ -125,27 +143,48 @@ const router = new Router({
         {
             path: '/403',
             name: '403',
-            meta: {
-                isMenu: false,
-                role: [ROLE_ADMIN, ROLE_TRADER, ROLE_SALESMAN, ROLE_WAREHOUSE, ROLE_FINANCE]
-            },
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
+// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
+function makeMenus (Route, Data) {
+    return Route.filter(value => {
+        if (value.path === '') {
+            return true
+        }
+        const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        if (value.children && authArr.length > 0) {
+            value.children = makeMenus(value.children, authArr[0].childAuthList)
+        }
+        return authArr.length > 0
+    })
+}
 
-router.beforeEach((to, from, next) => {
+async function getMenu (to, next) {
+    const { data } = await findMenuList()
+    const menu = makeMenus(routerMapping, data)
+    router.addRoutes(menu)
+    next({ ...to, replace: true })
+}
+
+let isFirst = true
+router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
-    // const is403 = to.name === '403'  暂时没有
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
-    // 非登录的情况下
+    // 非/login下需要验证
     if (!isLogin) {
+        // 非登录的情况下
         if (!userInfo) {
             return next({
                 name: 'login'
             })
+        } else {
+            if (isFirst) {
+                isFirst = false
+                await getMenu(to, next)
+            }
         }
     }
     next()

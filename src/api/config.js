@@ -9,6 +9,7 @@ var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.
 switch (env) {
     case 'development':
         interfaceUrl = 'http://192.168.20.248:30000/'
+        // interfaceUrl = 'http://192.168.20.166:36000'
         ossUrl = 'http://192.168.20.248:8089/'
         // interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         uploadUrl = 'http://192.168.20.248:30000/tms'
