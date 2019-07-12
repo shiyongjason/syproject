@@ -41,7 +41,7 @@
 
                 label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="goTo(scope.row.psncode)">修改</el-button>
+                    <el-button type="primary" size="mini" plain @click="goTo(scope.row)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -74,9 +74,9 @@ export default {
         indexMethod (index) {
             return this.paginationData.pageSize * (this.paginationData.pageNum - 1) + index + 1
         },
-        goTo (id) {
+        goTo (val) {
             this.$router.push({
-                path: '/auth/role', query: { jobNumber: id }
+                path: '/auth/role', query: { jobNumber: val.psncode, jobName: val.psnname }
             })
         }
     }
