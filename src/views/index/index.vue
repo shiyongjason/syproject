@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-import { iframeUrl } from '@/api/config'
+import { iframeUrl, jinyun } from '@/api/config'
 import { mapState } from 'vuex'
 export default {
     computed: {
@@ -36,7 +36,7 @@ export default {
                 if (token) {
                     token = 'Bearer ' + token
                 }
-                window.location.href = 'http://192.168.26.171:8180/bossLogin.do?mobileNo=' + '18502526429' + '&token=' + token
+                window.location.href = jinyun + 'bossLogin.do?mobileNo=' + this.userInfo.phoneNumber + '&token=' + token
             }
         }
     }
