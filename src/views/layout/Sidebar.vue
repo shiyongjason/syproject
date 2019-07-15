@@ -1,5 +1,8 @@
 <script>
-import { iframeUrl } from '@/api/config'
+import { iframeUrl, jinyun } from '@/api/config'
+import { gotoJinYun } from "../index/api"
+import { mapState } from 'vuex'
+
 export default {
     props: {
         menus: {
@@ -14,6 +17,16 @@ export default {
             type: Boolean,
             default: false
         }
+    },
+    data () {
+        return {
+            params: {}
+        }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         generateSidebar (menus, parentPath) {
@@ -38,6 +51,13 @@ export default {
                                 <span>{item.meta.title}</span>
                             </a>
                         )
+                    }else if (item.path === '/jinyunPlatform') {
+                        result.push(
+                        <a href={`${gotoJinYun(jinyun,this.params)}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
+                        {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                        <span>{item.meta.title}</span>
+                        </a>
+                        )
                     } else {
                         result.push(
                             <el-menu-item index={path}>
@@ -52,6 +72,15 @@ export default {
         }
     },
     render (h) {
+        let token = sessionStorage.getItem('token')
+        if (token) {
+            token = 'Bearer ' + token
+        }
+        const params = {
+            mobileNo: this.userInfo.phoneNumber,
+            token: token
+        }
+        this.params = params
         return (
             <el-menu mode={this.mode} default-active={this.$route.path} collapse={this.collapse} active-text-color="#FF7A45" unique-opened router>
                 {this.generateSidebar(this.menus, '')}
