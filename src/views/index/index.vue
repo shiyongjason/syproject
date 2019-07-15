@@ -19,6 +19,8 @@
 <script>
 import { iframeUrl, jinyun } from '@/api/config'
 import { mapState } from 'vuex'
+import { gotoJinYun } from './api'
+
 export default {
     computed: {
         ...mapState({
@@ -36,7 +38,12 @@ export default {
                 if (token) {
                     token = 'Bearer ' + token
                 }
-                window.location.href = jinyun + 'bossLogin.do?mobileNo=' + this.userInfo.phoneNumber + '&token=' + token
+                const params = {
+                    mobileNo: this.userInfo.phoneNumber,
+                    token: token
+                }
+                console.log(gotoJinYun(jinyun,params))
+                window.location.href = gotoJinYun(jinyun, params)
             }
         }
     }
@@ -53,6 +60,9 @@ export default {
         text-align: center;
         align-items: center;
         justify-content: center;
+    }
+    div {
+        cursor: pointer;
     }
 }
 .jinyun {
