@@ -1,6 +1,5 @@
 <script>
 import { iframeUrl, jinyun } from '@/api/config'
-import { gotoJinYun } from "../index/api"
 import { mapState } from 'vuex'
 
 export default {
@@ -31,6 +30,11 @@ export default {
     methods: {
         generateSidebar (menus, parentPath) {
             const result = []
+            let token = sessionStorage.getItem('token')
+            if (token) {
+                token = 'Bearer ' + token
+            }
+            const jinyunHref = jinyun + 'bossLogin.do?mobileNo=' + this.userInfo.phoneNumber + '&token=' + token
             menus.forEach((item, index) => {
                 const path = parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`
                 if (item.children && item.children.length > 0) {
@@ -53,7 +57,7 @@ export default {
                         )
                     }else if (item.path === '/jinyunPlatform') {
                         result.push(
-                        <a href={`${gotoJinYun(jinyun,this.params)}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
+                        <a href={`${jinyunHref}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
                         {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                         <span>{item.meta.title}</span>
                         </a>
@@ -72,15 +76,6 @@ export default {
         }
     },
     render (h) {
-        let token = sessionStorage.getItem('token')
-        if (token) {
-            token = 'Bearer ' + token
-        }
-        const params = {
-            mobileNo: this.userInfo.phoneNumber,
-            token: token
-        }
-        this.params = params
         return (
             <el-menu mode={this.mode} default-active={this.$route.path} collapse={this.collapse} active-text-color="#FF7A45" unique-opened router>
                 {this.generateSidebar(this.menus, '')}
