@@ -1,5 +1,7 @@
 <script>
-import { iframeUrl } from '@/api/config'
+import { iframeUrl, jinyun } from '@/api/config'
+import { mapState } from 'vuex'
+
 export default {
     props: {
         menus: {
@@ -15,9 +17,24 @@ export default {
             default: false
         }
     },
+    data () {
+        return {
+            params: {}
+        }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
     methods: {
         generateSidebar (menus, parentPath) {
             const result = []
+            let token = sessionStorage.getItem('token')
+            if (token) {
+                token = 'Bearer ' + token
+            }
+            const jinyunHref = jinyun + 'bossLogin.do?mobileNo=' + this.userInfo.phoneNumber + '&token=' + token
             menus.forEach((item, index) => {
                 const path = parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`
                 if (item.children && item.children.length > 0) {
@@ -37,6 +54,13 @@ export default {
                                 {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
                                 <span>{item.meta.title}</span>
                             </a>
+                        )
+                    }else if (item.path === '/jinyunPlatform') {
+                        result.push(
+                        <a href={`${jinyunHref}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
+                        {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                        <span>{item.meta.title}</span>
+                        </a>
                         )
                     } else {
                         result.push(

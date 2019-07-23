@@ -8,3 +8,5 @@ export const getPlatformInfo = (params) => axios.get('/report/api/index-page/bus
 export const getOperationInfo = (params) => axios.get('/report/api/index-page/data-analysis', {
     params
 })
+// 跳转金云平台
+export const gotoJinYun = (jinyun, params) => jinyun + 'bossLogin.do?mobileNo=' + params.mobileNo + '&token=' + params.token
