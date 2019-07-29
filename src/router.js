@@ -188,8 +188,8 @@ const routerMapping = [
                 component: () => import('./views/bestonline/pointscode')
             },
             {
-                path: 'pointscode',
-                name: 'pointscode',
+                path: 'standard',
+                name: 'standard',
                 meta: {
                     title: '标准分数配置',
                     tagName: '标准分数配置',
@@ -203,8 +203,8 @@ const routerMapping = [
                 path: 'applyform',
                 name: 'applyform',
                 meta: {
-                    title: '标准分数配置',
-                    tagName: '标准分数配置',
+                    title: '尽调申请详情',
+                    tagName: '尽调申请详情',
                     isMenu: false,
                     icon: '',
                     component: './views/bestonline/applyform'
@@ -239,6 +239,7 @@ function makeMenus (Route, Data) {
             return true
         }
         const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        // const authArr = Data.filter(item => item.authUri === value.path)
         if (value.children && authArr.length > 0) {
             value.children = makeMenus(value.children, authArr[0].childAuthList)
         }
