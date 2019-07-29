@@ -128,6 +128,90 @@ const routerMapping = [
                 component: () => import('./views/wisdom/platformTarget')
             }
         ]
+    },
+    {
+        path: '/bestonline',
+        meta: {
+            title: '尽调管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        // redirect: '/wisdom/' + this.children[0].path,
+        component: Layout,
+        children: [
+            {
+                path: 'application',
+                name: 'application',
+                meta: {
+                    title: '尽调申请',
+                    tagName: '尽调申请',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/bestonline/application'
+                },
+                component: () => import('./views/bestonline/application')
+            },
+            {
+                path: 'review',
+                name: 'review',
+                meta: {
+                    title: '现场尽调',
+                    tagName: '现场尽调',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/bestonline/review'
+                },
+                component: () => import('./views/bestonline/review')
+            },
+            {
+                path: 'piecevote',
+                name: 'piecevote',
+                meta: {
+                    title: '一项否决',
+                    tagName: '一项否决',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/bestonline/piecevote'
+                },
+                component: () => import('./views/bestonline/piecevote')
+            },
+            {
+                path: 'pointscode',
+                name: 'pointscode',
+                meta: {
+                    title: '评分规则配置',
+                    tagName: '评分规则配置',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/bestonline/pointscode'
+                },
+                component: () => import('./views/bestonline/pointscode')
+            },
+            {
+                path: 'pointscode',
+                name: 'pointscode',
+                meta: {
+                    title: '标准分数配置',
+                    tagName: '标准分数配置',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/bestonline/standard'
+                },
+                component: () => import('./views/bestonline/standard')
+            },
+            {
+                path: 'applyform',
+                name: 'applyform',
+                meta: {
+                    title: '标准分数配置',
+                    tagName: '标准分数配置',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/bestonline/applyform'
+                },
+                component: () => import('./views/bestonline/applyform')
+            }
+        ]
     }
 ]
 
