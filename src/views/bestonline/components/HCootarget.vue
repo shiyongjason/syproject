@@ -2,87 +2,94 @@
     <div class="jd-manage">
         <p class="titlt-p">合作目标</p>
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
-        <div class="table-flex">
-            <div class="table-row">
-                <div class="table-col">评估项</div>
-                <div class="table-col">合作目标</div>
-            </div>
-            <div class="table-row">
-                <div class="table-col"><span class="red-span">*</span>尽调规模</div>
-                <div class="table-col">
-                    <el-input
-                        placeholder="请输入内容"
-                        v-model="formData.scale"
-                        @keyup.native="oninput('scale',$event)"
-                        :disabled="isdisabled"
-                        maxlength="25"
-                    >
-                        <template slot="suffix">w</template>
+        <div class="flex-wrap-col">
+            <div class="flex-wrap-box applyW">
+                <div class="flex-wrap-title"><span class="red-span">*</span>尽调规模：</div>
+                <div class="flex-wrap-cont">
+                    <el-input placeholder="请输入尽调公司名称" maxlength="25" v-model="formData.companyName" :disabled='isdisabled'>
                     </el-input>
+                    <span class="unit">万</span>
                 </div>
             </div>
+        </div>
+        <div class="table-flex">
             <div class="table-row">
+                <div class="table-col">年份</div>
                 <div class="table-col"><span class="red-span">*</span>年度递增率</div>
+                <div class="table-col"><span class="red-span">*</span>净利润率</div>
+            </div>
+            <div class="table-row">
+                <div class="table-col">第1年</div>
                 <div class="table-col">
-                    <el-input
-                        placeholder="请输入内容"
-                        v-model="formData.yearGrowthRate"
-                        @keyup.native="oninput('yearGrowthRate',$event)"
-                        :disabled="isdisabled"
-                        maxlength="25"
-                    >
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
                         <template slot="suffix">%</template>
                     </el-input>
                 </div>
             </div>
             <div class="table-row">
-                <div class="table-col"><span class="red-span">*</span>股权比例</div>
+                <div class="table-col">第2年</div>
                 <div class="table-col">
-                    <el-input
-                        v-model="formData.equityRatio"
-                        placeholder="请输入内容"
-                        @keyup.native="oninput('equityRatio',$event)"
-                        :disabled="isdisabled"
-                        maxlength="25"
-                    ></el-input>
+                    <el-input placeholder="请输入内容" v-model="formData.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
                 </div>
             </div>
             <div class="table-row">
-                <div class="table-col"><span class="red-span">*</span>净利润率</div>
+                <div class="table-col">第3年</div>
                 <div class="table-col">
-                    <el-input
-                        placeholder="请输入内容"
-                        v-model="formData.netProfitRate"
-                        @keyup.native="oninput('netProfitRate',$event)"
-                        :disabled="isdisabled"
-                        maxlength="25"
-                    >
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-col">第4年</div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+            </div>
+            <div class="table-row">
+                <div class="table-col">第5年</div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" :disabled="isdisabled" maxlength="25">
+                        <template slot="suffix">%</template>
+                    </el-input>
+                </div>
+                <div class="table-col">
+                    <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
                         <template slot="suffix">%</template>
                     </el-input>
                 </div>
             </div>
         </div>
-        <div
-            class="flex-wrap-row top20 "
-            v-if="!isdisabled"
-        >
-            <el-col
-                :span="2"
-                :offset="6"
-            >
-                <el-button
-                    type="info"
-                    @click.native="onSubmit(0)"
-                >保存</el-button>
+        <div class="flex-wrap-row top20 " v-if="!isdisabled">
+            <el-col :span="2" :offset="6">
+                <el-button type="info" @click.native="onSubmit(0)">保存</el-button>
             </el-col>
-            <el-col
-                :span="2"
-                :offset="1"
-            >
-                <el-button
-                    type="primary"
-                    @click.native="onSubmit(1)"
-                >提交</el-button>
+            <el-col :span="2" :offset="1">
+                <el-button type="primary" @click.native="onSubmit(1)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -90,7 +97,7 @@
 <script>
 import { getDueLegal, addCooperativetarget, putCooperativetarget } from '../api/index.js'
 import { mapState } from 'vuex'
-import { plusOrMinus } from '../../../rules.js'
+// import { plusOrMinus } from '../../../rules.js'
 export default {
     props: {
         roleType: {
@@ -129,7 +136,7 @@ export default {
             if (value === 'equityRatio') {
                 // 股权比例
             } else {
-                e.target.value = plusOrMinus(e.target.value.toString())
+                // e.target.value = plusOrMinus(e.target.value.toString())
             }
             this.formData[value] = e.target.value
         },

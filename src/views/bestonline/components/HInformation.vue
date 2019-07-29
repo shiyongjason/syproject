@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe :src="srcUrl" ref="iframe" id="bdIframe"  width="100%" frameborder="0"  ></iframe>
+        <iframe :src="srcUrl" ref="iframe" id="bdIframe" width="100%" frameborder="0"></iframe>
     </div>
 </template>
 <script>
@@ -8,7 +8,8 @@ import { getTianyanUrl } from './../api/index.js'
 export default {
     data () {
         return {
-            srcUrl: ''
+            srcUrl: '',
+            companyName: ''
         }
     },
     computed: {
@@ -36,5 +37,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>
