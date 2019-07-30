@@ -1,61 +1,31 @@
 <template>
     <div class="page-body">
-        <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>现场尽调</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div class="page-wrap flex-wrap-col">
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">公司：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                placeholder="输入公司名称"
-                                v-model="params.companyName"
-                                maxlength="16"
-                            >
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">状态：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="params.status"
-                                placeholder="请选择"
-                            >
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.key"
-                                    :label="item.value"
-                                    :value="item.key"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-cont pl20">
-                            <el-button
-                                type="primary"
-                                @click="onSearch()"
-                            >搜索</el-button>
-                        </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <div class="query-col-title">公司：</div>
+                    <div class="query-col-input">
+                        <el-input placeholder="输入公司名称" v-model="params.companyName" maxlength="16">
+                        </el-input>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="params.status" placeholder="请选择">
+                            <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <el-button type="primary" @click="onSearch()">查询</el-button>
+                </div>
             </div>
-            <div class="page-box top10">
-                <reviewTable
-                    :totalData="totalTableData"
-                    :paginationData="paginationData"
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange"
-                >
+        </div>
+        <div class="page-body-cont">
+            <reviewTable :totalData="totalTableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 </reviewTable>
-            </div>
         </div>
     </div>
 </template>
@@ -119,5 +89,4 @@ export default {
 </script>
 
 <style lang="scss" >
-
 </style>

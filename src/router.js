@@ -164,6 +164,26 @@ const routerMapping = [
                 component: () => import('./views/bestonline/review')
             },
             {
+                path: 'reviewform',
+                name: 'reviewform',
+                meta: {
+                    title: '修改',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/bestonline/reviewform',
+                    func: (menus, route) => {
+                        const len = menus.length
+                        menus.splice(len - 1, 0, {
+                            path: '/bestonline/review',
+                            meta: {
+                                title: '现场尽调'
+                            }
+                        })
+                    }
+                },
+                component: () => import('./views/bestonline/reviewform')
+            },
+            {
                 path: 'piecevote',
                 name: 'piecevote',
                 meta: {

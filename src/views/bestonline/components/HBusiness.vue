@@ -1,78 +1,52 @@
 <template>
     <div class="jd-manage">
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
-        <el-collapse
-            v-model="activeName"
-            accordion
-            @change="onChange"
-        >
+        <el-collapse v-model="activeName" accordion @change="onChange">
             <el-collapse-item name="1">
                 <template slot="title">
                     <p class="titlt-p">商业尽调评估及KPI</p>
                 </template>
                 <!--start-->
                 <p class="small-title">1、商业尽调评估</p>
-                <div class="table-flex">
-                    <div class="table-row">
-                        <div class="table-col">评估项</div>
-                        <div class="table-col">合作目标</div>
-                        <div class="table-col"><span class="red-span">*</span>结论(必填)</div>
-                        <div class="table-col">备注</div>
-                    </div>
-                    <div
-                        class="table-row"
-                        v-for="(item,index) in dueBusinessAssessmentCreateFormList"
-                        :key=index
-                    >
-                        <div class="table-col">{{item.assessmentItem}}</div>
-                        <div class="table-col">
-                            {{item.cooperationIntention}}
-                            <i v-if="index === 1">w</i>
-                            <i v-if="index === 2">%</i>
-                            <i v-if="index === 4">%</i>
-                        </div>
-                        <div class="table-col">
-                            <el-select
-                                v-model="item.state"
-                                placeholder="请选择"
-                                :disabled="isdisabled"
-                            >
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="table-col">
-                            <el-input
-                                v-model="item.remark"
-                                placeholder="请输入内容"
-                                :disabled="isdisabled"
-                                maxlength="25"
-                            ></el-input>
-                        </div>
-                    </div>
-                </div>
+                <table class="assessmentTable">
+                    <thead>
+                        <tr>
+                            <td class="assessmentRow">评估项</td>
+                            <td class="assessmentRow">合作目标</td>
+                            <td class="assessmentRow"><span class="red-word">*</span>结论</td>
+                            <td class="assessmentRow">备注</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item,index) in dueBusinessAssessmentCreateFormList" :key=index>
+                            <td>{{item.assessmentItem}}</td>
+                            <td>{{item.cooperationIntention}}
+                                <i v-if="index === 1">w</i>
+                                <i v-if="index === 2">%</i>
+                                <i v-if="index === 4">%</i>
+                            </td>
+                            <td>
+                                <el-select v-model="item.state" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </td>
+                            <td :rowspan="dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+                                </el-input>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
                 <p class="small-title ">2、KPI(必填)</p>
                 <div class="flex-wrap-col">
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>销售增长健康度：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="salesGrowthHealth"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="salesGrowthHealth" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -80,17 +54,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>上游主体可否切换：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="upstreamBodySwitchable"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in typeOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="upstreamBodySwitchable" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -98,17 +63,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>下游客户结构健康度：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="downstreamCustomersHealth"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="downstreamCustomersHealth" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -120,14 +76,7 @@
                     <div class="flex-wrap-box ">
                         <div class="flex-wrap-title"><span class="red-span">*</span>风险揭示：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="6"
-                                :disabled="isdisabled"
-                                placeholder="请输入内容"
-                                v-model="riskDisclosure"
-                            >
+                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="riskDisclosure">
                             </el-input>
                         </div>
                     </div>
@@ -136,14 +85,7 @@
                     <div class="flex-wrap-box ">
                         <div class="flex-wrap-title"><span class="red-span">*</span>分析描述：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="6"
-                                :disabled="isdisabled"
-                                placeholder="请输入内容"
-                                v-model="analysisDescription"
-                            >
+                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="analysisDescription">
                             </el-input>
                         </div>
                     </div>
@@ -159,17 +101,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>主营业态：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="mainBusinessFormatOneId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in busOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="mainBusinessFormatOneId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -177,14 +110,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>业态占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="业态占比"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('businessFormatOneRatio',$event)"
-                                    @change="numChange('businessFormatOneRatio',$event)"
-                                    v-model="businessFormatOneRatio"
-                                >
+                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('businessFormatOneRatio',$event)" @change="numChange('businessFormatOneRatio',$event)" v-model="businessFormatOneRatio">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -194,17 +120,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营业态2：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="mainBusinessFormatTwoId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in busOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="mainBusinessFormatTwoId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -212,14 +129,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">业态占比2：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="业态占比"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="businessFormatTwoRatio"
-                                    @keyup.native="oninput('businessFormatTwoRatio',$event)"
-                                    @change="numChange('businessFormatTwoRatio',$event)"
-                                >
+                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" v-model="businessFormatTwoRatio" @keyup.native="oninput('businessFormatTwoRatio',$event)" @change="numChange('businessFormatTwoRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -229,17 +139,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营业态3：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="mainBusinessFormatThreeId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in busOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="mainBusinessFormatThreeId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -247,14 +148,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">业态占比3：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="业态占比"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="businessFormatTwoThreeRatio"
-                                    @keyup.native="oninput('businessFormatTwoThreeRatio',$event)"
-                                    @change="numChange('businessFormatTwoThreeRatio',$event)"
-                                >
+                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" v-model="businessFormatTwoThreeRatio" @keyup.native="oninput('businessFormatTwoThreeRatio',$event)" @change="numChange('businessFormatTwoThreeRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -264,17 +158,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>主营品类1：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="mainCategoryOneId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in cateOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="mainCategoryOneId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -282,14 +167,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>销售比重1：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售比重"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="categoryOneSalesRatio"
-                                    @keyup.native="oninput('categoryOneSalesRatio',$event)"
-                                    @change="numChange('categoryOneSalesRatio',$event)"
-                                >
+                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="categoryOneSalesRatio" @keyup.native="oninput('categoryOneSalesRatio',$event)" @change="numChange('categoryOneSalesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -299,17 +177,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营品类2：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="mainCategoryTwoId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in cateOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="mainCategoryTwoId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -317,14 +186,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">销售比重2：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售比重"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="categoryTwoSalesRatio"
-                                    @keyup.native="oninput('categoryTwoSalesRatio',$event)"
-                                    @change="numChange('categoryTwoSalesRatio',$event)"
-                                >
+                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="categoryTwoSalesRatio" @keyup.native="oninput('categoryTwoSalesRatio',$event)" @change="numChange('categoryTwoSalesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -334,26 +196,14 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>主营品牌1：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售占比大于30%"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="mainBrandOneName"
-                                >
+                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandOneName">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>销售比重1：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售比重"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="brandOneSalesRatio"
-                                    @keyup.native="oninput('brandOneSalesRatio',$event)"
-                                    @change="numChange('brandOneSalesRatio',$event)"
-                                >
+                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandOneSalesRatio" @keyup.native="oninput('brandOneSalesRatio',$event)" @change="numChange('brandOneSalesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -363,26 +213,14 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营品牌2：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售占比大于30%"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="mainBrandTwoName"
-                                >
+                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandTwoName">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">销售比重2：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售比重"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="brandTwoSalesRatio"
-                                    @keyup.native="oninput('brandTwoSalesRatio',$event)"
-                                    @change="numChange('brandTwoSalesRatio',$event)"
-                                >
+                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandTwoSalesRatio" @keyup.native="oninput('brandTwoSalesRatio',$event)" @change="numChange('brandTwoSalesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -392,26 +230,14 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营品牌3：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售占比大于30%"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="mainBrandThreeName"
-                                >
+                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandThreeName">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">销售比重3：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="销售比重"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="brandThreeSalesRatio"
-                                    @keyup.native="oninput('brandThreeSalesRatio',$event)"
-                                    @change="numChange('brandThreeSalesRatio',$event)"
-                                >
+                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandThreeSalesRatio" @keyup.native="oninput('brandThreeSalesRatio',$event)" @change="numChange('brandThreeSalesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -426,23 +252,10 @@
                 <table class="table-title">
                     <thead>
                         <tr>
-                            <td
-                                colspan="2"
-                                rowspan="2"
-                                width="120"
-                            >月份</td>
-                            <td
-                                colspan="2"
-                                width="120"
-                            >本年度</td>
-                            <td
-                                colspan="2"
-                                width="120"
-                            >上年度</td>
-                            <td
-                                colspan="2"
-                                width="120"
-                            >上上年度</td>
+                            <td colspan="2" rowspan="2" width="120">月份</td>
+                            <td colspan="2" width="120">本年度</td>
+                            <td colspan="2" width="120">上年度</td>
+                            <td colspan="2" width="120">上上年度</td>
 
                         </tr>
                         <tr>
@@ -491,30 +304,15 @@
                             </td>
                             <td></td>
                         </tr> -->
-                        <tr
-                            v-for="(item,index) in dueBusinessSaleCreateFormList"
-                            :key="index"
-                        >
+                        <tr v-for="(item,index) in dueBusinessSaleCreateFormList" :key="index">
                             <td colspan="2">{{item.month}}</td>
                             <td>
                                 <template v-if="index === 0">
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="currentYearAllSales"
-                                        @keyup.native="oninput('currentYearAllSales',$event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="currentYearAllSales" @keyup.native="oninput('currentYearAllSales',$event)">
                                     </el-input>
                                 </template>
                                 <template v-else>
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="item.currentYearSales"
-                                        @keyup.native="oninputSale(index,'currentYearSales',$event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.currentYearSales" @keyup.native="oninputSale(index,'currentYearSales',$event)">
                                     </el-input>
                                 </template>
                             </td>
@@ -524,23 +322,11 @@
                             </td>
                             <td>
                                 <template v-if="index === 0">
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="lastYearAllSales"
-                                        @keyup.native="oninput('lastYearAllSales',$event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastYearAllSales" @keyup.native="oninput('lastYearAllSales',$event)">
                                     </el-input>
                                 </template>
                                 <template v-else>
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="item.lastYearSales"
-                                        @keyup.native="oninputSale(index, 'lastYearSales', $event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
                                     </el-input>
                                 </template>
                             </td>
@@ -550,23 +336,11 @@
                             </td>
                             <td>
                                 <template v-if="index === 0">
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="lastTwoYearAllSales"
-                                        @keyup.native="oninput('lastTwoYearAllSales',$event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastTwoYearAllSales" @keyup.native="oninput('lastTwoYearAllSales',$event)">
                                     </el-input>
                                 </template>
                                 <template v-else>
-                                    <el-input
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="item.lastTwoYearSales"
-                                        @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)"
-                                    >
+                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
                                     </el-input>
                                 </template>
                             </td>
@@ -584,17 +358,8 @@
                                 <!-- <span class="red-span">*</span> -->
                                 前10个月销售是否持续下滑：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="firstTenMonthsDown"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in downOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="firstTenMonthsDown" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in downOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -608,28 +373,12 @@
                 </template>
                 <div class="flex-wrap-col lengthen">
                     <div class="flex-wrap-row ">
-                        <div
-                            class="flex-wrap"
-                            style="display:flex"
-                        >
+                        <div class="flex-wrap" style="display:flex">
                             <div class="flex-wrap-title">宣传推广渠道：</div>
                             <div class="flex-wrap-cont">
-                                <el-checkbox
-                                    :indeterminate="isIndeterminate"
-                                    v-model="checkAll"
-                                    @change="handleCheckAllChange"
-                                    :disabled="isdisabled"
-                                >全选</el-checkbox>
-                                <el-checkbox-group
-                                    v-model="checkedCities"
-                                    @change="handleCheckedCitiesChange"
-                                >
-                                    <el-checkbox
-                                        v-for="item in channelsList"
-                                        :label="item.code"
-                                        :key="item.code"
-                                        :disabled="isdisabled"
-                                    >{{item.value}}</el-checkbox>
+                                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" :disabled="isdisabled">全选</el-checkbox>
+                                <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                                    <el-checkbox v-for="item in channelsList" :label="item.code" :key="item.code" :disabled="isdisabled">{{item.value}}</el-checkbox>
                                 </el-checkbox-group>
                             </div>
                         </div>
@@ -638,12 +387,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">异业合作渠道：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="异业合作渠道"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="interIndustryCooperation"
-                                >
+                                <el-input placeholder="异业合作渠道" maxlength="25" :disabled="isdisabled" v-model="interIndustryCooperation">
                                 </el-input>
                             </div>
                         </div>
@@ -667,33 +411,14 @@
                     <p class="titlt-p">上游-供应商结构</p>
                 </template>
                 <!--start-->
-                <div
-                    class="flex-wrap-col supplier"
-                    v-for="(item,index) in dueBusinessSupplierCreateFormList"
-                    :key=index
-                >
-                    <i
-                        class="el-icon-circle-plus-outline pointer"
-                        v-show="!isdisabled"
-                        v-if="index==0"
-                        @click="addSupplier"
-                    ></i>
-                    <i
-                        class="el-icon-remove-outline pointer"
-                        @click="deleteSupplier(index)"
-                        v-show="!isdisabled"
-                        v-else
-                    ></i>
+                <div class="flex-wrap-col supplier" v-for="(item,index) in dueBusinessSupplierCreateFormList" :key=index>
+                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
+                    <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
                     <div class="flex-wrap-row lengthen">
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>供应商名称：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="供应商名称"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.supplierName"
-                                >
+                                <el-input placeholder="供应商名称" maxlength="25" :disabled="isdisabled" v-model="item.supplierName">
                                 </el-input>
                             </div>
                         </div>
@@ -702,13 +427,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>采购金额：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="采购金额"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.purchaseAmount"
-                                    @keyup.native="oninput2(index, 'purchaseAmount', $event)"
-                                >
+                                <el-input placeholder="采购金额" maxlength="25" :disabled="isdisabled" v-model="item.purchaseAmount" @keyup.native="oninput2(index, 'purchaseAmount', $event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -716,13 +435,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="占比"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.proportion"
-                                    @keyup.native="oninput2(index, 'proportion', $event)"
-                                >
+                                <el-input placeholder="占比" maxlength="25" :disabled="isdisabled" v-model="item.proportion" @keyup.native="oninput2(index, 'proportion', $event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -730,17 +443,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>是否提供合同：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="item.isProvideContract"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="item.isProvideContract" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -757,41 +461,21 @@
                                     :disabled="isdisabled"
                                 >
                                 </el-date-picker> -->
-                                <el-date-picker
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :editable="false"
-                                    value-format="yyyy-MM-dd"
-                                    v-model="item.contractStartDate"
-                                    :disabled="isdisabled"
-                                >
+                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.contractStartDate" :disabled="isdisabled">
                                 </el-date-picker>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">合同结束时间：</div>
                             <div class="flex-wrap-cont">
-                                <el-date-picker
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :editable="false"
-                                    value-format="yyyy-MM-dd"
-                                    v-model="item.contractEndDate"
-                                    :disabled="isdisabled"
-                                >
+                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.contractEndDate" :disabled="isdisabled">
                                 </el-date-picker>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">合同规模：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="合同规模"
-                                    maxlength="25"
-                                    v-model="item.contractScale"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput2(index, 'contractScale', $event)"
-                                >
+                                <el-input placeholder="合同规模" maxlength="25" v-model="item.contractScale" :disabled="isdisabled" @keyup.native="oninput2(index, 'contractScale', $event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -818,111 +502,46 @@
                             <div class="table-col">协议规模（万元）(非必填)</div>
 
                         </div>
-                        <div
-                            class="table-row"
-                            v-for="(item,index) in dueBusinessCustomerCreateFormList"
-                            :key=index
-                        >
+                        <div class="table-row" v-for="(item,index) in dueBusinessCustomerCreateFormList" :key=index>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.customerName"
-                                    placeholder="客户"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                >
+                                <el-input v-model="item.customerName" placeholder="客户" maxlength="25" :disabled="isdisabled">
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-select
-                                    v-model="item.categoryId"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in cateOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="item.categoryId" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.brandName"
-                                    placeholder="品牌"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                >
+                                <el-input v-model="item.brandName" placeholder="品牌" maxlength="25" :disabled="isdisabled">
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.salesFee"
-                                    placeholder="金额"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput3(index, 'salesFee', $event)"
-                                >
+                                <el-input v-model="item.salesFee" placeholder="金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesFee', $event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.salesProportion"
-                                    placeholder="占比"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput3(index, 'salesProportion', $event)"
-                                >
+                                <el-input v-model="item.salesProportion" placeholder="占比" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesProportion', $event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-date-picker
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :editable="false"
-                                    value-format="yyyy-MM-dd"
-                                    v-model="item.agreementStartDate"
-                                    :disabled="isdisabled"
-                                >
+                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate" :disabled="isdisabled">
                                 </el-date-picker>
                             </div>
                             <div class="table-col">
-                                <el-date-picker
-                                    type="date"
-                                    placeholder="选择日期"
-                                    :editable="false"
-                                    v-model="item.agreementEndDate"
-                                    :disabled="isdisabled"
-                                    value-format="yyyy-MM-dd"
-                                >
+                                <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" :disabled="isdisabled" value-format="yyyy-MM-dd">
                                 </el-date-picker>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.agreementScale"
-                                    placeholder="规模"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput3(index, 'agreementScale', $event)"
-                                >
+                                <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'agreementScale', $event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
-                            <i
-                                class="el-icon-circle-plus-outline pointer"
-                                v-show="!isdisabled"
-                                v-if="index==0"
-                                @click="addCustomer"
-                            ></i>
-                            <i
-                                class="el-icon-remove-outline pointer"
-                                v-show="!isdisabled"
-                                v-else
-                                @click="deleteCustomer(index)"
-                            ></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addCustomer"></i>
+                            <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCustomer(index)"></i>
                         </div>
                     </div>
                 </div>
@@ -931,17 +550,8 @@
                         <div class="flex-wrap-box top20">
                             <div class="flex-wrap-title"><span class="red-span">*</span>是否健康：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="customersHealth"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="customersHealth" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -959,13 +569,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">自营门店数量：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="自营门店数量"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="selfStoresNum"
-                                    @keyup.native="integer('selfStoresNum',$event)"
-                                >
+                                <el-input placeholder="自营门店数量" maxlength="25" :disabled="isdisabled" v-model="selfStoresNum" @keyup.native="integer('selfStoresNum',$event)">
                                 </el-input>
                             </div>
                         </div>
@@ -973,13 +577,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">会员店数量：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="会员店数量"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="memberShopNum"
-                                    @keyup.native="integer('memberShopNum',$event)"
-                                >
+                                <el-input placeholder="会员店数量" maxlength="25" :disabled="isdisabled" v-model="memberShopNum" @keyup.native="integer('memberShopNum',$event)">
                                 </el-input>
                             </div>
                         </div>
@@ -990,45 +588,21 @@
                 <template slot="title">
                     <p class="titlt-p">竞争对手</p>
                 </template>
-                <div
-                    class="compete supplier"
-                    v-for="(item,index) in dueBusinessCompetitorCreateFormList"
-                    :key=index
-                >
-                    <i
-                        class="el-icon-circle-plus-outline pointer"
-                        v-show="!isdisabled"
-                        @click="addCompet"
-                        v-if="index==0"
-                    ></i>
-                    <i
-                        class="el-icon-remove-outline pointer"
-                        v-show="!isdisabled"
-                        v-else
-                        @click="deleteCompet(index)"
-                    ></i>
+                <div class="compete supplier" v-for="(item,index) in dueBusinessCompetitorCreateFormList" :key=index>
+                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
+                    <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">竞争对手：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="item.competitorName"
-                                    placeholder="竞争对手"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                >
+                                <el-input v-model="item.competitorName" placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">主营业态：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="item.mainForms"
-                                    placeholder="主营业态"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                >
+                                <el-input v-model="item.mainForms" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
                                 </el-input>
                             </div>
                         </div>
@@ -1039,49 +613,22 @@
                 <template slot="title">
                     <p class="titlt-p">业务主体切换计划</p>
                 </template>
-                <div
-                    class="compete supplier"
-                    v-for="(item,index) in dueBusinessProxySwitchSchemeCreateFormList"
-                    :key=index
-                >
-                    <i
-                        class="el-icon-circle-plus-outline pointer"
-                        v-show="!isdisabled"
-                        v-if="index==0"
-                        @click="addScheme"
-                        alt="新增"
-                    ></i>
-                    <i
-                        class="el-icon-remove-outline pointer"
-                        v-show="!isdisabled"
-                        v-else
-                        @click="deleteScheme(index)"
-                        alt="新增"
-                    ></i>
+                <div class="compete supplier" v-for="(item,index) in dueBusinessProxySwitchSchemeCreateFormList" :key=index>
+                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addScheme" alt="新增"></i>
+                    <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteScheme(index)" alt="新增"></i>
                     <div class="flex-wrap-col">
                         <div class="flex-wrap-row">
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">品牌：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-input
-                                        :disabled="isdisabled"
-                                        placeholder="品牌"
-                                        maxlength="25"
-                                        v-model="item.brand"
-                                    >
+                                    <el-input :disabled="isdisabled" placeholder="品牌" maxlength="25" v-model="item.brand">
                                     </el-input>
                                 </div>
                             </div>
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">本年度预计销售：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-input
-                                        placeholder="本年度预计销售"
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        v-model="item.expectSales"
-                                        @keyup.native="oninput4(index, 'expectSales', $event)"
-                                    >
+                                    <el-input placeholder="本年度预计销售" maxlength="25" :disabled="isdisabled" v-model="item.expectSales" @keyup.native="oninput4(index, 'expectSales', $event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </div>
@@ -1089,14 +636,7 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">切换时间：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-date-picker
-                                        v-model="item.switchDate"
-                                        type="date"
-                                        :editable="false"
-                                        placeholder="选择日期"
-                                        value-format="yyyy-MM-dd"
-                                        :disabled="isdisabled"
-                                    >
+                                    <el-date-picker v-model="item.switchDate" type="date" :editable="false" placeholder="选择日期" value-format="yyyy-MM-dd" :disabled="isdisabled">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -1112,84 +652,49 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">资金支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.financialSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.financialSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">供应链支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.supplyChainSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.supplyChainSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">运营支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.operationSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.operationSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">服务支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.serviceSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.serviceSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">培训支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.trainingSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.trainingSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">管理支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.managementSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.managementSupport">
                             </el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">其他支持：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                :disabled="isdisabled"
-                                placeholder=""
-                                maxlength="25"
-                                v-model="dueBusinessCustomerDemandCreateForm.otherSupport"
-                            >
+                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.otherSupport">
                             </el-input>
                         </div>
                     </div>
@@ -1204,48 +709,28 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">业务模式：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    placeholder="业务模式"
-                                    maxlength="25"
-                                    v-model="dueBusinessFuturePlanCreateForm.productPlan"
-                                >
+                                <el-input :disabled="isdisabled" placeholder="业务模式" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.productPlan">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">运作规划：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    placeholder="运作规划"
-                                    maxlength="25"
-                                    v-model="dueBusinessFuturePlanCreateForm.engineeringBusinessPlan"
-                                >
+                                <el-input :disabled="isdisabled" placeholder="运作规划" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.engineeringBusinessPlan">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">上下游切换：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    placeholder="上下游切换"
-                                    maxlength="25"
-                                    v-model="dueBusinessFuturePlanCreateForm.operatingPlan"
-                                >
+                                <el-input :disabled="isdisabled" placeholder="上下游切换" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.operatingPlan">
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">销售趋势：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    v-model="dueBusinessFuturePlanCreateForm.other"
-                                    placeholder="销售趋势"
-                                    maxlength="25"
-                                >
+                                <el-input :disabled="isdisabled" v-model="dueBusinessFuturePlanCreateForm.other" placeholder="销售趋势" maxlength="25">
                                 </el-input>
                             </div>
                         </div>
@@ -1253,27 +738,12 @@
                 </div>
             </el-collapse-item>
         </el-collapse>
-        <div
-            class="flex-wrap-row top20 "
-            v-show="!isdisabled"
-        >
-            <el-col
-                :span="2"
-                :offset="6"
-            >
-                <el-button
-                    type="info"
-                    @click="onSaveBus"
-                >保存</el-button>
+        <div class="flex-wrap-row top20 " v-show="!isdisabled">
+            <el-col :span="2" :offset="6">
+                <el-button type="info" @click="onSaveBus">保存</el-button>
             </el-col>
-            <el-col
-                :span="2"
-                :offset="1"
-            >
-                <el-button
-                    type="primary"
-                    @click="onSubmit"
-                >提交</el-button>
+            <el-col :span="2" :offset="1">
+                <el-button type="primary" @click="onSubmit">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -1299,7 +769,7 @@ export default {
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
             cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' },
-                { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
+            { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
             downOptions: [{ value: -1, label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
             options: [{ value: '', label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
             typeOptions: [{ value: '', label: '请选择' }, { value: 0, label: '签订投资合同时切换' }, { value: 1, label: '1年内切换' }, { value: 2, label: '1年以上切换' }, { value: 3, label: '无法切换' }],
@@ -1651,7 +1121,7 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (let i = 0; i < this.dueBusinessAssessmentCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
                 if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1739,7 +1209,7 @@ export default {
             //     this.activeName = '3'
             //     return false
             // }
-            for (let i = 0; i < this.dueBusinessSupplierCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
                 if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
                     this.showWarnMsg('请输入商业尽调供应商必填项')
                     this.activeName = '5'
@@ -1754,7 +1224,7 @@ export default {
                 }
             }
 
-            for (let i = 0; i < this.dueBusinessCustomerCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
                 if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
                     this.showWarnMsg('请输入商业尽调客户结构必填项')
                     this.activeName = '6'
@@ -1899,7 +1369,7 @@ export default {
         text-align: center;
         line-height: 40px;
     }
-    .lengthen{
+    .lengthen {
         .flex-wrap-box {
             max-width: 600px;
         }
@@ -1949,7 +1419,15 @@ table {
     max-width: 200px;
     min-width: 180px;
 }
-/deep/ .el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 100%
+/deep/ .el-date-editor.el-input,
+.el-date-editor.el-input__inner {
+    width: 100%;
+}
+.assessmentTable {
+    margin: 15px;
+}
+.assessmentRow {
+    width: 360px;
+    height: 36px;
 }
 </style>

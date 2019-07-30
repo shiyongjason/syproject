@@ -1,16 +1,53 @@
 <template>
     <div class="jd-manage">
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
-        <el-collapse
-            v-model="activeName"
-            accordion
-        >
+        <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
                     <p class="titlt-p">财务尽调评估及KPI</p>
                 </template>
                 <!--start-->
+
                 <p class="small-title">1、财务尽调评估</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>评估项</th>
+                            <th>合作目标</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tr></tr>
+                    <th>评估项</th>
+                    <th>合作目标</th>
+                    <th><span class="red-word">*</span>结论</th>
+                    <th>备注</th>
+                    <tr></tr>
+                    <th>可否合作</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <tr></tr>
+                    <th>尽调规模</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <tr></tr>
+                    <th>年度递增率</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <tr></tr>
+                    <th>股权比例</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <tr></tr>
+                    <th>净利润率</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </table>
                 <div class="table-flex">
                     <div class="table-row">
                         <div class="table-col">评估项</div>
@@ -18,10 +55,7 @@
                         <div class="table-col"><span class="red-span">*</span>结论(必填)</div>
                         <div class="table-col">备注</div>
                     </div>
-                    <div class="table-row"
-                         v-for="(assessItem,index) in assessmentList"
-                         :key="index"
-                    >
+                    <div class="table-row" v-for="(assessItem,index) in assessmentList" :key="index">
                         <div class="table-col">{{assessItem.assessmentItem}}</div>
                         <div class="table-col">
                             {{assessItem.cooperationTarget}}
@@ -30,27 +64,18 @@
                             <i v-if="index === 4">%</i>
                         </div>
                         <div class="table-col">
-                            <el-select
-                                v-model="assessItem.state"
-                                placeholder="请选择"
-                                :disabled="isdisabled"
-                            >
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                >
+                            <el-select v-model="assessItem.state" placeholder="请选择" :disabled="isdisabled">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </div>
-                        <div class="table-col">
+                        <!-- <div class="table-col">
                             <el-input
                                 :disabled="isdisabled"
                                 v-model="assessItem.remark"
                                 placeholder="请输入内容"
                             ></el-input>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <p class="small-title ">2、KPI（必填）</p>
@@ -59,17 +84,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>资金风险：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="dueFinanceBasic.fundingRisks"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in riskoptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="dueFinanceBasic.fundingRisks" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -77,17 +93,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>资产监管：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="dueFinanceBasic.fundSupervision"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in superviseoptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="dueFinanceBasic.fundSupervision" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in superviseoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -95,17 +102,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>仓库监管：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="dueFinanceBasic.warehouseManaged"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="dueFinanceBasic.warehouseManaged" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -113,17 +111,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>财务外派：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="dueFinanceBasic.financialExpatriates"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in options"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="dueFinanceBasic.financialExpatriates" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -135,14 +124,7 @@
                     <div class="flex-wrap-box ">
                         <div class="flex-wrap-title"><span class="red-span">*</span>风险揭示：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="6"
-                                :disabled="isdisabled"
-                                placeholder="请输入内容"
-                                v-model="dueFinanceBasic.riskDisclosure"
-                            >
+                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="dueFinanceBasic.riskDisclosure">
                             </el-input>
                         </div>
                     </div>
@@ -151,14 +133,7 @@
                     <div class="flex-wrap-box ">
                         <div class="flex-wrap-title"><span class="red-span">*</span>分析描述：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="6"
-                                :disabled="isdisabled"
-                                placeholder="请输入内容"
-                                v-model="dueFinanceBasic.analysisDescription"
-                            >
+                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="dueFinanceBasic.analysisDescription">
                             </el-input>
                         </div>
                     </div>
@@ -174,13 +149,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>销售毛利率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder="营业利润/营业收入"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.grossMargin"
-                                    @keyup.native="oninput('grossMargin',$event)"
-                                    >
+                                <el-input placeholder="营业利润/营业收入" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.grossMargin" @keyup.native="oninput('grossMargin',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -188,13 +157,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>费率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.rate"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('rate',$event)"
-                                    >
+                                <el-input v-model="dueFinanceBasic.rate" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('rate',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -202,13 +165,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>净利率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.profitRatio"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('profitRatio',$event)"
-                                >
+                                <el-input v-model="dueFinanceBasic.profitRatio" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('profitRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -225,13 +182,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">销售费用占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.salesExpensesRatio"
-                                    @keyup.native="oninput('salesExpensesRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.salesExpensesRatio" @keyup.native="oninput('salesExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -239,13 +190,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">管理费用占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.managementExpensesRatio"
-                                    @keyup.native="oninput('managementExpensesRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.managementExpensesRatio" @keyup.native="oninput('managementExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -253,13 +198,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">财务费用占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.financeExpensesRatio"
-                                    @keyup.native="oninput('financeExpensesRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.financeExpensesRatio" @keyup.native="oninput('financeExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -276,13 +215,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>流动比率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.liquidityRatio"
-                                    @keyup.native="oninput('liquidityRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.liquidityRatio" @keyup.native="oninput('liquidityRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -290,13 +223,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>速动比率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.quickRatio"
-                                    @keyup.native="oninput('quickRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.quickRatio" @keyup.native="oninput('quickRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -304,13 +231,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>资产负债率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.assetLiabilityRatio"
-                                    @keyup.native="oninput('assetLiabilityRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.assetLiabilityRatio" @keyup.native="oninput('assetLiabilityRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -318,13 +239,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>现金比率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.cashRatio"
-                                    @keyup.native="oninput('cashRatio',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.cashRatio" @keyup.native="oninput('cashRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -342,13 +257,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>应收账款周转天数：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.daysOfReceivable"
-                                    @keyup.native="oninput('daysOfReceivable',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.daysOfReceivable" @keyup.native="oninput('daysOfReceivable',$event)">
                                     <template slot="suffix">天</template>
                                 </el-input>
                             </div>
@@ -356,13 +265,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>库存周转天数：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.daysOfInventory"
-                                    @keyup.native="oninput('daysOfInventory',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.daysOfInventory" @keyup.native="oninput('daysOfInventory',$event)">
                                     <template slot="suffix">天</template>
                                 </el-input>
                             </div>
@@ -370,13 +273,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>总资产周转率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.totalAssetsTurnover"
-                                    @keyup.native="oninput('totalAssetsTurnover',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.totalAssetsTurnover" @keyup.native="oninput('totalAssetsTurnover',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -384,13 +281,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>净资产收益率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="dueFinanceBasic.returnOnEquity"
-                                    @keyup.native="oninput('returnOnEquity',$event)"
-                                >
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="dueFinanceBasic.returnOnEquity" @keyup.native="oninput('returnOnEquity',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -409,41 +300,23 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>公司借款：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.companyDebt"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('companyDebt',$event)"
-                                >
-                                <template slot="suffix">万</template>
+                                <el-input v-model="dueFinanceBasic.companyDebt" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyDebt',$event)">
+                                    <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>股东借款：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.shareholdersDebt"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('shareholdersDebt',$event)"
-                                >
-                                <template slot="suffix">万</template>
+                                <el-input v-model="dueFinanceBasic.shareholdersDebt" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersDebt',$event)">
+                                    <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                         </div>
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>公司向股东借款：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.companyBorrowsShareholders"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('companyBorrowsShareholders',$event)"
-                                >
+                                <el-input v-model="dueFinanceBasic.companyBorrowsShareholders" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyBorrowsShareholders',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -451,13 +324,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>股东向公司借款：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.shareholdersBorrowsCompany"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('shareholdersBorrowsCompany',$event)"
-                                >
+                                <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -465,13 +332,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title">现金流量比率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.cashFlowRatio"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('cashFlowRatio',$event)"
-                                >
+                                <el-input v-model="dueFinanceBasic.cashFlowRatio" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -479,17 +340,8 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>资金风险评估：</div>
                             <div class="flex-wrap-cont">
-                                <el-select
-                                    v-model="dueFinanceBasic.capitalRiskAssessment"
-                                    placeholder="请选择"
-                                    :disabled="isdisabled"
-                                >
-                                    <el-option
-                                        v-for="item in riskoptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value"
-                                    >
+                                <el-select v-model="dueFinanceBasic.capitalRiskAssessment" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
                             </div>
@@ -507,13 +359,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>年度纳税营业收入:</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.annualTaxableBusinessIncome"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('annualTaxableBusinessIncome',$event)"
-                                    >
+                                <el-input v-model="dueFinanceBasic.annualTaxableBusinessIncome" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('annualTaxableBusinessIncome',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -521,13 +367,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>纳税收入占比：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.taxableIncomeRatio"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('taxableIncomeRatio',$event)"
-                                    >
+                                <el-input v-model="dueFinanceBasic.taxableIncomeRatio" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('taxableIncomeRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -535,13 +375,7 @@
                         <div class="flex-wrap-box">
                             <div class="flex-wrap-title"><span class="red-span">*</span>税负率：</div>
                             <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="dueFinanceBasic.taxBearingRate"
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    @keyup.native="oninput('taxBearingRate',$event)"
-                                >
+                                <el-input v-model="dueFinanceBasic.taxBearingRate" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('taxBearingRate',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </div>
@@ -559,18 +393,8 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">仓库地址：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.storeProvince"
-                                        placeholder="省"
-                                        :disabled="isdisabled"
-                                        @change="onProvince"
-                                    >
-                                        <el-option
-                                            v-for="item in storeProvince"
-                                            :key="item.id"
-                                            :label="item.cityName"
-                                            :value="item.cityId"
-                                        >
+                                    <el-select v-model="dueFinanceBasic.storeProvince" placeholder="省" :disabled="isdisabled" @change="onProvince">
+                                        <el-option v-for="item in storeProvince" :key="item.id" :label="item.cityName" :value="item.cityId">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -578,38 +402,19 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title"></div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.storeCity"
-                                        placeholder="市"
-                                        :disabled="isdisabled"
-                                        @change="onCity"
-                                    >
-                                    <el-option
-                                        v-for="item in storeCity"
-                                        :key="item.id"
-                                        :label="item.cityName"
-                                        :value="item.cityId"
-                                    >
-                                    </el-option>
-                                </el-select>
+                                    <el-select v-model="dueFinanceBasic.storeCity" placeholder="市" :disabled="isdisabled" @change="onCity">
+                                        <el-option v-for="item in storeCity" :key="item.id" :label="item.cityName" :value="item.cityId">
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title"></div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.storeArea"
-                                        placeholder="区"
-                                        :disabled="isdisabled"
-                                    >
-                                    <el-option
-                                        v-for="item in storeArea"
-                                        :key="item.id"
-                                        :label="item.cityName"
-                                        :value="item.cityId"
-                                    >
-                                    </el-option>
-                                </el-select>
+                                    <el-select v-model="dueFinanceBasic.storeArea" placeholder="区" :disabled="isdisabled">
+                                        <el-option v-for="item in storeArea" :key="item.id" :label="item.cityName" :value="item.cityId">
+                                        </el-option>
+                                    </el-select>
                                 </div>
                             </div>
                         </div>
@@ -617,15 +422,7 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">详细地址：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-input
-                                        type="textarea"
-                                        style="width:900px"
-                                        rows="2"
-                                        :disabled="isdisabled"
-                                        placeholder="请输入详细地址"
-                                        maxlength="250"
-                                        v-model="dueFinanceBasic.storeAddress"
-                                    >
+                                    <el-input type="textarea" style="width:900px" rows="2" :disabled="isdisabled" placeholder="请输入详细地址" maxlength="250" v-model="dueFinanceBasic.storeAddress">
                                     </el-input>
                                 </div>
                             </div>
@@ -634,30 +431,15 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">仓库面积（㎡）：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-input
-                                        v-model="dueFinanceBasic.storeSize"
-                                        placeholder=""
-                                        maxlength="25"
-                                        :disabled="isdisabled"
-                                        @keyup.native="oninput('storeSize',$event)"
-                                    >
+                                    <el-input v-model="dueFinanceBasic.storeSize" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('storeSize',$event)">
                                     </el-input>
                                 </div>
                             </div>
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">仓库形式：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.storeForm"
-                                        placeholder="请选择"
-                                        :disabled="isdisabled"
-                                    >
-                                        <el-option
-                                            v-for="item in storeOptions"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        >
+                                    <el-select v-model="dueFinanceBasic.storeForm" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="item in storeOptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -665,17 +447,8 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">仓库摆放有序程度：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.degreeOfStorageOrder"
-                                        placeholder="请选择"
-                                        :disabled="isdisabled"
-                                    >
-                                        <el-option
-                                            v-for="item in riskoptions"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        >
+                                    <el-select v-model="dueFinanceBasic.degreeOfStorageOrder" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -685,17 +458,8 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">是否接受好享家托管：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-select
-                                        v-model="dueFinanceBasic.isAgreeCustody"
-                                        placeholder="请选择"
-                                        :disabled="isdisabled"
-                                    >
-                                        <el-option
-                                            v-for="item in options"
-                                            :key="item.value"
-                                            :label="item.label"
-                                            :value="item.value"
-                                        >
+                                    <el-select v-model="dueFinanceBasic.isAgreeCustody" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -704,12 +468,7 @@
                             <div class="flex-wrap-box">
                                 <div class="flex-wrap-title">具体托管时间：</div>
                                 <div class="flex-wrap-cont">
-                                    <el-date-picker
-                                        v-model="dueFinanceBasic.dateOfCustody"
-                                        type="date"
-                                        placeholder="选择日期"
-                                        :disabled="isdisabled"
-                                    >
+                                    <el-date-picker v-model="dueFinanceBasic.dateOfCustody" type="date" placeholder="选择日期" :disabled="isdisabled">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -725,17 +484,8 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title"><span class="red-span">*</span>是否同意财务委派：</div>
                         <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="dueFinanceBasic.isAgreeFinancialDelegation"
-                                placeholder="请选择"
-                                :disabled="isdisabled"
-                            >
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                >
+                            <el-select v-model="dueFinanceBasic.isAgreeFinancialDelegation" placeholder="请选择" :disabled="isdisabled">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </div>
@@ -743,12 +493,7 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">开始时间：</div>
                         <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="dueFinanceBasic.startDateOfDelegation"
-                                type="date"
-                                placeholder="选择日期"
-                                :disabled="isdisabled"
-                            >
+                            <el-date-picker v-model="dueFinanceBasic.startDateOfDelegation" type="date" placeholder="选择日期" :disabled="isdisabled">
                             </el-date-picker>
                         </div>
                     </div>
@@ -768,22 +513,13 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title"><span class="red-span">*</span>编制单位：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="assetsLiabilities.writer"
-                                placeholder="请输入编制单位"
-                                :disabled="isdisabled"
-                            ></el-input>
+                            <el-input v-model="assetsLiabilities.writer" placeholder="请输入编制单位" :disabled="isdisabled"></el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">时间：</div>
                         <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="assetsLiabilities.recordTime"
-                                type="date"
-                                placeholder="选择日期"
-                                :disabled="isdisabled"
-                            >
+                            <el-date-picker v-model="assetsLiabilities.recordTime" type="date" placeholder="选择日期" :disabled="isdisabled">
                             </el-date-picker>
                         </div>
                     </div>
@@ -806,24 +542,12 @@
                             <template v-else>
                                 <div class="table-col">{{item.typeName}}</div>
                                 <div class="table-col">
-                                    <el-input
-                                        v-model="item.endOrCurrent"
-                                        placeholder="请输入内容"
-                                        :disabled="isdisabled"
-                                        maxlength="25"
-                                        @keyup.native="oninputAssets('assetList', index, 'endOrCurrent', $event)"
-                                    >
+                                    <el-input v-model="item.endOrCurrent" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputAssets('assetList', index, 'endOrCurrent', $event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </div>
                                 <div class="table-col">
-                                    <el-input
-                                        v-model="item.beginOrPrior"
-                                        placeholder="请输入内容"
-                                        :disabled="isdisabled"
-                                        maxlength="25"
-                                        @keyup.native="oninputAssets('assetList', index, 'beginOrPrior', $event)"
-                                    >
+                                    <el-input v-model="item.beginOrPrior" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputAssets('assetList', index, 'beginOrPrior', $event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </div>
@@ -843,24 +567,12 @@
                             <template v-else>
                                 <div class="table-col">{{item.typeName}}</div>
                                 <div class="table-col">
-                                    <el-input
-                                        v-model="item.endOrCurrent"
-                                        placeholder="请输入内容"
-                                        :disabled="isdisabled"
-                                        maxlength="25"
-                                        @keyup.native="oninputAssets('liabilitiesList', index, 'endOrCurrent', $event)"
-                                    >
+                                    <el-input v-model="item.endOrCurrent" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputAssets('liabilitiesList', index, 'endOrCurrent', $event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </div>
                                 <div class="table-col">
-                                    <el-input
-                                        v-model="item.beginOrPrior"
-                                        placeholder="请输入内容"
-                                        :disabled="isdisabled"
-                                        maxlength="25"
-                                        @keyup.native="oninputAssets('liabilitiesList', index, 'beginOrPrior', $event)"
-                                    >
+                                    <el-input v-model="item.beginOrPrior" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputAssets('liabilitiesList', index, 'beginOrPrior', $event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </div>
@@ -884,22 +596,13 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title"><span class="red-span">*</span>编制单位：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="dueFinanceProfit.writer"
-                                placeholder="请输入编制单位"
-                                :disabled="isdisabled"
-                            ></el-input>
+                            <el-input v-model="dueFinanceProfit.writer" placeholder="请输入编制单位" :disabled="isdisabled"></el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">时间：</div>
                         <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="dueFinanceProfit.recordTime"
-                                type="date"
-                                placeholder="选择日期"
-                                :disabled="isdisabled"
-                            >
+                            <el-date-picker v-model="dueFinanceProfit.recordTime" type="date" placeholder="选择日期" :disabled="isdisabled">
                             </el-date-picker>
                         </div>
                     </div>
@@ -921,24 +624,12 @@
                         <template v-else>
                             <div class="table-col">{{item.typeName}}</div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.endOrCurrent"
-                                    placeholder="请输入内容"
-                                    :disabled="isdisabled"
-                                    maxlength="25"
-                                    @keyup.native="oninputDueAndCase(index, 'endOrCurrent', $event, 0)"
-                                >
+                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputDueAndCase(index, 'endOrCurrent', $event, 0)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.beginOrPrior"
-                                    placeholder="请输入内容"
-                                    :disabled="isdisabled"
-                                    maxlength="25"
-                                    @keyup.native="oninputDueAndCase(index, 'beginOrPrior', $event, 0)"
-                                >
+                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputDueAndCase(index, 'beginOrPrior', $event, 0)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </div>
@@ -961,22 +652,13 @@
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title"><span class="red-span">*</span>编制单位：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="caseFlow.writer"
-                                placeholder="请输入编制单位"
-                                :disabled="isdisabled"
-                            ></el-input>
+                            <el-input v-model="caseFlow.writer" placeholder="请输入编制单位" :disabled="isdisabled"></el-input>
                         </div>
                     </div>
                     <div class="flex-wrap-box">
                         <div class="flex-wrap-title">时间：</div>
                         <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="caseFlow.recordTime"
-                                type="date"
-                                placeholder="选择日期"
-                                :disabled="isdisabled"
-                            >
+                            <el-date-picker v-model="caseFlow.recordTime" type="date" placeholder="选择日期" :disabled="isdisabled">
                             </el-date-picker>
                         </div>
                     </div>
@@ -998,25 +680,13 @@
                         <template v-else>
                             <div class="table-col">{{item.typeName}}</div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.endOrCurrent"
-                                    placeholder="请输入内容"
-                                    :disabled="isdisabled"
-                                    maxlength="25"
-                                    @keyup.native="oninputDueAndCase(index, 'endOrCurrent', $event, 1)"
-                                >
-                                <template slot="suffix">万</template>
+                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputDueAndCase(index, 'endOrCurrent', $event, 1)">
+                                    <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                             <div class="table-col">
-                                <el-input
-                                    v-model="item.beginOrPrior"
-                                    placeholder="请输入内容"
-                                    :disabled="isdisabled"
-                                    maxlength="25"
-                                    @keyup.native="oninputDueAndCase(index, 'beginOrPrior', $event, 1)"
-                                >
-                                <template slot="suffix">万</template>
+                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" :disabled="isdisabled" maxlength="25" @keyup.native="oninputDueAndCase(index, 'beginOrPrior', $event, 1)">
+                                    <template slot="suffix">万</template>
                                 </el-input>
                             </div>
                         </template>
@@ -1025,23 +695,11 @@
             </el-collapse-item>
         </el-collapse>
         <div class="flex-wrap-row top20 " v-show="!isdisabled">
-            <el-col
-                :span="2"
-                :offset="6"
-            >
-                <el-button
-                    type="info"
-                    @click="onSureHandle(0)"
-                >保存</el-button>
+            <el-col :span="2" :offset="6">
+                <el-button type="info" @click="onSureHandle(0)">保存</el-button>
             </el-col>
-            <el-col
-                :span="2"
-                :offset="1"
-            >
-                <el-button
-                    type="primary"
-                    @click="onSureHandle(1)"
-                >提交</el-button>
+            <el-col :span="2" :offset="1">
+                <el-button type="primary" @click="onSureHandle(1)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -1284,7 +942,7 @@ export default {
         },
         async onSubmit (type) {
             const formData = this.format(type)
-            for (let i = 0; i < this.assessmentList.length; i++) {
+            for (let i = 0;i < this.assessmentList.length;i++) {
                 if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1499,34 +1157,34 @@ td {
         }
     }
 }
-.double-table{
+.double-table {
     display: flex;
     margin: 15px;
-    .table-flex{
+    .table-flex {
         width: 50%;
         margin: 0;
     }
-    .table-flex:nth-child(1){
-        .table-row{
+    .table-flex:nth-child(1) {
+        .table-row {
             border-right: none;
         }
     }
-    .table-flex:nth-child(2){
-        .table-row{
+    .table-flex:nth-child(2) {
+        .table-row {
             border-left: none;
         }
     }
 }
-.table_left{
-    .table-col{
+.table_left {
+    .table-col {
         text-align: left !important;
     }
 }
-.subtitle{
+.subtitle {
     font-weight: 700;
     height: 40px;
 }
-.table_h{
+.table_h {
     height: 80px;
     // line-height: 80px;
 }

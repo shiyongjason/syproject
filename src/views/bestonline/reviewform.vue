@@ -1,14 +1,6 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item >尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item :to="{path:'/bestonline/review'}">现场尽调</el-breadcrumb-item>
-                    <el-breadcrumb-item :to="{path:'/bestonline/evaluation',query:{applyId}}">{{companyName}}</el-breadcrumb-item>
-                    <el-breadcrumb-item >管理</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
             <div class="reviewform">
                 <el-tabs :tab-position="tabPosition"  v-model="activeName">
                     <el-tab-pane label="合作目标" name="one">
