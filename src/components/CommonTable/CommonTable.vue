@@ -1,8 +1,8 @@
 <template>
     <div class="page-table clearfix">
         <!-- 列表 -->
-        <el-table :data="tableData" @selection-change="handleSelectionChange" border stripe :actionMinWidth="actionMinWidth" :span-method="spanMethod" :lazy="true" :max-height="maxHeight" :show-summary="isShowSum" :summary-method="getSum" @sort-change="handleSortChange">
-            <el-table-column type="selection" v-if="isMultiple" align="center" :selectable="selectable"></el-table-column>
+        <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange">
+            <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <el-table-column v-for="item in tableLabel" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
@@ -21,7 +21,7 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination :total="paginationInfo.total" layout="total, prev, pager, next,jumper" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" @current-change="handleCurrentChange" v-if="isPagination && paginationInfo.total"></el-pagination>
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationInfo.pageStyle" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" @current-change="handleCurrentChange"></el-pagination>
     </div>
 </template>
 <script>
@@ -49,10 +49,6 @@ export default {
             type: Boolean,
             default: false
         },
-        isShowSum: {
-            type: Boolean,
-            default: false
-        },
         isBlank: {
             type: Boolean,
             default: false,
@@ -60,15 +56,11 @@ export default {
         },
         tableData: {
             type: Array,
-            default: () => {
-
-            }
+            default: () => ([])
         },
         tableLabel: {
             type: Array,
-            default: () => {
-
-            }
+            default: () => ([])
         },
         pagination: {
             type: Object,
@@ -76,7 +68,8 @@ export default {
                 return {
                     total: 0,
                     pageSize: 10,
-                    pageNumber: 1
+                    pageNumber: 1,
+                    pageStyle: 'total, sizes, prev, pager, next, jumper'
                 }
             }
         },
@@ -92,17 +85,14 @@ export default {
             type: Function,
             default: () => true
         },
-        spanMethod: {
-            type: Function,
-            default: () => true
-        },
-        getSum: {
-            type: Function,
-            default: () => true
-        },
-        maxHeight: {
-            type: Number,
-            default: 1000
+        tableAttr: {
+            type: Object,
+            default: () => ({})
+        }
+    },
+    computed: {
+        tableAttrInfo () {
+            return Object.assign({}, this.tableAttr)
         }
     },
     watch: {
