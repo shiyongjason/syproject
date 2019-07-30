@@ -1,213 +1,79 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>评分规则配置</el-breadcrumb-item>
-                </el-breadcrumb>
+            <div class="table-cont-btn">
+                <el-button type="primary" @click="newDueFrom">
+                    新增评分规则
+                </el-button>
             </div>
-            <!-- <div class="page-wrap ">
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">指标：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                placeholder="请输入联系方式"
-                                maxlength="11"
-                            >
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-cont pl20">
-                            <el-button
-                                type="primary"
-                                @click="onSearch()"
-                            >搜索</el-button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <div class="flex-wrap-row pt10">
-                <div class="flex-wrap-box">
-                    <div class="flex-wrap-cont">
-                        <el-button
-                            type="primary"
-                            class="ml20"
-                            @click="newDueFrom"
-                        >
-                            新增评分规则
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="page-box ">
-                <table class="table-example" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <td width="180">序号</td>
-                            <td width="180">分类</td>
-                            <td width="180">指标</td>
-                            <td width="180">指标值</td>
-                            <td width="180">分数</td>
-                            <td width="180">操作</td>
+            <table class="table-example" style="width: 100%">
+                <thead>
+                    <tr class="tableTitle">
+                        <td width="180">序号</td>
+                        <td width="180">分类</td>
+                        <td width="180">指标</td>
+                        <td width="180">指标值</td>
+                        <td width="180">分数</td>
+                        <td width="180">操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="(item,pindex) in testList">
+                        <!--  eslint-disable -->
+                        <tr v-for="(seconditem,index) in item.dueScoreRuleVoList">
+                            <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length"> {{pindex+1}}
+                            </td>
+                            <td v-if="index == 0" :rowspan=" item.dueScoreRuleVoList.length">{{item.classifyName}}</td>
+                            <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">{{item.indicatorName}}</td>
+                            <td>{{seconditem.indicatorType}}{{seconditem.itemName}}</td>
+                            <td>{{seconditem.score}}</td>
+                            <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">
+                                <el-button class="orangeBtn" @click="onEditScore(item)">编辑</el-button>
+                                <el-button class="orangeBtn" @click="SureToDelete(item)">删除</el-button>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <template v-for="(item,pindex) in testList">
-                             <!--  eslint-disable -->
-                            <tr v-for="(seconditem,index) in item.dueScoreRuleVoList">
-                                <td
-                                    v-if="index == 0"
-                                    :rowspan="item.dueScoreRuleVoList.length"
-                                > {{pindex+1}}
-                                </td>
-                                <td
-                                    v-if="index == 0"
-                                    :rowspan=" item.dueScoreRuleVoList.length"
-                                >{{item.classifyName}}</td>
-                                <td
-                                    v-if="index == 0"
-                                    :rowspan="item.dueScoreRuleVoList.length"
-                                >{{item.indicatorName}}</td>
-                                <td>{{seconditem.indicatorType}}{{seconditem.itemName}}</td>
-                                <td>{{seconditem.score}}</td>
-                                <td
-                                    v-if="index == 0"
-                                    :rowspan="item.dueScoreRuleVoList.length"
-                                >
-                                    <el-button
-                                        type="text"
-                                        @click="onEditScore(item)"
-                                    >编辑</el-button>
-                                     <el-button
-                                        type="text"
-                                        @click="SureToDelete(item)"
-                                    >删除</el-button>
-                                </td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <el-dialog
-            title="评分规则"
-            :visible.sync="dialogVisible"
-            width="650px"
-            center
-            :close-on-click-modal=false
-        >
-            <el-form
-                ref="dueform"
-                label-width="80px"
-            >
-                <el-form-item label="分类:">
-                    <el-select
-                        v-model="dueForm.classifyId"
-                        placeholder="请选择"
-                        clearable
-                        @change="onChangeTarget()"
-                        :disabled="isdisabled"
-                    >
-                        <el-option
-                            v-for="item in options"
-                            :key="item.selectCode"
-                            :label="item.value"
-                            :value="item.selectCode"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="指标:">
-                    <HAutocomplete
-                        ref="HAutocomplete"
-                        :selectArr="targetArr"
-                        :selectObj="targetObj"
-                        :disabled="isdisabled"
-                        v-if="targetArr"
-                        @back-event="backFindTarget"
-                    ></HAutocomplete>
-                </el-form-item>
-                <div v-for="(item,index) in  dueForm.dueScoreRuleCreateFormList" :key=index>
-                <el-form-item label="指标值:" >
-                        <el-col :span="6">
-                            <el-select
-                                v-model="item.indicatorType"
-                                placeholder="请选择"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in dueArr"
-                                    :key="item.label"
-                                    :label="item.value"
-                                    :value="item.label"
-                                >
+                    </template>
+                </tbody>
+            </table>
+            <el-dialog title="评分规则" :visible.sync="dialogVisible" width="650px" center :close-on-click-modal=false>
+                <el-form ref="dueform" label-width="80px">
+                    <el-form-item label="分类:">
+                        <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="onChangeTarget()" :disabled="isdisabled">
+                            <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="指标:">
+                        <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" :disabled="isdisabled" v-if="targetArr" @back-event="backFindTarget"></HAutocomplete>
+                    </el-form-item>
+                    <div v-for="(item,index) in  dueForm.dueScoreRuleCreateFormList" :key=index class="indicator">
+                        <el-form-item label="指标值:">
+                            <el-select v-model="item.indicatorType" placeholder="请选择" clearable>
+                                <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
                                 </el-option>
                             </el-select>
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="1"
-                        >-</el-col>
-                        <el-col :span="7">
-                            <el-input
-                                v-if="type === 0"
-                                v-model="item.indicatorVal"
-                                placeholder="输入指标值"
-                                maxlength="25"
-                                @keyup.native="onDot(index, $event, 'indicatorVal')"
-                            >
+                            <span class="line">-</span>
+                            <el-input v-if="type === 0" v-model="item.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot(index, $event, 'indicatorVal')">
                                 <template slot="suffix">{{unit}}</template>
                             </el-input>
-                            <el-select
-                                v-if="type === 1"
-                                v-model="item.indicatorVal"
-                                placeholder="选择指标值"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in indicatorArr"
-                                    :key="item.id"
-                                    :label="item.itemName"
-                                    :value="item.itemValue"
-                                >
+                            <el-select v-if="type === 1" v-model="item.indicatorVal" placeholder="选择指标值" clearable>
+                                <el-option v-for="item in indicatorArr" :key="item.id" :label="item.itemName" :value="item.itemValue">
                                 </el-option>
-                            </el-select>                            
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="1"
-                        >-</el-col>
-                        <el-col :span="7">
-                            <el-input
-                                v-model="item.score"
-                                placeholder="输入得分值"
-                                maxlength="25"
-                                @keyup.native="oninput(index, $event, 'score')"
-                            ></el-input>
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="2"
-                        ><i v-if="index==0" class="el-icon-circle-plus-outline" @click="onAddTarget"></i>
-                        <i v-else class="el-icon-remove-outline" @click="onDeleteTarget(index)"></i>
-                        </el-col>
-                </el-form-item>
-                </div>
-            </el-form>
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="onAddscorerule"
-                >确 定</el-button>
-            </span>
-        </el-dialog>
+                            </el-select>
+                            <span class="line">-</span>
+                            <el-input v-model="item.score" placeholder="输入得分值" maxlength="25" @keyup.native="oninput(index, $event, 'score')"></el-input>
+                            <span class="line"><i v-if="index==0" class="el-icon-circle-plus-outline" @click="onAddTarget"></i>
+                                <i v-else class="el-icon-remove-outline" @click="onDeleteTarget(index)"></i>
+                            </span>
+                        </el-form-item>
+                    </div>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="onAddscorerule">确 定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
@@ -266,7 +132,7 @@ export default {
                 }
 
             ],
-            testList: [ ],
+            testList: [],
             clearForm: {
                 classifyId: '', // 分类
                 createUser: '', //
@@ -330,6 +196,7 @@ export default {
         },
         async getScorerules () {
             const { data } = await getScorerules({ indicatorName: this.indicatorName })
+            console.log(data)
             this.testList = data.data.pageContent
         },
         async onChangeTarget () {
@@ -469,7 +336,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.onDeleteScore(val)
-            }).catch(() => {})
+            }).catch(() => { })
         },
         async onDeleteScore (item) {
             await deleteScorerules(item.indicatorId)
@@ -498,13 +365,15 @@ export default {
 table {
     border-collapse: collapse;
     td {
-    border: 1px solid #dddddd !important;
-    text-align: center;
-    line-height: 40px;
-    position: relative;
+        border: 1px solid #dddddd !important;
+        text-align: center;
+        line-height: 40px;
+        position: relative;
+    }
 }
+.line {
+    margin: 0 10px;
 }
-
 .el-select {
     width: 100%;
 }
@@ -513,5 +382,24 @@ table {
 }
 .el-autocomplete {
     width: 100%;
+}
+.indicator {
+    .el-form-item {
+        .el-select {
+            width: 130px;
+        }
+        .el-input {
+            width: 130px;
+        }
+    }
+}
+.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+.el-dialog .el-form .el-form-item {
+    margin-bottom: 20px !important;
+}
+.tableTitle{
+    background:#f2f2f4;
 }
 </style>

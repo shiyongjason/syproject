@@ -829,11 +829,11 @@ export default {
         async getFinance () {
             const { data } = await getFinance(this.$route.query.applyId)
             // console.log(data)
-            if (!data.data.dueFinanceBasic.type) {
-                this.isdisabled = (!!data.data.dueFinanceBasic.type) || !this.roleType
-            } else {
-                this.isdisabled = (!!data.data.dueFinanceBasic.type)
-            }
+            // if (!data.data.dueFinanceBasic.type) {
+            //     this.isdisabled = (!!data.data.dueFinanceBasic.type) || !this.roleType
+            // } else {
+            //     this.isdisabled = (!!data.data.dueFinanceBasic.type)
+            // }
             this.type = !!data.data.dueFinanceBasic.type
             this.updateUser = data.data.dueFinanceBasic.updateUser
             this.updateTime = data.data.dueFinanceBasic.updateTime
