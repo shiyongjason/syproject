@@ -24,14 +24,11 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="150">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="150" @handleCurrentChange="handleCurrentChange">
                 <template slot="companyName" slot-scope="scope">
-                    <!-- <router-link :to=""> -->
-                    <a class="isLink">
+                    <router-link class="isLink" :to="{path:'/bestonline/evaluation',query:{'applyId':scope.data.row.applyId}}">
                         <span>{{scope.data.row.companyName}}</span>
-                    </a>
-
-                    <!-- </router-link> -->
+                    </router-link>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span v-if="scope.data.row.status == 0">未提交</span>
@@ -40,9 +37,9 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope)">修改</el-button>
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope)">提交审核</el-button>
-                    <el-button class="orangeBtn" v-else @click="onCheck(scope)">查看</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope.data.row)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onCommit(scope.data.row.applyId)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row.applyId)">查看</el-button>
                 </template>
             </basicTable>
             <!-- <reviewTable :totalData="totalTableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -147,6 +144,15 @@ export default {
                 }
                 return value
             })
+        },
+        onEdit (row) {
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale } })
+        },
+        onCheck (applyId) {
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: applyId } })
+        },
+        handleCurrentChange(val){
+            console.log(val)
         }
     },
     components: {
