@@ -11,12 +11,12 @@
   },
   "dependencies": {
     "echarts": "^4.2.1",
+    "hosjoy-ui": "^1.0.12",
     "jwt-decode": "^2.2.0",
     "save": "^2.3.3",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-    "hosjoy-ui": "^1.0.11"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",

@@ -6,6 +6,7 @@ let uploadUrl = ''
 let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
+let FileUploadUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
@@ -20,6 +21,7 @@ switch (env) {
         // ossUrl = 'https://testroute.hosjoy.com:4832/'
         // uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         // iframeUrl = 'https://test.hosjoy.com:4832/'
+        FileUploadUrl = 'http://172.16.168.8:30000/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -49,5 +51,6 @@ export {
     uploadUrl,
     ossUrl,
     iframeUrl,
-    jinyun
+    jinyun,
+    FileUploadUrl
 }

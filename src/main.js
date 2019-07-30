@@ -9,25 +9,22 @@ import '../src/theme/index.css'
 import '@/assets/style/common.scss'
 // import HosjoyUI from 'hosjoy-ui'
 import filters from './utils/filters'
-
+import basicTable from './components/CommonTable/CommonTable'
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 // Vue.use(HosjoyUI)
+
+// table公共组件
+Vue.component(
+    'basicTable', basicTable
+)
 
 // 过滤器
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })
 
-// Vue.mixin({
-//     mounted () {
-//         const dom = document.querySelector('.el-main')
-//         if (dom) {
-//             dom.scrollTo(0, 0)
-//         }
-//     }
-// })
 new Vue({
     router,
     store,
