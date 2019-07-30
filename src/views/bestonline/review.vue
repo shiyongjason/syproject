@@ -24,14 +24,47 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <reviewTable :totalData="totalTableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                </reviewTable>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="150">
+                <template slot="companyName" slot-scope="scope">
+                    <!-- <router-link :to=""> -->
+                    <a class="isLink">
+                        <span>{{scope.data.row.companyName}}</span>
+                    </a>
+
+                    <!-- </router-link> -->
+                </template>
+                <template slot="status" slot-scope="scope">
+                    <span v-if="scope.data.row.status == 0">未提交</span>
+                    <span v-if="scope.data.row.status == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
+                    <span class="isGreenColor" v-if="scope.data.row.status == 2" @click="showProcess(scope.data.row.applyId)">审批通过</span>
+                    <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-else @click="onCheck(scope)">查看</el-button>
+                </template>
+            </basicTable>
+            <!-- <reviewTable :totalData="totalTableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+            </reviewTable> -->
         </div>
+        <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
+            <div class="block">
+                <el-timeline>
+                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
+                        {{item.userName}}/{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible = false">好 的</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
-import reviewTable from './components/reviewTable'
-import { getDuemain } from './api/index.js'
+// import reviewTable from './components/reviewTable'
+import { getDuemain, getDueapprovalconclusion } from './api/index.js'
 import { mapState } from 'vuex'
 export default {
     name: 'reviewform',
@@ -47,7 +80,23 @@ export default {
             },
             paginationData: {},
             totalTableData: [],
-            options: [{ value: '请选择', key: '' }, { value: '未提交', key: 0 }, { value: '审批中', key: 1 }, { value: '审批通过', key: 2 }, { value: '审批驳回', key: 3 }]
+            options: [{ value: '请选择', key: '' }, { value: '未提交', key: 0 }, { value: '审批中', key: 1 }, { value: '审批通过', key: 2 }, { value: '审批驳回', key: 3 }],
+            tableLabel: [
+                { label: '公司名称', prop: 'companyName' },
+                { label: '发起人', prop: 'originatorName' },
+                { label: '发起人所在机构', prop: 'institution' },
+                { label: '发起时间', prop: 'originTime' },
+                { label: '全部提交时间', prop: 'allSubmitTime' },
+                { label: '评审通过/驳回时间', prop: 'handleTime' },
+                { label: '最终得分', prop: 'finalScore' },
+                { label: '标准分数', prop: 'standardScore' },
+                { label: '状态', prop: 'status' },
+                { label: '未操作人', prop: 'noOperators' }
+            ],
+            tableData: [],
+            pagination: {},
+            dialogVisible: false,
+            dueApproval: []
         }
     },
     mounted () {
@@ -75,15 +124,33 @@ export default {
             this.params.organizationCode = this.userInfo.organizationCode
             this.params.role = this.userInfo.positionCode
             const { data } = await getDuemain(this.params)
-            this.totalTableData = data.data.pageContent
-            this.paginationData = {
+            this.tableData = data.data.pageContent
+            console.log(data)
+            // this.totalTableData = data.data.pageContent
+            this.pagination = {
                 pageNumber: data.data.pageNumber,
-                totalElements: data.data.totalElements
+                pageSize: data.data.pageSize,
+                total: data.data.totalElements
             }
+            // this.paginationData = {
+            //     pageNumber: data.data.pageNumber,
+            //     totalElements: data.data.totalElements
+            // }
+        },
+        async showProcess (applyId) {
+            this.dialogVisible = true
+            const { data } = await getDueapprovalconclusion({ applyId: applyId })
+            this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
+            this.dueApproval && this.dueApproval.map(value => {
+                if (value.approvalStatus === 1) {
+                    value.color = '#f88825'
+                }
+                return value
+            })
         }
     },
     components: {
-        reviewTable
+        // reviewTable
     }
 }
 </script>

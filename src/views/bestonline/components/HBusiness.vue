@@ -32,7 +32,7 @@
                                 </el-select>
                             </td>
                             <td :rowspan="dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+                                <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
                                 </el-input>
                             </td>
                         </tr>
@@ -768,8 +768,7 @@ export default {
             activeName: '1',
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
-            cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' },
-            { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
+            cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
             downOptions: [{ value: -1, label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
             options: [{ value: '', label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
             typeOptions: [{ value: '', label: '请选择' }, { value: 0, label: '签订投资合同时切换' }, { value: 1, label: '1年内切换' }, { value: 2, label: '1年以上切换' }, { value: 3, label: '无法切换' }],
@@ -863,7 +862,8 @@ export default {
             newChannels: '',
             currentYearAllSales: 0, // 今年销售总额
             lastYearAllSales: 0, // 去年销售总额
-            lastTwoYearAllSales: 0 // 前年销售总额
+            lastTwoYearAllSales: 0, // 前年销售总额
+            textarea: ''
         }
     },
     mounted () {
@@ -1121,7 +1121,7 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessAssessmentCreateFormList.length; i++) {
                 if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1209,7 +1209,7 @@ export default {
             //     this.activeName = '3'
             //     return false
             // }
-            for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessSupplierCreateFormList.length; i++) {
                 if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
                     this.showWarnMsg('请输入商业尽调供应商必填项')
                     this.activeName = '5'
@@ -1224,7 +1224,7 @@ export default {
                 }
             }
 
-            for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessCustomerCreateFormList.length; i++) {
                 if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
                     this.showWarnMsg('请输入商业尽调客户结构必填项')
                     this.activeName = '6'
@@ -1429,5 +1429,11 @@ table {
 .assessmentRow {
     width: 360px;
     height: 36px;
+}
+/deep/ .textHeight {
+    textarea {
+        height: 210px;
+        border: 0;
+    }
 }
 </style>

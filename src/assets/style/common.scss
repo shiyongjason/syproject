@@ -226,10 +226,12 @@ a.isLink {
 
 .isOrangeColor {
     color: $hosjoyColor !important;
+    cursor: pointer;
 }
 
 .isGreenColor {
     color: $greenColor !important;
+    cursor: pointer;
 }
 
 .isGrayColor {
@@ -239,6 +241,7 @@ a.isLink {
 
 .isRedColor {
     color: $redColor !important;
+    cursor: pointer;
 }
 
 /***************************    文字按钮end    ************************************************************************************************/
