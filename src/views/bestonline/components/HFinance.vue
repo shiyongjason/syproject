@@ -9,44 +9,35 @@
                 <!--start-->
 
                 <p class="small-title">1、财务尽调评估</p>
-                <table>
+                <table class="assessmentTable">
                     <thead>
                         <tr>
-                            <th>评估项</th>
-                            <th>合作目标</th>
+                            <td class="assessmentRow">评估项</td>
+                            <td class="assessmentRow">合作目标</td>
+                            <td class="assessmentRow"><span class="red-word">*</span>结论</td>
+                            <td class="assessmentRow">备注</td>
                         </tr>
                     </thead>
-                    <tbody></tbody>
-                    <tr></tr>
-                    <th>评估项</th>
-                    <th>合作目标</th>
-                    <th><span class="red-word">*</span>结论</th>
-                    <th>备注</th>
-                    <tr></tr>
-                    <th>可否合作</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <tr></tr>
-                    <th>尽调规模</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <tr></tr>
-                    <th>年度递增率</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <tr></tr>
-                    <th>股权比例</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <tr></tr>
-                    <th>净利润率</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <tbody>
+                        <tr v-for="(assessItem,index) in assessmentList" :key=index>
+                            <td>{{assessItem.assessmentItem}}</td>
+                            <td>{{assessItem.cooperationTarget}}
+                                <i v-if="index === 1">w</i>
+                                <i v-if="index === 2">%</i>
+                                <i v-if="index === 4">%</i>
+                            </td>
+                            <td>
+                                <el-select v-model="assessItem.state" placeholder="请选择" :disabled="isdisabled">
+                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </td>
+                            <td :rowspan="assessmentList.length" v-if="index == 0">
+                                <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                                </el-input>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
                 <div class="table-flex">
                     <div class="table-row">
@@ -782,7 +773,8 @@ export default {
             storeCity: [], // 市
             storeArea: [], // 区
             applyId: '',
-            type: false
+            type: false,
+            textarea: ''
         }
     },
     computed: {
@@ -942,7 +934,7 @@ export default {
         },
         async onSubmit (type) {
             const formData = this.format(type)
-            for (let i = 0;i < this.assessmentList.length;i++) {
+            for (let i = 0; i < this.assessmentList.length; i++) {
                 if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1187,5 +1179,18 @@ td {
 .table_h {
     height: 80px;
     // line-height: 80px;
+}
+.assessmentTable {
+    margin: 15px;
+}
+.assessmentRow {
+    width: 360px;
+    height: 36px;
+}
+/deep/ .textHeight {
+    textarea {
+        height: 210px;
+        border: 0;
+    }
 }
 </style>

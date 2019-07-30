@@ -4,7 +4,7 @@
         <el-table :data="tableData" @selection-change="handleSelectionChange" border stripe :actionMinWidth="actionMinWidth" :span-method="spanMethod" :lazy="true" :max-height="maxHeight" :show-summary="isShowSum" :summary-method="getSum" @sort-change="handleSortChange">
             <el-table-column type="selection" v-if="isMultiple" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <el-table-column v-for="item in tableLabel" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align" :min-width="item.width?item.width:''" :show-overflow-tooltip="true">
+            <el-table-column v-for="item in tableLabel" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true">
                 <template slot-scope="scope">
                     <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                     <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
