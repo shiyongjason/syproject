@@ -1,5 +1,18 @@
 <template>
     <div class="wrapper">
+        <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true">
+            <template slot="approvalStatus" slot-scope="scope">
+                <span v-if="scope.data.row.approvalStatus == 0">未提交</span>
+                <span v-if="scope.data.row.approvalStatus == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
+                <span class="isGreenColor" v-if="scope.data.row.approvalStatus == 2" @click="showProcess(scope.data.row.applyId)">审批通过</span>
+                <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
+            </template>
+            <template slot="action" slot-scope="scope">
+                <span class="blue" @click="onEdit(scope.data.row)" v-if="scope.data.row.approvalStatus==0">修改</span>
+                <span class="blue ml10" @click="onDelete(scope.data.row)"  v-if='scope.data.row.approvalStatus==0'>删除</span>
+                <span class="blue ml10" @click="onShow(scope.data.row)"  v-if='scope.data.row.approvalStatus!=0'>查看</span>
+            </template>
+        </basicTable>
         <div class="page-table">
             <el-table
                 :data="totalData"
@@ -123,6 +136,16 @@ export default {
     },
     data () {
         return {
+            tableLabel: [
+                { label: '公司名称', prop: 'companyName' },
+                { label: '发起人', prop: 'createUserName' },
+                { label: '发起人所在机构', prop: 'createUser' },
+                { label: '创建时间', prop: 'createTime' },
+                { label: '评审通过/驳回时间', prop: 'approvalTime' },
+                { label: '评审状态', prop: 'approvalStatus' },
+                { label: '未操作人', prop: 'noOperator' }
+            ],
+            tableData: [],
             dueApproval: [],
             dialogVisible: false
         }
