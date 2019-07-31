@@ -37,15 +37,17 @@
             </table>
             <el-dialog title="评分规则" :visible.sync="dialogVisible" width="650px" center :close-on-click-modal=false>
                 <el-form ref="dueform" label-width="80px">
-                    <el-form-item label="分类:">
-                        <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="onChangeTarget()" :disabled="isdisabled">
-                            <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="指标:">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" :disabled="isdisabled" v-if="targetArr" @back-event="backFindTarget"></HAutocomplete>
-                    </el-form-item>
+                    <div class="reset">
+                        <el-form-item class="classify" label="分类:">
+                            <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="onChangeTarget()" :disabled="isdisabled">
+                                <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="指标:">
+                            <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" :disabled="isdisabled" v-if="targetArr" @back-event="backFindTarget"></HAutocomplete>
+                        </el-form-item>
+                    </div>
                     <div v-for="(item,index) in  dueForm.dueScoreRuleCreateFormList" :key=index class="indicator">
                         <el-form-item label="指标值:">
                             <el-select v-model="item.indicatorType" placeholder="请选择" clearable>
@@ -361,7 +363,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scope>
 table {
     border-collapse: collapse;
     td {
@@ -372,7 +374,7 @@ table {
     }
 }
 .line {
-    margin: 0 10px;
+    margin: 0 15px;
 }
 .el-select {
     width: 100%;
@@ -393,13 +395,23 @@ table {
         }
     }
 }
+.reset {
+    .el-form-item {
+        .el-select {
+            width: 520px;
+        }
+        .el-input{
+            width: 520px;
+        }
+    }
+}
 .el-form .el-input:not(:first-child) {
     margin-left: 0px;
 }
 .el-dialog .el-form .el-form-item {
     margin-bottom: 20px !important;
 }
-.tableTitle{
-    background:#f2f2f4;
+.tableTitle {
+    background: #f2f2f4;
 }
 </style>

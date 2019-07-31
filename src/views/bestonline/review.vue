@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="150" @handleCurrentChange="handleCurrentChange">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="160" @handleCurrentChange="handleCurrentChange">
                 <template slot="companyName" slot-scope="scope">
                     <router-link class="isLink" :to="{path:'/bestonline/evaluation',query:{'applyId':scope.data.row.applyId}}">
                         <span>{{scope.data.row.companyName}}</span>
@@ -88,7 +88,7 @@ export default {
                 { label: '最终得分', prop: 'finalScore' },
                 { label: '标准分数', prop: 'standardScore' },
                 { label: '状态', prop: 'status' },
-                { label: '未操作人', prop: 'noOperators' }
+                { label: '未操作人', prop: 'noOperator' }
             ],
             tableData: [],
             pagination: {},
@@ -151,7 +151,7 @@ export default {
         onCheck (applyId) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: applyId } })
         },
-        handleCurrentChange(val){
+        handleCurrentChange (val) {
             console.log(val)
         }
     },

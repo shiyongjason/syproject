@@ -6,91 +6,65 @@
                 <template slot="title">
                     <p class="titlt-p">商业尽调评估及KPI</p>
                 </template>
-                <!--start-->
-                <p class="small-title">1、商业尽调评估</p>
-                <table class="assessmentTable">
-                    <thead>
-                        <tr>
-                            <td class="assessmentRow">评估项</td>
-                            <td class="assessmentRow">合作目标</td>
-                            <td class="assessmentRow"><span class="red-word">*</span>结论</td>
-                            <td class="assessmentRow">备注</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in dueBusinessAssessmentCreateFormList" :key=index>
-                            <td>{{item.assessmentItem}}</td>
-                            <td>{{item.cooperationIntention}}
-                                <i v-if="index === 1">w</i>
-                                <i v-if="index === 2">%</i>
-                                <i v-if="index === 4">%</i>
-                            </td>
-                            <td>
-                                <el-select v-model="item.state" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </td>
-                            <td :rowspan="dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                <el-form :model="KPIFrom" :rules="KPIRules" label-width="160px">
+                    <!--start-->
+                    <p class="small-title">1、商业尽调评估</p>
+                    <table class="assessmentTable">
+                        <thead>
+                            <tr>
+                                <td class="assessmentRow">评估项</td>
+                                <td class="assessmentRow">合作目标</td>
+                                <td class="assessmentRow"><span class="red-word">*</span>结论</td>
+                                <td class="assessmentRow">备注</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item,index) in dueBusinessAssessmentCreateFormList" :key=index>
+                                <td>{{item.assessmentItem}}</td>
+                                <td>{{item.cooperationIntention}}
+                                    <i v-if="index === 1">w</i>
+                                    <i v-if="index === 2">%</i>
+                                    <i v-if="index === 4">%</i>
+                                </td>
+                                <td>
+                                    <el-select v-model="item.state" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </td>
+                                <td :rowspan="dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                                    </el-input>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="small-title ">2、KPI(必填)</p>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="批发:零售:工程占比：" prop="proportion">
+                                <el-input class="proportionKPI"></el-input><span class="KPISymbol">:</span>
+                                <el-input class="proportionKPI"></el-input><span class="KPISymbol">:</span>
+                                <el-input class="proportionKPI"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
+                            <el-form-item label="上年销售业绩：" prop="KPIpoint">
+                                <el-input v-model="KPIFrom.KPIpoint">
+                                    <template slot="suffix">万</template>
                                 </el-input>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p class="small-title ">2、KPI(必填)</p>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>销售增长健康度：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="salesGrowthHealth" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>上游主体可否切换：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="upstreamBodySwitchable" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>下游客户结构健康度：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="downstreamCustomersHealth" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                </div>
-                <p class="small-title ">2、分析报告(必填)</p>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box ">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>风险揭示：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="riskDisclosure">
-                            </el-input>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box ">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>分析描述：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="analysisDescription">
-                            </el-input>
-                        </div>
-                    </div>
-                </div>
-                <!--end-->
+                    <p class="small-title ">3、分析报告(必填)</p>
+                    <el-form-item label="风险揭示：" prop="KPIRisk" label-width="100px">
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIFrom.KPIRisk"></el-input>
+                    </el-form-item>
+                    <el-form-item label="分析描述：" prop="KPIDescription" label-width="100px">
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIFrom.KPIDescription"></el-input>
+                    </el-form-item>
+                    <!--end-->
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="2">
                 <template slot="title">
@@ -765,7 +739,7 @@ export default {
             isdisabled: false,
             updateUser: '',
             updateTime: '',
-            activeName: '1',
+            activeName: '2',
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
             cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
@@ -863,7 +837,35 @@ export default {
             currentYearAllSales: 0, // 今年销售总额
             lastYearAllSales: 0, // 去年销售总额
             lastTwoYearAllSales: 0, // 前年销售总额
-            textarea: ''
+            textarea: '',
+            KPIFromData: {
+                KPIpoint: '',
+                KPIRisk: '',
+                KPIDescription: ''
+            },
+            KPIFrom: {
+                KPIpoint: '',
+                KPIRisk: '',
+                KPIDescription: ''
+            },
+            KPIRules: {
+                proportion: [
+                    { required: true, message: '', trigger: 'blur' }
+
+                ],
+                KPIpoint: [
+                    { required: true, message: '', trigger: 'blur' }
+
+                ],
+                KPIRisk: [
+                    { required: true, message: '请输入风险揭示', trigger: 'blur' }
+                ],
+                KPIDescription: [
+                    { required: true, message: '请输入分析描述', trigger: 'blur' }
+                ]
+
+            },
+            proportion: ''
         }
     },
     mounted () {
@@ -984,11 +986,11 @@ export default {
         async getBusiness () {
             const { data } = await getBusiness(this.applyId)
             // console.log(data)
-            if (!data.data.operationNode) {
-                this.isdisabled = (!!data.data.operationNode) || !this.roleType
-            } else {
-                this.isdisabled = (!!data.data.operationNode)
-            }
+            // if (!data.data.operationNode) {
+            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
+            // } else {
+            //     this.isdisabled = (!!data.data.operationNode)
+            // }
             this.id = data.data.id
             this.type = !!data.data.operationNode
             this.updateTime = data.data.updateTime
@@ -1121,7 +1123,7 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (let i = 0; i < this.dueBusinessAssessmentCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
                 if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1209,7 +1211,7 @@ export default {
             //     this.activeName = '3'
             //     return false
             // }
-            for (let i = 0; i < this.dueBusinessSupplierCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
                 if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
                     this.showWarnMsg('请输入商业尽调供应商必填项')
                     this.activeName = '5'
@@ -1224,7 +1226,7 @@ export default {
                 }
             }
 
-            for (let i = 0; i < this.dueBusinessCustomerCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
                 if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
                     this.showWarnMsg('请输入商业尽调客户结构必填项')
                     this.activeName = '6'
@@ -1435,5 +1437,14 @@ table {
         height: 210px;
         border: 0;
     }
+}
+.small-title {
+    margin-bottom: 10px;
+}
+.proportionKPI {
+    width: 50px;
+}
+.KPISymbol {
+    margin-left: 10px;
 }
 </style>

@@ -17,53 +17,31 @@
             </basicTable>
             <el-dialog title="配置" :visible.sync="dialogVisible" width="650px" center :close-on-click-modal=false>
                 <el-form ref="dueform" :model="dueForm" label-width="80px">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">分类：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="changeTarget()" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-row ">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">指标：</div>
-                            <div class="flex-wrap-cont">
-                                <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" v-if="targetArr" @back-event="backFindTarget" :disabled="isdisabled"></HAutocomplete>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-row due-wrap">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">指标值：</div>
-                            <div class="flex-wrap-cont ">
-                                <el-select v-model="dueForm.indicatorType" placeholder="请选择" clearable>
-                                    <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                            <div class="flex-wrap-cont">
-                                <el-input v-if="type === 0" v-model="dueForm.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot">
-                                    <template slot="suffix">{{unit}}</template>
-                                </el-input>
-                                <el-select v-if="type === 1" v-model="dueForm.indicatorVal" placeholder="选择指标值" clearable>
-                                    <el-option v-for="item in indicatorArr" :key="item.id" :label="item.itemName" :value="item.itemValue">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">建议方案：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
-                            </div>
-                        </div>
-                    </div>
+                    <el-form-item label="分类:">
+                        <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="changeTarget()" :disabled="isdisabled">
+                            <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="指标:">
+                        <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" v-if="targetArr" @back-event="backFindTarget" :disabled="isdisabled"></HAutocomplete>
+                    </el-form-item>
+                    <el-form-item label="指标值:">
+                        <el-select v-model="dueForm.indicatorType" placeholder="请选择" clearable>
+                            <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
+                            </el-option>
+                        </el-select>
+                        <el-input v-if="type === 0" v-model="dueForm.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot">
+                            <template slot="suffix">{{unit}}</template>
+                        </el-input>
+                        <el-select v-if="type === 1" v-model="dueForm.indicatorVal" placeholder="选择指标值" clearable>
+                            <el-option v-for="item in indicatorArr" :key="item.id" :label="item.itemName" :value="item.itemValue">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="建议方案:">
+                        <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                    </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -380,4 +358,7 @@ export default {
 .el-select {
     width: 100%;
 }
+// .flex-wrap-title{
+//     line-height: 40px;
+// }
 </style>

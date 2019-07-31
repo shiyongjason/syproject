@@ -39,36 +39,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="table-flex">
-                    <div class="table-row">
-                        <div class="table-col">评估项</div>
-                        <div class="table-col">合作目标</div>
-                        <div class="table-col"><span class="red-span">*</span>结论(必填)</div>
-                        <div class="table-col">备注</div>
-                    </div>
-                    <div class="table-row" v-for="(assessItem,index) in assessmentList" :key="index">
-                        <div class="table-col">{{assessItem.assessmentItem}}</div>
-                        <div class="table-col">
-                            {{assessItem.cooperationTarget}}
-                            <i v-if="index === 1">w</i>
-                            <i v-if="index === 2">%</i>
-                            <i v-if="index === 4">%</i>
-                        </div>
-                        <div class="table-col">
-                            <el-select v-model="assessItem.state" placeholder="请选择" :disabled="isdisabled">
-                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <!-- <div class="table-col">
-                            <el-input
-                                :disabled="isdisabled"
-                                v-model="assessItem.remark"
-                                placeholder="请输入内容"
-                            ></el-input>
-                        </div> -->
-                    </div>
-                </div>
                 <p class="small-title ">2、KPI（必填）</p>
                 <div class="flex-wrap-col">
                     <div class="flex-wrap-row">
