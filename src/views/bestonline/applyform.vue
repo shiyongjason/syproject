@@ -1,66 +1,113 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item :to="{path:'/bestonline/application'}">尽调申请</el-breadcrumb-item>
-                    <el-breadcrumb-item>{{applyCompanyName}}</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div class="applyform">
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box applyW">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>目标合伙人：</div>
+            <el-form :model="formData" :rules="formRules" label-position="right" label-width="150px">
+                <el-form-item label="目标合伙人：" prop="targetPartner">
+                    <el-input
+                        placeholder="请输入目标合伙人"
+                        maxlength="25"
+                        :disabled="isdisabled"
+                        v-model="formData.targetPartner">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="尽调公司名称：" prop="companyName">
+                    <el-input
+                        placeholder="请输入尽调公司名称"
+                        maxlength="25"
+                        :disabled="isdisabled"
+                        v-model="formData.companyName">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="合作模式：" prop="cooperateType" >
+                    <div class="flex-wrap-cont">
+                        <el-radio v-model="formData.cooperateType" label="0" :disabled="isdisabled">现有模式</el-radio>
+                        <el-radio v-model="formData.cooperateType" label="1" :disabled="isdisabled" class="newcooperateType">
+                            新合作模式
+                        </el-radio>
+                        <el-tooltip effect="dark" content="新合作模式：拟合资公司操作新品类、股权结构等，和好享家规定的不同" placement="top-start">
+                            <i class="el-icon-question"></i>
+                        </el-tooltip>
+                    </div>
+                    <div v-if="formData.cooperateType == 1" class="remark">
+                        <el-input
+                            type="textarea"
+                            rows="4"
+                            placeholder="请详细说明"
+                            :disabled="isdisabled"
+                            v-model="formData.newCooperateContent">
+                        </el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="主营业务："  prop="mainBusinessId">
+                    <div class="flex-wrap-cont">
+                        <el-select
+                            v-model="formData.mainBusinessId"
+                            placeholder="请选择"
+                            :disabled="isdisabled"
+                            @change="selectGet">
+                            <el-option
+                                v-for="item in busOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </el-form-item>
+                <el-form-item label="主营品类：" prop="mainSystem">
+                    <div class="flex-wrap-cont">
+                        <el-checkbox-group v-model="checkList" :disabled="isdisabled">
+                            <el-checkbox label="0">冷暖</el-checkbox>
+                            <el-checkbox label="1">新风</el-checkbox>
+                            <el-checkbox label="2">净水</el-checkbox>
+                            <el-checkbox label="3">智能</el-checkbox>
+                            <el-checkbox label="4">其他</el-checkbox>
+                        </el-checkbox-group>
+                    </div>
+                    <div v-if="checkList.indexOf('4') != -1" class="remark">
+                        <el-input
+                            type="textarea"
+                            rows="4"
+                            placeholder="请详细说明"
+                            v-model="formData.mainSystemOther"
+                            maxlength="250">
+                        </el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="品牌：" prop="brand">
+                    <el-input
+                        placeholder="请输入品牌"
+                        maxlength="25"
+                        :disabled="isdisabled"
+                        v-model="formData.brand">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="销售形式："  prop="salesType">
+                    <div class="flex-wrap-cont">
+                        <div class="flex-wrap-cont">
+                            <el-radio v-model="formData.salesType" label="1" :disabled="isdisabled">线上</el-radio>
+                            <el-radio v-model="formData.salesType" label="2" :disabled="isdisabled">线下</el-radio>
+                        </div>
+                    </div>
+                </el-form-item>
+                <el-form-item label="合作目的："  prop="cooperateTarget">
+                    <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-input
-                                placeholder="请输入目标合伙人"
-                                maxlength="25"
-                                v-model="formData.targetPartner"
-                                :disabled='isdisabled'
+                                type="textarea"
+                                style="width:600px"
+                                rows="4"
+                                :disabled="isdisabled"
+                                placeholder="请输入合作目的"
+                                v-model="formData.cooperateTarget"
+                                maxlength="250"
                             >
                             </el-input>
                         </div>
                     </div>
-                </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box applyW">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>尽调公司名称：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                placeholder="请输入尽调公司名称"
-                                maxlength="25"
-                                v-model="formData.companyName"
-                                :disabled='isdisabled'
-                            >
-                            </el-input>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box applyW">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>主营业务：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="formData.mainBusinessId"
-                                placeholder="请选择"
-                                @change="selectGet"
-                                :disabled='isdisabled'
-                            >
-                                <el-option
-                                    v-for="item in busOptions"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box applyW">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>拟签约规模：</div>
+                </el-form-item>
+                <el-form-item label="拟签约规模："  prop="signScale">
+                    <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-input
                                 placeholder="请输入拟签约规模"
@@ -69,101 +116,84 @@
                                 @keyup.native="oninteger($event)"
                                 :disabled='isdisabled'
                             >
-                                <template slot="suffix">万</template>
                             </el-input>
+                            <span class="unit">万</span>
                         </div>
                     </div>
-                </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-box ">
-                        <div class="flex-wrap-title">备注：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="4"
-                                :disabled="isdisabled"
-                                placeholder="请输入备注"
-                                v-model="formData.remark"
-                                maxlength="250"
-                            >
-                            </el-input>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="flex-wrap-col"
-                    style="margin-bottom:110px"
-                >
-                    <div class="flex-wrap-box ">
-                        <div class="flex-wrap-title"><span class="red-span">*</span>附件：</div>
-                        <div
-                            class="flex-wrap-cont"
-                            v-show='!isdisabled'
+                </el-form-item>
+                <el-form-item label="备注："  prop="remark">
+                    <div class="flex-wrap-cont">
+                        <el-input
+                            type="textarea"
+                            style="width:600px"
+                            rows="4"
+                            placeholder="请输入备注"
+                            :disabled="isdisabled"
+                            v-model="formData.remark"
+                            width="30%"
                         >
-                            <el-upload
-                                class="upload-demo"
-                                v-bind="uploadInfo"
-                                :on-success="handleSuccess"
-                                :before-remove="beforeRemove"
-                                :on-remove="handleRemove"
-                                :on-exceed="handleExceed"
-                                :file-list="fileList"
-                                :on-change="handleCheckedSize"
-                                :before-upload="handleUpload"
-                            >
-                                <el-button
-                                    size="small"
-                                    type="primary"
-                                >点击上传</el-button>
-                                <div
-                                    slot="tip"
-                                    class="el-upload__tip"
-                                >附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,必须支持,附件每个大小限制10M以内</div>
-                            </el-upload>
-                        </div>
-                        <div
-                            class="cont"
-                            v-show='isdisabled'
-                        >
-                            <div v-if="fileList.length === 0">暂无附件</div>
-                            <p
-                                v-else
-                                class="upload"
-                                v-for="(item,index) in fileList"
-                                :key="index"
-                            > <a
-                                    :href="item.url"
-                                    target="_blank"
-                                >{{item.name}}</a></p>
-                        </div>
+                        </el-input>
                     </div>
-
-                </div>
-                <div class="page-body-bottom">
+                </el-form-item>
+                <el-form-item label="附件："  prop="companyName">
                     <div
-                        class="flex-wrap-row"
+                        class="flex-wrap-cont"
                         v-show='!isdisabled'
                     >
-                        <el-col
-                            :span="2"
-                            :offset="6"
-                        >
-                            <el-button @click="onSave">保存</el-button>
-                        </el-col>
-                        <el-col
-                            :span="2"
-                            :offset="1"
+                        <el-upload
+                            class="upload-demo"
+                            v-bind="uploadInfo"
+                            :multiple="true"
+                            :on-success="handleSuccess"
+                            :before-remove="beforeRemove"
+                            :on-remove="handleRemove"
+                            :on-exceed="handleExceed"
+                            :file-list="fileList"
+                            :on-change="handleCheckedSize"
+                            :before-upload="handleUpload"
                         >
                             <el-button
+                                size="small"
                                 type="primary"
-                                @click="onSubmit"
-                            >提交</el-button>
-                        </el-col>
+                            >点击上传</el-button>
+                        </el-upload>
                     </div>
-                </div>
+                    <div
+                        class="cont"
+                        v-show='isdisabled'
+                    >
+                        <div v-if="fileList.length === 0">暂无附件</div>
+                        <p
+                            v-else
+                            class="upload"
+                            v-for="(item,index) in fileList"
+                            :key="index"
+                        > <a
+                            :href="item.url"
+                            target="_blank"
+                        >{{item.name}}</a></p>
+                    </div>
+                </el-form-item>
+            </el-form>
+        <div class="query-cont-row">
+        </div>
+            <div class="flex-wrap-row">
+                <el-col
+                    :span="2"
+                    :offset="6"
+                >
+                    <el-button @click="onSave">暂存</el-button>
+                </el-col>
+                <el-col
+                    :span="2"
+                    :offset="1"
+                >
+                    <el-button
+                        type="primary"
+                        @click="onSubmit"
+                    >提交</el-button>
+                </el-col>
             </div>
-
         </div>
     </div>
 </template>
@@ -177,16 +207,47 @@ export default {
     data () {
         return {
             formData: {
-                attachmentsUrl: '',
-                companyName: '',
-                mainBusinessId: '',
-                mainBusinessName: '',
-                remark: '',
-                signScale: '',
                 targetPartner: '',
+                companyName: '',
+                cooperateType: '',
+                newCooperateContent: '',
+                mainBusinessName: '',
+                mainBusinessId: '',
+                mainSystem: '',
+                mainSystemOther: '',
+                brand: '',
+                salesType: '',
+                cooperateTarget: '',
+                signScale: '',
+                remark: '',
+                attachmentsUrl: '',
                 applyId: '',
                 createUserName: '',
                 organizationCode: ''
+            },
+            formRules: {
+                targetPartner: [
+                    { required: true, message: '请输入目标合伙人', trigger: 'blur' }
+                ],
+                companyName: [
+                    { required: true, message: '请输入尽调公司名称', trigger: 'blur' }
+                ],
+                newCooperateContent: [
+                    { required: true, message: '请输入尽调公司名称', trigger: 'blur' }
+                ],
+                brand: [
+                    { required: true, message: '请输入品牌名称', trigger: 'blur' }
+                ],
+                cooperateTarget: [
+                    { required: true, message: '请输入合作目的', trigger: 'blur' }
+                ],
+                signScale: [
+                    { required: true, message: '请输入签约规模', trigger: 'blur' }
+                ],
+                remark: [
+                    { required: true, message: '请输入备注', trigger: 'blur' }
+                ]
+
             },
             busOptions: [{
                 value: '',
@@ -223,26 +284,26 @@ export default {
             fileList: [],
             arrList: [],
             applyId: '',
-            is10M: false,
             approvalStatus: '',
-            isdisabled: false
+            isdisabled: false,
+            checkList: []
         }
     },
     mounted () {
-        this.applyId = this.$route.query.applyId
+        this.applyId = this.$route.query.id
         if (this.applyId) {
             this.getDueapplydetail(this.applyId)
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userdata: state => state.userdata
         }),
         uploadInfo () {
             return {
                 action: FileUploadUrl + 'tms/files/upload',
                 data: {
-                    updateUid: this.userInfo.name
+                    updateUid: this.userdata.name
                 },
                 accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF,.xlsx,.xls,.ppt,.doc,.docx,.rar,.zip',
                 name: 'multiFile'
@@ -320,12 +381,19 @@ export default {
             if (this.approvalStatus > 0) {
                 this.isdisabled = true
             }
-            this.formData.companyName = data.data.companyName
-            this.formData.mainBusinessId = data.data.mainBusinessId
-            this.formData.remark = data.data.remark
             this.formData.targetPartner = data.data.targetPartner
-            this.formData.signScale = data.data.signScale
+            this.formData.companyName = data.data.companyName
+            this.formData.cooperateType = data.data.cooperateType
+            this.formData.newCooperateContent = data.data.newCooperateContent
+            this.formData.mainBusinessId = data.data.mainBusinessId
+            this.formData.mainBusinessId = data.data.mainBusinessId
+            this.formData.mainSystemOther = data.data.mainSystemOther
+            this.formData.brand = data.data.brand
+            this.formData.salesType = data.data.salesType
+            this.formData.cooperateTarget = data.data.cooperateTarget
             this.formData.attachmentsUrl = data.data.attachmentsUrl
+            this.formData.signScale = data.data.signScale
+            this.formData.remark = data.data.remark
             this.fileList = JSON.parse(this.formData.attachmentsUrl)
             this.arrList = JSON.parse(data.data.attachmentsUrl)
         },
@@ -338,32 +406,33 @@ export default {
         },
         async  onSave () {
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-            this.formData.organizationCode = this.userInfo.organizationCode
+            this.formData.organizationCode = this.userdata.organizationCode
             if (!this.formData.companyName) {
                 this.showWarnMsg('请输入公司名称')
                 return false
             }
             if (this.applyId) {
                 this.formData.applyId = this.applyId
-                this.formData.updateUser = this.userInfo.name
+                this.formData.updateUser = this.userdata.name
                 await updateDueapply(this.formData)
                 this.$router.go(-1)
             } else {
-                this.formData.createUser = this.userInfo.name
+                this.formData.createUser = this.userdata.name
                 await adddueapply(this.formData)
                 this.$message({
                     showClose: true,
-                    message: '保存成功',
+                    message: '暂存成功',
                     type: 'success'
                 })
                 this.$router.go(-1)
             }
         },
         async  onSubmit () {
+            console.log(this.userdata)
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-            this.formData.createUserName = this.userInfo.name
-            this.formData.createUser = this.userInfo.uid
-            this.formData.organizationCode = this.userInfo.organizationCode
+            this.formData.createUserName = this.userdata.name
+            this.formData.createUser = this.userdata.uid
+            this.formData.organizationCode = this.userdata.organizationCode
             // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
             if (!this.formData.targetPartner) {
                 this.showWarnMsg('请输入目标合伙人')
@@ -408,96 +477,24 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
-a {
-    text-decoration: none;
-    color: #333333;
+<style lang="scss" scoped>
+.remark{
+    width: 598px;
 }
-.applyform {
-    padding: 0px;
-    background: #ffffff;
+.newcooperateType{
+    margin-right: 10px;
 }
 .applyW {
     width: 30%;
 }
-textarea {
-    border: 1px solid #dcdfe6;
-}
-/deep/ .el-input__suffix {
-    line-height: 40px;
-}
-.el-input.is-disabled .el-input__inner,
-.el-textarea.is-disabled .el-textarea__inner {
-    border: 0;
-    background: transparent;
-}
-.el-input.is-disabled .el-input__inner:hover,
-.el-textarea.is-disabled .el-textarea__inner:hover {
-    cursor: default;
-}
-.el-input.is-disabled .el-input__icon {
-    display: none;
-}
-.el-input.is-disabled .el-input__icon:hover {
-    cursor: default;
-}
-.el-input.is-disabled .el-input__inner,
-.el-textarea.is-disabled .el-textarea__inner {
-    outline: none;
-    resize: none;
-    color: #353638;
-}
-.el-input__suffix {
-    line-height: 40px;
-}
-.el-input--prefix .el-input__inner {
-    padding-left: 15px;
-}
-.el-date-editor.el-input,
-.el-date-editor.el-input__inner {
-    width: auto;
-}
-.page-body-bottom {
-    margin-top: 25px;
-}
-input:disabled {
-    // background-color : #fff; // 修改默认灰色样式
-    // color: #000;
-    opacity: 1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
-    // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
-}
-textarea:disabled {
-    // background-color : #fff; // 修改默认灰色样式
-    // color: #000;
-    opacity: 1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
-    // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
-}
-select:disabled {
-    // background-color : #fff; // 修改默认灰色样式
-    // color: #000;
-    opacity: 1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
-    // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
-}
-input:disabled::-webkit-input-placeholder {
-    color: #cccccc;
-    -webkit-text-fill-color: #ccc;
-    opacity: 0.8;
-    -webkit-opacity: 0.8;
-}
-textarea:disabled::-webkit-input-placeholder {
-    color: #cccccc;
-    -webkit-text-fill-color: #ccc;
-    opacity: 0.8;
-    -webkit-opacity: 0.8;
-}
-select:disabled::-webkit-input-placeholder {
-    color: #cccccc;
-    -webkit-text-fill-color: #ccc;
-    opacity: 0.8;
-    -webkit-opacity: 0.8;
-}
 
+.unit{
+    margin: 0 0 0 12px;
+}
+/*主题内容*/
+
+/*flex  横布局*/
+.flex-wrap-row {
+    display: flex;
+}
 </style>

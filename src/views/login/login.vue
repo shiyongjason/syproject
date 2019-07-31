@@ -107,7 +107,7 @@ export default {
                         user_agent: navigator.userAgent
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                    localStorage.setItem('user_data', JSON.stringify(userData.data))
+                    sessionStorage.setItem('user_data', JSON.stringify(userData.data))
                     this.sendMessage(userData)
                     // await this.findMenuList()
                     await this.next()

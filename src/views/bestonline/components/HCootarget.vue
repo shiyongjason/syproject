@@ -9,7 +9,7 @@
                 </el-input>
             </el-form-item>
 
-            <div class="table-flex">
+            <div class="table-flex table-width">
                 <div class="table-row">
                     <div class="table-col">年份</div>
                     <div class="table-col"><span class="red-word">*</span>年度递增率</div>
@@ -257,5 +257,11 @@ export default {
         line-height: 40px;
         border-bottom: 1px solid #dcdfe6;
     }
+}
+.table-width {
+    width: 50%;
+}
+.el-input__inner{
+    text-align: center;
 }
 </style>

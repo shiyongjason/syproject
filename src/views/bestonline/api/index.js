@@ -1,26 +1,28 @@
 import axios from 'axios'
-import { baseUrl } from '@/api/config'
+import { interfaceUrl } from '../../../api/config'
+// import { baseUrl } from '@/api/config'
 /*
 @申请
 */
-// 尽调申请
+
+// axios.defaults.baseURL = 'http://192.168.27.176:30000/'
 export const getDueapply = (params) => {
-    return axios.get('develop/dueapply/queryPageList', { params })
+    return axios.get('/develop/dueapply/queryPageList', { params })
 }
 export const adddueapply = (params) => {
-    return axios.post('develop/dueapply/add', params)
+    return axios.post('/develop/dueapply/add', params)
 }
 export const updateDueapply = (params) => {
-    return axios.post('develop/dueapply/update', params)
+    return axios.post('/develop/dueapply/update', params)
 }
 export const appDueapply = (params) => {
-    return axios.post('develop/dueapply/apply', params)
+    return axios.post('/develop/dueapply/apply', params)
 }
 export const getDueapplydetail = (params) => {
-    return axios.get('develop/dueapply/query', { params })
+    return axios.get('/develop/dueapply/query', { params })
 }
 export const getDueApproval = (params) => {
-    return axios.get('develop/dueapply/queryApplyFlowDetail/', { params })
+    return axios.get('/develop/dueapply/queryApplyFlowDetail/', { params })
 }
 /*
 @评审

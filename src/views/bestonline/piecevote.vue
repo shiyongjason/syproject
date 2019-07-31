@@ -1,219 +1,54 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>一项否决</el-breadcrumb-item>
-                </el-breadcrumb>
+            <div class="table-cont-btn">
+                <el-button type="primary" @click="newDueFrom">
+                    新增一票否决
+                </el-button>
             </div>
-            <!-- <div class="page-wrap ">
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">指标：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                placeholder="请输入指标"
-                                v-model="indicatorName"
-                                maxlength="25"
-                            >
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-cont pl20">
-                            <el-button
-                                type="primary"
-                                @click="getoneticketveto()"
-                            >搜索</el-button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <div class="flex-wrap-row pt10">
-                <div class="flex-wrap-box">
-                    <div class="flex-wrap-cont">
-                        <el-button
-                            type="primary"
-                            class="ml20"
-                            @click="newDueFrom"
-                        >
-                            新增一票否决
-                        </el-button>
-                    </div>
-                </div>
-            </div>
-            <div class="page-box">
-                <div class="page-table">
-                    <el-table
-                        :data="testList"
-                        style="width: 100%"
-                        border
-                    >
-                        <el-table-column
-                            type="index"
-                            label="序号"
-                            width="120"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="classifyName"
-                            label="分类"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="indicatorName"
-                            label="指标"
-                        >
-                        </el-table-column>
-                        <el-table-column label="指标值">
-                            <template slot-scope="scope">
-                                {{scope.row.indicatorType}}{{scope.row.itemName}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="proposedPlan"
-                            label="建议方案"
-                        >
-                        </el-table-column>
-                        <el-table-column label="操作">
-                            <template slot-scope="scope">
-                                <span
-                                    class="pointer blue mr20"
-                                    @click="updateDue(scope.row)"
-                                >
-                                    编辑
-                                </span>
-                                <span
-                                    class="pointer blue mr20"
-                                    @click="SureToDelete(scope.row)"
-                                >
-                                    删除
-                                </span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </div>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isShowIndex='true'>
+                <template slot="indicatorType" slot-scope="scope">
+                    <span>{{scope.data.row.indicatorType+scope.data.row.itemName}}</span>
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onUpdate(scope.data.row)">编辑</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                </template>
+            </basicTable>
+            <el-dialog title="配置" :visible.sync="dialogVisible" width="650px" center :close-on-click-modal=false>
+                <el-form ref="dueform" :model="dueForm" label-width="80px">
+                    <el-form-item label="分类:">
+                        <el-select v-model="dueForm.classifyId" placeholder="请选择" clearable @change="changeTarget()" :disabled="isdisabled">
+                            <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="指标:">
+                        <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" v-if="targetArr" @back-event="backFindTarget" :disabled="isdisabled"></HAutocomplete>
+                    </el-form-item>
+                    <el-form-item label="指标值:">
+                        <el-select v-model="dueForm.indicatorType" placeholder="请选择" clearable>
+                            <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
+                            </el-option>
+                        </el-select>
+                        <el-input v-if="type === 0" v-model="dueForm.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot">
+                            <template slot="suffix">{{unit}}</template>
+                        </el-input>
+                        <el-select v-if="type === 1" v-model="dueForm.indicatorVal" placeholder="选择指标值" clearable>
+                            <el-option v-for="item in indicatorArr" :key="item.id" :label="item.itemName" :value="item.itemValue">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="建议方案:">
+                        <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addOnedue">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
-        <el-dialog
-            title="配置"
-            :visible.sync="dialogVisible"
-            width="650px"
-            center
-             :close-on-click-modal=false
-        >
-            <el-form
-                ref="dueform"
-                :model="dueForm"
-                label-width="80px"
-            >
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">分类：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="dueForm.classifyId"
-                                placeholder="请选择"
-                                clearable
-                                @change="changeTarget()"
-                                :disabled="isdisabled"
-                            >
-                                <el-option
-                                    v-for="item in options"
-                                    :key="item.selectCode"
-                                    :label="item.value"
-                                    :value="item.selectCode"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-row ">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">指标：</div>
-                        <div class="flex-wrap-cont">
-                            <HAutocomplete
-                                ref="HAutocomplete"
-                                :selectArr="targetArr"
-                                 :selectObj="targetObj"
-                                v-if="targetArr"
-                                @back-event="backFindTarget"
-                                :disabled="isdisabled"
-                            ></HAutocomplete>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-row due-wrap">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">指标值：</div>
-                        <div class="flex-wrap-cont ">
-                            <el-select
-                                v-model="dueForm.indicatorType"
-                                placeholder="请选择"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in dueArr"
-                                    :key="item.label"
-                                    :label="item.value"
-                                    :value="item.label"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                v-if="type === 0"
-                                v-model="dueForm.indicatorVal"
-                                placeholder="输入指标值"
-                                maxlength="25"
-                                @keyup.native="onDot"
-                            >
-                                <template slot="suffix">{{unit}}</template>
-                            </el-input>
-                            <el-select
-                                v-if="type === 1"
-                                v-model="dueForm.indicatorVal"
-                                placeholder="选择指标值"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in indicatorArr"
-                                    :key="item.id"
-                                    :label="item.itemName"
-                                    :value="item.itemValue"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">建议方案：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="dueForm.proposedPlan"
-                                placeholder="请输入内容"
-                                maxlength="25"
-                            ></el-input>
-                        </div>
-                    </div>
-                </div>
-            </el-form>
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="addOnedue"
-                >确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -292,7 +127,14 @@ export default {
                 classifyId: '' // 分类ID
             },
             targetArr: [],
-            isdisabled: false
+            isdisabled: false,
+            tableLabel: [
+                { label: '分类', prop: 'classifyName' },
+                { label: '指标', prop: 'indicatorName' },
+                { label: '指标值', prop: 'indicatorType' },
+                { label: '建议方案', prop: 'proposedPlan' }
+            ],
+            tableData: []
         }
     },
     components: {
@@ -330,7 +172,8 @@ export default {
         async getoneticketveto () {
             const { data } = await getoneticketveto({ indicatorName: this.indicatorName })
             this.testList = data.data.pageContent
-            // console.log(data)
+            console.log(data)
+            this.tableData = data.data.pageContent
         },
         async changeTarget () {
             this.dueForm.indicatorVal = ''
@@ -437,10 +280,10 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.deleteDue(val)
-            }).catch(() => {})
+            }).catch(() => { })
         },
-        async deleteDue (val) {
-            await deleteoneticketveto(val.id)
+        async onDelete (id) {
+            await deleteoneticketveto(id)
             this.getoneticketveto()
             this.$message({
                 showClose: true,
@@ -451,23 +294,23 @@ export default {
                 }
             })
         },
-        async updateDue (item) {
+        async onUpdate (row) {
             this.isdisabled = true
-            this.judgeTextOrPullDown(item.indicatorId)
-            this.targetArr = await this.getDueconfig(item.classifyId)
+            this.judgeTextOrPullDown(row.indicatorId)
+            this.targetArr = await this.getDueconfig(row.classifyId)
             this.dialogVisible = true
             this.dueForm = {
-                classifyId: item.classifyId,
-                indicatorId: item.indicatorId,
-                indicatorVal: item.indicatorVal,
-                indicatorType: item.indicatorType,
-                proposedPlan: item.proposedPlan
+                classifyId: row.classifyId,
+                indicatorId: row.indicatorId,
+                indicatorVal: row.indicatorVal,
+                indicatorType: row.indicatorType,
+                proposedPlan: row.proposedPlan
             }
             this.targetObj = {
-                selectName: item.indicatorName,
-                selectCode: item.indicatorId
+                selectName: row.indicatorName,
+                selectCode: row.indicatorId
             }
-            this.id = item.id
+            this.id = row.id
             this.duetype = 'update'
         },
         backFindTarget (value) {
@@ -498,7 +341,7 @@ export default {
         width: 433px !important;
     }
 }
-.flex-wrap-box{
+.flex-wrap-box {
     margin-bottom: 22px !important;
 }
 .flex-wrap-cont {
@@ -515,4 +358,7 @@ export default {
 .el-select {
     width: 100%;
 }
+// .flex-wrap-title{
+//     line-height: 40px;
+// }
 </style>

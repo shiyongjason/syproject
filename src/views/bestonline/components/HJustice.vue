@@ -1076,7 +1076,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="small-title">资产信息（万）</p>
+                    <p class="small-title">资产信息</p>
                     <!--justiceData.assetList-->
                     <div v-for="(item,index) in assetListType0"
                          :key="'assetList'+item.type+index">
@@ -1428,8 +1428,9 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                    <p class="small-title">资产信息（万）</p>
+                    <p class="small-title">资产信息</p>
                     <div v-for="(item,index) in assetListType1" :key="'assetList'+item.type+index">
                         <div class="flex-wrap-col">
                             <div class="flex-wrap-box">
@@ -1794,7 +1795,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="small-title">资产信息（万）</p>
+                    <p class="small-title">资产信息</p>
                     <div
                         v-for="(item,index) in assetListType2"
                         :key="'assetList'+item.type+index">
@@ -2277,7 +2278,7 @@
 
                         </div>
                     </div>
-                    <p class="small-title">资产信息（万）</p>
+                    <p class="small-title">资产信息</p>
                     <div v-for="(item,index) in assetListType3" :key="'assetList'+item.type + index">
                         <div class="flex-wrap-col">
                             <div class="flex-wrap-box">

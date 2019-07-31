@@ -17,11 +17,7 @@ switch (env) {
         uploadUrl = 'http://192.168.20.248:30000/tms'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        // interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        // ossUrl = 'https://testroute.hosjoy.com:4832/'
-        // uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
-        // iframeUrl = 'https://test.hosjoy.com:4832/'
-        FileUploadUrl = 'http://172.16.168.8:30000/'
+        FileUploadUrl = 'http://192.168.20.248:30000/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'

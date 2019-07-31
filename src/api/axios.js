@@ -19,13 +19,7 @@ axios.interceptors.request.use(function (config) {
     if (token) {
         config.headers['Authorization'] = 'Bearer ' + token
     }
-    // if (config.method === 'get') {
-    //     config.url += '?t=' + new Date().getTime()
-    // }
-    // const showLoading = NO_LOADING_REQ.filter(item => item.method == config.method && config.url.indexOf(item.url) > -1)
-    // if (showLoading.length < 0) {
-    //     store.commit('LOAD_STATE', true)
-    // }
+
     return config
 }, function (error) {
     return Promise.reject(error)
@@ -33,6 +27,10 @@ axios.interceptors.request.use(function (config) {
 
 // 配置response过滤器
 axios.interceptors.response.use(function (response) {
+    if (response.data.code && response.data.code !== 200) {
+        Message({ message: response.data.msg || response.data.message, type: 'error' })
+        return Promise.reject(response)
+    }
     store.commit('LOAD_STATE', false)
     return response
 }, function (error) {

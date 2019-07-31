@@ -1,32 +1,17 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>尽调管理</el-breadcrumb-item>
-                    <el-breadcrumb-item>标准分数配置</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div class="flex-wrap-row">
-                <div class="flex-wrap-box">
-                    <div class="flex-wrap-cont">
-                        <el-button
-                            type="primary"
-                            class="ml20"
-                            @click="newDueFrom"
-                            v-if="testList.length<1"
-                        >
-                            新增标准分数配置
-                        </el-button>
-                    </div>
-                </div>
+            <div class="table-cont-btn">
+                <el-button type="primary" @click="newDueFrom">
+                    新增标准分数配置
+                </el-button>
             </div>
             <div style="margin-left: 20px" v-if="testList.length<1"><i class="el-icon-warning"></i>请先配置标准分数，若未配置，则默认标准分数为-。</div>
             <div style="margin-left: 20px" v-if="platformLevel"><i class="el-icon-warning"></i>请先配置总分区间，若未配置，则默认平台等级、辅导期、注资方式皆为-。</div>
             <div class="page-box ">
                 <table class="table-example">
                     <thead>
-                        <tr>
+                        <tr class="tableTitle">
                             <td width="180">序号</td>
                             <td width="180">分类</td>
                             <td width="180">指标</td>
@@ -34,7 +19,7 @@
                             <td width="180">标准分数</td>
                             <td width="180">分数区间</td>
                             <td width="180">平台等级</td>
-                             <td width="180">辅导期</td>
+                            <td width="180">辅导期</td>
                             <td width="180">注资方式</td>
                             <td width="180">操作</td>
                         </tr>
@@ -42,46 +27,19 @@
                     <tbody>
                         <template v-for="(item,index) in testList">
                             <template v-for="(sitem) in item.dueStandardScoreVoList">
-                                <tr
-                                    v-for="(titem,tindex) in sitem.dueStandardScoreVoList"
-                                    :key="titem.total"
-                                >
-                                    <td
-                                        :rowspan="item.total"
-                                        v-if="titem.sindex ==0 "
-                                    >{{index + 1}}</td>
-                                    <td
-                                        :rowspan="item.total"
-                                        v-if="titem.sindex ==0 "
-                                    >{{item.classifyName}}</td>
-                                    <td
-                                        :rowspan="item.total"
-                                        v-if="titem.sindex ==0 "
-                                    >{{item.indicatorName}}</td>
-                                    <td
-                                        :rowspan="sitem.total"
-                                        v-if='tindex==0'
-                                    >{{titem.indicatorType}}{{titem.itemName}}</td>
-                                    <td
-                                        :rowspan="sitem.total"
-                                        v-if='tindex==0'
-                                    >{{titem.standardScore}}</td>
+                                <tr v-for="(titem,tindex) in sitem.dueStandardScoreVoList" :key="titem.total">
+                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{index + 1}}</td>
+                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{item.classifyName}}</td>
+                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{item.indicatorName}}</td>
+                                    <td :rowspan="sitem.total" v-if='tindex==0'>{{titem.indicatorType}}{{titem.itemName}}</td>
+                                    <td :rowspan="sitem.total" v-if='tindex==0'>{{titem.standardScore}}</td>
                                     <td>{{titem.scoresType}}{{titem.scoresRange}}</td>
                                     <td>{{titem.platformLevel}}</td>
-                                     <td>{{titem.coachPeriod}}</td>
-                                      <td>{{titem.capitalInjectionWay}}</td>
-                                    <td
-                                        :rowspan="item.total"
-                                        v-if="titem.sindex ==0 "
-                                    >
-                                        <el-button
-                                            type="text"
-                                            @click="onEditStand(item)"
-                                        >编辑</el-button>
-                                        <el-button
-                                            type="text"
-                                            @click="ondeleteStandard(item)"
-                                        >删除</el-button>
+                                    <td>{{titem.coachPeriod}}</td>
+                                    <td>{{titem.capitalInjectionWay}}</td>
+                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">
+                                        <el-button class="orangeBtn" @click="onEditStand(item)">编辑</el-button>
+                                        <el-button class="orangeBtn" @click="ondeleteStandard(item)">删除</el-button>
                                     </td>
                                 </tr>
                             </template>
@@ -90,243 +48,74 @@
                 </table>
             </div>
         </div>
-        <el-dialog
-            title="标准分数"
-            :visible.sync="dialogVisible"
-            width="750px"
-            center
-             :close-on-click-modal=false
-        >
-            <el-form
-                ref="dueform"
-                label-width="80px"
-                v-show="stepSecond"
-            >
-                <el-form-item label="分类:">
-                    <el-select
-                        v-model="classifyId"
-                        placeholder="请选择"
-                        clearable
-                        @change="onChangeTarget()"
-                        :disabled="isdisabled"
-                    >
-                        <el-option
-                            v-for="item in options"
-                            :key="item.selectCode"
-                            :label="item.value"
-                            :value="item.selectCode"
-                        >
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="指标:">
-                    <HAutocomplete
-                        ref="HAutocomplete"
-                        :selectArr="targetArr"
-                        :selectObj="targetObj"
-                        v-if="targetArr"
-                        @back-event="backFindTarget"
-                        :disabled="isdisabled"
-                    ></HAutocomplete>
-                </el-form-item>
-                <div
-                    v-for="(item,index) in  dueStandardScoreCreateFormList"
-                    :key=index
-                >
+        <el-dialog title="标准分数" :visible.sync="dialogVisible" width="880px" center :close-on-click-modal=false>
+            <el-form ref="dueform" label-width="80px" v-show="stepSecond">
+                <div class="reset">
+                    <el-form-item label="分类:">
+                        <el-select v-model="classifyId" placeholder="请选择" clearable @change="onChangeTarget()" :disabled="isdisabled">
+                            <el-option v-for="item in options" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item class="target" label="指标:">
+                        <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" v-if="targetArr" @back-event="backFindTarget" :disabled="isdisabled"></HAutocomplete>
+                    </el-form-item>
+                </div>
+                <div v-for="(item,index) in  dueStandardScoreCreateFormList" :key=index class="indicator">
                     <el-form-item label="指标值:">
-                        <el-col :span="6">
-                            <el-select
-                                v-model="item.indicatorType"
-                                placeholder="请选择"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in dueArr"
-                                    :key="item.label"
-                                    :label="item.value"
-                                    :value="item.label"
-                                >
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="1"
-                        >-</el-col>
-                        <el-col
-                            :span="7"
-                            v-if="type==='0'"
-                        >
-                            <el-input
-                                v-model="item.indicatorVal"
-                                placeholder="输入指标值"
-                                maxlength="25"
-                                @keyup.native="onDot(index, $event, 'dueStandardScoreCreateFormList', 'indicatorVal')"
-                            >
-                                <template
-                                    slot="suffix"
-                                    v-if="unit"
-                                >{{unit}}</template>
-                            </el-input>
-                        </el-col>
-                        <el-col
-                            :span="7"
-                            v-if="type==='1'"
-                        >
-                            <el-select
-                                v-model="item.indicatorVal"
-                                placeholder="请选择"
-                                clearable
-                            >
-                                <el-option
-                                    v-for="item in selectList"
-                                    :key="item.itemValue"
-                                    :label="item.itemName"
-                                    :value="item.itemValue"
-                                >
-                                </el-option>
-                            </el-select>
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="1"
-                        >-</el-col>
-                        <el-col :span="7">
-                            <el-input
-                                v-model="item.standardScore"
-                                placeholder="输入标准分数"
-                                maxlength="25"
-                                @keyup.native="oninput(index, $event, 'dueStandardScoreCreateFormList', 'standardScore')"
-                            ></el-input>
-                        </el-col>
-                        <el-col
-                            class="line"
-                            :span="2"
-                        ><i
-                                v-if="index==0"
-                                class="el-icon-circle-plus-outline"
-                                @click="onAddTarget"
-                            ></i>
-                            <i
-                                v-else
-                                class="el-icon-remove-outline"
-                                @click="onDeleteTarget(index)"
-                            ></i>
-                        </el-col>
+                        <el-select v-model="item.indicatorType" placeholder="请选择" clearable>
+                            <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
+                            </el-option>
+                        </el-select>
+                        <span class="line" :span="1">-</span>
+                        <el-input v-model="item.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot(index, $event, 'dueStandardScoreCreateFormList', 'indicatorVal')">
+                            <template slot="suffix" v-if="unit">{{unit}}</template>
+                        </el-input>
+                        <span class="line" :span="1">-</span>
+                        <el-select v-model="item.indicatorVal" placeholder="请选择" clearable>
+                            <el-option v-for="item in selectList" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
+                            </el-option>
+                        </el-select>
+                        <span class="line" :span="1">-</span>
+                        <el-input v-model="item.standardScore" placeholder="输入标准分数" maxlength="25" @keyup.native="oninput(index, $event, 'dueStandardScoreCreateFormList', 'standardScore')"></el-input>
+                        <span class="line" :span="2"><i v-if="index==0" class="el-icon-circle-plus-outline" @click="onAddTarget"></i>
+                            <i v-else class="el-icon-remove-outline" @click="onDeleteTarget(index)"></i>
+                        </span>
                     </el-form-item>
                 </div>
             </el-form>
-            <el-form
-                label-width="10px"
-                v-show="!stepSecond"
-            >
-                <div
-                    v-for="(sitem,sindex) in dueStandardScoreCreateFormList"
-                    :key="sindex"
-                >
+            <el-form class="standardpoint" label-width="10px" v-show="!stepSecond">
+                <div v-for="(sitem,sindex) in dueStandardScoreCreateFormList" :key="sindex">
                     <p>{{sindex+1}}、指标值</p>
                     <template v-for="(item,index) in sitem.dueStandardScoreCreateFormList">
                         <el-form-item :key="index">
-                            <el-col :span="4">
-                                <el-select
-                                    v-model="item.scoresType"
-                                    placeholder="请选择"
-                                    clearable
-                                >
-                                    <el-option
-                                        v-for="item in dueArr"
-                                        :key="item.label"
-                                        :label="item.value"
-                                        :value="item.label"
-                                    >
-                                    </el-option>
-                                </el-select>
-                            </el-col>
-                            <el-col
-                                class="line"
-                                :span="1"
-                            >-</el-col>
-                            <el-col :span="4">
-                                <el-input
-                                    v-model="item.scoresRange"
-                                    placeholder="分数"
-                                    maxlength="25"
-                                    @keyup.native="onDot2(sindex, index, $event)"
-                                ></el-input>
-                            </el-col>
-                            <el-col
-                                class="line"
-                                :span="1"
-                            >-</el-col>
-                            <el-col :span="3">
-                                <el-input
-                                    v-model="item.platformLevel"
-                                    placeholder="等级"
-                                    maxlength="25"
-                                ></el-input>
-                            </el-col>
-                            <el-col
-                                class="line"
-                                :span="1"
-                            >-</el-col>
-                            <el-col :span="4">
-                                <el-input
-                                    v-model="item.coachPeriod"
-                                    placeholder="辅导期"
-                                    maxlength="25"
-                                ></el-input>
-                            </el-col>
-                            <el-col
-                                class="line"
-                                :span="1"
-                            >-</el-col>
-                            <el-col :span="4">
-                                <el-input
-                                    v-model="item.capitalInjectionWay"
-                                    placeholder="注资方式"
-                                    maxlength="25"
-                                ></el-input>
-                            </el-col>
-                            <el-col
-                                class="line"
-                                :span="1"
-                            >
-                                <i
-                                    v-if="index==0"
-                                    class="el-icon-circle-plus-outline"
-                                    @click="onAddStand(sindex)"
-                                ></i>
-                                <i
-                                    v-else
-                                    class="el-icon-remove-outline"
-                                    @click="onDeleteStand(sindex,index)"
-                                ></i>
-                            </el-col>
+
+                            <el-select v-model="item.scoresType" placeholder="请选择" clearable>
+                                <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
+                                </el-option>
+                            </el-select>
+                            <span class="line" :span="1">-</span>
+                            <el-input v-model="item.scoresRange" placeholder="分数" maxlength="25" @keyup.native="onDot2(sindex, index, $event)"></el-input>
+                            <span class="line" :span="1">-</span>
+                            <el-input v-model="item.platformLevel" placeholder="等级" maxlength="25"></el-input>
+                            <span class="line" :span="1">-</span>
+                            <el-input v-model="item.coachPeriod" placeholder="辅导期" maxlength="25"></el-input>
+                            <span class="line" :span="1">-</span>
+                            <el-input v-model="item.capitalInjectionWay" placeholder="注资方式" maxlength="25"></el-input>
+                            <span class="line" :span="1">
+                                <i v-if="index==0" class="el-icon-circle-plus-outline" @click="onAddStand(sindex)"></i>
+                                <i v-else class="el-icon-remove-outline" @click="onDeleteStand(sindex,index)"></i>
+                            </span>
                         </el-form-item>
                     </template>
-
                 </div>
             </el-form>
-            <span
-                slot="footer"
-                class="dialog-footer"
-                v-show="stepSecond"
-            >
-                <el-button
-                    type="primary"
-                    @click="onNext"
-                >下一步</el-button>
+            <span slot="footer" class="dialog-footer" v-show="stepSecond">
+                <el-button type="primary" @click="onNext">下一步</el-button>
             </span>
-            <span
-                slot="footer"
-                class="dialog-footer"
-                v-show="!stepSecond"
-            >
+            <span slot="footer" class="dialog-footer" v-show="!stepSecond">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="onAddstandardscore"
-                >确 定</el-button>
+                <el-button type="primary" @click="onAddstandardscore">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -436,7 +225,18 @@ export default {
             scoreType: '',
             selectList: [],
             isdisabled: false,
-            platformLevel: false
+            platformLevel: false,
+            tableLabel: [
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '指标', prop: 'indicatorName' },
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '财务尽调', prop: 'classifyName' },
+                { label: '财务尽调', prop: 'classifyName' }
+            ],
+            tableData: []
         }
     },
     components: {
@@ -547,6 +347,8 @@ export default {
                     return !v.platformLevel || !v.coachPeriod || !v.capitalInjectionWay
                 })
             })
+            console.log(data)
+            this.tableData = data.data.pageContent
         },
         async onChangeTarget () {
             this.$refs.HAutocomplete.clearInput()
@@ -709,12 +511,12 @@ export default {
                     message: '删除成功',
                     type: 'success'
                 })
-            }).catch(() => {})
+            }).catch(() => { })
         }
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scope >
 table {
     border-collapse: collapse;
     td {
@@ -733,5 +535,47 @@ table {
 }
 .el-autocomplete {
     width: 100%;
+}
+.tableTitle {
+    background: #f2f2f4;
+}
+.line {
+    margin: 0 15px;
+}
+.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+.el-dialog .el-form .el-form-item {
+    margin: 20px 0 !important;
+}
+.reset {
+    .el-form-item {
+        .el-select {
+            width: 750px;
+        }
+        .el-input {
+            width: 750px;
+        }
+    }
+}
+.indicator {
+    .el-form-item {
+        .el-select {
+            width: 140px;
+        }
+        .el-input {
+            width: 140px;
+        }
+    }
+}
+.standardpoint {
+    .el-form-item {
+        .el-select {
+            width: 120px;
+        }
+        .el-input {
+            width: 120px;
+        }
+    }
 }
 </style>
