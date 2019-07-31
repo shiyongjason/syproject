@@ -96,7 +96,7 @@ export default {
             tableLabel: [
                 { label: '公司名称', prop: 'companyName', align: 'left' },
                 { label: '发起人', prop: 'createUserName', align: 'left' },
-                { label: '发起人所在机构', prop: 'createUser', align: 'left' },
+                { label: '发起人所在机构', prop: 'applyOrganization' },
                 { label: '创建时间', prop: 'createTime' },
                 { label: '评审通过/驳回时间', prop: 'approvalTime' },
                 { label: '评审状态', prop: 'approvalStatus', width: '60px' },
