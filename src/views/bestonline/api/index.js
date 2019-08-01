@@ -159,7 +159,7 @@ export const getDueapprovalconclusion = (params) => {
 }
 // 省市区
 export const provinces = (params) => {
-    return axios.post('/api/httpH5/3041', params)
+    return axios.post('http://192.168.20.248:8089/api/httpH5/3041', params)
 }
 // 新增
 export const addStandardscore = (params) => {
