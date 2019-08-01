@@ -128,6 +128,128 @@ const routerMapping = [
                 component: () => import('./views/wisdom/platformTarget')
             }
         ]
+    },
+    {
+        path: '/hmall',
+        meta: {
+            title: 'B2b管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'category',
+                name: 'category',
+                meta: {
+                    title: '平台目标管理',
+                    tagName: '平台目标管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'brand',
+                name: 'brand',
+                meta: {
+                    title: '品牌管理',
+                    tagName: '品牌管理',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/hmall/category/category'
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'shopManager',
+                name: 'shopManager',
+                meta: {
+                    title: '商品库列表',
+                    tagName: '商品库列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'selectCategory',
+                name: 'selectCategory',
+                meta: {
+                    title: '商品库管理',
+                    tagName: '商品库管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'platform',
+                name: 'platform',
+                meta: {
+                    title: '平台公司功能管理',
+                    tagName: '平台公司功能管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'shopReviewList',
+                name: 'shopReviewList',
+                meta: {
+                    title: '商品审核',
+                    tagName: '商品审核',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'attribute',
+                name: 'attribute',
+                meta: {
+                    title: '属性管理',
+                    tagName: '属性管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'order',
+                name: 'order',
+                meta: {
+                    title: '订单／收款纪录查询',
+                    tagName: '订单／收款纪录查询',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'coupon',
+                name: 'coupon',
+                meta: {
+                    title: '优惠券',
+                    tagName: '优惠券',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            },
+            {
+                path: 'member',
+                name: 'member',
+                meta: {
+                    title: '会员店审核',
+                    tagName: '会员店审核',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/category/category.vue')
+            }
+        ]
     }
 ]
 
