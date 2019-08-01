@@ -8,16 +8,17 @@ import { getTianyanUrl } from './../api/index.js'
 export default {
     data () {
         return {
-            srcUrl: '',
-            companyName: ''
+            srcUrl: ''
         }
     },
     computed: {
         companyName () {
-            if (this.$store.state.dueDiligence.companyName === '') {
-                return localStorage.getItem('companyName')
-            }
-            return this.$store.state.dueDiligence.companyName
+            // if (this.$store.state.dueDiligence.companyName === '') {
+                
+            //     return localStorage.getItem('user_data')
+            // }
+            // return this.$store.state.dueDiligence.companyName
+            return JSON.parse(localStorage.getItem('user_data')).organizationName
         }
     },
     mounted () {

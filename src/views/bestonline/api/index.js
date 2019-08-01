@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { interfaceUrl } from '../../../api/config'
+// import { interfaceUrl } from '../../../api/config'
 // import { baseUrl } from '@/api/config'
 /*
 @申请

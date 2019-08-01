@@ -70,154 +70,143 @@
                 <template slot="title">
                     <p class="titlt-p">业务模式</p>
                 </template>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>主营业态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="mainBusinessFormatOneId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                <el-form :model="businessmodeFrom" :rules="businessmodeRules" label-width="110px">
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营业态1：" prop="mainBusiness">
+                                <el-select v-model="businessmodeFrom.mainBusiness" placeholder="请选择主营业态">
+                                    <el-option label="零售" value="shanghai"></el-option>
+                                    <el-option label="批发" value="beijing"></el-option>
+                                    <el-option label="工程" value="beijing"></el-option>
                                 </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>业态占比：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('businessFormatOneRatio',$event)" @change="numChange('businessFormatOneRatio',$event)" v-model="businessFormatOneRatio">
+                        <div class="form-cont-col">
+                            <el-form-item label="业态占比1：" prop="businessProportion">
+                                <el-input v-model="businessmodeFrom.businessProportion" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营业态2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="mainBusinessFormatTwoId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营业态2：">
+                                <el-select v-model="businessmodeFrom.mainBusiness" placeholder="请选择主营业态">
+                                    <el-option label="零售" value="shanghai"></el-option>
+                                    <el-option label="批发" value="beijing"></el-option>
+                                    <el-option label="工程" value="beijing"></el-option>
                                 </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">业态占比2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" v-model="businessFormatTwoRatio" @keyup.native="oninput('businessFormatTwoRatio',$event)" @change="numChange('businessFormatTwoRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="业态占比2：">
+                                <el-input v-model="businessmodeFrom.businessProportion" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营业态3：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="mainBusinessFormatThreeId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营业态3：">
+                                <el-select v-model="businessmodeFrom.mainBusiness" placeholder="请选择主营业态">
+                                    <el-option label="零售" value="shanghai"></el-option>
+                                    <el-option label="批发" value="beijing"></el-option>
+                                    <el-option label="工程" value="beijing"></el-option>
                                 </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">业态占比3：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="业态占比" maxlength="25" :disabled="isdisabled" v-model="businessFormatTwoThreeRatio" @keyup.native="oninput('businessFormatTwoThreeRatio',$event)" @change="numChange('businessFormatTwoThreeRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="业态占比3：">
+                                <el-input v-model="businessmodeFrom.businessProportion" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>主营品类1：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="mainCategoryOneId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营品类1：" prop="mainCategory">
+                                <el-select v-model="businessmodeFrom.mainCategory" placeholder="请选择主营品类">
+                                    <el-option label="零售" value="sales"></el-option>
+                                    <el-option label="批发" value="wholesale"></el-option>
+                                    <el-option label="工程" value="project"></el-option>
                                 </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>销售比重1：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="categoryOneSalesRatio" @keyup.native="oninput('categoryOneSalesRatio',$event)" @change="numChange('categoryOneSalesRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="销售比重1：" prop="salesProportion">
+                                <el-input v-model="businessmodeFrom.salesProportion" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营品类2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="mainCategoryTwoId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营品类2：">
+                                <el-select v-model="businessmodeFrom.mainCategory" placeholder="请选择主营品类">
+                                    <el-option label="零售" value="sales"></el-option>
+                                    <el-option label="批发" value="wholesale"></el-option>
+                                    <el-option label="工程" value="project"></el-option>
                                 </el-select>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">销售比重2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="categoryTwoSalesRatio" @keyup.native="oninput('categoryTwoSalesRatio',$event)" @change="numChange('categoryTwoSalesRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="销售比重2：">
+                                <el-input v-model="businessmodeFrom.salesProportion" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>主营品牌1：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandOneName">
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营品牌1：" prop="mainBrand">
+                                <el-input v-model="businessmodeFrom.mainBrand" placeholder="销售占比大于30%">
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>销售比重1：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandOneSalesRatio" @keyup.native="oninput('brandOneSalesRatio',$event)" @change="numChange('brandOneSalesRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="销售比重1：" prop="salesProportion">
+                                <el-input v-model="businessmodeFrom.salesProportion" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营品牌2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandTwoName">
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营品牌2：">
+                                <el-input v-model="businessmodeFrom.mainBrand" placeholder="销售占比大于30%">
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">销售比重2：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandTwoSalesRatio" @keyup.native="oninput('brandTwoSalesRatio',$event)" @change="numChange('brandTwoSalesRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="销售比重2：">
+                                <el-input v-model="businessmodeFrom.salesProportion" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营品牌3：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售占比大于30%" maxlength="25" :disabled="isdisabled" v-model="mainBrandThreeName">
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="主营品牌3：">
+                                <el-input v-model="businessmodeFrom.mainBusiness" placeholder="销售占比大于30%">
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">销售比重3：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="销售比重" maxlength="25" :disabled="isdisabled" v-model="brandThreeSalesRatio" @keyup.native="oninput('brandThreeSalesRatio',$event)" @change="numChange('brandThreeSalesRatio',$event)">
+                        <div class="form-cont-col">
+                            <el-form-item label="销售比重3：">
+                                <el-input v-model="businessmodeFrom.businessProportion" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
-                            </div>
+                            </el-form-item>
                         </div>
                     </div>
-                </div>
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="3">
                 <template slot="title">
@@ -242,42 +231,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- <tr>
-                            <td colspan="2">年度合计</td>
-                            <td>
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="currentYearAllSales"
-                                    @keyup.native="oninput('currentYearAllSales',$event)"
-                                >
-                                </el-input>
-                            </td>
-                            <td></td>
-                            <td>
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="lastYearAllSales"
-                                    @keyup.native="oninput('lastYearAllSales',$event)"
-                                >
-                                </el-input>
-                            </td>
-                            <td></td>
-                            <td>
-                                <el-input
-                                    placeholder=""
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="lastTwoYearAllSales"
-                                    @keyup.native="oninput('lastTwoYearAllSales',$event)"
-                                >
-                                </el-input>
-                            </td>
-                            <td></td>
-                        </tr> -->
                         <tr v-for="(item,index) in dueBusinessSaleCreateFormList" :key="index">
                             <td colspan="2">{{item.month}}</td>
                             <td>
@@ -325,136 +278,94 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box top20">
-                            <div class="flex-wrap-title">
-                                <!-- <span class="red-span">*</span> -->
-                                前10个月销售是否持续下滑：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="firstTenMonthsDown" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in downOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <el-form :model="salesFrom" label-width="200px">
+                    <el-form-item label="前10个月销售是否持续下滑：" prop="salesDown">
+                        <el-select v-model="salesFrom.salesDown" placeholder="请选择">
+                            <el-option label="是" value="yes"></el-option>
+                            <el-option label="否" value="no"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="4">
                 <template slot="title">
                     <p class="titlt-p">营销模式</p>
                 </template>
-                <div class="flex-wrap-col lengthen">
-                    <div class="flex-wrap-row ">
-                        <div class="flex-wrap" style="display:flex">
-                            <div class="flex-wrap-title">宣传推广渠道：</div>
-                            <div class="flex-wrap-cont">
-                                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" :disabled="isdisabled">全选</el-checkbox>
-                                <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-                                    <el-checkbox v-for="item in channelsList" :label="item.code" :key="item.code" :disabled="isdisabled">{{item.value}}</el-checkbox>
-                                </el-checkbox-group>
-                            </div>
+                <el-form :model="marketForm" label-width="130px">
+                    <el-form-item label="宣传推广渠道：" prop="checkedWays">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                        <div style="margin: 15px 0;"></div>
+                        <el-checkbox-group v-model="marketForm.checkedWays" @change="handleCheckedWays">
+                            <el-checkbox v-for="item in channelsList" :label="item.value" :key="item.code">{{item.value}}</el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col ">
+                            <el-form-item label="异业合作渠道：" prop="cooperationWay">
+                                <el-input v-model="marketForm.cooperationWay"></el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="form-cont-col ">
+                            <el-form-item label="本年度营销投入费用：" prop="marketCost" label-width="160px">
+                                <el-input v-model="marketForm.marketCost"></el-input>
+                            </el-form-item>
                         </div>
                     </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">异业合作渠道：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="异业合作渠道" maxlength="25" :disabled="isdisabled" v-model="interIndustryCooperation">
-                                </el-input>
-                            </div>
-                        </div>
-                        <!-- <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">本年度营销投入费用：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    placeholder=""
-                                    maxlength="11"
-                                    :disabled="isdisabled"
-                                >
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </div>
-                        </div> -->
-                    </div>
-                </div>
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="5">
                 <template slot="title">
                     <p class="titlt-p">上游-供应商结构</p>
                 </template>
                 <!--start-->
-                <div class="flex-wrap-col supplier" v-for="(item,index) in dueBusinessSupplierCreateFormList" :key=index>
+                <div class="supplier" v-for="(item,index) in dueBusinessSupplierCreateFormList" :key=index>
                     <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
                     <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
-                    <div class="flex-wrap-row lengthen">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>供应商名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="供应商名称" maxlength="25" :disabled="isdisabled" v-model="item.supplierName">
-                                </el-input>
+                    <el-form :model="structureFrom" :rules="structureRules" label-width="130px">
+                        <el-form-item label="供应商名称：" prop="providerName" placeholder="供应商名称">
+                            <el-input v-model="structureFrom.providerName" style="width: 90%;"></el-input>
+                        </el-form-item>
+                        <el-form-item label="品牌:" prop="structureBrand">
+                            <el-input type="textarea" v-model="structureFrom.structureBrand" row=1 style="width: 90%;"></el-input>
+                        </el-form-item>
+                        <div class="form-cont-row mb20">
+                            <div class="form-cont-col ">
+                                <el-form-item label="采购金额：" prop="purchase" placeholder="采购金额">
+                                    <el-input v-model="structureFrom.purchase"><template slot="suffix">万</template></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="form-cont-col ">
+                                <el-form-item label="占比：" prop="structureProportion" placeholder="占比">
+                                    <el-input v-model="structureFrom.structureProportio"><template slot="suffix">%</template></el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="form-cont-col ">
+                                <el-form-item label="是否提供合同：" prop="contract">
+                                    <el-select v-model="structureFrom.contract" placeholder="请选择">
+                                        <el-option label="是" value="yes"></el-option>
+                                        <el-option label="否" value="no"></el-option>
+                                    </el-select>
+                                </el-form-item>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>采购金额：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="采购金额" maxlength="25" :disabled="isdisabled" v-model="item.purchaseAmount" @keyup.native="oninput2(index, 'purchaseAmount', $event)">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                        <div class="form-cont-row mb20">
+                            <div class="form-cont-col">
+                                <el-form-item label="合同开始时间：">
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureFrom.startDate" style="width: 224px;"></el-date-picker>
+                                </el-form-item>
+                            </div>
+                            <div class="form-cont-col">
+                                <el-form-item label="合同结束时间：">
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureFrom.endDate" style="width: 224px;"></el-date-picker>
+                                </el-form-item>
+                            </div>
+                            <div class="form-cont-col">
+                                <el-form-item label="合同规模：" prop="contractScale" placeholder="请输入合同规模">
+                                    <el-input v-model="structureFrom.contractScale"><template slot="suffix">万</template></el-input>
+                                </el-form-item>
                             </div>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>占比：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="占比" maxlength="25" :disabled="isdisabled" v-model="item.proportion" @keyup.native="oninput2(index, 'proportion', $event)">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>是否提供合同：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="item.isProvideContract" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">合同开始时间：</div>
-                            <div class="flex-wrap-cont">
-                                <!-- <el-date-picker
-                                    type="date"
-                                    placeholder="选择日期"
-                                    value-format="yyyy-MM-dd"
-                                    :editable="false"
-                                    v-model="item.contractStartDate"
-                                    :disabled="isdisabled"
-                                >
-                                </el-date-picker> -->
-                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.contractStartDate" :disabled="isdisabled">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">合同结束时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.contractEndDate" :disabled="isdisabled">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">合同规模：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="合同规模" maxlength="25" v-model="item.contractScale" :disabled="isdisabled" @keyup.native="oninput2(index, 'contractScale', $event)">
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </div>
-                        </div>
-                    </div>
+                    </el-form>
                 </div>
                 <!--end-->
             </el-collapse-item>
@@ -466,11 +377,11 @@
                 <div class="flex-wrap-col supplier">
                     <div class="table-flex">
                         <div class="table-row">
-                            <div class="table-col"><span class="red-span">*</span>客户</div>
-                            <div class="table-col"><span class="red-span">*</span>品类</div>
-                            <div class="table-col"><span class="red-span">*</span>品牌</div>
-                            <div class="table-col"><span class="red-span">*</span>销售金额（万元）</div>
-                            <div class="table-col"><span class="red-span">*</span>销售占比</div>
+                            <div class="table-col"><span class="red-word">*</span>客户</div>
+                            <div class="table-col"><span class="red-word">*</span>品类</div>
+                            <div class="table-col"><span class="red-word">*</span>品牌</div>
+                            <div class="table-col"><span class="red-word">*</span>销售金额（万元）</div>
+                            <div class="table-col"><span class="red-word">*</span>销售占比</div>
                             <div class="table-col">协议期开始(非必填)</div>
                             <div class="table-col">协议期结束(非必填)</div>
                             <div class="table-col">协议规模（万元）(非必填)</div>
@@ -519,44 +430,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box top20">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>是否健康：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="customersHealth" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <el-form :model="customerFrom" :rules="customerRules" label-width="100px">
+                    <el-form-item label="是否健康" prop="health">
+                        <el-select v-model="customerFrom.health" placeholder="请选择">
+                            <el-option label="是" value="yes"></el-option>
+                            <el-option label="否" value="no"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <span>（不健康：超30%的业务聚焦在1个客户上）</span>
+                </el-form>
                 <!--end-->
             </el-collapse-item>
             <el-collapse-item name="7">
                 <template slot="title">
                     <p class="titlt-p">门店/会员店</p>
                 </template>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">自营门店数量：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="自营门店数量" maxlength="25" :disabled="isdisabled" v-model="selfStoresNum" @keyup.native="integer('selfStoresNum',$event)">
-                                </el-input>
-                            </div>
-                        </div>
-
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">会员店数量：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="会员店数量" maxlength="25" :disabled="isdisabled" v-model="memberShopNum" @keyup.native="integer('memberShopNum',$event)">
-                                </el-input>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <el-form :model="quantityFrom" label-width="130px">
+                    <el-form-item label="自营门店数量：" prop="outlet" placeholder="自营门店数量">
+                        <el-input v-model="quantityFrom.outlet"></el-input>
+                    </el-form-item>
+                    <el-form-item label="会员店数量：" prop="memberShop" placeholder="会员店数量">
+                        <el-input v-model="quantityFrom.memberShop"></el-input>
+                    </el-form-item>
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="8">
                 <template slot="title">
@@ -565,151 +461,104 @@
                 <div class="compete supplier" v-for="(item,index) in dueBusinessCompetitorCreateFormList" :key=index>
                     <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
                     <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">竞争对手：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input v-model="item.competitorName" placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">主营业态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input v-model="item.mainForms" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
-                                </el-input>
-                            </div>
-                        </div>
-                    </div>
+                    <el-form :model="competeFrom" label-width="130px">
+                        <el-form-item label="竞争对手：" prop="rival " placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
+                            <el-input v-model="competeFrom.rival"></el-input>
+                        </el-form-item>
+                        <el-form-item label="主营业态：" prop="mainStatus" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
+                            <el-input v-model="competeFrom.mainStatus"></el-input>
+                        </el-form-item>
+                    </el-form>
                 </div>
             </el-collapse-item>
             <el-collapse-item name="9">
                 <template slot="title">
-                    <p class="titlt-p">业务主体切换计划</p>
-                </template>
-                <div class="compete supplier" v-for="(item,index) in dueBusinessProxySwitchSchemeCreateFormList" :key=index>
-                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addScheme" alt="新增"></i>
-                    <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteScheme(index)" alt="新增"></i>
-                    <div class="flex-wrap-col">
-                        <div class="flex-wrap-row">
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">品牌：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input :disabled="isdisabled" placeholder="品牌" maxlength="25" v-model="item.brand">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">本年度预计销售：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input placeholder="本年度预计销售" maxlength="25" :disabled="isdisabled" v-model="item.expectSales" @keyup.native="oninput4(index, 'expectSales', $event)">
-                                        <template slot="suffix">万</template>
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">切换时间：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-date-picker v-model="item.switchDate" type="date" :editable="false" placeholder="选择日期" value-format="yyyy-MM-dd" :disabled="isdisabled">
-                                    </el-date-picker>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </el-collapse-item>
-            <el-collapse-item name="10">
-                <template slot="title">
-                    <p class="titlt-p">客户需求</p>
-                </template>
-                <div class="flex-wrap-col lengthen">
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">资金支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.financialSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">供应链支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.supplyChainSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">运营支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.operationSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">服务支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.serviceSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">培训支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.trainingSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">管理支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.managementSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">其他支持：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled="isdisabled" placeholder="" maxlength="25" v-model="dueBusinessCustomerDemandCreateForm.otherSupport">
-                            </el-input>
-                        </div>
-                    </div>
-                </div>
-            </el-collapse-item>
-            <el-collapse-item name="11">
-                <template slot="title">
                     <p class="titlt-p">新合资公司规划</p>
                 </template>
-                <div class="flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">业务模式：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input :disabled="isdisabled" placeholder="业务模式" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.productPlan">
-                                </el-input>
-                            </div>
+                <el-form :model="newplanFrom" :rules="newplanRules" label-width="160px">
+                    <el-form-item label="业务类别：" prop="category">
+                        <el-checkbox-group v-model="newplanFrom.category">
+                            <el-checkbox label="批发" name="category"></el-checkbox>
+                            <el-checkbox label="零售" name="category"></el-checkbox>
+                            <el-checkbox label="工程" name="category"></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="经营品类：" prop="manageCategory">
+                                <el-checkbox-group v-model="newplanFrom.manageCategory">
+                                    <el-checkbox label="冷暖" name="manageCategory"></el-checkbox>
+                                    <el-checkbox label="新风" name="manageCategory"></el-checkbox>
+                                    <el-checkbox label="净水" name="manageCategory"></el-checkbox>
+                                    <el-checkbox label="智能" name="manageCategory"></el-checkbox>
+                                    <el-checkbox label="其他" name="manageCategory"></el-checkbox>
+                                </el-checkbox-group>
+                            </el-form-item>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">运作规划：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input :disabled="isdisabled" placeholder="运作规划" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.engineeringBusinessPlan">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">上下游切换：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input :disabled="isdisabled" placeholder="上下游切换" maxlength="25" v-model="dueBusinessFuturePlanCreateForm.operatingPlan">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">销售趋势：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input :disabled="isdisabled" v-model="dueBusinessFuturePlanCreateForm.other" placeholder="销售趋势" maxlength="25">
-                                </el-input>
-                            </div>
+                        <div class="form-cont-col">
+                            <el-form-item label="" prop="manageCategory" label-width=0>
+                                <el-input type="textarea" v-model="newplanFrom.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+                            </el-form-item>
                         </div>
                     </div>
-                </div>
+                    <el-form-item label="经营品牌：" prop="manageBrand">
+                        <el-input type="textarea" v-model="newplanFrom.manageBrand" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
+                    </el-form-item>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="经营区域：" prop="manageRegion">
+                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择省">
+                                    <el-option label="区域一" value="shanghai"></el-option>
+                                    <el-option label="区域二" value="beijing"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
+                            <el-form-item prop="manageRegion" label-width="100px">
+                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择市">
+                                    <el-option label="区域一" value="shanghai"></el-option>
+                                    <el-option label="区域二" value="beijing"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
+                            <el-form-item prop="manageRegion" label-width="10px">
+                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择区">
+                                    <el-option label="区域一" value="shanghai"></el-option>
+                                    <el-option label="区域二" value="beijing"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="form-cont-row mb20">
+                        <div class="form-cont-col">
+                            <el-form-item label="年销售规模：" prop="manageScale">
+                                <el-input v-model="newplanFrom.manageScale" placeholder="请输入规模">
+                                    <template slot="suffix">万</template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
+                            <el-form-item label="净利润率：" prop="manageProfit">
+                                <el-input v-model="newplanFrom.manageProfit" placeholder="请输入净利润">
+                                    <template slot="suffix">%</template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <el-form-item label="下游切换渠道和客户：" prop="switchClient">
+                        <el-input type="textarea" v-model="newplanFrom.switchClient" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="市场推广渠道及计划：" prop="popularPlan">
+                        <el-input type="textarea" v-model="newplanFrom.popularPlan" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="资金用款需求：" prop="fundDemand">
+                        <el-input type="textarea" v-model="newplanFrom.fundDemand" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="其他规划和需求：" prop="elseDemand">
+                        <el-input type="textarea" v-model="newplanFrom.elseDemand" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    </el-form-item>
+                </el-form>
             </el-collapse-item>
         </el-collapse>
         <div class="flex-wrap-row top20 " v-show="!isdisabled">
@@ -739,7 +588,7 @@ export default {
             isdisabled: false,
             updateUser: '',
             updateTime: '',
-            activeName: '2',
+            activeName: '1',
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
             cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
@@ -841,12 +690,77 @@ export default {
             KPIFromData: {
                 KPIpoint: '',
                 KPIRisk: '',
-                KPIDescription: ''
+                KPIDescription: '',
+                mainBusiness: ''
             },
             KPIFrom: {
                 KPIpoint: '',
                 KPIRisk: '',
                 KPIDescription: ''
+            },
+            businessmodeFromData: {
+                mainBusiness: '',
+                businessProportion: ''
+            },
+            businessmodeFrom: {
+                mainBusiness: '',
+                businessProportion: ''
+            },
+            structureFromData: {
+                providerName: '',
+                contract: '',
+                startDate: '',
+                endDate: '',
+                contractScale: '',
+                purchase: '',
+                structureProportion: '',
+                structureBrand: ''
+            },
+            structureFrom: {
+                providerName: '',
+                contract: '',
+                startDate: '',
+                endDate: '',
+                contractScale: '',
+                purchase: '',
+                structureProportion: '',
+                structureBrand: ''
+            },
+            customerFrom: {
+                health: ''
+            },
+            quantityFrom: {
+                outlet: '',
+                memberShop: ''
+
+            },
+            competeFrom: {
+                rival: '',
+                mainStatus: ''
+            },
+            switchFrom: {
+                brand: '',
+                sales: '',
+                switchDate: ''
+            },
+            requireFrom: {
+                surpport: ''
+            },
+            newplanFrom: {
+                category: [],
+                manageCategory: [],
+                manageBrand: '',
+                manageRegion: '',
+                manageScale: '',
+                manageProfit: ''
+            },
+            marketForm: {
+                checkedWays: [],
+                cooperationWay: '',
+                marketCost: ''
+            },
+            salesFrom:{
+                salesDown:''
             },
             KPIRules: {
                 proportion: [
@@ -863,7 +777,64 @@ export default {
                 KPIDescription: [
                     { required: true, message: '请输入分析描述', trigger: 'blur' }
                 ]
-
+            },
+            businessmodeRules: {
+                mainBusiness: [
+                    { required: true, message: '请选择主营业态', trigger: 'blur' }
+                ],
+                businessProportion: [
+                    { required: true, message: '请输入业态占比', trigger: 'blur' }
+                ],
+                mainCategory: [
+                    { required: true, message: '请选择主营品类', trigger: 'blur' }
+                ],
+                mainBrand: [
+                    { required: true, message: '请输入主营品牌', trigger: 'blur' }
+                ],
+                salesProportion: [
+                    { required: true, message: '请输入销售占比', trigger: 'blur' }
+                ]
+            },
+            structureRules: {
+                providerName: [
+                    { required: true, message: '请输入供应商名称', trigger: 'blur' }
+                ],
+                contract: [
+                    { required: true, message: '请选择', trigger: 'blur' }
+                ],
+                purchase: [
+                    { required: true, message: '请输入输入采购金额', trigger: 'blur' }
+                ],
+                structureProportion: [
+                    { required: true, message: '请输入占比', trigger: 'blur' }
+                ]
+            },
+            customerRules: {
+                health: [
+                    { required: true, message: '请选择', trigger: 'blur' }
+                ]
+            },
+            switchRules: {
+                switchDate: [
+                    { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
+                ]
+            },
+            newplanRules: {
+                category: [
+                    { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
+                ],
+                manageCategory: [
+                    { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
+                ],
+                manageBrand: [
+                    { required: true, message: '请输入品牌信息', trigger: 'blur' }
+                ],
+                manageScale: [
+                    { required: true, message: '请输入年销售规模', trigger: 'blur' }
+                ],
+                manageProfit: [
+                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                ]
             },
             proportion: ''
         }
@@ -1058,7 +1029,8 @@ export default {
             this.checkedCities = val ? this.newChannels : []
             this.isIndeterminate = false
         },
-        handleCheckedCitiesChange (value) {
+        handleCheckedWays (value) {
+            console.log(value)
             let checkedCount = value.length
             this.checkAll = checkedCount === this.channelsList.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.channelsList.length
@@ -1303,6 +1275,16 @@ export default {
             })
             this.$router.go(-1)
         }
+        // handleCheckAllChange (val) {
+        //     console.log(val)
+        //     this.marketForm.checkedWays = val ? this.newChannels : []
+        //     this.isIndeterminate = false
+        // },
+        // handleCheckedWays (value) {
+        //     let checkedCount = value.length
+        //     this.checkAll = checkedCount === this.ways.length
+        //     this.isIndeterminate = checkedCount > 0 && checkedCount < this.ways.length
+        // }
     },
     computed: {
         ...mapState({

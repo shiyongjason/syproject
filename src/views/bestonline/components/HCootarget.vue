@@ -4,7 +4,7 @@
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
         <el-form :model="form" :rules="rules">
             <el-form-item label="尽调规模：" prop="scale">
-                <el-input v-model="form.scale">
+                <el-input v-model="form.scale"  @keyup.native="oninput('scale',$event)"> 
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -100,7 +100,7 @@
 <script>
 import { getDueLegal, addCooperativetarget, putCooperativetarget } from '../api/index.js'
 import { mapState } from 'vuex'
-// import { plusOrMinus } from '../../../rules.js'
+import { plusOrMinus } from '../../../rules'
 export default {
     props: {
         roleType: {
@@ -151,9 +151,9 @@ export default {
             if (value === 'equityRatio') {
                 // 股权比例
             } else {
-                // e.target.value = plusOrMinus(e.target.value.toString())
+                e.target.value = plusOrMinus(e.target.value.toString())
             }
-            this.formData[value] = e.target.value
+            this.formData[value] = (e.target.value)
         },
         vaildEmpty (value) {
             if (value !== null && value !== undefined && value !== '') {
@@ -172,11 +172,11 @@ export default {
         async getDueLegal () {
             const { data } = await getDueLegal(this.$route.query.applyId)
             // console.log(data)
-            if (!data.data.operationNode) {
-                this.isdisabled = (!!data.data.operationNode) || !this.roleType
-            } else {
-                this.isdisabled = (!!data.data.operationNode)
-            }
+            // if (!data.data.operationNode) {
+            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
+            // } else {
+            //     this.isdisabled = (!!data.data.operationNode)
+            // }
             this.type = !!data.data.operationNode
             this.data = data.data
             this.updateUser = data.data.updateUser

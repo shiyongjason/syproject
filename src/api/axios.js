@@ -27,6 +27,7 @@ axios.interceptors.request.use(function (config) {
 
 // 配置response过滤器
 axios.interceptors.response.use(function (response) {
+    // TODO status==200 异常处理 200 || '200'
     if (response.data.code && response.data.code != 200) {
         Message({ message: response.data.msg || response.data.message, type: 'error' })
         return Promise.reject(response)
