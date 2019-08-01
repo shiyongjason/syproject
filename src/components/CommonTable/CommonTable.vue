@@ -127,7 +127,7 @@ export default {
             }
         },
         formatter (data) {
-            return (data || data == 0) || this.isBlank ? data : '-'
+            return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         }
     },
     mounted () {

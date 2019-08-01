@@ -195,7 +195,8 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    min-width: calc((100% - 15px) / 3);
+    min-width: calc((100% - 15px) / 4);
+    margin-bottom: 20px;
 
     p,
     span {
