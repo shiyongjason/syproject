@@ -20,23 +20,24 @@
                 </el-form-item>
                 <el-form-item label="合作模式：" prop="cooperateType" >
                     <div class="flex-wrap-cont">
-                        <el-radio v-model="formData.cooperateType" label="0" :disabled="isdisabled">现有模式</el-radio>
-                        <el-radio v-model="formData.cooperateType" label="1" :disabled="isdisabled" class="newcooperateType">
+                        <el-radio v-model="formData.cooperateType" :label="0">现有模式</el-radio>
+                        <el-radio v-model="formData.cooperateType" :label="1" class="newcooperateType">
                             新合作模式
                         </el-radio>
                         <el-tooltip effect="dark" content="新合作模式：拟合资公司操作新品类、股权结构等，和好享家规定的不同" placement="top-start">
                             <i class="el-icon-question"></i>
                         </el-tooltip>
                     </div>
-                    <div v-if="formData.cooperateType == 1" class="remark">
-                        <el-input
-                            type="textarea"
-                            rows="4"
-                            placeholder="请详细说明"
-                            :disabled="isdisabled"
-                            v-model="formData.newCooperateContent">
-                        </el-input>
-                    </div>
+                </el-form-item>
+                <el-form-item label="" prop="newCooperateContent" v-if="formData.cooperateType == 1">
+                    <el-input
+                        type="textarea"
+                        rows="4"
+                        placeholder="请详细说明"
+                        :disabled="isdisabled"
+                        class="remark"
+                        v-model="formData.newCooperateContent">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="主营业务："  prop="mainBusinessId">
                     <div class="flex-wrap-cont">
@@ -57,22 +58,23 @@
                 <el-form-item label="主营品类：" prop="mainSystem">
                     <div class="flex-wrap-cont">
                         <el-checkbox-group v-model="checkList" :disabled="isdisabled">
-                            <el-checkbox label="0">冷暖</el-checkbox>
-                            <el-checkbox label="1">新风</el-checkbox>
-                            <el-checkbox label="2">净水</el-checkbox>
-                            <el-checkbox label="3">智能</el-checkbox>
-                            <el-checkbox label="4">其他</el-checkbox>
+                            <el-checkbox :label="0">冷暖</el-checkbox>
+                            <el-checkbox :label="1">新风</el-checkbox>
+                            <el-checkbox :label="2">净水</el-checkbox>
+                            <el-checkbox :label="3">智能</el-checkbox>
+                            <el-checkbox :label="4">其他</el-checkbox>
                         </el-checkbox-group>
                     </div>
-                    <div v-if="checkList.indexOf('4') != -1" class="remark">
-                        <el-input
-                            type="textarea"
-                            rows="4"
-                            placeholder="请详细说明"
-                            v-model="formData.mainSystemOther"
-                            maxlength="250">
-                        </el-input>
-                    </div>
+                </el-form-item>
+                <el-form-item label="" prop="mainSystemOther" v-if="checkList.indexOf(4) != -1">
+                    <el-input
+                        type="textarea"
+                        rows="4"
+                        placeholder="请详细说明"
+                        :disabled="isdisabled"
+                        class="remark"
+                        v-model="formData.mainSystemOther">
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="品牌：" prop="brand">
                     <el-input
@@ -85,8 +87,8 @@
                 <el-form-item label="销售形式："  prop="salesType">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
-                            <el-radio v-model="formData.salesType" label="1" :disabled="isdisabled">线上</el-radio>
-                            <el-radio v-model="formData.salesType" label="2" :disabled="isdisabled">线下</el-radio>
+                            <el-radio v-model="formData.salesType" :label="1" :disabled="isdisabled">线上</el-radio>
+                            <el-radio v-model="formData.salesType" :label="2" :disabled="isdisabled">线下</el-radio>
                         </div>
                     </div>
                 </el-form-item>
@@ -121,7 +123,7 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="备注："  prop="remark">
+                <el-form-item label="备注：">
                     <div class="flex-wrap-cont">
                         <el-input
                             type="textarea"
@@ -233,7 +235,7 @@ export default {
                     { required: true, message: '请输入尽调公司名称', trigger: 'blur' }
                 ],
                 newCooperateContent: [
-                    { required: true, message: '请输入尽调公司名称', trigger: 'blur' }
+                    { required: true, message: '请输入新合作模式备注', trigger: 'blur' }
                 ],
                 brand: [
                     { required: true, message: '请输入品牌名称', trigger: 'blur' }
@@ -244,8 +246,8 @@ export default {
                 signScale: [
                     { required: true, message: '请输入签约规模', trigger: 'blur' }
                 ],
-                remark: [
-                    { required: true, message: '请输入备注', trigger: 'blur' }
+                mainSystemOther: [
+                    { required: true, message: '请详细说明其他品类', trigger: 'blur' }
                 ]
 
             },
@@ -381,21 +383,13 @@ export default {
             if (this.approvalStatus > 0) {
                 this.isdisabled = true
             }
-            this.formData.targetPartner = data.data.targetPartner
-            this.formData.companyName = data.data.companyName
-            this.formData.cooperateType = data.data.cooperateType
-            this.formData.newCooperateContent = data.data.newCooperateContent
-            this.formData.mainBusinessId = data.data.mainBusinessId
-            this.formData.mainBusinessId = data.data.mainBusinessId
-            this.formData.mainSystemOther = data.data.mainSystemOther
-            this.formData.brand = data.data.brand
-            this.formData.salesType = data.data.salesType
-            this.formData.cooperateTarget = data.data.cooperateTarget
-            this.formData.attachmentsUrl = data.data.attachmentsUrl
-            this.formData.signScale = data.data.signScale
-            this.formData.remark = data.data.remark
+            this.formData = data.data
             this.fileList = JSON.parse(this.formData.attachmentsUrl)
             this.arrList = JSON.parse(data.data.attachmentsUrl)
+            // console.log(this.formData.mainSystem)
+            if (this.formData.mainSystem) {
+                this.checkList = this.formData.mainSystem.split(',')
+            }
         },
         selectGet (vId) {
             let obj = {}
@@ -405,6 +399,7 @@ export default {
             this.formData.mainBusinessName = obj.label
         },
         async  onSave () {
+            this.formData.mainSystem = this.checkList.toString()
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
             this.formData.organizationCode = this.userdata.organizationCode
             if (!this.formData.companyName) {
@@ -428,32 +423,12 @@ export default {
             }
         },
         async  onSubmit () {
-            console.log(this.userdata)
+            this.formData.mainSystem = this.checkList.toString()
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
             this.formData.createUserName = this.userdata.name
             this.formData.createUser = this.userdata.uid
             this.formData.organizationCode = this.userdata.organizationCode
             // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
-            if (!this.formData.targetPartner) {
-                this.showWarnMsg('请输入目标合伙人')
-                return false
-            }
-            if (!this.formData.companyName) {
-                this.showWarnMsg('请输入公司名称')
-                return false
-            }
-            if (this.formData.mainBusinessId === '') {
-                this.showWarnMsg('请选择主营业务')
-                return false
-            }
-            if (!this.formData.signScale) {
-                this.showWarnMsg('请输入签约规模')
-                return false
-            }
-            if (this.arrList.length === 0) {
-                this.showWarnMsg('请上传附件')
-                return false
-            }
             if (this.applyId) {
                 this.formData.applyId = this.applyId
                 // this.formData.createUser = dce5239f-0829-487f-9903-c0a0d16380ed'

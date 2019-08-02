@@ -8,7 +8,32 @@
                         <p class="titlt-p">法务尽调评估及KPI</p>
                     </template>
                     <!--start-->
-                    <p class="small-title">1、法务尽调评估</p>
+                    <p class="small-title">法务尽调评估</p>
+                    <div class="page-box">
+                        <table class="table-example">
+                            <thead>
+                            <tr class="tableTitle">
+                                <td width="180">评估项</td>
+                                <td width="180">合作目标</td>
+                                <td width="180"><span class="red-span">*</span>结论(必填)</td>
+                                <td width="180">备注</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="item in justiceData.assessmentList" :key="item.index">
+                                <td>{{item.assessmentItem}}</td>
+                                <td>{{item.cooperationTarget}}</td>
+                                <td>
+                                    <el-select v-model="item.state" placeholder="请选择结论" :disabled="disabled" class="selectconclusion">
+                                        <el-option label="是" :value="0"></el-option>
+                                        <el-option label="否" :value="1"></el-option>
+                                    </el-select>
+                                </td>
+                                <td>1</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="table-flex">
                         <div class="table-row">
                             <div class="table-col">评估项</div>
@@ -17,7 +42,8 @@
                             <div class="table-col">备注</div>
                         </div>
                         <div>
-                            <div class="table-row" v-for="(item,index) in justiceData.assessmentList" :key="'assessmentList'+index">
+                            <div class="table-row" v-for="(item,index) in justiceData.assessmentList"
+                                 :key="'assessmentList'+index">
                                 <div class="table-col" v-text="item.assessmentItem">
                                     <!--<el-input v-model="" placeholder="评估项" :disabled="disabled"-->
                                     <!--&gt;</el-input>-->
@@ -39,61 +65,50 @@
                             </div>
                         </div>
                     </div>
-                    <p class="small-title ">2、KPI(必填)</p>
-                    <div class="flex-wrap-col">
-                        <div class="flex-wrap-row">
-                            <div class="flex-wrap-box-justice">
-                                <div class="flex-wrap-title"><span class="red-span">*</span>尽调公司法律风险：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-form-item
-                                        :rules="{required: true,message: '尽调公司法律风险不能为空',trigger: 'change'}"
-                                        :prop="'affairs.legalRisksOfCompany'"
-                                    >
-                                        <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择结论" :disabled="disabled">
-                                            <el-option label="高" :value="0"></el-option>
-                                            <el-option label="中" :value="1"></el-option>
-                                            <el-option label="低" :value="2"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box-justice">
-                                <div class="flex-wrap-title"><span class="red-span">*</span>实际控制人法律风险：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-form-item
-                                        :rules="{required: true,message: '实际控制人法律风险不能为空',trigger: 'change'}"
-                                        :prop="'affairs.legalRisksOfController'"
-                                    >
-                                        <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择结论" :disabled="disabled">
-                                            <el-option label="高" :value="0"></el-option>
-                                            <el-option label="中" :value="1"></el-option>
-                                            <el-option label="低" :value="2"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box-justice">
-                                <div class="flex-wrap-title"><span class="red-span">*</span>实际控制人配偶法律风险：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-form-item :rules="{required: true ,message: '实际控制人配偶法律风险不能为空',trigger: 'change'}"
-                                                  :prop="'affairs.legalRisksOfControllerMate'">
-                                        <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择结论" :disabled="disabled">
-                                            <el-option label="高" :value="0"></el-option>
-                                            <el-option label="中" :value="1"></el-option>
-                                            <el-option label="低" :value="2"></el-option>
-                                        </el-select>
-                                    </el-form-item>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="small-title ">2、分析报告</p>
+                    <p class="small-title ">KPI(必填)</p>
+                        <el-form :model="justiceData.affairs" :rules="justiceData.affairsRules" label-position="right"
+                                 label-width="250px" class="fawuForm">
+                            <el-form-item label="尽调公司法律风险：" prop="legalRisksOfCompany">
+                                <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择结论">
+                                    <el-option label="高" :value="0"></el-option>
+                                    <el-option label="中" :value="1"></el-option>
+                                    <el-option label="低" :value="2"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="实际控制人法律风险：" prop="legalRisksOfController">
+                                <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择结论"
+                                           :disabled="disabled">
+                                    <el-option label="高" :value="0"></el-option>
+                                    <el-option label="中" :value="1"></el-option>
+                                    <el-option label="低" :value="2"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="实际控制人配偶法律风险：" prop="legalRisksOfControllerMate">
+                                <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择结论"
+                                           :disabled="disabled">
+                                    <el-option label="高" :value="0"></el-option>
+                                    <el-option label="中" :value="1"></el-option>
+                                    <el-option label="低" :value="2"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="个人经营性借款及担保总额：" prop="personalOperatingloansTotalGuarantees">
+                                <el-input v-model="personalOperatingloansTotalGuarantees" placeholder="请输入借款及担保总额">
+                                    <template slot="suffix">万</template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="公司借款及担保总额：" prop="companyLoanTotalGuarantee">
+                                <el-input v-model="companyLoanTotalGuarantee" placeholder="请输入借款及担保总额">
+                                    <template slot="suffix">万</template>
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                    <p class="small-title ">分析报告</p>
                     <div class="flex-wrap-col">
                         <div class="flex-wrap-box ">
                             <div class="flex-wrap-title"><span class="red-span">*</span>风险揭示：</div>
                             <div class="flex-wrap-cont">
                                 <el-form-item :rules="{required: true ,message: '风险揭示不能为空',trigger: 'blur'}"
-                                :prop="'affairs.riskDisclosure'">
+                                              :prop="'affairs.riskDisclosure'">
                                     <el-input
                                         type="textarea"
                                         style="width:600px"
@@ -111,15 +126,15 @@
                             <div class="flex-wrap-cont">
                                 <el-form-item :rules="{required: true ,message: '分析描述不能为空',trigger: 'blur'}"
                                               :prop="'affairs.analysisDescription'">
-                                <el-input
-                                    type="textarea"
-                                    style="width:600px"
-                                    rows="6"
-                                    :disabled="disabled"
-                                    placeholder="请输入内容"
-                                    v-model="justiceData.affairs.analysisDescription"
-                                >
-                                </el-input>
+                                    <el-input
+                                        type="textarea"
+                                        style="width:600px"
+                                        rows="6"
+                                        :disabled="disabled"
+                                        placeholder="请输入内容"
+                                        v-model="justiceData.affairs.analysisDescription"
+                                    >
+                                    </el-input>
                                 </el-form-item>
                             </div>
                         </div>
@@ -134,870 +149,566 @@
                         <div v-for="(item,index) in justiceData.copartnerInfoList" :key="index">
                             <div v-if="item.type==0">
                                 <p class="small-title">实际控制人</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b"><span class="red-span">*</span>姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    :rules="{required: true,message: '姓名不能为空',trigger: 'blur'}"
-                                                    :prop="'copartnerInfoList.'+ index + '.name'"
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="实际控制人"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.name"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b"><span class="red-span">*</span>联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    :rules="{required: true,message: '联系方式不能为空',trigger: 'blur'}"
-                                                    :prop="'copartnerInfoList.'+ index + '.tel'"
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="联系方式"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.tel"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div >
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b"><span class="red-span">*</span>性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    :rules="{required: true,message: '性别不能为空',trigger: 'change'}"
-                                                    :prop="'copartnerInfoList.'+ index + '.sex'"
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.sex" :disabled="disabled">
-                                                        <el-option label="男" :value="0"></el-option>
-                                                        <el-option label="女" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b"><span class="red-span">*</span>婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    :rules="{required: true,message: '婚姻不能为空',trigger: 'change'}"
-                                                    :prop="'copartnerInfoList.'+ index + '.marriage'"
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.marriage" :disabled="disabled">
-                                                        <el-option label="已婚" :value="0"></el-option>
-                                                        <el-option label="未婚" :value="1"></el-option>
-                                                        <el-option label="离异" :value="2"></el-option>
-                                                        <el-option label="丧偶" :value="3"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b"><span class="red-span">*</span>身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    :rules="{required: true,message: '身份证号不能为空',trigger: 'blur'}"
-                                                    :prop="'copartnerInfoList.'+ index + '.idNumber'"
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="身份证号"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.idNumber"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.education" :disabled="disabled">
-                                                        <el-option label="大专" :value="0"></el-option>
-                                                        <el-option label="本科" :value="1"></el-option>
-                                                        <el-option label="硕士" :value="2"></el-option>
-                                                        <el-option label="博士" :value="3"></el-option>
-                                                        <el-option label="其他" :value="4"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">持股比例：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="持股比例"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.shareholdingRatio"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                        <el-option label="是" :value="0"></el-option>
-                                                        <el-option label="否" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="行业身份"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.industryStatus"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">个人经营能力：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="个人经营能力"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.managementAbility"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">行业口碑：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="行业口碑"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.industryReputation"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row lengthen">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">社会资源：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="社会资源"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.socialResources"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form label-position="right" label-width="200px" class="fawuForm">
+                                    <el-form-item
+                                        label="姓名："
+                                        :rules="{required: true,message: '姓名不能为空',trigger: 'blur'}"
+                                        :prop="'copartnerInfoList.'+ index + '.name'"
+                                    >
+                                        <el-input
+                                            placeholder="实际控制人"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item
+                                        label="联系方式"
+                                        :rules="{required: true,message: '联系方式不能为空',trigger: 'blur'}"
+                                        :prop="'copartnerInfoList.'+ index + '.tel'"
+                                    >
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item
+                                        label="性别："
+                                        :rules="{required: true,message: '性别不能为空',trigger: 'change'}"
+                                        :prop="'copartnerInfoList.'+ index + '.sex'"
+                                    >
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item
+                                        label="婚姻："
+                                        :rules="{required: true,message: '婚姻不能为空',trigger: 'change'}"
+                                        :prop="'copartnerInfoList.'+ index + '.marriage'"
+                                    >
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item
+                                        label="身份证号："
+                                        :rules="{required: true,message: '身份证号不能为空',trigger: 'blur'}"
+                                        :prop="'copartnerInfoList.'+ index + '.idNumber'"
+                                    >
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="持股比例：">
+                                        <el-input
+                                            placeholder="持股比例"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.shareholdingRatio"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="个人经营能力：">
+                                        <el-input
+                                            placeholder="个人经营能力"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.managementAbility"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="行业口碑：">
+                                        <el-input
+                                            placeholder="行业口碑"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryReputation"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <div v-if="item.type==5">
                                 <p class="small-title">实际控制人配偶信息</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="实际控制人配偶"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.name"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="联系方式"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.tel"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div >
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.sex" :disabled="disabled">
-                                                        <el-option label="男" :value="0"></el-option>
-                                                        <el-option label="女" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.marriage" :disabled="disabled">
-                                                        <el-option label="已婚" :value="0"></el-option>
-                                                        <el-option label="未婚" :value="1"></el-option>
-                                                        <el-option label="离异" :value="2"></el-option>
-                                                        <el-option label="丧偶" :value="3"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="身份证号"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.idNumber"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.education" :disabled="disabled">
-                                                        <el-option label="大专" :value="0"></el-option>
-                                                        <el-option label="本科" :value="1"></el-option>
-                                                        <el-option label="硕士" :value="2"></el-option>
-                                                        <el-option label="博士" :value="3"></el-option>
-                                                        <el-option label="其他" :value="4"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">持股比例：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="持股比例"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.shareholdingRatio"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                        <el-option label="是" :value="0"></el-option>
-                                                        <el-option label="否" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="行业身份"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.industryStatus"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">个人经营能力：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="个人经营能力"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.managementAbility"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row lengthen">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">社会资源：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="社会资源"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.socialResources"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form label-position="right" label-width="200px" class="fawuForm">
+                                    <el-form-item label="姓名：">
+                                        <el-input
+                                            placeholder="实际控制人配偶"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系方式：">
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="性别：">
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="婚姻：">
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="身份证号：">
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="持股比例：">
+                                        <el-input
+                                            placeholder="持股比例"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.shareholdingRatio"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="个人经营能力：">
+                                        <el-input
+                                            placeholder="个人经营能力"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.managementAbility"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <div v-else-if="item.type==1">
                                 <p class="small-title">法人</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="姓名"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.name"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="联系方式"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.tel"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.sex" :disabled="disabled">
-                                                        <el-option label="男" :value="0"></el-option>
-                                                        <el-option label="女" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-select v-model="item.marriage" :disabled="disabled">
-                                                        <el-option label="已婚" :value="0"></el-option>
-                                                        <el-option label="未婚" :value="1"></el-option>
-                                                        <el-option label="离异" :value="2"></el-option>
-                                                        <el-option label="丧偶" :value="3"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item
-                                                    style="width: 100%"
-                                                >
-                                                    <el-input
-                                                        placeholder="身份证号"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.idNumber"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.education" :disabled="disabled">
-                                                        <el-option label="大专" :value="0"></el-option>
-                                                        <el-option label="本科" :value="1"></el-option>
-                                                        <el-option label="硕士" :value="2"></el-option>
-                                                        <el-option label="博士" :value="3"></el-option>
-                                                        <el-option label="其他" :value="4"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">持股比例：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="持股比例"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.shareholdingRatio"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                        <el-option label="是" :value="0"></el-option>
-                                                        <el-option label="否" :value="1"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="行业身份"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.industryStatus">
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row lengthen">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title margin-b">社会资源：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-form-item style="width: 100%">
-                                                    <el-input
-                                                        placeholder="社会资源"
-                                                        maxlength="25"
-                                                        :disabled="disabled"
-                                                        v-model="item.socialResources"
-                                                    >
-                                                    </el-input>
-                                                </el-form-item>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form label-position="right" label-width="200px" class="fawuForm">
+                                    <el-form-item label="姓名：">
+                                        <el-input
+                                            placeholder="姓名"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系方式：">
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="性别：">
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="婚姻：">
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="身份证号：">
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="持股比例：">
+                                        <el-input
+                                            placeholder="持股比例"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.shareholdingRatio"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <div v-else-if="item.type==2">
                                 <p class="small-title">大股东1</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="姓名"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.name"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="联系方式"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.tel"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.sex" :disabled="disabled">
-                                                    <el-option label="男" :value="0"></el-option>
-                                                    <el-option label="女" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.marriage" :disabled="disabled">
-                                                    <el-option label="已婚" :value="0"></el-option>
-                                                    <el-option label="未婚" :value="1"></el-option>
-                                                    <el-option label="离异" :value="2"></el-option>
-                                                    <el-option label="丧偶" :value="3"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="身份证号"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.idNumber"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.education" :disabled="disabled">
-                                                    <el-option label="大专" :value="0"></el-option>
-                                                    <el-option label="本科" :value="1"></el-option>
-                                                    <el-option label="硕士" :value="2"></el-option>
-                                                    <el-option label="博士" :value="3"></el-option>
-                                                    <el-option label="其他" :value="4"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">持股比例：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="持股比例"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.shareholdingRatio"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                    <el-option label="是" :value="0"></el-option>
-                                                    <el-option label="否" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="行业身份"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.industryStatus">
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="flex-wrap-row lengthen">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">社会资源：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="社会资源"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.socialResources"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form label-position="right" label-width="200px" class="fawuForm">
+                                    <el-form-item label="姓名：">
+                                        <el-input
+                                            placeholder="姓名"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系方式：">
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="性别：">
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="婚姻：">
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="身份证号：">
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="持股比例：">
+                                        <el-input
+                                            placeholder="持股比例"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.shareholdingRatio"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <div v-else-if="item.type==3">
                                 <p class="small-title">大股东2</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="姓名"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.name"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="联系方式"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.tel"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.sex" :disabled="disabled">
-                                                    <el-option label="男" :value="0"></el-option>
-                                                    <el-option label="女" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.marriage" :disabled="disabled">
-                                                    <el-option label="已婚" :value="0"></el-option>
-                                                    <el-option label="未婚" :value="1"></el-option>
-                                                    <el-option label="离异" :value="2"></el-option>
-                                                    <el-option label="丧偶" :value="3"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="身份证号"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.idNumber"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.education" :disabled="disabled">
-                                                    <el-option label="大专" :value="0"></el-option>
-                                                    <el-option label="本科" :value="1"></el-option>
-                                                    <el-option label="硕士" :value="2"></el-option>
-                                                    <el-option label="博士" :value="3"></el-option>
-                                                    <el-option label="其他" :value="4"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">持股比例：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="持股比例"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.shareholdingRatio"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                    <el-option label="是" :value="0"></el-option>
-                                                    <el-option label="否" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="行业身份"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.industryStatus">
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-wrap-row lengthen">
-                                    <div class="flex-wrap-box">
-                                        <div class="flex-wrap-title">社会资源：</div>
-                                        <div class="flex-wrap-cont">
-                                            <el-input
-                                                placeholder="社会资源"
-                                                maxlength="25"
-                                                :disabled="disabled"
-                                                v-model="item.socialResources"
-                                            >
-                                            </el-input>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form label-position="right" label-width="200px" class="fawuForm">
+                                    <el-form-item label="姓名：">
+                                        <el-input
+                                            placeholder="姓名"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系方式：">
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="性别：">
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="婚姻：">
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="身份证号：">
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="持股比例：">
+                                        <el-input
+                                            placeholder="持股比例"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.shareholdingRatio"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                             <div v-else-if="item.type==4">
                                 <p class="small-title">拟选签约人</p>
-                                <div class="justice-wrap">
-                                    <div class="flex-wrap-row">
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">姓名：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="姓名"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.name"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">联系方式：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="联系方式"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.tel"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">性别：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.sex" :disabled="disabled">
-                                                    <el-option label="男" :value="0"></el-option>
-                                                    <el-option label="女" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">婚姻：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.marriage" :disabled="disabled">
-                                                    <el-option label="已婚" :value="0"></el-option>
-                                                    <el-option label="未婚" :value="1"></el-option>
-                                                    <el-option label="离异" :value="2"></el-option>
-                                                    <el-option label="丧偶" :value="3"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">身份证号：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="身份证号"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.idNumber"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">学历：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.education" :disabled="disabled">
-                                                    <el-option label="大专" :value="0"></el-option>
-                                                    <el-option label="本科" :value="1"></el-option>
-                                                    <el-option label="硕士" :value="2"></el-option>
-                                                    <el-option label="博士" :value="3"></el-option>
-                                                    <el-option label="其他" :value="4"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">是否在外兼职：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-select v-model="item.partTimeJob" :disabled="disabled">
-                                                    <el-option label="是" :value="0"></el-option>
-                                                    <el-option label="否" :value="1"></el-option>
-                                                </el-select>
-                                            </div>
-                                        </div>
-                                        <div class="flex-wrap-box">
-                                            <div class="flex-wrap-title">行业身份：</div>
-                                            <div class="flex-wrap-cont">
-                                                <el-input
-                                                    placeholder="行业身份"
-                                                    maxlength="25"
-                                                    :disabled="disabled"
-                                                    v-model="item.industryStatus"
-                                                >
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-wrap-row lengthen">
-                                    <div class="flex-wrap-box">
-                                        <div class="flex-wrap-title">社会资源：</div>
-                                        <div class="flex-wrap-cont">
-                                            <el-input
-                                                placeholder="社会资源"
-                                                maxlength="25"
-                                                :disabled="disabled"
-                                                v-model="item.socialResources"
-                                            >
-                                            </el-input>
-                                        </div>
-                                    </div>
-                                </div>
+                                <el-form>
+                                    <el-form-item label="姓名：">
+                                        <el-input
+                                            placeholder="姓名"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.name"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="联系方式：">
+                                        <el-input
+                                            placeholder="联系方式"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.tel"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="性别：">
+                                        <el-select v-model="item.sex" :disabled="disabled">
+                                            <el-option label="男" :value="0"></el-option>
+                                            <el-option label="女" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="婚姻：">
+                                        <el-select v-model="item.marriage" :disabled="disabled">
+                                            <el-option label="已婚" :value="0"></el-option>
+                                            <el-option label="未婚" :value="1"></el-option>
+                                            <el-option label="离异" :value="2"></el-option>
+                                            <el-option label="丧偶" :value="3"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="身份证号：">
+                                        <el-input
+                                            placeholder="身份证号"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.idNumber"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学历：">
+                                        <el-select v-model="item.education" :disabled="disabled">
+                                            <el-option label="大专" :value="0"></el-option>
+                                            <el-option label="本科" :value="1"></el-option>
+                                            <el-option label="硕士" :value="2"></el-option>
+                                            <el-option label="博士" :value="3"></el-option>
+                                            <el-option label="其他" :value="4"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="是否在外兼职：">
+                                        <el-select v-model="item.partTimeJob" :disabled="disabled">
+                                            <el-option label="是" :value="0"></el-option>
+                                            <el-option label="否" :value="1"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="行业身份：">
+                                        <el-input
+                                            placeholder="行业身份"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.industryStatus"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="社会资源：">
+                                        <el-input
+                                            placeholder="社会资源"
+                                            maxlength="25"
+                                            :disabled="disabled"
+                                            v-model="item.socialResources"
+                                        >
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
                             </div>
                         </div>
                     </template>
@@ -1011,195 +722,164 @@
                     <div class="flex-wrap-col supplier" v-for="(item,index) in investmentsOutListType0"
                          :key="'investmentsOutList'+item.type+index">
                         <template v-if="!disabled">
-                            <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="addList('investmentsOutList',0)"></i>
-                            <i class="el-icon-remove-outline pointer" v-else @click="removeList('investmentsOutList', item.id)"></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-if="index==0"
+                               @click="addList('investmentsOutList',0)"></i>
+                            <i class="el-icon-remove-outline pointer" v-else
+                               @click="removeList('investmentsOutList', item.id)"></i>
                         </template>
-                        <div class="flex-wrap-row" >
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">投资公司：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input
-                                        placeholder="投资公司"
-                                        maxlength="25"
-                                        :disabled="disabled"
-                                        v-model="item.investmentCompany">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">投资金额：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input
-                                        placeholder="请输入投资金额"
-                                        maxlength="25"
-                                        :disabled="disabled"
-                                        v-model="item.investmentAmount">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">投资比例：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input
-                                        placeholder="请输入投资比例"
-                                        maxlength="25"
-                                        :disabled="disabled"
-                                        v-model="item.investmentRatio"
-                                    >
-                                        <template slot="suffix">%</template>
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">投资性质：</div>
-                                <div class="flex-wrap-cont">
-                                    <!--0：债务性投资 1：权益性投资 2：混合性投资-->
-                                    <el-select placeholder="请选择投资性质" :disabled="disabled"
-                                    v-model="item.investmentType">
-                                        <el-option label="债务性投资" :value="0"></el-option>
-                                        <el-option label="权益性投资" :value="1"></el-option>
-                                        <el-option label="混合性投资" :value="2"></el-option>
-                                    </el-select>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">投资收益：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input
-                                        placeholder="请输入投资收益"
-                                        maxlength="25"
-                                        :disabled="disabled"
-                                        v-model="item.investmentIncome"
-                                    >
-                                    </el-input>
-                                </div>
-                            </div>
-                        </div>
+                        <el-form label-position="right" label-width="200px" class="fawuForm">
+                            <el-form-item label="投资公司：">
+                                <el-input
+                                    placeholder="投资公司"
+                                    maxlength="25"
+                                    :disabled="disabled"
+                                    v-model="item.investmentCompany">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="投资金额：">
+                                <el-input
+                                    placeholder="请输入投资金额"
+                                    maxlength="25"
+                                    :disabled="disabled"
+                                    v-model="item.investmentAmount">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="投资比例：">
+                                <el-input
+                                    placeholder="请输入投资比例"
+                                    maxlength="25"
+                                    :disabled="disabled"
+                                    v-model="item.investmentRatio"
+                                >
+                                    <template slot="suffix">%</template>
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="投资性质：">
+                                <!--0：债务性投资 1：权益性投资 2：混合性投资-->
+                                <el-select placeholder="请选择投资性质" :disabled="disabled"
+                                           v-model="item.investmentType">
+                                    <el-option label="债务性投资" :value="0"></el-option>
+                                    <el-option label="权益性投资" :value="1"></el-option>
+                                    <el-option label="混合性投资" :value="2"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="投资收益：">
+                                <el-input
+                                    placeholder="请输入投资收益"
+                                    maxlength="25"
+                                    :disabled="disabled"
+                                    v-model="item.investmentIncome"
+                                >
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
                     </div>
                     <p class="small-title">资产信息</p>
                     <!--justiceData.assetList-->
                     <div v-for="(item,index) in assetListType0"
                          :key="'assetList'+item.type+index">
-                        <div class="flex-wrap-col">
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">不动产：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea" placeholder="请输入不动产"  rows="3"
-                                                 :disabled="disabled" v-model="item.realEstate" style="width:600px"></el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">准不动产：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea" placeholder="请输入准不动产"
-
-                                                 :disabled="disabled" rows="3"
-                                                 v-model="item.chattelReal" style="width:600px">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">动产：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea" placeholder="请输入动产"
-
-                                                 :disabled="disabled" rows="3"
-                                                 v-model="item.movableProperty" style="width:600px">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">无形资产-专利：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea"
-                                        placeholder="专利"
-
-                                        :disabled="disabled"
-                                        v-model="item.patent" rows="3"
-                                              style="width:600px"
+                        <el-form label-position="right" label-width="200px" class="fawuForm">
+                            <el-form-item label="不动产：">
+                                <el-input type="textarea" placeholder="请输入不动产" rows="3"
+                                          :disabled="disabled" v-model="item.realEstate"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="准不动产：">
+                                <el-input type="textarea" placeholder="请输入准不动产"
+                                          :disabled="disabled" rows="3"
+                                          v-model="item.chattelReal">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="动产：">
+                                <el-input type="textarea" placeholder="请输入动产"
+                                          :disabled="disabled" rows="3"
+                                          v-model="item.movableProperty">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="无形资产-专利：">
+                                <el-input type="textarea"
+                                          placeholder="专利"
+                                          :disabled="disabled"
+                                          v-model="item.patent" rows="3"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="无形资产-商标：">
+                                <el-input type="textarea"
+                                          placeholder="商标"
+                                          :disabled="disabled" rows="3"
+                                          v-model="item.brand"
+                                >
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="无形资产-其他：">
+                                <el-input type="textarea"
+                                          placeholder="其他"
+                                          :disabled="disabled" rows="3"
+                                          v-model="item.other"
+                                >
+                                </el-input>
+                            </el-form-item>
+                        </el-form>
+                        <div class="upload">
+                            <div class="flex-wrap-box ">
+                                <div class="flex-wrap-title">附件：</div>
+                                <div
+                                    class="flex-wrap-cont"
+                                    v-show='!disabled'
+                                >
+                                    <el-upload
+                                        class="upload-demo"
+                                        v-bind="uploadInfo"
+                                        :on-success="handleSuccess"
+                                        :before-remove="beforeRemove"
+                                        :on-exceed="handleExceed"
+                                        :file-list="item.attachInfo"
+                                        :before-upload="handleUpload"
                                     >
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">无形资产-商标：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea"
-                                        placeholder="商标"
-
-                                        :disabled="disabled" rows="3"
-                                        v-model="item.brand" style="width:600px"
-                                    >
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-box">
-                                <div class="flex-wrap-title">无形资产-其他：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-input type="textarea"
-                                        placeholder="其他"
-
-                                        :disabled="disabled" rows="3"
-                                        v-model="item.other" style="width:600px"
-                                    >
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="flex-wrap-col">
-                                <div class="flex-wrap-box ">
-                                    <div class="flex-wrap-title">附件：</div>
-                                    <div
-                                        class="flex-wrap-cont"
-                                        v-show='!disabled'
-                                    >
-                                        <el-upload
-                                            class="upload-demo"
-                                            v-bind="uploadInfo"
-                                            :on-success="handleSuccess"
-                                            :before-remove="beforeRemove"
-                                            :on-exceed="handleExceed"
-                                            :file-list="item.attachInfo"
-                                            :before-upload="handleUpload"
-                                        >
-                                            <el-button
-                                                size="small"
-                                                type="primary"
-                                                @click="uploadId(item)"
-                                            >点击上传</el-button>
-                                        </el-upload>
-                                    </div>
-                                    <div class="cont"  v-show='disabled' v-if="item.attachInfo">
-                                        <div v-if="item.attachInfo.length === 0">暂无附件</div>
-                                        <p
-                                            v-else
-                                            class="upload"
-                                            v-for="(sub,index) in item.attachInfo"
-                                            :key="index"
+                                        <el-button
+                                            size="small"
+                                            type="primary"
                                             @click="uploadId(item)"
-                                        > <a :href="sub.url" target="_blank">{{sub.name}}</a></p>
-                                    </div>
+                                        >点击上传
+                                        </el-button>
+                                    </el-upload>
                                 </div>
-
+                                <div class="cont" v-show='disabled' v-if="item.attachInfo">
+                                    <div v-if="item.attachInfo.length === 0">暂无附件</div>
+                                    <p
+                                        v-else
+                                        class="upload"
+                                        v-for="(sub,index) in item.attachInfo"
+                                        :key="index"
+                                        @click="uploadId(item)"
+                                    ><a :href="sub.url" target="_blank">{{sub.name}}</a></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <p class="small-title">负债信息（万）</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">合计：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input placeholder="" maxlength="25" :disabled="true" v-model="debtListType0Total">
-                                </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType0')">合计</el-button>
-                            </div>
+                                <el-form label-position="left" label-width="100px" class="fawuForm">
+                                    <el-form-item label="合计：">
+                                        <el-input placeholder="" maxlength="25" :disabled="true" v-model="debtListType0Total">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-form>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType0')">合计
+                                </el-button>
                         </div>
                     </div>
                     <div v-for="(item,index) in debtListType0"
                          :key="'debtList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index===0" @click="addList('debtList',0)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('debtList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index===0"
+                                   @click="addList('debtList',0)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('debtList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -1218,10 +898,10 @@
                                     <div class="flex-wrap-title">用途：</div>
                                     <div class="flex-wrap-cont">
                                         <!--<el-input-->
-                                            <!--placeholder="用途"-->
-                                            <!--maxlength="25"-->
-                                            <!--:disabled="disabled"-->
-                                            <!--v-model="item.purpose"-->
+                                        <!--placeholder="用途"-->
+                                        <!--maxlength="25"-->
+                                        <!--:disabled="disabled"-->
+                                        <!--v-model="item.purpose"-->
                                         <!--&gt;-->
                                         <!--</el-input>-->
                                         <el-select :disabled="disabled" v-model="item.purpose" placeholder="请选择用途">
@@ -1237,6 +917,18 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                                v-model="dueLegalRemarkCreateForm.companyDebtRemark"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">担保信息（万）</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
@@ -1249,7 +941,9 @@
                                     v-model="assureListType0Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType0')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType0')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
@@ -1257,8 +951,10 @@
                          :key="'assureList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="addList('assureList',0)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0"
+                                   @click="addList('assureList',0)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -1288,19 +984,33 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">诉讼、仲裁及行政处罚事件</p>
                     <div v-for="(item,index) in punishmentListType0"
                          :key="'punishmentList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="addList('punishmentList',0)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('punishmentList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0"
+                                   @click="addList('punishmentList',0)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('punishmentList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
                                     <div class="flex-wrap-title">事件类型：</div>
                                     <div class="flex-wrap-cont">
-                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled" v-model="item.punishmentType">
+                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled"
+                                                   v-model="item.punishmentType">
                                             <el-option label="诉讼、仲裁事件" :value="0">
                                             </el-option>
                                             <el-option label="被执行案件" :value="1">
@@ -1363,8 +1073,10 @@
                         v-for="(item,index) in investmentsOutListType1"
                         :key="'investmentsOutList'+item.type+index">
                         <template v-if="!disabled">
-                            <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="addList('investmentsOutList',1)"></i>
-                            <i class="el-icon-remove-outline pointer" v-else @click="removeList('investmentsOutList', item.id)"></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-if="index==0"
+                               @click="addList('investmentsOutList',1)"></i>
+                            <i class="el-icon-remove-outline pointer" v-else
+                               @click="removeList('investmentsOutList', item.id)"></i>
                         </template>
                         <div class="flex-wrap-row">
                             <div class="flex-wrap-box">
@@ -1535,17 +1247,18 @@
                                                 size="small"
                                                 type="primary"
                                                 @click="uploadId(item)"
-                                            >点击上传</el-button>
+                                            >点击上传
+                                            </el-button>
                                         </el-upload>
                                     </div>
-                                    <div class="cont"  v-show='disabled' v-if="item.attachInfo">
+                                    <div class="cont" v-show='disabled' v-if="item.attachInfo">
                                         <div v-if="item.attachInfo.length === 0">暂无附件</div>
                                         <p
                                             v-else
                                             class="upload"
                                             v-for="(sub,index) in item.attachInfo"
                                             :key="index"
-                                        > <a :href="sub.url" target="_blank">{{sub.name}}</a></p>
+                                        ><a :href="sub.url" target="_blank">{{sub.name}}</a></p>
                                     </div>
                                 </div>
 
@@ -1564,7 +1277,8 @@
                                     v-model="debtListType1Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType1')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType1')">合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
@@ -1572,8 +1286,10 @@
                          :key="'debtList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('debtList',1)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('debtList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('debtList',1)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('debtList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -1604,6 +1320,17 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">担保信息（万）</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
@@ -1616,15 +1343,19 @@
                                     v-model="assureListType1Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType1')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType1')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in assureListType1" :key="'assureList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="addList('assureList',1)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index==0"
+                                   @click="addList('assureList',1)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -1654,18 +1385,32 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">诉讼、仲裁及行政处罚事件</p>
                     <div v-for="(item,index) in punishmentListType1" :key="'punishmentList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('punishmentList',1)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('punishmentList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('punishmentList',1)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('punishmentList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
                                     <div class="flex-wrap-title">事件类型：</div>
                                     <div class="flex-wrap-cont">
-                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled" v-model="item.punishmentType">
+                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled"
+                                                   v-model="item.punishmentType">
                                             <el-option label="诉讼、仲裁事件" :value="0">
                                             </el-option>
                                             <el-option label="被执行案件" :value="1">
@@ -1727,8 +1472,10 @@
                     <div class="flex-wrap-col supplier" v-for="(item,index) in investmentsOutListType2"
                          :key="'investmentsOutList'+item.type+index">
                         <template v-if="!disabled">
-                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('investmentsOutList',2)"></i>
-                            <i class="el-icon-remove-outline pointer" v-else @click="removeList('investmentsOutList', item.id)"></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                               @click="addList('investmentsOutList',2)"></i>
+                            <i class="el-icon-remove-outline pointer" v-else
+                               @click="removeList('investmentsOutList', item.id)"></i>
                         </template>
                         <div class="flex-wrap-row">
                             <div class="flex-wrap-box">
@@ -1898,17 +1645,18 @@
                                                 size="small"
                                                 type="primary"
                                                 @click="uploadId(item)"
-                                            >点击上传</el-button>
+                                            >点击上传
+                                            </el-button>
                                         </el-upload>
                                     </div>
-                                    <div class="cont"  v-show='disabled' v-if="item.attachInfo">
+                                    <div class="cont" v-show='disabled' v-if="item.attachInfo">
                                         <div v-if="item.attachInfo.length === 0">暂无附件</div>
                                         <p
                                             v-else
                                             class="upload"
                                             v-for="(sub,index) in item.attachInfo"
                                             :key="index"
-                                        > <a :href="sub.url" target="_blank">{{sub.name}}</a></p>
+                                        ><a :href="sub.url" target="_blank">{{sub.name}}</a></p>
                                     </div>
                                 </div>
 
@@ -1927,7 +1675,8 @@
                                     v-model="debtListType2Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType2')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType2')">合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
@@ -1935,8 +1684,10 @@
                          :key="'debtList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('debtList',2)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('debtList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('debtList',2)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('debtList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -1967,6 +1718,17 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">担保信息（万）</p>
                     <p class="small-small-title">经营性担保</p>
                     <div class="flex-wrap-row">
@@ -1980,15 +1742,19 @@
                                     v-model="assureListType2Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType2')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType2')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in assureListType2" :key="'assureList'+item.type+ index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('assureList',2)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('assureList',2)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -2018,6 +1784,17 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-small-title">非经营性担保</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
@@ -2030,15 +1807,19 @@
                                     v-model="assureListType3Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType3')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType3')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in assureListType3" :key="'assureList'+item.type+ index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('assureList',3)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('assureList',3)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -2073,14 +1854,17 @@
                          :key="'punishmentList'+item.type+index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('punishmentList',2)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('punishmentList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('punishmentList',2)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('punishmentList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
                                     <div class="flex-wrap-title">事件类型：</div>
                                     <div class="flex-wrap-cont">
-                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled" v-model="item.punishmentType">
+                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled"
+                                                   v-model="item.punishmentType">
                                             <el-option label="诉讼、仲裁事件" :value="0">
                                             </el-option>
                                             <el-option label="被执行案件" :value="1">
@@ -2231,10 +2015,13 @@
                         </div>
                     </div>
                     <p class="small-title">分支机构</p>
-                    <div class="compete supplier" v-for="(item,index) in justiceData.branchAgencyList" :key="'branchAgencyList'+item.type+index">
+                    <div class="compete supplier" v-for="(item,index) in justiceData.branchAgencyList"
+                         :key="'branchAgencyList'+item.type+index">
                         <template v-if="!disabled">
-                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('branchAgencyList',3)"></i>
-                            <i class="el-icon-remove-outline pointer" v-else @click="removeList('branchAgencyList', item.id)"></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                               @click="addList('branchAgencyList',3)"></i>
+                            <i class="el-icon-remove-outline pointer" v-else
+                               @click="removeList('branchAgencyList', item.id)"></i>
                         </template>
                         <div class="flex-wrap-row">
                             <div class="flex-wrap-box">
@@ -2256,10 +2043,13 @@
                     </div>
                     <p class="small-title">关联公司</p>
 
-                    <div class="compete supplier" v-for="(item,index) in justiceData.relatedCompanyList" :key="'relatedCompanyList'+ item.type+index">
+                    <div class="compete supplier" v-for="(item,index) in justiceData.relatedCompanyList"
+                         :key="'relatedCompanyList'+ item.type+index">
                         <template v-if="!disabled">
-                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('relatedCompanyList',3)"></i>
-                            <i class="el-icon-remove-outline pointer" v-else @click="removeList('relatedCompanyList', item.id)"></i>
+                            <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                               @click="addList('relatedCompanyList',3)"></i>
+                            <i class="el-icon-remove-outline pointer" v-else
+                               @click="removeList('relatedCompanyList', item.id)"></i>
                         </template>
                         <div class="flex-wrap-row">
                             <div class="flex-wrap-box">
@@ -2379,17 +2169,18 @@
                                                 size="small"
                                                 type="primary"
                                                 @click="uploadId(item)"
-                                            >点击上传</el-button>
+                                            >点击上传
+                                            </el-button>
                                         </el-upload>
                                     </div>
-                                    <div class="cont"  v-show='disabled' v-if="item.attachInfo">
+                                    <div class="cont" v-show='disabled' v-if="item.attachInfo">
                                         <div v-if="item.attachInfo.length === 0">暂无附件</div>
                                         <p
                                             v-else
                                             class="upload"
                                             v-for="(sub,index) in item.attachInfo"
                                             :key="index"
-                                        > <a :href="sub.url" target="_blank">{{sub.name}}</a></p>
+                                        ><a :href="sub.url" target="_blank">{{sub.name}}</a></p>
                                     </div>
                                 </div>
 
@@ -2408,15 +2199,18 @@
                                     v-model="debtListType3Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType3')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType3')">合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in debtListType3" :key="'debtList'+ item.type + index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('debtList',3)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('debtList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('debtList',3)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('debtList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -2447,6 +2241,17 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title">担保信息（万）</p>
                     <p class="small-small-title">经营性担保</p>
                     <div class="flex-wrap-row">
@@ -2460,15 +2265,19 @@
                                     v-model="assureListType4Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType4')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType4')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in assureListType4" :key="'assureList'+item.type+ index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('assureList',4)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('assureList',4)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -2498,6 +2307,17 @@
                             </div>
                         </div>
                     </div>
+                    <el-form label-position="top" label-width="200px">
+                        <el-form-item label="备注：">
+                            <el-input
+                                type="textarea"
+                                rows="4"
+                                maxlength="25"
+                                :disabled="disabled"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-small-title">非经营性担保</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
@@ -2510,15 +2330,19 @@
                                     v-model="assureListType5Total"
                                 >
                                 </el-input>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType5')">合计</el-button>
+                                <el-button type="primary" style="margin-left: 8px" @click="total('assureListType5')">
+                                    合计
+                                </el-button>
                             </div>
                         </div>
                     </div>
                     <div v-for="(item,index) in assureListType5" :key="'assureList'+item.type+ index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('assureList',5)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('assureList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('assureList',5)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('assureList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
@@ -2552,14 +2376,17 @@
                     <div v-for="(item,index) in punishmentListType3" :key="'punishmentList'+ item.type + index">
                         <div class="flex-wrap-col supplier">
                             <template v-if="!disabled">
-                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="addList('punishmentList',3)"></i>
-                                <i class="el-icon-remove-outline pointer" v-else @click="removeList('punishmentList', item.id)"></i>
+                                <i class="el-icon-circle-plus-outline pointer" v-if="index === 0"
+                                   @click="addList('punishmentList',3)"></i>
+                                <i class="el-icon-remove-outline pointer" v-else
+                                   @click="removeList('punishmentList', item.id)"></i>
                             </template>
                             <div class="flex-wrap-row">
                                 <div class="flex-wrap-box">
                                     <div class="flex-wrap-title">事件类型：</div>
                                     <div class="flex-wrap-cont">
-                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled" v-model="item.punishmentType">
+                                        <el-select placeholder="诉讼、仲裁" :disabled="disabled"
+                                                   v-model="item.punishmentType">
                                             <el-option label="诉讼、仲裁事件" :value="0">
                                             </el-option>
                                             <el-option label="被执行案件" :value="1">
@@ -2614,9 +2441,9 @@
                 </el-collapse-item>
             </el-collapse>
             <div class="flex-wrap-row top20 " v-if="!disabled">
-            <!--<div class="flex-wrap-row top20 ">-->
+                <!--<div class="flex-wrap-row top20 ">-->
                 <el-col :span="2" :offset="6">
-                    <el-button type="info" @click="saveJusticeData(true)">保存</el-button>
+                    <el-button type="info" @click="saveJusticeData(true)">暂存</el-button>
                 </el-col>
                 <el-col :span="2" :offset="1">
                     <el-button type="primary" @click="saveJusticeData(false)">提交</el-button>
@@ -2629,6 +2456,7 @@
 import { FileUploadUrl } from '@/api/config'
 import { findJusticeData, createJusticeDoFirst, createJusticeDo } from './../api/index.js'
 import { mapState } from 'vuex'
+
 export default {
     props: {
         roleType: {
@@ -2645,9 +2473,7 @@ export default {
                     { assessmentItem: '尽调规模', cooperationTarget: '', remark: '', state: 0 },
                     { assessmentItem: '年度递增率', cooperationTarget: '', remark: '', state: 0 },
                     { assessmentItem: '股权比例', cooperationTarget: '', remark: '', state: 0 },
-                    { assessmentItem: '辅导期', cooperationTarget: '', remark: '', state: 0 },
-                    { assessmentItem: '净利润率', cooperationTarget: '', remark: '', state: 0 },
-                    { assessmentItem: '注资方式', cooperationTarget: '', remark: '', state: 0 }
+                    { assessmentItem: '净利润率', cooperationTarget: '', remark: '', state: 0 }
                 ],
                 affairs: {
                     analysisDescription: '',
@@ -2657,7 +2483,26 @@ export default {
                     businessQualification: '',
                     legalRisksOfCompany: 0,
                     legalRisksOfController: 0,
-                    legalRisksOfControllerMate: 0
+                    legalRisksOfControllerMate: 0,
+                    personalOperatingloansTotalGuarantees: '',
+                    companyLoanTotalGuarantee: ''
+                },
+                affairsRules: {
+                    legalRisksOfCompany: [
+                        { required: true, message: '尽调公司法律风险不能为空', trigger: 'change' }
+                    ],
+                    legalRisksOfController: [
+                        { required: true, message: '实际控制人法律风险不能为空', trigger: 'change' }
+                    ],
+                    legalRisksOfControllerMate: [
+                        { required: true, message: '实际控制人配偶法律风险不能为空', trigger: 'change' }
+                    ],
+                    personalOperatingloansTotalGuarantees: [
+                        { required: true, message: '请输入个人经营性借款及担保总额', trigger: 'blur' }
+                    ],
+                    companyLoanTotalGuarantee: [
+                        { required: true, message: '请输入公司借款及担保总额 ', trigger: 'blur' }
+                    ]
                 },
                 copartnerInfoList: [ // 实际合伙人信息
                     {
@@ -2946,7 +2791,17 @@ export default {
             assureListType0Total: '',
             updateTime: '',
             updateUser: '',
-            tempFileId: null
+            tempFileId: null,
+            dueLegalRemarkCreateForm: {
+                companyDebtRemark: '',
+                companyNotOperatingAssureRemark: '',
+                companyOperatingAssureRemark: '',
+                controllerAssureRemark: '',
+                controllerDebtRemark: '',
+                controllerMateAssureRemark: '',
+                controllerMateDebtRemark: '',
+                id: ''
+            }
         }
     },
     computed: {
@@ -3083,7 +2938,8 @@ export default {
         },
         handleSuccess (response, file, fileList) {
             if (response.code !== 200) {
-                this.$confirm(response.message, '提示信息').catch(() => { })
+                this.$confirm(response.message, '提示信息').catch(() => {
+                })
             } else {
                 let uploadedUrl = response.data.accessUrl
                 let name = response.data.fileName
@@ -3330,21 +3186,8 @@ export default {
                 id: selfId
             }
             data.data.punishmentList.forEach((value) => {
-                switch (value.type) {
-                    case 0:
-                        punishmentList.push(0)
-                        break
-                    case 1:
-                        punishmentList.push(1)
-                        break
-                    case 2:
-                        punishmentList.push(2)
-                        break
-                    case 3:
-                        punishmentList.push(3)
-                        break
-                    default:
-                        break
+                if (value.type || value.type == 0) {
+                    punishmentList.push(value.type)
                 }
             })
             for (let i = 0; i < 4; i++) {
@@ -3429,7 +3272,7 @@ export default {
             if (isSave) {
                 params.affairs.type = 0
                 this.type = 0
-                messageTip = '保存成功'
+                messageTip = '暂存成功'
             } else {
                 params.affairs.type = 1
                 messageTip = '提交成功'
@@ -3491,15 +3334,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    // .flex-wrap-title {
-    //     min-width: 140px;
-    //     margin-right: 10px;
-    // }
     .jd-manage {
         padding: 0 15px;
-        .lengthen{
+
+        .lengthen {
             .flex-wrap-box {
-                max-width: 600px;
+                max-width: 150px;
             }
         }
     }
@@ -3536,17 +3376,21 @@ export default {
         padding-right: 40px;
         padding-top: 25px;
         margin-bottom: 20px;
+
         > i {
             position: absolute;
             top: 10px;
             right: 10px;
             font-size: 25px;
         }
+
         .table-row {
             position: relative;
+
             &:not(:first-child) {
                 border-right: none !important;
             }
+
             > i {
                 position: absolute;
                 top: 10px;
@@ -3555,17 +3399,37 @@ export default {
             }
         }
     }
-    .reviewform .flex-wrap-title{
+
+    .reviewform .flex-wrap-title {
         line-height: 40px;
     }
-    .flex-wrap-box-justice{
+
+    .flex-wrap-box-justice {
         width: 400px;
         display: flex;
     }
-    .reviewform .flex-wrap-box-justice .flex-wrap-title{
+
+    .reviewform .flex-wrap-box-justice .flex-wrap-title {
         min-width: 180px;
     }
-    .margin-b{
-        margin-bottom: 22px;
+
+    .margin-b {
+        margin: 0;
+    }
+
+    .red-span {
+        color: red;
+    }
+    .selectconclusion{
+        border-radius: 0;
+    }
+    .fawuForm{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    .upload{
+        margin-top: -10px;
+        margin-bottom: 40px;
     }
 </style>

@@ -162,6 +162,7 @@ export default {
             this.params.role = this.userInfo.positionCode
             const { data } = await getDueapply(this.params)
             this.tableData = data.data.pageContent
+            console.log(this.tableData)
             this.pagination = {
                 pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
