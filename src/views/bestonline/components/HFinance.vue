@@ -161,7 +161,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="备注：">
-                                <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="dueFinanceBasic.analysisDescription"></el-input>
+                                <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请对合理性评估进行备注" v-model="dueFinanceBasic.analysisDescription"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -1059,7 +1059,7 @@ export default {
             }
         },
         async getFinance () {
-            return false
+            // return false
             const { data } = await getFinance(this.$route.query.applyId)
             // console.log(data)
             // if (!data.data.dueFinanceBasic.type) {
@@ -1095,7 +1095,7 @@ export default {
             }
         },
         async provinces (params, city) {
-            return false
+            // return false
             const { data } = await provinces(params)
             switch (city) {
                 case 0:
@@ -1168,7 +1168,7 @@ export default {
         },
         async onSubmit (type) {
             const formData = this.format(type)
-            for (let i = 0;i < this.assessmentList.length;i++) {
+            for (let i = 0; i < this.assessmentList.length; i++) {
                 if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'

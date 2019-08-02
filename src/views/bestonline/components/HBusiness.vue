@@ -759,17 +759,15 @@ export default {
                 cooperationWay: '',
                 marketCost: ''
             },
-            salesFrom:{
-                salesDown:''
+            salesFrom: {
+                salesDown: ''
             },
             KPIRules: {
                 proportion: [
                     { required: true, message: '', trigger: 'blur' }
-
                 ],
                 KPIpoint: [
                     { required: true, message: '', trigger: 'blur' }
-
                 ],
                 KPIRisk: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
@@ -841,7 +839,6 @@ export default {
     },
     mounted () {
         // console.log(this.roleType)
-
         this.applyId = this.$route.query.applyId
         this.getBusiness()
         this.getChannels()
@@ -956,7 +953,8 @@ export default {
         },
         async getBusiness () {
             const { data } = await getBusiness(this.applyId)
-            // console.log(data)
+
+            console.log(data)
             // if (!data.data.operationNode) {
             //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
             // } else {
@@ -1095,7 +1093,7 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessAssessmentCreateFormList.length; i++) {
                 if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
                     this.showWarnMsg('请选择尽调评估结论')
                     this.activeName = '1'
@@ -1183,7 +1181,7 @@ export default {
             //     this.activeName = '3'
             //     return false
             // }
-            for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessSupplierCreateFormList.length; i++) {
                 if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
                     this.showWarnMsg('请输入商业尽调供应商必填项')
                     this.activeName = '5'
@@ -1198,7 +1196,7 @@ export default {
                 }
             }
 
-            for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueBusinessCustomerCreateFormList.length; i++) {
                 if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
                     this.showWarnMsg('请输入商业尽调客户结构必填项')
                     this.activeName = '6'
