@@ -64,7 +64,7 @@
                 align="center"
                 label="创建时间">
                 <template slot-scope="scope">
-                    {{scope.row.createTime | formatDate}}
+                    {{scope.row.createTime | formatterTime}}
                 </template>
             </el-table-column>
             <el-table-column
@@ -123,7 +123,7 @@
                         {{couponDetails.effectiveDays}}天
                     </el-form-item>
                     <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatDate}}天
+                        {{couponDetails.createTime | formatterTime}}天
                     </el-form-item>
                     <el-form-item label="优惠券类型：">
                         {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}

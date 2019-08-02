@@ -79,7 +79,7 @@
                     label="维护时间"
                     align="center">
                     <template slot-scope="scope">
-                        {{ scope.row.updateTime | formatDate }}
+                        {{ scope.row.updateTime | formatterTime }}
                     </template>
                 </el-table-column>
                 <el-table-column

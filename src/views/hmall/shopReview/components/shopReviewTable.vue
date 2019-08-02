@@ -37,14 +37,14 @@
                 <el-table-column
                     label="创建时间">
                     <template slot-scope="scope">
-                        {{ scope.row.createTime | formatDate }}
+                        {{ scope.row.createTime | formatterTime }}
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="审核时间"
                     align="center">
                     <template slot-scope="scope">
-                        <span v-if="scope.row.checkTime">{{scope.row.checkTime | formatDate}}</span>
+                        <span v-if="scope.row.checkTime">{{scope.row.checkTime | formatterTime}}</span>
                         <span v-else v-text="'-'"></span>
                     </template>
                 </el-table-column>

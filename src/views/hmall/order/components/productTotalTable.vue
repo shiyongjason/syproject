@@ -54,7 +54,7 @@
                 align="center"
                 label="下单时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.orderTime">{{scope.row.orderTime | formatDate}}</span>
+                    <span v-if="scope.row.orderTime">{{scope.row.orderTime | formatterTime}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>
@@ -87,7 +87,7 @@
                 align="center"
                 label="同步mis时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.misTime">{{scope.row.misTime | formatDate}}</span>
+                    <span v-if="scope.row.misTime">{{scope.row.misTime | formatterTime}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>

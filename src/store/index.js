@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import { findMenuList } from '../views/layout/api'
+import hmall from '@/views/hmall/store/index.js'
 
 Vue.use(Vuex)
 
@@ -28,6 +29,7 @@ const store = new Vuex.Store({
     },
     modules: {
         // 视图的 store
+        hmall
     }
 })
 

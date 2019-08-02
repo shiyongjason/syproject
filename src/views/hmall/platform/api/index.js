@@ -1,17 +1,17 @@
 import axios from 'axios'
 import {
-    interfaceUrl
+    ossUrl, interfaceUrl
 } from '@/api/config'
 
 // 查询平台公司信息列表
 export const findplatformList = (params) => {
-    return axios.get('api/organization/company-list', {
+    return axios.get(ossUrl + 'api/organization/company-list', {
         params
     })
 }
 // 机构在线的 分部查询
 export const findDepList = (params) => {
-    return axios.get('api/httpH5/3107', {
+    return axios.get(ossUrl + 'api/httpH5/3107', {
         params
     })
 }

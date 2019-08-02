@@ -63,7 +63,7 @@
                 align="center"
                 label="开启时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.createTime">{{scope.row.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
+                    <span v-if="scope.row.createTime">{{scope.row.createTime | formatterTime }}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>
@@ -80,7 +80,7 @@
                 align="center"
                 label="开通时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.bankRegisterOpenTime">{{scope.row.bankRegisterOpenTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
+                    <span v-if="scope.row.bankRegisterOpenTime">{{scope.row.bankRegisterOpenTime | formatterTime}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>

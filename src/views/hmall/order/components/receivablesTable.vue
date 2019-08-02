@@ -27,7 +27,7 @@
                 align="center"
                 label="支付时间">
                 <template slot-scope="scope">
-                    {{scope.row.paymentTime | formatDate }}
+                    {{scope.row.paymentTime | formatterTime }}
                 </template>
             </el-table-column>
             <el-table-column

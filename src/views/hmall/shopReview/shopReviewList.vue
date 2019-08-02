@@ -207,16 +207,16 @@ export default {
         async onQuery () {
             const { ...params } = this.queryParams
             if (params.checkStartDate) {
-                params.checkStartDate = this.$root.$options.filters.formatDate(params.checkStartDate, 'YYYY-MM-DD HH:mm:ss')
+                params.checkStartDate = this.$root.$options.filters.formatterTime(params.checkStartDate)
             }
             if (params.checkEndDate) {
-                params.checkEndDate = this.$root.$options.filters.formatDate(params.checkEndDate, 'YYYY-MM-DD HH:mm:ss')
+                params.checkEndDate = this.$root.$options.filters.formatterTime(params.checkEndDate)
             }
             if (params.startDate) {
-                params.startDate = this.$root.$options.filters.formatDate(params.startDate, 'YYYY-MM-DD HH:mm:ss')
+                params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
             }
             if (params.endDate) {
-                params.endDate = this.$root.$options.filters.formatDate(params.endDate, 'YYYY-MM-DD HH:mm:ss')
+                params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
             }
             if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
             const { data } = await findCheckProducts(params)
