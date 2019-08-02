@@ -223,10 +223,10 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.isEdit) {
-                        this.form.updateBy = this.userInfo.name
+                        this.form.updateBy = this.userInfo.employeeName
                         await updateCategory(this.form)
                     } else {
-                        this.form.createBy = this.userInfo.name
+                        this.form.createBy = this.userInfo.employeeName
                         await createCategory(this.form)
                     }
                     this.$message({
@@ -274,7 +274,7 @@ export default {
             await moveCategory({
                 id: row.id,
                 moveValue: direction,
-                updateBy: this.userInfo.name
+                updateBy: this.userInfo.employeeName
             })
             this.$message({
                 message: '类目移动成功',
@@ -361,7 +361,7 @@ export default {
             return data.map((item, index) => {
                 item.isFirst = index === 0
                 item.isLast = index === data.length - 1
-                item.updateTime = this.$filter.formatterTime(item.updateTime)
+                item.updateTime = this.$root.$options.filters.formatterTime(item.updateTime)
                 if (this.expandCell.includes(item.id)) {
                     item._isFold = false
                     item._isHide = false

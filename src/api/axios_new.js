@@ -2,23 +2,29 @@ import axios from 'axios'
 import store from '@/store/index'
 import { Message } from 'element-ui'
 import { B2bUrl } from './config'
+import qs from 'qs'
 
 const instance = axios.create({
     baseURL: B2bUrl
 })
 instance.interceptors.request.use(async function (config) {
     // 登录token带到请求的头部中，用于校验登录状态
-    const token = sessionStorage.getItem('token')
+    const token = sessionStorage.getItem('tokenB2b')
     if (token) {
         config.headers['Authorization'] = 'Bearer ' + token
     } else {
-        const { data } = await axios.post(B2bUrl + 'uaa/oauth/token', {
+        const newInstance = axios.create({
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        const { data } = await newInstance.post(B2bUrl + 'uaa/oauth/token', qs.stringify({
             'grant_type': 'client_credentials',
             'client_id': 'boss',
             'client_secret': 'boss',
             'scope': 'boss'
-        })
-        sessionStorage.setItem('token', data.access_token)
+        }))
+        sessionStorage.setItem('tokenB2b', data.access_token)
         config.headers['Authorization'] = 'Bearer ' + data.access_token
     }
     store.commit('LOAD_STATE', true)

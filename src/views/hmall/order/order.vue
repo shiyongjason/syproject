@@ -1,0 +1,720 @@
+<template>
+    <div class="order">
+        <div class="page-body">
+            <div class="page-body-cont">
+                <el-tabs v-model="activeName" @tab-click="handleClick">
+                    <el-tab-pane label="订单记录" name="first">
+                        <div class="page-wrap flex-wrap-col">
+                            <div class="flex-wrap-row">
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">订单编号：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input
+                                            type="text"
+                                            v-model="queryParams.orderNo"
+                                            maxlength="50"
+                                            placeholder="请输入订单编号"></el-input>
+                                    </div>
+                                </div>
+
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">平台公司名称：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParams.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">会员店名称：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParams.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">订单状态：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParams.orderStatus"
+                                            placeholder="全部"
+                                            :clearable=true
+                                        >
+                                            <el-option label="待审核" :value="1"></el-option>
+                                            <el-option label="待付款" :value="2"></el-option>
+                                            <el-option label="待发货" :value="3"></el-option>
+                                            <el-option label="已完成" :value="4"></el-option>
+                                            <el-option label="已关闭" :value="5"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">分部名称：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParams.branchCode"
+                                            placeholder="全部"
+                                            :clearable=true
+                                            @change="branchHandler"
+                                        >
+                                            <el-option :label="item.organizationName" :value="item.organizationCode"
+                                                       v-for="item in brandsList" :key="item.organizationCode"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">同步至MIS状态：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParams.misStatus"
+                                            placeholder="全部"
+                                            :clearable=true
+                                        >
+                                            <!--MIS同步状态 0未同步 1同步成功 2同步失败-->
+                                            <el-option label="未同步" :value="0"></el-option>
+                                            <el-option label="同步成功" :value="1"></el-option>
+                                            <el-option label="同步失败" :value="2"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">下单时间：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-date-picker
+                                            v-model="queryParams.orderTimeStart"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="开始日期"
+                                            :picker-options="pickerOptionsStart"
+                                        >
+                                        </el-date-picker>
+                                        <span class="ml10 mr10">-</span>
+                                        <el-date-picker
+                                            v-model="queryParams.orderTimeEnd"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="结束日期"
+                                            :picker-options="pickerOptionsEnd"
+                                        >
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">同步mis时间：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-date-picker
+                                            v-model="queryParams.misTimeStart"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="开始日期"
+                                            :picker-options="pickerMisStart"
+                                        >
+                                        </el-date-picker>
+                                        <span class="ml10 mr10">-</span>
+                                        <el-date-picker
+                                            v-model="queryParams.misTimeEnd"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="结束日期"
+                                            :picker-options="pickerMisEnd"
+                                        >
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-cont">
+                                        <el-button type="primary" class="ml20" @click="onQueryOrder">
+                                            搜索
+                                        </el-button>
+                                        <el-button type="primary" class="ml20" @click="exportTabOrder">
+                                            导出
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-box page-table">
+                            <orderTable
+                                :tableData="orderData"
+                                :paginationData="paginationOrderData"
+                                @onQuery="onQueryOrder"
+                                @onSizeChange="onSizeChange"
+                                @onCurrentChange="onCurrentChange"></orderTable>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="收款记录" name="second">
+                        <div class="page-wrap flex-wrap-col">
+                            <div class="flex-wrap-row">
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">支付流水号：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input
+                                            type="text"
+                                            v-model="queryParamsReceivables.paymentNo"
+                                            maxlength="50"
+                                            placeholder="请输入支付流水号"></el-input>
+                                    </div>
+                                </div>
+
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">平台公司名称：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParamsReceivables.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">会员店名称：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParamsReceivables.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">订单编号：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParamsReceivables.orderNo" maxlength="50" placeholder="请输入订单编号"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">支付方式：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParamsReceivables.paymentMethod"
+                                            placeholder="全部"
+                                            :clearable=true
+                                        >
+                                            <!--1账期支付，2线下支付，3钱包支付-->
+                                            <el-option label="全部" :value="''"></el-option>
+                                            <el-option label="账期支付" :value="1"></el-option>
+                                            <el-option label="线下支付" :value="2"></el-option>
+                                            <el-option label="钱包支付" :value="3"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">支付时间：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-date-picker
+                                            v-model="queryParamsReceivables.paymentTimeStart"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="开始日期"
+                                            :picker-options="pickerReceivablesStart"
+                                        >
+                                        </el-date-picker>
+                                        <span class="ml10 mr10">-</span>
+                                        <el-date-picker
+                                            v-model="queryParamsReceivables.paymentTimeEnd"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="结束日期"
+                                            :picker-options="pickerReceivablesEnd"
+                                        >
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-cont">
+                                        <el-button type="primary" class="ml20" @click="onQueryReceivables">
+                                            搜索
+                                        </el-button>
+                                        <el-button type="primary" class="ml20" @click="exportTabReceivables">
+                                            导出
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-box page-table">
+                            <receivablesTable
+                                :tableData="receivablesData"
+                                :paginationData="paginationReceivablesData"
+                                @onQuery="onQueryReceivables"
+                                @onSizeChange="onSizeChange"
+                                @onCurrentChange="onCurrentChange"></receivablesTable>
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="商品统计" name="third">
+                        <div class="page-wrap flex-wrap-col">
+                            <div class="flex-wrap-row">
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">商品SPU：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input
+                                            type="text"
+                                            v-model="queryParamsProductTotal.spuCode"
+                                            maxlength="50"
+                                            placeholder="请输入商品SPU"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">商品SkU：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input type="text"
+                                                  v-model="queryParamsProductTotal.productCode"
+                                                  maxlength="50" placeholder="商品SkU">
+                                        </el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">分部：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParamsProductTotal.branchCode"
+                                            placeholder="全部"
+                                            :clearable="true"
+                                            @change="branchProductHandler"
+                                        >
+                                            <el-option :label="item.organizationName" :value="item.organizationCode"
+                                                       v-for="item in brandsList" :key="item.organizationCode"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">平台公司：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input
+                                            type="text"
+                                            v-model="queryParamsProductTotal.merchantName"
+                                            maxlength="50"
+                                            placeholder="请输入平台公司"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">会员店：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-input
+                                            type="text"
+                                            v-model="queryParamsProductTotal.memberName"
+                                            maxlength="50"
+                                            placeholder="请输入会员店"></el-input>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">订单状态：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParamsProductTotal.orderStatus"
+                                            placeholder="全部"
+                                            :clearable=true
+                                        >
+                                            <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
+                                            <el-option label="待审核" :value="1"></el-option>
+                                            <el-option label="待付款" :value="2"></el-option>
+                                            <el-option label="待发货" :value="3"></el-option>
+                                            <el-option label="已完成" :value="4"></el-option>
+                                            <el-option label="已关闭" :value="5"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">商品类目：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-cascader
+                                            v-model="queryParamsProductTotal.categoryId"
+                                            :options="categoryOptions"
+                                            :change-on-select="true"
+                                            @change="productCategoryChange"
+                                            style="width: 100%"></el-cascader>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">同步至MIS状态：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-select
+                                            v-model="queryParamsProductTotal.misStatus"
+                                            placeholder="全部"
+                                            :clearable=true
+                                        >
+                                            <!--0未同步 1同步成功 2同步失败-->
+                                            <el-option label="未同步" :value="0"></el-option>
+                                            <el-option label="同步成功" :value="1"></el-option>
+                                            <el-option label="同步失败" :value="2"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-title">下单时间：</div>
+                                    <div class="flex-wrap-cont">
+                                        <el-date-picker
+                                            v-model="queryParamsProductTotal.orderTimeStart"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="开始日期"
+                                            :picker-options="pickerProductTotalStart"
+                                        >
+                                        </el-date-picker>
+                                        <span class="ml10 mr10">-</span>
+                                        <el-date-picker
+                                            v-model="queryParamsProductTotal.orderTimeEnd"
+                                            type="datetime"
+                                            format="yyyy-MM-dd HH:mm:ss"
+                                            placeholder="结束日期"
+                                            :picker-options="pickerProductTotalEnd"
+                                        >
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="flex-wrap-box">
+                                    <div class="flex-wrap-cont">
+                                        <el-button type="primary" class="ml20" @click="onQueryProductTotal()">
+                                            搜索
+                                        </el-button>
+                                        <el-button type="primary" class="ml20" @click="exportTabTotal">
+                                            导出
+                                        </el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="page-box page-table">
+                            <productTotalTable
+                                :tableData="productTotalData"
+                                :paginationData="paginationProductTotalData"
+                                @onQuery="onQueryProductTotal"
+                                @onSizeChange="onSizeChange"
+                                @onCurrentChange="onCurrentChange"></productTotalTable>
+                        </div>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import orderTable from './components/orderTable'
+import receivablesTable from './components/receivablesTable'
+import productTotalTable from './components/productTotalTable'
+import { mapState } from 'vuex'
+import {
+    findBrandsList, findOrderList, findProductTotalList,
+    findReceivablesList, exportTotalList, exportTabReceivables,
+    exportTabOrder
+} from './api/index'
+import { findProductCategory } from '../shopManager/api/index'
+
+export default {
+    name: 'order',
+    components: {
+        orderTable,
+        receivablesTable,
+        productTotalTable
+    },
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.orderTimeEnd
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.orderTimeStart
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerMisStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.misTimeEnd
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerMisEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.misTimeStart
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerReceivablesStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParamsReceivables.paymentTimeEnd
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerReceivablesEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParamsReceivables.paymentTimeStart
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerProductTotalStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParamsProductTotal.orderTimeEnd
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerProductTotalEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParamsProductTotal.orderTimeStart
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
+    data () {
+        return {
+            activeName: '',
+            queryParams: {
+                branchName: '',
+                branchCode: '',
+                memberName: '',
+                merchantName: '',
+                misStatus: '',
+                orderNo: '',
+                orderStatus: '',
+                orderTimeEnd: '',
+                orderTimeStart: '',
+                misTimeStart: '',
+                misTimeEnd: '',
+                current: 1,
+                size: 10
+            },
+            queryParamsReceivables: {
+                memberName: '',
+                merchantName: '',
+                orderNo: '',
+                paymentMethod: '',
+                paymentNo: '',
+                paymentTimeEnd: '',
+                paymentTimeStart: '',
+                current: 1,
+                size: 10
+            },
+            queryParamsProductTotal: {
+                current: 1,
+                size: 10,
+                branchCode: '',
+                branchName: '',
+                categoryId: [],
+                memberName: '',
+                merchantName: '',
+                misStatus: '',
+                orderStatus: '',
+                orderTimeEnd: '',
+                orderTimeStart: '',
+                productCode: '',
+                spuCode: ''
+            },
+            orderData: [],
+            receivablesData: [],
+            productTotalData: [],
+            depArr: [],
+            paginationOrderData: {},
+            paginationReceivablesData: {},
+            paginationProductTotalData: {},
+            brandsList: [],
+            categoryOptions: []
+        }
+    },
+    methods: {
+        exportTab () {
+
+        },
+        branchHandler (model) {
+            if (!model) {
+                this.queryParams.branchName = ''
+                return
+            }
+            try {
+                this.brandsList.forEach(value => {
+                    if (value.organizationCode === model) {
+                        this.queryParams.branchName = value.organizationName
+                        throw new Error('迭代结束')
+                    }
+                })
+            } catch (e) {}
+        },
+        branchProductHandler (model) {
+            if (!model) {
+                this.queryParamsProductTotal.branchName = ''
+                return
+            }
+            try {
+                this.brandsList.forEach(value => {
+                    if (value.organizationCode === model) {
+                        this.queryParamsProductTotal.branchName = value.organizationName
+                        throw new Error('迭代结束')
+                    }
+                })
+            } catch (e) {}
+        },
+        handleClick () {
+            localStorage.setItem('hMallOrderStatus', this.activeName)
+        },
+        async onQueryOrder () {
+            const { ...params } = this.queryParams
+            const { data } = await findOrderList(params)
+            this.orderData = data.records
+            this.paginationOrderData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
+        },
+        async onQueryReceivables () {
+            const { ...params } = this.queryParamsReceivables
+            const { data } = await findReceivablesList(params)
+            this.receivablesData = data.records
+            this.paginationReceivablesData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
+        },
+        async onQueryProductTotal () {
+            const { ...params } = this.queryParamsProductTotal
+            if (params.categoryId.length > 0) params.categoryId = params.categoryId[params.categoryId.length - 1]
+            const { data } = await findProductTotalList(params)
+            this.productTotalData = data.records
+            this.paginationProductTotalData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
+        },
+        exportTabTotal () {
+            const { ...params } = this.queryParamsProductTotal
+            params.access_token = '' || sessionStorage.getItem('token')
+            if (params.categoryId.length > 0) {
+                params.categoryId = params.categoryId[params.categoryId.length - 1]
+            } else {
+                delete params.categoryId
+            }
+            location.href = exportTotalList(params)
+        },
+        exportTabOrder () {
+            const { ...params } = this.queryParams
+            params.access_token = '' || sessionStorage.getItem('token')
+            console.log(params)
+            location.href = exportTabOrder(params)
+        },
+        exportTabReceivables () {
+            const { ...params } = this.queryParamsReceivables
+            params.access_token = '' || sessionStorage.getItem('token')
+            location.href = exportTabReceivables(params)
+        },
+        onSizeChange (val, source) {
+            if (source === 'order') {
+                this.queryParams.size = val
+                this.onQueryOrder()
+            } else if (source === 'receivables') {
+                this.queryParamsReceivables.size = val
+                this.onQueryReceivables()
+            } else if (source === 'productTotal') {
+                this.queryParamsProductTotal.size = val
+                this.onQueryProductTotal()
+            }
+        },
+        onCurrentChange (val, source) {
+            if (source === 'order') {
+                this.queryParams.current = val
+                this.onQueryOrder()
+            } else if (source === 'receivables') {
+                this.queryParamsReceivables.current = val
+                this.onQueryReceivables()
+            } else if (source === 'productTotal') {
+                this.queryParamsProductTotal.current = val
+                this.onQueryProductTotal()
+            }
+        },
+        productCategoryChange (val) {
+            this.queryParamsProductTotal.categoryId = val
+        }
+    },
+    async mounted () {
+        const { data } = await findBrandsList()
+        this.brandsList = data
+        let haveStorage = localStorage.getItem('hMallOrderStatus')
+        if (!haveStorage || haveStorage === 'first') {
+            this.activeName = 'first'
+        } else if (haveStorage === 'second') {
+            this.activeName = 'second'
+        } else if (haveStorage === 'third') {
+            this.activeName = 'third'
+        }
+        const { data: productCategory } = await findProductCategory()
+        let productCategoryTemp = []
+        // 用递归函数从写，后面提
+        productCategoryTemp = productCategory.map((value) => {
+            return {
+                value: value.id,
+                label: value.categoryName,
+                children: value.categoryList ? value.categoryList.map(value1 => {
+                    return {
+                        value: value1.id,
+                        label: value1.categoryName,
+                        children: value1.categoryList ? value1.categoryList.map(value2 => {
+                            return {
+                                value: value2.id,
+                                label: value2.categoryName
+                            }
+                        }) : null
+                    }
+                }) : null
+            }
+        })
+        productCategoryTemp.splice(0, 0, {
+            value: '',
+            label: '全部'
+        })
+        this.categoryOptions = productCategoryTemp
+    },
+    watch: {
+        activeName (val) {
+            if (val === 'first') {
+                this.onQueryOrder()
+            } else if (val === 'second') {
+                this.onQueryReceivables()
+            } else if (val === 'third') {
+                this.onQueryProductTotal()
+            }
+        }
+    }
+}
+</script>
+
+<style scoped>
+    .flex-wrap-row{
+        max-width: 1350px;
+    }
+    .order{
+        padding: 20px;
+        background: #ffffff;
+    }
+</style>

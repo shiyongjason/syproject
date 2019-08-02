@@ -7,6 +7,7 @@ let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
 let B2bUrl = ''
+let fileUploadUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
@@ -18,6 +19,8 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'http://192.168.20.248:30000/'
+
         // interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         // ossUrl = 'https://testroute.hosjoy.com:4832/'
         // uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
@@ -38,6 +41,7 @@ switch (env) {
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -47,6 +51,7 @@ switch (env) {
         iframeUrl = 'https://boss.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'https://hbp.hosjoy.com/'
         break
 }
 export {
@@ -55,5 +60,6 @@ export {
     ossUrl,
     iframeUrl,
     jinyun,
-    B2bUrl
+    B2bUrl,
+    fileUploadUrl
 }

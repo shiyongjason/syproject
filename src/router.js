@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList } from '@/views/layout/api'
 
 Vue.use(Router)
 
@@ -157,9 +156,9 @@ const routerMapping = [
                     tagName: '品牌管理',
                     isMenu: true,
                     icon: '',
-                    component: './views/hmall/category/category'
+                    component: './views/hmall/brand/brand'
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/brand/brand.vue')
             },
             {
                 path: 'shopManager',
@@ -170,7 +169,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/shopManager/shopManager.vue')
             },
             {
                 path: 'selectCategory',
@@ -181,7 +180,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/shopManager/selectCategory.vue')
             },
             {
                 path: 'platform',
@@ -192,7 +191,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/platform/platform.vue')
             },
             {
                 path: 'shopReviewList',
@@ -203,7 +202,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/shopReview/shopReviewList.vue')
             },
             {
                 path: 'attribute',
@@ -214,7 +213,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/attribute/attribute.vue')
             },
             {
                 path: 'order',
@@ -225,7 +224,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/order/order.vue')
             },
             {
                 path: 'coupon',
@@ -236,7 +235,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/coupon/coupon.vue')
             },
             {
                 path: 'member',
@@ -247,7 +246,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('./views/hmall/category/category.vue')
+                component: () => import('./views/hmall/memberStore/member.vue')
             }
         ]
     }
@@ -267,31 +266,10 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        }
+        },
+        ...routerMapping
     ]
 })
-// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
-function makeMenus (Route, Data) {
-    return Route.filter(value => {
-        if (value.path === '') {
-            return true
-        }
-        const authArr = Data.filter(item => item.authUri === value.path && item.have)
-        if (value.children && authArr.length > 0) {
-            value.children = makeMenus(value.children, authArr[0].childAuthList)
-        }
-        return authArr.length > 0
-    })
-}
-
-async function getMenu (to, next) {
-    const { data } = await findMenuList()
-    const menu = makeMenus(routerMapping, data)
-    router.addRoutes(menu)
-    next({ ...to, replace: true })
-}
-
-let isFirst = true
 router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
@@ -302,11 +280,6 @@ router.beforeEach(async (to, from, next) => {
             return next({
                 name: 'login'
             })
-        } else {
-            if (isFirst) {
-                isFirst = false
-                await getMenu(to, next)
-            }
         }
     }
     next()
