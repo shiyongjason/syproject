@@ -335,7 +335,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
 .due-wrap {
     .flex-wrap-cont {
         width: 433px !important;
