@@ -9,136 +9,100 @@
                     </template>
                     <!--start-->
                     <p class="small-title">法务尽调评估</p>
-                    <div class="page-box">
-                        <table class="table-example">
-                            <thead>
-                            <tr class="tableTitle">
-                                <td width="180">评估项</td>
-                                <td width="180">合作目标</td>
-                                <td width="180"><span class="red-span">*</span>结论(必填)</td>
-                                <td width="180">备注</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr v-for="item in justiceData.assessmentList" :key="item.index">
-                                <td>{{item.assessmentItem}}</td>
-                                <td>{{item.cooperationTarget}}</td>
-                                <td>
-                                    <el-select v-model="item.state" placeholder="请选择结论" :disabled="disabled" class="selectconclusion">
-                                        <el-option label="是" :value="0"></el-option>
-                                        <el-option label="否" :value="1"></el-option>
-                                    </el-select>
-                                </td>
-                                <td>1</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="table-flex">
-                        <div class="table-row">
-                            <div class="table-col">评估项</div>
-                            <div class="table-col">合作目标</div>
-                            <div class="table-col"><span class="red-span">*</span>结论(必填)</div>
-                            <div class="table-col">备注</div>
-                        </div>
-                        <div>
-                            <div class="table-row" v-for="(item,index) in justiceData.assessmentList"
-                                 :key="'assessmentList'+index">
-                                <div class="table-col" v-text="item.assessmentItem">
-                                    <!--<el-input v-model="" placeholder="评估项" :disabled="disabled"-->
-                                    <!--&gt;</el-input>-->
-                                </div>
-                                <div class="table-col" v-text="item.cooperationTarget">
-                                    <!--<el-input v-model="item.cooperationTarget" placeholder="合作目标" :disabled="disabled"-->
-                                    <!--&gt;</el-input>-->
-                                </div>
-                                <div class="table-col">
-                                    <el-select v-model="item.state" placeholder="请选择结论" :disabled="disabled">
-                                        <el-option label="是" :value="0"></el-option>
-                                        <el-option label="否" :value="1"></el-option>
-                                    </el-select>
-                                </div>
-                                <div class="table-col">
-                                    <el-input v-model="item.remark" placeholder="请输入备注" :disabled="disabled"
-                                    ></el-input>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <table class="assessmentTable">
+                        <thead>
+                        <tr class="tableTitle">
+                            <td width="180">评估项</td>
+                            <td width="180">合作目标</td>
+                            <td width="180"><span class="red-span">*</span>结论(必填)</td>
+                            <td width="180">备注</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,index) in justiceData.assessmentList" :key="index">
+                            <td>{{item.assessmentItem}}</td>
+                            <td>{{item.cooperationTarget}}</td>
+                            <td>
+                                <el-select v-model="item.state" placeholder="请选择结论" :disabled="disabled" class="selectconclusion">
+                                    <el-option label="是" :value="0"></el-option>
+                                    <el-option label="否" :value="1"></el-option>
+                                </el-select>
+                            </td>
+                            <td :rowspan="justiceData.assessmentList.length" v-if="index == 0">
+                                <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark" :disabled="disabled">
+                                </el-input>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <p class="small-title ">KPI(必填)</p>
-                        <el-form :model="justiceData.affairs" :rules="justiceData.affairsRules" label-position="right"
-                                 label-width="250px" class="fawuForm">
-                            <el-form-item label="尽调公司法律风险：" prop="legalRisksOfCompany">
-                                <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择结论">
-                                    <el-option label="高" :value="0"></el-option>
-                                    <el-option label="中" :value="1"></el-option>
-                                    <el-option label="低" :value="2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="实际控制人法律风险：" prop="legalRisksOfController">
-                                <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择结论"
-                                           :disabled="disabled">
-                                    <el-option label="高" :value="0"></el-option>
-                                    <el-option label="中" :value="1"></el-option>
-                                    <el-option label="低" :value="2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="实际控制人配偶法律风险：" prop="legalRisksOfControllerMate">
-                                <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择结论"
-                                           :disabled="disabled">
-                                    <el-option label="高" :value="0"></el-option>
-                                    <el-option label="中" :value="1"></el-option>
-                                    <el-option label="低" :value="2"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item label="个人经营性借款及担保总额：" prop="personalOperatingloansTotalGuarantees">
-                                <el-input v-model="personalOperatingloansTotalGuarantees" placeholder="请输入借款及担保总额">
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </el-form-item>
-                            <el-form-item label="公司借款及担保总额：" prop="companyLoanTotalGuarantee">
-                                <el-input v-model="companyLoanTotalGuarantee" placeholder="请输入借款及担保总额">
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </el-form-item>
-                        </el-form>
+                    <el-form :model="justiceData.affairs" :rules="justiceData.affairsRules" label-position="right"
+                             label-width="250px" class="fawuForm">
+                        <el-form-item label="尽调公司法律风险：" prop="legalRisksOfCompany">
+                            <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择结论">
+                                <el-option label="高" :value="0"></el-option>
+                                <el-option label="中" :value="1"></el-option>
+                                <el-option label="低" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="实际控制人法律风险：" prop="legalRisksOfController">
+                            <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择结论"
+                                       :disabled="disabled">
+                                <el-option label="高" :value="0"></el-option>
+                                <el-option label="中" :value="1"></el-option>
+                                <el-option label="低" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="实际控制人配偶法律风险：" prop="legalRisksOfControllerMate">
+                            <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择结论"
+                                       :disabled="disabled">
+                                <el-option label="高" :value="0"></el-option>
+                                <el-option label="中" :value="1"></el-option>
+                                <el-option label="低" :value="2"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="个人经营性借款及担保总额：" prop="personalOperatingloansTotalGuarantees">
+                            <el-input v-model="personalOperatingloansTotalGuarantees" placeholder="请输入借款及担保总额">
+                                <template slot="suffix">万</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="公司借款及担保总额：" prop="companyLoanTotalGuarantee">
+                            <el-input v-model="companyLoanTotalGuarantee" placeholder="请输入借款及担保总额">
+                                <template slot="suffix">万</template>
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <p class="small-title ">分析报告</p>
-                    <div class="flex-wrap-col">
-                        <div class="flex-wrap-box ">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>风险揭示：</div>
-                            <div class="flex-wrap-cont">
-                                <el-form-item :rules="{required: true ,message: '风险揭示不能为空',trigger: 'blur'}"
-                                              :prop="'affairs.riskDisclosure'">
-                                    <el-input
-                                        type="textarea"
-                                        style="width:600px"
-                                        rows="6"
-                                        :disabled="disabled"
-                                        placeholder="请输入内容"
-                                        v-model="justiceData.affairs.riskDisclosure"
-                                    >
-                                    </el-input>
-                                </el-form-item>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box ">
-                            <div class="flex-wrap-title"><span class="red-span">*</span>分析描述：</div>
-                            <div class="flex-wrap-cont">
-                                <el-form-item :rules="{required: true ,message: '分析描述不能为空',trigger: 'blur'}"
-                                              :prop="'affairs.analysisDescription'">
-                                    <el-input
-                                        type="textarea"
-                                        style="width:600px"
-                                        rows="6"
-                                        :disabled="disabled"
-                                        placeholder="请输入内容"
-                                        v-model="justiceData.affairs.analysisDescription"
-                                    >
-                                    </el-input>
-                                </el-form-item>
-                            </div>
-                        </div>
-                    </div>
+                    <el-form>
+                        <el-form-item
+                            label="风险揭示："
+                            :rules="{required: true ,message: '风险揭示不能为空',trigger: 'blur'}"
+                            :prop="'affairs.riskDisclosure'">
+                            <el-input
+                                type="textarea"
+                                style="width:600px"
+                                rows="6"
+                                :disabled="disabled"
+                                placeholder="请输入内容"
+                                v-model="justiceData.affairs.riskDisclosure"
+                            >
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item
+                            label="分析描述："
+                            :rules="{required: true ,message: '分析描述不能为空',trigger: 'blur'}"
+                            :prop="'affairs.analysisDescription'">
+                            <el-input
+                                type="textarea"
+                                style="width:600px"
+                                rows="6"
+                                :disabled="disabled"
+                                placeholder="请输入内容"
+                                v-model="justiceData.affairs.analysisDescription"
+                            >
+                            </el-input>
+                        </el-form-item>
+                    </el-form>
                     <!--end-->
                 </el-collapse-item>
                 <el-collapse-item name="2">
@@ -862,14 +826,14 @@
                     <p class="small-title">负债信息（万）</p>
                     <div class="flex-wrap-row">
                         <div class="flex-wrap-box">
-                                <el-form label-position="left" label-width="100px" class="fawuForm">
-                                    <el-form-item label="合计：">
-                                        <el-input placeholder="" maxlength="25" :disabled="true" v-model="debtListType0Total">
-                                        </el-input>
-                                    </el-form-item>
-                                </el-form>
-                                <el-button type="primary" style="margin-left: 8px" @click="total('debtListType0')">合计
-                                </el-button>
+                            <el-form label-position="left" label-width="100px" class="fawuForm">
+                                <el-form-item label="合计：">
+                                    <el-input placeholder="" maxlength="25" :disabled="true" v-model="debtListType0Total">
+                                    </el-input>
+                                </el-form-item>
+                            </el-form>
+                            <el-button type="primary" style="margin-left: 8px" @click="total('debtListType0')">合计
+                            </el-button>
                         </div>
                     </div>
                     <div v-for="(item,index) in debtListType0"
@@ -3431,5 +3395,14 @@ export default {
     .upload{
         margin-top: -10px;
         margin-bottom: 40px;
+    }
+    .assessmentTable {
+        margin: 15px;
+        /deep/ .textHeight {
+            textarea {
+                height: 210px;
+                border: 0;
+            }
+        }
     }
 </style>
