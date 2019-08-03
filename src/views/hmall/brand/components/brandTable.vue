@@ -1,17 +1,15 @@
 <template>
     <div>
-        <div class="flex-wrap-row pt10">
-            <div class="flex-wrap-box">
-                <div class="flex-wrap-cont">
-                    <el-button type="primary" class="ml20" @click="openMark('add')">
-                        新增品牌
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,1)">批量生效</el-button>
-                    <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,2)">批量失效</el-button>
-                </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-col">
+                <el-button type="primary" class="ml20" @click="openMark('add')">
+                    新增品牌
+                </el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,1)">批量生效</el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,2)">批量失效</el-button>
             </div>
         </div>
-        <div class="page-box base-table product-table page-table">
+        <div class="page-body-cont">
             <el-table :data="tableData"
                     border
                     ref="brandTable"

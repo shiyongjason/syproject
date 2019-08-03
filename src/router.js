@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
+import { findMenuList } from '@/views/layout/api'
 
 Vue.use(Router)
 
@@ -266,10 +267,31 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
+// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
+function makeMenus (Route, Data) {
+    return Route.filter(value => {
+        if (value.path === '') {
+            return true
+        }
+        const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        if (value.children && authArr.length > 0) {
+            value.children = makeMenus(value.children, authArr[0].childAuthList)
+        }
+        return authArr.length > 0
+    })
+}
+
+async function getMenu (to, next) {
+    const { data } = await findMenuList()
+    const menu = makeMenus(routerMapping, data)
+    router.addRoutes(menu)
+    next({ ...to, replace: true })
+}
+
+let isFirst = true
 router.beforeEach(async (to, from, next) => {
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
@@ -280,6 +302,11 @@ router.beforeEach(async (to, from, next) => {
             return next({
                 name: 'login'
             })
+        } else {
+            if (isFirst) {
+                isFirst = false
+                await getMenu(to, next)
+            }
         }
     }
     next()

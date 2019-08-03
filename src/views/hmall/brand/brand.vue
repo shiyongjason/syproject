@@ -1,77 +1,69 @@
 <template>
-    <div class="product">
-        <div class="page-body">
-            <div class="page-body-cont">
-                <div class="page-header">
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item>品牌管理</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <div class="page-wrap flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">品牌编码：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    v-model="queryParams.brandCode"
-                                    maxlength="50"
-                                    placeholder="请输入品牌编码"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">品牌名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    v-model="queryParams.brandName"
-                                    maxlength="50"
-                                    placeholder="请输入品牌名称"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">品牌状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.status" style="width: 100%">
-                                    <el-option
-                                        v-for="item in brandStatusOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">维护人：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    v-model="queryParams.updateBy"
-                                    maxlength="50"
-                                    placeholder="请输入维护人姓名"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-cont">
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    搜索
-                                </el-button>
-                            </div>
-                        </div>
+    <div class="page-body">
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">品牌编码：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input
+                            type="text"
+                            v-model="queryParams.brandCode"
+                            maxlength="50"
+                            placeholder="请输入品牌编码"></el-input>
                     </div>
                 </div>
-                <brandTable
-                    ref="baseTable"
-                    :tableData="tableData"
-                    :paginationData="paginationData"
-                    @updateStatus="onQuery"
-                    @updateBrand="updateBrandChange"
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange"
-                    @openMark="openMark"></brandTable>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">品牌名称：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input
+                            type="text"
+                            v-model="queryParams.brandName"
+                            maxlength="50"
+                            placeholder="请输入品牌名称"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">品牌状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.status" style="width: 100%">
+                            <el-option
+                                v-for="item in brandStatusOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">维护人：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input
+                            type="text"
+                            v-model="queryParams.updateBy"
+                            maxlength="50"
+                            placeholder="请输入维护人姓名"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-cont">
+                        <el-button type="primary" class="ml20" @click="onQuery()">
+                            搜索
+                        </el-button>
+                    </div>
+                </div>
             </div>
         </div>
+        <brandTable
+            ref="baseTable"
+            :tableData="tableData"
+            :paginationData="paginationData"
+            @updateStatus="onQuery"
+            @updateBrand="updateBrandChange"
+            @onSizeChange="onSizeChange"
+            @onCurrentChange="onCurrentChange"
+            @openMark="openMark">
+        </brandTable>
         <el-dialog
             title="品牌编辑"
             :visible.sync="dialogBrandEdit"

@@ -1,47 +1,40 @@
 <template>
     <div class="page-body">
-        <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>类目管理</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            <div class="flex-wrap-row pt20" style="background-color: #fff">
-                <div class="flex-wrap-box">
-                    <div class="flex-wrap-cont">
-                        <el-button type="primary" class="ml20" @click="onShowAdd('child')" v-if="current.level !== 3">
-                            添加子类目
-                        </el-button>
-                        <el-button class="ml20 disabeld" v-else>添加子类目</el-button>
-                        <el-button type="primary" class="ml20" @click="onShowAdd('brother')">
-                            添加同类目
-                        </el-button>
-                    </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="onShowAdd('child')" v-if="current.level !== 3">
+                        添加子类目
+                    </el-button>
+                    <el-button class="ml20 disabeld" v-else>添加子类目</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowAdd('brother')">
+                        添加同类目
+                    </el-button>
                 </div>
             </div>
-            <div class="page-box base-table">
-                <tree-table
-                    ref="treeTable"
-                    :data="data"
-                    :columns="columns"
-                    :selectable="false"
-                    :expand-type="false"
-                    :row-style="tableRowStyle"
-                    children-prop="categoryList"
-                    @cell-click="onCellSelected"
-                    @expand-cell-click="onExpandCell"
-                    @tree-icon-click="onExpandCell">
-                    <template slot="operations" slot-scope="scope">
-                        <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
-                        <span class="action mr10" @click="onMove(scope.row, -1)" v-if="!scope.row.isFirst">上移</span>
-                        <span class="action mr10 disabled" v-if="scope.row.isFirst">上移</span>
-                        <span class="action mr10" @click="onMove(scope.row, 1)" v-if="!scope.row.isLast">下移</span>
-                        <span class="action mr10 disabled" v-if="scope.row.isLast">下移</span>
-                        <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
-                        <span class="action mr10" @click="onShowBrands(scope.row)" v-if="scope.row.level === 2">关联品牌</span>
-                    </template>
-                </tree-table>
-            </div>
+        </div>
+        <div class="page-body-cont">
+            <tree-table
+                ref="treeTable"
+                :data="data"
+                :columns="columns"
+                :selectable="false"
+                :expand-type="false"
+                :row-style="tableRowStyle"
+                children-prop="categoryList"
+                @cell-click="onCellSelected"
+                @expand-cell-click="onExpandCell"
+                @tree-icon-click="onExpandCell">
+                <template slot="operations" slot-scope="scope">
+                    <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
+                    <span class="action mr10" @click="onMove(scope.row, -1)" v-if="!scope.row.isFirst">上移</span>
+                    <span class="action mr10 disabled" v-if="scope.row.isFirst">上移</span>
+                    <span class="action mr10" @click="onMove(scope.row, 1)" v-if="!scope.row.isLast">下移</span>
+                    <span class="action mr10 disabled" v-if="scope.row.isLast">下移</span>
+                    <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
+                    <span class="action mr10" @click="onShowBrands(scope.row)" v-if="scope.row.level === 2">关联品牌</span>
+                </template>
+            </tree-table>
         </div>
         <el-dialog title="类目编辑" :visible.sync="editVisible">
             <el-form
@@ -90,12 +83,12 @@
                 </div>
                 <span>必填</span>
             </el-transfer>
-            <div class="mt10">
+            <div class="mt10 center-btn">
                 <el-button @click="paramsVisible = false">取消</el-button>
                 <el-button type="primary" @click="onLinkParams">保存</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="关联品牌" :visible.sync="brandsVisible" :before-close="brandClose">
+        <el-dialog title="关联品牌" :visible.sync="brandsVisible" :before-close="brandClose" class="settingParams">
             <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
             <el-transfer
                 v-model="selectedBrands"
@@ -104,7 +97,7 @@
                 filterable
                 filter-placeholder="请输入品牌名称"
                 :props="{'key': 'brandId', 'label': 'brandName'}" ref="brandRef"></el-transfer>
-            <div class="mt10">
+            <div class="mt10 center-btn">
                 <el-button @click="brandsVisible = false">取消</el-button>
                 <el-button type="primary" @click="onLinkBrands">保存</el-button>
             </div>
@@ -115,8 +108,8 @@
 <script>
 import {
     findAllCategory, updateCategory, createCategory,
-    moveCategory, linkParams, linkBrands, findLinkParams, findLinkBrands } from './api/index.js'
-// import moment from 'moment'
+    moveCategory, linkParams, linkBrands, findLinkParams, findLinkBrands
+} from './api/index.js'
 import { mapState } from 'vuex'
 
 export default {
@@ -388,9 +381,11 @@ export default {
 
 <style lang="scss" scoped>
     .action {
-        padding: 2px 5px;
+        padding: 4px 6px;
         background-color: #ff9933;
         border-radius: 5px;
+        color: #ffffff;
+        font-size: 12px;
     }
     .disabled {
         background-color: #ccc;
@@ -417,6 +412,11 @@ export default {
         background-color: #f5f7fa !important;
         color: #c0c4cc;
     }
+    .center-btn {
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
 </style>
 <style>
     .settingParams .el-transfer-panel{
@@ -424,5 +424,6 @@ export default {
     }
     .settingParams .el-checkbox{
         margin-right: 0;
+        display: block;
     }
 </style>
