@@ -49,8 +49,8 @@
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="上年销售业绩：" prop="KPIpoint">
-                                <el-input v-model="KPIFrom.KPIpoint">
+                            <el-form-item label="上年销售业绩：" prop="salesPerformanceLastYear">
+                                <el-input v-model="KPIFrom.salesPerformanceLastYear">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
@@ -427,11 +427,11 @@
                     <p class="titlt-p">门店/会员店</p>
                 </template>
                 <el-form :model="quantityFrom" label-width="130px">
-                    <el-form-item label="自营门店数量：" prop="outlet" placeholder="自营门店数量">
-                        <el-input v-model="quantityFrom.outlet"></el-input>
+                    <el-form-item label="自营门店数量：" placeholder="自营门店数量">
+                        <el-input v-model="quantityFrom.selfStoresNum"></el-input>
                     </el-form-item>
-                    <el-form-item label="会员店数量：" prop="memberShop" placeholder="会员店数量">
-                        <el-input v-model="quantityFrom.memberShop"></el-input>
+                    <el-form-item label="会员店数量：" placeholder="会员店数量">
+                        <el-input v-model="quantityFrom.memberShopNum"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -443,11 +443,11 @@
                     <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
                     <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
                     <el-form :model="competeFrom" label-width="130px">
-                        <el-form-item label="竞争对手：" prop="rival " placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
-                            <el-input v-model="competeFrom.rival"></el-input>
+                        <el-form-item label="竞争对手：" prop="competitorName " placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
+                            <el-input v-model="competeFrom.competitorName"></el-input>
                         </el-form-item>
-                        <el-form-item label="主营业态：" prop="mainStatus" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
-                            <el-input v-model="competeFrom.mainStatus"></el-input>
+                        <el-form-item label="主营业态：" prop="mainForms" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
+                            <el-input v-model="competeFrom.mainForms"></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -457,22 +457,20 @@
                     <p class="titlt-p">新合资公司规划</p>
                 </template>
                 <el-form :model="newplanFrom" :rules="newplanRules" label-width="160px">
-                    <el-form-item label="业务类别：" prop="category">
-                        <el-checkbox-group v-model="newplanFrom.category">
-                            <el-checkbox label="批发" name="category"></el-checkbox>
-                            <el-checkbox label="零售" name="category"></el-checkbox>
-                            <el-checkbox label="工程" name="category"></el-checkbox>
+                    <el-form-item label="业务类别：" prop="serviceCategory">
+                        <el-checkbox-group v-model="newplanFrom.serviceCategory">
+                            <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="经营品类：" prop="manageCategory">
-                                <el-checkbox-group v-model="newplanFrom.manageCategory">
-                                    <el-checkbox label="冷暖" name="manageCategory"></el-checkbox>
-                                    <el-checkbox label="新风" name="manageCategory"></el-checkbox>
-                                    <el-checkbox label="净水" name="manageCategory"></el-checkbox>
-                                    <el-checkbox label="智能" name="manageCategory"></el-checkbox>
-                                    <el-checkbox label="其他" name="manageCategory"></el-checkbox>
+                            <el-form-item label="经营品类：" prop="businessCategory">
+                                <el-checkbox-group v-model="newplanFrom.businessCategory">
+                                    <el-checkbox label="0">冷暖</el-checkbox>
+                                    <el-checkbox label="1">新风</el-checkbox>
+                                    <el-checkbox label="2">净水</el-checkbox>
+                                    <el-checkbox label="3">智能</el-checkbox>
+                                    <el-checkbox label="4">其他</el-checkbox>
                                 </el-checkbox-group>
                             </el-form-item>
                         </div>
@@ -487,57 +485,51 @@
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="经营区域：" prop="manageRegion">
-                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择省">
-                                    <el-option label="区域一" value="shanghai"></el-option>
-                                    <el-option label="区域二" value="beijing"></el-option>
+                            <el-form-item label="经营区域：" prop="businessProvince">
+                                <el-select v-model="newplanFrom.businessProvince" placeholder="请选择省">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item prop="manageRegion" label-width="100px">
-                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择市">
-                                    <el-option label="区域一" value="shanghai"></el-option>
-                                    <el-option label="区域二" value="beijing"></el-option>
+                            <el-form-item prop="businessCity" label-width="100px">
+                                <el-select v-model="newplanFrom.businessCity" placeholder="请选择市">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item prop="manageRegion" label-width="10px">
-                                <el-select v-model="newplanFrom.manageRegion" placeholder="请选择区">
-                                    <el-option label="区域一" value="shanghai"></el-option>
-                                    <el-option label="区域二" value="beijing"></el-option>
+                            <el-form-item prop="businessArea" label-width="10px">
+                                <el-select v-model="newplanFrom.businessArea" placeholder="请选择区">
                                 </el-select>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="年销售规模：" prop="manageScale">
-                                <el-input v-model="newplanFrom.manageScale" placeholder="请输入规模">
+                            <el-form-item label="年销售规模：" prop="annualSalesScale">
+                                <el-input v-model="newplanFrom.annualSalesScale" placeholder="请输入规模">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="净利润率：" prop="manageProfit">
-                                <el-input v-model="newplanFrom.manageProfit" placeholder="请输入净利润">
+                            <el-form-item label="净利润率：" prop="netProfitRate">
+                                <el-input v-model="newplanFrom.netProfitRate" placeholder="请输入净利润">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item label="下游切换渠道和客户：" prop="switchClient">
-                        <el-input type="textarea" v-model="newplanFrom.switchClient" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="下游切换渠道和客户：">
+                        <el-input type="textarea" v-model="newplanFrom.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="市场推广渠道及计划：" prop="popularPlan">
-                        <el-input type="textarea" v-model="newplanFrom.popularPlan" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="市场推广渠道及计划：">
+                        <el-input type="textarea" v-model="newplanFrom.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="资金用款需求：" prop="fundDemand">
-                        <el-input type="textarea" v-model="newplanFrom.fundDemand" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="资金用款需求：">
+                        <el-input type="textarea" v-model="newplanFrom.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="其他规划和需求：" prop="elseDemand">
-                        <el-input type="textarea" v-model="newplanFrom.elseDemand" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="其他规划和需求：">
+                        <el-input type="textarea" v-model="newplanFrom.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -570,7 +562,7 @@ export default {
             isdisabled: false,
             updateUser: '',
             updateTime: '',
-            activeName: '6',
+            activeName: '9',
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
             cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
@@ -670,13 +662,10 @@ export default {
             lastTwoYearAllSales: 0, // 前年销售总额
             textarea: '',
             KPIFromData: {
-                KPIpoint: '',
-                KPIRisk: '',
-                KPIDescription: '',
                 mainBusiness: ''
             },
             KPIFrom: {
-                KPIpoint: '',
+                salesPerformanceLastYear: '',
                 riskDisclosure: '',
                 analysisDescription: ''
             },
@@ -710,16 +699,16 @@ export default {
                 contractScale: ''
             },
             customerFrom: {
-                health: ''
+                customersHealth: ''
             },
             quantityFrom: {
-                outlet: '',
-                memberShop: ''
+                selfStoresNum: '',
+                memberShopNum: ''
 
             },
             competeFrom: {
-                rival: '',
-                mainStatus: ''
+                competitorName: '',
+                mainForms: ''
             },
             switchFrom: {
                 brand: '',
@@ -730,12 +719,18 @@ export default {
                 surpport: ''
             },
             newplanFrom: {
-                category: [],
-                manageCategory: [],
+                serviceCategory: [],
+                businessCategory: [],
                 manageBrand: '',
-                manageRegion: '',
-                manageScale: '',
-                manageProfit: ''
+                businessProvince: '',
+                businessCity: '',
+                businessArea: '',
+                annualSalesScale: '',
+                netProfitRate: '',
+                downstreamSwitchChannelsCustomers: '',
+                marketingChannelsPlans: '',
+                fundingRequirements: '',
+                otherPlansNeeds: ''
             },
             marketForm: {
                 checkedWays: [],
@@ -749,7 +744,7 @@ export default {
                 proportion: [
                     { required: true, message: '', trigger: 'blur' }
                 ],
-                KPIpoint: [
+                salesPerformanceLastYear: [
                     { required: true, message: '', trigger: 'blur' }
                 ],
                 riskDisclosure: [
@@ -804,19 +799,19 @@ export default {
                 ]
             },
             newplanRules: {
-                category: [
+                serviceCategory: [
                     { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
                 ],
-                manageCategory: [
+                businessCategory: [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
                 manageBrand: [
                     { required: true, message: '请输入品牌信息', trigger: 'blur' }
                 ],
-                manageScale: [
+                annualSalesScale: [
                     { required: true, message: '请输入年销售规模', trigger: 'blur' }
                 ],
-                manageProfit: [
+                netProfitRate: [
                     { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ]
             },
@@ -942,7 +937,7 @@ export default {
         async getBusiness () {
             const { data } = await getBusiness(this.applyId)
 
-            // console.log(data)
+            console.log(data.data)
             // if (!data.data.operationNode) {
             //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
             // } else {
@@ -1013,6 +1008,7 @@ export default {
 
             this.KPIFrom.riskDisclosure = data.data.riskDisclosure
             this.KPIFrom.analysisDescription = data.data.analysisDescription
+            this.KPIFrom.salesPerformanceLastYear = data.data.salesPerformanceLastYear
             this.businessmodeFrom.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
             this.businessmodeFrom.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
             this.businessmodeFrom.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
@@ -1038,6 +1034,17 @@ export default {
             this.structureFrom.contractEndDate = data.data.contractEndDate
             this.structureFrom.contractScale = data.data.contractScale
             this.customerFrom.customersHealth = data.data.customersHealth
+            this.quantityFrom.selfStoresNum = data.data.selfStoresNum
+            this.quantityFrom.memberShopNum = data.data.memberShopNum
+            this.competeFrom.competitorName = data.data.competitorName
+            this.competeFrom.mainForms = data.data.mainForms
+            this.newplanFrom.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
+            this.newplanFrom.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
+            this.newplanFrom.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
+            this.newplanFrom.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
+            this.newplanFrom.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
+            this.newplanFrom.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
+            this.newplanFrom.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
         },
         handleCheckAllChange (val) {
             console.log(this.newChannels)
@@ -1112,13 +1119,13 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
-                if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
-                    this.showWarnMsg('请选择尽调评估结论')
-                    this.activeName = '1'
-                    return false
-                }
-            }
+            // for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
+            //     if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
+            //         this.showWarnMsg('请选择尽调评估结论')
+            //         this.activeName = '1'
+            //         return false
+            //     }
+            // }
             if (!this.vaildEmpty(this.salesGrowthHealth)) {
                 this.showWarnMsg('请选择销售增长健康度')
                 this.activeName = '1'
@@ -1200,35 +1207,35 @@ export default {
             //     this.activeName = '3'
             //     return false
             // }
-            for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
-                if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
-                    this.showWarnMsg('请输入商业尽调供应商必填项')
-                    this.activeName = '5'
-                    return false
-                }
-                if (this.dueBusinessSupplierCreateFormList[i].contractStartDate && this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
-                    if (this.dueBusinessSupplierCreateFormList[i].contractStartDate >= this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
-                        this.showWarnMsg('合同开始时间大于合同结束时间')
-                        this.activeName = '5'
-                        return false
-                    }
-                }
-            }
+            // for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
+            //     if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
+            //         this.showWarnMsg('请输入商业尽调供应商必填项')
+            //         this.activeName = '5'
+            //         return false
+            //     }
+            //     if (this.dueBusinessSupplierCreateFormList[i].contractStartDate && this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
+            //         if (this.dueBusinessSupplierCreateFormList[i].contractStartDate >= this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
+            //             this.showWarnMsg('合同开始时间大于合同结束时间')
+            //             this.activeName = '5'
+            //             return false
+            //         }
+            //     }
+            // }
 
-            for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
-                if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
-                    this.showWarnMsg('请输入商业尽调客户结构必填项')
-                    this.activeName = '6'
-                    return false
-                }
-                if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate && this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
-                    if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate >= this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
-                        this.showWarnMsg('协议期开始大于协议期结束')
-                        this.activeName = '6'
-                        return false
-                    }
-                }
-            }
+            // for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
+            //     if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
+            //         this.showWarnMsg('请输入商业尽调客户结构必填项')
+            //         this.activeName = '6'
+            //         return false
+            //     }
+            //     if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate && this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
+            //         if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate >= this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
+            //             this.showWarnMsg('协议期开始大于协议期结束')
+            //             this.activeName = '6'
+            //             return false
+            //         }
+            //     }
+            // }
             if (!this.vaildEmpty(this.customersHealth)) {
                 this.showWarnMsg('请选择商业尽调客户健康度')
                 this.activeName = '6'
@@ -1309,13 +1316,13 @@ export default {
                 this.lastTwoYearAllSales = 0
                 val.map((item, index) => {
                     if (index === 0) {
-                        databaseCurrentYearAllSales = item.currentYearSales
-                        databaseLastYearAllSales = item.lastYearSales
-                        databaseLastTwoYearAllSales = item.lastTwoYearSales
+                        databaseCurrentYearAllSales = parseFloat(item.currentYearSales)
+                        databaseLastYearAllSales = parseFloat(item.lastYearSales)
+                        databaseLastTwoYearAllSales =  parseFloat(item.lastTwoYearSales)
                     } else {
-                        this.currentYearAllSales += +item.currentYearSales
-                        this.lastYearAllSales += +item.lastYearSales
-                        this.lastTwoYearAllSales += +item.lastTwoYearSales
+                        this.currentYearAllSales += parseFloat(item.currentYearSales)
+                        this.lastYearAllSales += parseFloat(item.lastYearSales)
+                        this.lastTwoYearAllSales += parseFloat(item.lastTwoYearSales)
                     }
                 })
                 this.currentYearAllSales = (this.currentYearAllSales ? this.currentYearAllSales : 0).toFixed(2)
