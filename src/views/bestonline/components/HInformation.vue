@@ -17,7 +17,7 @@ export default {
             //     return localStorage.getItem('user_data')
             // }
             // return this.$store.state.dueDiligence.companyName
-            return JSON.parse(localStorage.getItem('user_data')).organizationName
+            return sessionStorage.getItem('companyName')
         }
     },
     mounted () {

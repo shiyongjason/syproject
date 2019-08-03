@@ -138,6 +138,7 @@ export default {
             })
         },
         onEdit (row) {
+            sessionStorage.setItem('companyName', row.companyName)
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale } })
         },
         onCheck (applyId) {
