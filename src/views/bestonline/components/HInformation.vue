@@ -13,11 +13,11 @@ export default {
     },
     computed: {
         companyName () {
-            // if (this.$store.state.dueDiligence.companyName === '') { 
+            // if (this.$store.state.dueDiligence.companyName === '') {
             //     return localStorage.getItem('user_data')
             // }
             // return this.$store.state.dueDiligence.companyName
-            return JSON.parse(sessionStorage.getItem('user_data')).organizationName
+            return sessionStorage.getItem('companyName')
         }
     },
     mounted () {

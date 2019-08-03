@@ -19,20 +19,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(assessItem,index) in assessmentList" :key=index>
-                                <td>{{assessItem.assessmentItem}}</td>
-                                <td>{{assessItem.cooperationTarget}}
+                            <tr v-for="(item,index) in KPIForm.assessmentList" :key=index>
+                                <td>{{item.assessmentItem}}</td>
+                                <td>{{item.cooperationTarget}}
                                     <i v-if="index === 1">w</i>
                                     <i v-if="index === 2">%</i>
                                     <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
-                                    <el-select v-model="assessItem.state" placeholder="请选择" :disabled="isdisabled">
-                                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                                    <el-select v-model="item.state" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="i in options" :key="i.value" :label="i.label" :value="i.value">
                                         </el-option>
                                     </el-select>
                                 </td>
-                                <td :rowspan="assessmentList.length" v-if="index == 0">
+                                <td :rowspan="KPIForm.assessmentList.length" v-if="index == 0">
                                     <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
                                     </el-input>
                                 </td>
@@ -917,7 +917,7 @@ export default {
     },
     data () {
         return {
-            activeName: '12',
+            activeName: '1',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -1015,7 +1015,7 @@ export default {
         })
     },
     mounted () {
-        this.provinces({ parentId: 0 }, 0)
+        // this.provinces({ parentId: 0 }, 0)
         this.getFinance()
         this.applyId = this.$route.query.applyId
     },
@@ -1059,9 +1059,10 @@ export default {
             }
         },
         async getFinance () {
-            // return false
             const { data } = await getFinance(this.$route.query.applyId)
-            // console.log(data)
+            console.log(data.data)
+
+            this.KPIForm.assessmentList = data.data.assessmentList
             // if (!data.data.dueFinanceBasic.type) {
             //     this.isdisabled = (!!data.data.dueFinanceBasic.type) || !this.roleType
             // } else {

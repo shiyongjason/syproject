@@ -2,35 +2,35 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="reviewform">
-                <el-tabs :tab-position="tabPosition"  v-model="activeName">
+                <el-tabs :tab-position="tabPosition" v-model="activeName">
                     <el-tab-pane label="合作目标" name="one">
-                        <HCootarget v-if="activeName=='one'" :roleType='oneType' @parentFun = 'getCooperativetarget'/>
+                        <HCootarget v-if="activeName=='one'" :roleType='oneType' @parentFun='getCooperativetarget' />
                     </el-tab-pane>
 
                     <el-tab-pane label="调前信息" name="two">
-                        <HInformation   v-if="activeName=='two'"/>
+                        <HInformation v-if="activeName=='two'" />
                     </el-tab-pane>
 
                     <template v-if="Cooperation">
 
-                        <el-tab-pane label="商业尽调" name="three" >
-                            <HBusiness v-if="activeName=='three'"  :roleType='twoType' />
+                        <el-tab-pane label="商业尽调" name="three">
+                            <HBusiness v-if="activeName=='three'" :roleType='twoType' />
                         </el-tab-pane>
 
-                        <el-tab-pane label="财务尽调" name="four" >
-                            <HFinance v-if="activeName=='four'" :roleType='threeType'/>
+                        <el-tab-pane label="财务尽调" name="four">
+                            <HFinance v-if="activeName=='four'" :roleType='threeType' />
                         </el-tab-pane>
 
-                        <el-tab-pane label="法务尽调" name="five" >
-                            <HJustice v-if="activeName=='five'" :roleType='fourType'/>
+                        <el-tab-pane label="法务尽调" name="five">
+                            <HJustice v-if="activeName=='five'" :roleType='fourType' />
                         </el-tab-pane>
 
                         <el-tab-pane label="组织尽调" name="six" :lazy="true">
-                            <HOrganization v-if="activeName=='six'" :roleType='fiveType'/>
+                            <HOrganization v-if="activeName=='six'" :roleType='fiveType' />
                         </el-tab-pane>
 
-                        <el-tab-pane label="附件上传" name="seven" >
-                            <HAccessory v-if="activeName=='seven'"/>
+                        <el-tab-pane label="附件上传" name="seven">
+                            <HAccessory v-if="activeName=='seven'" />
                         </el-tab-pane>
                         <!-- <el-tab-pane label="尽调评估及KPI" name="eight" >
                             <HEvaluation v-if="activeName=='eight'"/>
@@ -206,8 +206,8 @@ export default {
             .el-select {
                 width: 100%;
             }
-            .el-textarea__inner{
-                border: none
+            .el-textarea__inner {
+                border: none;
             }
         }
     }
@@ -230,63 +230,66 @@ export default {
 .el-collapse-item__header.is-active {
     // border-left:5px solid #eae8e8
 }
-.el-input__suffix{
+.el-input__suffix {
     line-height: 40px;
-}input:disabled{
+}
+input:disabled {
     // background-color : #fff; // 修改默认灰色样式
     // color: #000;
-    opacity:1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638 // 字体颜色安卓与IOS适配】
+    opacity: 1; // 默认的不透明级别为0.3
+    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
     // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
 }
-textarea:disabled{
+textarea:disabled {
     // background-color : #fff; // 修改默认灰色样式
     // color: #000;
-    opacity:1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638 // 字体颜色安卓与IOS适配】
+    opacity: 1; // 默认的不透明级别为0.3
+    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
     // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
 }
-select:disabled{
+select:disabled {
     // background-color : #fff; // 修改默认灰色样式
     // color: #000;
-    opacity:1; // 默认的不透明级别为0.3
-    -webkit-text-fill-color: #353638 // 字体颜色安卓与IOS适配】
+    opacity: 1; // 默认的不透明级别为0.3
+    -webkit-text-fill-color: #353638; // 字体颜色安卓与IOS适配】
     // -webkit-opacity: 1; // 不透明级别安卓与IOS适配
 }
-input:disabled::-webkit-input-placeholder{
-  color: #cccccc;
-  -webkit-text-fill-color: #ccc;
-  opacity: 0.8;
-  -webkit-opacity:0.8;
+input:disabled::-webkit-input-placeholder {
+    color: #cccccc;
+    -webkit-text-fill-color: #ccc;
+    opacity: 0.8;
+    -webkit-opacity: 0.8;
 }
-textarea:disabled::-webkit-input-placeholder{
-  color: #cccccc;
-  -webkit-text-fill-color: #ccc;
-  opacity: 0.8;
-  -webkit-opacity:0.8;
+textarea:disabled::-webkit-input-placeholder {
+    color: #cccccc;
+    -webkit-text-fill-color: #ccc;
+    opacity: 0.8;
+    -webkit-opacity: 0.8;
 }
-select:disabled::-webkit-input-placeholder{
-  color: #cccccc;
-  -webkit-text-fill-color: #ccc;
-  opacity: 0.8;
-  -webkit-opacity:0.8;
+select:disabled::-webkit-input-placeholder {
+    color: #cccccc;
+    -webkit-text-fill-color: #ccc;
+    opacity: 0.8;
+    -webkit-opacity: 0.8;
 }
-    .el-input.is-disabled .el-input__inner,.el-textarea.is-disabled .el-textarea__inner{
-        border: 0;
-        background: #ffffff;
-    }
-    .el-input.is-disabled .el-input__inner:hover,.el-textarea.is-disabled .el-textarea__inner:hover{
-        cursor: default;
-    }
-    .el-input.is-disabled .el-input__icon{
-        display: none;
-    }
-    .el-input.is-disabled .el-input__icon:hover{
-        cursor: default;
-    }
-    .el-input.is-disabled .el-input__inner, .el-textarea.is-disabled .el-textarea__inner{
-        outline: none;
-        resize:none
-    }
-
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner {
+    border: 0;
+    background: #ffffff;
+}
+.el-input.is-disabled .el-input__inner:hover,
+.el-textarea.is-disabled .el-textarea__inner:hover {
+    cursor: default;
+}
+.el-input.is-disabled .el-input__icon {
+    display: none;
+}
+.el-input.is-disabled .el-input__icon:hover {
+    cursor: default;
+}
+.el-input.is-disabled .el-input__inner,
+.el-textarea.is-disabled .el-textarea__inner {
+    outline: none;
+    resize: none;
+}
 </style>

@@ -277,7 +277,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
 .jd-manage {
     padding: 0 15px;
     h3 {
