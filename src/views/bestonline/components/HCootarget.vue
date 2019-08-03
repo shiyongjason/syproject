@@ -4,7 +4,7 @@
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
         <el-form :model="form" :rules="rules">
             <el-form-item label="尽调规模：" prop="scale">
-                <el-input v-model="form.scale"  @keyup.native="oninput('scale',$event)"> 
+                <el-input v-model="form.scale" @keyup.native="oninput('scale',$event)">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -249,7 +249,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
 .jd-manage {
     padding: 0 15px;
     h3 {
@@ -261,7 +261,7 @@ export default {
 .table-width {
     width: 50%;
 }
-.el-input__inner{
+.el-input__inner {
     text-align: center;
 }
 </style>

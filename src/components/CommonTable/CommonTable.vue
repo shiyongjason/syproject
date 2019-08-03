@@ -21,7 +21,9 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationInfo.pageStyle" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" @current-change="handleCurrentChange"></el-pagination>
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange">
+        </el-pagination>
     </div>
 </template>
 <script>
@@ -68,8 +70,7 @@ export default {
                 return {
                     total: 0,
                     pageSize: 10,
-                    pageNumber: 1,
-                    pageStyle: 'total, sizes, prev, pager, next, jumper'
+                    pageNumber: 1
                 }
             }
         },
@@ -93,6 +94,13 @@ export default {
     computed: {
         tableAttrInfo () {
             return Object.assign({}, this.tableAttr)
+        },
+        paginationStyle () {
+            const paginationStyle = Object.assign({
+                pageLayout: 'total, sizes, prev, pager, next, jumper',
+                pageSizes: [10, 20, 30, 40, 50]
+            })
+            return paginationStyle
         }
     },
     watch: {
@@ -115,6 +123,9 @@ export default {
         handleCurrentChange (val) {
             this.paginationInfo.pageNumber = val
             this.$emit('onCurrentChange', this.paginationInfo)
+        },
+        handleSizeChange (val) {
+            this.$emit('onSizeChange', val)
         },
         handleSortChange (val) {
             this.$emit('onSortChange', val)

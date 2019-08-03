@@ -7,10 +7,7 @@
                         公司：
                     </div>
                     <div class="query-col-input">
-                        <el-input
-                            placeholder="请输入公司名称"
-                            v-model="params.companyName"
-                            maxlength="25">
+                        <el-input placeholder="请输入公司名称" v-model="params.companyName" maxlength="25">
                         </el-input>
                     </div>
                 </div>
@@ -19,23 +16,14 @@
                         状态：
                     </div>
                     <div class="query-col-input">
-                        <el-select
-                            v-model="params.approvalStatus"
-                            placeholder="请选择">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.key"
-                                :label="item.value"
-                                :value="item.key">
+                        <el-select v-model="params.approvalStatus" placeholder="请选择">
+                            <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button
-                        type="primary"
-                        @click="onSearch()"
-                    >搜索
+                    <el-button type="primary" @click="onSearch()">搜索
                     </el-button>
                 </div>
             </div>
@@ -43,31 +31,22 @@
         </div>
         <div class="page-body-cont">
             <div class="table-cont-btn">
-                <el-button
-                    type="primary"
-                    class="addbutton"
-                    @click="addNewApply">
+                <el-button type="primary" class="addbutton" @click="addNewApply">
                     添加申请
                 </el-button>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination="pagination" @onCurrentChange="onCurrentChange">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
                 <template slot="approvalStatus" slot-scope="scope">
                     <span v-if="scope.data.row.approvalStatus == 0">未提交</span>
-                    <span v-if="scope.data.row.approvalStatus == 1"
-                          @click="showProcess(scope.data.row.applyId)">审批中</span>
-                    <span class="isGreenColor" v-if="scope.data.row.approvalStatus == 2"
-                          @click="showProcess(scope.data.row.applyId)">审批通过</span>
-                    <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3"
-                          @click="showProcess(scope.data.row.applyId)">审批驳回</span>
+                    <span v-if="scope.data.row.approvalStatus == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
+                    <span class="isGreenColor" v-if="scope.data.row.approvalStatus == 2" @click="showProcess(scope.data.row.applyId)">审批通过</span>
+                    <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)"
-                               v-if="scope.data.row.approvalStatus==0">修改
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="scope.data.row.approvalStatus==0">修改
                     </el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)"
-                          v-if='scope.data.row.approvalStatus==0'>删除</el-button>
-                    <el-button class="orangeBtn" @click="onShow(scope.data.row)"
-                          v-if='scope.data.row.approvalStatus!=0'>查看</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if='scope.data.row.approvalStatus==0'>删除</el-button>
+                    <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-if='scope.data.row.approvalStatus!=0'>查看</el-button>
                 </template>
             </basicTable>
         </div>
@@ -135,6 +114,7 @@ export default {
             this.$router.push({ path: '/bestonline/applyform' })
         },
         onSizeChange (val) {
+            console.log(val)
             this.params.pageSize = val
             this.getDueapply()
         },
