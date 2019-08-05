@@ -10,7 +10,7 @@
                 </template>
                 <!--start-->
                 <p class="small-title">已上传附件</p>
-                <div v-if="tableList.length === 0">暂无附件</div>
+                <div v-if="tableList.length === 0" class="noannex">暂无附件</div>
                 <div
                     v-else
                     class="upload"
@@ -20,7 +20,7 @@
                     <span>{{item.fileName}}</span> <span>{{item.createUser}} {{item.createTime}}</span> <span> <a :href="item.fileUrl" target="_blank">下载</a></span>
                 </div>
                 <p class="small-title ">附件上传</p>
-                <div>
+                <div class="upload">
                     <el-upload
                         class="upload-demo"
                         v-bind="uploadInfo"
@@ -44,7 +44,7 @@
                 <!--end-->
             </el-collapse-item>
         </el-collapse>
-        <div class="flex-wrap-row top20 ">
+        <div class="flex-wrap-row">
             <el-col
                 :span="2"
                 :offset="8"
@@ -205,6 +205,7 @@ export default {
 <style lang="scss" scoped>
 .upload {
     display: flex;
+    margin-top: 10px;
     margin-bottom: 10px;
     span {
         flex: 1;
@@ -212,5 +213,14 @@ export default {
             color: #c31313;
         }
     }
+}
+.noannex{
+    margin-top: 10px;
+}
+.small-title{
+    padding: 10px 0;
+}
+.flex-wrap-row{
+    margin-top: 20px;
 }
 </style>

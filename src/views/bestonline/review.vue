@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="160" @handleCurrentChange="handleCurrentChange">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="160" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
                 <template slot="companyName" slot-scope="scope">
                     <router-link class="isLink" :to="{path:'/bestonline/evaluation',query:{'applyId':scope.data.row.applyId}}">
                         <span>{{scope.data.row.companyName}}</span>
@@ -42,8 +42,6 @@
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row.applyId)">查看</el-button>
                 </template>
             </basicTable>
-            <!-- <reviewTable :totalData="totalTableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-            </reviewTable> -->
         </div>
         <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
             <div class="block">
@@ -60,7 +58,6 @@
     </div>
 </template>
 <script>
-// import reviewTable from './components/reviewTable'
 import { getDuemain, getDueapprovalconclusion } from './api/index.js'
 import { mapState } from 'vuex'
 export default {
@@ -106,6 +103,7 @@ export default {
     },
     methods: {
         onSizeChange (val) {
+            console.log(val)
             this.params.pageSize = val
             this.getDuemain()
         },
@@ -122,17 +120,11 @@ export default {
             this.params.role = this.userInfo.positionCode
             const { data } = await getDuemain(this.params)
             this.tableData = data.data.pageContent
-            console.log(data)
-            // this.totalTableData = data.data.pageContent
             this.pagination = {
                 pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
                 total: data.data.totalElements
             }
-            // this.paginationData = {
-            //     pageNumber: data.data.pageNumber,
-            //     totalElements: data.data.totalElements
-            // }
         },
         async showProcess (applyId) {
             this.dialogVisible = true
@@ -146,17 +138,12 @@ export default {
             })
         },
         onEdit (row) {
+            sessionStorage.setItem('companyName', row.companyName)
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale } })
         },
         onCheck (applyId) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: applyId } })
-        },
-        handleCurrentChange (val) {
-            console.log(val)
         }
-    },
-    components: {
-        // reviewTable
     }
 }
 </script>
