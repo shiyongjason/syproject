@@ -64,11 +64,10 @@
                 <el-table-column
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
-                        <el-button type="text"
-                                size="small"
+                        <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
+                        <!--:class="scope.row.status === 2 ? '' : 'status-on'"-->
+                        <el-button class="orangeBtn"
                                 @click="onUpdateBrandStatus(scope.row)"
-                                :class="scope.row.status === 2 ? '' : 'status-on'"
                                 v-text="scope.row.status === 2 ? '生效' : '失效'">
                         </el-button>
                     </template>
@@ -155,7 +154,7 @@ export default {
             }
         },
         async _updateBrandStatus (params) {
-            params.updateBy = this.userInfo.name
+            params.updateBy = this.userInfo.employeeName
             await updateBrandStatus(params)
             this.$message({
                 message: params.status === 2 ? '品牌已失效！' : '品牌已生效！',

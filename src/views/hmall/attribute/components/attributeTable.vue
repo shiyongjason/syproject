@@ -1,17 +1,15 @@
 <template>
     <div>
-        <div class="flex-wrap-row header">
-            <div class="flex-wrap-box">
-                <div class="flex-wrap-cont">
-                    <el-button type="primary" class="ml20" @click="openMark()">
-                        新增属性
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,1)">批量生效</el-button>
-                    <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,2)">批量失效</el-button>
-                </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-col">
+                <el-button type="primary" class="ml20" @click="openMark()">
+                    新增属性
+                </el-button>
+                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,1)">批量生效</el-button>
+                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,2)">批量失效</el-button>
             </div>
         </div>
-        <div class="attribute-table page-box base-table page-table">
+        <div class="page-body-cont">
             <el-table
                 :data="tableData"
                 border
@@ -85,12 +83,11 @@
                 <el-table-column
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
+                        <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
+                        <!--:class="scope.row.status === 2 ? '' : 'status-on'"-->
                         <el-button
-                            type="text"
-                            size="small"
+                            class="orangeBtn"
                             @click="updateAttributeStatus(scope.row)"
-                            :class="scope.row.status === 2 ? '' : 'status-on'"
                             v-text="scope.row.status === 2 ? '生效' : '失效'">
                         </el-button>
                     </template>
@@ -176,7 +173,7 @@ export default {
             }
         },
         async _updateAttributeStatus (params) {
-            params.updateBy = this.userInfo.name
+            params.updateBy = this.userInfo.employeeName
             await updateAttributeStatus(params)
             this.$message({
                 message: params.status === 2 ? '属性已失效！' : '属性已生效！',

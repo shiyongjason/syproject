@@ -172,7 +172,7 @@ export default {
             return {
                 action: fileUploadUrl + 'tms/files/upload',
                 data: {
-                    updateUid: this.userInfo.name
+                    updateUid: this.userInfo.employeeName
                 },
                 accept: 'image/jpeg, image/jpg, image/png'
             }
@@ -210,7 +210,7 @@ export default {
         },
         async saveBrand () {
             let { ...params } = this.form
-            params.createBy = this.userInfo.name
+            params.createBy = this.userInfo.employeeName
             if (this.status === 'add') {
                 await createBrand(params)
             } else if (this.status === 'modify') {

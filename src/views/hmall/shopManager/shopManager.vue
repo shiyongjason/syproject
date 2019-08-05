@@ -1,131 +1,124 @@
 <template>
     <div class="shop-manager">
         <div class="page-body">
-            <div class="page-body-cont">
-                <div class="page-header">
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item>商品库管理</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <div class="page-wrap flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品编码：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.productCode"
-                                    placeholder="请输入商品编码"
-                                    maxlength="50"></el-input>
-                            </div>
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-row">
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品编码：</div>
+                        <div class="flex-wrap-cont">
+                            <el-input
+                                v-model="queryParams.productCode"
+                                placeholder="请输入商品编码"
+                                maxlength="50"></el-input>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.productName"
-                                    placeholder="请输入商品名称"
-                                    maxlength="50"></el-input>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品名称：</div>
+                        <div class="flex-wrap-cont">
+                            <el-input
+                                v-model="queryParams.productName"
+                                placeholder="请输入商品名称"
+                                maxlength="50"></el-input>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品品牌：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.brandName"
-                                    placeholder="请输入商品品牌"
-                                    maxlength="50"></el-input>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品品牌：</div>
+                        <div class="flex-wrap-cont">
+                            <el-input
+                                v-model="queryParams.brandName"
+                                placeholder="请输入商品品牌"
+                                maxlength="50"></el-input>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.status" style="width: 100%">
-                                    <el-option
-                                        label="全部"
-                                        value="">
-                                    </el-option>
-                                    <el-option
-                                        label="上架"
-                                        value="1">
-                                    </el-option>
-                                    <el-option
-                                        label="下架"
-                                        value="2">
-                                    </el-option>
-                                </el-select>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品状态：</div>
+                        <div class="flex-wrap-cont">
+                            <el-select v-model="queryParams.status" style="width: 100%">
+                                <el-option
+                                    label="全部"
+                                    value="">
+                                </el-option>
+                                <el-option
+                                    label="上架"
+                                    value="1">
+                                </el-option>
+                                <el-option
+                                    label="下架"
+                                    value="2">
+                                </el-option>
+                            </el-select>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品来源：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.sourceCode" style="width: 100%">
-                                    <el-option
-                                        label="全部"
-                                        value="">
-                                    </el-option>
-                                    <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
-                                    </el-option>
-                                </el-select>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品来源：</div>
+                        <div class="flex-wrap-cont">
+                            <el-select v-model="queryParams.sourceCode" style="width: 100%">
+                                <el-option
+                                    label="全部"
+                                    value="">
+                                </el-option>
+                                <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
+                                </el-option>
+                            </el-select>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品类目：</div>
-                            <div class="flex-wrap-cont">
-                                <el-cascader
-                                    :options="productCategoryList"
-                                    v-model="queryParams.categoryId"
-                                    :change-on-select="true"
-                                    @change="productCategoryChange"
-                                    style="width: 100%"></el-cascader>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">商品类目：</div>
+                        <div class="flex-wrap-cont">
+                            <el-cascader
+                                :options="productCategoryList"
+                                v-model="queryParams.categoryId"
+                                :change-on-select="true"
+                                @change="productCategoryChange"
+                                style="width: 100%"></el-cascader>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">维护时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker
-                                    v-model="queryParams.startDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm"
-                                    placeholder="开始日期"
-                                    :picker-options="pickerOptionsStart"
-                                >
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker
-                                    v-model="queryParams.endDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm"
-                                    placeholder="结束日期"
-                                    :picker-options="pickerOptionsEnd"
-                                >
-                                </el-date-picker>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">维护时间：</div>
+                        <div class="flex-wrap-cont">
+                            <el-date-picker
+                                v-model="queryParams.startDate"
+                                type="datetime"
+                                format="yyyy-MM-dd HH:mm"
+                                placeholder="开始日期"
+                                :picker-options="pickerOptionsStart"
+                            >
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker
+                                v-model="queryParams.endDate"
+                                type="datetime"
+                                format="yyyy-MM-dd HH:mm"
+                                placeholder="结束日期"
+                                :picker-options="pickerOptionsEnd"
+                            >
+                            </el-date-picker>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">维护人：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input type="text" maxlength="50" v-model="queryParams.updateBy" placeholder="请输入维护人姓名">
-                                </el-input>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">维护人：</div>
+                        <div class="flex-wrap-cont">
+                            <el-input type="text" maxlength="50" v-model="queryParams.updateBy" placeholder="请输入维护人姓名">
+                            </el-input>
                         </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-cont">
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    搜索
-                                </el-button>
-                            </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-cont">
+                            <el-button type="primary" class="ml20" @click="onQuery()">
+                                搜索
+                            </el-button>
                         </div>
                     </div>
                 </div>
-                <shopManagerTable
-                    ref="shopManagerTable"
-                    :tableData="tableData"
-                    :paginationData="paginationData"
-                    @updateStatus="onQuery"
-                    @updateBrand="updateBrandChange"
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange"></shopManagerTable>
             </div>
+            <shopManagerTable
+                ref="shopManagerTable"
+                :tableData="tableData"
+                :paginationData="paginationData"
+                @updateStatus="onQuery"
+                @updateBrand="updateBrandChange"
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange"></shopManagerTable>
         </div>
     </div>
 </template>

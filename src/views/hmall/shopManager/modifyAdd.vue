@@ -188,7 +188,7 @@ export default {
                 // TODO: 这个是老接口，不知道要不要更新
                 action: interfaceUrl + 'api/httpH5/upload/6999',
                 data: {
-                    updateUid: this.userInfo.name
+                    updateUid: this.userInfo.employeeName
                 },
                 accept: 'image/jpeg, image/jpg, image/png'
             }

@@ -1,133 +1,124 @@
 <template>
     <div class="shop-list">
         <div class="page-body">
-            <div class="page-body-cont">
-                <div class="page-header">
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item>商品审核</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <div class="page-wrap flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品编码：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.productCode"
-                                    placeholder="请输入商品编码"
-                                    maxlength="50"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.productName"
-                                    placeholder="请输入商品名称"
-                                    maxlength="50"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品类目：</div>
-                            <div class="flex-wrap-cont">
-                                <el-cascader
-                                    :options="productCategoryList"
-                                    v-model="queryParams.categoryId"
-                                    :change-on-select="true"
-                                    @change="productCategoryChange"
-                                    style="width: 100%"></el-cascader>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">商品品牌：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.brandName"
-                                    placeholder="请输入商品品牌"
-                                    maxlength="50"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">平台公司名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    v-model="queryParams.sourceName"
-                                    placeholder="请输入平台公司名称"
-                                    maxlength="50"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">审核状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.checkStatus" style="width: 100%">
-                                    <el-option :label="'全部'" value=""></el-option>
-                                    <el-option :label="'待审核'" :value="1"></el-option>
-                                    <el-option :label="'审核通过'" :value="2"></el-option>
-                                    <el-option :label="'审核失败'" :value="3"></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">创建时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker
-                                    v-model="queryParams.startDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="开始日期"
-                                    :picker-options="pickerOptionsStart"
-                                >
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker
-                                    v-model="queryParams.endDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="结束日期"
-                                    :picker-options="pickerOptionsEnd"
-                                >
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">审核时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker
-                                    v-model="queryParams.checkStartDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="开始日期"
-                                    :picker-options="pickerOptionsCheckStart"
-                                >
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker
-                                    v-model="queryParams.checkEndDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="结束日期"
-                                    :picker-options="pickerOptionsCheckEnd"
-                                >
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-cont">
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    搜索
-                                </el-button>
-                            </div>
-                        </div>
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品编码：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            v-model="queryParams.productCode"
+                            placeholder="请输入商品编码"
+                            maxlength="50"></el-input>
                     </div>
                 </div>
-                <shopReviewTable
-                    :tableData="tableData"
-                    :paginationData="paginationData"
-                    @updateStatus="onQuery"
-                    @updateBrand="updateBrandChange"
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange"></shopReviewTable>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品名称：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            v-model="queryParams.productName"
+                            placeholder="请输入商品名称"
+                            maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品类目：</div>
+                    <div class="query-col-input">
+                        <el-cascader
+                            :options="productCategoryList"
+                            v-model="queryParams.categoryId"
+                            :change-on-select="true"
+                            @change="productCategoryChange"
+                            style="width: 100%"></el-cascader>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品品牌：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            v-model="queryParams.brandName"
+                            placeholder="请输入商品品牌"
+                            maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司名称：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            v-model="queryParams.sourceName"
+                            placeholder="请输入平台公司名称"
+                            maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">审核状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.checkStatus" style="width: 100%">
+                            <el-option :label="'全部'" value=""></el-option>
+                            <el-option :label="'待审核'" :value="1"></el-option>
+                            <el-option :label="'审核通过'" :value="2"></el-option>
+                            <el-option :label="'审核失败'" :value="3"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">创建时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker
+                            v-model="queryParams.startDate"
+                            type="datetime"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="开始日期"
+                            :picker-options="pickerOptionsStart"
+                        >
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker
+                            v-model="queryParams.endDate"
+                            type="datetime"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="结束日期"
+                            :picker-options="pickerOptionsEnd"
+                        >
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">审核时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker
+                            v-model="queryParams.checkStartDate"
+                            type="datetime"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="开始日期"
+                            :picker-options="pickerOptionsCheckStart"
+                        >
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker
+                            v-model="queryParams.checkEndDate"
+                            type="datetime"
+                            format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="结束日期"
+                            :picker-options="pickerOptionsCheckEnd"
+                        >
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onQuery()">
+                            搜索
+                        </el-button>
+                    </div>
+                </div>
             </div>
+            <shopReviewTable
+                :tableData="tableData"
+                :paginationData="paginationData"
+                @updateStatus="onQuery"
+                @updateBrand="updateBrandChange"
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange"></shopReviewTable>
         </div>
     </div>
 </template>

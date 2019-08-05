@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="page-box base-table page-table shop-manager-table">
+        <div class="page-body-cont">
             <el-table :data="tableData"
                     border
                     ref="brandTable"
@@ -14,7 +14,7 @@
                     align="center"
                     label="商品名称">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="goToDetails(scope.row)"><span style="word-break: break-all;white-space:pre-wrap;text-align: center;line-height: 20px">{{ scope.row.productName }}</span></el-button>
+                        <a class="isLink" @click="goToDetails(scope.row)"><span style="word-break: break-all;white-space:pre-wrap;text-align: center;line-height: 20px">{{ scope.row.productName }}</span></a>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -35,6 +35,7 @@
                     label="平台公司">
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="创建时间">
                     <template slot-scope="scope">
                         {{ scope.row.createTime | formatterTime }}
@@ -71,10 +72,10 @@
                     align="center"
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small"
+                        <el-button class="orangeBtn"
                                     @click="goToChecked(scope.row)"
                                         v-if="scope.row.checkStatus===1">审核</el-button>
-                        <el-button type="text" size="small"  @click="addShopLibrary(scope.row)"
+                        <el-button class="orangeBtn"  @click="addShopLibrary(scope.row)"
                                    v-if="scope.row.checkStatus===2">
                             添加到商品库
                         </el-button>

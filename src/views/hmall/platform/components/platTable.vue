@@ -1,5 +1,5 @@
 <template>
-    <div class="plat-table">
+    <div class="page-body-cont">
         <el-table :data="tableData"
                   border
                   style="width: 100%">
@@ -88,8 +88,8 @@
                 align="center"
                 label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" size="small" @click="open(scope.row.organizationCode)" v-if="scope.row.status != 1">开启</el-button>
-                    <el-button type="text" size="small" disabled="disabled" v-else>经营数据</el-button>
+                    <el-button class="orangeBtn" @click="open(scope.row.organizationCode)" v-if="scope.row.status != 1">开启</el-button>
+                    <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -185,7 +185,7 @@ export default {
         async createOpen () {
             const params = {
                 account: this.form.phoneNumber,
-                createBy: this.userInfo.name,
+                createBy: this.userInfo.employeeName,
                 organizationCode: this.openId,
                 status: 1 // 开启
             }

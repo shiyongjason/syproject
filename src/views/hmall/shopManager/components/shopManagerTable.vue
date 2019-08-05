@@ -1,17 +1,15 @@
 <template>
     <div>
-        <div class="flex-wrap-row pt10">
-            <div class="flex-wrap-box">
-                <div class="flex-wrap-cont">
-                    <el-button type="primary" class="ml20" @click="gotoProductAdd">
-                        新增商品
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量上架</el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量下架</el-button>
-                </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-col">
+                <el-button type="primary" class="ml20" @click="gotoProductAdd">
+                    新增商品
+                </el-button>
+                <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量上架</el-button>
+                <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量下架</el-button>
             </div>
         </div>
-        <div class="page-box base-table page-table shop-manager-table">
+        <div class="page-body-cont">
             <el-table :data="tableData"
                     border
                     ref="brandTable"
@@ -30,15 +28,18 @@
                 </el-table-column>
                 <el-table-column
                     prop="productCode"
+                    align="center"
                     label="商品编码spu">
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="商品名称">
                     <template slot-scope="scope">
-                        <el-button @click="modify(scope.row)" type="text"><span style="word-break: break-all;white-space:pre-wrap;line-height: 20px">{{scope.row.productName}}</span></el-button>
+                        <a @click="modify(scope.row)" class="isLink"><span style="word-break: break-all;white-space:pre-wrap;line-height: 20px">{{scope.row.productName}}</span></a>
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="品牌">
                     <template slot-scope="scope">
                         {{scope.row.brandName}}{{scope.row.brandNameEn}}
@@ -46,10 +47,12 @@
                 </el-table-column>
                 <el-table-column
                     prop="categoryName"
+                    align="center"
                     label="商品类目">
                 </el-table-column>
                 <el-table-column
                     prop="sourceName"
+                    align="center"
                     label="商品来源">
                 </el-table-column>
                 <el-table-column
@@ -63,22 +66,24 @@
                 </el-table-column>
                 <el-table-column
                     prop="updateBy"
+                    align="center"
                     label="维护人">
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="维护时间">
                     <template slot-scope="scope">
                         {{ scope.row.updateTime | formatterTime }}
                     </template>
                 </el-table-column>
                 <el-table-column
+                    align="center"
                     label="操作">
                     <template slot-scope="scope">
-                        <el-button @click="modify(scope.row)" type="text" size="small">修改</el-button>
-                        <el-button type="text"
-                                size="small"
+                        <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
+                        <!--:class="scope.row.status === 1 ? 'status-on' : ''"-->
+                        <el-button class="orangeBtn"
                                 @click="onChangeStatusSingle(scope.row)"
-                                :class="scope.row.status === 1 ? 'status-on' : ''"
                                 v-text="scope.row.status === 1 ? '下架' : '上架'">
                         </el-button>
                     </template>
@@ -155,7 +160,7 @@ export default {
                 productIds: [row.id],
                 status: row.status === 2 ? 1 : 2,
                 requestSource: 1,
-                updateBy: this.userInfo.name
+                updateBy: this.userInfo.employeeName
             })
             this.$emit('updateStatus')
         },
@@ -171,7 +176,7 @@ export default {
                     productIds: this.selectIds,
                     status,
                     requestSource: 1,
-                    updateBy: this.userInfo.name
+                    updateBy: this.userInfo.employeeName
                 })
                 this.$emit('updateStatus')
             }

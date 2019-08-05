@@ -1,92 +1,83 @@
 <template>
     <div class="attribute">
         <div class="page-body">
-            <div class="page-body-cont">
-                <div class="page-header">
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item>属性管理</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <div class="page-wrap flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">属性编码：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    maxlength="50"
-                                    v-model="queryParams.parameterCode"
-                                    placeholder="请输入属性编码">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">属性名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    maxlength="50"
-                                    v-model="queryParams.parameterName"
-                                    placeholder="请输入属性名称">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">属性类型：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.type" style="width: 100%">
-                                    <el-option
-                                        v-for="item in attrTypeOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">属性状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.status" style="width: 100%">
-                                    <el-option
-                                        v-for="item in attrStatusOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">维护人：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input
-                                    type="text"
-                                    maxlength="50"
-                                    v-model="queryParams.updateBy"
-                                    placeholder="请输入维护人姓名">
-                                </el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-cont">
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    搜索
-                                </el-button>
-                            </div>
-                        </div>
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-col">
+                    <div class="query-col-title">属性编码：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            type="text"
+                            maxlength="50"
+                            v-model="queryParams.parameterCode"
+                            placeholder="请输入属性编码">
+                        </el-input>
                     </div>
                 </div>
-                <AttributeTable
-                    :tableData="tableData"
-                    :paginationData="paginationData"
-                    @updateStatus="onQuery"
-                    @updateAttribute="updateAttributeChange"
-                    @openMark="openMark"
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange">
-                </AttributeTable>
+                <div class="query-cont-col">
+                    <div class="query-col-title">属性名称：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            type="text"
+                            maxlength="50"
+                            v-model="queryParams.parameterName"
+                            placeholder="请输入属性名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">属性类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.type" style="width: 100%">
+                            <el-option
+                                v-for="item in attrTypeOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">属性状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.status" style="width: 100%">
+                            <el-option
+                                v-for="item in attrStatusOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">维护人：</div>
+                    <div class="query-col-input">
+                        <el-input
+                            type="text"
+                            maxlength="50"
+                            v-model="queryParams.updateBy"
+                            placeholder="请输入维护人姓名">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onQuery()">
+                            搜索
+                        </el-button>
+                    </div>
+                </div>
             </div>
+            <AttributeTable
+                :tableData="tableData"
+                :paginationData="paginationData"
+                @updateStatus="onQuery"
+                @updateAttribute="updateAttributeChange"
+                @openMark="openMark"
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange">
+            </AttributeTable>
         </div>
         <el-dialog
             title="属性编辑"
@@ -272,7 +263,7 @@ export default {
             } else if (params.type === 2) {
                 params.values = params.values.map(item => item.value)
             }
-            params.operator = this.userInfo.name
+            params.operator = this.userInfo.employeeName
             if (this.status === 'add') {
                 await createAttribute(params)
             } else if (this.status === 'modify') {

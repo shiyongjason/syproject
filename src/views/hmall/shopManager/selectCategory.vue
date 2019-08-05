@@ -321,7 +321,7 @@ export default {
             return {
                 action: fileUploadUrl + 'tms/files/upload',
                 data: {
-                    updateUid: this.userInfo.name
+                    updateUid: this.userInfo.employeeName
                 },
                 name: 'multiFile'
             }
@@ -331,7 +331,7 @@ export default {
         },
         uploadImgParams () {
             return {
-                updateUid: this.userInfo.name
+                updateUid: this.userInfo.employeeName
             }
         },
         uploadImgName () {
@@ -508,7 +508,7 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     const { ...params } = this.form
-                    params.createBy = this.userInfo.name
+                    params.createBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfo.organizationCode
 
@@ -666,8 +666,8 @@ export default {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     const { ...params } = this.form
-                    params.createBy = this.userInfo.name
-                    params.updateBy = this.userInfo.name
+                    params.createBy = this.userInfo.employeeName
+                    params.updateBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfo.organizationCode
                     if (this.form.productShortName) {
@@ -696,7 +696,7 @@ export default {
                 const params = {
                     id: this.modify,
                     causeFailure: this.rejectContainer,
-                    checkBy: this.userInfo.name
+                    checkBy: this.userInfo.employeeName
                 }
                 await reviewReject(params)
                 this.$router.push('/hmall/shopReviewList')
