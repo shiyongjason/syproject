@@ -205,8 +205,6 @@ export default {
             ]
         },
         async onSubmit (i) {
-
-
             const type = i === 0 ? '保存' : '提交'
             let data = {
                 applyId: this.$route.query.applyId,

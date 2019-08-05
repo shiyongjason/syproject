@@ -22,3 +22,15 @@ export const MAIN_CATEGORY = [
     { value: '厨卫', key: 6 },
     { value: '其他', key: 7 }
 ]
+
+export const YES_NO_STATUS = [
+    { label: '请选择', value: '' },
+    { label: '是', value: 1 },
+    { label: '否', value: 0 }
+]
+
+export const COST_RATIONALITY = [
+    { label: '请选择', value: '' },
+    { label: '合理', value: 0 },
+    { label: '不合理', value: 1 }
+]
