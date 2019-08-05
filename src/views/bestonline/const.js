@@ -34,3 +34,18 @@ export const COST_RATIONALITY = [
     { label: '合理', value: 0 },
     { label: '不合理', value: 1 }
 ]
+
+export const ISPROVIDE_CONTRACT = [
+    { value: '是', key: 0 },
+    { value: '否', key: 1 }
+]
+
+export const IS_DOWN = [
+    { value: '否', key: 0 },
+    { value: '是', key: 1 }
+]
+
+export const IS_HEALTH = [
+    { value: '是', key: 0 },
+    { value: '否', key: 1 }
+]

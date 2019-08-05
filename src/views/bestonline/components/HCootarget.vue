@@ -16,7 +16,7 @@
                     <div class="table-col"><span class="red-word">*</span>净利润率</div>
                 </div>
                 <div class="table-row" v-for="(item,index) in form.yearRateTabelContents" :key="index">
-                    <div class="table-col">第{{item.year}}年</div>
+                    <div class="table-col">{{item.year}}</div>
                     <div class="table-col">
                         <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
                             <template slot="suffix">%</template>
@@ -196,13 +196,7 @@ export default {
             this.form.createUser = data.data.createUser
             this.form.equityRatio = data.data.equityRatio
             this.form.scale = data.data.scale
-            this.form.yearRateTabelContents = data.data.yearRateTabelContents ? data.data.yearRateTabelContents : [
-                { year: '第一年' },
-                { year: '第二年' },
-                { year: '第三年' },
-                { year: '第四年' },
-                { year: '第五年' }
-            ]
+            this.form.yearRateTabelContents = data.data.yearRateTabelContents
         },
         async onSubmit (i) {
             const type = i === 0 ? '保存' : '提交'
