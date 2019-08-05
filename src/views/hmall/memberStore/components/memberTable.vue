@@ -1,5 +1,5 @@
 <template>
-    <div class="coupon-table">
+    <div class="page-body-cont">
         <el-table :data="tableData"
                   border
                   style="width: 100%">
