@@ -248,6 +248,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
+            },
+            {
+                path: 'activity',
+                name: 'activity',
+                meta: {
+                    title: '活动审核',
+                    tagName: '活动审核',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/activity/index.vue')
             }
         ]
     }

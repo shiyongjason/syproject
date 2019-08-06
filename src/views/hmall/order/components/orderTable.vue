@@ -38,6 +38,21 @@
                 label="优惠金额">
             </el-table-column>
             <el-table-column
+                prop="couponDetailDTO.a"
+                align="center"
+                label="活动编号">
+            </el-table-column>
+            <el-table-column
+                prop="couponDetailDTO.b"
+                align="center"
+                label="活动类型">
+            </el-table-column>
+            <el-table-column
+                prop="couponDetailDTO.c"
+                align="center"
+                label="活动优惠金额">
+            </el-table-column>
+            <el-table-column
                 align="center"
                 label="订单状态">
                 <template slot-scope="scope">
