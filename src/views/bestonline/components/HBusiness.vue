@@ -1179,11 +1179,11 @@ export default {
                     return false
                 }
             })
-            this.$refs['KPIForm'].validate((valid) => {
-                if (valid) {
-                    this.$refs['']
-                }
-            })
+            // this.$refs['KPIForm'].validate((valid) => {
+            //     if (valid) {
+            //         this.$refs['']
+            //     }
+            // })
 
             this.publicityPromotionChannels = this.checkedCities.join(',')
             this.dueBusinessSaleCreateFormList[0].currentYearSales = this.currentYearAllSales

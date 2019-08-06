@@ -2,7 +2,7 @@
     <div class="jd-manage">
         <p class="titlt-p">合作目标</p>
         <p v-show="isdisabled && type">已提交 {{updateTime}} {{updateUser}} </p>
-        <el-form :model="form" :rules="rules">
+        <el-form :model="form" :rules="rules" ref="form">
             <el-form-item label="尽调规模：" prop="scale">
                 <el-input v-model="form.scale" @keyup.native="oninput('scale',$event)">
                     <template slot="suffix">万</template>
@@ -29,59 +29,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="table-row">
-                    <div class="table-col">第2年</div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                </div>
-                <div class="table-row">
-                    <div class="table-col">第3年</div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                </div>
-                <div class="table-row">
-                    <div class="table-col">第4年</div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                </div>
-                <div class="table-row">
-                    <div class="table-col">第5年</div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="formData.scale" @keyup.native="oninput('scale',$event)" :disabled="isdisabled" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                </div>
-            </div> -->
             <el-form-item label="股权比例：" prop="equityRatio">
                 <el-input v-model="form.equityRatio">
                 </el-input>
@@ -168,13 +115,6 @@ export default {
                 return false
             }
         },
-        showWarnMsg (msg) {
-            this.$message({
-                showClose: true,
-                message: msg,
-                type: 'warning'
-            })
-        },
         async getDueLegal () {
             const { data } = await getDueLegal(this.$route.query.applyId)
             console.log(data.data)
@@ -199,71 +139,55 @@ export default {
             this.form.yearRateTabelContents = data.data.yearRateTabelContents
         },
         async onSubmit (i) {
-            const type = i === 0 ? '保存' : '提交'
+            // const type = i === 0 ? '保存' : '提交'
+            this.form.yearRateTabelContents.map(i => {
+                if (i.yearGrowthRate === null || i.yearGrowthRate === '') {
+                    this.$message.warning('请输入年度递增率')
+                    return false
+                }
+            })
+            this.form.yearRateTabelContents.map(i => {
+                if (i.netProfitRate === null || i.netProfitRate === '') {
+                    this.$message.warning('请输入净利润率')
+                    return false
+                }
+            })
             let data = {
                 applyId: this.$route.query.applyId,
                 ...this.form,
                 operationNode: i
             }
-            if (i === 0) {
-                if (this.data.id) {
-                    Object.assign(data, { updateUser: this.userInfo.name, id: this.data.id })
-                    await putCooperativetarget(data)
-                } else {
-                    Object.assign(data, { createUser: this.userInfo.name })
-                    await addCooperativetarget(data)
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    if (i === 0) {
+                        if (this.data.id) {
+                            Object.assign(data, { updateUser: this.userInfo.name, id: this.data.id })
+                            await putCooperativetarget(data)
+                        } else {
+                            Object.assign(data, { createUser: this.userInfo.name })
+                            await addCooperativetarget(data)
+                        }
+                    }
+                    if (i === 1) {
+                        if (this.data.id) {
+                            Object.assign(data, { updateUser: this.userInfo.name, id: this.data.id })
+                            await putCooperativetarget(data)
+                        } else {
+                            this.form.applyId = this.$route.query.applyId
+                            this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                            this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
+                                item.yearGrowthRate = item.yearGrowthRate - 0
+                                item.netProfitRate = item.netProfitRate - 0
+                            })
+                            Object.assign(data, { createUser: this.userInfo.name })
+                            await addCooperativetarget(data)
+                        }
+                        this.isdisabled = true
+                        this.type = true
+                    }
                 }
-                //     this.$router.go(-1)
-            }
-            if (i === 1) {
-                //     if (!this.vaildEmpty(this.formData.scale)) {
-                //         this.showWarnMsg('请输入尽调规模')
-                //         return false
-                //     }
-                //     if (!this.vaildEmpty(this.formData.yearGrowthRate)) {
-                //         this.showWarnMsg('请输入年度递增率')
-                //         return false
-                //     }
-                //     if (!this.vaildEmpty(this.formData.equityRatio)) {
-                //         this.showWarnMsg('请选择股权比例')
-                //         return false
-                //     }
-                //     // eslint-disable-next-line
-                //     const regex = /^\d+(\:\d+)$/.test(this.formData.equityRatio)
-                //     if (!regex) {
-                //         this.$message({
-                //             showClose: true,
-                //             message: '股权比例格式不对',
-                //             type: 'warning'
-                //         })
-                //         return false
-                //     }
-                //     if (!this.vaildEmpty(this.formData.netProfitRate)) {
-                //         this.showWarnMsg('请选择净利润率')
-                //         return false
-                //     }
-                if (this.data.id) {
-                    console.log(1)
-                    Object.assign(data, { updateUser: this.userInfo.name, id: this.data.id })
-                    await putCooperativetarget(data)
-                } else {
-                    // console.log(JSON.parse(sessionStorage.getItem('user_data')).name)
-                    this.form.applyId = this.$route.query.applyId
-                    this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-                    this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
-                        item.yearGrowthRate = item.yearGrowthRate - 0
-                        item.netProfitRate = item.netProfitRate - 0
-                    })
-                    Object.assign(data, { createUser: this.userInfo.name })
-                    await addCooperativetarget(data)
-                }
-                this.isdisabled = true
-                this.type = true
-            }
-            this.$message({
-                type: 'success',
-                message: `${type}成功`
             })
+
             this.$emit('parentFun')
         }
     }

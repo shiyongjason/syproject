@@ -48,7 +48,7 @@
                                 <td class="assessmentRow">上年度</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="KPIForm.dueFinanceYearOperatingPos">
                             <tr>
                                 <td class="assessmentRow">资产负债率</td>
                                 <td class="assessmentRow">
@@ -258,18 +258,18 @@
                                 <td class="assessmentRow">上年度</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="debtForm.dueFinanceYearOperatingPos">
                             <tr>
                                 <td class="assessmentRow">流动比率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].liquidityRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -278,13 +278,13 @@
                                 <td class="assessmentRow">速动比率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].quickRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].quickRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].quickRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].quickRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -292,12 +292,12 @@
                             <tr>
                                 <td class="assessmentRow">现金比率</td>
                                 <td class="assessmentRow">
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].cashRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].cashRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].cashRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].cashRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -306,13 +306,13 @@
                                 <td class="assessmentRow">资产负债率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
+                                    <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -375,24 +375,23 @@
                                 <td class="assessmentRow">上上年度</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="serviceForm.dueFinanceYearOperatingPos">
                             <tr>
                                 <td class="assessmentRow">流动比率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[0].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[1].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[2].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -401,19 +400,18 @@
                                 <td class="assessmentRow">速动比率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].quickRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[0].quickRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].quickRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[1].quickRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[2].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -421,18 +419,19 @@
                             <tr>
                                 <td class="assessmentRow">现金比率</td>
                                 <td class="assessmentRow">
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].cashRatio">
-                                        <template slot="suffix">%</template>
-                                    </el-input>
-                                </td>
-                                <td class="assessmentRow">
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].cashRatio">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[0].cashRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[1].cashRatio">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[2].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -441,19 +440,18 @@
                                 <td class="assessmentRow">资产负债率</td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <span class="red-word">*</span>
-                                    <el-input v-model="profitForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                    <el-input v-model="serviceForm.dueFinanceYearOperatingPos[2].liquidityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -508,21 +506,21 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="公司借款：">
-                                <el-input v-model="dueFinanceBasic.companyDebt" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyDebt',$event)">
+                                <el-input v-model="dueFinanceBasic.companyDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyDebt',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="股东借款：">
-                                <el-input v-model="dueFinanceBasic.shareholdersDebt" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersDebt',$event)">
+                            <el-form-item label="股东借款：" prop="shareholdersDebt">
+                                <el-input v-model="dueFinanceBasic.shareholdersDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersDebt',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="公司向股东借款：">
-                                <el-input v-model="dueFinanceBasic.companyBorrowsShareholders" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyBorrowsShareholders',$event)">
+                            <el-form-item label="公司向股东借款：" prop="companyBorrowsShareholders">
+                                <el-input v-model="dueFinanceBasic.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyBorrowsShareholders',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
@@ -530,22 +528,22 @@
                     </div>
                     <div class="form-cont-row">
                         <div class="form-cont-col">
-                            <el-form-item label="公司向股东借款：">
-                                <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                            <el-form-item label="公司向股东借款：" prop="shareholdersBorrowsCompany">
+                                <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="现金流量比率：">
-                                <el-input v-model="dueFinanceBasic.cashFlowRatio" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
+                                <el-input v-model="dueFinanceBasic.cashFlowRatio" placeholder="请输入现金流量比率" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="资金风险评估：">
-                                <el-select v-model="dueFinanceBasic.capitalRiskAssessment" placeholder="请选择" :disabled="isdisabled">
+                            <el-form-item label="资金风险评估：" prop="capitalRiskAssessment">
+                                <el-select v-model="dueFinanceBasic.capitalRiskAssessment" placeholder="请选择资金风险评估" :disabled="isdisabled">
                                     <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -555,14 +553,14 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                                <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                                <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="个人及公司担保：">
-                                <el-input v-model="dueFinanceBasic.cashFlowRatio" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
+                                <el-input v-model="dueFinanceBasic.cashFlowRatio" placeholder="请输入比例" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -638,12 +636,66 @@
                                 <td class="assessmentRow">上上年度</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="taxationForm.dueFinanceYearOperatingPos">
                             <tr>
-                                <td class="assessmentRow">-</td>
-                                <td class="assessmentRow">本年度</td>
-                                <td class="assessmentRow">上年度</td>
-                                <td class="assessmentRow">上上年度</td>
+                                <td class="assessmentRow">年度纳税营业收入</td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[0].annualTaxableBusinessIncome">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[1].annualTaxableBusinessIncome">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[2].annualTaxableBusinessIncome">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="assessmentRow">纳税收入占比</td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[0].taxableIncomeRatio">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[1].taxableIncomeRatio">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[2].taxableIncomeRatio">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="assessmentRow">税负率</td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[0].taxBearingRate">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <span class="red-word">*</span>
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[1].taxBearingRate">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
+                                <td class="assessmentRow">
+                                    <el-input v-model="taxationForm.dueFinanceYearOperatingPos[2].taxBearingRate">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -1125,7 +1177,7 @@ export default {
     },
     data () {
         return {
-            activeName: '5',
+            activeName: '7',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -1184,7 +1236,16 @@ export default {
             applyId: '',
             type: false,
             textarea: '',
-            KPIForm: {},
+            KPIForm: {
+                assessmentList: [],
+                assessmentItem: '',
+                cooperationTarget: '',
+                state: '',
+                remark: '',
+                riskDisclosure: '',
+                analysisDescription: '',
+                dueFinanceYearOperatingPos: []
+            },
             KPIRules: {
                 riskDisclosure: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
@@ -1193,23 +1254,64 @@ export default {
                     { required: true, message: '请输入分析描述', trigger: 'blur' }
                 ]
             },
-            profitForm: {},
+            profitForm: {
+                dueFinanceYearOperatingPos: []
+            },
             costForm: {},
             costRules: {},
-            debtForm: {},
-            serviceForm: {},
-            capitalForm: {},
-            capitalRules: {},
-            taxationForm: {},
-            storageForm: {},
-            storageRules: {},
-            financeForm: {},
-            financeRules: {},
-            assetsForm: {},
+            debtForm: {
+                dueFinanceYearOperatingPos: []
+            },
+            serviceForm: {
+                dueFinanceYearOperatingPos: []
+            },
+            capitalForm: {
+                companyDebt: '',
+                shareholdersDebt: '',
+                companyBorrowsShareholders: '',
+                shareholdersBorrowsCompany: '',
+                cashFlowRatio: '',
+                capitalRiskAssessment: '',
+                actualControllerAndMateOperatingLoan: '',
+                personalAndCompanyGuarantee: ''
+            },
+            capitalRules: {
+                shareholdersDebt: [
+                    { required: true, message: '请输入股东借款金额', trigger: 'blur' }
+                ],
+                companyBorrowsShareholders: [
+                    { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
+                ],
+                shareholdersBorrowsCompany: [
+                    { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
+                ],
+                capitalRiskAssessment: [
+                    { required: true, message: '请选择资金风险评估', trigger: 'change' }
+                ]
+            },
+            taxationForm: {
+                // dueFinanceYearOperatingPos: [],
+                // annualTaxableBusinessIncome: '',
+                taxableIncomeRatio: '',
+                taxBearingRate: ''
+            },
+            storageForm: {
+                dueFinanceBasic: []
+            },
+            financeForm: {
+                dueFinanceBasic: []
+            },
+            assetsForm: {
+                assetsLiabilities: []
+            },
             assetsRules: {},
-            superprofitForm: {},
+            superprofitForm: {
+                dueFinanceProfit: []
+            },
             superprofitRules: {},
-            cashForm: {},
+            cashForm: {
+                caseFlow: []
+            },
             cashRules: {},
             a: '',
             debtDialog: false,
@@ -1273,7 +1375,7 @@ export default {
             this.KPIForm.riskDisclosure = data.data.dueFinanceBasic.riskDisclosure
             this.KPIForm.analysisDescription = data.data.dueFinanceBasic.analysisDescription
 
-            this.profitForm.dueFinanceYearOperatingPos = this.KPIForm.dueFinanceYearOperatingPos = data.data.dueFinanceYearOperatingPos
+            this.debtForm.dueFinanceYearOperatingPos = this.serviceForm.dueFinanceYearOperatingPos = this.profitForm.dueFinanceYearOperatingPos = this.KPIForm.dueFinanceYearOperatingPos = data.data.dueFinanceYearOperatingPos
 
             this.costForm.salesExpensesRatio = data.data.dueFinanceBasic.salesExpensesRatio
             this.costForm.managementExpensesRatio = data.data.dueFinanceBasic.managementExpensesRatio
@@ -1387,6 +1489,25 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (type) {
+            this.KPIForm.assessmentList.map(i => {
+                if (i.state === null || i.state === '') {
+                    this.$message.warning('请选择尽调评估结论')
+                    this.activeName = '1'
+                    return false
+                }
+            })
+            this.KPIForm.dueFinanceYearOperatingPos.map(i => {
+                if (i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
+                    this.$message.warning('请输入资产负债率')
+                    this.activeName = '1'
+                    return false
+                }
+                if (i.netProfitRate === null || i.netProfitRate === '') {
+                    this.$message.warning('请输入净利润率')
+                    this.activeName = '1'
+                    return false
+                }
+            })
             const formData = this.format(type)
             // for (let i = 0;i < this.assessmentList.length;i++) {
             //     if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
@@ -1395,153 +1516,153 @@ export default {
             //         return false
             //     }
             // }
-            if (!this.vaildEmpty(this.dueFinanceBasic.fundingRisks)) {
-                this.showWarnMsg('请选择资金风险')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.fundSupervision)) {
-                this.showWarnMsg('请选择资金监管')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.warehouseManaged)) {
-                this.showWarnMsg('请选择仓库托管')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.financialExpatriates)) {
-                this.showWarnMsg('请选择财务外派')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.dueFinanceBasic.riskDisclosure) {
-                this.showWarnMsg('请输入风险揭示')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.dueFinanceBasic.analysisDescription) {
-                this.showWarnMsg('请输入分析描述')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.grossMargin)) {
-                this.showWarnMsg('请输入销售毛利率')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.rate)) {
-                this.showWarnMsg('请输入费率')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.profitRatio)) {
-                this.showWarnMsg('请输入净利率')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.liquidityRatio)) {
-                this.showWarnMsg('请输入流动比率')
-                this.activeName = '4'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.quickRatio)) {
-                this.showWarnMsg('请输入速动比率')
-                this.activeName = '4'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.assetLiabilityRatio)) {
-                this.showWarnMsg('请输入资产负债率')
-                this.activeName = '4'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.cashRatio)) {
-                this.showWarnMsg('请输入现金比率')
-                this.activeName = '4'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.daysOfReceivable)) {
-                this.showWarnMsg('请输入应收账款周转天数')
-                this.activeName = '5'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.daysOfInventory)) {
-                this.showWarnMsg('请输入库存周转天数')
-                this.activeName = '5'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.totalAssetsTurnover)) {
-                this.showWarnMsg('请输入总资产周转率')
-                this.activeName = '5'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.returnOnEquity)) {
-                this.showWarnMsg('请输入净资产收益率')
-                this.activeName = '5'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.companyDebt)) {
-                this.showWarnMsg('请输入公司借款')
-                this.activeName = '6'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersDebt)) {
-                this.showWarnMsg('请输入股东借款')
-                this.activeName = '6'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.companyBorrowsShareholders)) {
-                this.showWarnMsg('请输入公司向股东借款')
-                this.activeName = '6'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersBorrowsCompany)) {
-                this.showWarnMsg('请输入股东向公司借款')
-                this.activeName = '6'
-                return false
-            }
-            // if (!this.dueFinanceBasic.cashFlowRatio) {
-            //     this.showWarnMsg('请输入现金流量比率')
+            // if (!this.vaildEmpty(this.dueFinanceBasic.fundingRisks)) {
+            //     this.showWarnMsg('请选择资金风险')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.fundSupervision)) {
+            //     this.showWarnMsg('请选择资金监管')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.warehouseManaged)) {
+            //     this.showWarnMsg('请选择仓库托管')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.financialExpatriates)) {
+            //     this.showWarnMsg('请选择财务外派')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.dueFinanceBasic.riskDisclosure) {
+            //     this.showWarnMsg('请输入风险揭示')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.dueFinanceBasic.analysisDescription) {
+            //     this.showWarnMsg('请输入分析描述')
+            //     this.activeName = '1'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.grossMargin)) {
+            //     this.showWarnMsg('请输入销售毛利率')
+            //     this.activeName = '2'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.rate)) {
+            //     this.showWarnMsg('请输入费率')
+            //     this.activeName = '2'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.profitRatio)) {
+            //     this.showWarnMsg('请输入净利率')
+            //     this.activeName = '2'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.liquidityRatio)) {
+            //     this.showWarnMsg('请输入流动比率')
+            //     this.activeName = '4'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.quickRatio)) {
+            //     this.showWarnMsg('请输入速动比率')
+            //     this.activeName = '4'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.assetLiabilityRatio)) {
+            //     this.showWarnMsg('请输入资产负债率')
+            //     this.activeName = '4'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.cashRatio)) {
+            //     this.showWarnMsg('请输入现金比率')
+            //     this.activeName = '4'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.daysOfReceivable)) {
+            //     this.showWarnMsg('请输入应收账款周转天数')
+            //     this.activeName = '5'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.daysOfInventory)) {
+            //     this.showWarnMsg('请输入库存周转天数')
+            //     this.activeName = '5'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.totalAssetsTurnover)) {
+            //     this.showWarnMsg('请输入总资产周转率')
+            //     this.activeName = '5'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.returnOnEquity)) {
+            //     this.showWarnMsg('请输入净资产收益率')
+            //     this.activeName = '5'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.companyDebt)) {
+            //     this.showWarnMsg('请输入公司借款')
             //     this.activeName = '6'
             //     return false
             // }
-            if (!this.vaildEmpty(this.dueFinanceBasic.capitalRiskAssessment)) {
-                this.showWarnMsg('请选择资金风险评估')
-                this.activeName = '6'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.annualTaxableBusinessIncome)) {
-                this.showWarnMsg('请输入年度纳税营业收入')
-                this.activeName = '7'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.taxableIncomeRatio)) {
-                this.showWarnMsg('请输入纳税收入占比')
-                this.activeName = '7'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.taxBearingRate)) {
-                this.showWarnMsg('请输入税负率')
-                this.activeName = '7'
-                return false
-            }
-            if (!this.vaildEmpty(this.dueFinanceBasic.isAgreeFinancialDelegation)) {
-                this.showWarnMsg('请选择是否同意财务委派')
-                this.activeName = '9'
-                return false
-            }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersDebt)) {
+            //     this.showWarnMsg('请输入股东借款')
+            //     this.activeName = '6'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.companyBorrowsShareholders)) {
+            //     this.showWarnMsg('请输入公司向股东借款')
+            //     this.activeName = '6'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersBorrowsCompany)) {
+            //     this.showWarnMsg('请输入股东向公司借款')
+            //     this.activeName = '6'
+            //     return false
+            // }
+            // // if (!this.dueFinanceBasic.cashFlowRatio) {
+            // //     this.showWarnMsg('请输入现金流量比率')
+            // //     this.activeName = '6'
+            // //     return false
+            // // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.capitalRiskAssessment)) {
+            //     this.showWarnMsg('请选择资金风险评估')
+            //     this.activeName = '6'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.annualTaxableBusinessIncome)) {
+            //     this.showWarnMsg('请输入年度纳税营业收入')
+            //     this.activeName = '7'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.taxableIncomeRatio)) {
+            //     this.showWarnMsg('请输入纳税收入占比')
+            //     this.activeName = '7'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.taxBearingRate)) {
+            //     this.showWarnMsg('请输入税负率')
+            //     this.activeName = '7'
+            //     return false
+            // }
+            // if (!this.vaildEmpty(this.dueFinanceBasic.isAgreeFinancialDelegation)) {
+            //     this.showWarnMsg('请选择是否同意财务委派')
+            //     this.activeName = '9'
+            //     return false
+            // }
 
-            var result1 = this.assetsLiabilities.assetList.some((v, i) => {
-                return v.beginOrPrior || v.endOrCurrent
-            })
-            var result2 = this.assetsLiabilities.liabilitiesList.some((v, i) => {
-                return v.beginOrPrior || v.endOrCurrent
-            })
-            if (!result1 && !result2) {
-                this.showWarnMsg('请输入资产负债表')
-                this.activeName = '10'
-                return false
-            }
+            // var result1 = this.assetsLiabilities.assetList.some((v, i) => {
+            //     return v.beginOrPrior || v.endOrCurrent
+            // })
+            // var result2 = this.assetsLiabilities.liabilitiesList.some((v, i) => {
+            //     return v.beginOrPrior || v.endOrCurrent
+            // })
+            // if (!result1 && !result2) {
+            //     this.showWarnMsg('请输入资产负债表')
+            //     this.activeName = '10'
+            //     return false
+            // }
             await saveFinance(formData)
             this.isdisabled = true
             this.$message({
