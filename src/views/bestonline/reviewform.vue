@@ -59,7 +59,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'four',
+            activeName: 'one',
             applyId: '',
             Cooperation: '',
             oneType: false,
