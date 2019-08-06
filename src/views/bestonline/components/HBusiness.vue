@@ -33,7 +33,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="KPIForm.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -70,7 +70,7 @@
                 <template slot="title">
                     <p class="titlt-p">业务模式</p>
                 </template>
-                <el-form :model="businessmodeForm" :rules="businessmodeRules" label-width="110px">
+                <el-form :model="businessmodeForm" :rules="businessmodeRules" ref="businessmodeForm" label-width="110px">
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
@@ -202,7 +202,7 @@
                 <template slot="title">
                     <p class="titlt-p">销售业绩(含税)（万元）</p>
                 </template>
-                <el-form :model="salesForm" label-width="200px">
+                <el-form :model="salesForm" ref="salesForm" label-width="200px">
                     <table class="table-title">
                         <thead>
                             <tr>
@@ -280,7 +280,7 @@
                 <template slot="title">
                     <p class="titlt-p">营销模式</p>
                 </template>
-                <el-form :model="marketForm" label-width="130px">
+                <el-form :model="marketForm" ref="marketForm" label-width="130px">
                     <el-form-item label="宣传推广渠道：" prop="checkedWays">
                         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                         <div style="margin: 15px 0;"></div>
@@ -298,7 +298,7 @@
                     <p class="titlt-p">上游-供应商结构</p>
                 </template>
                 <!--start-->
-                <el-form :model="structureForm" :rules="structureRules" label-width="130px">
+                <el-form :model="structureForm" :rules="structureRules" ref="structureForm" label-width="130px">
                     <div class="supplier" v-for="(item,index) in structureForm.dueBusinessSupplierCreateFormList" :key=index>
                         <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
                         <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
@@ -330,17 +330,17 @@
                         <div class="form-cont-row mb20">
                             <div class="form-cont-col">
                                 <el-form-item label="合同开始时间：">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureForm.contractStartDate" style="width: 224px;"></el-date-picker>
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="item.contractStartDate" style="width: 224px;"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col">
                                 <el-form-item label="合同结束时间：">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureForm.endDate" style="width: 224px;"></el-date-picker>
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="item.contractEndDate" style="width: 224px;"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col">
                                 <el-form-item label="合同规模：" prop="contractScale" placeholder="请输入合同规模">
-                                    <el-input v-model="structureForm.contractScale"><template slot="suffix">万</template></el-input>
+                                    <el-input v-model="item.contractScale"><template slot="suffix">万</template></el-input>
                                 </el-form-item>
                             </div>
                         </div>
@@ -354,7 +354,7 @@
                     <p class="titlt-p">下游-客户结构</p>
                 </template>
                 <!--start-->
-                <el-form :model="customerForm" :rules="customerRules" label-width="100px" class="supplierSymbol">
+                <el-form :model="customerForm" :rules="customerRules" ref="customerForm" label-width="100px" class="supplierSymbol">
                     <div class="flex-wrap-col supplier">
                         <div class="table-flex">
                             <div class="table-row">
@@ -424,7 +424,7 @@
                 <template slot="title">
                     <p class="titlt-p">门店/会员店</p>
                 </template>
-                <el-form :model="quantityForm" label-width="130px">
+                <el-form :model="quantityForm" ref="quantityForm" label-width="130px">
                     <el-form-item label="自营门店数量：" placeholder="自营门店数量">
                         <el-input v-model="quantityForm.selfStoresNum"></el-input>
                     </el-form-item>
@@ -437,7 +437,7 @@
                 <template slot="title">
                     <p class="titlt-p">竞争对手</p>
                 </template>
-                <el-form :model="competeForm" label-width="130px">
+                <el-form :model="competeForm" ref="competeForm" label-width="130px">
                     <div class="compete supplier" v-for="(item,index) in competeForm.dueBusinessCompetitorCreateFormList" :key=index>
                         <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
                         <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
@@ -454,7 +454,7 @@
                 <template slot="title">
                     <p class="titlt-p">新合资公司规划</p>
                 </template>
-                <el-form :model="newplanForm" :rules="newplanRules" label-width="160px">
+                <el-form :model="newplanForm" :rules="newplanRules" ref="newplanForm" label-width="160px">
                     <el-form-item label="业务类别：" prop="serviceCategory">
                         <el-checkbox-group v-model="newplanForm.serviceCategory">
                             <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
@@ -877,13 +877,6 @@ export default {
         onChange () {
             document.getElementsByClassName('container')[0].scrollTop = 0
         },
-        showWarnMsg (msg) {
-            this.$message({
-                showClose: true,
-                message: msg,
-                type: 'warning'
-            })
-        },
         vaildEmpty (value) {
             if (value !== null && value !== undefined && value !== '') {
                 return true
@@ -1024,6 +1017,9 @@ export default {
             this.KPIForm.analysisDescription = data.data.analysisDescription
             this.KPIForm.salesPerformanceLastYear = data.data.salesPerformanceLastYear
             this.KPIForm.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
+            this.KPIForm.projectShare = data.data.projectShare
+            this.KPIForm.retailShare = data.data.retailShare
+            this.KPIForm.wholesaleShare = data.data.wholesaleShare
             this.businessmodeForm.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
             this.businessmodeForm.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
             this.businessmodeForm.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
@@ -1145,46 +1141,44 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            this.KPIForm.dueBusinessAssessmentCreateFormList.map(i => {
-                if (i.state === null || i.state === '') {
-                    this.$message.warning('请选择尽调评估结论')
-                    this.activeName = '1'
-                    return false
+            this.$refs['KPIForm'].validate(async (valid) => {
+                if (valid) {
+                    for (var i of this.KPIForm.dueBusinessCustomerCreateFormList) {
+                        if (i.state === null || i.state === '') {
+                            this.$message.warning('请选择尽调评估结论')
+                            this.activeName = '1'
+                            return false
+                        }
+                    }
                 }
             })
-            this.customerForm.dueBusinessCustomerCreateFormList.map(i => {
-                if (i.categoryId === null || i.categoryId === '') {
-                    this.$message.warning('请选择品类')
-                    this.activeName = '6'
-                    return false
-                }
-                if (i.customerName === null || i.customerName === '') {
-                    this.$message.warning('请输入客户名称')
-                    this.activeName = '6'
-                    return false
-                }
-                if (i.brandName === null || i.brandName === '') {
-                    this.$message.warning('请输入品牌')
-                    this.activeName = '6'
-                    return false
-                }
-                if (i.salesFee === null || i.salesFee === '') {
-                    this.$message.warning('请输入销售金额')
-                    this.activeName = '6'
-                    return false
-                }
-                if (i.salesProportion === null || i.salesProportion === '') {
-                    this.$message.warning('请输入销售占比')
-                    this.activeName = '6'
-                    return false
+            this.$refs['customerForm'].validate(async (valid) => {
+                if (valid) {
+                    for (var i of this.customerForm.dueBusinessCustomerCreateFormList) {
+                        if (i.categoryId === null || i.categoryId === '') {
+                            this.$message.warning('请选择品类')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.customerName === null || i.customerName === '') {
+                            this.$message.warning('请输入客户名称')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.brandName === null || i.brandName === '') {
+                            this.$message.warning('请输入品牌')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.salesFee === null || i.salesFee === '') {
+                            this.$message.warning('请输入销售金额')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.salesProportion === null || i.salesProportion === '') {
+                            this.$message.warning('请输入销售占比')
+                            this.activeName = '6'
+                            return false
+                        }
+                    }
                 }
             })
-            // this.$refs['KPIForm'].validate((valid) => {
-            //     if (valid) {
-            //         this.$refs['']
-            //     }
-            // })
-
             this.publicityPromotionChannels = this.checkedCities.join(',')
             this.dueBusinessSaleCreateFormList[0].currentYearSales = this.currentYearAllSales
             this.dueBusinessSaleCreateFormList[0].lastYearSales = this.lastYearAllSales
@@ -1228,7 +1222,10 @@ export default {
                 salesGrowthHealth: this.salesGrowthHealth,
                 salesPerformanceLastYear: this.KPIForm.salesPerformanceLastYear,
                 selfStoresNum: this.quantityForm.selfStoresNum,
-                upstreamBodySwitchable: this.upstreamBodySwitchable
+                upstreamBodySwitchable: this.upstreamBodySwitchable,
+                wholesaleShare: this.KPIForm.wholesaleShare,
+                retailShare: this.KPIForm.retailShare,
+                projectShare: this.KPIForm.projectShare
             }
             console.log(formData)
             // console.log(formData)
