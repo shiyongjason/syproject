@@ -1174,7 +1174,7 @@
 </template>
 <script>
 import { getFinance, saveFinance, provinces } from '../api/index.js'
-import { plusOrMinus } from '../../../rules.js'
+import { plusOrMinus } from '../../../utils/rules'
 import { mapState } from 'vuex'
 import { YES_NO_STATUS, COST_RATIONALITY } from '../const'
 export default {

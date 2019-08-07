@@ -545,7 +545,7 @@
 <script>
 import { getBusiness, addBusiness, putBusiness, getChannels } from '../api/index.js'
 import { mapState } from 'vuex'
-import { plusOrMinus } from '../../../rules.js'
+import { plusOrMinus } from '../../../utils/rules'
 import { MAIN_COMMERCIAL, MAIN_CATEGORY, ISPROVIDE_CONTRACT, IS_DOWN, IS_HEALTH } from '../const'
 export default {
     props: {
