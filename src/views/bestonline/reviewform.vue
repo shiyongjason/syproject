@@ -32,8 +32,8 @@
                         <el-tab-pane label="附件上传" name="seven">
                             <HAccessory v-if="activeName=='seven'" />
                         </el-tab-pane>
-                        <el-tab-pane label="尽调评估及KPI" name="eight" >
-                            <HEvaluation v-if="activeName=='eight'"/>
+                        <el-tab-pane label="尽调评估及KPI" name="eight">
+                            <HEvaluation v-if="activeName=='eight'" />
                         </el-tab-pane>
                     </template>
                 </el-tabs>
@@ -59,7 +59,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'one',
+            activeName: 'three',
             applyId: '',
             Cooperation: '',
             oneType: false,
