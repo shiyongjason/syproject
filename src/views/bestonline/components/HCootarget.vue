@@ -29,7 +29,7 @@
                 </div>
             </div>
             <el-form-item label="股权比例：" prop="equityRatio">
-                <el-input v-model="form.equityRatio" placeholder="请输入内容" @keyup.native="oninput('netProfitRate',$event)" :disabled="isdisabled" maxlength="25"></el-input>
+                <el-input v-model="form.equityRatio" placeholder="请输入内容" :disabled="isdisabled" maxlength="25"></el-input>
             </el-form-item>
         </el-form>
 
@@ -45,8 +45,7 @@
 </template>
 <script>
 import { getDueLegal, addCooperativetarget, putCooperativetarget } from '../api/index.js'
-import { mapState } from 'vuex'
-import { plusOrMinus } from '../../../rules'
+import { plusOrMinus } from '../../../utils/rules.js'
 export default {
     props: {
         roleType: {
@@ -68,7 +67,16 @@ export default {
                     { required: true, message: '请输入尽调规模', trigger: 'blur' }
                 ],
                 equityRatio: [
-                    { required: true, message: '请输入股权比例', trigger: 'blur' }
+                    { required: true, message: '请输入股权比例', trigger: 'blur' },
+                    {
+                        validator: (rule, value, callback) => {
+                            var Reg = /^\d+(:\d+)$/
+                            if (value && !(Reg.test(value))) {
+                                return callback(new Error('股权比例格式不对'))
+                            }
+                            return callback()
+                        }
+                    }
                 ]
             },
             isdisabled: false,
@@ -80,10 +88,7 @@ export default {
     computed: {
         roleTypes () {
             return this.roleType
-        },
-        ...mapState({
-            userInfo: state => state.userInfo
-        })
+        }
     },
     methods: {
         oninput (value, e) {
@@ -96,59 +101,67 @@ export default {
         },
         async getDueLegal () {
             const { data } = await getDueLegal(this.$route.query.applyId)
-            console.log(data.data)
-            // if (!data.data.operationNode) {
-            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
-            // } else {
-            //     this.isdisabled = (!!data.data.operationNode)
-            // }
+            if (!data.data.operationNode) {
+                this.isdisabled = (!!data.data.operationNode) || !this.roleType
+            } else {
+                this.isdisabled = (!!data.data.operationNode)
+            }
             this.type = !!data.data.operationNode
             this.id = data.data.id
             this.updateUser = data.data.updateUser
             this.updateTime = data.data.updateTime
-
             this.form.equityRatio = data.data.equityRatio
             this.form.scale = data.data.scale
             this.form.yearRateTabelContents = data.data.yearRateTabelContents
         },
         async onSubmit (i) {
-            // const type = i === 0 ? '保存' : '提交'
-
-            this.$refs['form'].validate(async (valid) => {
-                if (valid) {
-                    for (var i of this.form.yearRateTabelContents) {
-                        if (i.yearGrowthRate === null || i.yearGrowthRate === '') {
-                            this.$message.warning('请输入年度递增率')
-                            return false
-                        } else if (i.netProfitRate === null || i.netProfitRate === '') {
-                            this.$message.warning('请输入净利润率')
-                            return false
+            const type = i === 0 ? '保存' : '提交'
+            this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
+                item.yearGrowthRate = item.yearGrowthRate - 0
+                item.netProfitRate = item.netProfitRate - 0
+                return item
+            })
+            this.form.applyId = this.$route.query.applyId
+            this.form.operationNode = i
+            if (i === 0) {
+                if (this.id != '') {
+                    this.form.id = this.id
+                    this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                    await putCooperativetarget(this.form)
+                    this.$message.success(type + '成功！')
+                } else {
+                    this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                    await addCooperativetarget(this.form)
+                    this.$message.success(type + '成功！')
+                }
+                this.$router.go(-1)
+            } else if (i === 1) {
+                this.$refs['form'].validate(async (valid) => {
+                    if (valid) {
+                        for (const i of this.form.yearRateTabelContents) {
+                            if (i.yearGrowthRate === null || i.yearGrowthRate === '') {
+                                this.$message.warning('请输入年度递增率')
+                                return false
+                            } else if (i.netProfitRate === null || i.netProfitRate === '') {
+                                this.$message.warning('请输入净利润率')
+                                return false
+                            }
                         }
-                    }
-                    if (i === 0) {
-                        if (this.id) {
-                            await putCooperativetarget()
+                        if (this.id != '') {
+                            this.form.id = this.id
+                            this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                            await putCooperativetarget(this.form)
+                            this.$message.success(type + '成功！')
                         } else {
-                            await addCooperativetarget()
-                        }
-                    }
-                    if (i === 1) {
-                        if (this.id) {
-                            await putCooperativetarget()
-                        } else {
-                            this.form.applyId = this.$route.query.applyId
                             this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-                            this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
-                                item.yearGrowthRate = item.yearGrowthRate - 0
-                                item.netProfitRate = item.netProfitRate - 0
-                            })
-                            await addCooperativetarget()
+                            await addCooperativetarget(this.form)
+                            this.$message.success(type + '成功！')
                         }
                         this.isdisabled = true
                         this.type = true
                     }
-                }
-            })
+                })
+            }
             this.$emit('parentFun')
         }
     },

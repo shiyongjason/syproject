@@ -132,7 +132,7 @@ export const getDueLegal = (params) => {
 }
 // 新增合作目标
 export const addCooperativetarget = (params) => {
-    return axios.post('develop/cooperativetarget', params)
+    return axios.post('develop/cooperativetarget', { params })
 }
 // 修改合作目标
 export const putCooperativetarget = (params) => {
