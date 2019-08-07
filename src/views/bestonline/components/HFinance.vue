@@ -251,85 +251,106 @@
                         <p class="titlt-p">偿债能力(必填)</p>
                     </template>
                     <el-form :model="debtForm">
-                        <table class="assessmentTable">
-                            <thead>
-                                <tr>
-                                    <td class="assessmentRow">-</td>
-                                    <td class="assessmentRow">本年度</td>
-                                    <td class="assessmentRow">上年度</td>
-                                </tr>
-                            </thead>
-                            <tbody v-if="debtForm.dueFinanceYearOperatingPos">
-                                <tr>
-                                    <td class="assessmentRow">流动比率</td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].liquidityRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].liquidityRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="assessmentRow">速动比率</td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].quickRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].quickRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="assessmentRow">现金比率</td>
-                                    <td class="assessmentRow">
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].cashRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                    <td class="assessmentRow">
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].cashRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="assessmentRow">资产负债率</td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                    <td class="assessmentRow">
-                                        <span class="red-word">*</span>
-                                        <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
-                                            <template slot="suffix">%</template>
-                                        </el-input>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <span>
-                            <el-button class="el-icon-question" slot="reference" @click="onDebtDialog = true"></el-button>
-                            <el-dialog title="偿债能力标准值" :visible.sync="onDebtDialog" width="30%" :before-close="handleClose">
-                                <span>满足一下条件，即判断为符合标准</span>
-                                <span slot="footer" class="dialog-footer">
-                                    <el-button @click="onDebtDialog = false">取 消</el-button>
-                                    <el-button type="primary" @click="onDebtDialog = false">确 定</el-button>
+                        <div class="form-cont-row">
+                            <div class="form-cont-col">
+                                <table class="assessmentTable">
+                                    <thead>
+                                        <tr>
+                                            <td class="assessmentRow">-</td>
+                                            <td class="assessmentRow">本年度</td>
+                                            <td class="assessmentRow">上年度</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-if="debtForm.dueFinanceYearOperatingPos">
+                                        <tr>
+                                            <td class="assessmentRow">流动比率</td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].liquidityRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].liquidityRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="assessmentRow">速动比率</td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].quickRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].quickRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="assessmentRow">现金比率</td>
+                                            <td class="assessmentRow">
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].cashRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                            <td class="assessmentRow">
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].cashRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="assessmentRow">资产负债率</td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[0].assetLiabilityRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                            <td class="assessmentRow">
+                                                <span class="red-word">*</span>
+                                                <el-input v-model="debtForm.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
+                                                    <template slot="suffix">%</template>
+                                                </el-input>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <span class="question">
+                                    <i class="el-icon-question" @click="onDebtDialog = true"></i>
+                                    <el-dialog title="偿债能力标准值" width="25%" :visible.sync="onDebtDialog" center>
+                                        <span>满足以下条件，即判断为符合标准。</span>
+                                        <table>
+                                            <tr>
+                                                <td>流动比率：</td>
+                                                <td>≥200%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>速动比率：</td>
+                                                <td>≥100%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>现金比率：</td>
+                                                <td>≥20%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>资产负债率：</td>
+                                                <td>≥70%</td>
+                                            </tr>
+                                        </table>
+                                        <div slot="footer" class="dialog-footer">
+                                            <el-button type="primary" @click="onDebtDialog = false">关闭</el-button>
+                                        </div>
+                                    </el-dialog>
                                 </span>
-                            </el-dialog>
-                        </span>
+                            </div>
+                        </div>
                     </el-form>
                     <!-- <div class="flex-wrap-col">
                     <div class="flex-wrap-row">
@@ -561,7 +582,7 @@
                         <div class="form-cont-row">
                             <div class="form-cont-col">
                                 <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                                    <el-input v-model="dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                                    <el-input v-model="dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </el-form-item>
@@ -1174,7 +1195,7 @@
 </template>
 <script>
 import { getFinance, saveFinance, provinces } from '../api/index.js'
-import { plusOrMinus } from '../../../utils/rules'
+import { plusOrMinus } from '../../../rules.js'
 import { mapState } from 'vuex'
 import { YES_NO_STATUS, COST_RATIONALITY } from '../const'
 export default {
@@ -1329,7 +1350,9 @@ export default {
             cashRules: {},
             a: '',
             debtDialog: false,
-            tabName: 'nowYear'
+            tabName: 'nowYear',
+            onDebtDialog: false
+
         }
     },
     computed: {
@@ -1474,6 +1497,9 @@ export default {
             if (i === 0) return this.onSaveGood(i)
             if (i === 1) return this.onSubmit(i)
             // }).catch(() => {})
+        },
+        initTable () {
+
         },
         format (type) {
             if (this.dueFinanceBasic.dateOfCustody) this.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
@@ -1684,13 +1710,6 @@ export default {
                 message: `提交成功`
             })
             this.$router.go(-1)
-        },
-        onDebtDialog () {
-            console.log(1)
-            this.debtDialog = true
-        },
-        initTable () {
-
         }
     }
 }
