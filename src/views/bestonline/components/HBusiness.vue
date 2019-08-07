@@ -875,7 +875,7 @@ export default {
             if (data.data.publicityPromotionChannels) {
                 this.form.publicityPromotionChannels = data.data.publicityPromotionChannels.split(',')
             }
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.map(Number)
+            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.map(Number)
             // 业务模式
 
             // console.log(data.data)
