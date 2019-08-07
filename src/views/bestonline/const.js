@@ -84,3 +84,30 @@ export const MAIN_CATEGORY = [
     { value: '厨卫', key: 6 },
     { value: '其他', key: 7 }
 ]
+
+export const YES_NO_STATUS = [
+    { label: '请选择', value: '' },
+    { label: '是', value: 1 },
+    { label: '否', value: 0 }
+]
+
+export const COST_RATIONALITY = [
+    { label: '请选择', value: '' },
+    { label: '合理', value: 0 },
+    { label: '不合理', value: 1 }
+]
+
+export const ISPROVIDE_CONTRACT = [
+    { value: '是', key: 0 },
+    { value: '否', key: 1 }
+]
+
+export const IS_DOWN = [
+    { value: '否', key: 0 },
+    { value: '是', key: 1 }
+]
+
+export const IS_HEALTH = [
+    { value: '是', key: 0 },
+    { value: '否', key: 1 }
+]

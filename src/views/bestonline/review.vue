@@ -103,12 +103,11 @@ export default {
     },
     methods: {
         onSizeChange (val) {
-            console.log(val)
             this.params.pageSize = val
             this.getDuemain()
         },
         onCurrentChange (val) {
-            this.params.pageNumber = val
+            this.params.pageNumber = val.pageNumber
             this.getDuemain()
         },
         onSearch () {

@@ -6,7 +6,7 @@
                 <template slot="title">
                     <p class="titlt-p">商业尽调评估及KPI</p>
                 </template>
-                <el-form :model="KPIFrom" :rules="KPIRules" label-width="160px">
+                <el-form :model="KPIForm" :rules="KPIRules" ref="KPIForm" label-width="160px">
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
                     <table class="assessmentTable">
@@ -19,7 +19,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item,index) in dueBusinessAssessmentCreateFormList" :key=index>
+                            <tr v-for="(item,index) in KPIForm.dueBusinessAssessmentCreateFormList" :key=index>
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
@@ -32,8 +32,8 @@
                                         </el-option>
                                     </el-select>
                                 </td>
-                                <td :rowspan="dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                                <td :rowspan="KPIForm.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -42,15 +42,15 @@
                     <p class="small-title ">2、KPI(必填)</p>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="批发:零售:工程占比：" prop="proportion">
-                                <el-input class="proportionKPI"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI"></el-input>
+                            <el-form-item label="批发:零售:工程占比：" :prop="(KPIForm.wholesaleShare==''||KPIForm.wholesaleShare==null)?'wholesaleShare':(KPIForm.retailShare==''||KPIForm.retailShare==null)?'retailShare':'projectShare'">
+                                <el-input class="proportionKPI" v-model="KPIForm.wholesaleShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input class="proportionKPI" v-model="KPIForm.retailShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input class="proportionKPI" v-model="KPIForm.projectShare"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="上年销售业绩：" prop="salesPerformanceLastYear">
-                                <el-input v-model="KPIFrom.salesPerformanceLastYear">
+                                <el-input v-model="KPIForm.salesPerformanceLastYear">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
@@ -58,10 +58,10 @@
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIFrom.riskDisclosure"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIForm.riskDisclosure"></el-input>
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIFrom.analysisDescription"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="KPIForm.analysisDescription"></el-input>
                     </el-form-item>
                     <!--end-->
                 </el-form>
@@ -70,18 +70,18 @@
                 <template slot="title">
                     <p class="titlt-p">业务模式</p>
                 </template>
-                <el-form :model="businessmodeFrom" :rules="businessmodeRules" label-width="110px">
+                <el-form :model="businessmodeForm" :rules="businessmodeRules" ref="businessmodeForm" label-width="110px">
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                                <el-select v-model="businessmodeFrom.mainBusinessFormatOneId" placeholder="请选择主营业态">
+                                <el-select v-model="businessmodeForm.mainBusinessFormatOneId" placeholder="请选择主营业态">
                                     <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-                                <el-input v-model="businessmodeFrom.businessFormatOneRatio" placeholder="业态占比">
+                                <el-input v-model="businessmodeForm.businessFormatOneRatio" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -90,14 +90,14 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营业态2：">
-                                <el-select v-model="businessmodeFrom.mainBusinessFormatTwoId" placeholder="请选择主营业态">
+                                <el-select v-model="businessmodeForm.mainBusinessFormatTwoId" placeholder="请选择主营业态">
                                     <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="业态占比2：">
-                                <el-input v-model="businessmodeFrom.businessFormatTwoRatio" placeholder="业态占比">
+                                <el-input v-model="businessmodeForm.businessFormatTwoRatio" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -106,14 +106,14 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营业态3：">
-                                <el-select v-model="businessmodeFrom.mainBusinessFormatThreeId" placeholder="请选择主营业态">
+                                <el-select v-model="businessmodeForm.mainBusinessFormatThreeId" placeholder="请选择主营业态">
                                     <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="业态占比3：">
-                                <el-input v-model="businessmodeFrom.businessFormatTwoThreeRatio" placeholder="业态占比">
+                                <el-input v-model="businessmodeForm.businessFormatTwoThreeRatio" placeholder="业态占比">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -122,14 +122,14 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营品类1：" prop="mainCategoryOneId">
-                                <el-select v-model="businessmodeFrom.mainCategoryOneId" placeholder="请选择主营品类">
+                                <el-select v-model="businessmodeForm.mainCategoryOneId" placeholder="请选择主营品类">
                                     <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="销售比重1：" prop="salesProportion">
-                                <el-input v-model="businessmodeFrom.categoryOneSalesRatio" placeholder="销售比重">
+                                <el-input v-model="businessmodeForm.categoryOneSalesRatio" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -138,14 +138,14 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营品类2：">
-                                <el-select v-model="businessmodeFrom.mainCategoryTwoId" placeholder="请选择主营品类">
+                                <el-select v-model="businessmodeForm.mainCategoryTwoId" placeholder="请选择主营品类">
                                     <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="销售比重2：">
-                                <el-input v-model="businessmodeFrom.categoryTwoSalesRatio" placeholder="销售比重">
+                                <el-input v-model="businessmodeForm.categoryTwoSalesRatio" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -154,13 +154,13 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营品牌1：" prop="mainBrandOneName">
-                                <el-input v-model="businessmodeFrom.mainBrandOneName" placeholder="销售占比大于30%">
+                                <el-input v-model="businessmodeForm.mainBrandOneName" placeholder="销售占比大于30%">
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="销售比重1：" prop="brandOneSalesRatio">
-                                <el-input v-model="businessmodeFrom.brandOneSalesRatio" placeholder="销售比重">
+                                <el-input v-model="businessmodeForm.brandOneSalesRatio" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -169,13 +169,13 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营品牌2：">
-                                <el-input v-model="businessmodeFrom.mainBrandTwoName" placeholder="销售占比大于30%">
+                                <el-input v-model="businessmodeForm.mainBrandTwoName" placeholder="销售占比大于30%">
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="销售比重2：">
-                                <el-input v-model="businessmodeFrom.brandTwoSalesRatio" placeholder="销售比重">
+                                <el-input v-model="businessmodeForm.brandTwoSalesRatio" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -184,13 +184,13 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="主营品牌3：">
-                                <el-input v-model="businessmodeFrom.mainBrandThreeName" placeholder="销售占比大于30%">
+                                <el-input v-model="businessmodeForm.mainBrandThreeName" placeholder="销售占比大于30%">
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="销售比重3：">
-                                <el-input v-model="businessmodeFrom.brandThreeSalesRatio" placeholder="销售比重">
+                                <el-input v-model="businessmodeForm.brandThreeSalesRatio" placeholder="销售比重">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -202,77 +202,76 @@
                 <template slot="title">
                     <p class="titlt-p">销售业绩(含税)（万元）</p>
                 </template>
-                <table class="table-title">
-                    <thead>
-                        <tr>
-                            <td colspan="2" rowspan="2" width="120">月份</td>
-                            <td colspan="2" width="120">本年度</td>
-                            <td colspan="2" width="120">上年度</td>
-                            <td colspan="2" width="120">上上年度</td>
+                <el-form :model="salesForm" ref="salesForm" label-width="200px">
+                    <table class="table-title">
+                        <thead>
+                            <tr>
+                                <td colspan="2" rowspan="2" width="120">月份</td>
+                                <td colspan="2" width="120">本年度</td>
+                                <td colspan="2" width="120">上年度</td>
+                                <td colspan="2" width="120">上上年度</td>
 
-                        </tr>
-                        <tr>
-                            <td width="120">销售</td>
-                            <td width="120">占比</td>
-                            <td width="120">销售</td>
-                            <td width="120">占比</td>
-                            <td width="120">销售</td>
-                            <td width="120">占比</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item,index) in dueBusinessSaleCreateFormList" :key="index">
-                            <td colspan="2">{{item.month}}</td>
-                            <td>
-                                <template v-if="index === 0">
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="currentYearAllSales" @keyup.native="oninput('currentYearAllSales',$event)">
-                                    </el-input>
-                                </template>
-                                <template v-else>
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.currentYearSales" @keyup.native="oninputSale(index,'currentYearSales',$event)">
-                                    </el-input>
-                                </template>
-                            </td>
-                            <td>
-                                <template v-if="index === 0"></template>
-                                <template v-else>{{ item.currentYearSales/currentYearAllSales | keepTwoNum }}</template>
-                            </td>
-                            <td>
-                                <template v-if="index === 0">
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastYearAllSales" @keyup.native="oninput('lastYearAllSales',$event)">
-                                    </el-input>
-                                </template>
-                                <template v-else>
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
-                                    </el-input>
-                                </template>
-                            </td>
-                            <td>
-                                <template v-if="index === 0"></template>
-                                <template v-else>{{ item.lastYearSales/lastYearAllSales | keepTwoNum }}</template>
-                            </td>
-                            <td>
-                                <template v-if="index === 0">
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastTwoYearAllSales" @keyup.native="oninput('lastTwoYearAllSales',$event)">
-                                    </el-input>
-                                </template>
-                                <template v-else>
-                                    <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
-                                    </el-input>
-                                </template>
-                            </td>
-                            <td>
-                                <template v-if="index === 0"></template>
-                                <template v-else>{{ item.lastTwoYearSales/lastTwoYearAllSales | keepTwoNum }}</template>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <el-form :model="salesFrom" label-width="200px">
-                    <el-form-item label="前10个月销售是否持续下滑：">
-                        <el-select v-model="salesFrom.firstTenMonthsDown" placeholder="请选择">
-                            <el-option label="是" value="1"></el-option>
-                            <el-option label="否" value="0"></el-option>
+                            </tr>
+                            <tr>
+                                <td width="120">销售</td>
+                                <td width="120">占比</td>
+                                <td width="120">销售</td>
+                                <td width="120">占比</td>
+                                <td width="120">销售</td>
+                                <td width="120">占比</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item,index) in dueBusinessSaleCreateFormList" :key="index">
+                                <td colspan="2">{{item.month}}</td>
+                                <td>
+                                    <template v-if="index === 0">
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="currentYearAllSales" @keyup.native="oninput('currentYearAllSales',$event)">
+                                        </el-input>
+                                    </template>
+                                    <template v-else>
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.currentYearSales" @keyup.native="oninputSale(index,'currentYearSales',$event)">
+                                        </el-input>
+                                    </template>
+                                </td>
+                                <td>
+                                    <template v-if="index === 0"></template>
+                                    <template v-else>{{ item.currentYearSales/currentYearAllSales | keepTwoNum }}</template>
+                                </td>
+                                <td>
+                                    <template v-if="index === 0">
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastYearAllSales" @keyup.native="oninput('lastYearAllSales',$event)">
+                                        </el-input>
+                                    </template>
+                                    <template v-else>
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
+                                        </el-input>
+                                    </template>
+                                </td>
+                                <td>
+                                    <template v-if="index === 0"></template>
+                                    <template v-else>{{ item.lastYearSales/lastYearAllSales | keepTwoNum }}</template>
+                                </td>
+                                <td>
+                                    <template v-if="index === 0">
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="lastTwoYearAllSales" @keyup.native="oninput('lastTwoYearAllSales',$event)">
+                                        </el-input>
+                                    </template>
+                                    <template v-else>
+                                        <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
+                                        </el-input>
+                                    </template>
+                                </td>
+                                <td>
+                                    <template v-if="index === 0"></template>
+                                    <template v-else>{{ item.lastTwoYearSales/lastTwoYearAllSales | keepTwoNum }}</template>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <el-form-item label="前10个月销售是否持续下滑：" class="mt20">
+                        <el-select v-model="salesForm.firstTenMonthsDown" placeholder="请选择">
+                            <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -281,7 +280,7 @@
                 <template slot="title">
                     <p class="titlt-p">营销模式</p>
                 </template>
-                <el-form :model="marketForm" label-width="130px">
+                <el-form :model="marketForm" ref="marketForm" label-width="130px">
                     <el-form-item label="宣传推广渠道：" prop="checkedWays">
                         <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                         <div style="margin: 15px 0;"></div>
@@ -299,32 +298,31 @@
                     <p class="titlt-p">上游-供应商结构</p>
                 </template>
                 <!--start-->
-                <div class="supplier" v-for="(item,index) in dueBusinessSupplierCreateFormList" :key=index>
-                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
-                    <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
-                    <el-form :model="structureFrom" :rules="structureRules" label-width="130px">
+                <el-form :model="structureForm" :rules="structureRules" ref="structureForm" label-width="130px">
+                    <div class="supplier" v-for="(item,index) in structureForm.dueBusinessSupplierCreateFormList" :key=index>
+                        <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
+                        <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
                         <el-form-item label="供应商名称：" prop="supplierName" placeholder="供应商名称">
-                            <el-input v-model="structureFrom.supplierName" style="width: 90%;"></el-input>
+                            <el-input v-model="item.supplierName" style="width: 90%;"></el-input>
                         </el-form-item>
                         <el-form-item label="品牌:">
-                            <el-input type="textarea" v-model="structureFrom.brand" row=1 style="width: 90%;"></el-input>
+                            <el-input type="textarea" v-model="item.brand" row=1 style="width: 90%;"></el-input>
                         </el-form-item>
                         <div class="form-cont-row mb20">
                             <div class="form-cont-col ">
                                 <el-form-item label="采购金额：" prop="purchaseAmount" placeholder="采购金额">
-                                    <el-input v-model="structureFrom.purchaseAmount"><template slot="suffix">万</template></el-input>
+                                    <el-input v-model="item.purchaseAmount"><template slot="suffix">万</template></el-input>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col ">
                                 <el-form-item label="占比：" prop="proportion" placeholder="占比">
-                                    <el-input v-model="structureFrom.proportion"><template slot="suffix">%</template></el-input>
+                                    <el-input v-model="item.proportion"><template slot="suffix">%</template></el-input>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col ">
                                 <el-form-item label="是否提供合同：" prop="isProvideContract">
-                                    <el-select v-model="structureFrom.isProvideContract" placeholder="请选择">
-                                        <el-option label="是" value="0"></el-option>
-                                        <el-option label="否" value="1"></el-option>
+                                    <el-select v-model="item.isProvideContract" placeholder="请选择">
+                                        <el-option v-for="item in isProvideContractData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
@@ -332,22 +330,23 @@
                         <div class="form-cont-row mb20">
                             <div class="form-cont-col">
                                 <el-form-item label="合同开始时间：">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureFrom.contractStartDate" style="width: 224px;"></el-date-picker>
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="item.contractStartDate" style="width: 224px;"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col">
                                 <el-form-item label="合同结束时间：">
-                                    <el-date-picker type="date" placeholder="选择日期" v-model="structureFrom.endDate" style="width: 224px;"></el-date-picker>
+                                    <el-date-picker type="date" placeholder="选择日期" v-model="item.contractEndDate" style="width: 224px;"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col">
                                 <el-form-item label="合同规模：" prop="contractScale" placeholder="请输入合同规模">
-                                    <el-input v-model="structureFrom.contractScale"><template slot="suffix">万</template></el-input>
+                                    <el-input v-model="item.contractScale"><template slot="suffix">万</template></el-input>
                                 </el-form-item>
                             </div>
                         </div>
-                    </el-form>
-                </div>
+                    </div>
+                </el-form>
+
                 <!--end-->
             </el-collapse-item>
             <el-collapse-item name="6">
@@ -355,67 +354,66 @@
                     <p class="titlt-p">下游-客户结构</p>
                 </template>
                 <!--start-->
-                <div class="flex-wrap-col supplier">
-                    <div class="table-flex">
-                        <div class="table-row">
-                            <div class="table-col"><span class="red-word">*</span>客户</div>
-                            <div class="table-col"><span class="red-word">*</span>品类</div>
-                            <div class="table-col"><span class="red-word">*</span>品牌</div>
-                            <div class="table-col"><span class="red-word">*</span>销售金额（万元）</div>
-                            <div class="table-col"><span class="red-word">*</span>销售占比</div>
-                            <div class="table-col">协议期开始(非必填)</div>
-                            <div class="table-col">协议期结束(非必填)</div>
-                            <div class="table-col">协议规模（万元）(非必填)</div>
+                <el-form :model="customerForm" :rules="customerRules" ref="customerForm" label-width="100px" class="supplierSymbol">
+                    <div class="flex-wrap-col supplier">
+                        <div class="table-flex">
+                            <div class="table-row">
+                                <div class="table-col"><span class="red-word">*</span>客户</div>
+                                <div class="table-col"><span class="red-word">*</span>品类</div>
+                                <div class="table-col"><span class="red-word">*</span>品牌</div>
+                                <div class="table-col"><span class="red-word">*</span>销售金额（万元）</div>
+                                <div class="table-col"><span class="red-word">*</span>销售占比</div>
+                                <div class="table-col">协议期开始(非必填)</div>
+                                <div class="table-col">协议期结束(非必填)</div>
+                                <div class="table-col">协议规模（万元）(非必填)</div>
 
-                        </div>
-                        <div class="table-row" v-for="(item,index) in dueBusinessCustomerCreateFormList" :key=index>
-                            <div class="table-col">
-                                <el-input v-model="item.customerName" placeholder="客户" maxlength="25" :disabled="isdisabled">
-                                </el-input>
                             </div>
-                            <div class="table-col">
-                                <el-select v-model="item.categoryId" placeholder="请选择" :disabled="isdisabled">
-                                    <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
-                                    </el-option>
-                                </el-select>
+                            <div class="table-row " v-for="(item,index) in customerForm.dueBusinessCustomerCreateFormList" :key=index>
+                                <div class="table-col">
+                                    <el-input v-model="item.customerName" placeholder="客户" maxlength="25" :disabled="isdisabled">
+                                    </el-input>
+                                </div>
+                                <div class="table-col">
+                                    <el-select v-model="item.categoryId" placeholder="请选择" :disabled="isdisabled">
+                                        <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                                <div class="table-col">
+                                    <el-input v-model="item.brandName" placeholder="品牌" maxlength="25" :disabled="isdisabled">
+                                    </el-input>
+                                </div>
+                                <div class="table-col">
+                                    <el-input v-model="item.salesFee" placeholder="金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesFee', $event)">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </div>
+                                <div class="table-col">
+                                    <el-input v-model="item.salesProportion" placeholder="占比" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesProportion', $event)">
+                                        <template slot="suffix">%</template>
+                                    </el-input>
+                                </div>
+                                <div class="table-col">
+                                    <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate" :disabled="isdisabled">
+                                    </el-date-picker>
+                                </div>
+                                <div class="table-col">
+                                    <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" :disabled="isdisabled" value-format="yyyy-MM-dd">
+                                    </el-date-picker>
+                                </div>
+                                <div class="table-col">
+                                    <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'agreementScale', $event)">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </div>
+                                <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addCustomer"></i>
+                                <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCustomer(index)"></i>
                             </div>
-                            <div class="table-col">
-                                <el-input v-model="item.brandName" placeholder="品牌" maxlength="25" :disabled="isdisabled">
-                                </el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-input v-model="item.salesFee" placeholder="金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesFee', $event)">
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-input v-model="item.salesProportion" placeholder="占比" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'salesProportion', $event)">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate" :disabled="isdisabled">
-                                </el-date-picker>
-                            </div>
-                            <div class="table-col">
-                                <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" :disabled="isdisabled" value-format="yyyy-MM-dd">
-                                </el-date-picker>
-                            </div>
-                            <div class="table-col">
-                                <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" :disabled="isdisabled" @keyup.native="oninput3(index, 'agreementScale', $event)">
-                                    <template slot="suffix">万</template>
-                                </el-input>
-                            </div>
-                            <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addCustomer"></i>
-                            <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCustomer(index)"></i>
                         </div>
                     </div>
-                </div>
-                <el-form :model="customerFrom" :rules="customerRules" label-width="100px">
                     <el-form-item label="是否健康" prop="customersHealth">
-                        <el-select v-model="customerFrom.customersHealth" placeholder="请选择">
-                            <el-option label="是" value="0"></el-option>
-                            <el-option label="否" value="1"></el-option>
+                        <el-select v-model="customerForm.customersHealth" placeholder="请选择">
+                            <el-option v-for="item in customersHealthData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                         </el-select>
                     </el-form-item>
                     <span>（不健康：超30%的业务聚焦在1个客户上）</span>
@@ -426,12 +424,12 @@
                 <template slot="title">
                     <p class="titlt-p">门店/会员店</p>
                 </template>
-                <el-form :model="quantityFrom" label-width="130px">
+                <el-form :model="quantityForm" ref="quantityForm" label-width="130px">
                     <el-form-item label="自营门店数量：" placeholder="自营门店数量">
-                        <el-input v-model="quantityFrom.selfStoresNum"></el-input>
+                        <el-input v-model="quantityForm.selfStoresNum"></el-input>
                     </el-form-item>
                     <el-form-item label="会员店数量：" placeholder="会员店数量">
-                        <el-input v-model="quantityFrom.memberShopNum"></el-input>
+                        <el-input v-model="quantityForm.memberShopNum"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -439,33 +437,33 @@
                 <template slot="title">
                     <p class="titlt-p">竞争对手</p>
                 </template>
-                <div class="compete supplier" v-for="(item,index) in dueBusinessCompetitorCreateFormList" :key=index>
-                    <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
-                    <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
-                    <el-form :model="competeFrom" label-width="130px">
+                <el-form :model="competeForm" ref="competeForm" label-width="130px">
+                    <div class="compete supplier" v-for="(item,index) in competeForm.dueBusinessCompetitorCreateFormList" :key=index>
+                        <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
+                        <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
                         <el-form-item label="竞争对手：" prop="competitorName " placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
-                            <el-input v-model="competeFrom.competitorName"></el-input>
+                            <el-input v-model="item.competitorName"></el-input>
                         </el-form-item>
-                        <el-form-item label="主营业态：" prop="mainForms" placeholder="主营业态" maxlength="25" :disabled="isdisabled">
-                            <el-input v-model="competeFrom.mainForms"></el-input>
+                        <el-form-item label="主营业态：" prop="mainForms" placeholder="主营业态" maxlength="25" :disabled="isdisabled" class="mb20">
+                            <el-input v-model="item.mainForms"></el-input>
                         </el-form-item>
-                    </el-form>
-                </div>
+                    </div>
+                </el-form>
             </el-collapse-item>
             <el-collapse-item name="9">
                 <template slot="title">
                     <p class="titlt-p">新合资公司规划</p>
                 </template>
-                <el-form :model="newplanFrom" :rules="newplanRules" label-width="160px">
+                <el-form :model="newplanForm" :rules="newplanRules" ref="newplanForm" label-width="160px">
                     <el-form-item label="业务类别：" prop="serviceCategory">
-                        <el-checkbox-group v-model="newplanFrom.serviceCategory">
+                        <el-checkbox-group v-model="newplanForm.serviceCategory">
                             <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="经营品类：" prop="businessCategory">
-                                <el-checkbox-group v-model="newplanFrom.businessCategory">
+                                <el-checkbox-group v-model="newplanForm.businessCategory">
                                     <el-checkbox label="0">冷暖</el-checkbox>
                                     <el-checkbox label="1">新风</el-checkbox>
                                     <el-checkbox label="2">净水</el-checkbox>
@@ -476,29 +474,29 @@
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="" prop="manageCategory" label-width=0>
-                                <el-input type="textarea" v-model="newplanFrom.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+                                <el-input type="textarea" v-model="newplanForm.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item label="经营品牌：" prop="manageBrand">
-                        <el-input type="textarea" v-model="newplanFrom.manageBrand" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="经营品牌：" prop="brandManagement">
+                        <el-input type="textarea" v-model="newplanForm.brandManagement" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="经营区域：" prop="businessProvince">
-                                <el-select v-model="newplanFrom.businessProvince" placeholder="请选择省">
+                                <el-select v-model="newplanForm.businessProvince" placeholder="请选择省">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item prop="businessCity" label-width="100px">
-                                <el-select v-model="newplanFrom.businessCity" placeholder="请选择市">
+                                <el-select v-model="newplanForm.businessCity" placeholder="请选择市">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item prop="businessArea" label-width="10px">
-                                <el-select v-model="newplanFrom.businessArea" placeholder="请选择区">
+                                <el-select v-model="newplanForm.businessArea" placeholder="请选择区">
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -506,30 +504,30 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="年销售规模：" prop="annualSalesScale">
-                                <el-input v-model="newplanFrom.annualSalesScale" placeholder="请输入规模">
+                                <el-input v-model="newplanForm.annualSalesScale" placeholder="请输入规模">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="净利润率：" prop="netProfitRate">
-                                <el-input v-model="newplanFrom.netProfitRate" placeholder="请输入净利润">
+                                <el-input v-model="newplanForm.netProfitRate" placeholder="请输入净利润">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                     </div>
                     <el-form-item label="下游切换渠道和客户：">
-                        <el-input type="textarea" v-model="newplanFrom.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                        <el-input type="textarea" v-model="newplanForm.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <el-form-item label="市场推广渠道及计划：">
-                        <el-input type="textarea" v-model="newplanFrom.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                        <el-input type="textarea" v-model="newplanForm.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <el-form-item label="资金用款需求：">
-                        <el-input type="textarea" v-model="newplanFrom.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                        <el-input type="textarea" v-model="newplanForm.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <el-form-item label="其他规划和需求：">
-                        <el-input type="textarea" v-model="newplanFrom.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                        <el-input type="textarea" v-model="newplanForm.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                 </el-form>
             </el-collapse-item>
@@ -548,7 +546,7 @@
 import { getBusiness, addBusiness, putBusiness, getChannels } from '../api/index.js'
 import { mapState } from 'vuex'
 import { plusOrMinus } from '../../../rules.js'
-import { MAIN_COMMERCIAL, MAIN_CATEGORY } from '../const'
+import { MAIN_COMMERCIAL, MAIN_CATEGORY, ISPROVIDE_CONTRACT, IS_DOWN, IS_HEALTH } from '../const'
 export default {
     props: {
         roleType: {
@@ -562,7 +560,7 @@ export default {
             isdisabled: false,
             updateUser: '',
             updateTime: '',
-            activeName: '9',
+            activeName: '1',
             watchTime: 0, // 监听次数
             busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
             cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
@@ -661,15 +659,19 @@ export default {
             lastYearAllSales: 0, // 去年销售总额
             lastTwoYearAllSales: 0, // 前年销售总额
             textarea: '',
-            KPIFromData: {
+            KPIFormData: {
                 mainBusiness: ''
             },
-            KPIFrom: {
+            KPIForm: {
                 salesPerformanceLastYear: '',
                 riskDisclosure: '',
-                analysisDescription: ''
+                analysisDescription: '',
+                wholesaleShare: '',
+                retailShare: '',
+                projectShare: '',
+                dueBusinessAssessmentCreateFormList: []
             },
-            businessmodeFrom: {
+            businessmodeForm: {
                 businessProportion: '',
                 mainBusinessFormatOneId: '',
                 mainBusinessFormatTwoId: '',
@@ -688,7 +690,7 @@ export default {
                 brandTwoSalesRatio: '',
                 brandThreeSalesRatio: ''
             },
-            structureFrom: {
+            structureForm: {
                 supplierName: '',
                 brand: '',
                 purchaseAmount: '',
@@ -696,19 +698,22 @@ export default {
                 isProvideContract: '',
                 contractStartDate: '',
                 contractEndDate: '',
-                contractScale: ''
+                contractScale: '',
+                dueBusinessSupplierCreateFormList: []
             },
-            customerFrom: {
-                customersHealth: ''
+            customerForm: {
+                customersHealth: '',
+                dueBusinessCustomerCreateFormList: []
             },
-            quantityFrom: {
+            quantityForm: {
                 selfStoresNum: '',
                 memberShopNum: ''
 
             },
-            competeFrom: {
+            competeForm: {
                 competitorName: '',
-                mainForms: ''
+                mainForms: '',
+                dueBusinessCompetitorCreateFormList: []
             },
             switchFrom: {
                 brand: '',
@@ -718,10 +723,10 @@ export default {
             requireFrom: {
                 surpport: ''
             },
-            newplanFrom: {
+            newplanForm: {
                 serviceCategory: [],
                 businessCategory: [],
-                manageBrand: '',
+                brandManagement: '',
                 businessProvince: '',
                 businessCity: '',
                 businessArea: '',
@@ -730,22 +735,29 @@ export default {
                 downstreamSwitchChannelsCustomers: '',
                 marketingChannelsPlans: '',
                 fundingRequirements: '',
-                otherPlansNeeds: ''
+                otherPlansNeeds: '',
+                dueBusinessFuturePlanCreateForm: []
             },
             marketForm: {
                 checkedWays: [],
                 publicityPromotionChannels: [],
                 interIndustryCooperation: ''
             },
-            salesFrom: {
+            salesForm: {
                 firstTenMonthsDown: ''
             },
             KPIRules: {
-                proportion: [
-                    { required: true, message: '', trigger: 'blur' }
+                wholesaleShare: [
+                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
+                ],
+                retailShare: [
+                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
+                ],
+                projectShare: [
+                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
                 ],
                 salesPerformanceLastYear: [
-                    { required: true, message: '', trigger: 'blur' }
+                    { required: true, message: '请输入上年销售业绩', trigger: 'blur' }
                 ],
                 riskDisclosure: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
@@ -782,7 +794,7 @@ export default {
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
                 purchaseAmount: [
-                    { required: true, message: '请输入输入采购金额', trigger: 'blur' }
+                    { required: true, message: '请输入采购金额', trigger: 'blur' }
                 ],
                 proportion: [
                     { required: true, message: '请输入占比', trigger: 'blur' }
@@ -805,7 +817,7 @@ export default {
                 businessCategory: [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
-                manageBrand: [
+                brandManagement: [
                     { required: true, message: '请输入品牌信息', trigger: 'blur' }
                 ],
                 annualSalesScale: [
@@ -815,9 +827,11 @@ export default {
                     { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ]
             },
-            proportion: '',
             mainCommercialData: MAIN_COMMERCIAL,
-            mainCategoryData: MAIN_CATEGORY
+            mainCategoryData: MAIN_CATEGORY,
+            isProvideContractData: ISPROVIDE_CONTRACT,
+            firstTenMonthsDownData: IS_DOWN,
+            customersHealthData: IS_HEALTH
         }
     },
     mounted () {
@@ -862,13 +876,6 @@ export default {
         },
         onChange () {
             document.getElementsByClassName('container')[0].scrollTop = 0
-        },
-        showWarnMsg (msg) {
-            this.$message({
-                showClose: true,
-                message: msg,
-                type: 'warning'
-            })
         },
         vaildEmpty (value) {
             if (value !== null && value !== undefined && value !== '') {
@@ -937,7 +944,7 @@ export default {
         async getBusiness () {
             const { data } = await getBusiness(this.applyId)
 
-            console.log(data.data)
+            // console.log(data.data)
             // if (!data.data.operationNode) {
             //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
             // } else {
@@ -1006,48 +1013,63 @@ export default {
             this.lastYearAllSales = (this.lastYearAllSales ? this.lastYearAllSales : 0).toFixed(2)
             this.lastTwoYearAllSales = (this.lastTwoYearAllSales ? this.lastTwoYearAllSales : 0).toFixed(2)
 
-            this.KPIFrom.riskDisclosure = data.data.riskDisclosure
-            this.KPIFrom.analysisDescription = data.data.analysisDescription
-            this.KPIFrom.salesPerformanceLastYear = data.data.salesPerformanceLastYear
-            this.businessmodeFrom.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
-            this.businessmodeFrom.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
-            this.businessmodeFrom.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
-            this.businessmodeFrom.mainCategoryOneId = data.data.mainCategoryOneId
-            this.businessmodeFrom.mainCategoryTwoId = data.data.mainCategoryTwoId
-            this.businessmodeFrom.businessFormatOneRatio = data.data.businessFormatOneRatio
-            this.businessmodeFrom.businessFormatTwoRatio = data.data.businessFormatTwoRatio
-            this.businessmodeFrom.businessFormatTwoThreeRatio = data.data.businessFormatTwoThreeRatio
-            this.businessmodeFrom.categoryOneSalesRatio = data.data.categoryOneSalesRatio
-            this.businessmodeFrom.categoryTwoSalesRatio = data.data.categoryTwoSalesRatio
-            this.businessmodeFrom.mainBrandOneName = data.data.mainBrandOneName
-            this.businessmodeFrom.mainBrandTwoName = data.data.mainBrandTwoName
-            this.businessmodeFrom.mainBrandThreeName = data.data.mainBrandThreeName
-            this.businessmodeFrom.brandOneSalesRatio = data.data.brandOneSalesRatio
-            this.businessmodeFrom.brandTwoSalesRatio = data.data.brandTwoSalesRatio
-            this.businessmodeFrom.brandThreeSalesRatio = data.data.brandThreeSalesRatio
-            this.salesFrom.firstTenMonthsDown = data.data.firstTenMonthsDown
+            this.KPIForm.riskDisclosure = data.data.riskDisclosure
+            this.KPIForm.analysisDescription = data.data.analysisDescription
+            this.KPIForm.salesPerformanceLastYear = data.data.salesPerformanceLastYear
+            this.KPIForm.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
+            this.KPIForm.projectShare = data.data.projectShare
+            this.KPIForm.retailShare = data.data.retailShare
+            this.KPIForm.wholesaleShare = data.data.wholesaleShare
+            this.businessmodeForm.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
+            this.businessmodeForm.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
+            this.businessmodeForm.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
+            this.businessmodeForm.mainCategoryOneId = data.data.mainCategoryOneId
+            this.businessmodeForm.mainCategoryTwoId = data.data.mainCategoryTwoId
+            this.businessmodeForm.businessFormatOneRatio = data.data.businessFormatOneRatio
+            this.businessmodeForm.businessFormatTwoRatio = data.data.businessFormatTwoRatio
+            this.businessmodeForm.businessFormatTwoThreeRatio = data.data.businessFormatTwoThreeRatio
+            this.businessmodeForm.categoryOneSalesRatio = data.data.categoryOneSalesRatio
+            this.businessmodeForm.categoryTwoSalesRatio = data.data.categoryTwoSalesRatio
+            this.businessmodeForm.mainBrandOneName = data.data.mainBrandOneName
+            this.businessmodeForm.mainBrandTwoName = data.data.mainBrandTwoName
+            this.businessmodeForm.mainBrandThreeName = data.data.mainBrandThreeName
+            this.businessmodeForm.brandOneSalesRatio = data.data.brandOneSalesRatio
+            this.businessmodeForm.brandTwoSalesRatio = data.data.brandTwoSalesRatio
+            this.businessmodeForm.brandThreeSalesRatio = data.data.brandThreeSalesRatio
+            this.salesForm.firstTenMonthsDown = data.data.firstTenMonthsDown
             this.marketForm.interIndustryCooperation = data.data.interIndustryCooperation
-            this.structureFrom.supplierName = data.data.supplierName
-            this.structureFrom.brand = data.data.brand
-            this.structureFrom.isProvideContract = data.data.isProvideContract
-            this.structureFrom.contractStartDate = data.data.contractStartDate
-            this.structureFrom.contractEndDate = data.data.contractEndDate
-            this.structureFrom.contractScale = data.data.contractScale
-            this.customerFrom.customersHealth = data.data.customersHealth
-            this.quantityFrom.selfStoresNum = data.data.selfStoresNum
-            this.quantityFrom.memberShopNum = data.data.memberShopNum
-            this.competeFrom.competitorName = data.data.competitorName
-            this.competeFrom.mainForms = data.data.mainForms
-            this.newplanFrom.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
-            this.newplanFrom.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
-            this.newplanFrom.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
-            this.newplanFrom.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
-            this.newplanFrom.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
-            this.newplanFrom.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
-            this.newplanFrom.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
+            this.structureForm.supplierName = data.data.supplierName
+            this.structureForm.brand = data.data.brand
+            this.structureForm.purchaseAmount = data.data.purchaseAmount
+            this.structureForm.proportion = data.data.proportion
+            this.structureForm.isProvideContract = data.data.isProvideContract
+            this.structureForm.contractStartDate = data.data.contractStartDate
+            this.structureForm.contractEndDate = data.data.contractEndDate
+            this.structureForm.contractScale = data.data.contractScale
+            this.structureForm.dueBusinessSupplierCreateFormList = data.data.dueBusinessSupplierVoList
+            this.customerForm.dueBusinessCustomerCreateFormList = data.data.dueBusinessCustomerVoList
+            this.customerForm.customersHealth = data.data.customersHealth
+            this.quantityForm.selfStoresNum = data.data.selfStoresNum
+            this.quantityForm.memberShopNum = data.data.memberShopNum
+            this.competeForm.competitorName = data.data.competitorName
+            this.competeForm.mainForms = data.data.mainForms
+            this.competeForm.dueBusinessCompetitorCreateFormList = data.data.dueBusinessCompetitorVoList
+            this.newplanForm.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
+            this.newplanForm.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
+            this.newplanForm.brandManagement = data.data.dueBusinessFuturePlanVo.brandManagement
+            this.newplanForm.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
+            this.newplanForm.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
+            this.newplanForm.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
+            this.newplanForm.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
+            this.newplanForm.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
+            this.newplanForm.downstreamSwitchChannelsCustomers = data.data.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers
+            this.newplanForm.marketingChannelsPlans = data.data.dueBusinessFuturePlanVo.marketingChannelsPlans
+            this.newplanForm.fundingRequirements = data.data.dueBusinessFuturePlanVo.fundingRequirements
+            this.newplanForm.otherPlansNeeds = data.data.dueBusinessFuturePlanVo.otherPlansNeeds
+            this.newplanForm.dueBusinessFuturePlanCreateForm = data.data.dueBusinessFuturePlanVo.dueBusinessFuturePlanVo
         },
         handleCheckAllChange (val) {
-            console.log(this.newChannels)
+            // console.log(this.newChannels)
             // console.log(val)
             // console.log(this.marketForm.publicityPromotionChannels)
             this.marketForm.publicityPromotionChannels = val ? this.newChannels : []
@@ -1119,185 +1141,104 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            // for (let i = 0;i < this.dueBusinessAssessmentCreateFormList.length;i++) {
-            //     if (this.dueBusinessAssessmentCreateFormList[i].state === null || this.dueBusinessAssessmentCreateFormList[i].state === '') {
-            //         this.showWarnMsg('请选择尽调评估结论')
-            //         this.activeName = '1'
-            //         return false
-            //     }
-            // }
-            if (!this.vaildEmpty(this.salesGrowthHealth)) {
-                this.showWarnMsg('请选择销售增长健康度')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.upstreamBodySwitchable)) {
-                this.showWarnMsg('请选择上游主体切换')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.vaildEmpty(this.downstreamCustomersHealth)) {
-                this.showWarnMsg('请选择下游客户结构健康度')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.riskDisclosure) {
-                this.showWarnMsg('请输入风险揭示')
-                this.activeName = '1'
-                return false
-            }
-            if (!this.analysisDescription) {
-                this.showWarnMsg('请输入分析描述')
-                this.activeName = '1'
-                return false
-            }
-
-            if (!this.vaildEmpty(this.mainBusinessFormatOneId)) {
-                this.showWarnMsg('请输入主要业态')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.businessFormatOneRatio)) {
-                this.showWarnMsg('请输入主要业态 业态占比')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.mainCategoryOneId)) {
-                this.showWarnMsg('请输入主营品类一')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.categoryOneSalesRatio)) {
-                this.showWarnMsg('请输入主营品类一销售占比')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.mainBrandOneName)) {
-                this.showWarnMsg('请输入主营品牌一名称')
-                this.activeName = '2'
-                return false
-            }
-            if (!this.vaildEmpty(this.brandOneSalesRatio)) {
-                this.showWarnMsg('请输入主营品牌一销售比重1')
-                this.activeName = '2'
-                return false
-            }
-
-            // for (var i = 0; i < this.dueBusinessSaleCreateFormList.length; i++) {
-            //     // if (!this.vaildEmpty(this.dueBusinessSaleCreateFormList[i].lastTwoYearSales)) {
-            //     //     this.showWarnMsg(`请输入${this.dueBusinessSaleCreateFormList[i].month}上上年度销售额`)
-            //     //     this.activeName = '3'
-            //     //     return false
-            //     // }
-            //     if (!this.vaildEmpty(this.dueBusinessSaleCreateFormList[i].lastYearSales)) {
-            //         this.showWarnMsg(`请输入${this.dueBusinessSaleCreateFormList[i].month}上年度销售额`)
-            //         this.activeName = '3'
-            //         return false
-            //     }
-            //     if (i < 4) {
-            //         if (!this.vaildEmpty(this.dueBusinessSaleCreateFormList[i].currentYearSales)) {
-            //             this.showWarnMsg(`请输入${this.dueBusinessSaleCreateFormList[i].month}本年度销售额`)
-            //             this.activeName = '3'
-            //             return false
-            //         }
-            //     }
-            // }
-            // if (!this.vaildEmpty(this.firstTenMonthsDown)) {
-            //     this.showWarnMsg('请选择前十个月是否下滑')
-            //     this.activeName = '3'
-            //     return false
-            // }
-            // for (let i = 0;i < this.dueBusinessSupplierCreateFormList.length;i++) {
-            //     if (!(this.dueBusinessSupplierCreateFormList[i].supplierName && this.dueBusinessSupplierCreateFormList[i].purchaseAmount && this.dueBusinessSupplierCreateFormList[i].proportion && this.vaildEmpty(this.dueBusinessSupplierCreateFormList[i].isProvideContract))) {
-            //         this.showWarnMsg('请输入商业尽调供应商必填项')
-            //         this.activeName = '5'
-            //         return false
-            //     }
-            //     if (this.dueBusinessSupplierCreateFormList[i].contractStartDate && this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
-            //         if (this.dueBusinessSupplierCreateFormList[i].contractStartDate >= this.dueBusinessSupplierCreateFormList[i].contractEndDate) {
-            //             this.showWarnMsg('合同开始时间大于合同结束时间')
-            //             this.activeName = '5'
-            //             return false
-            //         }
-            //     }
-            // }
-
-            // for (let i = 0;i < this.dueBusinessCustomerCreateFormList.length;i++) {
-            //     if (!(this.dueBusinessCustomerCreateFormList[i].customerName && this.vaildEmpty(this.dueBusinessCustomerCreateFormList[i].categoryId) && this.dueBusinessCustomerCreateFormList[i].brandName && this.dueBusinessCustomerCreateFormList[i].salesFee && this.dueBusinessCustomerCreateFormList[i].salesProportion)) {
-            //         this.showWarnMsg('请输入商业尽调客户结构必填项')
-            //         this.activeName = '6'
-            //         return false
-            //     }
-            //     if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate && this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
-            //         if (this.dueBusinessCustomerCreateFormList[i].agreementStartDate >= this.dueBusinessCustomerCreateFormList[i].agreementEndDate) {
-            //             this.showWarnMsg('协议期开始大于协议期结束')
-            //             this.activeName = '6'
-            //             return false
-            //         }
-            //     }
-            // }
-            if (!this.vaildEmpty(this.customersHealth)) {
-                this.showWarnMsg('请选择商业尽调客户健康度')
-                this.activeName = '6'
-                return false
-            }
+            this.$refs['KPIForm'].validate(async (valid) => {
+                if (valid) {
+                    for (var i of this.KPIForm.dueBusinessCustomerCreateFormList) {
+                        if (i.state === null || i.state === '') {
+                            this.$message.warning('请选择尽调评估结论')
+                            this.activeName = '1'
+                            return false
+                        }
+                    }
+                }
+            })
+            this.$refs['customerForm'].validate(async (valid) => {
+                if (valid) {
+                    for (var i of this.customerForm.dueBusinessCustomerCreateFormList) {
+                        if (i.categoryId === null || i.categoryId === '') {
+                            this.$message.warning('请选择品类')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.customerName === null || i.customerName === '') {
+                            this.$message.warning('请输入客户名称')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.brandName === null || i.brandName === '') {
+                            this.$message.warning('请输入品牌')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.salesFee === null || i.salesFee === '') {
+                            this.$message.warning('请输入销售金额')
+                            this.activeName = '6'
+                            return false
+                        } else if (i.salesProportion === null || i.salesProportion === '') {
+                            this.$message.warning('请输入销售占比')
+                            this.activeName = '6'
+                            return false
+                        }
+                    }
+                }
+            })
             this.publicityPromotionChannels = this.checkedCities.join(',')
             this.dueBusinessSaleCreateFormList[0].currentYearSales = this.currentYearAllSales
             this.dueBusinessSaleCreateFormList[0].lastYearSales = this.lastYearAllSales
             this.dueBusinessSaleCreateFormList[0].lastTwoYearSales = this.lastTwoYearAllSales
             const formData = {
                 id: this.id,
-                analysisDescription: this.analysisDescription,
+                analysisDescription: this.KPIForm.analysisDescription,
                 applyId: this.applyId,
-                brandOneSalesRatio: this.brandOneSalesRatio,
-                brandThreeSalesRatio: this.brandThreeSalesRatio,
-                brandTwoSalesRatio: this.brandTwoSalesRatio,
-                businessFormatOneRatio: this.businessFormatOneRatio,
-                businessFormatTwoRatio: this.businessFormatTwoRatio,
-                businessFormatTwoThreeRatio: this.businessFormatTwoThreeRatio,
-                categoryOneSalesRatio: this.categoryOneSalesRatio,
-                categoryTwoSalesRatio: this.categoryTwoSalesRatio,
+                brandOneSalesRatio: this.businessmodeForm.brandOneSalesRatio,
+                brandThreeSalesRatio: this.businessmodeForm.brandThreeSalesRatio,
+                brandTwoSalesRatio: this.businessmodeForm.brandTwoSalesRatio,
+                businessFormatOneRatio: this.businessmodeForm.businessFormatOneRatio,
+                businessFormatTwoRatio: this.businessmodeForm.businessFormatTwoRatio,
+                businessFormatTwoThreeRatio: this.businessmodeForm.businessFormatTwoThreeRatio,
+                categoryOneSalesRatio: this.businessmodeForm.categoryOneSalesRatio,
+                categoryTwoSalesRatio: this.businessmodeForm.categoryTwoSalesRatio,
                 createUser: this.userInfo.name,
-                customersHealth: this.customersHealth,
+                customersHealth: this.customerForm.customersHealth,
                 downstreamCustomersHealth: this.downstreamCustomersHealth,
-                dueBusinessAssessmentCreateFormList: this.dueBusinessAssessmentCreateFormList,
-                dueBusinessCompetitorCreateFormList: this.dueBusinessCompetitorCreateFormList,
-                dueBusinessCustomerCreateFormList: this.dueBusinessCustomerCreateFormList,
-                dueBusinessCustomerDemandCreateForm: this.dueBusinessCustomerDemandCreateForm,
-                dueBusinessFuturePlanCreateForm: this.dueBusinessFuturePlanCreateForm,
+                dueBusinessAssessmentCreateFormList: this.KPIForm.dueBusinessAssessmentCreateFormList,
+                dueBusinessCompetitorCreateFormList: this.competeForm.dueBusinessCompetitorCreateFormList,
+                dueBusinessCustomerCreateFormList: this.customerForm.dueBusinessCustomerCreateFormList,
+                dueBusinessFuturePlanCreateForm: this.newplanForm,
                 dueBusinessId: this.dueBusinessId,
-                dueBusinessProxySwitchSchemeCreateFormList: this.dueBusinessProxySwitchSchemeCreateFormList,
                 dueBusinessSaleCreateFormList: this.dueBusinessSaleCreateFormList,
-                dueBusinessSupplierCreateFormList: this.dueBusinessSupplierCreateFormList,
-                firstTenMonthsDown: this.firstTenMonthsDown,
-                interIndustryCooperation: this.interIndustryCooperation,
-                mainBrandOneName: this.mainBrandOneName,
-                mainBrandThreeName: this.mainBrandThreeName,
-                mainBrandTwoName: this.mainBrandTwoName,
-                mainBusinessFormatOneId: this.mainBusinessFormatOneId,
-                mainBusinessFormatThreeId: this.mainBusinessFormatThreeId,
-                mainBusinessFormatTwoId: this.mainBusinessFormatTwoId,
-                mainCategoryOneId: this.mainCategoryOneId,
-                mainCategoryTwoId: this.mainCategoryTwoId,
-                memberShopNum: this.memberShopNum,
+                dueBusinessSupplierCreateFormList: this.structureForm.dueBusinessSupplierCreateFormList,
+                firstTenMonthsDown: this.salesForm.firstTenMonthsDown,
+                interIndustryCooperation: this.marketForm.interIndustryCooperation,
+                mainBrandOneName: this.businessmodeForm.mainBrandOneName,
+                mainBrandThreeName: this.businessmodeForm.mainBrandThreeName,
+                mainBrandTwoName: this.businessmodeForm.mainBrandTwoName,
+                mainBusinessFormatOneId: this.businessmodeForm.mainBusinessFormatOneId,
+                mainBusinessFormatThreeId: this.businessmodeForm.mainBusinessFormatThreeId,
+                mainBusinessFormatTwoId: this.businessmodeForm.mainBusinessFormatTwoId,
+                mainCategoryOneId: this.businessmodeForm.mainCategoryOneId,
+                mainCategoryTwoId: this.businessmodeForm.mainCategoryTwoId,
+                memberShopNum: this.quantityForm.memberShopNum,
                 operationNode: 1,
-                publicityPromotionChannels: this.publicityPromotionChannels,
-                riskDisclosure: this.riskDisclosure,
+                publicityPromotionChannels: this.marketForm.publicityPromotionChannels,
+                riskDisclosure: this.KPIForm.riskDisclosure,
                 salesGrowthHealth: this.salesGrowthHealth,
-                selfStoresNum: this.selfStoresNum,
-                upstreamBodySwitchable: this.upstreamBodySwitchable
+                salesPerformanceLastYear: this.KPIForm.salesPerformanceLastYear,
+                selfStoresNum: this.quantityForm.selfStoresNum,
+                upstreamBodySwitchable: this.upstreamBodySwitchable,
+                wholesaleShare: this.KPIForm.wholesaleShare,
+                retailShare: this.KPIForm.retailShare,
+                projectShare: this.KPIForm.projectShare
             }
+            console.log(formData)
             // console.log(formData)
             if (this.dueBusinessId) {
-                await putBusiness(formData)
+                // await putBusiness(formData)
             } else {
-                await addBusiness(formData)
+                // await addBusiness(formData)
             }
-            this.$message({
-                type: 'success',
-                message: '提交成功'
-            })
-            this.$router.go(-1)
+            // this.$message({
+            //     type: 'success',
+            //     message: '提交成功'
+            // })
+            // this.$router.go(-1)
         }
     },
     computed: {
@@ -1318,7 +1259,7 @@ export default {
                     if (index === 0) {
                         databaseCurrentYearAllSales = parseFloat(item.currentYearSales)
                         databaseLastYearAllSales = parseFloat(item.lastYearSales)
-                        databaseLastTwoYearAllSales =  parseFloat(item.lastTwoYearSales)
+                        databaseLastTwoYearAllSales = parseFloat(item.lastTwoYearSales)
                     } else {
                         this.currentYearAllSales += parseFloat(item.currentYearSales)
                         this.lastYearAllSales += parseFloat(item.lastYearSales)
@@ -1417,10 +1358,10 @@ table {
     max-width: 200px;
     min-width: 180px;
 }
-/deep/ .el-date-editor.el-input,
-.el-date-editor.el-input__inner {
-    width: 100%;
-}
+// /deep/ .el-date-editor.el-input,
+// .el-date-editor.el-input__inner {
+//     width: 100%;
+// }
 .assessmentTable {
     margin: 15px;
 }
@@ -1442,5 +1383,8 @@ table {
 }
 .KPISymbol {
     margin-left: 10px;
+}
+/deep/ .supplierSymbol.el-form .el-input {
+    width: 100%;
 }
 </style>
