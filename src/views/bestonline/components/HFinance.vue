@@ -321,7 +321,14 @@
                             </tbody>
                         </table>
                         <span>
-                            <i class="el-icon-question" @click="onDebtDialog"></i>
+                            <el-button class="el-icon-question" slot="reference" @click="onDebtDialog = true"></el-button>
+                            <el-dialog title="偿债能力标准值" :visible.sync="onDebtDialog" width="30%" :before-close="handleClose">
+                                <span>满足一下条件，即判断为符合标准</span>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="onDebtDialog = false">取 消</el-button>
+                                    <el-button type="primary" @click="onDebtDialog = false">确 定</el-button>
+                                </span>
+                            </el-dialog>
                         </span>
                     </el-form>
                     <!-- <div class="flex-wrap-col">
@@ -1259,7 +1266,12 @@ export default {
             profitForm: {
                 dueFinanceYearOperatingPos: []
             },
-            costForm: {},
+            costForm: {
+                salesExpensesRatio: '',
+                costRationality: '',
+                managementExpensesRatio: '',
+                costRationalityRemark: ''
+            },
             costRules: {},
             debtForm: {
                 dueFinanceYearOperatingPos: []
@@ -1474,8 +1486,8 @@ export default {
                 assetsLiabilities: this.assetsLiabilities,
                 caseFlow: this.caseFlow,
                 dueFinanceBasic: this.dueFinanceBasic,
-                dueFinanceProfit: this.dueFinanceProfit,
-                type
+                dueFinanceProfit: this.dueFinanceProfit
+
             }
             return formData
         },
