@@ -178,7 +178,7 @@ const routerMapping = [
                 meta: {
                     title: '商品库管理',
                     tagName: '商品库管理',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('./views/hmall/shopManager/selectCategory.vue')
