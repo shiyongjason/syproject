@@ -639,7 +639,6 @@ export default {
             },
             nowMonth: '',
             newChannels: [],
-
             textarea: '',
             KPIFormData: {
                 mainBusiness: ''

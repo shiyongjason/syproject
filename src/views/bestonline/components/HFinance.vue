@@ -34,7 +34,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.assessmentList.length" v-if="index == 0">
-                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="textarea">
+                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -60,7 +60,7 @@
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input  v-if="form.dueFinanceYearOperatingPos[1]"  v-model="form.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
+                                    <el-input v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].assetLiabilityRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -83,11 +83,11 @@
                         </tbody>
                     </table>
                     <p class="small-title mb15">3、分析报告(必填)</p>
-                    <el-form-item label="风险揭示：" prop="riskDisclosure">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
+                    <el-form-item label="风险揭示：" prop="dueFinanceBasic.riskDisclosure">
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.dueFinanceBasic.riskDisclosure"></el-input>
                     </el-form-item>
-                    <el-form-item label="分析描述：" prop="analysisDescription">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
+                    <el-form-item label="分析描述：" prop="dueFinanceBasic.analysisDescription">
+                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.dueFinanceBasic.analysisDescription"></el-input>
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -135,12 +135,12 @@
                                 </td>
                                 <td class="assessmentRow">
                                     <span class="red-word">*</span>
-                                    <el-input  v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].rate">
+                                    <el-input v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].rate">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <el-input  v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].rate">
+                                    <el-input v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].rate">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -160,7 +160,7 @@
                                     </el-input>
                                 </td>
                                 <td class="assessmentRow">
-                                    <el-input  v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].profitRatio">
+                                    <el-input v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].profitRatio">
                                         <template slot="suffix">%</template>
                                     </el-input>
                                 </td>
@@ -203,21 +203,21 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="销售费用占比：">
-                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.salesExpensesRatio" @keyup.native="oninput('salesExpensesRatio',$event)">
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.dueFinanceBasic.salesExpensesRatio" @keyup.native="oninput('salesExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="管理费用占比：">
-                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.managementExpensesRatio" @keyup.native="oninput('managementExpensesRatio',$event)">
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.dueFinanceBasic.managementExpensesRatio" @keyup.native="oninput('managementExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="财务费用占比：">
-                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.financeExpensesRatio" @keyup.native="oninput('financeExpensesRatio',$event)">
+                                <el-input placeholder="" maxlength="25" :disabled="isdisabled" v-model="form.dueFinanceBasic.financeExpensesRatio" @keyup.native="oninput('financeExpensesRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -226,7 +226,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="费用合理性：">
-                                <el-select v-model="form.costRationality">
+                                <el-select v-model="form.dueFinanceBasic.costRationality">
                                     <el-option v-for="item in costRationalityData" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -235,7 +235,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="备注：">
-                                <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请对合理性评估进行备注" v-model="form.costRationalityRemark"></el-input>
+                                <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请对合理性评估进行备注" v-model="form.dueFinanceBasic.costRationalityRemark"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -524,21 +524,21 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="公司借款：">
-                                <el-input v-model="form.companyDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyDebt',$event)">
+                                <el-input v-model="form.dueFinanceBasic.companyDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyDebt',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="股东借款：" prop="shareholdersDebt">
-                                <el-input v-model="form.shareholdersDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersDebt',$event)">
+                                <el-input v-model="form.dueFinanceBasic.shareholdersDebt" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersDebt',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="公司向股东借款：" prop="companyBorrowsShareholders">
-                                <el-input v-model="form.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyBorrowsShareholders',$event)">
+                                <el-input v-model="form.dueFinanceBasic.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('companyBorrowsShareholders',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
@@ -547,21 +547,21 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="股东向公司借款：" prop="shareholdersBorrowsCompany">
-                                <el-input v-model="form.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                                <el-input v-model="form.dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="现金流量比率：">
-                                <el-input v-model="form.cashFlowRatio" placeholder="请输入现金流量比率" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
+                                <el-input v-model="form.dueFinanceBasic.cashFlowRatio" placeholder="请输入现金流量比率" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="资金风险评估：" prop="capitalRiskAssessment">
-                                <el-select v-model="form.capitalRiskAssessment" placeholder="请选择资金风险评估" :disabled="isdisabled">
+                                <el-select v-model="form.dueFinanceBasic.capitalRiskAssessment" placeholder="请选择资金风险评估" :disabled="isdisabled">
                                     <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -571,14 +571,14 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                                <el-input v-model="form.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                                <el-input v-model="form.dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="个人及公司担保：">
-                                <el-input v-model="form.cashFlowRatio" placeholder="请输入比例" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
+                                <el-input v-model="form.dueFinanceBasic.cashFlowRatio" placeholder="请输入比例" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('cashFlowRatio',$event)">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -751,7 +751,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="仓库地址">
-                                <el-select v-model="form.storeProvince" placeholder="省" :disabled="isdisabled" @change="onProvince">
+                                <el-select v-model="form.dueFinanceBasic.storeProvince" placeholder="省" :disabled="isdisabled" @change="onProvince">
                                     <el-option v-for="item in storeProvince" :key="item.id" :label="item.cityName" :value="item.cityId">
                                     </el-option>
                                 </el-select>
@@ -759,7 +759,7 @@
                         </div>
                         <div class="form-cont-col">
                             <el-form-item>
-                                <el-select v-model="form.storeCity" placeholder="市" :disabled="isdisabled" @change="onCity">
+                                <el-select v-model="form.dueFinanceBasic.storeCity" placeholder="市" :disabled="isdisabled" @change="onCity">
                                     <el-option v-for="item in storeCity" :key="item.id" :label="item.cityName" :value="item.cityId">
                                     </el-option>
                                 </el-select>
@@ -767,7 +767,7 @@
                         </div>
                         <div class="form-cont-col">
                             <el-form-item>
-                                <el-select v-model="form.storeArea" placeholder="区" :disabled="isdisabled">
+                                <el-select v-model="form.dueFinanceBasic.storeArea" placeholder="区" :disabled="isdisabled">
                                     <el-option v-for="item in storeArea" :key="item.id" :label="item.cityName" :value="item.cityId">
                                     </el-option>
                                 </el-select>
@@ -777,7 +777,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="详细地址：">
-                                <el-input type="textarea" style="width:1030px" rows="2" :disabled="isdisabled" placeholder="请输入详细地址" maxlength="250" v-model="dueFinanceBasic.storeAddress">
+                                <el-input type="textarea" style="width:1030px" rows="2" :disabled="isdisabled" placeholder="请输入详细地址" maxlength="250" v-model="form.dueFinanceBasic.storeAddress">
                                 </el-input>
                             </el-form-item>
                         </div>
@@ -785,13 +785,13 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="仓库面积（㎡）：">
-                                <el-input v-model="form.storeSize" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('storeSize',$event)">
+                                <el-input v-model="form.dueFinanceBasicstoreSize" placeholder="" maxlength="25" :disabled="isdisabled" @keyup.native="oninput('storeSize',$event)">
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="仓库形式：">
-                                <el-select v-model="form.storeForm" placeholder="请选择" :disabled="isdisabled">
+                                <el-select v-model="form.dueFinanceBasic.storeForm" placeholder="请选择" :disabled="isdisabled">
                                     <el-option v-for="item in storeOptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -799,7 +799,7 @@
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="仓库摆放有序程度：">
-                                <el-select v-model="form.degreeOfStorageOrder" placeholder="请选择" :disabled="isdisabled">
+                                <el-select v-model="form.dueFinanceBasic.degreeOfStorageOrder" placeholder="请选择" :disabled="isdisabled">
                                     <el-option v-for="item in riskoptions" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -809,7 +809,7 @@
                     <div class="form-cont-row">
                         <div class="form-cont-col">
                             <el-form-item label="接受好享家仓库监管方式：">
-                                <el-select v-model="form.isAgreeCustody" placeholder="请选择" :disabled="isdisabled">
+                                <el-select v-model="form.dueFinanceBasic.isAgreeCustody" placeholder="请选择" :disabled="isdisabled">
                                     <el-option v-for="item in yesNoStatus" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
                                 </el-select>
@@ -817,7 +817,7 @@
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="具体监管时间：">
-                                <el-date-picker v-model="form.dateOfCustody" type="date" placeholder="选择日期" :disabled="isdisabled">
+                                <el-date-picker v-model="form.dueFinanceBasic.dateOfCustody" type="date" placeholder="选择日期" :disabled="isdisabled">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
@@ -1443,11 +1443,11 @@ export default {
 
         },
         format (type) {
-            if (this.dueFinanceBasic.dateOfCustody) this.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
-            if (this.dueFinanceBasic.startDateOfDelegation) this.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
-            if (this.assetsLiabilities.recordTime) this.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.assetsLiabilities.recordTime, 'YYYY-MM-DD')
-            if (this.dueFinanceProfit.recordTime) this.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
-            if (this.caseFlow.recordTime) this.caseFlow.recordTime = this.$options.filters.formatDate(this.caseFlow.recordTime, 'YYYY-MM-DD')
+            if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
+            if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
+            if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
+            if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
+            if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
             const formData = {
                 assessmentList: this.assessmentList,
                 assetsLiabilities: this.assetsLiabilities,
@@ -1470,6 +1470,48 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (type) {
+            for (const i of this.form.assessmentList) {
+                if (i.state === null || i.state === '') {
+                    this.$message.warning('请选择尽调评估结论')
+                    this.activeName = '1'
+                    return false
+                }
+            }
+            for (const i of this.form.dueFinanceYearOperatingPos) {
+                if(i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
+                    this.$message.warning('请输入资产负债率')
+                    this.activeName = '1'
+                    return false
+                }else if(i.profitRatio === null || i.profitRatio === '') {
+                    this.$message.warning('请输入净利率')
+                    this.activeName = '1'
+                    return false
+                }else if(i.grossMargin === null || i.grossMargin === '') {
+                    this.$message.warning('请输入销售毛利率')
+                    this.activeName = '2'
+                    return false
+                }else if(i.rate === null || i.rate === '') {
+                    this.$message.warning('请输入费率')
+                    this.activeName = '2'
+                    return false
+                }else if(i.liquidityRatio === null || i.liquidityRatio === '') {
+                    this.$message.warning('请输入流动比率')
+                    this.activeName = '4'
+                    return false
+                }else if(i.quickRatio === null || i.quickRatio === '') {
+                    this.$message.warning('请输入速动比率')
+                    this.activeName = '4'
+                    return false
+                }else if(i.cashRatio === null || i.cashRatio === '') {
+                    this.$message.warning('请输入现金比率')
+                    this.activeName = '4'
+                    return false
+                }else if(i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
+                    this.$message.warning('请输入资产负债率')
+                    this.activeName = '4'
+                    return false
+                }
+            }
             const formData = this.format(type)
             // for (let i = 0;i < this.assessmentList.length;i++) {
             //     if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
