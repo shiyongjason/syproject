@@ -20,7 +20,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item,index) in form.dueBusinessAssessmentVoList" :key=index>
+                            <tr v-for="(item,index) in form.dueBusinessAssessmentCreateFormList" :key=index>
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
@@ -33,7 +33,7 @@
                                         </el-option>
                                     </el-select>
                                 </td>
-                                <td :rowspan="form.dueBusinessAssessmentVoList.length" v-if="index == 0">
+                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
                                     <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
@@ -44,7 +44,6 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                                {{form.dueBusinessAssessmentCreateFormList}}
                                 <el-input class="proportionKPI" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
                                 <el-input class="proportionKPI" v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
                                 <el-input class="proportionKPI" v-model="form.projectShare"></el-input>
@@ -220,7 +219,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(item,index) in form.dueBusinessSaleVoList" :key="index">
+                            <tr v-for="(item,index) in form.dueBusinessSaleCreateFormList" :key="index">
                                 <td colspan="2">{{item.month}}</td>
                                 <td>
                                     <template v-if="index === 0">
@@ -293,10 +292,10 @@
                         <p class="titlt-p">上游-供应商结构</p>
                     </template>
                     <!--start-->
-                    <div class="supplier" v-for="(item,index) in form.dueBusinessSupplierVoList" :key=index>
+                    <div class="supplier" v-for="(item,index) in form.dueBusinessSupplierCreateFormList" :key=index>
                         <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" v-if="index==0" @click="addSupplier"></i>
                         <i class="el-icon-remove-outline pointer" @click="deleteSupplier(index)" v-show="!isdisabled" v-else></i>
-                        <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierVoList[${index}].supplierName`" :rules="rules.supplierName">
+                        <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
                             <el-input v-model="item.supplierName" style="width: 90%;" :disabled="isdisabled" placeholder="供应商名称" maxlength="25"></el-input>
                         </el-form-item>
                         <el-form-item label="品牌:">
@@ -304,17 +303,17 @@
                         </el-form-item>
                         <div class="form-cont-row mb20">
                             <div class="form-cont-col ">
-                                <el-form-item label="采购金额：" :prop="`dueBusinessSupplierVoList[${index}].purchaseAmount`" :rules="rules.purchaseAmount">
+                                <el-form-item label="采购金额：" :prop="`dueBusinessSupplierCreateFormList[${index}].purchaseAmount`" :rules="rules.purchaseAmount">
                                     <el-input v-model="item.purchaseAmount" :disabled="isdisabled" placeholder="采购金额"><template slot="suffix">万</template></el-input>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col ">
-                                <el-form-item label="占比：" :prop="`dueBusinessSupplierVoList[${index}].proportion`" :rules="rules.proportion">
+                                <el-form-item label="占比：" :prop="`dueBusinessSupplierCreateFormList[${index}].proportion`" :rules="rules.proportion">
                                     <el-input v-model="item.proportion" :disabled="isdisabled" placeholder="占比"><template slot="suffix">%</template></el-input>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col ">
-                                <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierVoList[${index}].isProvideContract`" :rules="rules.isProvideContract">
+                                <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`" :rules="rules.isProvideContract">
                                     <el-select v-model="item.isProvideContract" placeholder="请选择" :disabled="isdisabled">
                                         <el-option v-for="item in isProvideContractData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                                     </el-select>
@@ -359,7 +358,7 @@
                                 <div class="table-col">协议规模（万元）(非必填)</div>
 
                             </div>
-                            <div class="table-row " v-for="(item,index) in form.dueBusinessCustomerVoList" :key=index>
+                            <div class="table-row " v-for="(item,index) in form.dueBusinessCustomerCreateFormList" :key=index>
                                 <div class="table-col">
                                     <el-input v-model="item.customerName" placeholder="客户" maxlength="25" :disabled="isdisabled">
                                     </el-input>
@@ -425,7 +424,7 @@
                     <template slot="title">
                         <p class="titlt-p">竞争对手</p>
                     </template>
-                    <div class="compete supplier" v-for="(item,index) in form.dueBusinessCompetitorVoList" :key=index>
+                    <div class="compete supplier" v-for="(item,index) in form.dueBusinessCompetitorCreateFormList" :key=index>
                         <i class="el-icon-circle-plus-outline pointer" v-show="!isdisabled" @click="addCompet" v-if="index==0"></i>
                         <i class="el-icon-remove-outline pointer" v-show="!isdisabled" v-else @click="deleteCompet(index)"></i>
                         <el-form-item label="竞争对手：" prop="competitorName " placeholder="竞争对手" maxlength="25" :disabled="isdisabled">
@@ -440,15 +439,15 @@
                     <template slot="title">
                         <p class="titlt-p">新合资公司规划</p>
                     </template>
-                    <el-form-item label="业务类别：" prop="dueBusinessFuturePlanVo.serviceCategory">
-                        <el-checkbox-group v-model="form.dueBusinessFuturePlanVo.serviceCategory">
+                    <el-form-item label="业务类别：" prop="dueBusinessFuturePlanCreateForm.serviceCategory">
+                        <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory">
                             <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="经营品类：" prop="dueBusinessFuturePlanVo.businessCategory">
-                                <el-checkbox-group v-model="form.dueBusinessFuturePlanVo.businessCategory">
+                            <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory">
+                                <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
                                     <el-checkbox label="0">冷暖</el-checkbox>
                                     <el-checkbox label="1">新风</el-checkbox>
                                     <el-checkbox label="2">净水</el-checkbox>
@@ -458,61 +457,61 @@
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="" prop="dueBusinessFuturePlanVo.manageCategory" label-width=0>
-                                <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+                            <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.manageCategory" label-width=0>
+                                <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item label="经营品牌：" prop="dueBusinessFuturePlanVo.brandManagement">
-                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.brandManagement" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="经营品牌：" prop="dueBusinessFuturePlanCreateForm.brandManagement">
+                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.brandManagement" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="经营区域：" prop="dueBusinessFuturePlanVo.businessProvince">
-                                <el-select v-model="form.dueBusinessFuturePlanVo.businessProvince" placeholder="请选择省">
+                            <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince">
+                                <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item prop="dueBusinessFuturePlanVo.businessCity">
-                                <el-select v-model="form.dueBusinessFuturePlanVo.businessCity" placeholder="请选择市">
+                            <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity">
+                                <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" placeholder="请选择市">
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item prop="dueBusinessFuturePlanVo.businessArea">
-                                <el-select v-model="form.dueBusinessFuturePlanVo.businessArea" placeholder="请选择区">
+                            <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea">
+                                <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessArea" placeholder="请选择区">
                                 </el-select>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
-                            <el-form-item label="年销售规模：" prop="dueBusinessFuturePlanVo.annualSalesScale">
-                                <el-input v-model="form.dueBusinessFuturePlanVo.annualSalesScale" placeholder="请输入规模">
+                            <el-form-item label="年销售规模：" prop="dueBusinessFuturePlanCreateForm.annualSalesScale">
+                                <el-input v-model="form.dueBusinessFuturePlanCreateForm.annualSalesScale" placeholder="请输入规模">
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="净利润率：" prop="dueBusinessFuturePlanVo.netProfitRate">
-                                <el-input v-model="form.dueBusinessFuturePlanVo.netProfitRate" placeholder="请输入净利润">
+                            <el-form-item label="净利润率：" prop="dueBusinessFuturePlanCreateForm.netProfitRate">
+                                <el-input v-model="form.dueBusinessFuturePlanCreateForm.netProfitRate" placeholder="请输入净利润">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                     </div>
-                    <el-form-item label="下游切换渠道和客户：" prop="dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers" label-width="170px">
-                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="下游切换渠道和客户：" prop="dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers" label-width="170px">
+                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="市场推广渠道及计划：" prop="dueBusinessFuturePlanVo.marketingChannelsPlans" label-width="170px">
-                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="市场推广渠道及计划：" prop="dueBusinessFuturePlanCreateForm.marketingChannelsPlans" label-width="170px">
+                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
-                    <el-form-item label="资金用款需求：" prop="dueBusinessFuturePlanVo.fundingRequirements">
-                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                    <el-form-item label="资金用款需求：" prop="dueBusinessFuturePlanCreateForm.fundingRequirements">
+                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                     <el-form-item label="其他规划和需求：">
-                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanVo.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+                        <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
                     </el-form-item>
                 </el-collapse-item>
             </el-form>
@@ -645,19 +644,62 @@ export default {
                 mainBusiness: ''
             },
             form: {
-                dueBusinessAssessmentVoList: [],
-                wholesaleShare: '',
-                retailShare: '',
-                projectShare: '',
-                riskDisclosure: '',
                 analysisDescription: '',
-                dueBusinessSaleVoList: [],
-                dueBusinessFuturePlanVo: {
+                applyId: '',
+                brandOneSalesRatio: '',
+                brandThreeSalesRatio: '',
+                brandTwoSalesRatio: '',
+                businessFormatOneRatio: '',
+                businessFormatTwoRatio: '',
+                businessFormatTwoThreeRatio: '',
+                categoryOneSalesRatio: '',
+                categoryTwoSalesRatio: '',
+                createUser: '',
+                customersHealth: '',
+                downstreamCustomersHealth: '',
+                firstTenMonthsDown: '',
+                interIndustryCooperation: '',
+                mainBrandOneName: '',
+                mainBrandThreeName: '',
+                mainBrandTwoName: '',
+                mainBusinessFormatOneId: '',
+                mainBusinessFormatThreeId: '',
+                mainBusinessFormatTwoId: '',
+                mainCategoryOneId: '',
+                mainCategoryTwoId: '',
+                memberShopNum: '',
+                operationNode: '',
+                projectShare: '',
+                publicityPromotionChannels: [],
+                retailShare: '',
+                riskDisclosure: '',
+                salesGrowthHealth: '',
+                salesPerformanceLastYear: '',
+                selfStoresNum: '',
+                upstreamBodySwitchable: '',
+                wholesaleShare: '',
+                dueBusinessAssessmentCreateFormList: [],
+                dueBusinessCompetitorCreateFormList: [],
+                dueBusinessCustomerCreateFormList: [],
+                dueBusinessCustomerDemandCreateForm: {},
+                dueBusinessFuturePlanCreateForm: {
                     serviceCategory: [],
                     businessCategory: [],
-                    manageCategory: ''
+                    businessCategoryOther: '',
+                    brandManagement: '',
+                    businessProvince: '',
+                    businessCity: '',
+                    businessArea: '',
+                    annualSalesScale: '',
+                    netProfitRate: '',
+                    downstreamSwitchChannelsCustomers: '',
+                    marketingChannelsPlans: '',
+                    fundingRequirements: '',
+                    otherPlansNeeds: ''
                 },
-                publicityPromotionChannels: []
+                dueBusinessProxySwitchSchemeCreateFormList: [],
+                dueBusinessSaleCreateFormList: [],
+                dueBusinessSupplierCreateFormList: []
             },
             currentYearAllSales: 0, // 今年销售总额
             lastYearAllSales: 0, // 去年销售总额
@@ -717,31 +759,31 @@ export default {
                 switchDate: [
                     { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.serviceCategory': [
+                'dueBusinessFuturePlanCreateForm.serviceCategory': [
                     { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
                 ],
-                'dueBusinessFuturePlanVo.businessCategory': [
+                'dueBusinessFuturePlanCreateForm.businessCategory': [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
-                'dueBusinessFuturePlanVo.manageCategory': [
+                'dueBusinessFuturePlanCreateForm.manageCategory': [
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.brandManagement': [
+                'dueBusinessFuturePlanCreateForm.brandManagement': [
                     { required: true, message: '请输入品牌信息', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.annualSalesScale': [
+                'dueBusinessFuturePlanCreateForm.annualSalesScale': [
                     { required: true, message: '请输入年销售规模', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.netProfitRate': [
+                'dueBusinessFuturePlanCreateForm.netProfitRate': [
                     { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers': [
+                'dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers': [
                     { required: true, message: '请输入下游切换渠道和客户', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.marketingChannelsPlans': [
+                'dueBusinessFuturePlanCreateForm.marketingChannelsPlans': [
                     { required: true, message: '请输入市场推广渠道及计划', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanVo.fundingRequirements': [
+                'dueBusinessFuturePlanCreateForm.fundingRequirements': [
                     { required: true, message: '请输入资金用款需求', trigger: 'blur' }
                 ]
             },
@@ -862,7 +904,6 @@ export default {
             const { data } = await getBusiness(this.applyId)
             console.log(data.data)
 
-            this.form = data.data
             data.data.dueBusinessSaleVoList.map((item, value) => {
                 this.currentYearAllSales += +item.currentYearSales
                 this.lastYearAllSales += +item.lastYearSales
@@ -871,24 +912,78 @@ export default {
             this.currentYearAllSales = (this.currentYearAllSales ? this.currentYearAllSales : 0).toFixed(2)
             this.lastYearAllSales = (this.lastYearAllSales ? this.lastYearAllSales : 0).toFixed(2)
             this.lastTwoYearAllSales = (this.lastTwoYearAllSales ? this.lastTwoYearAllSales : 0).toFixed(2)
-            if (data.data.publicityPromotionChannels) {
-                this.form.publicityPromotionChannels = data.data.publicityPromotionChannels.split(',')
-            }
-            this.form.dueBusinessFuturePlanVo.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
-            this.form.dueBusinessFuturePlanVo.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
 
-            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.map(Number)
-
-            // if (!data.data.operationNode) {
-            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
-            // } else {
-            //     this.isdisabled = (!!data.data.operationNode)
-            // }
             this.id = data.data.id
             this.type = !!data.data.operationNode
             this.updateTime = data.data.updateTime
             this.updateUser = data.data.updateUser
             this.dueBusinessId = data.data.dueBusinessId
+            // if (!data.data.operationNode) {
+            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
+            // } else {
+            //     this.isdisabled = (!!data.data.operationNode)
+            // }
+            this.form.analysisDescription = data.data.analysisDescription
+            this.form.applyId = data.data.applyId
+            this.form.brandOneSalesRatio = data.data.brandOneSalesRatio
+            this.form.brandThreeSalesRatio = data.data.brandThreeSalesRatio
+            this.form.brandTwoSalesRatio = data.data.brandTwoSalesRatio
+            this.form.businessFormatOneRatio = data.data.businessFormatOneRatio
+            this.form.businessFormatTwoRatio = data.data.businessFormatTwoRatio
+            this.form.businessFormatTwoThreeRatio = data.data.businessFormatTwoThreeRatio
+            this.form.categoryOneSalesRatio = data.data.categoryOneSalesRatio
+            this.form.categoryTwoSalesRatio = data.data.categoryTwoSalesRatio
+            this.form.createUser = data.data.createUser
+            this.form.customersHealth = data.data.customersHealth
+            this.form.downstreamCustomersHealth = data.data.downstreamCustomersHealth
+            this.form.firstTenMonthsDown = data.data.firstTenMonthsDown
+            this.form.interIndustryCooperation = data.data.interIndustryCooperation
+            this.form.mainBrandOneName = data.data.mainBrandOneName
+            this.form.mainBrandThreeName = data.data.mainBrandThreeName
+            this.form.mainBrandTwoName = data.data.mainBrandTwoName
+            this.form.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
+            this.form.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
+            this.form.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
+            this.form.mainCategoryOneId = data.data.mainCategoryOneId
+            this.form.mainCategoryTwoId = data.data.mainCategoryTwoId
+            this.form.memberShopNum = data.data.memberShopNum
+            this.form.operationNode = data.data.operationNode
+            this.form.projectShare = data.data.projectShare
+            this.form.publicityPromotionChannels = data.data.publicityPromotionChannels ? data.data.publicityPromotionChannels : []
+            this.form.retailShare = data.data.retailShare
+            this.form.riskDisclosure = data.data.riskDisclosure
+            this.form.salesGrowthHealth = data.data.salesGrowthHealth
+            this.form.salesPerformanceLastYear = data.data.salesPerformanceLastYear
+            this.form.selfStoresNum = data.data.selfStoresNum
+            this.form.upstreamBodySwitchable = data.data.upstreamBodySwitchable
+            this.form.wholesaleShare = data.data.wholesaleShare
+            this.form.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
+            this.form.dueBusinessCompetitorCreateFormList = data.data.dueBusinessCompetitorVoList
+            this.form.dueBusinessCustomerCreateFormList = data.data.dueBusinessCustomerVoList
+            this.form.dueBusinessCustomerDemandCreateForm = data.data.dueBusinessCustomerDemandVo
+            this.form.dueBusinessProxySwitchSchemeCreateFormList = data.data.dueBusinessProxySwitchSchemeVoList
+            this.form.dueBusinessSaleCreateFormList = data.data.dueBusinessSaleVoList
+            this.form.dueBusinessSupplierCreateFormList = data.data.dueBusinessSupplierVoList
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
+            this.form.dueBusinessFuturePlanCreateForm.businessCategoryOther = data.data.dueBusinessFuturePlanVo.businessCategoryOther
+            this.form.dueBusinessFuturePlanCreateForm.brandManagement = data.data.dueBusinessFuturePlanVo.brandManagement
+            this.form.dueBusinessFuturePlanCreateForm.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
+            this.form.dueBusinessFuturePlanCreateForm.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
+            this.form.dueBusinessFuturePlanCreateForm.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
+            this.form.dueBusinessFuturePlanCreateForm.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
+            this.form.dueBusinessFuturePlanCreateForm.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
+            this.form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers = data.data.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers
+            this.form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans = data.data.dueBusinessFuturePlanVo.marketingChannelsPlans
+            this.form.dueBusinessFuturePlanCreateForm.fundingRequirements = data.data.dueBusinessFuturePlanVo.fundingRequirements
+            this.form.dueBusinessFuturePlanCreateForm.otherPlansNeeds = data.data.dueBusinessFuturePlanVo.otherPlansNeeds
+
+            // if (data.data.publicityPromotionChannels) {
+            // this.form.publicityPromotionChannels = data.data.publicityPromotionChannels.split(',')
+            // }
+
+            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.map(Number)
+
             this.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
             this.dueBusinessSupplierCreateFormList = data.data.dueBusinessSupplierVoList
             if (this.dueBusinessSupplierCreateFormList.length === 0) {
@@ -906,41 +1001,14 @@ export default {
             if (this.dueBusinessProxySwitchSchemeCreateFormList.length === 0) {
                 this.dueBusinessProxySwitchSchemeCreateFormList.push(this.comObj)
             }
-            this.analysisDescription = data.data.analysisDescription
-            this.dueBusinessFuturePlanCreateForm = data.data.dueBusinessFuturePlanVo
-            this.dueBusinessCustomerDemandCreateForm = data.data.dueBusinessCustomerDemandVo
-            this.memberShopNum = data.data.memberShopNum
-            this.selfStoresNum = data.data.selfStoresNum
-            this.firstTenMonthsDown = data.data.firstTenMonthsDown
-            this.riskDisclosure = data.data.riskDisclosure
-
-            this.mainCategoryTwoId = data.data.mainCategoryTwoId
-            this.mainCategoryOneId = data.data.mainCategoryOneId
-            this.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
-            this.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
-            this.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
-            this.mainBrandTwoName = data.data.mainBrandTwoName
-            this.mainBrandThreeName = data.data.mainBrandThreeName
-            this.mainBrandOneName = data.data.mainBrandOneName
-            this.interIndustryCooperation = data.data.interIndustryCooperation
-            this.dueBusinessSaleCreateFormList = data.data.dueBusinessSaleVoList
-            this.salesGrowthHealth = data.data.salesGrowthHealth
-            this.upstreamBodySwitchable = data.data.upstreamBodySwitchable
-            this.downstreamCustomersHealth = data.data.downstreamCustomersHealth
-            this.brandOneSalesRatio = data.data.brandOneSalesRatio
-            this.brandThreeSalesRatio = data.data.brandThreeSalesRatio
-            this.brandTwoSalesRatio = data.data.brandTwoSalesRatio
-            this.businessFormatOneRatio = data.data.businessFormatOneRatio
-            this.businessFormatTwoRatio = data.data.businessFormatTwoRatio
-            this.businessFormatTwoThreeRatio = data.data.businessFormatTwoThreeRatio
-            this.categoryOneSalesRatio = data.data.categoryOneSalesRatio
-            this.categoryTwoSalesRatio = data.data.categoryTwoSalesRatio
         },
         handleCheckAllChange (val) {
+            console.log(val)
             this.form.publicityPromotionChannels = val ? this.newChannels : []
             this.isIndeterminate = false
         },
         handleCheckedWays (value) {
+            console.log(value)
             let checkedCount = value.length
             this.checkAll = checkedCount === this.newChannels.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.newChannels.length
@@ -1005,14 +1073,14 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit () {
-            for (const i of this.form.dueBusinessAssessmentVoList) {
+            for (const i of this.form.dueBusinessAssessmentCreateFormList) {
                 if (i.state === null || i.state === '') {
                     this.$message.warning('请选择尽调评估结论')
                     this.activeName = '1'
                     return false
                 }
             }
-            for (const i of this.form.dueBusinessCustomerVoList) {
+            for (const i of this.form.dueBusinessCustomerCreateFormList) {
                 if (i.categoryId === null || i.categoryId === '') {
                     this.$message.warning('请选择品类')
                     this.activeName = '6'
@@ -1035,9 +1103,11 @@ export default {
                     return false
                 }
             }
-            console.log(this.form.publicityPromotionChannels)
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            // console.log(this.form.publicityPromotionChannels)
+            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            // this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+            // this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             const formData = {
                 id: this.id,
                 analysisDescription: this.form.analysisDescription,
@@ -1090,10 +1160,19 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.dueBusinessId) {
-                        await putBusiness(formData)
+                        await putBusiness({
+                            id: this.id,
+                            operationNode: 1,
+                            createUser: createUser,
+                            ...this.form
+                        })
                         this.$message.success('提交成功')
                     } else {
-                        await addBusiness(formData)
+                        await addBusiness({
+                            operationNode: 1,
+                            createUser: createUser,
+                            ...this.form
+                        })
                         this.$message.success('提交成功')
                     }
                 }
@@ -1106,7 +1185,7 @@ export default {
         }
     },
     watch: {
-        dueBusinessSaleCreateFormList: {
+        'form.dueBusinessSaleCreateFormList': {
             handler (val) {
                 let databaseCurrentYearAllSales
                 let databaseLastYearAllSales
