@@ -1,75 +1,71 @@
 <template>
     <div>
-        <div class="select-category" v-if="!isNext">
-            <div class="page-body">
-                <div class="page-body-cont">
-                    <div class="container">
-                        <div class="title">
-                            选择商品类目:
-                        </div>
-                        <div class="category">
-                            <div class="column">
-                                <div class="item">
-                                    <ul>
-                                        <li v-for="item in categoryFirst"
-                                            :key="item.id"
-                                            :class="item.isOn ? 'on' : ''"
-                                            @click="onShowNext(item.id, 'categorySecond', item)">
-                                            {{ item.categoryName }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="item">
-                                    <ul>
-                                        <li v-for="item in categorySecond"
-                                            :key="item.id"
-                                            :class="item.isOn ? 'on' : ''"
-                                            @click="onShowNext(item.id, 'categoryThird', item)">
-                                            {{ item.categoryName }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="item">
-                                    <ul>
-                                        <li v-for="item in categoryThird" :key="item.id"
-                                            :class="item.isOn ? 'on' : ''"
-                                            @click="onShowNext(null, null, item)">
-                                            {{ item.categoryName }}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tips">
-                            当前的选择是：
-                            {{categorySelect.join(' > ')}}
-                        </div>
-                        <div class="next">
-                            <el-button type="primary" class="next-btn" @click="next()">下一步</el-button>
+        <div class="select-category page-body" v-if="!isNext">
+            <div class="page-body-cont">
+                <div class="table-cont-title clearfix">
+                    <span class="table-title-name fll">选择商品类目</span>
+                    <span class="current-select">
+                        当前的选择是：
+                        {{categorySelect.join(' > ')}}
+                    </span>
+                </div>
+                <div class="category">
+                    <div class="column">
+                        <div class="item">
+                            <ul>
+                                <li v-for="item in categoryFirst"
+                                    :key="item.id"
+                                    :class="item.isOn ? 'on' : ''"
+                                    @click="onShowNext(item.id, 'categorySecond', item)">
+                                    {{ item.categoryName }}
+                                </li>
+                            </ul>
                         </div>
                     </div>
+                    <div class="column">
+                        <div class="item">
+                            <ul>
+                                <li v-for="item in categorySecond"
+                                    :key="item.id"
+                                    :class="item.isOn ? 'on' : ''"
+                                    @click="onShowNext(item.id, 'categoryThird', item)">
+                                    {{ item.categoryName }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="item">
+                            <ul>
+                                <li v-for="item in categoryThird" :key="item.id"
+                                    :class="item.isOn ? 'on' : ''"
+                                    @click="onShowNext(null, null, item)">
+                                    {{ item.categoryName }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="next">
+                    <el-button type="primary" class="next-btn" @click="next()">下一步</el-button>
                 </div>
             </div>
         </div>
         <div class="modify-add" v-if="isNext">
             <div class="page-body">
-                <div class="page-box base-table page-table">
-                    <el-form ref="form" :model="form" label-width="120px" :rules="rules" :disabled="isDisabled">
-                        <div class="pd-20">
-                            <el-form-item label="类目">
-                                {{categorySelect.join(' > ')}}
-                                <el-button type="primary" style="margin-left: 12px" @click="toggle()">切换目录</el-button>
-                            </el-form-item>
+                <div class="page-body-cont">
+                    <el-form ref="form" :model="form" :rules="rules" :disabled="isDisabled">
+                        <el-form-item label="类目">
+                            {{categorySelect.join(' > ')}}
+                            <el-button type="primary" style="margin-left: 12px" @click="toggle()">切换目录</el-button>
+                        </el-form-item>
+                        <div class="form-cont-col">
                             <el-form-item label="商品编码" v-if="!isAdd">
                                 {{form.productCode}}
                             </el-form-item>
                         </div>
-                        <div class="sub-title">
-                            商品信息（spu）
+                        <div class="table-cont-title clearfix">
+                            <span class="table-title-name fll">商品信息（spu）</span>
                         </div>
                         <el-row style="max-width: 900px">
                             <el-col :span="8">
@@ -131,8 +127,8 @@
                             </el-col>
                         </el-row>
                         <div v-if="form.attributeList.length>0" style="position: relative;z-index: 2">
-                            <div class="sub-title">
-                                属性信息
+                            <div class="table-cont-title clearfix">
+                                <span class="table-title-name fll">属性信息</span>
                             </div>
                             <el-row style="max-width: 900px">
                                 <el-col :span="24">
@@ -751,6 +747,10 @@ export default {
 
     .next-btn {
         width: 200px;
+    }
+    .category {
+        width: 90%;
+        margin: auto;
     }
     .category ul {
         width: 100%;
