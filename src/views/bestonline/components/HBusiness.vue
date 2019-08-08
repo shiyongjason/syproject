@@ -904,7 +904,7 @@ export default {
             const { data } = await getBusiness(this.applyId)
             console.log(data.data)
 
-            data.data.dueBusinessSaleVoList.map((item, value) => {
+            data.data.dueBusinessAssessmentCreateFormList.map((item, value) => {
                 this.currentYearAllSales += +item.currentYearSales
                 this.lastYearAllSales += +item.lastYearSales
                 this.lastTwoYearAllSales += +item.lastTwoYearSales
@@ -923,60 +923,20 @@ export default {
             // } else {
             //     this.isdisabled = (!!data.data.operationNode)
             // }
-            this.form.analysisDescription = data.data.analysisDescription
-            this.form.applyId = data.data.applyId
-            this.form.brandOneSalesRatio = data.data.brandOneSalesRatio
-            this.form.brandThreeSalesRatio = data.data.brandThreeSalesRatio
-            this.form.brandTwoSalesRatio = data.data.brandTwoSalesRatio
-            this.form.businessFormatOneRatio = data.data.businessFormatOneRatio
-            this.form.businessFormatTwoRatio = data.data.businessFormatTwoRatio
-            this.form.businessFormatTwoThreeRatio = data.data.businessFormatTwoThreeRatio
-            this.form.categoryOneSalesRatio = data.data.categoryOneSalesRatio
-            this.form.categoryTwoSalesRatio = data.data.categoryTwoSalesRatio
-            this.form.createUser = data.data.createUser
-            this.form.customersHealth = data.data.customersHealth
-            this.form.downstreamCustomersHealth = data.data.downstreamCustomersHealth
-            this.form.firstTenMonthsDown = data.data.firstTenMonthsDown
-            this.form.interIndustryCooperation = data.data.interIndustryCooperation
-            this.form.mainBrandOneName = data.data.mainBrandOneName
-            this.form.mainBrandThreeName = data.data.mainBrandThreeName
-            this.form.mainBrandTwoName = data.data.mainBrandTwoName
-            this.form.mainBusinessFormatOneId = data.data.mainBusinessFormatOneId
-            this.form.mainBusinessFormatThreeId = data.data.mainBusinessFormatThreeId
-            this.form.mainBusinessFormatTwoId = data.data.mainBusinessFormatTwoId
-            this.form.mainCategoryOneId = data.data.mainCategoryOneId
-            this.form.mainCategoryTwoId = data.data.mainCategoryTwoId
-            this.form.memberShopNum = data.data.memberShopNum
-            this.form.operationNode = data.data.operationNode
-            this.form.projectShare = data.data.projectShare
-            this.form.publicityPromotionChannels = data.data.publicityPromotionChannels ? data.data.publicityPromotionChannels : []
-            this.form.retailShare = data.data.retailShare
-            this.form.riskDisclosure = data.data.riskDisclosure
-            this.form.salesGrowthHealth = data.data.salesGrowthHealth
-            this.form.salesPerformanceLastYear = data.data.salesPerformanceLastYear
-            this.form.selfStoresNum = data.data.selfStoresNum
-            this.form.upstreamBodySwitchable = data.data.upstreamBodySwitchable
-            this.form.wholesaleShare = data.data.wholesaleShare
-            this.form.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
-            this.form.dueBusinessCompetitorCreateFormList = data.data.dueBusinessCompetitorVoList
-            this.form.dueBusinessCustomerCreateFormList = data.data.dueBusinessCustomerVoList
-            this.form.dueBusinessCustomerDemandCreateForm = data.data.dueBusinessCustomerDemandVo
-            this.form.dueBusinessProxySwitchSchemeCreateFormList = data.data.dueBusinessProxySwitchSchemeVoList
-            this.form.dueBusinessSaleCreateFormList = data.data.dueBusinessSaleVoList
-            this.form.dueBusinessSupplierCreateFormList = data.data.dueBusinessSupplierVoList
+            this.form = data.data
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
-            this.form.dueBusinessFuturePlanCreateForm.businessCategoryOther = data.data.dueBusinessFuturePlanVo.businessCategoryOther
-            this.form.dueBusinessFuturePlanCreateForm.brandManagement = data.data.dueBusinessFuturePlanVo.brandManagement
-            this.form.dueBusinessFuturePlanCreateForm.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
-            this.form.dueBusinessFuturePlanCreateForm.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
-            this.form.dueBusinessFuturePlanCreateForm.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
-            this.form.dueBusinessFuturePlanCreateForm.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
-            this.form.dueBusinessFuturePlanCreateForm.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
-            this.form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers = data.data.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers
-            this.form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans = data.data.dueBusinessFuturePlanVo.marketingChannelsPlans
-            this.form.dueBusinessFuturePlanCreateForm.fundingRequirements = data.data.dueBusinessFuturePlanVo.fundingRequirements
-            this.form.dueBusinessFuturePlanCreateForm.otherPlansNeeds = data.data.dueBusinessFuturePlanVo.otherPlansNeeds
+            // this.form.dueBusinessFuturePlanCreateForm.businessCategoryOther = data.data.dueBusinessFuturePlanVo.businessCategoryOther
+            // this.form.dueBusinessFuturePlanCreateForm.brandManagement = data.data.dueBusinessFuturePlanVo.brandManagement
+            // this.form.dueBusinessFuturePlanCreateForm.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
+            // this.form.dueBusinessFuturePlanCreateForm.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
+            // this.form.dueBusinessFuturePlanCreateForm.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
+            // this.form.dueBusinessFuturePlanCreateForm.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
+            // this.form.dueBusinessFuturePlanCreateForm.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
+            // this.form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers = data.data.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers
+            // this.form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans = data.data.dueBusinessFuturePlanVo.marketingChannelsPlans
+            // this.form.dueBusinessFuturePlanCreateForm.fundingRequirements = data.data.dueBusinessFuturePlanVo.fundingRequirements
+            // this.form.dueBusinessFuturePlanCreateForm.otherPlansNeeds = data.data.dueBusinessFuturePlanVo.otherPlansNeeds
 
             // if (data.data.publicityPromotionChannels) {
             // this.form.publicityPromotionChannels = data.data.publicityPromotionChannels.split(',')
