@@ -27,8 +27,6 @@
                         <td>
                             {{item.cooperationTarget}}
                             <i v-if="index === 1">w</i>
-                            <i v-if="index === 2">%</i>
-                            <i v-if="index === 4">%</i>
                         </td>
                         <td>
                             <el-select
@@ -44,7 +42,7 @@
                                 ></el-option>
                             </el-select>
                         </td>
-                        <td :rowspan="dueOrganizationAssessmentCreateFormList.length" v-if="index == 0">
+                        <td :rowspan="dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
                             <el-input
                                 v-model="item.remark"
                                 placeholder="请输入内容"
@@ -201,80 +199,50 @@
                     </el-form-item>
                 </el-form>
                 <p class="small-title">综合评估</p>
-                <div class="table-flex">
-                    <div class="table-row">
-                        <div class="table-col">评估维度</div>
-                        <div class="table-col">描述</div>
-                        <div class="table-col">评分</div>
-                    </div>
-                    <template v-for="(item,index) in dueOrganizationControllerAssessmentCreateFormList">
-                        <div
-                            :key="index"
-                            class="table-row"
-                            v-if="index==0"
-                        >
-                            基本情况
-                        </div>
-                        <div
-                            :key="index"
-                            class="table-row"
-                            v-if="index==3"
-                        >
-                            道德风险因素
-                        </div>
-
-                        <div
-                            :key="index"
-                            class="table-row"
-                            v-if="index==7"
-                        >
-                            心理风险因素
-                        </div>
-                        <div
-                            :key="index"
-                            class="table-row"
-                            v-if="index==9"
-                        >
-                            经营能力
-                        </div>
-                        <div
-                            :key="index"
-                            class="table-row"
-                            v-if="index==11"
-                        >
-                            社会关系
-                        </div>
-                        <div class="table-row" :key="'debtList'+item.type+index">
-                            <div class="table-col">
-                                <span class="red-span">*</span>
-                                {{item.assessmentDimension}}
-                            </div>
-                            <div class="table-col">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    v-model="item.description"
-                                    placeholder="请输入内容"
-                                    maxlength="250"
-                                ></el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-input
-                                    :disabled="isdisabled"
-                                    v-model="item.score"
-                                    @keyup.native.stop="percentInteget(index, $event, 'dueOrganizationControllerAssessmentCreateFormList', 'score')"
-                                    placeholder="满分40"
-                                ></el-input>
-                            </div>
-                        </div>
-                    </template>
-                    <div class="table-row">
-                        <div class="table-col">
-                            <span class="red-span">*</span>综合评分（自动计算）
-                        </div>
-                        <div class="table-col">-</div>
-                        <div class="table-col">{{actualControllerScore}}</div>
-                    </div>
-                </div>
+                <table class="organization-table">
+                    <thead>
+                    <tr class="tableTitle">
+                        <td width="180">评估维度</td>
+                        <td width="550">描述</td>
+                        <td width="180">评分</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item,index) in dueOrganizationControllerAssessmentCreateFormList" :key="index">
+                        <td>
+                            <span class="red-span" v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">*</span>
+                            {{item.assessmentDimension}}
+                        </td>
+                        <td>
+                            <el-input
+                                :disabled="isdisabled"
+                                v-model="item.description"
+                                placeholder="请输入内容"
+                                maxlength="250"
+                                v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15"
+                            ></el-input>
+                            <span v-if="index === 0 || index === 4 || index === 9 || index === 12 || index === 15">-</span>
+                        </td>
+                        <td>
+                            <el-input
+                                :disabled="isdisabled"
+                                v-model="item.score"
+                                @keyup.native.stop="percentInteget(index, $event, 'dueOrganizationControllerAssessmentCreateFormList', 'score')"
+                                placeholder="满分40"
+                                v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15"
+                            ></el-input>
+                            <span v-if="index === 0 || index === 4 || index === 9 || index === 12 || index === 15">-</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td><span class="red-span">*</span>综合评分（自动计算）</td>
+                        <td>-</td>
+                        <td>{{actualControllerScore}}</td>
+                    </tr>
+                    </tfoot>
+                </table>
                 <div
                     ref="radarChart2"
                     style="width:600px;height:550px;"
@@ -343,74 +311,68 @@
                     </el-form-item>
                 </el-form>
                 <p class="small-small-p">高管结构</p>
-                <div class="flex-wrap-col supplier">
-                    <div class="table-flex">
-                        <div class="table-row">
-                            <div class="table-col"><span class="red-span">*</span>职位</div>
-                            <div class="table-col"><span class="red-span">*</span>姓名</div>
-                            <div class="table-col"><span class="red-span">*</span>岗位职责</div>
-                            <div class="table-col"><span class="red-span">*</span>人员情况</div>
-                        </div>
-                        <div
-                            class="table-row"
-                            v-for="(item,index) in dueOrganizationSeniorCreateFormList"
-                            :key="index"
-                        >
-                            <div class="table-col">
-                                <el-input
-                                    placeholder="请输入职位"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.position"
-                                ></el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-input
-                                    placeholder="请输入姓名"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.name"
-                                ></el-input>
-                            </div>
-                            <div class="table-col">
-                                <el-input
-                                    placeholder="请输入岗位职责"
-                                    maxlength="25"
-                                    :disabled="isdisabled"
-                                    v-model="item.positionDuty"
-                                ></el-input>
-                            </div>
-                            <div class="table-col">
-                                <!-- <textarea
-                                width="100%"
-                                    placeholder="请输入人员情况"
-                                    maxlength="500"
-                                    v-model="item.personnelSituation"
-                                ></textarea > -->
-                                <el-input
-                                    type="textarea"
-                                    :rows="1"
-                                    :autosize="{ minRows: 1, maxRows: 1}"
-                                    placeholder="请输入人员情况"
-                                    :disabled="isdisabled"
-                                    v-model="item.personnelSituation">
-                                </el-input>
-                            </div>
+                <table class="organization-table">
+                    <thead>
+                    <tr class="tableTitle">
+                        <td width="180"><span class="red-span">*</span>职位</td>
+                        <td width="180"><span class="red-span">*</span>姓名</td>
+                        <td width="180"><span class="red-span">*</span>岗位职责</td>
+                        <td width="180"><span class="red-span">*</span>人员情况</td>
+                        <td width="180">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="(item,index) in dueOrganizationSeniorCreateFormList"
+                        :key="index">
+                        <td>
+                            <el-input
+                                placeholder="请输入职位"
+                                maxlength="25"
+                                :disabled="isdisabled"
+                                v-model="item.position"
+                            ></el-input>
+                        </td>
+                        <td>
+                            <el-input
+                                placeholder="请输入姓名"
+                                maxlength="25"
+                                :disabled="isdisabled"
+                                v-model="item.name"
+                            ></el-input>
+                        </td>
+                        <td>
+                            <el-input
+                                placeholder="请输入岗位职责"
+                                maxlength="25"
+                                :disabled="isdisabled"
+                                v-model="item.positionDuty"
+                            ></el-input>
+                        </td>
+                        <td>
+                            <el-input
+                                type="textarea"
+                                :rows="1"
+                                :autosize="{ minRows: 1, maxRows: 1}"
+                                placeholder="请输入人员情况"
+                                :disabled="isdisabled"
+                                v-model="item.personnelSituation">
+                            </el-input>
+                        </td>
+                        <td>
                             <i
                                 class="el-icon-circle-plus-outline pointer"
-                                v-show="!isdisabled"
                                 v-if="index==0"
                                 @click="onAddperson()"
                             ></i>
                             <i
                                 class="el-icon-remove-outline pointer"
-                                v-show="!isdisabled"
                                 @click="onDeletperson(index)"
                                 v-else
                             ></i>
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
                 <p class="small-small-p">岗位分布</p>
                 <table class="organization-table">
                     <thead>
@@ -477,7 +439,6 @@
                             <el-input
                                 placeholder="满分40分"
                                 maxlength="25"
-                                :disabled="isdisabled"
                                 v-model="item.score"
                                 @keyup.native.stop="percentInteget(index, $event, 'dueOrganizationOrgAssessmentCreateFormList', 'score')"
                                 @change.native.stop="percentInteget(index, $event, 'dueOrganizationOrgAssessmentCreateFormList', 'score')"
@@ -774,6 +735,7 @@ export default {
             this.updateTime = data.data.updateTime
             this.updateUser = data.data.updateUser
             this.dueOrganizationAssessmentCreateFormList = data.data.dueOrganizationAssessmentVoList
+            console.log(this.dueOrganizationAssessmentCreateFormList)
             this.dueOrganizationControllerAssessmentCreateFormList = data.data.dueOrganizationControllerAssessmentVoList
             this.dueOrganizationPostCreateFormList = data.data.dueOrganizationPostVoList
             this.dueOrganizationOrgAssessmentCreateFormList = data.data.dueOrganizationOrgAssessmentVoList
@@ -1057,15 +1019,27 @@ export default {
             handler (val) {
                 this.actualControllerScore = 0
                 val.map((item, index) => {
-                    if (index === 0 || index === 1) {
-                        this.actualControllerScore += +item.score * 0.4
-                    } else if (index === 2 || index === 3) {
-                        this.actualControllerScore += +item.score * 0.1
-                    } else if (index === 4) {
-                        this.actualControllerScore += +item.score * 0.5
-                    } else if (index === 5 || index === 6 || index === 7) {
+                    if (index === 1 || index === 6) {
+                        this.actualControllerScore += +item.score * 0.2
+                    } else if (index === 2) {
+                        this.actualControllerScore += +item.score * 0.3
+                    } else if (index === 3) {
                         this.actualControllerScore += +item.score * 0.25
-                    } else {
+                    } else if (index === 5) {
+                        this.actualControllerScore += +item.score * 0.2 * 0.75
+                    } else if (index === 7) {
+                        this.actualControllerScore += +item.score * 0.05
+                    } else if (index === 8) {
+                        this.actualControllerScore += +item.score * 0.05 * 0.5
+                    } else if (index === 10 || index === 11) {
+                        this.actualControllerScore += +item.score * 0.25 * 0.75
+                    } else if (index === 13) {
+                        this.actualControllerScore += +item.score * 0.25 * 0.625
+                    } else if (index === 14) {
+                        this.actualControllerScore += +item.score * 0.25 * 0.5
+                    } else if (index === 16) {
+                        this.actualControllerScore += +item.score * 0.125 * 0.5
+                    } else if (index === 17) {
                         this.actualControllerScore += +item.score * 0.125
                     }
                 })
@@ -1089,7 +1063,6 @@ export default {
         },
         dueOrganizationPostCreateFormList: {
             handler (val) {
-                console.log(val)
                 this.peopleNumber = 0
                 val.map((item, index) => {
                     this.peopleNumber = this.peopleNumber + +item.proportion
@@ -1107,55 +1080,6 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-    .jd-manage {
-        padding: 0 15px;
-    }
-
-    .jd-manage {
-        textarea {
-            border: 1px solid #dddddd;
-        }
-    }
-
-    .el-checkbox {
-        margin-right: 20px;
-    }
-
-    .el-checkbox + .el-checkbox {
-        margin-left: 0;
-    }
-
-    .supplier {
-        // border: 1px solid #dcdcdc;
-        position: relative;
-        padding-right: 40px;
-        // padding-top: 25px;
-        margin-bottom: 20px;
-
-        > i {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 25px;
-        }
-
-        .table-row {
-            position: relative;
-
-            &:not(:first-child) {
-                border-right: none !important;
-            }
-
-            > i {
-                position: absolute;
-                top: 10px;
-                right: -50px;
-                font-size: 20px;
-            }
-        }
-    }
-</style>
 <style lang="scss" scoped>
     .flex-wrap-title {
         max-width: 200px;
@@ -1183,5 +1107,9 @@ export default {
     }
     .red-span{
         color: red;
+    }
+    .assessmentDimension-title{
+        width: 320px;
+        text-align: center;
     }
 </style>

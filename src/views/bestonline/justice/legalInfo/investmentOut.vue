@@ -86,8 +86,9 @@ export default {
         },
         investmentsOutList () {
             let investmentsOutList = this.justiceData.investmentsOutList
-            const tempObj = JSON.parse(JSON.stringify(this.defaultInvestmentOut))
-            if (investmentsOutList.length == 0) {
+            const result = investmentsOutList.filter(item => item.type == this.type)
+            if (result.length == 0) {
+                const tempObj = JSON.parse(JSON.stringify(this.defaultInvestmentOut))
                 investmentsOutList.push(tempObj)
             }
             return investmentsOutList.filter(item => item.type == this.type)
@@ -129,5 +130,8 @@ export default {
         right: 10px;
         font-size: 25px;
     }
+}
+.small-title{
+    margin-bottom: 20px;
 }
 </style>

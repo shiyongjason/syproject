@@ -15,7 +15,6 @@
                 </el-collapse-item>
             </el-collapse>
             <div class="flex-wrap-row top20 ">
-                <!--<div class="flex-wrap-row top20 ">-->
                 <el-col :span="2" :offset="6">
                     <el-button type="info" @click="saveJusticeData(true)">暂存</el-button>
                 </el-col>
@@ -35,6 +34,7 @@ import CoPartner from '../justice/copartner.vue'
 import LegalInfo from '../justice/legalInfo.vue'
 import CompanyBasic from '../justice/legalInfo/companyBasic.vue'
 import InvestmentOut from '../justice/legalInfo/investmentOut.vue'
+// import { FileUploadUrl } from '@/api/config'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
@@ -72,6 +72,11 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
+        // assetListType0 () {
+        //     return this.justiceData.assetList.filter(value => {
+        //         if (value.type === 0) return value
+        //     })
+        // }
     },
     methods: {
         total (name) {
@@ -168,6 +173,7 @@ export default {
             }
         },
         onAddList (key, type) {
+            console.log(key, type)
             const { ...obj } = this.justiceData[key][0]
             for (let key1 in obj) {
                 switch (typeof obj[key1]) {
