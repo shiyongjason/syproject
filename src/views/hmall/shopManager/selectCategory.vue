@@ -54,21 +54,19 @@
         <div class="modify-add" v-if="isNext">
             <div class="page-body">
                 <div class="page-body-cont">
-                    <el-form ref="form" :model="form" :rules="rules" :disabled="isDisabled">
+                    <el-form ref="form" :model="form" :rules="rules" :disabled="isDisabled" label-width="100px">
                         <el-form-item label="类目">
                             {{categorySelect.join(' > ')}}
                             <el-button type="primary" style="margin-left: 12px" @click="toggle()">切换目录</el-button>
                         </el-form-item>
-                        <div class="form-cont-col">
-                            <el-form-item label="商品编码" v-if="!isAdd">
-                                {{form.productCode}}
-                            </el-form-item>
-                        </div>
+                        <el-form-item label="商品编码" v-if="!isAdd">
+                            {{form.productCode}}
+                        </el-form-item>
                         <div class="table-cont-title clearfix">
                             <span class="table-title-name fll">商品信息（spu）</span>
                         </div>
-                        <el-row style="max-width: 900px">
-                            <el-col :span="8">
+                        <div class="form-cont-row">
+                            <div class="form-cont-col">
                                 <el-form-item label="商品品牌" prop="brandId" ref="brandId">
                                     <el-select v-model="form.brandId" clearable placeholder="请选择" style="width: 100%" @change="brandNameChange()">
                                         <el-option
@@ -77,126 +75,116 @@
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
-                            </el-col>
-                            <el-col :span="16">
+                            </div>
+                            <div class="form-cont-col">
                                 <el-form-item label="规格/型号" prop="specification">
                                     <el-input type="text" style="width: 100%" placeholder="请输入规格／型号"
                                               maxlength="30" v-model="form.specification"></el-input>
                                 </el-form-item>
-                            </el-col>
-                            <el-col :span="24">
-                                <el-form-item label="商品名称"  prop="productName">
-                                    <el-input placeholder="" :maxlength="50 - length"
-                                              v-model="form.productShortName">
-                                        <template slot="prepend">{{(brandName ? brandName : '') + categorySelect[2]+ (form.specification ? form.specification : '')}}</template>
-                                    </el-input>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="24">
-                                <el-form-item label="商品主图" prop="reqPictures" ref="reqPictures">
-                                    <ul class="picture-container">
-                                        <template v-if="pictureContainer.length>0">
-                                            <li v-for="(item,index) in pictureContainer" :key="item.url">
-                                                <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
+                            </div>
+                        </div>
+                        <el-form-item label="商品名称"  prop="productName">
+                            <el-input placeholder="" :maxlength="50 - length" style="width: 500px"
+                                      v-model="form.productShortName">
+                                <template slot="prepend">{{(brandName ? brandName : '') + categorySelect[2]+ (form.specification ? form.specification : '')}}</template>
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item label="商品主图" prop="reqPictures" ref="reqPictures">
+                            <ul class="picture-container">
+                                <template v-if="pictureContainer.length>0">
+                                    <li v-for="(item,index) in pictureContainer" :key="item.url">
+                                        <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
 
-                                                <img :src="item.url" :alt="item.url">
-                                                <span class="picture-setting" @click="pictureSetting(index)">
+                                        <img :src="item.url" :alt="item.url">
+                                        <span class="picture-setting" @click="pictureSetting(index)">
                                                     设为主图
                                                 </span>
-                                            </li>
-                                        </template>
-                                        <el-upload
-                                            v-bind="uploadInfo"
-                                            v-if="pictureContainer.length<5"
-                                            :on-exceed="pictureMessage"
-                                            :on-error="pictureError"
-                                            :on-success="pictureSuccess"
-                                            :show-file-list="false"
-                                            :before-upload="beforeAvatarUpload"
-                                            style="float: left"
-                                            list-type="picture-card">
-                                            <i class="el-icon-plus"></i>
-                                        </el-upload>
-                                    </ul>
-                                </el-form-item>
-                                <el-form-item>
-                                    <div class="upload-tips">
-                                        最多上传5张，500x500，不超过2m，仅支持jpg、jpeg、png
-                                    </div>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
+                                    </li>
+                                </template>
+                                <el-upload
+                                    v-bind="uploadInfo"
+                                    v-if="pictureContainer.length<5"
+                                    :on-exceed="pictureMessage"
+                                    :on-error="pictureError"
+                                    :on-success="pictureSuccess"
+                                    :show-file-list="false"
+                                    :before-upload="beforeAvatarUpload"
+                                    style="float: left"
+                                    list-type="picture-card">
+                                    <i class="el-icon-plus"></i>
+                                </el-upload>
+                            </ul>
+                        </el-form-item>
+                        <el-form-item>
+                            <div class="upload-tips">
+                                最多上传5张，500x500，不超过2m，仅支持jpg、jpeg、png
+                            </div>
+                        </el-form-item>
                         <div v-if="form.attributeList.length>0" style="position: relative;z-index: 2">
                             <div class="table-cont-title clearfix">
                                 <span class="table-title-name fll">属性信息</span>
                             </div>
-                            <el-row style="max-width: 900px">
-                                <el-col :span="24">
-                                    <el-col :span="8" :key="item.parameterCode" v-for="(item,index) in form.attributeList">
-                                        <el-form-item :label="item.parameterName" :prop="'attributeList.'+ index + '.model'"
-                                                      :class="item.type === 1? 'isW100' : ''"
-                                                      :rules="{
+                            <div class="form-cont-row">
+                                <div :key="item.parameterCode" v-for="(item,index) in form.attributeList" class="form-cont-col">
+                                    <el-form-item :label="item.parameterName" :prop="'attributeList.'+ index + '.model'"
+                                                  :class="item.type === 1? 'isW100' : ''"
+                                                  :rules="{
                                                  required: item.isRequired === 1 ? true : false ,
                                                  whitespace: true,
                                                  message: '请输入'+ item.parameterName,
                                                  trigger: item.type === 2 ? 'blur' : ''
                                              }"
-                                        >
-                                            <el-select style="width: 100%;"
-                                                       v-model="item.model"
-                                                       v-if="item.type === 2">
-                                                <template v-if="item.parameterValueList">
-                                                    <el-option
-                                                        :label="subItem"
-                                                        :value="subItem" :key="subItem"
-                                                        v-for="subItem in item.parameterValueList">
-                                                    </el-option>
-                                                </template>
-                                            </el-select>
-                                            <template v-else-if="item.type === 1">
-                                                <el-input placeholder="" maxlength="25"
-                                                          style="width: 50%;margin-right: 12px"
-                                                          v-model="item.model">
-                                                </el-input>{{item.unit}}
+                                    >
+                                        <el-select style="width: 100%;"
+                                                   v-model="item.model"
+                                                   v-if="item.type === 2">
+                                            <template v-if="item.parameterValueList">
+                                                <el-option
+                                                    :label="subItem"
+                                                    :value="subItem" :key="subItem"
+                                                    v-for="subItem in item.parameterValueList">
+                                                </el-option>
                                             </template>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-col>
-                            </el-row>
+                                        </el-select>
+                                        <template v-else-if="item.type === 1">
+                                            <el-input placeholder="" maxlength="25"
+                                                      style="width: 50%;margin-right: 12px"
+                                                      v-model="item.model">
+                                            </el-input>{{item.unit}}
+                                        </template>
+                                    </el-form-item>
+                                </div>
+                            </div>
                         </div>
                         <el-row style="position: relative;z-index: 1">
-                            <el-col :span="13">
-                                <el-form-item>
-                                    <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName"
-                                                :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;"></RichEditor>
-                                </el-form-item>
-                                <el-form-item v-if="isStatus === 'details' && causeFailure" label="驳回原因">
-                                    {{causeFailure}}
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="13" v-if="isStatus === 'add' || isStatus === 'back'|| isReview === 'yes'">
+                            <el-form-item>
+                                <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName"
+                                            :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;"></RichEditor>
+                            </el-form-item>
+                            <el-form-item v-if="isStatus === 'details' && causeFailure" label="驳回原因">
+                                {{causeFailure}}
+                            </el-form-item>
+                            <div :span="13" v-if="isStatus === 'add' || isStatus === 'back'|| isReview === 'yes'">
                                 <el-form-item style="text-align: center">
                                     <el-button @click="cancel">取消</el-button>
                                     <el-button type="primary" @click="save('form')" :disabled="saveDisabled">保存</el-button>
                                 </el-form-item>
-                            </el-col>
-                            <el-form>
-                                <el-row v-if="isStatus === 'checked'">
-                                    <el-col :span="13">
-                                        <el-form-item style="text-align: center">
-                                            <el-button @click="dialogRejectEdit = true">驳回商品</el-button>
-                                            <el-button type="primary" @click="pass('form')">审核通过</el-button>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
-                                <el-row v-if="isStatus === 'details'">
-                                    <el-col :span="13">
-                                        <el-form-item style="text-align: center">
-                                            <el-button @click="close">关闭</el-button>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-row>
-                            </el-form>
+                            </div>
+                        </el-row>
+                    </el-form>
+                </div>
+                <div class="page-body-cont btn-cont">
+                    <el-form>
+                        <el-row v-if="isStatus === 'checked'">
+                            <el-form-item style="text-align: center">
+                                <el-button  name="white-color"  @click="dialogRejectEdit = true">驳回商品</el-button>
+                                <el-button name="hosjoy-color" type="primary" @click="pass('form')">审核通过</el-button>
+                            </el-form-item>
+                        </el-row>
+                        <el-row v-if="isStatus === 'details'">
+                            <el-form-item style="text-align: center">
+                                <el-button name="white-color" @click="close">关闭</el-button>
+                            </el-form-item>
                         </el-row>
                     </el-form>
                 </div>
@@ -507,7 +495,6 @@ export default {
                     delete params.attributeList
                     /**
                      * 修复保存按钮多次提交bug 2019-05-16
-                     * @author yosun
                      */
                     try {
                         if (this.isAdd) {
@@ -612,9 +599,6 @@ export default {
             if (this.isAdd) {
                 this.isNext = false
             } else {
-            // else if(this.isStatus === 'back'){
-            //         this.$router.push('/hmall/shopReviewList')
-            //     }
                 if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
                     this.$router.push('/hmall/shopReviewList')
                 } else {
@@ -709,10 +693,6 @@ export default {
 </script>
 
 <style scoped>
-    .container {
-        padding: 20px;
-        width: 800px;
-    }
 
     .category {
         display: flex;
@@ -774,8 +754,8 @@ export default {
         float: left;
     }
     .picture-container li{
-        width: 148px;
-        height: 148px;
+        width: 102px;
+        height: 102px;
         border: 1px dashed #c0ccda;
         border-radius: 6px;
         position: relative;
@@ -829,5 +809,8 @@ export default {
     .upload-tips{
         font-size: 12px;
         color: #999;
+    }
+    .form-cont-col{
+        margin-bottom: 20px;
     }
 </style>
