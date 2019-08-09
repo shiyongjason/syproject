@@ -14,7 +14,10 @@ export default {
             assetList: [],
             debtList: [],
             assureList: [],
-            punishmentList: []
+            punishmentList: [],
+            branchAgencyList: [],
+            relatedCompanyList: [],
+            copartnerInfoList: []
         }
     },
     mutations: {

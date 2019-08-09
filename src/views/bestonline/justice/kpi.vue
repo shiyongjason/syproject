@@ -58,12 +58,12 @@
         </el-form-item>
     </el-form>
     <p class="small-title">分析报告</p>
-    <el-form v-if="justiceData.affairs" :model="justiceData.affairs" :rules="analysisRules" label-width="100px">
+    <el-form v-if="justiceData.affairs" :model="justiceData.affairs" :rules="analysisRules" label-position="top">
         <el-form-item label="风险揭示：" prop="riskDisclosure">
             <el-input
                 type="textarea"
                 style="width:600px"
-                rows="6"
+                rows="3"
                 placeholder="请输入内容"
                 v-model="justiceData.affairs.riskDisclosure" >
             </el-input>
@@ -72,7 +72,7 @@
             <el-input
                 type="textarea"
                 style="width:600px"
-                rows="6"
+                rows="3"
                 placeholder="请输入内容"
                 v-model="justiceData.affairs.analysisDescription">
             </el-input>
@@ -160,5 +160,14 @@ export default {
 }
 /deep/ .el-table .cell.el-tooltip {
     white-space: normal;
+}
+/deep/ .textHeight {
+    textarea {
+        height: 337px;
+        border: 0;
+    }
+}
+.small-title{
+    margin-bottom: 20px;
 }
 </style>

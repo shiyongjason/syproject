@@ -6,11 +6,11 @@
     <template v-if="copartnerInfoList && copartnerInfoList.length > 0">
         <div v-for="(item, index) in copartnerInfoList" :key="index">
             <p class="small-title">{{ copartnerTitles[item.type] }}</p>
-            <el-form label-position="right" label-width="150px" class="legal-form">
+            <el-form :model="justiceData" label-position="right" label-width="150px" class="legal-form">
                 <el-form-item
                     label="姓名："
                     :rules="item.type == 0 ? {required: true,message: '姓名不能为空',trigger: 'blur'} : {}"
-                    :prop="'copartnerInfoList.'+ index + '.name'">
+                    :prop="`copartnerInfoList[${index}].name`">
                     <el-input
                         :placeholder="copartnerTitles[item.type]"
                         maxlength="25"
@@ -150,5 +150,8 @@ export default {
 }
 .legal-form .el-form-item {
     display: inline-block;
+}
+.small-title{
+    margin-bottom: 20px;
 }
 </style>
