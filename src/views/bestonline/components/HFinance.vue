@@ -317,9 +317,9 @@
                             </table>
                             <span class="question">
                                 <i class="el-icon-question" @click="onDebtDialog = true"></i>
-                                <el-dialog title="偿债能力标准值" width="25%" :visible.sync="onDebtDialog" center>
+                                <el-dialog title="偿债能力标准值" width="20%" :visible.sync="onDebtDialog" center>
                                     <span>满足以下条件，即判断为符合标准。</span>
-                                    <table>
+                                    <table width="100%">
                                         <tr>
                                             <td>流动比率：</td>
                                             <td>≥200%</td>
@@ -335,6 +335,14 @@
                                         <tr>
                                             <td>资产负债率：</td>
                                             <td>≥70%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>符合标准：</td>
+                                            <td><font color="green">绿色字体</font></td>
+                                        </tr>
+                                        <tr>
+                                            <td>不符合标准：</td>
+                                            <td><font color="red">红色字体</font></td>
                                         </tr>
                                     </table>
                                     <div slot="footer" class="dialog-footer">
@@ -1454,7 +1462,6 @@ export default {
                 caseFlow: this.caseFlow,
                 dueFinanceBasic: this.dueFinanceBasic,
                 dueFinanceProfit: this.dueFinanceProfit
-
             }
             return formData
         },
@@ -1478,41 +1485,61 @@ export default {
                 }
             }
             for (const i of this.form.dueFinanceYearOperatingPos) {
-                if(i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
+                if (i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
                     this.$message.warning('请输入资产负债率')
                     this.activeName = '1'
                     return false
-                }else if(i.profitRatio === null || i.profitRatio === '') {
+                } else if (i.profitRatio === null || i.profitRatio === '') {
                     this.$message.warning('请输入净利率')
                     this.activeName = '1'
                     return false
-                }else if(i.grossMargin === null || i.grossMargin === '') {
+                } else if (i.grossMargin === null || i.grossMargin === '') {
                     this.$message.warning('请输入销售毛利率')
                     this.activeName = '2'
                     return false
-                }else if(i.rate === null || i.rate === '') {
+                } else if (i.rate === null || i.rate === '') {
                     this.$message.warning('请输入费率')
                     this.activeName = '2'
                     return false
-                }else if(i.liquidityRatio === null || i.liquidityRatio === '') {
+                } else if (i.liquidityRatio === null || i.liquidityRatio === '') {
                     this.$message.warning('请输入流动比率')
                     this.activeName = '4'
                     return false
-                }else if(i.quickRatio === null || i.quickRatio === '') {
+                } else if (i.quickRatio === null || i.quickRatio === '') {
                     this.$message.warning('请输入速动比率')
                     this.activeName = '4'
                     return false
-                }else if(i.cashRatio === null || i.cashRatio === '') {
+                } else if (i.cashRatio === null || i.cashRatio === '') {
                     this.$message.warning('请输入现金比率')
                     this.activeName = '4'
                     return false
-                }else if(i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
+                } else if (i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
                     this.$message.warning('请输入资产负债率')
                     this.activeName = '4'
                     return false
                 }
             }
-            const formData = this.format(type)
+            //  this.$refs['form'].validate(async (valid) => {
+            //     if (valid) {
+            //         if (this.dueBusinessId) {
+            //             await putBusiness({
+            //                 id: this.id,
+            //                 operationNode: 1,
+            //                 createUser: createUser,
+            //                 ...this.form
+            //             })
+            //             this.$message.success('提交成功')
+            //         } else {
+            //             await addBusiness({
+            //                 operationNode: 1,
+            //                 createUser: createUser,
+            //                 ...this.form
+            //             })
+            //             this.$message.success('提交成功')
+            //         }
+            //     }
+            // })
+            // const formData = this.format(type)
             // for (let i = 0;i < this.assessmentList.length;i++) {
             //     if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
             //         this.showWarnMsg('请选择尽调评估结论')
@@ -1667,13 +1694,13 @@ export default {
             //     this.activeName = '10'
             //     return false
             // }
-            await saveFinance(formData)
-            this.isdisabled = true
-            this.$message({
-                type: 'success',
-                message: `提交成功`
-            })
-            this.$router.go(-1)
+            // await saveFinance(formData)
+            // this.isdisabled = true
+            // this.$message({
+            //     type: 'success',
+            //     message: `提交成功`
+            // })
+            // this.$router.go(-1)
         }
     }
 }
@@ -1771,5 +1798,8 @@ td {
         height: 210px;
         border: 0;
     }
+}
+.el-dialog span {
+    text-align: center;
 }
 </style>
