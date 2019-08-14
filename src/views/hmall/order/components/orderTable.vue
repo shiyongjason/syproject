@@ -9,6 +9,11 @@
                 label="订单编号">
             </el-table-column>
             <el-table-column
+                prop="orderNo"
+                align="center"
+                label="拆分订单编号">
+            </el-table-column>
+            <el-table-column
                 prop="totalAmount"
                 align="center"
                 label="订单金额">
@@ -51,6 +56,11 @@
                 prop="couponDetailDTO.c"
                 align="center"
                 label="活动优惠金额">
+            </el-table-column>
+            <el-table-column
+                prop="test"
+                align="center"
+                label="订单类型">
             </el-table-column>
             <el-table-column
                 align="center"

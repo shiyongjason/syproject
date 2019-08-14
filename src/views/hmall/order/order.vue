@@ -60,20 +60,27 @@
                                 </div>
                             </div>
                             <div class="query-cont-col">
-                                <div class="query-col-title">同步至MIS状态：</div>
+                                <div class="query-col-title">活动编号：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParams.misStatus"
-                                        placeholder="全部"
-                                        :clearable=true
-                                    >
-                                        <!--MIS同步状态 0未同步 1同步成功 2同步失败-->
-                                        <el-option label="未同步" :value="0"></el-option>
-                                        <el-option label="同步成功" :value="1"></el-option>
-                                        <el-option label="同步失败" :value="2"></el-option>
-                                    </el-select>
+                                    <el-input placeholder="请输入活动编号" v-model="queryParams.avtiveNummmmmm"></el-input>
                                 </div>
                             </div>
+                            <!-- 1.7V 删除 -->
+                            <!--<div class="query-cont-col">-->
+                                <!--<div class="query-col-title">同步至MIS状态：</div>-->
+                                <!--<div class="query-col-input">-->
+                                    <!--<el-select-->
+                                        <!--v-model="queryParams.misStatus"-->
+                                        <!--placeholder="全部"-->
+                                        <!--:clearable=true-->
+                                    <!--&gt;-->
+                                        <!--&lt;!&ndash;MIS同步状态 0未同步 1同步成功 2同步失败&ndash;&gt;-->
+                                        <!--<el-option label="未同步" :value="0"></el-option>-->
+                                        <!--<el-option label="同步成功" :value="1"></el-option>-->
+                                        <!--<el-option label="同步失败" :value="2"></el-option>-->
+                                    <!--</el-select>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
@@ -96,26 +103,64 @@
                                     </el-date-picker>
                                 </div>
                             </div>
+                            <!--<div class="query-cont-col">-->
+                                <!--<div class="query-col-title">同步mis时间：</div>-->
+                                <!--<div class="query-col-input">-->
+                                    <!--<el-date-picker-->
+                                        <!--v-model="queryParams.misTimeStart"-->
+                                        <!--type="datetime"-->
+                                        <!--format="yyyy-MM-dd HH:mm:ss"-->
+                                        <!--placeholder="开始日期"-->
+                                        <!--:picker-options="pickerMisStart"-->
+                                    <!--&gt;-->
+                                    <!--</el-date-picker>-->
+                                    <!--<span class="ml10 mr10">-</span>-->
+                                    <!--<el-date-picker-->
+                                        <!--v-model="queryParams.misTimeEnd"-->
+                                        <!--type="datetime"-->
+                                        <!--format="yyyy-MM-dd HH:mm:ss"-->
+                                        <!--placeholder="结束日期"-->
+                                        <!--:picker-options="pickerMisEnd"-->
+                                    <!--&gt;-->
+                                    <!--</el-date-picker>-->
+                                <!--</div>-->
+                            <!--</div>-->
                             <div class="query-cont-col">
-                                <div class="query-col-title">同步mis时间：</div>
-                                <div class="query-col-input">
-                                    <el-date-picker
-                                        v-model="queryParams.misTimeStart"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="开始日期"
-                                        :picker-options="pickerMisStart"
-                                    >
-                                    </el-date-picker>
-                                    <span class="ml10 mr10">-</span>
-                                    <el-date-picker
-                                        v-model="queryParams.misTimeEnd"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="结束日期"
-                                        :picker-options="pickerMisEnd"
-                                    >
-                                    </el-date-picker>
+                                <div class="query-col-title">
+                                    分部名称
+                                </div>
+                                <div class="query-cont-input">
+                                    <el-select v-model="queryParams.xxx">
+                                        <el-option label="label" value="value"></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">
+                                    优惠券类型
+                                </div>
+                                <div class="query-cont-input">
+                                    <el-select v-model="queryParams.xxx">
+                                        <el-option label="label" value="value"></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">
+                                    优惠券编号
+                                </div>
+                                <div class="query-cont-input">
+                                    <el-input placeholder="请输入优惠券编号"></el-input>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">
+                                    订单类型
+                                </div>
+                                <div class="query-cont-input">
+                                    <el-select v-model="queryParams.xxx">
+                                        <el-option label="label" value="value"></el-option>
+                                    </el-select>
                                 </div>
                             </div>
                             <div class="query-cont-col">
