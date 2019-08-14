@@ -285,4 +285,7 @@ export default {
     .el-form-item {
         margin-bottom: 0;
     }
+    .el-form-item__label,.el-form-item__content{
+        line-height: 25px;
+    }
 </style>
