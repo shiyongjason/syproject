@@ -113,6 +113,9 @@
                     <el-form-item label="地址：">
                         {{memberDetails.provinceStr + memberDetails.cityStr + memberDetails.areaStr + memberDetails.address}}
                     </el-form-item>
+                    <el-form-item label="备注原因：" v-if="memberDetails.status === 10 || memberDetails.status === 11">
+                        {{memberDetails.failReason ? memberDetails.failReason : '-'}}
+                    </el-form-item>
                 </div>
             </el-form>
             <el-form ref="form" :rules="rules" :model="suggest">

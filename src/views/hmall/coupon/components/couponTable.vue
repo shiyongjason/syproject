@@ -113,16 +113,16 @@
                         {{couponDetails.couponName}}
                     </el-form-item>
                     <el-form-item label="指定门店：">
-                        {{couponDetails.memberNameList? couponDetails.memberNameList.join(','): ''}}
+                        {{couponDetails.memberNameList? couponDetails.memberNameList.join(','): '-'}}
                     </el-form-item>
                     <el-form-item label="平台公司名称：">
                         {{couponDetails.merchantName}}
                     </el-form-item>
                     <el-form-item label="发放时间：">
-                        {{couponDetails.effectiveDays}}天
+                        {{couponDetails.effectiveDays | formatDateDuration}}
                     </el-form-item>
                     <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatterTime}}天
+                        {{couponDetails.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </el-form-item>
                     <el-form-item label="优惠券类型：">
                         {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
@@ -138,7 +138,7 @@
                         <span v-if="couponDetails.status === 5">未通过</span>
                     </el-form-item>
                     <el-form-item label="限领数量：">
-                        {{couponDetails.receiveNumLimit}}张
+                        {{couponDetails.receiveNumLimit === 0 ? '不限量' : couponDetails.receiveNumLimit +'张'}}
                     </el-form-item>
                     <el-form-item label="活动备注：">
                         {{couponDetails.description}}
@@ -250,18 +250,18 @@ export default {
         handleCurrentChange (val) {
             this.$emit('onCurrentChange', val)
         },
-        showDialog (id, type) {
+        async showDialog (id, type) {
             this.openId = id
             this.suggest = {}
             if (type === 'review') {
                 this.dialogParams.title = '审核优惠券'
                 this.dialogParams.type = type
             } else if (type === 'watch') {
-                this.dialogParams.title = '审核优惠券'
+                this.dialogParams.title = '查看优惠券'
                 this.dialogParams.type = type
             }
+            await this.findCouponDetails(id)
             this.dialogParams.show = true
-            this.findCouponDetails(id)
         },
         close () {
             this.dialogParams.show = false
@@ -278,7 +278,7 @@ export default {
                 if (valid) {
                     const params = {
                         id: this.openId,
-                        operatorUserName: this.userInfo.employeeName,
+                        operatorUserName: this.userInfo.name,
                         ...this.suggest
                     }
                     try {
