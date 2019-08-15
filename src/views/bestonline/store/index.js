@@ -1,7 +1,10 @@
 import {
     GET_COMPANY_NAME,
     GET_APPLY_COMPANY_NAME,
-    JUSTICE_DATA
+    JUSTICE_DATA,
+    BUSINESS_DATA,
+    FINANCE_DATA,
+    ORGANIZATION_DATA
 } from './const.js'
 import axios from 'axios'
 
@@ -10,6 +13,7 @@ export default {
         companyName: '', // 现场尽调公司名
         applyCompanyName: '申请', // 尽调申请公司名
         justiceData: {
+            affairs: {},
             investmentsOutList: [],
             assetList: [],
             debtList: [],
@@ -17,7 +21,18 @@ export default {
             punishmentList: [],
             branchAgencyList: [],
             relatedCompanyList: [],
-            copartnerInfoList: []
+            copartnerInfoList: [],
+            dueLegalRemarkCreateForm: {}
+        },
+        businessData: {},
+        organizationData: {},
+        financeData: {
+            dueFinanceYearOperatingCreateForms: [],
+            dueFinanceBasic: {},
+            caseFlow: {},
+            dueFinanceProfit: {},
+            assetsLiabilities: {},
+            assessmentList: []
         }
     },
     mutations: {
@@ -29,14 +44,35 @@ export default {
             localStorage.setItem('applyCompanyName', val)
             state.applyCompanyName = val
         },
+        [BUSINESS_DATA] (state, payload) {
+            state.businessData = payload.data
+        },
+        [FINANCE_DATA] (state, payload) {
+            state.financeData = payload.data
+        },
         [JUSTICE_DATA] (state, payload) {
             state.justiceData = payload.data
+        },
+        [ORGANIZATION_DATA] (state, payload) {
+            state.organizationData = payload.data
         }
     },
     actions: {
+        async findBusinessData ({ commit }, params) {
+            const { data } = await axios.get(`develop/business/${params.applyId}`)
+            commit(BUSINESS_DATA, data)
+        },
+        async findFinanceData ({ commit }, params) {
+            const { data } = await axios.get(`develop/duefinance/${params.applyId}`)
+            commit(FINANCE_DATA, data)
+        },
         async findJusticeData ({ commit }, params) {
             const { data } = await axios.get(`develop/duelegal/${params.applyId}`)
             commit(JUSTICE_DATA, data)
+        },
+        async findOrganizationData ({ commit }, params) {
+            const { data } = await axios.get(`develop/organization/${params.applyId}`)
+            commit(ORGANIZATION_DATA, data)
         }
     }
 }

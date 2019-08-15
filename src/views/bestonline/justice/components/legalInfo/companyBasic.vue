@@ -178,30 +178,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .legal-form {
-        flex-direction: row;
-        width: 100%;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    .legal-form .el-form-item {
-        display: inline-block;
-    }
-    .info-wrap {
-        border: 1px solid #dcdcdc;
-        position: relative;
-        padding-right: 40px;
-        padding-top: 25px;
-        margin-bottom: 20px;
+.small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
+}
+.legal-form {
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.legal-form .el-form-item {
+    display: inline-block;
+}
+.info-wrap {
+    border: 1px solid #dcdcdc;
+    position: relative;
+    padding-right: 40px;
+    padding-top: 25px;
+    margin-bottom: 20px;
 
-        > i {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 25px;
-        }
+    > i {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 25px;
     }
-    .small-title{
-        margin-bottom: 20px;
-    }
+}
 </style>

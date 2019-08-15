@@ -58,9 +58,9 @@ export const getOrganization = (params) => {
     return axios.get(`develop/organization/${params}`)
 }
 
-/*
-企业尽调
-*/
+/**
+ * 商业尽调
+ */
 export const getBusiness = (params) => {
     return axios.get(`develop/business/${params}`)
 }
@@ -70,7 +70,7 @@ export const addBusiness = (params) => {
 export const putBusiness = (params) => {
     return axios.put('develop/business', params)
 }
-export const getChannels = (params) => {
+export const findChannels = (params) => {
     return axios.get('develop/channels', params)
 }
 /*
@@ -183,9 +183,9 @@ export const addAttach = (params) => {
     return axios.post('develop/dueattach/', params)
 }
 // 法务查询
-export const findJusticeData = (params) => {
-    return axios.get(`develop/duelegal/${params.applyId}`)
-}
+// export const findJusticeData = (params) => {
+//     return axios.get(`develop/duelegal/${params.applyId}`)
+// }
 // 法务保存,提交 第一次
 export const createJusticeDoFirst = (params) => {
     return axios.post('develop/duelegal/', params)

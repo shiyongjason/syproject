@@ -1,14 +1,15 @@
 <template>
 <el-collapse-item name="2">
     <template slot="title">
-        <p class="titlt-p">合伙人信息</p>
+        <p class="title-p">合伙人信息</p>
     </template>
     <template v-if="copartnerInfoList && copartnerInfoList.length > 0">
         <div v-for="(item, index) in copartnerInfoList" :key="index">
             <p class="small-title">{{ copartnerTitles[item.type] }}</p>
-            <el-form :model="justiceData" label-position="right" label-width="150px" class="legal-form">
+            <div class="item-wrapper legal-form">
                 <el-form-item
                     label="姓名："
+                    label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '姓名不能为空',trigger: 'blur'} : {}"
                     :prop="`copartnerInfoList[${index}].name`">
                     <el-input
@@ -19,6 +20,7 @@
                 </el-form-item>
                 <el-form-item
                     label="联系方式"
+                    label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '联系方式不能为空',trigger: 'blur'} : {}"
                     :prop="'copartnerInfoList.'+ index + '.tel'">
                     <el-input
@@ -29,6 +31,7 @@
                 </el-form-item>
                 <el-form-item
                     label="性别："
+                    label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '性别不能为空',trigger: 'change'} : {}"
                     :prop="'copartnerInfoList.'+ index + '.sex'">
                     <el-select v-model="item.sex">
@@ -38,6 +41,7 @@
                 </el-form-item>
                 <el-form-item
                     label="婚姻："
+                    label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '婚姻不能为空',trigger: 'change'} : {}"
                     :prop="'copartnerInfoList.'+ index + '.marriage'">
                     <el-select v-model="item.marriage">
@@ -49,15 +53,12 @@
                 </el-form-item>
                 <el-form-item
                     label="身份证号："
+                    label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '身份证号不能为空',trigger: 'blur'} : {}"
                     :prop="'copartnerInfoList.'+ index + '.idNumber'">
-                    <el-input
-                        placeholder="身份证号"
-                        maxlength="25"
-                        v-model="item.idNumber">
-                    </el-input>
+                    <el-input v-model="item.idNumber" placeholder="身份证号" maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item label="学历：">
+                <el-form-item label="学历：" label-width="150px">
                     <el-select v-model="item.education">
                         <el-option v-for="item in educationOptions"
                             :key="item.value"
@@ -65,48 +66,28 @@
                             :value="item.value"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="持股比例：" v-if="item.type != 2">
-                    <el-input
-                        placeholder="持股比例"
-                        maxlength="25"
-                        v-model="item.shareholdingRatio">
-                    </el-input>
+                <el-form-item label="持股比例：" label-width="150px" v-if="item.type != 2">
+                    <el-input v-model="item.shareholdingRatio" placeholder="持股比例" maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item label="是否在外兼职：">
+                <el-form-item label="是否在外兼职：" label-width="150px">
                     <el-select v-model="item.partTimeJob">
                         <el-option label="是" :value="0"></el-option>
                         <el-option label="否" :value="1"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="行业身份：">
-                    <el-input
-                        placeholder="行业身份"
-                        maxlength="25"
-                        v-model="item.industryStatus">
-                    </el-input>
+                <el-form-item label="行业身份：" label-width="150px">
+                    <el-input v-model="item.industryStatus" placeholder="行业身份" maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item label="个人经营能力：" v-if="item.type == 0 || item.type == 5">
-                    <el-input
-                        placeholder="个人经营能力"
-                        maxlength="25"
-                        v-model="item.managementAbility">
-                    </el-input>
+                <el-form-item label="个人经营能力：" label-width="150px" v-if="item.type == 0 || item.type == 5">
+                    <el-input v-model="item.managementAbility" placeholder="个人经营能力" maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item label="行业口碑：" v-if="item.type == 0">
-                    <el-input
-                        placeholder="行业口碑"
-                        maxlength="25"
-                        v-model="item.industryReputation">
-                    </el-input>
+                <el-form-item label="行业口碑：" label-width="150px" v-if="item.type == 0">
+                    <el-input v-model="item.industryReputation" placeholder="行业口碑" maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item label="社会资源：">
-                    <el-input
-                        placeholder="社会资源"
-                        maxlength="25"
-                        v-model="item.socialResources"  >
-                    </el-input>
+                <el-form-item label="社会资源：" label-width="150px">
+                    <el-input v-model="item.socialResources" placeholder="社会资源" maxlength="25"></el-input>
                 </el-form-item>
-            </el-form>
+            </div>
         </div>
     </template>
 </el-collapse-item>
@@ -131,6 +112,7 @@ export default {
         }),
         copartnerInfoList () {
             let copartnerInfoList = this.justiceData.copartnerInfoList
+            // 做排序，根据type顺序排序
             if (copartnerInfoList) {
                 copartnerInfoList = copartnerInfoList.sort((itemA, itemB) => itemA.type - itemB.type)
                 return copartnerInfoList
@@ -142,6 +124,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-p {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+}
+.small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
+}
+.item-wrapper {
+    margin: 20px 0 20px;
+}
 .legal-form {
     flex-direction: row;
     width: 100%;
@@ -154,4 +150,5 @@ export default {
 .small-title{
     margin-bottom: 20px;
 }
+
 </style>

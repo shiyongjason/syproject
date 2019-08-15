@@ -28,6 +28,14 @@ export const IsEnglish = (rule, value, callback) => {
     return callback()
 }
 
+export const IsPositiveInteger = (rule, value, callback) => {
+    const Reg = /^[1-9]\d*$/
+    if (!Reg.test(value)) {
+        return callback(new Error(rule.message))
+    }
+    return callback()
+}
+
 /* 校验输入正负数， 保留2位小数 传来的需要是string类型 */
 export function plusOrMinus (values) {
     let newValue

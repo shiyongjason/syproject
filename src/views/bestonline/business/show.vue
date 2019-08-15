@@ -67,134 +67,7 @@
                     <!--end-->
                 </el-collapse-item>
                 <el-collapse-item name="2">
-                    <template slot="title">
-                        <p class="titlt-p">业务模式</p>
-                    </template>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                                <el-select v-model="form.mainBusinessFormatOneId" placeholder="请选择主营业态">
-                                    <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-                                <el-input v-model="form.businessFormatOneRatio" placeholder="业态占比">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营业态2：">
-                                <el-select v-model="form.mainBusinessFormatTwoId" placeholder="请选择主营业态">
-                                    <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="业态占比2：">
-                                <el-input v-model="form.businessFormatTwoRatio" placeholder="业态占比">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营业态3：">
-                                <el-select v-model="form.mainBusinessFormatThreeId" placeholder="请选择主营业态">
-                                    <el-option v-for="item in mainCommercialData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="业态占比3：">
-                                <el-input v-model="form.businessFormatTwoThreeRatio" placeholder="业态占比">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营品类1：" prop="mainCategoryOneId">
-                                <el-select v-model="form.mainCategoryOneId" placeholder="请选择主营品类">
-                                    <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="销售比重1：" prop="categoryOneSalesRatio">
-                                <el-input v-model="form.categoryOneSalesRatio" placeholder="销售比重">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营品类2：">
-                                <el-select v-model="form.mainCategoryTwoId" placeholder="请选择主营品类">
-                                    <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="销售比重2：">
-                                <el-input v-model="form.categoryTwoSalesRatio" placeholder="销售比重">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营品牌1：" prop="mainBrandOneName">
-                                <el-input v-model="form.mainBrandOneName" placeholder="销售占比大于30%">
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="销售比重1：" prop="brandOneSalesRatio">
-                                <el-input v-model="form.brandOneSalesRatio" placeholder="销售比重">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营品牌2：">
-                                <el-input v-model="form.mainBrandTwoName" placeholder="销售占比大于30%">
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="销售比重2：">
-                                <el-input v-model="form.brandTwoSalesRatio" placeholder="销售比重">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
-                            <el-form-item label="主营品牌3：">
-                                <el-input v-model="form.mainBrandThreeName" placeholder="销售占比大于30%">
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                        <div class="form-cont-col">
-                            <el-form-item label="销售比重3：">
-                                <el-input v-model="form.brandThreeSalesRatio" placeholder="销售比重">
-                                    <template slot="suffix">%</template>
-                                </el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
+                    <BusinessMode />
                 </el-collapse-item>
                 <el-collapse-item name="3">
                     <template slot="title">
@@ -365,7 +238,7 @@
                                 </div>
                                 <div class="table-col">
                                     <el-select v-model="item.categoryId" placeholder="请选择" :disabled="isdisabled">
-                                        <el-option v-for="item in cateOptions" :key="item.value" :label="item.label" :value="item.value">
+                                        <el-option v-for="item in mainCategoryData" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -517,7 +390,7 @@
             </el-form>
         </el-collapse>
 
-        <div class="flex-wrap-row top20 " v-show="!isdisabled">
+        <div class="flex-wrap-row top20">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveBus">保存</el-button>
             </el-col>
@@ -531,7 +404,12 @@
 import { getBusiness, addBusiness, putBusiness, findChannels } from '../api/index.js'
 import { plusOrMinus } from '../../../utils/rules'
 import { MAIN_COMMERCIAL, MAIN_CATEGORY, ISPROVIDE_CONTRACT, IS_DOWN, IS_HEALTH } from '../const'
+import BusinessMode from './components/businessMode.vue'
+
 export default {
+    components: {
+        BusinessMode
+    },
     props: {
         roleType: {
             type: Boolean,
@@ -546,11 +424,7 @@ export default {
             updateTime: '',
             activeName: '9',
             watchTime: 0, // 监听次数
-            busOptions: [{ value: '', label: '请选择' }, { value: 0, label: '零售' }, { value: 1, label: '批发' }, { value: 2, label: '工程' }],
-            cateOptions: [{ value: '', label: '请选择' }, { value: 0, label: '冷暖' }, { value: 1, label: '新风' }, { value: 2, label: '智能' }, { value: 3, label: '净水' }, { value: 4, label: '冰洗' }, { value: 5, label: '黑电' }, { value: 6, label: '厨卫' }, { value: 7, label: '其他' }],
-            downOptions: [{ value: -1, label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
             options: [{ value: '', label: '请选择' }, { value: 0, label: '是' }, { value: 1, label: '否' }],
-            typeOptions: [{ value: '', label: '请选择' }, { value: 0, label: '签订投资合同时切换' }, { value: 1, label: '1年内切换' }, { value: 2, label: '1年以上切换' }, { value: 3, label: '无法切换' }],
             checkAll: false,
             checkedCities: [],
             channelsList: [],
@@ -901,7 +775,6 @@ export default {
         },
         async getBusiness () {
             const { data } = await getBusiness(this.applyId)
-            console.log(data.data)
 
             data.data.dueBusinessAssessmentCreateFormList.map((item, value) => {
                 this.currentYearAllSales += +item.currentYearSales
@@ -962,12 +835,10 @@ export default {
             }
         },
         handleCheckAllChange (val) {
-            console.log(val)
             this.form.publicityPromotionChannels = val ? this.newChannels : []
             this.isIndeterminate = false
         },
         handleCheckedWays (value) {
-            console.log(value)
             let checkedCount = value.length
             this.checkAll = checkedCount === this.newChannels.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.newChannels.length
@@ -1258,10 +1129,6 @@ table {
     max-width: 200px;
     min-width: 180px;
 }
-// /deep/ .el-date-editor.el-input,
-// .el-date-editor.el-input__inner {
-//     width: 100%;
-// }
 .assessmentTable {
     margin: 15px;
 }

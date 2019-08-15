@@ -108,6 +108,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
+}
 .legal-form {
     flex-direction: row;
     width: 100%;

@@ -4,7 +4,7 @@
             <div class="reviewform">
                 <el-tabs :tab-position="tabPosition" v-model="activeName">
                     <el-tab-pane label="合作目标" name="one">
-                        <HCootarget v-if="activeName=='one'" :roleType='oneType' @parentFun='getCooperativetarget' />
+                        <HCotarget v-if="activeName=='one'" :roleType='oneType' @parentFun='getCooperativetarget' />
                     </el-tab-pane>
 
                     <el-tab-pane label="调前信息" name="two">
@@ -44,12 +44,14 @@
 
 <script>
 import HInformation from './components/HInformation'
-import HCootarget from './components/HCootarget'
-import HBusiness from './components/HBusiness'
-import HFinance from './components/HFinance'
-import HOrganization from './components/HOrganization'
+import HCotarget from './cotarget/index'
+import HBusiness from './business/index'
+// import HFinance from './components/HFinance'
+import HFinance from './finance/index'
+import HOrganization from './organization/index'
+// import HOrganization from './components/HOrganization'
 import HAccessory from './components/HAccessory'
-import HJustice from './components/HJustice'
+import HJustice from './justice/index'
 import HEvaluation from './components/HEvaluation'
 import { getCooperativetarget } from './api/index.js'
 import { mapState } from 'vuex'
@@ -72,7 +74,7 @@ export default {
     },
     components: {
         HInformation,
-        HCootarget,
+        HCotarget,
         HBusiness,
         HFinance,
         HOrganization,
@@ -213,21 +215,6 @@ export default {
             }
         }
     }
-}
-
-.titlt-p {
-    font-size: 18px;
-    color: #409eff;
-    font-weight: 500;
-    margin: 0;
-}
-.small-title {
-    font-size: 16px;
-    margin-top: 0;
-    border-bottom: 1px solid #dddddd;
-}
-.el-collapse-item__wrap {
-    padding: 15px;
 }
 .el-collapse-item__header.is-active {
     // border-left:5px solid #eae8e8
