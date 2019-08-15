@@ -235,6 +235,18 @@ export default {
 }
 .item-wrapper {
     margin: 20px 0 20px;
+    td {
+            .el-input {
+        width: 100%;
+    }
+        /deep/ .el-input__inner {
+            border: none;
+        }
+        /deep/.el-textarea__inner {
+            border: none;
+            resize: none;
+        }
+    }
 }
 .organization-form {
     display: flex;

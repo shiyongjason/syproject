@@ -1,22 +1,42 @@
 <template>
-<div class="jd-manage">
-    <el-collapse v-model="activeName" accordion @change="onChange">
-        <el-form :model="form" :rules="rules">
-            <KPI />
-            <Controller />
-            <Organization />
-            <MotivationRisk />
-        </el-form>
-    </el-collapse>
-    <div class="flex-wrap-row top20">
-        <el-col :span="2" :offset="6">
-            <el-button type="info" @click="onSaveOrganize">暂存</el-button>
-        </el-col>
-        <el-col :span="2" :offset="1">
-            <el-button type="primary" @click="onSubmit">提交</el-button>
-        </el-col>
+    <div class="jd-manage">
+        <el-collapse
+            v-model="activeName"
+            accordion
+            @change="onChange"
+        >
+            <el-form
+                :model="form"
+                :rules="rules"
+                ref="form"
+            >
+                <KPI />
+                <Controller />
+                <Organization />
+                <MotivationRisk />
+            </el-form>
+        </el-collapse>
+        <div class="flex-wrap-row top20">
+            <el-col
+                :span="2"
+                :offset="6"
+            >
+                <el-button
+                    type="info"
+                    @click="onSaveOrganize"
+                >暂存</el-button>
+            </el-col>
+            <el-col
+                :span="2"
+                :offset="1"
+            >
+                <el-button
+                    type="primary"
+                    @click="onSubmit"
+                >提交</el-button>
+            </el-col>
+        </div>
     </div>
-</div>
 </template>
 <script>
 import { addOrganization, updateOrganization } from '../api/index.js'
@@ -71,7 +91,7 @@ export default {
                     { required: true, message: '请输入合作初衷', trigger: 'blur' }
                 ],
                 cooperationRisk: [
-                    { required: true, message: '请设置合作风险', trigger: 'blur' }
+                    { required: true, message: '请设置合作风险', trigger: 'change' }
                 ],
                 companyAdvantage: [
                     { required: true, message: '请填写企业优势', trigger: 'blur' }
@@ -159,19 +179,23 @@ export default {
             })
             this.$router.go(-1)
         },
-        async onSubmit () {
-            this.form.operationNode = 1
-            this.form.applyId = this.applyId
-            if (this.form.dueOrganizationId) {
-                await updateOrganization(this.form)
-            } else {
-                await addOrganization(this.form)
-            }
-            this.$message({
-                message: '提交成功',
-                type: 'success'
+        onSubmit () {
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    this.form.operationNode = 1
+                    this.form.applyId = this.applyId
+                    if (this.form.dueOrganizationId) {
+                        await updateOrganization(this.form)
+                    } else {
+                        await addOrganization(this.form)
+                    }
+                    this.$message({
+                        message: '提交成功',
+                        type: 'success'
+                    })
+                    this.$router.go(-1)
+                }
             })
-            this.$router.go(-1)
         }
     }
 }
@@ -187,24 +211,26 @@ export default {
     table {
         border-collapse: collapse;
     }
-    table, tr, td {
+    table,
+    tr,
+    td {
         border: 1px solid #dddddd;
         text-align: center;
         line-height: 40px;
     }
 }
-.organization-form{
+.organization-form {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
 }
-.organization-table{
+.organization-table {
     margin: 20px;
 }
-.red-span{
+.red-span {
     color: red;
 }
-.assessmentDimension-title{
+.assessmentDimension-title {
     width: 320px;
     text-align: center;
 }

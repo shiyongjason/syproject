@@ -17,7 +17,7 @@
     </div>
     <p class="small-title">合作风险</p>
     <div class="item-wrapper">
-        <el-form-item label="合作风险：" label-width="100px" prop="cooperationRisk">
+        <el-form-item label="合作风险：" label-width="100px" prop="cooperationRisk"  :rules="{ required: true ,message: '分析描述不能为空', trigger: 'blur' }">
             <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
         </el-form-item>
         <el-form-item label="企业优势：" label-width="100px" prop="companyAdvantage">
@@ -68,6 +68,9 @@ export default {
 }
 .item-wrapper {
     margin: 20px 0 20px;
+    .el-input{
+        width: 100%;
+    }
 }
 .organization-form {
     display: flex;

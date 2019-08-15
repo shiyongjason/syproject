@@ -2,37 +2,81 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="reviewform">
-                <el-tabs :tab-position="tabPosition" v-model="activeName">
-                    <el-tab-pane label="合作目标" name="one">
-                        <HCotarget v-if="activeName=='one'" :roleType='oneType' @parentFun='getCooperativetarget' />
+                <el-tabs
+                    :tab-position="tabPosition"
+                    v-model="activeName"
+                >
+                    <el-tab-pane
+                        label="合作目标"
+                        name="one"
+                    >
+                        <HCotarget
+                            v-if="activeName=='one'"
+                            :roleType='oneType'
+                            @parentFun='getCooperativetarget'
+                        />
                     </el-tab-pane>
 
-                    <el-tab-pane label="调前信息" name="two">
+                    <el-tab-pane
+                        label="调前信息"
+                        name="two"
+                    >
                         <HInformation v-if="activeName=='two'" />
                     </el-tab-pane>
 
                     <template v-if="Cooperation">
 
-                        <el-tab-pane label="商业尽调" name="three">
-                            <HBusiness v-if="activeName=='three'" :roleType='twoType' />
+                        <el-tab-pane
+                            label="商业尽调"
+                            name="three"
+                        >
+                            <HBusiness
+                                v-if="activeName=='three'"
+                                :roleType='twoType'
+                            />
                         </el-tab-pane>
 
-                        <el-tab-pane label="财务尽调" name="four">
-                            <HFinance v-if="activeName=='four'" :roleType='threeType' />
+                        <el-tab-pane
+                            label="财务尽调"
+                            name="four"
+                        >
+                            <HFinance
+                                v-if="activeName=='four'"
+                                :roleType='threeType'
+                            />
                         </el-tab-pane>
 
-                        <el-tab-pane label="法务尽调" name="five">
-                            <HJustice v-if="activeName=='five'" :roleType='fourType' />
+                        <el-tab-pane
+                            label="法务尽调"
+                            name="five"
+                        >
+                            <HJustice
+                                v-if="activeName=='five'"
+                                :roleType='fourType'
+                            />
                         </el-tab-pane>
 
-                        <el-tab-pane label="组织尽调" name="six" :lazy="true">
-                            <HOrganization v-if="activeName=='six'" :roleType='fiveType' />
+                        <el-tab-pane
+                            label="组织尽调"
+                            name="six"
+                            :lazy="true"
+                        >
+                            <HOrganization
+                                v-if="activeName=='six'"
+                                :roleType='fiveType'
+                            />
                         </el-tab-pane>
 
-                        <el-tab-pane label="附件上传" name="seven">
+                        <el-tab-pane
+                            label="附件上传"
+                            name="seven"
+                        >
                             <HAccessory v-if="activeName=='seven'" />
                         </el-tab-pane>
-                        <el-tab-pane label="尽调评估及KPI" name="eight">
+                        <el-tab-pane
+                            label="尽调评估及KPI"
+                            name="eight"
+                        >
                             <HEvaluation v-if="activeName=='eight'" />
                         </el-tab-pane>
                     </template>
@@ -61,7 +105,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'four',
+            activeName: 'six',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -213,6 +257,22 @@ export default {
             .el-textarea__inner {
                 border: none;
             }
+        }
+    }
+}
+.item-wrapper {
+    margin: 20px 0 20px;
+
+    td {
+        .el-input {
+            width: 100%;
+        }
+        /deep/ .el-input__inner {
+            border: none;
+        }
+        /deep/.el-textarea__inner {
+            border: none;
+            resize: none;
         }
     }
 }
