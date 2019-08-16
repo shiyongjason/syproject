@@ -23,3 +23,7 @@ export const updateProduct = (params) => instance.put(B2bUrl + `product/api/boss
 export const reviewPass = (params) => instance.put(B2bUrl + `product/api/boss/products/success/${params.id}`, params)
 // 审核驳回
 export const reviewReject = (params) => instance.put(B2bUrl + `product/api/boss/products/reject/${params.id}`, params)
+// 共享商品分页
+export const findPublicShop = (params) => instance.get(B2bUrl + `product/api/categories/share`, { params })
+// 共享商品启用/停用
+export const updatePublicShop = (params) => instance.get(B2bUrl + `product/api/categories/share/disable-enable`, params)

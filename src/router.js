@@ -259,6 +259,39 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/activity/index.vue')
+            },
+            {
+                path: 'publicShop',
+                name: 'publicShop',
+                meta: {
+                    title: '共享商品管理',
+                    tagName: '共享商品管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/shopManager/publicShop.vue')
+            },
+            {
+                path: 'activeReview',
+                name: 'activeReview',
+                meta: {
+                    title: '活动审核列表',
+                    tagName: '活动审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/shopReview/activeReview.vue')
+            },
+            {
+                path: 'merchantReview',
+                name: 'merchantReview',
+                meta: {
+                    title: '商户审核列表',
+                    tagName: '商户审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/shopReview/merchantReview.vue')
             }
         ]
     }
