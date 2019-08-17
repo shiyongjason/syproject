@@ -22,7 +22,7 @@
                 :key="index"
             >
                 <router-link
-                    :to="item.path"
+                    :to="item.path + serializeLink(item.query)"
                     class="tags-li-title"
                 >
                     {{item.title}}
@@ -115,7 +115,8 @@ export default {
                 !isExist && this.tagsList.push({
                     title: route.meta.tagName,
                     path: (route.fullPath).split('?')[0],
-                    name: route.name
+                    name: route.name,
+                    query: route.query
                 })
             }
 
@@ -132,6 +133,14 @@ export default {
         },
         handleTags (command) {
             command === 'other' ? this.closeOther() : this.closeAll()
+        },
+        serializeLink (params) {
+            if (Object.keys(params).length < 1) return ''
+            let link = '?'
+            for (let key in params) {
+                link += (key + '=' + params[key] + '&')
+            }
+            return link
         }
     },
     watch: {

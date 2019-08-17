@@ -55,12 +55,12 @@ export default {
                                 <span>{item.meta.title}</span>
                             </a>
                         )
-                    }else if (item.path === '/jinyunPlatform') {
+                    } else if (item.path === '/jinyunPlatform') {
                         result.push(
-                        <a href={`${jinyunHref}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
-                        {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
-                        <span>{item.meta.title}</span>
-                        </a>
+                            <a href={`${jinyunHref}`} target="_blank" class={`el-menu-item `} style={`display:block`}>
+                                {item.meta.icon && <i class={`iconfont ${item.meta.icon}`}></i>}
+                                <span>{item.meta.title}</span>
+                            </a>
                         )
                     } else {
                         result.push(
