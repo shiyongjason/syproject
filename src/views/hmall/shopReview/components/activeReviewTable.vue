@@ -6,16 +6,16 @@
             <el-table-column
                 prop="couponCode"
                 align="center"
-                label="优惠券编号">
+                label="活动编号">
             </el-table-column>
             <el-table-column
                 prop="couponName"
                 align="center"
-                label="优惠券名称">
+                label="活动名称">
             </el-table-column>
             <el-table-column
                 align="center"
-                label="优惠券类型">
+                label="活动类型">
                 <!--优惠券类型(1,满减 2,无门槛)-->
                 <template slot-scope="scope">
                     {{scope.row.couponType === 1 ? '满减' : '无门槛'}}
@@ -24,7 +24,7 @@
             <el-table-column
                 prop="status"
                 align="center"
-                label="优惠券状态">
+                label="活动状态">
                 <!--2.进行中 3.未审核 4.已结束 5.未通过-->
                 <template slot-scope="scope">
                     <span v-if="scope.row.status === 2">进行中</span>
@@ -32,11 +32,6 @@
                     <span v-if="scope.row.status === 4">已结束</span>
                     <span v-if="scope.row.status === 5">未通过</span>
                 </template>
-            </el-table-column>
-            <el-table-column
-                prop="totalQuantity"
-                align="center"
-                label="发放数量（张）">
             </el-table-column>
             <el-table-column
                 align="center"
@@ -101,7 +96,7 @@
             <el-form class="base" :inline="true">
                 <div>
                     <h2 class="sub-title">基本信息</h2>
-                    <el-form-item label="优惠券编号：">
+                    <el-form-item label="活动编号：">
                         {{couponDetails.couponCode}}
                     </el-form-item>
                     <el-form-item label="活动范围：">
@@ -109,10 +104,10 @@
                         <span v-if="couponDetails.targetRange === 1">全部会员店</span>
                         <span v-if="couponDetails.targetRange === 2">部分会员店</span>
                     </el-form-item>
-                    <el-form-item label="优惠券名称：">
+                    <el-form-item label="活动名称：">
                         {{couponDetails.couponName}}
                     </el-form-item>
-                    <el-form-item label="指定门店：">
+                    <el-form-item label="指定会员店：">
                         {{couponDetails.memberNameList? couponDetails.memberNameList.join(','): '-'}}
                     </el-form-item>
                     <el-form-item label="平台公司名称：">
@@ -121,47 +116,39 @@
                     <el-form-item label="发放时间：">
                         {{couponDetails.effectiveDays | formatDateDuration}}
                     </el-form-item>
-                    <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
-                    </el-form-item>
-                    <el-form-item label="优惠券类型：">
+                    <el-form-item label="活动类型：">
                         {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
                     </el-form-item>
                     <el-form-item label="活动规则：">
+                        {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
+                    </el-form-item>
+                    <el-form-item label="活动状态：">
+                        {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
+                    </el-form-item>
+                    <el-form-item label="参与方式：">
+                        {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
+                    </el-form-item>
+                    <el-form-item label="活动时间：">
+                        {{couponDetails.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                    </el-form-item>
+                    <el-form-item label="类目：">
                         {{couponDetails.rule}}
                     </el-form-item>
-                    <el-form-item label="优惠券状态：">
+                    <el-form-item label="审核状态：">
                         <!--2.进行中 3.未审核 4.已结束 5.未通过-->
                         <span v-if="couponDetails.status === 2">进行中</span>
                         <span v-if="couponDetails.status === 3">未审核</span>
                         <span v-if="couponDetails.status === 4">已结束</span>
                         <span v-if="couponDetails.status === 5">未通过</span>
                     </el-form-item>
-                    <el-form-item label="限领数量：">
-                        {{couponDetails.receiveNumLimit === 0 ? '不限量' : couponDetails.receiveNumLimit +'张'}}
+                    <el-form-item label="是否与优惠卷同享：">
+                        {{couponDetails.description}}
                     </el-form-item>
                     <el-form-item label="活动备注：">
                         {{couponDetails.description}}
                     </el-form-item>
-                    <el-form-item label="发放数量：">
-                        {{couponDetails.totalQuantity}}
-                    </el-form-item>
-                    <el-form-item label="审核状态：">
-                        <!--审核状态0,未审核 1,已审核 2,审核失败-->
-                        <span v-if="couponDetails.auditStatus === 0">未审核</span>
-                        <span v-if="couponDetails.auditStatus === 1">已审核</span>
-                        <span v-if="couponDetails.auditStatus === 2">审核失败</span>
-                    </el-form-item>
-                    <el-form-item label="参与方式：">
-                        <span v-if="couponDetails.joinType === 1">全场参加</span>
-                        <span v-if="couponDetails.joinType === 2">指定类目</span>
-                        <span v-if="couponDetails.joinType === 3">指定商品</span>
-                    </el-form-item>
-                    <el-form-item label="类目名称：" v-if="couponDetails.joinType === 2">
-                        {{couponDetails.categoryNameList ? couponDetails.categoryNameList.join(',') : '-'}}
-                    </el-form-item>
-                    <el-form-item label="商品名称：" v-if="couponDetails.joinType === 3">
-                        {{couponDetails.productNameList ? couponDetails.productNameList.join(',') : '-'}}
+                    <el-form-item label="优惠券编号：">
+                        {{couponDetails.description}}
                     </el-form-item>
                 </div>
             </el-form>
