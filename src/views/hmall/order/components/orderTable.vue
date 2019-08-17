@@ -19,14 +19,18 @@
                 label="订单金额">
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.couponCode"
                 align="center"
                 label="优惠劵编号">
+                 <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.couponCode}}
+                </template>
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.couponSN"
                 align="center"
                 label="优惠券流水号">
+                 <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.couponSnNo}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -38,29 +42,39 @@
                 </template>
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.couponValue"
                 align="center"
                 label="优惠金额">
+                 <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.couponAmount}}
+                </template>
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.a"
                 align="center"
                 label="活动编号">
+                <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.activityCode}}
+                </template>
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.b"
                 align="center"
                 label="活动类型">
+             <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.activityName}}
+                </template>
             </el-table-column>
             <el-table-column
-                prop="couponDetailDTO.c"
                 align="center"
                 label="活动优惠金额">
+                  <template slot-scope="scope">
+                 {{scope.row.orderDiscountInfoDTO.couponAmount}}
+                </template>
             </el-table-column>
             <el-table-column
-                prop="test"
                 align="center"
                 label="订单类型">
+                 <template slot-scope="scope">
+                 {{scope.row.orderType==0?'普通订单':'组合订单'}}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -105,11 +119,10 @@
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                 align="center"
                 label="同步至mis状态">
                 <template slot-scope="scope">
-                    <!--MIS同步状态 0未同步 1同步成功 2同步失败-->
                     <span v-if="scope.row.misStatus === 0">未同步</span>
                     <span v-if="scope.row.misStatus === 1">同步成功</span>
                     <span v-if="scope.row.misStatus === 2">同步失败</span>
@@ -122,7 +135,7 @@
                     <span v-if="scope.row.misTime">{{scope.row.misTime | formatterTime}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <div class="page clearfix" style="text-align: center;margin-top: 20px">
             <el-pagination

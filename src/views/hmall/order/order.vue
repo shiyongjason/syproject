@@ -8,35 +8,25 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单编号：</div>
                                 <div class="query-col-input">
-                                    <el-input
-                                        type="text"
-                                        v-model="queryParams.orderNo"
-                                        maxlength="50"
-                                        placeholder="请输入订单编号"></el-input>
+                                    <el-input type="text" v-model="queryParams.orderNo" maxlength="50" placeholder="请输入订单编号"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">平台公司名称：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParams.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
+                                    <el-input type="text" v-model="queryParams.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">会员店名称：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParams.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
+                                    <el-input type="text" v-model="queryParams.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单状态：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParams.orderStatus"
-                                        placeholder="全部"
-                                        :clearable=true
-                                    >
+                                    <el-select v-model="queryParams.orderStatus" placeholder="全部" :clearable=true>
                                         <el-option label="待审核" :value="1"></el-option>
                                         <el-option label="待付款" :value="2"></el-option>
                                         <el-option label="待发货" :value="3"></el-option>
@@ -48,14 +38,8 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">分部名称：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParams.branchCode"
-                                        placeholder="全部"
-                                        :clearable=true
-                                        @change="branchHandler"
-                                    >
-                                        <el-option :label="item.organizationName" :value="item.organizationCode"
-                                                   v-for="item in brandsList" :key="item.organizationCode"></el-option>
+                                    <el-select v-model="queryParams.branchCode" placeholder="全部" :clearable=true @change="branchHandler">
+                                        <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in brandsList" :key="item.organizationCode"></el-option>
                                     </el-select>
                                 </div>
                             </div>
@@ -67,99 +51,79 @@
                             </div>
                             <!-- 1.7V 删除 -->
                             <!--<div class="query-cont-col">-->
-                                <!--<div class="query-col-title">同步至MIS状态：</div>-->
-                                <!--<div class="query-col-input">-->
-                                    <!--<el-select-->
-                                        <!--v-model="queryParams.misStatus"-->
-                                        <!--placeholder="全部"-->
-                                        <!--:clearable=true-->
-                                    <!--&gt;-->
-                                        <!--&lt;!&ndash;MIS同步状态 0未同步 1同步成功 2同步失败&ndash;&gt;-->
-                                        <!--<el-option label="未同步" :value="0"></el-option>-->
-                                        <!--<el-option label="同步成功" :value="1"></el-option>-->
-                                        <!--<el-option label="同步失败" :value="2"></el-option>-->
-                                    <!--</el-select>-->
-                                <!--</div>-->
+                            <!--<div class="query-col-title">同步至MIS状态：</div>-->
+                            <!--<div class="query-col-input">-->
+                            <!--<el-select-->
+                            <!--v-model="queryParams.misStatus"-->
+                            <!--placeholder="全部"-->
+                            <!--:clearable=true-->
+                            <!--&gt;-->
+                            <!--&lt;!&ndash;MIS同步状态 0未同步 1同步成功 2同步失败&ndash;&gt;-->
+                            <!--<el-option label="未同步" :value="0"></el-option>-->
+                            <!--<el-option label="同步成功" :value="1"></el-option>-->
+                            <!--<el-option label="同步失败" :value="2"></el-option>-->
+                            <!--</el-select>-->
+                            <!--</div>-->
                             <!--</div>-->
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
-                                    <el-date-picker
-                                        v-model="queryParams.orderTimeStart"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="开始日期"
-                                        :picker-options="pickerOptionsStart"
-                                    >
+                                    <el-date-picker v-model="queryParams.orderTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                                     </el-date-picker>
                                     <span class="ml10 mr10">-</span>
-                                    <el-date-picker
-                                        v-model="queryParams.orderTimeEnd"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="结束日期"
-                                        :picker-options="pickerOptionsEnd"
-                                    >
+                                    <el-date-picker v-model="queryParams.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                                     </el-date-picker>
                                 </div>
                             </div>
                             <!--<div class="query-cont-col">-->
-                                <!--<div class="query-col-title">同步mis时间：</div>-->
-                                <!--<div class="query-col-input">-->
-                                    <!--<el-date-picker-->
-                                        <!--v-model="queryParams.misTimeStart"-->
-                                        <!--type="datetime"-->
-                                        <!--format="yyyy-MM-dd HH:mm:ss"-->
-                                        <!--placeholder="开始日期"-->
-                                        <!--:picker-options="pickerMisStart"-->
-                                    <!--&gt;-->
-                                    <!--</el-date-picker>-->
-                                    <!--<span class="ml10 mr10">-</span>-->
-                                    <!--<el-date-picker-->
-                                        <!--v-model="queryParams.misTimeEnd"-->
-                                        <!--type="datetime"-->
-                                        <!--format="yyyy-MM-dd HH:mm:ss"-->
-                                        <!--placeholder="结束日期"-->
-                                        <!--:picker-options="pickerMisEnd"-->
-                                    <!--&gt;-->
-                                    <!--</el-date-picker>-->
-                                <!--</div>-->
+                            <!--<div class="query-col-title">同步mis时间：</div>-->
+                            <!--<div class="query-col-input">-->
+                            <!--<el-date-picker-->
+                            <!--v-model="queryParams.misTimeStart"-->
+                            <!--type="datetime"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--placeholder="开始日期"-->
+                            <!--:picker-options="pickerMisStart"-->
+                            <!--&gt;-->
+                            <!--</el-date-picker>-->
+                            <!--<span class="ml10 mr10">-</span>-->
+                            <!--<el-date-picker-->
+                            <!--v-model="queryParams.misTimeEnd"-->
+                            <!--type="datetime"-->
+                            <!--format="yyyy-MM-dd HH:mm:ss"-->
+                            <!--placeholder="结束日期"-->
+                            <!--:picker-options="pickerMisEnd"-->
+                            <!--&gt;-->
+                            <!--</el-date-picker>-->
+                            <!--</div>-->
                             <!--</div>-->
                             <div class="query-cont-col">
                                 <div class="query-col-title">
-                                    分部名称
+                                    优惠券类型：
                                 </div>
                                 <div class="query-cont-input">
-                                    <el-select v-model="queryParams.xxx">
-                                        <el-option label="label" value="value"></el-option>
+                                    <el-select v-model="queryParams.couponType">
+                                        <el-option v-for="item in couponList" :key="item.value" :label="item.name" :value="item.value">
+                                        </el-option>
                                     </el-select>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
-                                    优惠券类型
+                                    优惠券编号：
                                 </div>
                                 <div class="query-cont-input">
-                                    <el-select v-model="queryParams.xxx">
-                                        <el-option label="label" value="value"></el-option>
-                                    </el-select>
+                                    <el-input placeholder="请输入优惠券编号" v-model="queryParams.couponCode"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
-                                    优惠券编号
+                                    订单类型：
                                 </div>
                                 <div class="query-cont-input">
-                                    <el-input placeholder="请输入优惠券编号"></el-input>
-                                </div>
-                            </div>
-                            <div class="query-cont-col">
-                                <div class="query-col-title">
-                                    订单类型
-                                </div>
-                                <div class="query-cont-input">
-                                    <el-select v-model="queryParams.xxx">
-                                        <el-option label="label" value="value"></el-option>
+                                    <el-select v-model="queryParams.orderType">
+                                        <el-option v-for="item in orderList" :key="item.value" :label="item.name" :value="item.value">
+                                        </el-option>
                                     </el-select>
                                 </div>
                             </div>
@@ -175,12 +139,7 @@
                             </div>
                         </div>
                         <div class="page-box page-table">
-                            <orderTable
-                                :tableData="orderData"
-                                :paginationData="paginationOrderData"
-                                @onQuery="onQueryOrder"
-                                @onSizeChange="onSizeChange"
-                                @onCurrentChange="onCurrentChange"></orderTable>
+                            <orderTable :tableData="orderData" :paginationData="paginationOrderData" @onQuery="onQueryOrder" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></orderTable>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="收款记录" name="second">
@@ -188,42 +147,31 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">支付流水号：</div>
                                 <div class="query-col-input">
-                                    <el-input
-                                        type="text"
-                                        v-model="queryParamsReceivables.paymentNo"
-                                        maxlength="50"
-                                        placeholder="请输入支付流水号"></el-input>
+                                    <el-input type="text" v-model="queryParamsReceivables.paymentNo" maxlength="50" placeholder="请输入支付流水号"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">平台公司名称：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParamsReceivables.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
+                                    <el-input type="text" v-model="queryParamsReceivables.merchantName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">会员店名称：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParamsReceivables.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
+                                    <el-input type="text" v-model="queryParamsReceivables.memberName" maxlength="50" placeholder="请输入会员店名称"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单编号：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParamsReceivables.orderNo" maxlength="50" placeholder="请输入订单编号"></el-input>
+                                    <el-input type="text" v-model="queryParamsReceivables.orderNo" maxlength="50" placeholder="请输入订单编号"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">支付方式：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParamsReceivables.paymentMethod"
-                                        placeholder="全部"
-                                        :clearable=true
-                                    >
+                                    <el-select v-model="queryParamsReceivables.paymentMethod" placeholder="全部" :clearable=true>
                                         <!--1账期支付，2线下支付，3钱包支付-->
                                         <el-option label="全部" :value="''"></el-option>
                                         <el-option label="账期支付" :value="1"></el-option>
@@ -235,22 +183,10 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">支付时间：</div>
                                 <div class="query-col-input">
-                                    <el-date-picker
-                                        v-model="queryParamsReceivables.paymentTimeStart"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="开始日期"
-                                        :picker-options="pickerReceivablesStart"
-                                    >
+                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerReceivablesStart">
                                     </el-date-picker>
                                     <span class="ml10 mr10">-</span>
-                                    <el-date-picker
-                                        v-model="queryParamsReceivables.paymentTimeEnd"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="结束日期"
-                                        :picker-options="pickerReceivablesEnd"
-                                    >
+                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerReceivablesEnd">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -266,12 +202,7 @@
                             </div>
                         </div>
                         <div class="page-box page-table">
-                            <receivablesTable
-                                :tableData="receivablesData"
-                                :paginationData="paginationReceivablesData"
-                                @onQuery="onQueryReceivables"
-                                @onSizeChange="onSizeChange"
-                                @onCurrentChange="onCurrentChange"></receivablesTable>
+                            <receivablesTable :tableData="receivablesData" :paginationData="paginationReceivablesData" @onQuery="onQueryReceivables" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></receivablesTable>
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="商品统计" name="third">
@@ -279,54 +210,34 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">商品SPU：</div>
                                 <div class="query-col-input">
-                                    <el-input
-                                        type="text"
-                                        v-model="queryParamsProductTotal.spuCode"
-                                        maxlength="50"
-                                        placeholder="请输入商品SPU"></el-input>
+                                    <el-input type="text" v-model="queryParamsProductTotal.spuCode" maxlength="50" placeholder="请输入商品SPU"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">商品SkU：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text"
-                                              v-model="queryParamsProductTotal.productCode"
-                                              maxlength="50" placeholder="商品SkU">
+                                    <el-input type="text" v-model="queryParamsProductTotal.productCode" maxlength="50" placeholder="商品SkU">
                                     </el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">分部：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParamsProductTotal.branchCode"
-                                        placeholder="全部"
-                                        :clearable="true"
-                                        @change="branchProductHandler"
-                                    >
-                                        <el-option :label="item.organizationName" :value="item.organizationCode"
-                                                   v-for="item in brandsList" :key="item.organizationCode"></el-option>
+                                    <el-select v-model="queryParamsProductTotal.branchCode" placeholder="全部" :clearable="true" @change="branchProductHandler">
+                                        <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in brandsList" :key="item.organizationCode"></el-option>
                                     </el-select>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">平台公司：</div>
                                 <div class="query-col-input">
-                                    <el-input
-                                        type="text"
-                                        v-model="queryParamsProductTotal.merchantName"
-                                        maxlength="50"
-                                        placeholder="请输入平台公司"></el-input>
+                                    <el-input type="text" v-model="queryParamsProductTotal.merchantName" maxlength="50" placeholder="请输入平台公司"></el-input>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单状态：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParamsProductTotal.orderStatus"
-                                        placeholder="全部"
-                                        :clearable=true
-                                    >
+                                    <el-select v-model="queryParamsProductTotal.orderStatus" placeholder="全部" :clearable=true>
                                         <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
                                         <el-option label="待审核" :value="1"></el-option>
                                         <el-option label="待付款" :value="2"></el-option>
@@ -339,22 +250,13 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">商品类目：</div>
                                 <div class="query-col-input">
-                                    <el-cascader
-                                        v-model="queryParamsProductTotal.categoryId"
-                                        :options="categoryOptions"
-                                        :change-on-select="true"
-                                        @change="productCategoryChange"
-                                        style="width: 100%"></el-cascader>
+                                    <el-cascader v-model="queryParamsProductTotal.categoryId" :options="categoryOptions" :change-on-select="true" @change="productCategoryChange" style="width: 100%"></el-cascader>
                                 </div>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">同步至MIS状态：</div>
                                 <div class="query-col-input">
-                                    <el-select
-                                        v-model="queryParamsProductTotal.misStatus"
-                                        placeholder="全部"
-                                        :clearable=true
-                                    >
+                                    <el-select v-model="queryParamsProductTotal.misStatus" placeholder="全部" :clearable=true>
                                         <!--0未同步 1同步成功 2同步失败-->
                                         <el-option label="未同步" :value="0"></el-option>
                                         <el-option label="同步成功" :value="1"></el-option>
@@ -365,22 +267,10 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
-                                    <el-date-picker
-                                        v-model="queryParamsProductTotal.orderTimeStart"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="开始日期"
-                                        :picker-options="pickerProductTotalStart"
-                                    >
+                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerProductTotalStart">
                                     </el-date-picker>
                                     <span class="ml10 mr10">-</span>
-                                    <el-date-picker
-                                        v-model="queryParamsProductTotal.orderTimeEnd"
-                                        type="datetime"
-                                        format="yyyy-MM-dd HH:mm:ss"
-                                        placeholder="结束日期"
-                                        :picker-options="pickerProductTotalEnd"
-                                    >
+                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerProductTotalEnd">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -396,12 +286,7 @@
                             </div>
                         </div>
                         <div class="page-box page-table">
-                            <productTotalTable
-                                :tableData="productTotalData"
-                                :paginationData="paginationProductTotalData"
-                                @onQuery="onQueryProductTotal"
-                                @onSizeChange="onSizeChange"
-                                @onCurrentChange="onCurrentChange"></productTotalTable>
+                            <productTotalTable :tableData="productTotalData" :paginationData="paginationProductTotalData" @onQuery="onQueryProductTotal" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></productTotalTable>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
@@ -414,6 +299,7 @@
 import orderTable from './components/orderTable'
 import receivablesTable from './components/receivablesTable'
 import productTotalTable from './components/productTotalTable'
+import { ORDER_TYPE, COUPON_TYPE } from './const.js'
 import { mapState } from 'vuex'
 import {
     findBrandsList, findOrderList, findProductTotalList,
@@ -516,8 +402,13 @@ export default {
     },
     data () {
         return {
+            couponList: COUPON_TYPE,
+            orderList: ORDER_TYPE,
             activeName: '',
             queryParams: {
+                couponType: '',
+                couponCode: '',
+                orderType: '',
                 branchName: '',
                 branchCode: '',
                 memberName: '',
@@ -585,7 +476,7 @@ export default {
                         throw new Error('迭代结束')
                     }
                 })
-            } catch (e) {}
+            } catch (e) { }
         },
         branchProductHandler (model) {
             if (!model) {
@@ -599,7 +490,7 @@ export default {
                         throw new Error('迭代结束')
                     }
                 })
-            } catch (e) {}
+            } catch (e) { }
         },
         handleClick () {
             localStorage.setItem('hMallOrderStatus', this.activeName)
@@ -737,11 +628,11 @@ export default {
 </script>
 
 <style scoped>
-    .flex-wrap-row{
-        max-width: 1350px;
-    }
-    .order{
-        padding: 20px;
-        background: #ffffff;
-    }
+.flex-wrap-row {
+    max-width: 1350px;
+}
+.order {
+    padding: 20px;
+    background: #ffffff;
+}
 </style>
