@@ -27,3 +27,5 @@ export const reviewReject = (params) => instance.put(B2bUrl + `product/api/boss/
 export const findPublicShop = (params) => instance.get(B2bUrl + `product/api/categories/share`, { params })
 // 共享商品启用/停用
 export const updatePublicShop = (params) => instance.get(B2bUrl + `product/api/categories/share/disable-enable`, params)
+// 商品列表导出
+export const exportProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/export', { params })

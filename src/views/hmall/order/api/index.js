@@ -49,3 +49,5 @@ export const exportTabOrder = (params) => {
     }
     return url
 }
+// new-获取子订单列表
+export const findChildOrder = (params) => instance.get(B2bUrl + `order/api/orders/${params.orderId}/childOrder`, {})

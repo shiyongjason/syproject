@@ -10,95 +10,52 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-table :data="tableData"
-                    border
-                    ref="brandTable"
-                    @selection-change="selectionChange"
-                    style="width: 100%">
-                <el-table-column
-                    type="selection"
-                    align="center">
+            <el-table :data="tableData" border ref="brandTable" @selection-change="selectionChange" style="width: 100%">
+                <el-table-column type="selection" align="center">
                 </el-table-column>
-                <el-table-column
-                    type="index"
-                    label="序号"
-                    :index="indexMethod"
-                    align="center"
-                    width="60">
+                <el-table-column type="index" label="序号" :index="indexMethod" align="center" width="60">
                 </el-table-column>
-                <el-table-column
-                    prop="productCode"
-                    align="center"
-                    label="商品编码spu">
+                <el-table-column prop="productCode" align="center" label="商品编码spu">
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="商品名称">
+                <el-table-column align="center" label="商品名称">
                     <template slot-scope="scope">
                         <a @click="modify(scope.row)" class="isLink"><span style="word-break: break-all;white-space:pre-wrap;line-height: 20px">{{scope.row.productName}}</span></a>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="品牌">
+                <el-table-column align="center" label="品牌">
                     <template slot-scope="scope">
                         {{scope.row.brandName}}{{scope.row.brandNameEn}}
                     </template>
                 </el-table-column>
-                <el-table-column
-                    prop="categoryName"
-                    align="center"
-                    label="商品类目">
+                <el-table-column prop="categoryName" align="center" label="商品类目">
                 </el-table-column>
-                <el-table-column
-                    prop="sourceName"
-                    align="center"
-                    label="商品来源">
+                <el-table-column prop="sourceName" align="center" label="商品来源">
                 </el-table-column>
-                <el-table-column
-                    label="商品状态"
-                    align="center">
+                <el-table-column label="商品状态" align="center">
                     <template slot-scope="scope">
-                        <span class="valid-status"  v-if="scope.row.status == 1">上架</span>
+                        <span class="valid-status" v-if="scope.row.status == 1">上架</span>
                         <span class="invalid-status" v-else>下架</span>
                     </template>
                     <!--{{scope.row.status === 1 ? '上架' : '下架'}}-->
                 </el-table-column>
-                <el-table-column
-                    prop="updateBy"
-                    align="center"
-                    label="维护人">
+                <el-table-column prop="updateBy" align="center" label="维护人">
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="维护时间">
+                <el-table-column align="center" label="维护时间">
                     <template slot-scope="scope">
                         {{ scope.row.updateTime | formatterTime }}
                     </template>
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="操作">
+                <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
                         <!--:class="scope.row.status === 1 ? 'status-on' : ''"-->
-                        <el-button class="orangeBtn"
-                                @click="onChangeStatusSingle(scope.row)"
-                                v-text="scope.row.status === 1 ? '下架' : '上架'">
+                        <el-button class="orangeBtn" @click="onChangeStatusSingle(scope.row)" v-text="scope.row.status === 1 ? '下架' : '上架'">
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="page clearfix" style="text-align: center;margin-top: 20px">
-                <el-pagination
-                    class="el-page"
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="paginationData.pageNumber"
-                    :page-sizes="[10,20,30,40,50]"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :total="paginationData.totalElements">
+                <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                 </el-pagination>
             </div>
         </div>
@@ -203,17 +160,17 @@ export default {
 </script>
 
 <style scoped>
-.status-on{
+.status-on {
     color: #999;
 }
 .invalid-status {
     color: #ccc;
 }
 .valid-status {
-    color: #FF7A45;
+    color: #ff7a45;
 }
 .brand-link {
-    color: #409EFF;
+    color: #409eff;
     cursor: pointer;
 }
 </style>
