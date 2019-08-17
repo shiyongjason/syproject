@@ -140,6 +140,7 @@
                         </div>
                         <div class="page-box page-table">
                             <orderTable :tableData="orderData" :paginationData="paginationOrderData" @onQuery="onQueryOrder" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></orderTable>
+
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="收款记录" name="second">
@@ -504,6 +505,12 @@ export default {
                 pageSize: data.size,
                 totalElements: data.total
             }
+            this.orderData = this.orderData && this.orderData.map(item => {
+                if (item.isSplit == 1) {
+                    item.hasChildren = true
+                }
+                return item
+            })
         },
         async onQueryReceivables () {
             const { ...params } = this.queryParamsReceivables

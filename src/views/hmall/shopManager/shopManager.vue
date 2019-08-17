@@ -6,45 +6,30 @@
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">商品编码：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="queryParams.productCode"
-                                placeholder="请输入商品编码"
-                                maxlength="50"></el-input>
+                            <el-input v-model="queryParams.productCode" placeholder="请输入商品编码" maxlength="50"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">商品名称：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="queryParams.productName"
-                                placeholder="请输入商品名称"
-                                maxlength="50"></el-input>
+                            <el-input v-model="queryParams.productName" placeholder="请输入商品名称" maxlength="50"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">商品品牌：</div>
                         <div class="flex-wrap-cont">
-                            <el-input
-                                v-model="queryParams.brandName"
-                                placeholder="请输入商品品牌"
-                                maxlength="50"></el-input>
+                            <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">商品状态：</div>
                         <div class="flex-wrap-cont">
                             <el-select v-model="queryParams.status" style="width: 100%">
-                                <el-option
-                                    label="全部"
-                                    value="">
+                                <el-option label="全部" value="">
                                 </el-option>
-                                <el-option
-                                    label="上架"
-                                    value="1">
+                                <el-option label="上架" value="1">
                                 </el-option>
-                                <el-option
-                                    label="下架"
-                                    value="2">
+                                <el-option label="下架" value="2">
                                 </el-option>
                             </el-select>
                         </div>
@@ -53,9 +38,7 @@
                         <div class="flex-wrap-title">商品来源：</div>
                         <div class="flex-wrap-cont">
                             <el-select v-model="queryParams.sourceCode" style="width: 100%">
-                                <el-option
-                                    label="全部"
-                                    value="">
+                                <el-option label="全部" value="">
                                 </el-option>
                                 <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
                                 </el-option>
@@ -65,33 +48,16 @@
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">商品类目：</div>
                         <div class="flex-wrap-cont">
-                            <el-cascader
-                                :options="productCategoryList"
-                                v-model="queryParams.categoryId"
-                                :change-on-select="true"
-                                @change="productCategoryChange"
-                                style="width: 100%"></el-cascader>
+                            <el-cascader :options="productCategoryList" v-model="queryParams.categoryId" :change-on-select="true" @change="productCategoryChange" style="width: 100%"></el-cascader>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">维护时间：</div>
                         <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="queryParams.startDate"
-                                type="datetime"
-                                format="yyyy-MM-dd HH:mm"
-                                placeholder="开始日期"
-                                :picker-options="pickerOptionsStart"
-                            >
+                            <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10">-</span>
-                            <el-date-picker
-                                v-model="queryParams.endDate"
-                                type="datetime"
-                                format="yyyy-MM-dd HH:mm"
-                                placeholder="结束日期"
-                                :picker-options="pickerOptionsEnd"
-                            >
+                            <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
@@ -107,18 +73,14 @@
                             <el-button type="primary" class="ml20" @click="onQuery()">
                                 搜索
                             </el-button>
+                            <el-button type="primary" class="ml20" @click="onExport()">
+                                导出
+                            </el-button>
                         </div>
                     </div>
                 </div>
             </div>
-            <shopManagerTable
-                ref="shopManagerTable"
-                :tableData="tableData"
-                :paginationData="paginationData"
-                @updateStatus="onQuery"
-                @updateBrand="updateBrandChange"
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"></shopManagerTable>
+            <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable>
         </div>
     </div>
 </template>
@@ -127,6 +89,7 @@
 import shopManagerTable from './components/shopManagerTable'
 import { findProducts, findProductSource, findProductCategory } from './api/index'
 // import { findCategoryByParent } from '@/views/hmall/category/api/index'
+import { B2bUrl } from '@/api/config'
 export default {
     name: 'shopManager',
     components: {
@@ -157,6 +120,10 @@ export default {
     data () {
         return {
             queryParams: {
+                productCode: '',
+                productName: '',
+                updateBy: '',
+                brandName: '',
                 pageNumber: 1,
                 status: '',
                 startDate: '',
@@ -203,6 +170,17 @@ export default {
         },
         productCategoryChange (val) {
             this.queryParams.categoryId = val
+        },
+        onExport () {
+            window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
+                '&startDate=' + this.queryParams.startDate +
+                '&endDate=' + this.queryParams.endDate +
+                '&categoryId=' + this.queryParams.categoryId +
+                '&sourceCode=' + this.queryParams.sourceCode +
+                '&productName=' + this.queryParams.productName +
+                '&productCode=' + this.queryParams.productCode +
+                '&updateBy=' + this.queryParams.updateBy +
+                '&brandName=' + this.queryParams.brandName
         }
     },
     async mounted () {
@@ -242,10 +220,10 @@ export default {
 </script>
 
 <style scoped>
-    .status-on{
-        color: #999999;
-    }
-    .flex-wrap-row{
-        max-width: 1350px;
-    }
+.status-on {
+    color: #999999;
+}
+.flex-wrap-row {
+    max-width: 1350px;
+}
 </style>
