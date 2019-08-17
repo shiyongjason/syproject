@@ -145,6 +145,8 @@ export default {
         },
         async findPublicShop () {
             const { ...params } = this.queryParams
+            if (params.startTime) params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
+            if (params.endTime) params.endTime = this.$root.$options.filters.formatterTime(params.endTime)
             const { data } = await findPublicShop(params)
             this.tableData = data.records
             this.paginationData = {

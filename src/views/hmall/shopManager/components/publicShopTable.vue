@@ -94,12 +94,6 @@
                                 :value="item.organizationCode">
                             </el-option>
                         </el-select>
-                        <!--<el-autocomplete-->
-                            <!--v-model="dialogSearch.company"-->
-                            <!--:fetch-suggestions="querySearchCompany"-->
-                            <!--placeholder="请选择"-->
-                            <!--@select="handleCompany"-->
-                        <!--&gt;</el-autocomplete>-->
                     </div>
                 </div>
                 <div class="dialog-query-cont-col">
@@ -116,7 +110,7 @@
                     </div>
                 </div>
             </div>
-            <el-transfer v-model="publicModel" :data="publicData" class="transfer"
+            <el-transfer v-model="publicModel" :data="publicData" class="transfer" ref="dialogSearch"
                          :titles="['已添加的类目', '可添加的类目']"
                          filter-placeholder="请输入类目"
                          filterable
@@ -211,6 +205,13 @@ export default {
                 shareMerchantCode: this.dialogSearch.publicCompany,
                 shareMerchantName: this.$refs.companyRight.query
             }
+            if (!params.merchantCode) {
+                this.$message({
+                    type: 'warn',
+                    message: '未选择平台公司'
+                })
+                return
+            }
             this.createPublicShop(params)
         },
         reset () {
@@ -218,6 +219,8 @@ export default {
                 company: '',
                 publicCompany: ''
             }
+            this.$refs.dialogSearch.clearQuery('left')
+            this.$refs.dialogSearch.clearQuery('right')
             this.publicModel = []
             this.publicDataTemp = []
         },
@@ -260,17 +263,18 @@ export default {
             })
         },
         handleCompany (item) {
-            // 1 表示全选 2表示共享选 3表示 已选择平台公司
+            // 1 表示全选 2表示共享选 3表示 已选择平台公司 产品需求修改
             if (this.dialogSearch.company && this.dialogSearch.publicCompany) {
-                this.makeSelectList(1)
+                this.makeSelectList(true)
             } else if (!this.dialogSearch.company && this.dialogSearch.publicCompany) {
-                this.makeSelectList(2)
-            } else if (this.dialogSearch.company && !this.dialogSearch.publicCompany) {
-                this.makeSelectList(3)
+                this.makeSelectList()
             }
+            // else if (this.dialogSearch.company && !this.dialogSearch.publicCompany) {
+            //     this.makeSelectList(3)
+            // }
         },
         async makeSelectList (type) {
-            if (type === 1) {
+            if (type) {
                 const temp = await this.findPublicShopCategory(1)
                 const temp2 = await this.findPublicShopCategory(2)
                 const totalTemp = temp.concat(temp2)
@@ -278,16 +282,17 @@ export default {
                     return value.shareCategoryId
                 })
                 this.publicDataTemp = totalTemp
-            } else if (type === 2) {
+            } else {
                 const temp2 = await this.findPublicShopCategory(2)
                 this.publicDataTemp = temp2
                 this.publicModel = temp2.map(value => {
                     return value.shareCategoryId
                 })
-            } else if (type === 3) {
-                const temp = await this.findPublicShopCategory(1)
-                this.publicDataTemp = temp
             }
+            // else if (type === 3) { // 产品需求修改
+            //     const temp = await this.findPublicShopCategory(1)
+            //     this.publicDataTemp = temp
+            // }
         },
         createStateFilter (queryString) {
             return (state) => {
@@ -319,7 +324,13 @@ export default {
         },
         async deleteCategory (params) {
             if (params) {
-                await deleteCategory({ ids: params.id })
+                this.$confirm('确认删除？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(async () => {
+                    await deleteCategory({ ids: params.id })
+                    this.onQuery()
+                })
             } else {
                 if (this.selectList.length < 1) {
                     this.$message({
@@ -327,11 +338,16 @@ export default {
                         message: '请选择删除商品类目'
                     })
                 } else {
-                    const temp = this.selectList.map(value => value.id)
-                    await deleteCategory({ ids: temp.join(',') })
+                    this.$confirm('确认删除？', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        const temp = this.selectList.map(value => value.id)
+                        await deleteCategory({ ids: temp.join(',') })
+                        this.onQuery()
+                    })
                 }
             }
-            this.onQuery()
         }
     },
     mounted () {
