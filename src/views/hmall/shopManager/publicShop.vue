@@ -17,10 +17,13 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">维护人：</div>
+                    <div class="query-col-title">状态：</div>
                     <div class="query-col-input">
-                        <el-input type="text"
-                                  v-model="queryParams.updateBy" maxlength="50" placeholder="请输入"></el-input>
+                        <el-select v-model="queryParams.isEnable">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="启用" :value="1"></el-option>
+                            <el-option label="停用" :value="0"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -28,6 +31,13 @@
                     <div class="query-col-input">
                         <el-input type="text"
                                   v-model="queryParams.shareCategoryName" maxlength="50" placeholder="请输入"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">维护人：</div>
+                    <div class="query-col-input">
+                        <el-input type="text"
+                                  v-model="queryParams.updateBy" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -50,16 +60,6 @@
                             :picker-options="pickerOptionsEnd"
                         >
                         </el-date-picker>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">状态：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.isEnable">
-                            <el-option label="全部" value=""></el-option>
-                            <el-option label="启用" :value="1"></el-option>
-                            <el-option label="停用" :value="0"></el-option>
-                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -113,7 +113,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.orderTimeEnd
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -123,7 +123,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.orderTimeStart
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -145,7 +145,8 @@ export default {
         },
         async findPublicShop () {
             const { ...params } = this.queryParams
-            console.log(params)
+            if (params.startTime) params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
+            if (params.endTime) params.endTime = this.$root.$options.filters.formatterTime(params.endTime)
             const { data } = await findPublicShop(params)
             this.tableData = data.records
             this.paginationData = {

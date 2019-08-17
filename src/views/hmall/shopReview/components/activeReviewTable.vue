@@ -4,27 +4,26 @@
                   border
                   style="width: 100%">
             <el-table-column
-                prop="couponCode"
+                prop="activityCode"
                 align="center"
-                label="优惠券编号">
+                label="活动编号">
             </el-table-column>
             <el-table-column
-                prop="couponName"
+                prop="activityName"
                 align="center"
-                label="优惠券名称">
+                label="活动名称">
             </el-table-column>
             <el-table-column
                 align="center"
-                label="优惠券类型">
+                label="活动类型">
                 <!--优惠券类型(1,满减 2,无门槛)-->
                 <template slot-scope="scope">
-                    {{scope.row.couponType === 1 ? '满减' : '无门槛'}}
+                    {{scope.row.activityType === 1 ? '满减' : '折扣'}}
                 </template>
             </el-table-column>
             <el-table-column
-                prop="status"
                 align="center"
-                label="优惠券状态">
+                label="活动状态">
                 <!--2.进行中 3.未审核 4.已结束 5.未通过-->
                 <template slot-scope="scope">
                     <span v-if="scope.row.status === 2">进行中</span>
@@ -32,11 +31,6 @@
                     <span v-if="scope.row.status === 4">已结束</span>
                     <span v-if="scope.row.status === 5">未通过</span>
                 </template>
-            </el-table-column>
-            <el-table-column
-                prop="totalQuantity"
-                align="center"
-                label="发放数量（张）">
             </el-table-column>
             <el-table-column
                 align="center"
@@ -71,9 +65,6 @@
                 align="center"
                 label="操作">
                 <template slot-scope="scope">
-                    <!--当审核状态=待审核时，展示查看与审核-->
-                    <!--当审核状态=审核通过时，展示查看-->
-                    <!--当审核状态=审核不通过时，展示查看-->
                     <!--2.进行中 3.未审核 4.已结束 5.未通过-->
                     <el-button class="orangeBtn" v-if="scope.row.status === 3"
                                @click="showDialog(scope.row.id,'review')">审核
@@ -101,71 +92,73 @@
             <el-form class="base" :inline="true">
                 <div>
                     <h2 class="sub-title">基本信息</h2>
-                    <el-form-item label="优惠券编号：">
-                        {{couponDetails.couponCode}}
+                    <el-form-item label="活动编号：">
+                        {{activeDetails.activityCode}}
                     </el-form-item>
                     <el-form-item label="活动范围：">
                         <!--目标范围(1,全部会员店 2,部分会员店)-->
-                        <span v-if="couponDetails.targetRange === 1">全部会员店</span>
-                        <span v-if="couponDetails.targetRange === 2">部分会员店</span>
+                        <span v-if="activeDetails.targetRange === 1">全部会员店</span>
+                        <span v-if="activeDetails.targetRange === 2">部分会员店</span>
                     </el-form-item>
-                    <el-form-item label="优惠券名称：">
-                        {{couponDetails.couponName}}
+                    <el-form-item label="活动名称：">
+                        {{activeDetails.activityName}}
                     </el-form-item>
-                    <el-form-item label="指定门店：">
-                        {{couponDetails.memberNameList? couponDetails.memberNameList.join(','): '-'}}
+                    <el-form-item label="指定会员店：">
+                        {{activeDetails.memberNameList? activeDetails.memberNameList.join(','): '-'}}
                     </el-form-item>
                     <el-form-item label="平台公司名称：">
-                        {{couponDetails.merchantName}}
+                        {{activeDetails.merchantName}}
                     </el-form-item>
                     <el-form-item label="发放时间：">
-                        {{couponDetails.effectiveDays | formatDateDuration}}
+                        {{activeDetails.releaseTime | formatDateDuration}}
                     </el-form-item>
-                    <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
-                    </el-form-item>
-                    <el-form-item label="优惠券类型：">
-                        {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
+                    <el-form-item label="活动类型：">
+                        {{activeDetails.activityType === 1 ? '满减' : '折扣'}}
                     </el-form-item>
                     <el-form-item label="活动规则：">
-                        {{couponDetails.rule}}
+                        <!--1,满xx减xx 2,每满xx减xx 3.折扣)-->
+                        {{activeDetails.activityRule === 1 ? '满减' : '无门槛'}}
                     </el-form-item>
-                    <el-form-item label="优惠券状态：">
-                        <!--2.进行中 3.未审核 4.已结束 5.未通过-->
-                        <span v-if="couponDetails.status === 2">进行中</span>
-                        <span v-if="couponDetails.status === 3">未审核</span>
-                        <span v-if="couponDetails.status === 4">已结束</span>
-                        <span v-if="couponDetails.status === 5">未通过</span>
-                    </el-form-item>
-                    <el-form-item label="限领数量：">
-                        {{couponDetails.receiveNumLimit === 0 ? '不限量' : couponDetails.receiveNumLimit +'张'}}
-                    </el-form-item>
-                    <el-form-item label="活动备注：">
-                        {{couponDetails.description}}
-                    </el-form-item>
-                    <el-form-item label="发放数量：">
-                        {{couponDetails.totalQuantity}}
-                    </el-form-item>
-                    <el-form-item label="审核状态：">
-                        <!--审核状态0,未审核 1,已审核 2,审核失败-->
-                        <span v-if="couponDetails.auditStatus === 0">未审核</span>
-                        <span v-if="couponDetails.auditStatus === 1">已审核</span>
-                        <span v-if="couponDetails.auditStatus === 2">审核失败</span>
+                    <el-form-item label="活动状态：">
+                        <!--活动状态(2,进行中 3,待审核 4,已结束 5,未通过)-->
+                        <span v-if="activeDetails.activityStatus === 2">进行中</span>
+                        <span v-if="activeDetails.activityStatus === 3">待审核</span>
+                        <span v-if="activeDetails.activityStatus === 4">已结束</span>
+                        <span v-if="activeDetails.activityStatus === 5">未通过</span>
                     </el-form-item>
                     <el-form-item label="参与方式：">
-                        <span v-if="couponDetails.joinType === 1">全场参加</span>
-                        <span v-if="couponDetails.joinType === 2">指定类目</span>
-                        <span v-if="couponDetails.joinType === 3">指定商品</span>
+                        <!--1,全场参加,无限制 2,指定类目 3,指定商品)-->
+                        <span v-if="activeDetails.joinType === 1">全场参加,无限制</span>
+                        <span v-if="activeDetails.joinType === 2">无限制</span>
+                        <span v-if="activeDetails.joinType === 3">指定类目</span>
                     </el-form-item>
-                    <el-form-item label="类目名称：" v-if="couponDetails.joinType === 2">
-                        {{couponDetails.categoryNameList ? couponDetails.categoryNameList.join(',') : '-'}}
+                    <el-form-item label="活动时间：">
+                        {{activeDetails.createTime | formatterTime}}
                     </el-form-item>
-                    <el-form-item label="商品名称：" v-if="couponDetails.joinType === 3">
-                        {{couponDetails.productNameList ? couponDetails.productNameList.join(',') : '-'}}
+                    <el-form-item label="类目：">
+                        <span v-if="activeDetails.categoryNameList">{{activeDetails.categoryNameList.join(',')}}</span>
+                    </el-form-item>
+                    <el-form-item label="审核状态：">
+                        <!--(0,未审核 1,已审核 2,审核不通过)-->
+                        <span v-if="activeDetails.auditStatus === 0">未审核</span>
+                        <span v-if="activeDetails.auditStatus === 1">已审核</span>
+                        <span v-if="activeDetails.auditStatus === 2">审核不通过</span>
+                    </el-form-item>
+                    <el-form-item label="是否与优惠卷同享：">
+                        <!--0,不可同享券 1,可同享所有券 2,指定券同享)-->
+                        <span v-if="activeDetails.couponExistType === 0">不可同享券</span>
+                        <span v-if="activeDetails.couponExistType === 1">可同享所有券</span>
+                        <span v-if="activeDetails.couponExistType === 2">指定券同享</span>
+                    </el-form-item>
+                    <el-form-item label="活动备注：">
+                        {{activeDetails.description}}
+                    </el-form-item>
+                    <el-form-item label="优惠券编号：">
+                        <span v-if="activeDetails.couponCodeList">{{activeDetails.couponCodeList.join(',')}}</span>
                     </el-form-item>
                 </div>
             </el-form>
-            <el-form ref="form" :rules="rules" :model="suggest">
+            <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
                 <div v-if="dialogParams.type === 'review'">
                     <h2>审核意见</h2>
                     <div>
@@ -182,11 +175,11 @@
                 </div>
                 <div class="suggest-btn">
                     <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button type="primary" @click="createCouponReview">确认</el-button>
-                        <el-button @click="cancel">取消</el-button>
+                        <el-button name="hosjoy-color" @click="createActiveReview">确认</el-button>
+                        <el-button name="white-color" @click="cancel">取消</el-button>
                     </el-form-item>
                     <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button @click="close">关闭</el-button>
+                        <el-button name="white-color" @click="close">关闭</el-button>
                     </el-form-item>
                 </div>
             </el-form>
@@ -226,7 +219,7 @@ export default {
                 type: 'review'
             },
             suggest: {},
-            couponDetails: {},
+            activeDetails: {},
             openId: '',
             rules: {
                 auditResult: [
@@ -254,13 +247,13 @@ export default {
             this.openId = id
             this.suggest = {}
             if (type === 'review') {
-                this.dialogParams.title = '审核优惠券'
+                this.dialogParams.title = '审核活动'
                 this.dialogParams.type = type
             } else if (type === 'watch') {
-                this.dialogParams.title = '查看优惠券'
+                this.dialogParams.title = '查看活动'
                 this.dialogParams.type = type
             }
-            await this.findCouponDetails(id)
+            await this.findActiveDetails(id)
             this.dialogParams.show = true
         },
         close () {
@@ -269,16 +262,16 @@ export default {
         cancel () {
             this.dialogParams.show = false
         },
-        async findCouponDetails (id) {
-            const { data } = await findActiveDetails({ id: id })
-            this.couponDetails = data
+        async findActiveDetails (id) {
+            const { data } = await findActiveDetails({ activityId: id })
+            this.activeDetails = data
         },
-        async createCouponReview () {
+        async createActiveReview () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     const params = {
-                        id: this.openId,
-                        operatorUserName: this.userInfo.name,
+                        activityId: this.openId,
+                        operatorUserName: this.userInfo.employeeName,
                         ...this.suggest
                     }
                     try {
@@ -287,14 +280,9 @@ export default {
                             type: 'success',
                             message: '已提交审核结果'
                         })
-                        this.dialogParams.show = false
-                    } catch (e) {
-                        this.$message({
-                            type: 'error',
-                            message: '提交审核结果失败'
-                        })
-                    }
-                    this.onQuery()
+                        this.onQuery()
+                    } catch (e) {}
+                    this.dialogParams.show = false
                 }
             })
         }
@@ -306,5 +294,33 @@ export default {
 </script>
 
 <style scoped>
-
+    .suggest-btn {
+        padding-top: 20px;
+        text-align: right;
+    }
+    .sub-title{
+        font-size: 18px;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<style>
+    .el-dialog .el-form .el-form-item{
+        margin-bottom: 0;
+    }
+    .el-dialog--center .el-dialog__body{
+        padding: 12px 25px 15px;
+    }
+    .el-form--inline .el-form-item {
+        width: 45%;
+    }
+    .el-form-item {
+        margin-bottom: 5px;
+    }
+    .el-form-item__label,.el-form-item__content{
+        line-height: 25px
+    }
+    .suggest .el-form-item {
+        margin-bottom: 15px!important;
+    }
 </style>
