@@ -49,8 +49,8 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.auditStatus">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="已审核" value="1"></el-option>
-                            <el-option label="未审核" value="0"></el-option>
+                            <el-option label="审核审核" value="1"></el-option>
+                            <el-option label="待审核" value="0"></el-option>
                             <el-option label="审核不通过" value="2"></el-option>
                         </el-select>
                     </div>

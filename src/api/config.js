@@ -40,7 +40,7 @@ switch (env) {
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'http://192.168.20.248:40000/'
+        B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'production':
@@ -50,7 +50,7 @@ switch (env) {
         uploadUrl = 'https://hbp.hosjoy.com/tms'
         iframeUrl = 'https://boss.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'http://192.168.20.248:40000/'
+        B2bUrl = 'https://b2b-gateway.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
         break
 }

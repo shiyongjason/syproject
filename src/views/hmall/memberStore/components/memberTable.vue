@@ -129,7 +129,7 @@
                     </div>
                     <div>
                         <el-form-item label="备注原因：">
-                            <el-input type="textarea" v-model="suggest.opinion" rows="3"></el-input>
+                            <el-input type="textarea" v-model="suggest.opinion" rows="3" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
                 </div>

@@ -36,8 +36,8 @@
                 align="center"
                 label="审核状态">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.auditStatus === 0">未审核</span>
-                    <span v-if="scope.row.auditStatus === 1">已审核</span>
+                    <span v-if="scope.row.auditStatus === 0">待审核</span>
+                    <span v-if="scope.row.auditStatus === 1">审核通过</span>
                     <span v-if="scope.row.auditStatus === 2">审核不通过</span>
                 </template>
             </el-table-column>
@@ -87,7 +87,7 @@
                 :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center
+        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="850px" center
                    :close-on-click-modal="false">
             <el-form class="base" :inline="true">
                 <div>
@@ -110,14 +110,14 @@
                         {{activeDetails.merchantName}}
                     </el-form-item>
                     <el-form-item label="发放时间：">
-                        {{activeDetails.releaseTime | formatDateDuration}}
+                        {{activeDetails.releaseTime}}天
                     </el-form-item>
                     <el-form-item label="活动类型：">
                         {{activeDetails.activityType === 1 ? '满减' : '折扣'}}
                     </el-form-item>
                     <el-form-item label="活动规则：">
                         <!--1,满xx减xx 2,每满xx减xx 3.折扣)-->
-                        {{activeDetails.activityRule === 1 ? '满减' : '无门槛'}}
+                        {{activeDetails.rule}}
                     </el-form-item>
                     <el-form-item label="活动状态：">
                         <!--活动状态(2,进行中 3,待审核 4,已结束 5,未通过)-->
@@ -133,7 +133,7 @@
                         <span v-if="activeDetails.joinType === 3">指定类目</span>
                     </el-form-item>
                     <el-form-item label="活动时间：">
-                        {{activeDetails.createTime | formatterTime}}
+                        {{(activeDetails.effectiveStartDate)+ '-' + (activeDetails.effectiveEndDate)}}
                     </el-form-item>
                     <el-form-item label="类目：">
                         <span v-if="activeDetails.categoryNameList">{{activeDetails.categoryNameList.join(',')}}</span>
@@ -151,7 +151,7 @@
                         <span v-if="activeDetails.couponExistType === 2">指定券同享</span>
                     </el-form-item>
                     <el-form-item label="活动备注：">
-                        {{activeDetails.description}}
+                        {{activeDetails.description ? activeDetails.description : '-'}}
                     </el-form-item>
                     <el-form-item label="优惠券编号：">
                         <span v-if="activeDetails.couponCodeList">{{activeDetails.couponCodeList.join(',')}}</span>
@@ -169,7 +169,7 @@
                     </div>
                     <div class="remark">
                         <el-form-item label="备注原因">
-                            <el-input type="textarea" v-model="suggest.auditRemark" rows="4"></el-input>
+                            <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
                 </div>
