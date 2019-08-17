@@ -122,9 +122,9 @@
                          filterable
             ></el-transfer>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onSave">确认</el-button>
-                <el-button type="primary" @click="reset">重置</el-button>
-                <el-button type="primary" @click="cancel">取消</el-button>
+                <el-button name="hosjoy-color"  @click="onSave">确认</el-button>
+                <el-button name="hosjoy-color" @click="reset">重置</el-button>
+                <el-button name="white-color" @click="cancel">取消</el-button>
             </span>
         </el-dialog>
     </div>

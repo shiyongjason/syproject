@@ -118,7 +118,7 @@
                     </el-form-item>
                 </div>
             </el-form>
-            <el-form ref="form" :rules="rules" :model="suggest">
+            <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
                 <div v-if="dialogParams.type === 'review'">
                     <h2>审核意见</h2>
                     <div class="preview-result">
@@ -135,11 +135,11 @@
                 </div>
                 <div class="suggest-btn">
                     <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button type="primary" @click="createMemberReview">提交</el-button>
-                        <el-button @click="cancel">取消</el-button>
+                        <el-button name="hosjoy-color" @click="createMemberReview">提交</el-button>
+                        <el-button name="white-color" @click="cancel">取消</el-button>
                     </el-form-item>
                     <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button @click="close">关闭</el-button>
+                        <el-button name="white-color" @click="close">关闭</el-button>
                     </el-form-item>
                 </div>
             </el-form>
@@ -251,7 +251,7 @@ export default {
 <style scoped>
     .suggest-btn {
         padding-top: 20px;
-        text-align: center;
+        text-align: right;
     }
     .sub-title{
         font-size: 18px;
@@ -287,5 +287,8 @@ export default {
     }
     .el-form-item__label,.el-form-item__content{
         line-height: 25px;
+    }
+    .suggest .el-form-item {
+        margin-bottom: 15px!important;
     }
 </style>

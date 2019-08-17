@@ -6,7 +6,7 @@
                     <div class="query-col-title">活动名称：</div>
                     <div class="query-col-input">
                         <el-input type="text"
-                                  v-model="queryParams.couponName" maxlength="50" placeholder="请输入"></el-input>
+                                  v-model="queryParams.activityName" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -14,7 +14,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.status">
                             <el-option label="全部" value=""></el-option>
-                            <!-- （boss没有1.未开始） 2.进行中 3.未审核 4.已结束 5.未通过 6.已中止-->
+                            <!-- （boss没有1.未开始） 2.进行中 3.未审核 4.已结束 5.未通过-->
                             <el-option label="进行中" :value="2"></el-option>
                             <el-option label="未审核" :value="3"></el-option>
                             <el-option label="已结束" :value="4"></el-option>
@@ -58,10 +58,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">活动类型：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.couponType">
+                        <el-select v-model="queryParams.activityType">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="满减" value="1"></el-option>
-                            <el-option label="无门槛" value="2"></el-option>
+                            <el-option label="折扣" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findCouponList">
+                        <el-button type="primary" class="ml20" @click="findActiveList">
                             搜索
                         </el-button>
                         <el-button type="primary" class="ml20" @click="reset">
@@ -86,7 +86,7 @@
             <activeReviewTable
                 :tableData="tableData"
                 :paginationData="paginationData"
-                @onQuery="findCouponList"
+                @onQuery="findActiveList"
                 @onSizeChange="onSizeChange"
                 @onCurrentChange="onCurrentChange"></activeReviewTable>
         </div>
@@ -128,12 +128,12 @@ export default {
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                couponName: '',
+                activityName: '',
                 status: '',
                 startDate: '',
                 endDate: '',
                 auditStatus: '',
-                couponType: '',
+                activityType: '',
                 merchantName: ''
             },
             tableData: [],
@@ -152,8 +152,8 @@ export default {
         },
         async findActiveList () {
             const { ...params } = this.queryParams
-            if (params.startDate) params.startDate = this.$root.$options.filters.formatDate(params.startDate)
-            if (params.endDate) params.endDate = this.$root.$options.filters.formatDate(params.endDate)
+            if (params.startDate) params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
+            if (params.endDate) params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
             const { data } = await findActiveList(params)
             this.tableData = data.records
             this.paginationData = {

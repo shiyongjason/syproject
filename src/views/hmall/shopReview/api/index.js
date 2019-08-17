@@ -15,12 +15,9 @@ export const findRelationBrand = (params) => instance.get(B2bUrl + 'product/api/
 export const reviewPass = (params) => instance.put(B2bUrl + `product/api/boss/products/success/${params.id}`, params)
 // 审核驳回
 export const reviewReject = (params) => instance.put(B2bUrl + `product/api/boss/products/reject/${params.id}`, params)
-
-// 活动审核列表和查询
-export const findActiveList = (params) => instance.get('/ops/api/boss/coupon', { params })
-
-// 活动审核
-export const createActiveReview = (params) => instance.post('/ops/api/boss/coupon/audit', params)
-
-// 活动详情
-export const findActiveDetails = (params) => instance.get(`/ops/api/boss/coupon/info/${params.id}`)
+// 查看活动信息
+export const findActiveDetails = (params) => instance.get(`/ops/api/boss/activity/info/${params.activityId}`)
+// 活动审核列表
+export const findActiveList = (params) => instance.get(`/ops/api/boss/activity`, { params })
+// 活动审核操作
+export const createActiveReview = (params) => instance.post(`ops/api/boss/activity/audit`, params)
