@@ -106,11 +106,13 @@
                     <el-form-item label="指定会员店：">
                         {{activeDetails.memberNameList? activeDetails.memberNameList.join(','): '-'}}
                     </el-form-item>
+                    <el-form-item label="发放时间：">
+                        <span v-if="activeDetails.releaseTime">
+                            {{activeDetails.releaseTime | formatDateDuration}}
+                        </span>
+                    </el-form-item>
                     <el-form-item label="平台公司名称：">
                         {{activeDetails.merchantName}}
-                    </el-form-item>
-                    <el-form-item label="发放时间：">
-                        {{activeDetails.releaseTime}}天
                     </el-form-item>
                     <el-form-item label="活动类型：">
                         {{activeDetails.activityType === 1 ? '满减' : '折扣'}}
@@ -137,6 +139,7 @@
                     </el-form-item>
                     <el-form-item label="类目：">
                         <span v-if="activeDetails.categoryNameList">{{activeDetails.categoryNameList.join(',')}}</span>
+                        <span v-else>-</span>
                     </el-form-item>
                     <el-form-item label="审核状态：">
                         <!--(0,未审核 1,已审核 2,审核不通过)-->
@@ -155,6 +158,7 @@
                     </el-form-item>
                     <el-form-item label="优惠券编号：">
                         <span v-if="activeDetails.couponCodeList">{{activeDetails.couponCodeList.join(',')}}</span>
+                        <span v-else>-</span>
                     </el-form-item>
                 </div>
             </el-form>
