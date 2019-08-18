@@ -122,7 +122,7 @@
                         {{couponDetails.effectiveDays | formatDateDuration}}
                     </el-form-item>
                     <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                        {{couponDetails.createTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="优惠券类型：">
                         {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
