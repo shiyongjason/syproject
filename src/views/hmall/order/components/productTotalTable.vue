@@ -73,11 +73,10 @@
                 align="center"
                 label="商品类目">
             </el-table-column>
-            <el-table-column
+            <!-- <el-table-column
                 align="center"
                 label="同步至mis状态">
                 <template slot-scope="scope">
-                    <!--MIS同步状态 0未同步 1同步成功 2同步失败-->
                     <span v-if="scope.row.misStatus === 0">未同步</span>
                     <span v-if="scope.row.misStatus === 1">同步成功</span>
                     <span v-if="scope.row.misStatus === 2">同步失败</span>
@@ -90,7 +89,7 @@
                     <span v-if="scope.row.misTime">{{scope.row.misTime | formatterTime}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
         </el-table>
         <div class="page clearfix" style="text-align: center;margin-top: 20px">
             <el-pagination

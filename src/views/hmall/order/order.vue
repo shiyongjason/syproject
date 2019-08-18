@@ -32,6 +32,7 @@
                                         <el-option label="待发货" :value="3"></el-option>
                                         <el-option label="已完成" :value="4"></el-option>
                                         <el-option label="已关闭" :value="5"></el-option>
+                                        <el-option label="待拆分" :value="6"></el-option>
                                     </el-select>
                                 </div>
                             </div>
@@ -46,7 +47,7 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">活动编号：</div>
                                 <div class="query-col-input">
-                                    <el-input placeholder="请输入活动编号" v-model="queryParams.avtiveNummmmmm"></el-input>
+                                    <el-input placeholder="请输入活动编号" v-model="queryParams.activityCode"></el-input>
                                 </div>
                             </div>
                             <!-- 1.7V 删除 -->
@@ -245,6 +246,7 @@
                                         <el-option label="待发货" :value="3"></el-option>
                                         <el-option label="已完成" :value="4"></el-option>
                                         <el-option label="已关闭" :value="5"></el-option>
+                                        <!-- <el-option label="待拆分" :value="6"></el-option> -->
                                     </el-select>
                                 </div>
                             </div>
@@ -254,17 +256,16 @@
                                     <el-cascader v-model="queryParamsProductTotal.categoryId" :options="categoryOptions" :change-on-select="true" @change="productCategoryChange" style="width: 100%"></el-cascader>
                                 </div>
                             </div>
-                            <div class="query-cont-col">
+                            <!-- <div class="query-cont-col">
                                 <div class="query-col-title">同步至MIS状态：</div>
                                 <div class="query-col-input">
                                     <el-select v-model="queryParamsProductTotal.misStatus" placeholder="全部" :clearable=true>
-                                        <!--0未同步 1同步成功 2同步失败-->
                                         <el-option label="未同步" :value="0"></el-option>
                                         <el-option label="同步成功" :value="1"></el-option>
                                         <el-option label="同步失败" :value="2"></el-option>
                                     </el-select>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
@@ -407,11 +408,12 @@ export default {
             orderList: ORDER_TYPE,
             activeName: '',
             queryParams: {
+                activityCode: '',
+                branchCode: '',
+                branchName: '',
                 couponType: '',
                 couponCode: '',
                 orderType: '',
-                branchName: '',
-                branchCode: '',
                 memberName: '',
                 merchantName: '',
                 misStatus: '',
@@ -419,8 +421,8 @@ export default {
                 orderStatus: '',
                 orderTimeEnd: '',
                 orderTimeStart: '',
-                misTimeStart: '',
-                misTimeEnd: '',
+                // misTimeStart: '',
+                // misTimeEnd: '',
                 current: 1,
                 size: 10
             },
@@ -498,6 +500,11 @@ export default {
         },
         async onQueryOrder () {
             const { ...params } = this.queryParams
+            if (params.orderStatus == 6) {
+                delete params.orderStatus
+                params.orderType = 1
+                params.isSplit = 0
+            }
             const { data } = await findOrderList(params)
             this.orderData = data.records
             this.paginationOrderData = {
@@ -535,18 +542,24 @@ export default {
         },
         exportTabTotal () {
             const { ...params } = this.queryParamsProductTotal
+            console.log(params)
             params.access_token = '' || sessionStorage.getItem('token')
             if (params.categoryId.length > 0) {
                 params.categoryId = params.categoryId[params.categoryId.length - 1]
             } else {
                 delete params.categoryId
             }
+
             location.href = exportTotalList(params)
         },
         exportTabOrder () {
             const { ...params } = this.queryParams
+            if (params.orderStatus == 6) {
+                delete params.orderStatus
+                params.orderType = 1
+                params.isSplit = 0
+            }
             params.access_token = '' || sessionStorage.getItem('token')
-            console.log(params)
             location.href = exportTabOrder(params)
         },
         exportTabReceivables () {
