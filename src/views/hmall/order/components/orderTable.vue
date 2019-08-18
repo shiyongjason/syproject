@@ -134,6 +134,7 @@ export default {
             const orderNo = tree.orderNo
             const { data } = await findChildOrder({ orderId: tree.id })
             const childData = data.map(item => {
+                item.id = item.id + '_sub'
                 item.childOrderNo = item.orderNo
                 item.orderNo = orderNo
                 return item
