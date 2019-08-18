@@ -291,4 +291,7 @@ export default {
     .suggest .el-form-item {
         margin-bottom: 15px!important;
     }
+    .el-dialog--center .el-dialog__body{
+        padding: 0 25px;
+    }
 </style>

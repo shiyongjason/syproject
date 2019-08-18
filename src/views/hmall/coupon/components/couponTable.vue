@@ -329,4 +329,7 @@ export default {
     .suggest .el-form-item {
         margin-bottom: 15px!important;
     }
+    .el-dialog .el-form .el-form-item {
+        margin-bottom: 0;
+    }
 </style>
