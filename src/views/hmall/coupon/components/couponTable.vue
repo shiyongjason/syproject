@@ -278,7 +278,7 @@ export default {
                 if (valid) {
                     const params = {
                         id: this.openId,
-                        operatorUserName: this.userInfo.name,
+                        operatorUserName: this.userInfo.employeeName,
                         ...this.suggest
                     }
                     try {

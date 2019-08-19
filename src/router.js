@@ -142,8 +142,8 @@ const routerMapping = [
                 path: 'category',
                 name: 'category',
                 meta: {
-                    title: '平台目标管理',
-                    tagName: '平台目标管理',
+                    title: '类目管理',
+                    tagName: '类目管理',
                     isMenu: true,
                     icon: ''
                 },
