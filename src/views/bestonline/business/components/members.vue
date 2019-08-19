@@ -13,8 +13,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-    
+    data () {
+        return {
+
+        }
+    },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.businessData
+        })
+    }
 }
 </script>
-

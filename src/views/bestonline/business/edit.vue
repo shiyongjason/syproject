@@ -68,7 +68,18 @@
                 <BusinessMode />
                 <!-- 销售业绩(含税)（万元） -->
                 <SalesPerformance />
-                <!-- <Plan /> -->
+                <!-- 营销模式 -->
+<MarketingModel />
+<!-- 上游-供应商结构 -->
+<Supplier />
+<!-- 下游-客户结构 -->
+<Customer />
+<!-- 门店/会员店 -->
+<Members />
+<!-- 竞争对手 -->
+<Competitor />
+<!-- 新合资公司规划 -->
+                <Plan />
             </el-form>
         </el-collapse>
 

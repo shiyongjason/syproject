@@ -3,7 +3,7 @@
     <template slot="title">
         <p class="title-p">上游-供应商结构</p>
     </template>
-    <div class="supplier" v-for="(item, index) in form.dueBusinessSupplierCreateFormList" :key=index>
+    <div class="supplier" v-for="(item, index) in dueBusinessSupplierCreateFormList" :key=index>
         <i class="el-icon-circle-plus-outline pointer" v-if="index == 0" @click="onAddSupplier"></i>
         <i class="el-icon-remove-outline pointer" @click="onRemoveSupplier(index)" v-else></i>
         <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
@@ -49,7 +49,6 @@
             </div>
         </div>
     </div>
-    <!--end-->
 </el-collapse-item>
 </template>
 
@@ -90,7 +89,21 @@ export default {
     computed: {
         ...mapState({
             form: state => state.dueDiligence.businessData
-        })
+        }),
+        dueBusinessSupplierCreateFormList () {
+            let businessSupplierCreateFormList = this.form.dueBusinessSupplierCreateFormList
+            if (!businessSupplierCreateFormList) {
+                businessSupplierCreateFormList = []
+            }
+            if (businessSupplierCreateFormList.length == 0) {
+                let defaultObj = JSON.parse(JSON.stringify(this.defaultSupplier))
+                businessSupplierCreateFormList.push(defaultObj)
+            }
+            return this.form.dueBusinessSupplierCreateFormList
+        }
+    },
+    mounted () {
+        console.log(this.form.dueBusinessSupplierCreateFormList)
     },
     methods: {
         onAddSupplier () {

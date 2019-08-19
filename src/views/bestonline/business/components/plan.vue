@@ -5,18 +5,14 @@
     </template>
     <el-form-item label="业务类别：" prop="dueBusinessFuturePlanCreateForm.serviceCategory">
         <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory">
-            <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
+            <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.value'>{{item.value}}</el-checkbox>
         </el-checkbox-group>
     </el-form-item>
     <div class="form-cont-row mb20">
         <div class="form-cont-col">
             <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory">
-                <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
-                    <el-checkbox label="0">冷暖</el-checkbox>
-                    <el-checkbox label="1">新风</el-checkbox>
-                    <el-checkbox label="2">净水</el-checkbox>
-                    <el-checkbox label="3">智能</el-checkbox>
-                    <el-checkbox label="4">其他</el-checkbox>
+                <el-checkbox-group v-model="businessCategory">
+                  <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.value'>{{item.value}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
         </div>
@@ -81,7 +77,27 @@
 </template>
 
 <script>
+import { MAIN_COMMERCIAL_OPTIONS, MAIN_CATEGORY_OPTIONS } from '../const'
+import { mapState } from 'vuex'
 export default {
-    
+    data () {
+        return {
+            mainCommercialData: MAIN_COMMERCIAL_OPTIONS,
+            maincategory: MAIN_CATEGORY_OPTIONS
+
+        }
+    },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.businessData
+        }),
+        businessCategory () {
+            let businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
+            if (!businessCategory) {
+                businessCategory = []
+            }
+            return this.form.dueBusinessFuturePlanCreateForm.businessCategory
+        }
+    }
 }
 </script>
