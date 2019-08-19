@@ -193,7 +193,7 @@ export default {
     },
     methods: {
         ...mapMutations({
-            changePage: 'CHANGE_PAGENUMBER'
+            changePage: 'CHANGE_REVIEW_LIST_PAGE_NUMBER'
         }),
         async onQuery () {
             const { ...params } = this.queryParams
@@ -237,7 +237,7 @@ export default {
         }
     },
     async mounted () {
-        this.queryParams.pageNumber = this.$store.state.hmall.pageNumber
+        this.queryParams.pageNumber = this.$store.state.hmall.reviewListPageNumber
         this.onQuery()
         const { data: productCategory } = await findProductCategory()
         let productCategoryTemp = []

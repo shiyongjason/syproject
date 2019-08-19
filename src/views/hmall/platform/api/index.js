@@ -24,5 +24,5 @@ export const findProvinceAndCity = (params) => {
 }
 // 开启
 export const createOpen = (params) => {
-    return axios.post(interfaceUrl + 'api/organization/start-b2b', params)
+    return axios.post(ossUrl + 'api/organization/start-b2b', params)
 }

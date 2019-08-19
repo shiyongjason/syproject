@@ -90,6 +90,7 @@ import shopManagerTable from './components/shopManagerTable'
 import { findProducts, findProductSource, findProductCategory } from './api/index'
 // import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { B2bUrl } from '@/api/config'
+import { mapMutations } from 'vuex'
 export default {
     name: 'shopManager',
     components: {
@@ -138,6 +139,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            changePage: 'CHANGE_MANAGE_PAGE_NUMBER'
+        }),
         async onQuery () {
             const { ...params } = this.queryParams
             if (params.startDate) {
@@ -160,6 +164,7 @@ export default {
             this.onQuery()
         },
         onCurrentChange (val) {
+            this.changePage(val)
             this.queryParams.pageNumber = val
             this.onQuery()
         },
@@ -184,6 +189,7 @@ export default {
         }
     },
     async mounted () {
+        this.queryParams.pageNumber = this.$store.state.hmall.managePageNumber
         this.onQuery()
         const { data } = await findProductSource()
         this.productSource = data
