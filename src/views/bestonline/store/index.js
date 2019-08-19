@@ -24,7 +24,16 @@ export default {
             copartnerInfoList: [],
             dueLegalRemarkCreateForm: {}
         },
-        businessData: {},
+        businessData: {
+            dueBusinessAssessmentCreateFormList: [], // 商业尽调评估
+            dueBusinessSaleCreateFormList: [], // 12月份
+            dueBusinessSupplierCreateFormList: [], // 商业尽调供应商
+            dueBusinessCustomerCreateFormList: [], // 商业尽调客户结构
+            dueBusinessCompetitorCreateFormList: [], // 商业尽调竞争对手
+            dueBusinessProxySwitchSchemeCreateFormList: [],
+            dueBusinessCustomerDemandCreateForm: {},
+            dueBusinessFuturePlanCreateForm: {}
+        },
         organizationData: {},
         financeData: {
             dueFinanceYearOperatingCreateForms: [],

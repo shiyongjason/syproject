@@ -105,7 +105,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'six',
+            activeName: 'three',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -188,6 +188,11 @@ export default {
 <style lang="scss">
 .jd-manage {
     margin-bottom: 200px;
+    .title-p{
+        font-size: 18px;
+        font-weight: 500;
+        margin: 0;
+    }
 }
 .reviewform {
     background: #ffffff;
@@ -251,7 +256,7 @@ export default {
             .el-input__inner {
                 border: none;
             }
-            .el-select {
+           /deep/ .el-select {
                 width: 100%;
             }
             .el-textarea__inner {
@@ -273,6 +278,9 @@ export default {
         /deep/.el-textarea__inner {
             border: none;
             resize: none;
+        }
+        /deep/.el-select{
+            width: 100%
         }
     }
 }

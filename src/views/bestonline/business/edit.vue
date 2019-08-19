@@ -4,7 +4,7 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
                     <template slot="title">
-                        <p class="titlt-p">商业尽调评估及KPI</p>
+                        <p class="title-p">商业尽调评估及KPI</p>
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
@@ -26,7 +26,7 @@
                                     <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
-                                    <el-select v-model="item.state" placeholder="请选择" :disabled="isdisabled">
+                                    <el-select v-model="item.state" placeholder="请选择" >
                                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
@@ -57,10 +57,10 @@
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6"  placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6"  placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -68,18 +68,7 @@
                 <BusinessMode />
                 <!-- 销售业绩(含税)（万元） -->
                 <SalesPerformance />
-                <!-- 营销模式 -->
-                <MarketingModel />
-                <!-- 上游-供应商结构 -->
-                <Supplier />
-                <!-- 下游-客户结构 -->
-                <Customer />
-                <!-- 门店/会员店 -->
-                <Members />
-                <!-- 竞争对手 -->
-                <Competitor />
-                <!-- 新合资公司规划 -->
-                <Plan />
+                <!-- <Plan /> -->
             </el-form>
         </el-collapse>
 
@@ -96,7 +85,7 @@
 <script>
 import { getBusiness, addBusiness, putBusiness } from '../api/index.js'
 import { plusOrMinus } from '../../../utils/rules'
-import { MAIN_COMMERCIAL, MAIN_CATEGORY, ISPROVIDE_CONTRACT, IS_DOWN, IS_HEALTH } from '../const.js'
+import { DOWN_OPTIONS } from './const'
 import BusinessMode from './components/businessMode.vue'
 import MarketingModel from './components/marketingModel.vue'
 import Supplier from './components/supplier.vue'
@@ -105,12 +94,15 @@ import Members from './components/members.vue'
 import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
+import { mapState } from 'vuex'
 export default {
     components: {
-        BusinessMode, MarketingModel, Supplier, Customer, Members, Competitor, Plan
+        BusinessMode, MarketingModel, SalesPerformance, Supplier, Customer, Members, Competitor, Plan
     },
     data () {
         return {
+            activeName: '1',
+            options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [
                     { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
@@ -131,7 +123,7 @@ export default {
                     { required: true, message: '请输入分析描述', trigger: 'blur' }
                 ],
                 mainBusinessFormatOneId: [
-                    { required: true, message: '请选择主营业态', trigger: 'blur' }
+                    { required: true, message: '请选择主营业态', trigger: 'change' }
                 ],
                 businessFormatOneRatio: [
                     { required: true, message: '请输入业态占比', trigger: 'blur' }
@@ -165,41 +157,20 @@ export default {
                 ],
                 switchDate: [
                     { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.serviceCategory': [
-                    { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
-                ],
-                'dueBusinessFuturePlanCreateForm.businessCategory': [
-                    { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
-                ],
-                'dueBusinessFuturePlanCreateForm.manageCategory': [
-                    { required: true, message: '请输入说明', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.brandManagement': [
-                    { required: true, message: '请输入品牌信息', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.annualSalesScale': [
-                    { required: true, message: '请输入年销售规模', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.netProfitRate': [
-                    { required: true, message: '请输入净利润率', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers': [
-                    { required: true, message: '请输入下游切换渠道和客户', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.marketingChannelsPlans': [
-                    { required: true, message: '请输入市场推广渠道及计划', trigger: 'blur' }
-                ],
-                'dueBusinessFuturePlanCreateForm.fundingRequirements': [
-                    { required: true, message: '请输入资金用款需求', trigger: 'blur' }
                 ]
             }
         }
     },
     mounted () {
         this.applyId = this.$route.query.applyId
-        this.getBusiness()
+        console.log(this.form)
         this.nowMonth = (new Date()).getMonth()
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo,
+            form: state => state.dueDiligence.businessData
+        })
     },
     methods: {
         oninput (value, e) {

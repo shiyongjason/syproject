@@ -1,7 +1,7 @@
 <template>
 <div>
     <template slot="title">
-        <p class="titlt-p">销售业绩(含税)（万元）</p>
+        <p class="title-p">销售业绩(含税)（万元）</p>
     </template>
     <table class="table-title">
         <thead>
@@ -70,8 +70,57 @@
     </table>
     <el-form-item label="前10个月销售是否持续下滑：" label-width="200px" class="mt20">
         <el-select v-model="form.firstTenMonthsDown" placeholder="请选择">
-            <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
+            <el-option v-for="item in firstTenMonthsDownData" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
     </el-form-item>
 </div>
 </template>
+<script>
+import { MAIN_COMMERCIAL_OPTIONS, MAIN_CATEGORY_OPTIONS, DOWN_OPTIONS } from '../const'
+import { mapState } from 'vuex'
+import { plusOrMinus } from '../../../../utils/rules'
+export default {
+    name: 'business_mode',
+    data () {
+        return {
+            mainCommercialOptions: MAIN_COMMERCIAL_OPTIONS,
+            mainCategoryOptions: MAIN_CATEGORY_OPTIONS,
+            firstTenMonthsDownData: DOWN_OPTIONS,
+            currentYearAllSales: 0, // 今年销售总额
+            lastYearAllSales: 0, // 去年销售总额
+            lastTwoYearAllSales: 0 // 前年销售总额
+        }
+    },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.businessData
+        })
+    },
+    methods: {
+        oninputSale (i, v, e) {
+            e.target.value = plusOrMinus(e.target.value.toString())
+            // console.log(e.target.value)
+            this.dueBusinessSaleCreateFormList[i][v] = e.target.value
+            // console.log(this.dueBusinessSaleCreateFormList[i][v])
+        },
+        oninput (value, e) {
+            // 通过正则过滤小数点后两位
+            this[value] = plusOrMinus(e.target.value.toString())
+        }
+    },
+    filters: {
+        keepTwoNum: function (val) {
+            if (isNaN(val)) {
+                val = 0
+            }
+            val = val * 100
+            val = Number(val)
+            if (val || val === 0) {
+                return val.toFixed(2) + '%'
+            } else {
+                return '-'
+            }
+        }
+    }
+}
+</script>
