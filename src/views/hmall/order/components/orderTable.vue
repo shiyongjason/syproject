@@ -1,12 +1,11 @@
 <template>
     <div class="order-table">
-        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"  @onSizeChange="handleSizeChange"
-        :isMultiple="false" :isAction="false" :actionMinWidth=250 :load="load" :rowKey="rowKey">
+        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 :load="load" :rowKey="rowKey">
             <template slot-scope="scope" slot="orderNo">
-               <span :class="scope.data.row.isSplit==1?'isLink':''">{{scope.data.row.orderNo}}</span>
+                <span :class="scope.data.row.isSplit==1?'isLink':''">{{scope.data.row.orderNo}}</span>
             </template>
             <template slot-scope="scope" slot="couponCode" v-if="scope.data.row.orderDiscountInfoDTO">
-               {{scope.data.row.orderDiscountInfoDTO.couponCode}}
+                {{scope.data.row.orderDiscountInfoDTO.couponCode}}
             </template>
             <template slot-scope="scope" slot="couponSnNo" v-if="scope.data.row.orderDiscountInfoDTO">
                 {{scope.data.row.orderDiscountInfoDTO.couponSnNo}}
@@ -34,14 +33,14 @@
             <template slot-scope="scope" slot="orderStatus">
                 <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
                 <p v-if="scope.data.row.isSplit==0&&scope.data.row.isParentOrder==1">
- <span>待拆分</span>
+                    <span>待拆分</span>
                 </p>
                 <p v-else>
- <span v-if="scope.data.row.orderStatus === 1">待审核</span>
-                <span v-if="scope.data.row.orderStatus === 2">待付款</span>
-                <span v-if="scope.data.row.orderStatus === 3">待发货</span>
-                <span v-if="scope.data.row.orderStatus === 4">已完成</span>
-                <span v-if="scope.data.row.orderStatus === 5">已关闭</span>
+                    <span v-if="scope.data.row.orderStatus === 1">待审核</span>
+                    <span v-if="scope.data.row.orderStatus === 2">待付款</span>
+                    <span v-if="scope.data.row.orderStatus === 3">待发货</span>
+                    <span v-if="scope.data.row.orderStatus === 4">已完成</span>
+                    <span v-if="scope.data.row.orderStatus === 5">已关闭</span>
                 </p>
 
             </template>
@@ -155,8 +154,8 @@ export default {
 .el-pagination__editor.el-input .el-input__inner {
     box-shadow: none;
 }
-.isLink{
-    color: #409EFF;
-    font-weight:600
+.isLink {
+    color: #409eff;
+    font-weight: 600;
 }
 </style>
