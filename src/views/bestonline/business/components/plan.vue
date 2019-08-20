@@ -4,7 +4,7 @@
         <p class="title-p">新合资公司规划</p>
     </template>
     <el-form-item label="业务类别：" prop="dueBusinessFuturePlanCreateForm.serviceCategory">
-        <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory">
+        <el-checkbox-group v-model="serviceCategory">
             <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.value'>{{item.value}}</el-checkbox>
         </el-checkbox-group>
     </el-form-item>
@@ -95,6 +95,13 @@ export default {
             let businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
                 businessCategory = []
+            }
+            return this.form.dueBusinessFuturePlanCreateForm.businessCategory
+        },
+        serviceCategory () {
+            let serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory
+            if (!serviceCategory) {
+                serviceCategory = []
             }
             return this.form.dueBusinessFuturePlanCreateForm.businessCategory
         }

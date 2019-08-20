@@ -1,5 +1,4 @@
 export const MAIN_COMMERCIAL_OPTIONS = [
-    { value: '请选择', key: '' },
     { value: '零售', key: 0 },
     { value: '批发', key: 1 },
     { value: '工程', key: 2 }

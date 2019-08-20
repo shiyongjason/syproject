@@ -2,81 +2,37 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="reviewform">
-                <el-tabs
-                    :tab-position="tabPosition"
-                    v-model="activeName"
-                >
-                    <el-tab-pane
-                        label="合作目标"
-                        name="one"
-                    >
-                        <HCotarget
-                            v-if="activeName=='one'"
-                            :roleType='oneType'
-                            @parentFun='getCooperativetarget'
-                        />
+                <el-tabs :tab-position="tabPosition" v-model="activeName">
+                    <el-tab-pane label="合作目标" name="one">
+                        <HCotarget v-if="activeName=='one'" :roleType='oneType' @parentFun='getCooperativetarget' />
                     </el-tab-pane>
 
-                    <el-tab-pane
-                        label="调前信息"
-                        name="two"
-                    >
+                    <el-tab-pane label="调前信息" name="two">
                         <HInformation v-if="activeName=='two'" />
                     </el-tab-pane>
 
                     <template v-if="Cooperation">
 
-                        <el-tab-pane
-                            label="商业尽调"
-                            name="three"
-                        >
-                            <HBusiness
-                                v-if="activeName=='three'"
-                                :roleType='twoType'
-                            />
+                        <el-tab-pane label="商业尽调" name="three">
+                            <HBusiness v-if="activeName=='three'" :roleType='twoType' />
                         </el-tab-pane>
 
-                        <el-tab-pane
-                            label="财务尽调"
-                            name="four"
-                        >
-                            <HFinance
-                                v-if="activeName=='four'"
-                                :roleType='threeType'
-                            />
+                        <el-tab-pane label="财务尽调" name="four">
+                            <HFinance v-if="activeName=='four'" :roleType='threeType' />
                         </el-tab-pane>
 
-                        <el-tab-pane
-                            label="法务尽调"
-                            name="five"
-                        >
-                            <HJustice
-                                v-if="activeName=='five'"
-                                :roleType='fourType'
-                            />
+                        <el-tab-pane label="法务尽调" name="five">
+                            <HJustice v-if="activeName=='five'" :roleType='fourType' />
                         </el-tab-pane>
 
-                        <el-tab-pane
-                            label="组织尽调"
-                            name="six"
-                            :lazy="true"
-                        >
-                            <HOrganization
-                                v-if="activeName=='six'"
-                                :roleType='fiveType'
-                            />
+                        <el-tab-pane label="组织尽调" name="six" :lazy="true">
+                            <HOrganization v-if="activeName=='six'" :roleType='fiveType' />
                         </el-tab-pane>
 
-                        <el-tab-pane
-                            label="附件上传"
-                            name="seven"
-                        >
+                        <el-tab-pane label="附件上传" name="seven">
                             <HAccessory v-if="activeName=='seven'" />
                         </el-tab-pane>
-                        <el-tab-pane
-                            label="尽调评估及KPI"
-                            name="eight"
-                        >
+                        <el-tab-pane label="尽调评估及KPI" name="eight">
                             <HEvaluation v-if="activeName=='eight'" />
                         </el-tab-pane>
                     </template>
@@ -188,7 +144,7 @@ export default {
 <style lang="scss">
 .jd-manage {
     margin-bottom: 200px;
-    .title-p{
+    .title-p {
         font-size: 18px;
         font-weight: 500;
         margin: 0;
@@ -242,9 +198,12 @@ export default {
             flex: 1;
             border-left: 1px solid #dddddd;
             text-align: center;
-            // overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal;
+            overflow: hidden;
+            white-space: nowrap;
+            /deep/ .el-input {
+                width: 100%;
+            }
             p {
                 // line-height: 24px;
                 margin: 0;
@@ -256,7 +215,7 @@ export default {
             .el-input__inner {
                 border: none;
             }
-           /deep/ .el-select {
+            /deep/ .el-select {
                 width: 100%;
             }
             .el-textarea__inner {
@@ -279,8 +238,8 @@ export default {
             border: none;
             resize: none;
         }
-        /deep/.el-select{
-            width: 100%
+        /deep/.el-select {
+            width: 100%;
         }
     }
 }

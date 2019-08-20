@@ -572,7 +572,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss" >
 .jd-manage {
     padding: 0 15px;
     table,
@@ -636,7 +636,7 @@ table {
     margin: 15px;
 }
 .assessmentRow {
-    width: 360px;
+    width: calc(100% / 4);
     height: 36px;
 }
 /deep/ .textHeight {
