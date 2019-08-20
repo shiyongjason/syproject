@@ -1,13 +1,25 @@
 import {
-    CHANGE_PAGENUMBER
+    CHANGE_REVIEW_LIST_PAGE_NUMBER,
+    CHANGE_MANAGE_PAGE_NUMBER,
+    GET_USER_INFO_NAME_AND_CODE
 } from './const.js'
+import actions from './actions'
 export default {
     state: {
-        pageNumber: 1 // 页数
+        reviewListPageNumber: 1,
+        managePageNumber: 1,
+        userInfo: {}
     },
     mutations: {
-        [CHANGE_PAGENUMBER] (state, pageNumber) {
-            state.pageNumber = pageNumber
+        [CHANGE_REVIEW_LIST_PAGE_NUMBER] (state, pageNumber) {
+            state.reviewListPageNumber = pageNumber
+        },
+        [CHANGE_MANAGE_PAGE_NUMBER] (state, pageNumber) {
+            state.managePageNumber = pageNumber
+        },
+        [GET_USER_INFO_NAME_AND_CODE] (state, data) {
+            state.userInfo = data
         }
-    }
+    },
+    actions
 }
