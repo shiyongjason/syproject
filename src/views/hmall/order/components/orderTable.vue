@@ -33,11 +33,17 @@
             </template>
             <template slot-scope="scope" slot="orderStatus">
                 <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
-                <span v-if="scope.data.row.orderStatus === 1">待审核</span>
+                <p v-if="scope.data.row.isSplit==0&&scope.data.row.isParentOrder==1">
+ <span>待拆分</span>
+                </p>
+                <p v-else>
+ <span v-if="scope.data.row.orderStatus === 1">待审核</span>
                 <span v-if="scope.data.row.orderStatus === 2">待付款</span>
                 <span v-if="scope.data.row.orderStatus === 3">待发货</span>
                 <span v-if="scope.data.row.orderStatus === 4">已完成</span>
                 <span v-if="scope.data.row.orderStatus === 5">已关闭</span>
+                </p>
+
             </template>
             <template slot-scope="scope" slot="orderTime">
                 <span v-if="scope.data.row.orderTime">{{scope.data.row.orderTime | formatterTime}}</span>
@@ -78,7 +84,7 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '订单号', prop: 'orderNo', width: '150' },
+                { label: '订单编号', prop: 'orderNo', width: '150' },
                 { label: '拆分订单编号', prop: 'childOrderNo', width: '100' },
                 { label: '订单金额', prop: 'totalAmount' },
                 { label: '优惠劵编号', prop: 'couponCode' },

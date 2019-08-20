@@ -502,7 +502,7 @@ export default {
             const { ...params } = this.queryParams
             if (params.orderStatus == 6) {
                 delete params.orderStatus
-                params.orderType = 1
+                params.isParentOrder = 1
                 params.isSplit = 0
             }
             const { data } = await findOrderList(params)
@@ -556,7 +556,7 @@ export default {
             const { ...params } = this.queryParams
             if (params.orderStatus == 6) {
                 delete params.orderStatus
-                params.orderType = 1
+                params.isParentOrder = 1
                 params.isSplit = 0
             }
             params.access_token = '' || sessionStorage.getItem('token')
