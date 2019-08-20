@@ -23,101 +23,46 @@
                         <tr>
                             <td width="">一级菜单</td>
                             <td width="">二级菜单</td>
-                            <td
-                                width=""
-                                colspan=3
-                            >权限</td>
+                            <td width="" colspan=3>权限</td>
                         </tr>
                     </thead>
                     <tbody>
                         <template v-for="(item) in tableList">
                             <template v-for="(itema) in item.childAuthList">
-                                <tr
-                                    v-for="(itemb,indexb) in itema.childAuthList"
-                                    :key="indexb+'_'+itemb.id?itemb.id:item.id"
-                                >
-                                    <td
-                                        :rowspan="item.total"
-                                        v-if="itemb.sort==0"
-                                    >
-                                        <el-checkbox
-                                            v-model="item.have"
-                                            @change="onCheckboxChange([item], item.have)"
-                                        >{{item.authName}}</el-checkbox>
+                                <tr v-for="(itemb,indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
+                                    <td :rowspan="item.total" v-if="itemb.sort==0">
+                                        <el-checkbox v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
                                     </td>
-                                    <td
-                                        :rowspan="itema.childAuthList.length"
-                                        v-if="indexb==0"
-                                    >
+                                    <td :rowspan="itema.childAuthList.length" v-if="indexb==0">
                                         <div v-if="itema.authName">
-                                            <el-checkbox
-                                                v-model="itema.have"
-                                                @change="onCheckboxChange([item, itema], itema.have)"
-                                            >{{itema.authName}}</el-checkbox>
+                                            <el-checkbox v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
                                         </div>
                                     </td>
                                     <td>
                                         <div v-if="itemb.authName">
-                                            <el-checkbox
-                                                v-model="itemb.have"
-                                                @change="onCheckboxChange([item, itema, itemb], itemb.have)"
-                                            >{{itemb.authName}}</el-checkbox>
+                                            <el-checkbox v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
                                         </div>
                                     </td>
                                     <td>
                                         <div :class="!(item.have&&(itema.authName?itema.have:true)&&(itemb.authName?itemb.have:true))?'gryrole':''">
-                                          <div v-if="itemb.pageConfig&&itemb.pageConfig.length>0">
-                                            <el-checkbox
-                                                v-if="itemb.childAuthList.length>0"
-                                                v-model="itemb.childAuthList[0].allhave"
-                                                @change="onSearchRole(itemb.childAuthList[0].allhave,itemb)"
-                                                :disabled="!itemb.have"
-                                            >敏感字段</el-checkbox>
-                                            <div class="el-radio-group">
-                                                <button
-                                                    :disabled="!itemb.childAuthList[0].allhave"
-                                                    v-if="itemb.childAuthList[0]"
-                                                    class="el-radio-button__inner"
-                                                    :class="itemb.childAuthList[0].status==0?'taborg':''"
-                                                    @click="changeTabs(0,itemb)"
-                                                >全部</button>
-                                                <button
-                                                    :disabled="!itemb.childAuthList[0].allhave"
-                                                    v-if="itemb.childAuthList[0]"
-                                                    class="el-radio-button__inner"
-                                                    :class="itemb.childAuthList[0].status==1?'taborg':''"
-                                                    @click="changeTabs(1,itemb)"
-                                                >配置</button>
+                                            <div v-if="itemb.pageConfig&&itemb.pageConfig.length>0">
+                                                <el-checkbox v-if="itemb.childAuthList.length>0" v-model="itemb.childAuthList[0].allhave" @change="onSearchRole(itemb.childAuthList[0].allhave,itemb)" :disabled="!itemb.have">敏感字段</el-checkbox>
+                                                <div class="el-radio-group">
+                                                    <button :disabled="!itemb.childAuthList[0].allhave" v-if="itemb.childAuthList[0]" class="el-radio-button__inner" :class="itemb.childAuthList[0].status==0?'taborg':''" @click="changeTabs(0,itemb)">全部</button>
+                                                    <button :disabled="!itemb.childAuthList[0].allhave" v-if="itemb.childAuthList[0]" class="el-radio-button__inner" :class="itemb.childAuthList[0].status==1?'taborg':''" @click="changeTabs(1,itemb)">配置</button>
+                                                </div>
                                             </div>
-                                        </div>
                                         </div>
                                     </td>
                                     <td>
                                         <div :class="!(item.have&&itema.have&&itemb.have)?'gryrole':''">
-                                             <div v-if="itemb.childAuthList&&itemb.childAuthList[2]">
-                                            <el-checkbox
-                                                v-if="itemb.childAuthList.length>0"
-                                                v-model="itemb.childAuthList[1].operateHave"
-                                                @change="onOperateRole(itemb.childAuthList[1].operateHave,itemb)"
-                                                :disabled="!itemb.have"
-                                            >敏感操作</el-checkbox>
-                                            <div class="el-radio-group">
-                                                <button
-                                                    :disabled="!itemb.childAuthList[1].operateHave"
-                                                    v-if="itemb.childAuthList[1]"
-                                                    class="el-radio-button__inner"
-                                                    :class="itemb.childAuthList[1].status==0?'taborg':''"
-                                                    @click="changeTwoTabs(0,itemb,itema)"
-                                                >全部</button>
-                                                <button
-                                                    :disabled="!itemb.childAuthList[1].operateHave"
-                                                    v-if="itemb.childAuthList[1]"
-                                                    class="el-radio-button__inner"
-                                                    :class="itemb.childAuthList[1].status==1?'taborg':''"
-                                                    @click="changeTwoTabs(1,itemb,itema)"
-                                                >配置</button>
+                                            <div v-if="itemb.childAuthList&&itemb.childAuthList[2]">
+                                                <el-checkbox v-if="itemb.childAuthList.length>0" v-model="itemb.childAuthList[1].operateHave" @change="onOperateRole(itemb.childAuthList[1].operateHave,itemb)" :disabled="!itemb.have">敏感操作</el-checkbox>
+                                                <div class="el-radio-group">
+                                                    <button :disabled="!itemb.childAuthList[1].operateHave" v-if="itemb.childAuthList[1]" class="el-radio-button__inner" :class="itemb.childAuthList[1].status==0?'taborg':''" @click="changeTwoTabs(0,itemb,itema)">全部</button>
+                                                    <button :disabled="!itemb.childAuthList[1].operateHave" v-if="itemb.childAuthList[1]" class="el-radio-button__inner" :class="itemb.childAuthList[1].status==1?'taborg':''" @click="changeTwoTabs(1,itemb,itema)">配置</button>
+                                                </div>
                                             </div>
-                                             </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -128,25 +73,11 @@
             </div>
 
         </div>
-        <div
-            class="h-foot"
-            :class="isCollapse?'minLeft':'maxLeft'"
-        >
-            <el-button
-                @click="onCancelRole()"
-            >取 消</el-button>
-            <el-button
-                 type="primary"
-                @click="onSaveRole()"
-            >保  存</el-button>
+        <div class="h-foot" :class="isCollapse?'minLeft':'maxLeft'">
+            <el-button @click="onCancelRole()">取 消</el-button>
+            <el-button type="primary" @click="onSaveRole()">保 存</el-button>
         </div>
-        <el-dialog
-            title="查询配置"
-            :visible.sync="dialogVisible"
-            width="40%"
-            :close-on-click-modal='false'
-             :before-close="onCancelCongifg"
-        >
+        <el-dialog title="查询配置" :visible.sync="dialogVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelCongifg">
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
@@ -160,68 +91,39 @@
                         <tr>
                             <td>{{authName}}</td>
                             <td style="text-align:left">
-                                <el-checkbox
-                                    v-model="item.have"
-                                    :label="item.fieldShowName"
-                                    v-for="(item,index) in pageConfig"
-                                    :key="index"
-                                ></el-checkbox>
+                                <el-checkbox v-model="item.have" :label="item.fieldShowName" v-for="(item,index) in pageConfig" :key="index"></el-checkbox>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelCongifg(),dialogVisible = false">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="dialogVisible = false"
-                >保 存</el-button>
+                <el-button type="primary" @click="dialogVisible = false">保 存</el-button>
             </span>
         </el-dialog>
-        <el-dialog
-            title="操作配置"
-            :visible.sync="twodialogVisible"
-            width="40%"
-            :close-on-click-modal='false'
-             :before-close="onCanceloperateCongifg"
-        >
+        <el-dialog title="操作配置" :visible.sync="twodialogVisible" width="40%" :close-on-click-modal='false' :before-close="onCanceloperateCongifg">
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
                         <tr>
                             <td width="30%">菜单</td>
                             <td width="70%">权限</td>
-
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>{{authName}}</td>
                             <td style="text-align:left">
-                                <el-checkbox
-                                    v-model="item.have"
-                                    :label="item.authName"
-                                    v-for="(item,index) in operateConfig"
-                                    :key="index"
-                                ></el-checkbox>
+                                <el-checkbox v-model="item.have" :label="item.authName" v-for="(item,index) in operateConfig" :key="index"></el-checkbox>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="onCanceloperateCongifg(),twodialogVisible = false">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="twodialogVisible = false"
-                >保 存</el-button>
+                <el-button type="primary" @click="twodialogVisible = false">保 存</el-button>
             </span>
         </el-dialog>
     </div>
@@ -480,7 +382,6 @@ export default {
     }
     tbody {
         td {
-
         }
         min-width: 1280px;
         overflow-x: scroll;
@@ -534,8 +435,8 @@ export default {
     border-color: #ff7a45;
     box-shadow: -1px 0 0 0 #ff7a45;
 }
-.el-radio-button__inner:hover{
-    color: #ff7a45
+.el-radio-button__inner:hover {
+    color: #ff7a45;
 }
 .el-radio-group {
     button {
@@ -557,16 +458,16 @@ export default {
             // border-left: none;
         }
     }
-    button[disabled]{
+    button[disabled] {
         cursor: not-allowed;
         color: #dddddd;
         // border-left: 1px solid #dcdfe6 !important;
-    border-right: 1px solid #ffffff !important;
-        &:hover{
-            color:#dddddd
+        border-right: 1px solid #ffffff !important;
+        &:hover {
+            color: #dddddd;
         }
-        &:last-child{
-             border-right: 1px solid #dcdfe6 !important;
+        &:last-child {
+            border-right: 1px solid #dcdfe6 !important;
         }
     }
 }

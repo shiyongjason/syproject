@@ -171,6 +171,7 @@ export default {
     },
     computed: {
         organizationSeniorList () {
+            console.log(2)
             let organizationSeniorList = this.form.dueOrganizationSeniorCreateFormList
             if (!organizationSeniorList) {
                 organizationSeniorList = []
@@ -179,7 +180,7 @@ export default {
                 let defaultObj = JSON.parse(JSON.stringify(this.defaultOrganizationSenior))
                 organizationSeniorList.push(defaultObj)
             }
-            return this.form.dueOrganizationSeniorCreateFormList
+            return organizationSeniorList
         },
         organizationScore () {
             const organizationAssessment = this.form.dueOrganizationOrgAssessmentCreateFormList

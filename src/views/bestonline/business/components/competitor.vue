@@ -40,11 +40,10 @@ export default {
                 let defaultObj = JSON.parse(JSON.stringify(this.defaultCompetitor))
                 businessCompetitorCreateFormList.push(defaultObj)
             }
-            return this.form.dueBusinessCompetitorCreateFormList
+            return businessCompetitorCreateFormList
         }
     },
     mounted () {
-        console.log(this.form.dueBusinessCompetitorCreateFormList)
     },
     methods: {
         addCompet () {

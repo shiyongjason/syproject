@@ -26,7 +26,7 @@
                                     <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
-                                    <el-select v-model="item.state" placeholder="请选择" >
+                                    <el-select v-model="item.state" placeholder="请选择">
                                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                                         </el-option>
                                     </el-select>
@@ -57,10 +57,10 @@
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6"  placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6"  placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -69,16 +69,16 @@
                 <!-- 销售业绩(含税)（万元） -->
                 <SalesPerformance />
                 <!-- 营销模式 -->
-<MarketingModel />
-<!-- 上游-供应商结构 -->
-<Supplier />
-<!-- 下游-客户结构 -->
-<Customer />
-<!-- 门店/会员店 -->
-<Members />
-<!-- 竞争对手 -->
-<Competitor />
-<!-- 新合资公司规划 -->
+                <MarketingModel />
+                <!-- 上游-供应商结构 -->
+                <Supplier />
+                <!-- 下游-客户结构 -->
+                <Customer />
+                <!-- 门店/会员店 -->
+                <Members />
+                <!-- 竞争对手 -->
+                <Competitor />
+                <!-- 新合资公司规划 -->
                 <Plan />
             </el-form>
         </el-collapse>
@@ -112,7 +112,7 @@ export default {
     },
     data () {
         return {
-            activeName: '1',
+            activeName: '9',
             options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [
@@ -174,7 +174,6 @@ export default {
     },
     mounted () {
         this.applyId = this.$route.query.applyId
-        console.log(this.form)
         this.nowMonth = (new Date()).getMonth()
     },
     computed: {
@@ -184,159 +183,6 @@ export default {
         })
     },
     methods: {
-        oninput (value, e) {
-            // 通过正则过滤小数点后两位
-            this[value] = plusOrMinus(e.target.value.toString())
-        },
-        oninput2 (i, v, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            this.dueBusinessSupplierCreateFormList[i][v] = e.target.value
-        },
-        oninput3 (i, v, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            this.dueBusinessCustomerCreateFormList[i][v] = e.target.value
-        },
-        oninput4 (i, v, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            this.dueBusinessProxySwitchSchemeCreateFormList[i][v] = e.target.value
-        },
-        oninputSale (i, v, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            // console.log(e.target.value)
-            this.dueBusinessSaleCreateFormList[i][v] = e.target.value
-            // console.log(this.dueBusinessSaleCreateFormList[i][v])
-        },
-        integer (v, e) {
-            if (e) {
-                this[v] = e.target.value.replace(/[^0-9]/g, '')
-            }
-        },
-        // 结合change事件对失去焦点进行判断，防止输入一些无效值
-        numChange (value, e) {
-            e = parseFloat(e).toFixed(2)
-            this[value] = e.replace(/[^0-9.-]/g, '')
-        },
-        onChange () {
-            document.getElementsByClassName('container')[0].scrollTop = 0
-        },
-        vaildEmpty (value) {
-            if (value !== null && value !== undefined && value !== '') {
-                return true
-            } else {
-                return false
-            }
-        },
-        addScheme () {
-            this.dueBusinessProxySwitchSchemeCreateFormList.push({
-                brand: '',
-                expectSales: '',
-                switchDate: ''
-            })
-        },
-        deleteScheme (index) {
-            this.dueBusinessProxySwitchSchemeCreateFormList.splice(index, 1)
-        },
-        addSupplier () {
-            this.dueBusinessSupplierCreateFormList.push({
-                contractEndDate: '',
-                contractScale: '',
-                contractStartDate: '',
-                dueBusinessId: '',
-                isProvideContract: '',
-                proportion: '',
-                purchaseAmount: '',
-                supplierName: ''
-            })
-        },
-        deleteSupplier (index) {
-            this.dueBusinessSupplierCreateFormList.splice(index, 1)
-        },
-        addCustomer () {
-            this.dueBusinessCustomerCreateFormList.push({
-                agreementEndDate: '',
-                agreementScale: '',
-                agreementStartDate: '',
-                brandName: '',
-                categoryId: '',
-                customerName: '',
-                dueBusinessId: '',
-                salesFee: '',
-                salesProportion: ''
-            })
-        },
-        deleteCustomer (index) {
-            this.dueBusinessCustomerCreateFormList.splice(index, 1)
-        },
-        addCompet () {
-            this.dueBusinessCompetitorCreateFormList.push({
-                competitorName: '',
-                mainForms: ''
-            })
-        },
-        deleteCompet (index) {
-            this.dueBusinessCompetitorCreateFormList.splice(index, 1)
-        },
-        async getBusiness () {
-            const { data } = await getBusiness(this.applyId)
-
-            data.data.dueBusinessAssessmentCreateFormList.map((item, value) => {
-                this.currentYearAllSales += +item.currentYearSales
-                this.lastYearAllSales += +item.lastYearSales
-                this.lastTwoYearAllSales += +item.lastTwoYearSales
-            })
-            this.currentYearAllSales = (this.currentYearAllSales ? this.currentYearAllSales : 0).toFixed(2)
-            this.lastYearAllSales = (this.lastYearAllSales ? this.lastYearAllSales : 0).toFixed(2)
-            this.lastTwoYearAllSales = (this.lastTwoYearAllSales ? this.lastTwoYearAllSales : 0).toFixed(2)
-
-            this.id = data.data.id
-            this.type = !!data.data.operationNode
-            this.updateTime = data.data.updateTime
-            this.updateUser = data.data.updateUser
-            this.dueBusinessId = data.data.dueBusinessId
-            // if (!data.data.operationNode) {
-            //     this.isdisabled = (!!data.data.operationNode) || !this.roleType
-            // } else {
-            //     this.isdisabled = (!!data.data.operationNode)
-            // }
-            this.form = data.data
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = data.data.dueBusinessFuturePlanVo.serviceCategory ? data.data.dueBusinessFuturePlanVo.serviceCategory : []
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = data.data.dueBusinessFuturePlanVo.businessCategory ? data.data.dueBusinessFuturePlanVo.businessCategory : []
-            // this.form.dueBusinessFuturePlanCreateForm.businessCategoryOther = data.data.dueBusinessFuturePlanVo.businessCategoryOther
-            // this.form.dueBusinessFuturePlanCreateForm.brandManagement = data.data.dueBusinessFuturePlanVo.brandManagement
-            // this.form.dueBusinessFuturePlanCreateForm.businessProvince = data.data.dueBusinessFuturePlanVo.businessProvince
-            // this.form.dueBusinessFuturePlanCreateForm.businessCity = data.data.dueBusinessFuturePlanVo.businessCity
-            // this.form.dueBusinessFuturePlanCreateForm.businessArea = data.data.dueBusinessFuturePlanVo.businessArea
-            // this.form.dueBusinessFuturePlanCreateForm.annualSalesScale = data.data.dueBusinessFuturePlanVo.annualSalesScale
-            // this.form.dueBusinessFuturePlanCreateForm.netProfitRate = data.data.dueBusinessFuturePlanVo.netProfitRate
-            // this.form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers = data.data.dueBusinessFuturePlanVo.downstreamSwitchChannelsCustomers
-            // this.form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans = data.data.dueBusinessFuturePlanVo.marketingChannelsPlans
-            // this.form.dueBusinessFuturePlanCreateForm.fundingRequirements = data.data.dueBusinessFuturePlanVo.fundingRequirements
-            // this.form.dueBusinessFuturePlanCreateForm.otherPlansNeeds = data.data.dueBusinessFuturePlanVo.otherPlansNeeds
-
-            // if (data.data.publicityPromotionChannels) {
-            // this.form.publicityPromotionChannels = data.data.publicityPromotionChannels.split(',')
-            // }
-
-            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.map(Number)
-
-            this.dueBusinessAssessmentCreateFormList = data.data.dueBusinessAssessmentVoList
-            this.dueBusinessSupplierCreateFormList = data.data.dueBusinessSupplierVoList
-            if (this.dueBusinessSupplierCreateFormList.length === 0) {
-                this.dueBusinessSupplierCreateFormList.push(this.busObj)
-            }
-            this.dueBusinessCustomerCreateFormList = data.data.dueBusinessCustomerVoList
-            if (this.dueBusinessCustomerCreateFormList.length === 0) {
-                this.dueBusinessCustomerCreateFormList.push(this.cusObj)
-            }
-            this.dueBusinessCompetitorCreateFormList = data.data.dueBusinessCompetitorVoList
-            if (this.dueBusinessCompetitorCreateFormList.length === 0) {
-                this.dueBusinessCompetitorCreateFormList.push(this.comObj)
-            }
-            this.dueBusinessProxySwitchSchemeCreateFormList = data.data.dueBusinessProxySwitchSchemeVoList
-            if (this.dueBusinessProxySwitchSchemeCreateFormList.length === 0) {
-                this.dueBusinessProxySwitchSchemeCreateFormList.push(this.comObj)
-            }
-        },
         handleCheckAllChange (val) {
             this.form.publicityPromotionChannels = val ? this.newChannels : []
             this.isIndeterminate = false
@@ -347,63 +193,18 @@ export default {
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.newChannels.length
         },
         async onSaveBus () {
-            this.publicityPromotionChannels = this.checkedCities.join(',')
-            this.dueBusinessSaleCreateFormList[0].currentYearSales = this.currentYearAllSales
-            this.dueBusinessSaleCreateFormList[0].lastYearSales = this.lastYearAllSales
-            this.dueBusinessSaleCreateFormList[0].lastTwoYearSales = this.lastTwoYearAllSales
-            const formData = {
-                id: this.id,
-                analysisDescription: this.analysisDescription,
-                applyId: this.applyId,
-                brandOneSalesRatio: this.brandOneSalesRatio,
-                brandThreeSalesRatio: this.brandThreeSalesRatio,
-                brandTwoSalesRatio: this.brandTwoSalesRatio,
-                businessFormatOneRatio: this.businessFormatOneRatio,
-                businessFormatTwoRatio: this.businessFormatTwoRatio,
-                businessFormatTwoThreeRatio: this.businessFormatTwoThreeRatio,
-                categoryOneSalesRatio: this.categoryOneSalesRatio,
-                categoryTwoSalesRatio: this.categoryTwoSalesRatio,
-                createUser: this.userInfo.name,
-                customersHealth: this.customersHealth,
-                downstreamCustomersHealth: this.downstreamCustomersHealth,
-                dueBusinessAssessmentCreateFormList: this.dueBusinessAssessmentCreateFormList,
-                dueBusinessCompetitorCreateFormList: this.dueBusinessCompetitorCreateFormList,
-                dueBusinessCustomerCreateFormList: this.dueBusinessCustomerCreateFormList,
-                dueBusinessCustomerDemandCreateForm: this.dueBusinessCustomerDemandCreateForm,
-                dueBusinessFuturePlanCreateForm: this.dueBusinessFuturePlanCreateForm,
-                dueBusinessId: this.dueBusinessId,
-                dueBusinessProxySwitchSchemeCreateFormList: this.dueBusinessProxySwitchSchemeCreateFormList,
-                dueBusinessSaleCreateFormList: this.dueBusinessSaleCreateFormList,
-                dueBusinessSupplierCreateFormList: this.dueBusinessSupplierCreateFormList,
-                firstTenMonthsDown: this.firstTenMonthsDown,
-                interIndustryCooperation: this.interIndustryCooperation,
-                mainBrandOneName: this.mainBrandOneName,
-                mainBrandThreeName: this.mainBrandThreeName,
-                mainBrandTwoName: this.mainBrandTwoName,
-                mainBusinessFormatOneId: this.mainBusinessFormatOneId,
-                mainBusinessFormatThreeId: this.mainBusinessFormatThreeId,
-                mainBusinessFormatTwoId: this.mainBusinessFormatTwoId,
-                mainCategoryOneId: this.mainCategoryOneId,
-                mainCategoryTwoId: this.mainCategoryTwoId,
-                memberShopNum: this.memberShopNum,
-                operationNode: 0,
-                publicityPromotionChannels: this.publicityPromotionChannels,
-                riskDisclosure: this.riskDisclosure,
-                salesGrowthHealth: this.salesGrowthHealth,
-                selfStoresNum: this.selfStoresNum,
-                upstreamBodySwitchable: this.upstreamBodySwitchable
-            }
+            console.log(this.form)
             // console.log(formData)
-            if (this.dueBusinessId) {
-                await putBusiness(formData)
-            } else {
-                await addBusiness(formData)
-            }
+            // if (this.dueBusinessId) {
+            //     await putBusiness(formData)
+            // } else {
+            //     await addBusiness(formData)
+            // }
             this.$message({
                 type: 'success',
                 message: '保存成功'
             })
-            this.$router.go(-1)
+            // this.$router.go(-1)
         },
         async onSubmit () {
             for (const i of this.form.dueBusinessAssessmentCreateFormList) {
