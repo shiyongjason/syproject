@@ -131,8 +131,8 @@
                     <el-form-item label="参与方式：">
                         <!--1,全场参加,无限制 2,指定类目 3,指定商品)-->
                         <span v-if="activeDetails.joinType === 1">全场参加,无限制</span>
-                        <span v-if="activeDetails.joinType === 2">无限制</span>
-                        <span v-if="activeDetails.joinType === 3">指定类目</span>
+                        <span v-if="activeDetails.joinType === 2">指定类目</span>
+                        <span v-if="activeDetails.joinType === 3">指定商品</span>
                     </el-form-item>
                     <el-form-item label="活动时间：">
                         {{(activeDetails.effectiveStartDate)+ '-' + (activeDetails.effectiveEndDate)}}
