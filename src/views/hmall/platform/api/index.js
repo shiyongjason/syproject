@@ -22,7 +22,17 @@ export const findProvinceAndCity = (params) => {
         params
     })
 }
-// 开启
+// 开启 单独解决fromData接口问题
 export const createOpen = (params) => {
-    return axios.post(ossUrl + 'api/organization/start-b2b', params)
+    let paramStr = ''
+    for (let i in params) {
+        paramStr += (i + '=' + params[i] + '&')
+    }
+    const instance = axios.create({
+        baseURL: ossUrl,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    })
+    return instance.post('api/organization/start-b2b', paramStr.substring(0, paramStr.length - 1))
 }

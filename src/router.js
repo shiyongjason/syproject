@@ -165,8 +165,8 @@ const routerMapping = [
                 path: 'shopManager',
                 name: 'shopManager',
                 meta: {
-                    title: '商品库列表',
-                    tagName: '商品库列表',
+                    title: '商品库管理SPU',
+                    tagName: '商品库管理SPU',
                     isMenu: true,
                     icon: ''
                 },
@@ -198,8 +198,8 @@ const routerMapping = [
                 path: 'shopReviewList',
                 name: 'shopReviewList',
                 meta: {
-                    title: '商品审核',
-                    tagName: '商品审核',
+                    title: '平台公司商品审核列表',
+                    tagName: '平台公司商品审核列表',
                     isMenu: true,
                     icon: ''
                 },
@@ -231,8 +231,8 @@ const routerMapping = [
                 path: 'coupon',
                 name: 'coupon',
                 meta: {
-                    title: '优惠券',
-                    tagName: '优惠券',
+                    title: '优惠券审核列表',
+                    tagName: '优惠券审核列表',
                     isMenu: true,
                     icon: ''
                 },
@@ -242,23 +242,12 @@ const routerMapping = [
                 path: 'member',
                 name: 'member',
                 meta: {
-                    title: '会员店审核',
-                    tagName: '会员店审核',
+                    title: '会员店审核列表',
+                    tagName: '会员店审核列表',
                     isMenu: true,
                     icon: ''
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
-            },
-            {
-                path: 'activity',
-                name: 'activity',
-                meta: {
-                    title: '活动审核',
-                    tagName: '活动审核',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/activity/index.vue')
             },
             {
                 path: 'publicShop',
@@ -292,6 +281,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
+            },
+            {
+                path: 'wallet',
+                name: 'wallet',
+                meta: {
+                    title: '钱包支付开通情况',
+                    tagName: '钱包支付开通情况',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/walletPay/walletPay.vue')
             }
         ]
     }

@@ -215,7 +215,7 @@ import { IsChinese } from '@/rules'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
 import { fileUploadUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'selectCategory',
@@ -668,9 +668,13 @@ export default {
         },
         close () {
             this.$router.push('/hmall/shopReviewList')
-        }
+        },
+        ...mapActions({
+            getUserInfoMore: 'getUserInfoMore'
+        })
     },
     async mounted () {
+        this.getUserInfoMore()
         const { data } = await findCategoryByParent({
             parentId: 0
         })

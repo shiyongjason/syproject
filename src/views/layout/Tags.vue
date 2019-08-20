@@ -77,21 +77,15 @@ export default {
         },
         // 关闭单个标签
         closeTags (index) {
-            const delItem = this.tagsList.splice(index, 1)[0]
-            const item = this.tagsList[index] ? this.tagsList[index] : this.tagsList[index - 1]
-            if (item) {
-                delItem.path === this.$route.fullPath && this.$router.push(item.path)
-            } else {
+            this.tagsList.splice(index, 1)
+            if (this.tagsList.length < 1) {
                 this.$router.push('/')
+            } else {
+                this.$router.push(this.tagsList[this.tagsList.length - 1].path)
             }
         },
         // 关闭全部标签
         closeAll () {
-            // this.tagsList = [{
-            //     title: '首页',
-            //     path: '/',
-            //     name: 'index'
-            // }]
             this.tagsList = []
             this.tagsInfo(this.tagsList)
             this.$router.push('/')
@@ -103,7 +97,6 @@ export default {
             })
             this.tagsList = curItem
             // TODO  session
-            // this.tagsInfo(this.tagsList)
             sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
         },
         // 设置标签
@@ -119,16 +112,7 @@ export default {
                     query: route.query
                 })
             }
-
-            // this.tagsList = this.tagsList.filter(item =>
-            //     item.name != 'index'
-            // ).push({
-            //     title: '首页',
-            //     path: '/index',
-            //     name: 'index'
-            // })
             this.editableTabsValue = route.name
-            // this.tagsInfo(this.tagsList)
             sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
         },
         handleTags (command) {
@@ -150,31 +134,9 @@ export default {
     },
     mounted () {
         const tags = JSON.parse(sessionStorage.getItem('tagsList'))
-        // const isExist = this.newTags.some(item => {
-        //     return item.path == '/'
-        // })
-        // !isExist && this.newTags.push({
-        //     title: '首页',
-        //     path: '/',
-        //     name: 'index'
-        // })
         this.tagsList = tags || []
         this.setTags(this.$route)
     }
-    // updated () {
-    //     console.log(2)
-    //     const tags = JSON.parse(sessionStorage.getItem('tagsList'))
-    //     // const isExist = this.newTags.some(item => {
-    //     //     return item.path == '/'
-    //     // })
-    //     // !isExist && this.newTags.push({
-    //     //     title: '首页',
-    //     //     path: '/',
-    //     //     name: 'index'
-    //     // })
-    //     this.tagsList = tags || []
-    //     this.setTags(this.$route)
-    // }
 }
 
 </script>

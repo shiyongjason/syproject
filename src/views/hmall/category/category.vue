@@ -417,6 +417,9 @@ export default {
         margin-top: 10px;
         margin-bottom: 20px;
     }
+    span.action{
+        cursor: pointer;
+    }
 </style>
 <style>
     .settingParams .el-transfer-panel{
