@@ -8,7 +8,6 @@ export default {
         state.managePageNumber = pageNumber
     },
     [GET_USER_INFO_NAME_AND_CODE] (state, data) {
-        console.log(data)
         state.userInfo = data
     }
 }
