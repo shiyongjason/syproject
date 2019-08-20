@@ -103,6 +103,7 @@ export default {
             if (!serviceCategory) {
                 serviceCategory = []
             }
+
             return this.form.dueBusinessFuturePlanCreateForm.businessCategory
         }
     }
