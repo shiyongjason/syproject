@@ -490,6 +490,7 @@ export default {
                             type: 'warning',
                             message: '商品名称长度为50字以内'
                         })
+                        this.saveDisabled = false
                         return
                     }
                     delete params.attributeList
