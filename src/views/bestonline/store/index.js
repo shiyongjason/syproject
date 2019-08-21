@@ -32,7 +32,10 @@ export default {
             dueBusinessCompetitorCreateFormList: [], // 商业尽调竞争对手
             dueBusinessProxySwitchSchemeCreateFormList: [],
             dueBusinessCustomerDemandCreateForm: {},
-            dueBusinessFuturePlanCreateForm: {}
+            dueBusinessFuturePlanCreateForm: {
+                businessCategory: [],
+                serviceCategory: []
+            }
         },
         organizationData: {},
         financeData: {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { interfaceUrl } from '../../../api/config'
+import { ccpBaseUrl } from '../../../api/config'
 // import { baseUrl } from '@/api/config'
 /*
 @申请
@@ -193,4 +193,8 @@ export const createJusticeDoFirst = (params) => {
 // 法务保存,提交
 export const createJusticeDo = (params) => {
     return axios.put('develop/duelegal/', params)
+}
+// 省市区
+export const getAreacode = (params) => {
+    return axios.get(ccpBaseUrl + 'common/amap/district', { params })
 }

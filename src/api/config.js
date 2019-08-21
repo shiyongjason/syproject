@@ -7,6 +7,7 @@ let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
 let FileUploadUrl = ''
+let ccpBaseUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
@@ -18,6 +19,7 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         FileUploadUrl = 'http://192.168.20.248:30000/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -48,5 +50,6 @@ export {
     ossUrl,
     iframeUrl,
     jinyun,
-    FileUploadUrl
+    FileUploadUrl,
+    ccpBaseUrl
 }

@@ -32,12 +32,12 @@
                     </el-input>
                 </div>
                 <div class="table-col">
-                    <el-input v-model="item.salesFee" placeholder="金额" maxlength="25"  @keyup.native="oninput3(index, 'salesFee', $event)">
+                    <el-input v-model="item.salesFee" placeholder="金额" maxlength="25"  >
                         <template slot="suffix">万</template>
                     </el-input>
                 </div>
                 <div class="table-col">
-                    <el-input v-model="item.salesProportion" placeholder="占比" maxlength="25"  @keyup.native="oninput3(index, 'salesProportion', $event)">
+                    <el-input v-model="item.salesProportion" placeholder="占比" maxlength="25"  >
                         <template slot="suffix">%</template>
                     </el-input>
                 </div>

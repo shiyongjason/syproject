@@ -5,13 +5,13 @@
         </template>
         <el-form-item label="业务类别：" prop="serviceCategory">
             <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory">
-                <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key' >{{item.value}}</el-checkbox>
+                <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory">
-                    <el-checkbox-group v-model="businessCategory">
+                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
                         <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
@@ -28,19 +28,25 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince">
-                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省" @change="onchangeP(form.dueBusinessFuturePlanCreateForm.businessProvince)">
+                        <el-option v-for="item in provelist" :key="item.adCode" :label="item.name" :value="item.adCode">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity">
-                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" placeholder="请选择市">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" @change="onchangeC(form.dueBusinessFuturePlanCreateForm.businessCity)" placeholder="请选择市">
+                        <el-option v-for="item in citylist" :key="item.adCode" :label="item.name" :value="item.adCode">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea">
                     <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessArea" placeholder="请选择区">
+                        <el-option v-for="item in arealist" :key="item.adCode" :label="item.name" :value="item.adCode">
+                        </el-option>
                     </el-select>
                 </el-form-item>
             </div>
@@ -78,52 +84,65 @@
 
 <script>
 import { MAIN_COMMERCIAL_OPTIONS, MAIN_CATEGORY_OPTIONS } from '../const'
+import { getAreacode } from '../../api/index'
 import { mapState } from 'vuex'
 export default {
     data () {
         return {
             mainCommercialData: MAIN_COMMERCIAL_OPTIONS,
             maincategory: MAIN_CATEGORY_OPTIONS,
-            serviceCategory: '',
-            businessCategory: [1, 3]
+            provelist: [],
+            citylist: [],
+            arealist: []
+        }
+    },
+    watch: {
+        form (form) {
+            let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
+            if (!serviceCategory) {
+                serviceCategory = []
+            }
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory
+            let sinessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
+            if (!sinessCategory) {
+                sinessCategory = []
+            }
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = sinessCategory
         }
     },
     computed: {
         ...mapState({
             form: state => state.dueDiligence.businessData
         })
-        // serviceCategory () {
-        //     console.log(1)
-        //     let busserviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory
-        //     if (!busserviceCategory) {
-        //         busserviceCategory = []
-        //     }
-        //     return busserviceCategory
-        // },
-        // businessCategory () {
-        //     let businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
-        //     if (!businessCategory) {
-        //         businessCategory = []
-        //     }
 
-        //     return businessCategory
-        // }
     },
-    mounted () {
-        this.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory
-        if (!this.serviceCategory) {
-            this.serviceCategory = []
-        }
-        this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.serviceCategory
-        // console.log(this.form)
-        // this.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
-        // if (!this.businessCategory) {
-        //     this.businessCategory = []
-        // }
-        // this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.businessCategory
+    created () {
+
+    },
+    async  mounted () {
+        this.provelist = await this.getAreacode()
     },
     methods: {
-
+        async  getAreacode () {
+            const { data } = await getAreacode()
+            let selectObj = [{ name: '请选择', adCode: '' }]
+            return selectObj.concat(data)
+        },
+        async onchangeP (val) {
+            if (val) {
+                this.citylist = await this.getAreacode({ keywords: val })
+            } else {
+                this.citylist = []
+                this.arealist = []
+            }
+        },
+        async onchangeC (val) {
+            if (val) {
+                this.arealist = await this.getAreacode({ keywords: val })
+            } else {
+                this.arealist = []
+            }
+        }
     }
 }
 </script>

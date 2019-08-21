@@ -19,7 +19,6 @@ axios.interceptors.request.use(function (config) {
     if (token) {
         config.headers['Authorization'] = 'Bearer ' + token
     }
-
     return config
 }, function (error) {
     return Promise.reject(error)
@@ -35,6 +34,7 @@ axios.interceptors.response.use(function (response) {
     store.commit('LOAD_STATE', false)
     return response
 }, function (error) {
+    console.log(error)
     if (error.request.status === 0) Message({ message: '网络异常，请检查网络链接', type: 'error' })
     store.commit('LOAD_STATE', false)
     const data = error.response.data

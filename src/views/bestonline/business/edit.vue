@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <el-collapse v-model="activeName" accordion @change="onChange">
+        <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
                     <template slot="title">
@@ -32,7 +32,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
+                                    <el-input type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -94,8 +94,7 @@
     </div>
 </template>
 <script>
-import { getBusiness, addBusiness, putBusiness } from '../api/index.js'
-import { plusOrMinus } from '../../../utils/rules'
+import { addBusiness, putBusiness } from '../api/index.js'
 import { DOWN_OPTIONS } from './const'
 import BusinessMode from './components/businessMode.vue'
 import MarketingModel from './components/marketingModel.vue'
@@ -183,23 +182,12 @@ export default {
         })
     },
     methods: {
-        handleCheckAllChange (val) {
-            this.form.publicityPromotionChannels = val ? this.newChannels : []
-            this.isIndeterminate = false
-        },
-        handleCheckedWays (value) {
-            let checkedCount = value.length
-            this.checkAll = checkedCount === this.newChannels.length
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.newChannels.length
-        },
         async onSaveBus () {
-            console.log(this.form)
-            // console.log(formData)
-            // if (this.dueBusinessId) {
-            //     await putBusiness(formData)
-            // } else {
-            //     await addBusiness(formData)
-            // }
+            if (this.dueBusinessId) {
+                await putBusiness(this.form)
+            } else {
+                await addBusiness(this.form)
+            }
             this.$message({
                 type: 'success',
                 message: '保存成功'
@@ -242,55 +230,6 @@ export default {
             // this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
             // this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-            const formData = {
-                id: this.id,
-                analysisDescription: this.form.analysisDescription,
-                applyId: this.applyId,
-                brandOneSalesRatio: this.form.brandOneSalesRatio,
-                brandThreeSalesRatio: this.form.brandThreeSalesRatio,
-                brandTwoSalesRatio: this.form.brandTwoSalesRatio,
-                businessFormatOneRatio: this.form.businessFormatOneRatio,
-                businessFormatTwoRatio: this.form.businessFormatTwoRatio,
-                businessFormatTwoThreeRatio: this.form.businessFormatTwoThreeRatio,
-                categoryOneSalesRatio: this.form.categoryOneSalesRatio,
-                categoryTwoSalesRatio: this.form.categoryTwoSalesRatio,
-                createUser: JSON.parse(sessionStorage.getItem('user_data')).name,
-                customersHealth: this.form.customersHealth,
-                downstreamCustomersHealth: this.downstreamCustomersHealth,
-                dueBusinessAssessmentCreateFormList: this.form.dueBusinessAssessmentVoList,
-                dueBusinessCompetitorCreateFormList: this.form.dueBusinessCompetitorVoList,
-                dueBusinessCustomerCreateFormList: this.form.dueBusinessCustomerVoList,
-                dueBusinessFuturePlanCreateForm: this.form.dueBusinessFuturePlanVo,
-                dueBusinessId: this.dueBusinessId,
-                dueBusinessSaleCreateFormList: {
-                    currentYearSales: this.currentYearAllSales,
-                    lastYearSales: this.lastYearAllSales,
-                    lastTwoYearSales: this.lastTwoYearAllSales
-                },
-                dueBusinessSupplierCreateFormList: this.form.dueBusinessSupplierVoList,
-                firstTenMonthsDown: this.form.firstTenMonthsDown,
-                interIndustryCooperation: this.form.interIndustryCooperation,
-                mainBrandOneName: this.form.mainBrandOneName,
-                mainBrandThreeName: this.form.mainBrandThreeName,
-                mainBrandTwoName: this.form.mainBrandTwoName,
-                mainBusinessFormatOneId: this.form.mainBusinessFormatOneId,
-                mainBusinessFormatThreeId: this.form.mainBusinessFormatThreeId,
-                mainBusinessFormatTwoId: this.form.mainBusinessFormatTwoId,
-                mainCategoryOneId: this.form.mainCategoryOneId,
-                mainCategoryTwoId: this.form.mainCategoryTwoId,
-                memberShopNum: this.form.memberShopNum,
-                operationNode: 1,
-                publicityPromotionChannels: this.form.publicityPromotionChannels,
-                riskDisclosure: this.form.riskDisclosure,
-                salesGrowthHealth: this.salesGrowthHealth,
-                salesPerformanceLastYear: this.form.salesPerformanceLastYear,
-                selfStoresNum: this.form.selfStoresNum,
-                upstreamBodySwitchable: this.upstreamBodySwitchable,
-                wholesaleShare: this.form.wholesaleShare,
-                retailShare: this.form.retailShare,
-                projectShare: this.form.projectShare
-            }
-            console.log(formData)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.dueBusinessId) {
@@ -316,45 +255,6 @@ export default {
             // this.dueBusinessSaleCreateFormList[0].lastYearSales = this.lastYearAllSales
             // this.dueBusinessSaleCreateFormList[0].lastTwoYearSales = this.lastTwoYearAllSales
             // this.$router.go(-1)
-        }
-    },
-    watch: {
-        'form.dueBusinessSaleCreateFormList': {
-            handler (val) {
-                let databaseCurrentYearAllSales
-                let databaseLastYearAllSales
-                let databaseLastTwoYearAllSales
-                this.currentYearAllSales = 0
-                this.lastYearAllSales = 0
-                this.lastTwoYearAllSales = 0
-                val.map((item, index) => {
-                    if (index === 0) {
-                        databaseCurrentYearAllSales = parseFloat(item.currentYearSales)
-                        databaseLastYearAllSales = parseFloat(item.lastYearSales)
-                        databaseLastTwoYearAllSales = parseFloat(item.lastTwoYearSales)
-                    } else {
-                        this.currentYearAllSales += parseFloat(item.currentYearSales)
-                        this.lastYearAllSales += parseFloat(item.lastYearSales)
-                        this.lastTwoYearAllSales += parseFloat(item.lastTwoYearSales)
-                    }
-                })
-                this.currentYearAllSales = (this.currentYearAllSales ? this.currentYearAllSales : 0).toFixed(2)
-                this.lastYearAllSales = (this.lastYearAllSales).toFixed(2)
-                this.lastTwoYearAllSales = (this.lastTwoYearAllSales).toFixed(2)
-                if (this.watchTime === 0) {
-                    if (+this.currentYearAllSales !== databaseCurrentYearAllSales) {
-                        this.currentYearAllSales = databaseCurrentYearAllSales.toFixed(2)
-                    }
-                    if (+this.lastYearAllSales !== databaseLastYearAllSales) {
-                        this.lastYearAllSales = databaseLastYearAllSales.toFixed(2)
-                    }
-                    if (+this.lastTwoYearAllSales !== databaseLastTwoYearAllSales) {
-                        this.lastTwoYearAllSales = databaseLastTwoYearAllSales.toFixed(2)
-                    }
-                }
-                this.watchTime++
-            },
-            deep: true
         }
     },
     filters: {
