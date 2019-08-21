@@ -215,7 +215,7 @@ import { IsChinese } from '@/rules'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
 import { fileUploadUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'selectCategory',
@@ -309,7 +309,8 @@ export default {
             return this.form.logoUrl
         },
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            userInfoMore: state => state.hmall.userInfo
         }),
         length () {
             return ((this.brandName ? this.brandName : '') + this.categorySelect[2] + (this.form.specification ? this.form.specification : '')).length
@@ -418,20 +419,28 @@ export default {
             }
         },
         async createProduct (params) {
-            await createProduct(params)
-            if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
-                this.$router.push('/hmall/shopReviewList')
-            } else {
-                this.$router.push({
-                    path: '/hmall/shopManager'
-                })
+            try {
+                await createProduct(params)
+                if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
+                    this.$router.push('/hmall/shopReviewList')
+                } else {
+                    this.$router.push({
+                        path: '/hmall/shopManager'
+                    })
+                }
+            } catch (e) {
+                this.saveDisabled = false
             }
         },
         async updateProduct (params) {
-            await updateProduct(params)
-            this.$router.push({
-                path: '/hmall/shopManager'
-            })
+            try {
+                await updateProduct(params)
+                this.$router.push({
+                    path: '/hmall/shopManager'
+                })
+            } catch (e) {
+                this.saveDisabled = false
+            }
         },
         pictureMessage (files, fileList) {
             this.$message({
@@ -478,7 +487,7 @@ export default {
                     const { ...params } = this.form
                     params.createBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
-                    params.merchantCode = this.userInfo.organizationCode
+                    params.merchantCode = this.userInfoMore.organizationCode
 
                     if (this.form.productShortName) {
                         params.productName = this.brandName + this.categorySelect[2] + this.form.specification + this.form.productShortName
@@ -490,6 +499,7 @@ export default {
                             type: 'warning',
                             message: '商品名称长度为50字以内'
                         })
+                        this.saveDisabled = false
                         return
                     }
                     delete params.attributeList
@@ -498,8 +508,8 @@ export default {
                      */
                     try {
                         if (this.isAdd) {
-                            params.sourceCode = this.userInfo.organizationCode
-                            params.sourceName = this.userInfo.organizationName
+                            params.sourceCode = this.userInfoMore.organizationCode
+                            params.sourceName = this.userInfoMore.organizationName
                             this.createProduct(params)
                         } else {
                             params.id = this.modify
@@ -633,7 +643,7 @@ export default {
                     params.createBy = this.userInfo.employeeName
                     params.updateBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
-                    params.merchantCode = this.userInfo.organizationCode
+                    params.merchantCode = this.userInfoMore.organizationCode
                     if (this.form.productShortName) {
                         params.productName = this.brandName + this.categorySelect[2] + this.form.specification + this.form.productShortName
                     } else {
@@ -644,11 +654,17 @@ export default {
                             type: 'warning',
                             message: '商品名称长度为50字以内'
                         })
+                        this.saveDisabled = false
                         return
                     }
                     delete params.attributeList
                     params.id = this.modify
-                    await reviewPass(params)
+                    try {
+                        await reviewPass(params)
+                    } catch (e) {
+                        this.saveDisabled = false
+                    }
+
                     this.$router.push('/hmall/shopReviewList')
                 }
             })
@@ -668,9 +684,13 @@ export default {
         },
         close () {
             this.$router.push('/hmall/shopReviewList')
-        }
+        },
+        ...mapActions({
+            getUserInfoMore: 'getUserInfoMore'
+        })
     },
     async mounted () {
+        this.getUserInfoMore()
         const { data } = await findCategoryByParent({
             parentId: 0
         })

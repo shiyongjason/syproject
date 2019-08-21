@@ -1,13 +1,8 @@
 <template>
-    <div class="page-body-cont">
+    <div class="coupon-table">
         <el-table :data="tableData"
                   border
                   style="width: 100%">
-            <el-table-column
-                prop="memberName"
-                align="center"
-                label="申请编号">
-            </el-table-column>
             <el-table-column
                 prop="memberName"
                 align="center"
@@ -47,7 +42,7 @@
                 align="center"
                 label="申请日期">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.createTime">{{scope.row.createTime | formatterTime}}</span>
+                    <span v-if="scope.row.createTime">{{scope.row.createTime | formatDate}}</span>
                     <span v-else v-text="'-'"></span>
                 </template>
             </el-table-column>
@@ -55,8 +50,8 @@
                 align="center"
                 label="操作">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.status === 0" class="orangeBtn" @click="showDialog(scope.row,'review')">审核</el-button>
-                    <el-button v-if="scope.row.status != 0" class="orangeBtn" @click="showDialog(scope.row,'watch')">查看</el-button>
+                    <el-button v-if="scope.row.status === 0" type="text" size="small" @click="showDialog(scope.row,'review')">审核</el-button>
+                    <el-button v-if="scope.row.status != 0" type="text" size="small" @click="showDialog(scope.row,'watch')">查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -117,7 +112,7 @@
                     </el-form-item>
                 </div>
             </el-form>
-            <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
+            <el-form ref="form" :rules="rules" :model="suggest">
                 <div v-if="dialogParams.type === 'review'">
                     <h2>审核意见</h2>
                     <div class="preview-result">
@@ -128,17 +123,17 @@
                     </div>
                     <div>
                         <el-form-item label="备注原因：">
-                            <el-input type="textarea" v-model="suggest.opinion" rows="3" maxlength="50"></el-input>
+                            <el-input type="textarea" v-model="suggest.opinion" rows="3"></el-input>
                         </el-form-item>
                     </div>
                 </div>
                 <div class="suggest-btn">
                     <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button name="hosjoy-color" @click="createMemberReview">提交</el-button>
-                        <el-button name="white-color" @click="cancel">取消</el-button>
+                        <el-button type="primary" @click="createMemberReview">提交</el-button>
+                        <el-button @click="cancel">取消</el-button>
                     </el-form-item>
                     <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button name="white-color" @click="close">关闭</el-button>
+                        <el-button @click="close">关闭</el-button>
                     </el-form-item>
                 </div>
             </el-form>
@@ -147,110 +142,110 @@
 </template>
 
 <script>
-import { findMemberDetails, createMemberReview } from '../api/index'
-export default {
-    name: 'memberTable',
-    props: {
-        tableData: {
-            type: Array,
-            required: false,
-            default () {
-                return []
-            }
-        },
-        paginationData: {
-            type: Object,
-            default () {
-                return {
-                    totalElements: 0,
-                    pageSize: 10,
-                    pageNumber: 1
+    import { findMemberDetails, createMemberReview } from '../api/index'
+    export default {
+        name: 'memberTable',
+        props: {
+            tableData: {
+                type: Array,
+                required: false,
+                default () {
+                    return []
+                }
+            },
+            paginationData: {
+                type: Object,
+                default () {
+                    return {
+                        totalElements: 0,
+                        pageSize: 10,
+                        pageNumber: 1
+                    }
                 }
             }
-        }
-    },
-    data () {
-        return {
-            dialogParams: {
-                show: false,
-                title: '审核优惠券',
-                type: 'review'
-            },
-            suggest: {},
-            memberDetails: {},
-            openParams: {
-                id: '',
-                memberCode: ''
-            },
-            rules: {
-                status: [
-                    { required: true, message: '审核结果不能为空！' }
-                ]
-            }
-        }
-    },
-    methods: {
-        onQuery () {
-            this.$emit('onQuery')
         },
-        handleSizeChange (val) {
-            this.$emit('onSizeChange', val)
-        },
-        handleCurrentChange (val) {
-            this.$emit('onCurrentChange', val)
-        },
-        showDialog (row, type) {
-            this.openParams.id = row.id
-            this.openParams.memberCode = row.memberCode
-            this.suggest = {}
-            if (type === 'review') {
-                this.dialogParams.title = '会员店审核'
-                this.dialogParams.type = type
-            } else if (type === 'watch') {
-                this.dialogParams.title = '会员店信息查看'
-                this.dialogParams.type = type
-            }
-            this.dialogParams.show = true
-            this.findMemberDetails(row)
-        },
-        close () {
-            this.dialogParams.show = false
-        },
-        cancel () {
-            this.dialogParams.show = false
-        },
-        async findMemberDetails (row) {
-            const { data } = await findMemberDetails({ id: row.id, memberCode: row.memberCode })
-            this.memberDetails = data
-        },
-        async createMemberReview () {
-            this.$refs['form'].validate(async (valid) => {
-                if (valid) {
-                    const params = {
-                        ...this.openParams,
-                        ...this.suggest
-                    }
-                    if (!params.memberCode) delete params.memberCode
-                    try {
-                        await createMemberReview(params)
-                        this.$message({
-                            type: 'success',
-                            message: '已提交审核结果'
-                        })
-                        this.dialogParams.show = false
-                    } catch (e) {
-                    }
-                    this.onQuery()
+        data () {
+            return {
+                dialogParams: {
+                    show: false,
+                    title: '审核优惠券',
+                    type: 'review'
+                },
+                suggest: {},
+                memberDetails: {},
+                openParams: {
+                    id: '',
+                    memberCode: ''
+                },
+                rules: {
+                    status: [
+                        { required: true, message: '审核结果不能为空！' }
+                    ]
                 }
-            })
+            }
+        },
+        methods: {
+            onQuery () {
+                this.$emit('onQuery')
+            },
+            handleSizeChange (val) {
+                this.$emit('onSizeChange', val)
+            },
+            handleCurrentChange (val) {
+                this.$emit('onCurrentChange', val)
+            },
+            async showDialog (row, type) {
+                this.openParams.id = row.id
+                this.openParams.memberCode = row.memberCode
+                this.suggest = {}
+                if (type === 'review') {
+                    this.dialogParams.title = '会员店审核'
+                    this.dialogParams.type = type
+                } else if (type === 'watch') {
+                    this.dialogParams.title = '会员店信息查看'
+                    this.dialogParams.type = type
+                }
+                await this.findMemberDetails(row)
+                this.dialogParams.show = true
+            },
+            close () {
+                this.dialogParams.show = false
+            },
+            cancel () {
+                this.dialogParams.show = false
+            },
+            async findMemberDetails (row) {
+                const { data } = await findMemberDetails({ id: row.id, memberCode: row.memberCode })
+                this.memberDetails = data
+            },
+            async createMemberReview () {
+                this.$refs['form'].validate(async (valid) => {
+                    if (valid) {
+                        const params = {
+                            ...this.openParams,
+                            ...this.suggest
+                        }
+                        if (!params.memberCode) delete params.memberCode
+                        try {
+                            await createMemberReview(params)
+                            this.$message({
+                                type: 'success',
+                                message: '已提交审核结果'
+                            })
+                            this.dialogParams.show = false
+                        } catch (e) {
+                        }
+                        this.onQuery()
+                    }
+                })
+            }
         }
     }
-}
 </script>
 <style scoped>
     .suggest-btn {
         padding-top: 20px;
-        text-align: right;
+        text-align: center;
     }
     .sub-title{
         font-size: 18px;
@@ -274,7 +269,7 @@ export default {
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%)
     }
 </style>
 <style>
@@ -286,11 +281,5 @@ export default {
     }
     .el-form-item__label,.el-form-item__content{
         line-height: 25px;
-    }
-    .suggest .el-form-item {
-        margin-bottom: 15px!important;
-    }
-    .el-dialog--center .el-dialog__body{
-        padding: 0 25px;
     }
 </style>
