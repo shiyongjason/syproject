@@ -39,12 +39,12 @@ export default {
         },
         organizationData: {},
         financeData: {
+            assessmentList: [], // 财务尽调评估
             dueFinanceYearOperatingCreateForms: [],
             dueFinanceBasic: {},
             caseFlow: {},
             dueFinanceProfit: {},
-            assetsLiabilities: {},
-            assessmentList: []
+            assetsLiabilities: {}
         }
     },
     mutations: {

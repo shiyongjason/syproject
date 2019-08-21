@@ -43,8 +43,7 @@
                     <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="scope.data.row.approvalStatus==0">修改
-                    </el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="scope.data.row.approvalStatus==0">修改</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if='scope.data.row.approvalStatus==0'>删除</el-button>
                     <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-if='scope.data.row.approvalStatus!=0'>查看</el-button>
                 </template>
@@ -78,7 +77,7 @@ export default {
                 { label: '发起人所在机构', prop: 'applyOrganization' },
                 { label: '创建时间', prop: 'createTime' },
                 { label: '评审通过/驳回时间', prop: 'approvalTime' },
-                { label: '评审状态', prop: 'approvalStatus', width: '60px' },
+                { label: '评审状态', prop: 'approvalStatus' },
                 { label: '未操作人', prop: 'noOperator', align: 'left' }
             ],
             tableData: [],

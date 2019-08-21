@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { ossUrl } from '../../../api/config'
-// import { baseUrl } from '@/api/config'
+import { ccpBaseUrl } from '../../../api/config'
+import { ossUrl } from '@/api/config'
 /*
 @申请
 */
@@ -132,7 +132,7 @@ export const getDueLegal = (params) => {
 }
 // 新增合作目标
 export const addCooperativetarget = (params) => {
-    return axios.post('develop/cooperativetarget', { params })
+    return axios.post('develop/cooperativetarget', params)
 }
 // 修改合作目标
 export const putCooperativetarget = (params) => {
@@ -157,7 +157,10 @@ export const getAssessment = (params) => {
 export const getDueapprovalconclusion = (params) => {
     return axios.get('develop/dueapprovalconclusion/queryList', { params })
 }
-
+// 省市区
+export const provinces = (params) => {
+    return axios.post(ossUrl + 'api/httpH5/3041', params)
+}
 // 新增
 export const addStandardscore = (params) => {
     return axios.post('develop/standardscore/', params)
