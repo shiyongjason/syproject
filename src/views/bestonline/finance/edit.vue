@@ -19,7 +19,7 @@
                 <!-- 仓储 -->
                 <!-- <Storage /> -->
                 <!-- 财务委派 -->
-                <!-- <FinancialAppointment /> -->
+                <FinancialAppointment />
                 <!-- 资产负债表 -->
                 <BalanceSheet />
                 <!-- 利润表 -->
@@ -73,7 +73,7 @@ export default {
     },
     data () {
         return {
-            activeName: '10',
+            activeName: '11',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -132,35 +132,35 @@ export default {
             applyId: '',
             type: false,
             textarea: '',
-            form: {
-                assessmentList: [],
-                assessmentItem: '',
-                cooperationTarget: '',
-                state: '',
-                remark: '',
-                riskDisclosure: '',
-                analysisDescription: '',
-                dueFinanceYearOperatingPos: [],
-                salesExpensesRatio: '',
-                costRationality: '',
-                managementExpensesRatio: '',
-                costRationalityRemark: '',
-                companyDebt: '',
-                shareholdersDebt: '',
-                companyBorrowsShareholders: '',
-                shareholdersBorrowsCompany: '',
-                cashFlowRatio: '',
-                capitalRiskAssessment: '',
-                actualControllerAndMateOperatingLoan: '',
-                personalAndCompanyGuarantee: '',
-                taxableIncomeRatio: '',
-                taxBearingRate: '',
-                dueFinanceBasic: [],
-                assetsLiabilities: [],
-                dueFinanceProfit: [],
-                caseFlow: [],
-                assetLiabilityRatio: ''
-            },
+            // form: {
+            //     assessmentList: [],
+            //     assessmentItem: '',
+            //     cooperationTarget: '',
+            //     state: '',
+            //     remark: '',
+            //     riskDisclosure: '',
+            //     analysisDescription: '',
+            //     dueFinanceYearOperatingPos: [],
+            //     salesExpensesRatio: '',
+            //     costRationality: '',
+            //     managementExpensesRatio: '',
+            //     costRationalityRemark: '',
+            //     companyDebt: '',
+            //     shareholdersDebt: '',
+            //     companyBorrowsShareholders: '',
+            //     shareholdersBorrowsCompany: '',
+            //     cashFlowRatio: '',
+            //     capitalRiskAssessment: '',
+            //     actualControllerAndMateOperatingLoan: '',
+            //     personalAndCompanyGuarantee: '',
+            //     taxableIncomeRatio: '',
+            //     taxBearingRate: '',
+            //     dueFinanceBasic: [],
+            //     assetsLiabilities: [],
+            //     dueFinanceProfit: [],
+            //     caseFlow: [],
+            //     assetLiabilityRatio: ''
+            // },
             rules: {
                 riskDisclosure: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
@@ -191,7 +191,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            financeData: state => state.dueDiligence.financeData
+            form: state => state.dueDiligence.financeData
         })
     },
     mounted () {
@@ -320,6 +320,7 @@ export default {
             }
         },
         onSureHandle (i) {
+            console.log(this.form)
             // const type = i === 0 ? '保存' : '提交'
             // this.$confirm(`确定${type}?`, '提示', {
             //     confirmButtonText: '确定',
@@ -350,14 +351,14 @@ export default {
         },
         async onSaveGood (type) {
             const formData = this.format(type)
-            // console.log(formData)
-            await saveFinance(formData)
+            console.log(formData)
+            // await saveFinance(formData)
             // this.getFinance()
-            this.$message({
-                type: 'success',
-                message: '保存成功!'
-            })
-            this.$router.go(-1)
+            // this.$message({
+            //     type: 'success',
+            //     message: '保存成功!'
+            // })
+            // this.$router.go(-1)
         },
         async onSubmit (type) {
             for (const i of this.form.assessmentList) {

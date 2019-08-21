@@ -219,11 +219,11 @@ export default {
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.form.operationNode = 0
-            if (this.dueBusinessId) {
-                await putBusiness(this.form)
-            } else {
-                await addBusiness(this.form)
-            }
+            // if (this.dueBusinessId) {
+            //     await putBusiness(this.form)
+            // } else {
+            //     await addBusiness(this.form)
+            // }
             this.$message({
                 type: 'success',
                 message: '保存成功'
