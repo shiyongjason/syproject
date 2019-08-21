@@ -375,13 +375,7 @@ table {
     max-width: 200px;
     min-width: 180px;
 }
-.assessmentTable {
-    margin: 15px;
-}
-.assessmentRow {
-    width: calc(100% / 4);
-    height: 36px;
-}
+
 /deep/ .textHeight {
     textarea {
         height: 210px;
