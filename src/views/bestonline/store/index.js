@@ -71,6 +71,7 @@ export default {
     },
     actions: {
         async findBusinessData ({ commit }, params) {
+            console.log(params)
             const { data } = await axios.get(`develop/business/${params.applyId}`)
             commit(BUSINESS_DATA, data)
         },

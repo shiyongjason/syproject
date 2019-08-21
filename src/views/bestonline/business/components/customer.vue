@@ -23,7 +23,7 @@
                 </div>
                 <div class="table-col">
                     <el-select v-model="item.categoryId" placeholder="请选择" >
-                        <el-option v-for="item in mainCategoryData" :key="item.value" :label="item.label" :value="item.value">
+                        <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </div>
