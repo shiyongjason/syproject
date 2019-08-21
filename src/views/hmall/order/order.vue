@@ -501,7 +501,8 @@ export default {
         async onQueryOrder () {
             const { ...params } = this.queryParams
             if (params.orderStatus == 6) {
-                delete params.orderStatus
+                params.orderStatus = 3
+                params.orderType = 1
                 params.isParentOrder = 1
                 params.isSplit = 0
             }
@@ -555,7 +556,8 @@ export default {
         exportTabOrder () {
             const { ...params } = this.queryParams
             if (params.orderStatus == 6) {
-                delete params.orderStatus
+                params.orderStatus = 3
+                params.orderType = 1
                 params.isParentOrder = 1
                 params.isSplit = 0
             }
@@ -647,7 +649,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+/deep/ .el-table__expand-icon{
+    position: absolute;
+    top: 14px;
+    right: 1px;
+}
 .flex-wrap-row {
     max-width: 1350px;
 }

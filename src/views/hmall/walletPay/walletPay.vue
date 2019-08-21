@@ -1,144 +1,267 @@
 <template>
     <div class="wallet-pay">
         <div class="page-body">
-            <div class="page-body-cont">
-                <div class="page-header">
-                    <el-breadcrumb separator="/">
-                        <el-breadcrumb-item>钱包支付开通情况</el-breadcrumb-item>
-                    </el-breadcrumb>
-                </div>
-                <div class="page-wrap flex-wrap-col">
-                    <div class="flex-wrap-row">
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">平台公司：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input type="text"
-                                          v-model="queryParams.organizationName" maxlength="50" placeholder="请输入"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">会员店名称：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input type="text" placeholder="请输入会员店"></el-input>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">网商支付开通时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker
-                                    v-model="queryParams.startDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="开始日期"
-                                    :picker-options="pickerOptionsStart"
-                                >
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker
-                                    v-model="queryParams.endDate"
-                                    type="datetime"
-                                    format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="结束日期"
-                                    :picker-options="pickerOptionsEnd"
-                                >
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">网商支付开通状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.status">
-                                    <el-option label="全部" value=""></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-title">单分享开通状态：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="queryParams.status">
-                                    <el-option label="全部" value=""></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="flex-wrap-box">
-                            <div class="flex-wrap-cont">
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    搜索
-                                </el-button>
-                                <el-button type="primary" class="ml20" @click="onQuery()">
-                                    重置
-                                </el-button>
-                            </div>
-                        </div>
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete
+                            :selectArr="platComList"
+                            @back-event="backPlat"
+                            :placeholder="'全部'"
+                            @clearInput="clearInput"
+                            :selectObj="selectPlatObj"
+                        ></HAutocomplete>
                     </div>
                 </div>
-                <div class="page-box page-table">
-                    <walletPayTable
-                        :tableData="tableData"
-                        :paginationData="paginationData"
-                        @onQuery="onQuery"
-                        @onSizeChange="onSizeChange"
-                        @onCurrentChange="onCurrentChange"></walletPayTable>
+                <div class="query-cont-col">
+                    <div class="query-col-title">会员店名称：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete
+                            :selectArr="MenberStoreList"
+                            @back-event="backMenber"
+                            :placeholder="'全部'"
+                            @clearInput="clearInput"
+                            :selectObj="selectMenberObj"
+                        ></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">钱包支付开通时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker
+                            v-model="queryParams.startTime"
+                            type="datetime"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            placeholder="开始时间"
+                            :picker-options="pickerOptionsStart"
+                        >
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker
+                            v-model="queryParams.endTime"
+                            type="datetime"
+                            format="yyyy-MM-dd"
+                            value-format="yyyy-MM-dd"
+                            placeholder="结束时间"
+                            :picker-options="pickerOptionsEnd"
+                        >
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">钱包支付开通状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.registerStatus" style="width: 100%">
+                            <el-option
+                                v-for="item in wsOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">单分享开通状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.singleShareOpen" style="width: 100%">
+                            <el-option
+                                v-for="item in dfxOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-input">
+                        <el-button type="primary" class="ml20" @click="onQuery(true)">
+                            搜索
+                        </el-button>
+                        <el-button type="primary" class="ml20" @click="clear()">
+                            清空筛选条件
+                        </el-button>
+                    </div>
                 </div>
             </div>
+            <walletPayTable
+                :tableData="tableData"
+                :paginationData="paginationData"
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange"></walletPayTable>
         </div>
     </div>
 </template>
 
 <script>
 import walletPayTable from './components/wallerPayTable'
+import { getPurseOpenCase, getListByParent, findPaltList } from './api/index'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'walletPay',
     components: {
-        walletPayTable
+        walletPayTable,
+        HAutocomplete
     },
     data () {
         return {
+            platComList: [], // 平台公司
+            MenberStoreList: [], // 會員店
+            selectPlatObj: {
+                selectCode: '',
+                selectName: '',
+                fields: 'pOrganizationName'
+            },
+            selectMenberObj: {
+                selectCode: '',
+                selectName: '',
+                fields: 'organizationName'
+            },
+            pickerOptionsStart: {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.endTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            },
+            pickerOptionsEnd: {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.startTime
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            },
             queryParams: {
+                pOrganizationName: '',
+                organizationName: '',
+                registerStatus: '',
+                singleShareOpen: '',
+                startTime: '',
+                endTime: ''
+            },
+            searchQueryParams: {
+                pOrganizationName: '', // 平台公司
+                organizationName: '', // 会员店
+                registerStatus: '',
+                singleShareOpen: '',
+                // startTime: '',
+                // endTime: '',
+                pageNumber: 1,
+                pageSize: 10
+            },
+            tableData: [],
+            paginationData: {
+                totalElements: 100,
                 pageSize: 10,
                 pageNumber: 1
             },
-            tableData: [],
-            paginationData: {}
-        }
-    },
-    computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
-                    if (beginDateVal) {
-                        return time.getTime() > beginDateVal
-                    }
+            dfxOptions: [
+                {
+                    value: '',
+                    label: '全部'
+                },
+                {
+                    value: 0,
+                    label: '未开通'
+                },
+                {
+                    value: 1,
+                    label: '已开通'
                 }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
-                    if (beginDateVal) {
-                        return time.getTime() < beginDateVal
-                    }
+            ],
+            wsOptions: [
+                {
+                    value: '',
+                    label: '全部'
+                },
+                {
+                    value: 1,
+                    label: '已开通'
+                },
+                {
+                    value: 2,
+                    label: '未开通'
                 }
-            }
+            ]
         }
     },
     methods: {
+        backPlat (value) {
+            this.updateBrandChange()
+            this.selectMenberObj.selectName = ''
+            this.queryParams.pOrganizationName = value.value.value ? value.value.value : ''
+        },
+        backMenber (value) {
+            this.queryParams.organizationName = value.value.value ? value.value.value : ''
+        },
+        clearInput (fields) {
+            if (fields === 'pOrganizationName') {
+                this.updateBrandChange()
+                this.selectMenberObj.selectName = ''
+            }
+            this.queryParams[fields] = ''
+        },
+        async onQuery (searchOrNextPage) {
+            if (searchOrNextPage) {
+                Object.keys(this.queryParams).forEach(key => {
+                    this.searchQueryParams[key] = this.queryParams[key]
+                })
+            }
+            const { data } = await getPurseOpenCase(this.searchQueryParams)
+            this.tableData = data.records
+            this.paginationData.totalElements = data.total
+            this.paginationData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
+        },
+        clear () {
+            Object.keys(this.queryParams).forEach((key) => {
+                this.queryParams[key] = ''
+            })
+            this.selectPlatObj.selectName = ''
+            this.selectMenberObj.selectName = ''
+        },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onQuery()
+            this.searchQueryParams.pageSize = val
+            this.onQuery(false)
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val
-            this.onQuery()
+            this.searchQueryParams.pageNumber = val
+            this.onQuery(false)
         },
-        onQuery () {
-            console.log(1)
+        async updateBrandChange () {
+            const params = {
+                organizationShortName: '',
+                organizationType: '4, 5, 6',
+                pOrganizationCode: this.selectPlatObj.selectName ? this.selectPlatObj.selectCode : ''
+            }
+            const { data } = await getListByParent(params)
+            for (let i of data.data) {
+                i.value = i.organizationShortName
+                i.selectCode = i.organizationCode
+            }
+            this.MenberStoreList = data.data
         }
     },
-    mounted () {
-
+    async mounted () {
+        await this.onQuery(false)
+        // 平台公司
+        const { data } = await findPaltList()
+        for (let i of data.data.pageContent) {
+            i.value = i.companyShortName
+            i.selectCode = i.companyCode
+        }
+        this.platComList = data.data.pageContent
+        await this.updateBrandChange()
     }
 }
 </script>

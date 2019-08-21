@@ -32,7 +32,7 @@
             </template>
             <template slot-scope="scope" slot="orderStatus">
                 <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
-                <p v-if="scope.data.row.isSplit==0&&scope.data.row.isParentOrder==1">
+                <p v-if="scope.data.row.isSplit==0&&scope.data.row.isParentOrder==1&&scope.data.row.orderStatus==3&&scope.data.row.orderType==1">
                     <span>待拆分</span>
                 </p>
                 <p v-else>
@@ -149,13 +149,17 @@ export default {
     }
 }
 </script>
-
-<style>
+<style lang="scss">
 .el-pagination__editor.el-input .el-input__inner {
     box-shadow: none;
 }
 .isLink {
     color: #409eff;
     font-weight: 600;
+}
+/deep/ .el-table__expand-icon{
+    position: absolute;
+    top: 14px;
+    right: 1px;
 }
 </style>
