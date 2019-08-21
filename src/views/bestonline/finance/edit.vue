@@ -73,7 +73,7 @@ export default {
     },
     data () {
         return {
-            activeName: '11',
+            activeName: '1',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -331,34 +331,18 @@ export default {
             if (i === 1) return this.onSubmit(i)
             // }).catch(() => {})
         },
-        initTable () {
-
-        },
-        format (type) {
+        async onSaveGood () {
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
             if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
-            const formData = {
-                assessmentList: this.assessmentList,
-                assetsLiabilities: this.assetsLiabilities,
-                caseFlow: this.caseFlow,
-                dueFinanceBasic: this.dueFinanceBasic,
-                dueFinanceProfit: this.dueFinanceProfit
-            }
-            return formData
-        },
-        async onSaveGood (type) {
-            const formData = this.format(type)
-            console.log(formData)
-            // await saveFinance(formData)
-            // this.getFinance()
-            // this.$message({
-            //     type: 'success',
-            //     message: '保存成功!'
-            // })
-            // this.$router.go(-1)
+            await saveFinance({ ...this.form, type: 0 })
+            this.$message({
+                type: 'success',
+                message: '保存成功!'
+            })
+            this.$router.go(-1)
         },
         async onSubmit (type) {
             for (const i of this.form.assessmentList) {
@@ -578,13 +562,13 @@ export default {
             //     this.activeName = '10'
             //     return false
             // }
-            // await saveFinance(formData)
+            await saveFinance({ ...form, type: 1 })
             // this.isdisabled = true
-            // this.$message({
-            //     type: 'success',
-            //     message: `提交成功`
-            // })
-            // this.$router.go(-1)
+            this.$message({
+                type: 'success',
+                message: `提交成功`
+            })
+            this.$router.go(-1)
         }
     }
 }
