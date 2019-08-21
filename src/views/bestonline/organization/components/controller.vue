@@ -5,47 +5,14 @@
         </template>
         <p class="small-title">个人简介</p>
         <div class="item-wrapper">
-            <el-form-item
-                label="概况："
-                label-width="150px"
-                prop="actualControllerOverview"
-            >
-                <el-input
-                    type="textarea"
-                    style="width:600px"
-                    rows="4"
-                    placeholder="请输入内容"
-                    v-model="form.actualControllerOverview"
-                    maxlength="250"
-                ></el-input>
+            <el-form-item label="概况：" label-width="150px" prop="actualControllerOverview">
+                <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入内容" v-model="form.actualControllerOverview" maxlength="250"></el-input>
             </el-form-item>
-            <el-form-item
-                label="底线和禁区："
-                label-width="150px"
-                prop="actualControllerBaseline"
-            >
-                <el-input
-                    type="textarea"
-                    style="width:600px"
-                    rows="4"
-                    placeholder="请输入内容"
-                    v-model="form.actualControllerBaseline"
-                    maxlength="250"
-                ></el-input>
+            <el-form-item label="底线和禁区：" label-width="150px" prop="actualControllerBaseline">
+                <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入内容" v-model="form.actualControllerBaseline" maxlength="250"></el-input>
             </el-form-item>
-            <el-form-item
-                label="个人风格和喜好："
-                label-width="150px"
-                prop="actualControllerHobby"
-            >
-                <el-input
-                    type="textarea"
-                    style="width:600px"
-                    rows="4"
-                    placeholder="请输入内容"
-                    v-model="form.actualControllerHobby"
-                    maxlength="250"
-                ></el-input>
+            <el-form-item label="个人风格和喜好：" label-width="150px" prop="actualControllerHobby">
+                <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入内容" v-model="form.actualControllerHobby" maxlength="250"></el-input>
             </el-form-item>
         </div>
         <p class="small-title">综合评估</p>
@@ -58,30 +25,16 @@
                 </tr>
             </thead>
             <tbody>
-                <tr
-                    v-for="(item, index) in form.dueOrganizationControllerAssessmentCreateFormList"
-                    :key="index"
-                >
+                <tr v-for="(item, index) in form.dueOrganizationControllerAssessmentCreateFormList" :key="index">
                     <td :colspan="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15 ? 1 : 3">
-                        <span
-                            class="red-span"
-                            v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15"
-                        >*</span>
+                        <span class="red-span" v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">*</span>
                         {{item.assessmentDimension}}
                     </td>
                     <td v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">
-                        <el-input
-                            v-model="item.description"
-                            placeholder="请输入内容"
-                            maxlength="250"
-                        ></el-input>
+                        <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
                     </td>
                     <td v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">
-                        <el-input
-                            v-model="item.score"
-                            placeholder="满分40"
-                            maxlength="2"
-                        ></el-input>
+                        <el-input v-model="item.score" placeholder="满分40" maxlength="2"></el-input>
                     </td>
                 </tr>
             </tbody>
@@ -93,10 +46,7 @@
                 </tr>
             </tfoot>
         </table>
-        <div
-            ref="radarChart2"
-            style="width:600px;height:550px;"
-        ></div>
+        <div ref="radarChart2" style="width:600px;height:550px;"></div>
     </el-collapse-item>
 </template>
 
@@ -167,13 +117,12 @@ export default {
 }
 .item-wrapper {
     margin: 20px 0 20px;
-   /deep/ .el-input {
+    /deep/ .el-input {
         width: 100%;
     }
     /deep/ .el-input__inner {
         border: none;
     }
-
 }
 .red-span {
     color: red;

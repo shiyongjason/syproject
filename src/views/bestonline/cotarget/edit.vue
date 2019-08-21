@@ -74,6 +74,9 @@ export default {
             }
         }
     },
+    computed: {
+
+    },
     methods: {
         oninput (value, e) {
             if (value === 'equityRatio') {
@@ -97,7 +100,8 @@ export default {
                 item.netProfitRate = item.netProfitRate - 0
                 return item
             })
-            if (this.form.id != '') {
+            console.log(this.form.id)
+            if (this.form.id) {
                 this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await putCooperativetarget(this.form)
                 this.$message.success('保存成功！')

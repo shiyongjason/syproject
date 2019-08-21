@@ -4,13 +4,13 @@
             <p class="title-p">新合资公司规划</p>
         </template>
         <el-form-item label="业务类别：" prop="serviceCategory">
-            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px">
+            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory">
                 <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
-                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory" label-width="170px">
+                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory">
                     <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
                         <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
@@ -22,30 +22,30 @@
                 </el-form-item>
             </div>
         </div>
-        <el-form-item label="经营品牌：" prop="dueBusinessFuturePlanCreateForm.brandManagement" label-width="170px">
+        <el-form-item label="经营品牌：" prop="dueBusinessFuturePlanCreateForm.brandManagement">
             <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.brandManagement" placeholder="请输入品牌信息" row=1 style="width: 80%;"></el-input>
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
-                <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince" label-width="170px">
-                    <el-select v-model="businessProvince" placeholder="请选择省" @change="onchangeP(businessProvince)">
-                        <el-option v-for="(item) in provelist" :key="item.key" :label="item.value" :value="item">
+                <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省" @change="onchangeP(form.dueBusinessFuturePlanCreateForm.businessProvince)">
+                        <el-option v-for="item in provelist" :key="item.adCode" :label="item.name" :value="item.adCode">
                         </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity" label-width="170px">
-                    <el-select v-model="businessCity" @change="onchangeC(businessCity)" placeholder="请选择市">
-                        <el-option v-for="item in citylist" :key="item.key" :label="item.value" :value="item">
+                <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" @change="onchangeC(form.dueBusinessFuturePlanCreateForm.businessCity)" placeholder="请选择市">
+                        <el-option v-for="item in citylist" :key="item.adCode" :label="item.name" :value="item.adCode">
                         </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea" label-width="170px">
-                    <el-select v-model="businessArea" placeholder="请选择区"  @change="onchangeA(businessArea)">
-                        <el-option v-for="item in arealist" :key="item.key" :label="item.value" :value="item">
+                <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessArea" placeholder="请选择区">
+                        <el-option v-for="item in arealist" :key="item.adCode" :label="item.name" :value="item.adCode">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -53,30 +53,26 @@
         </div>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
-                <el-form-item label="年销售规模：" prop="dueBusinessFuturePlanCreateForm.annualSalesScale" label-width="170px">
-                    <el-input v-model="form.dueBusinessFuturePlanCreateForm.annualSalesScale" placeholder="请输入规模">
-                        <template slot="suffix">万</template>
-                    </el-input>
+                <el-form-item label="年销售规模：" prop="dueBusinessFuturePlanCreateForm.annualSalesScale">
+                    {{form.dueBusinessFuturePlanCreateForm.annualSalesScale}}万
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item label="净利润率：" prop="dueBusinessFuturePlanCreateForm.netProfitRate" label-width="170px">
-                    <el-input v-model="form.dueBusinessFuturePlanCreateForm.netProfitRate" placeholder="请输入净利润">
-                        <template slot="suffix">%</template>
-                    </el-input>
+                <el-form-item label="净利润率：" prop="dueBusinessFuturePlanCreateForm.netProfitRate">
+                  {{form.dueBusinessFuturePlanCreateForm.netProfitRate}}%
                 </el-form-item>
             </div>
         </div>
         <el-form-item label="下游切换渠道和客户：" prop="dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers" label-width="170px">
-            <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers" placeholder="请输入" row=1 style="width: 80%;"></el-input>
+            {{form.dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers}}
         </el-form-item>
         <el-form-item label="市场推广渠道及计划：" prop="dueBusinessFuturePlanCreateForm.marketingChannelsPlans" label-width="170px">
             <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.marketingChannelsPlans" placeholder="请输入" row=1 style="width: 80%;"></el-input>
         </el-form-item>
-        <el-form-item label="资金用款需求：" prop="dueBusinessFuturePlanCreateForm.fundingRequirements" label-width="170px">
+        <el-form-item label="资金用款需求：" prop="dueBusinessFuturePlanCreateForm.fundingRequirements">
             <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.fundingRequirements" placeholder="请输入" row=1 style="width: 80%;"></el-input>
         </el-form-item>
-        <el-form-item label="其他规划和需求：" label-width="170px">
+        <el-form-item label="其他规划和需求：">
             <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds" placeholder="请输入" row=1 style="width: 80%;"></el-input>
         </el-form-item>
     </el-collapse-item>
@@ -93,10 +89,7 @@ export default {
             maincategory: MAIN_CATEGORY_OPTIONS,
             provelist: [],
             citylist: [],
-            arealist: [],
-            businessProvince: '',
-            businessCity: '',
-            businessArea: ''
+            arealist: []
         }
     },
     watch: {
@@ -123,40 +116,27 @@ export default {
 
     },
     async  mounted () {
-        const data = await this.getAreacode()
-        let selectObj = [{ value: '请选择', key: '' }]
-        this.provelist = selectObj.concat(data.dictpro)
+        this.provelist = await this.getAreacode()
     },
     methods: {
         async  getAreacode () {
             const { data } = await getAreacode()
-
-            return data.data
+            let selectObj = [{ name: '请选择', adCode: '' }]
+            return selectObj.concat(data)
         },
         async onchangeP (val) {
             if (val) {
-                let list = val.cityList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.citylist = selectObj.concat(list)
+                this.citylist = await this.getAreacode({ keywords: val })
             } else {
                 this.citylist = []
                 this.arealist = []
             }
-            this.form.dueBusinessFuturePlanCreateForm.businessProvince = val.key ? val.key : ''
         },
         async onchangeC (val) {
             if (val) {
-                let list = val.areaList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.arealist = selectObj.concat(list)
+                this.arealist = await this.getAreacode({ keywords: val })
             } else {
                 this.arealist = []
-            }
-            this.form.dueBusinessFuturePlanCreateForm.businessCity = val.key ? val.key : ''
-        },
-        async onchangeA (val) {
-            if (val) {
-                this.form.dueBusinessFuturePlanCreateForm.businessArea = val.key
             }
         }
     }

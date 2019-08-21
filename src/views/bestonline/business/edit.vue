@@ -22,7 +22,7 @@
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
-                                    <i v-if="index === 2">%</i>
+
                                     <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
@@ -83,7 +83,7 @@
             </el-form>
         </el-collapse>
 
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom maxLeft">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveBus">保存</el-button>
             </el-col>
@@ -167,13 +167,44 @@ export default {
                 ],
                 switchDate: [
                     { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.serviceCategory': [
+                    { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
+                ],
+                'dueBusinessFuturePlanCreateForm.businessCategory': [
+                    { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
+                ],
+                'dueBusinessFuturePlanCreateForm.manageCategory': [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.brandManagement': [
+                    { required: true, message: '请输入品牌信息', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.annualSalesScale': [
+                    { required: true, message: '请输入年销售规模', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.netProfitRate': [
+                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers': [
+                    { required: true, message: '请输入下游切换渠道和客户', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.marketingChannelsPlans': [
+                    { required: true, message: '请输入市场推广渠道及计划', trigger: 'blur' }
+                ],
+                'dueBusinessFuturePlanCreateForm.fundingRequirements': [
+                    { required: true, message: '请输入资金用款需求', trigger: 'blur' }
                 ]
             }
         }
     },
     mounted () {
-        this.applyId = this.$route.query.applyId
         this.nowMonth = (new Date()).getMonth()
+    },
+    watch: {
+        form (form) {
+            form.applyId = this.$route.query.applyId
+        }
     },
     computed: {
         ...mapState({
@@ -183,6 +214,11 @@ export default {
     },
     methods: {
         async onSaveBus () {
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+            this.form.operationNode = 0
             if (this.dueBusinessId) {
                 await putBusiness(this.form)
             } else {
@@ -226,9 +262,9 @@ export default {
                 }
             }
             // console.log(this.form.publicityPromotionChannels)
-            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-            // this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            // this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {

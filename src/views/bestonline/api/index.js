@@ -132,7 +132,7 @@ export const getDueLegal = (params) => {
 }
 // 新增合作目标
 export const addCooperativetarget = (params) => {
-    return axios.post('develop/cooperativetarget', { params })
+    return axios.post('develop/cooperativetarget', params)
 }
 // 修改合作目标
 export const putCooperativetarget = (params) => {
@@ -196,5 +196,9 @@ export const createJusticeDo = (params) => {
 }
 // 省市区
 export const getAreacode = (params) => {
-    return axios.get(ccpBaseUrl + 'common/amap/district', { params })
+    return axios.post(ossUrl + '/api/httpH5/3044', params)
+}
+// 省市区
+export const getChiness = (params) => {
+    return axios.get(ossUrl + '/api/httpH5/3164', { params })
 }

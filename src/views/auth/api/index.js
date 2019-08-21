@@ -8,6 +8,7 @@ export const saveAuthRole = (params) => axios.post('/uaa/api/employee/auth', par
 
 // 员工查询
 export const getRoleInfo = (params) => axios.get(`/uaa/api/employee/${params}`)
+
 // 获取BOSS组织结构树
 export const findBOSSOrganization = () => axios.get('/uaa/api/department/getDepartmentTree')
 
@@ -22,3 +23,6 @@ export const addList = (params) => axios.post('/uaa/position', params)
 
 // 更新岗位信息
 export const updateList = (params) => axios.put('/uaa/position', params)
+
+// 删除岗位信息
+export const deleteList = (params) => axios.delete(`/uaa/position/${params}`, params)
