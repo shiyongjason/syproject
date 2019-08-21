@@ -61,7 +61,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'four',
+            activeName: 'three',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -150,35 +150,38 @@ export default {
         margin: 0;
     }
     .jd-bottom {
-          position: fixed;
-    bottom: 0;
-    background: #ffffff;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    text-align: center;
-    z-index: 99;
+        position: fixed;
+        bottom: 0;
+        background: #ffffff;
+        left: 0;
+        right: 0;
+        padding: 10px;
+        text-align: center;
+        z-index: 99;
     }
     .minLeft {
-    left: 64px;
-    transition: 0.3s;
+        left: 64px;
+        transition: 0.3s;
     }
     .maxLeft {
         left: 200px;
         transition: 0.3s;
     }
 }
-.assessmentTable{
-     margin: 15px;
-    td{
-        /deep/ .el-select{
+.assessmentTable {
+    margin: 15px;
+    td {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        /deep/ .el-select {
             width: 100%;
         }
-        /deep/ .el-input{
-               width: 100%;
+        /deep/ .el-input {
+            width: 100%;
         }
-        /deep/ .el-input__inner{
- border: none;
+        /deep/ .el-input__inner {
+            border: none;
         }
     }
 }
@@ -261,9 +264,13 @@ export default {
     }
 }
 .item-wrapper {
+    width: 100%;
     margin: 20px 0 20px;
-
     td {
+        // width: calc(100% / 3);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
         .el-input {
             width: 100%;
         }
@@ -282,7 +289,7 @@ export default {
 .el-collapse-item__header.is-active {
     // border-left:5px solid #eae8e8
 }
-.el-collapse-item__content{
+.el-collapse-item__content {
     position: relative;
 }
 .el-input__suffix {

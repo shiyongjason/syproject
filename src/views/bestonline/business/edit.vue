@@ -32,7 +32,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
+                                    <el-input type="textarea"   :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -40,11 +40,11 @@
                     </table>
                     <p class="small-title ">2、KPI(必填)</p>
                     <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
+                        <div class="form-cont-col proportionKPI">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                                <el-input class="proportionKPI" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.projectShare"></el-input>
+                                <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.projectShare"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
@@ -221,7 +221,6 @@ export default {
             this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
-            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.form.operationNode = 0
             if (this.form.dueBusinessId) {
                 await putBusiness(this.form)
@@ -268,12 +267,13 @@ export default {
                 }
             }
             // console.log(this.form.publicityPromotionChannels)
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
+                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
@@ -386,7 +386,9 @@ table {
     margin-bottom: 10px;
 }
 .proportionKPI {
-    width: 50px;
+   .el-input {
+        width: 50px;
+    }
 }
 .KPISymbol {
     margin-left: 10px;
