@@ -13,3 +13,12 @@ export const findBOSSOrganization = () => axios.get('/uaa/api/department/getDepa
 
 // 查询组织机构人员
 export const findOrganizationEmployee = (params) => axios.post('/uaa/api/employee/queryListByDeptCode', params)
+
+// 查询岗位信息
+export const findList = (params) => axios.get(`/uaa/position/list?positionName=${params}`, params)
+
+// 增加岗位信息
+export const addList = (params) => axios.post('/uaa/position', params)
+
+// 更新岗位信息
+export const updateList = (params) => axios.put('/uaa/position', params)
