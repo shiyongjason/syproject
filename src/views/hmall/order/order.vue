@@ -649,7 +649,12 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+/deep/ .el-table__expand-icon{
+    position: absolute;
+    top: 14px;
+    right: 1px;
+}
 .flex-wrap-row {
     max-width: 1350px;
 }

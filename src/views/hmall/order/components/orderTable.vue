@@ -149,13 +149,17 @@ export default {
     }
 }
 </script>
-
-<style>
+<style lang="scss">
 .el-pagination__editor.el-input .el-input__inner {
     box-shadow: none;
 }
 .isLink {
     color: #409eff;
     font-weight: 600;
+}
+/deep/ .el-table__expand-icon{
+    position: absolute;
+    top: 14px;
+    right: 1px;
 }
 </style>
