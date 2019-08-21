@@ -22,7 +22,7 @@
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
-                                    <i v-if="index === 2">%</i>
+
                                     <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
@@ -83,7 +83,7 @@
             </el-form>
         </el-collapse>
 
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom maxLeft">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveBus">保存</el-button>
             </el-col>
@@ -214,20 +214,15 @@ export default {
     },
     methods: {
         async onSaveBus () {
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+            this.form.operationNode = 0
             if (this.dueBusinessId) {
-                await putBusiness({
-                    id: this.id,
-                    operationNode: 0,
-                    createUser: createUser,
-                    ...this.form
-                })
+                await putBusiness(this.form)
             } else {
-                await addBusiness({
-                    operationNode: 0,
-                    createUser: createUser,
-                    ...this.form
-                })
+                await addBusiness(this.form)
             }
             this.$message({
                 type: 'success',
@@ -267,9 +262,9 @@ export default {
                 }
             }
             // console.log(this.form.publicityPromotionChannels)
-            // this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-            // this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            // this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {

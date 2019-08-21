@@ -149,6 +149,16 @@ export default {
         font-weight: 500;
         margin: 0;
     }
+    .jd-bottom {
+          position: fixed;
+    bottom: 0;
+    background: #ffffff;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center;
+    z-index: 99;
+    }
 }
 .reviewform {
     background: #ffffff;
@@ -243,9 +253,7 @@ export default {
         }
     }
 }
-.el-collapse-item__header.is-active {
-    // border-left:5px solid #eae8e8
-}
+
 .el-input__suffix {
     line-height: 40px;
 }

@@ -97,6 +97,7 @@ export default {
                 item.netProfitRate = item.netProfitRate - 0
                 return item
             })
+            console.log(this.form)
             if (this.form.id != '') {
                 this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await putCooperativetarget(this.form)
