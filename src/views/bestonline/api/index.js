@@ -157,6 +157,7 @@ export const getAssessment = (params) => {
 export const getDueapprovalconclusion = (params) => {
     return axios.get('develop/dueapprovalconclusion/queryList', { params })
 }
+
 // 新增
 export const addStandardscore = (params) => {
     return axios.post('develop/standardscore/', params)
@@ -192,5 +193,9 @@ export const createJusticeDo = (params) => {
 }
 // 省市区
 export const getAreacode = (params) => {
-    return axios.post(ossUrl + '/api/httpH5/3164', params)
+    return axios.post(ossUrl + '/api/httpH5/3044', params)
+}
+// 省市区
+export const getChiness = (params) => {
+    return axios.get(ossUrl + '/api/httpH5/3164', { params })
 }
