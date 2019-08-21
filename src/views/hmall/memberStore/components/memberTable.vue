@@ -6,11 +6,6 @@
             <el-table-column
                 prop="memberName"
                 align="center"
-                label="申请编号">
-            </el-table-column>
-            <el-table-column
-                prop="memberName"
-                align="center"
                 label="会员店名称">
             </el-table-column>
             <el-table-column
