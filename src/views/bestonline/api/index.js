@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ccpBaseUrl } from '../../../api/config'
+import { ossUrl } from '../../../api/config'
 // import { baseUrl } from '@/api/config'
 /*
 @申请
@@ -157,10 +157,6 @@ export const getAssessment = (params) => {
 export const getDueapprovalconclusion = (params) => {
     return axios.get('develop/dueapprovalconclusion/queryList', { params })
 }
-// 省市区
-export const provinces = (params) => {
-    return axios.post('http://192.168.20.248:8089/api/httpH5/3041', params)
-}
 // 新增
 export const addStandardscore = (params) => {
     return axios.post('develop/standardscore/', params)
@@ -196,5 +192,5 @@ export const createJusticeDo = (params) => {
 }
 // 省市区
 export const getAreacode = (params) => {
-    return axios.get(ccpBaseUrl + 'common/amap/district', { params })
+    return axios.post(ossUrl + '/api/httpH5/3164', params)
 }
