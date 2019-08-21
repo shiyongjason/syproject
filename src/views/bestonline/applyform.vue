@@ -3,22 +3,14 @@
         <div class="page-body-cont">
             <el-form :model="formData" :rules="formRules" label-position="right" label-width="150px">
                 <el-form-item label="目标合伙人：" prop="targetPartner">
-                    <el-input
-                        placeholder="请输入目标合伙人"
-                        maxlength="25"
-                        :disabled="isdisabled"
-                        v-model="formData.targetPartner">
+                    <el-input placeholder="请输入目标合伙人" maxlength="25" :disabled="isdisabled" v-model="formData.targetPartner">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="尽调公司名称：" prop="companyName">
-                    <el-input
-                        placeholder="请输入尽调公司名称"
-                        maxlength="25"
-                        :disabled="isdisabled"
-                        v-model="formData.companyName">
+                    <el-input placeholder="请输入尽调公司名称" maxlength="25" :disabled="isdisabled" v-model="formData.companyName">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="合作模式：" prop="cooperateType" >
+                <el-form-item label="合作模式：" prop="cooperateType">
                     <div class="flex-wrap-cont">
                         <el-radio v-model="formData.cooperateType" :label="0">现有模式</el-radio>
                         <el-radio v-model="formData.cooperateType" :label="1" class="newcooperateType">
@@ -30,27 +22,13 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="" prop="newCooperateContent" v-if="formData.cooperateType == 1">
-                    <el-input
-                        type="textarea"
-                        rows="4"
-                        placeholder="请详细说明"
-                        :disabled="isdisabled"
-                        class="remark"
-                        v-model="formData.newCooperateContent">
+                    <el-input type="textarea" rows="4" placeholder="请详细说明" :disabled="isdisabled" class="remark" v-model="formData.newCooperateContent">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="主营业务："  prop="mainBusinessId">
+                <el-form-item label="主营业务：" prop="mainBusinessId">
                     <div class="flex-wrap-cont">
-                        <el-select
-                            v-model="formData.mainBusinessId"
-                            placeholder="请选择"
-                            :disabled="isdisabled"
-                            @change="selectGet">
-                            <el-option
-                                v-for="item in busOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                        <el-select v-model="formData.mainBusinessId" placeholder="请选择" :disabled="isdisabled" @change="selectGet">
+                            <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -67,24 +45,14 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="" prop="mainSystemOther" v-if="checkList.indexOf(4) != -1">
-                    <el-input
-                        type="textarea"
-                        rows="4"
-                        placeholder="请详细说明"
-                        :disabled="isdisabled"
-                        class="remark"
-                        v-model="formData.mainSystemOther">
+                    <el-input type="textarea" rows="4" placeholder="请详细说明" :disabled="isdisabled" class="remark" v-model="formData.mainSystemOther">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="品牌：" prop="brand">
-                    <el-input
-                        placeholder="请输入品牌"
-                        maxlength="25"
-                        :disabled="isdisabled"
-                        v-model="formData.brand">
+                    <el-input placeholder="请输入品牌" maxlength="25" :disabled="isdisabled" v-model="formData.brand">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="销售形式："  prop="salesType">
+                <el-form-item label="销售形式：" prop="salesType">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-radio v-model="formData.salesType" :label="1" :disabled="isdisabled">线上</el-radio>
@@ -92,32 +60,18 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="合作目的："  prop="cooperateTarget">
+                <el-form-item label="合作目的：" prop="cooperateTarget">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
-                            <el-input
-                                type="textarea"
-                                style="width:600px"
-                                rows="4"
-                                :disabled="isdisabled"
-                                placeholder="请输入合作目的"
-                                v-model="formData.cooperateTarget"
-                                maxlength="250"
-                            >
+                            <el-input type="textarea" style="width:600px" rows="4" :disabled="isdisabled" placeholder="请输入合作目的" v-model="formData.cooperateTarget" maxlength="250">
                             </el-input>
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="拟签约规模："  prop="signScale">
+                <el-form-item label="拟签约规模：" prop="signScale">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
-                            <el-input
-                                placeholder="请输入拟签约规模"
-                                maxlength="25"
-                                v-model="formData.signScale"
-                                @keyup.native="oninteger($event)"
-                                :disabled='isdisabled'
-                            >
+                            <el-input placeholder="请输入拟签约规模" maxlength="25" v-model="formData.signScale" @keyup.native="oninteger($event)" :disabled='isdisabled'>
                             </el-input>
                             <span class="unit">万</span>
                         </div>
@@ -125,75 +79,30 @@
                 </el-form-item>
                 <el-form-item label="备注：">
                     <div class="flex-wrap-cont">
-                        <el-input
-                            type="textarea"
-                            style="width:600px"
-                            rows="4"
-                            placeholder="请输入备注"
-                            :disabled="isdisabled"
-                            v-model="formData.remark"
-                            width="30%"
-                        >
+                        <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入备注" :disabled="isdisabled" v-model="formData.remark" width="30%">
                         </el-input>
                     </div>
                 </el-form-item>
-                <el-form-item label="附件："  prop="companyName">
-                    <div
-                        class="flex-wrap-cont"
-                        v-show='!isdisabled'
-                    >
-                        <el-upload
-                            class="upload-demo"
-                            v-bind="uploadInfo"
-                            :multiple="true"
-                            :on-success="handleSuccess"
-                            :before-remove="beforeRemove"
-                            :on-remove="handleRemove"
-                            :on-exceed="handleExceed"
-                            :file-list="fileList"
-                            :on-change="handleCheckedSize"
-                            :before-upload="handleUpload"
-                        >
-                            <el-button
-                                size="small"
-                                type="primary"
-                            >点击上传</el-button>
+                <el-form-item label="附件：" prop="companyName">
+                    <div class="flex-wrap-cont" v-show='!isdisabled'>
+                        <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess" :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
+                            <el-button size="small" type="primary">点击上传</el-button>
                         </el-upload>
                     </div>
-                    <div
-                        class="cont"
-                        v-show='isdisabled'
-                    >
+                    <div class="cont" v-show='isdisabled'>
                         <div v-if="fileList.length === 0">暂无附件</div>
-                        <p
-                            v-else
-                            class="upload"
-                            v-for="(item,index) in fileList"
-                            :key="index"
-                        > <a
-                            :href="item.url"
-                            target="_blank"
-                        >{{item.name}}</a></p>
+                        <p v-else class="upload" v-for="(item,index) in fileList" :key="index"> <a :href="item.url" target="_blank">{{item.name}}</a></p>
                     </div>
                 </el-form-item>
             </el-form>
-        <div class="query-cont-row">
-        </div>
+            <div class="query-cont-row">
+            </div>
             <div class="flex-wrap-row">
-                <el-col
-                    :span="2"
-                    :offset="6"
-                >
+                <el-col :span="2" :offset="6">
                     <el-button @click="onSave">暂存</el-button>
                 </el-col>
-                <el-col
-                    :span="2"
-                    :offset="1"
-                >
-                    <el-button
-                        type="primary"
-                        @click="onSubmit"
-                    >提交</el-button>
+                <el-col :span="2" :offset="1">
+                    <el-button type="primary" @click="onSubmit">提交</el-button>
                 </el-col>
             </div>
         </div>
@@ -299,7 +208,8 @@ export default {
     },
     computed: {
         ...mapState({
-            userdata: state => state.userdata
+            userdata: state => state.userdata,
+            userInfo: state => state.userInfo
         }),
         uploadInfo () {
             return {
@@ -423,10 +333,11 @@ export default {
             }
         },
         async  onSubmit () {
+            console.log(this.userdata)
             this.formData.mainSystem = this.checkList.toString()
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
             this.formData.createUserName = this.userdata.name
-            this.formData.createUser = this.userdata.uid
+            this.formData.createUser = this.userInfo.jobNumber
             this.formData.organizationCode = this.userdata.organizationCode
             // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
             if (this.applyId) {
@@ -439,7 +350,6 @@ export default {
                     type: 'success'
                 })
             } else {
-                // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
                 await appDueapply(this.formData)
                 this.$message({
                     showClose: true,
@@ -453,17 +363,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.remark{
+.remark {
     width: 598px;
 }
-.newcooperateType{
+.newcooperateType {
     margin-right: 10px;
 }
 .applyW {
     width: 30%;
 }
 
-.unit{
+.unit {
     margin: 0 0 0 12px;
 }
 /*主题内容*/
