@@ -159,6 +159,32 @@ export default {
     text-align: center;
     z-index: 99;
     }
+    .minLeft {
+    left: 64px;
+    transition: 0.3s;
+    }
+    .maxLeft {
+        left: 200px;
+        transition: 0.3s;
+    }
+}
+.assessmentTable{
+     margin: 15px;
+    td{
+        /deep/ .el-select{
+            width: 100%;
+        }
+        /deep/ .el-input{
+               width: 100%;
+        }
+        /deep/ .el-input__inner{
+ border: none;
+        }
+    }
+}
+.assessmentRow {
+    width: calc(100% / 4);
+    height: 36px;
 }
 .reviewform {
     background: #ffffff;

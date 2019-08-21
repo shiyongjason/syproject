@@ -103,14 +103,17 @@ export default {
         form (form) {
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
-                serviceCategory = []
+                serviceCategory = ''
             }
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory
-            let sinessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory
-            if (!sinessCategory) {
-                sinessCategory = []
+            serviceCategory = serviceCategory.split(',')
+            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => parseInt(item))
+
+            let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
+            if (!businessCategory) {
+                businessCategory = ''
             }
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = sinessCategory
+            businessCategory = businessCategory.split(',')
+            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => parseInt(item))
         }
     },
     computed: {
