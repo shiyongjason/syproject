@@ -5,21 +5,21 @@
                 <!-- KPI -->
                 <KPI />
                 <!-- 盈利能力 -->
-                <Profitability />
+                <!-- <Profitability /> -->
                 <!-- 费用结构 -->
-                <CostStructure />
+                <!-- <CostStructure /> -->
                 <!-- 偿债能力 -->
-                <Solvency />
+                <!-- <Solvency /> -->
                 <!-- 营运能力 -->
-                <Operational />
+                <!-- <Operational /> -->
                 <!-- 资金风险评估 -->
-                <FinancialRisks />
+                <!-- <FinancialRisks /> -->
                 <!-- 税务合规 -->
-                <TaxCompliance />
+                <!-- <TaxCompliance /> -->
                 <!-- 仓储 -->
                 <!-- <Storage /> -->
                 <!-- 财务委派 -->
-                <FinancialAppointment />
+                <!-- <FinancialAppointment /> -->
                 <!-- 资产负债表 -->
                 <BalanceSheet />
                 <!-- 利润表 -->
@@ -73,7 +73,7 @@ export default {
     },
     data () {
         return {
-            activeName: '7',
+            activeName: '10',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -190,12 +190,13 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            financeData: state => state.dueDiligence.financeData
         })
     },
     mounted () {
         // this.provinces({ parentId: 0 }, 0)
-        this.getFinance()
+        // this.getFinance()
         this.applyId = this.$route.query.applyId
     },
     methods: {
@@ -239,7 +240,7 @@ export default {
         },
         async getFinance () {
             const { data } = await getFinance(this.$route.query.applyId)
-            console.log(data.data)
+            // console.log(data.data)
             this.form = data.data
 
             this.form.assessmentList = data.data.assessmentList

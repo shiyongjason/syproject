@@ -61,7 +61,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'three',
+            activeName: 'four',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -245,6 +245,9 @@ export default {
 }
 .el-collapse-item__header.is-active {
     // border-left:5px solid #eae8e8
+}
+.el-collapse-item__content{
+    position: relative;
 }
 .el-input__suffix {
     line-height: 40px;

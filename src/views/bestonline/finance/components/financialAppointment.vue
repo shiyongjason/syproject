@@ -1,10 +1,10 @@
 <template>
 <el-collapse-item name="9">
     <template slot="title">
-        <p class="titlt-p">财务委派</p>
+        <p class="title-p">财务外派</p>
     </template>
     <div class="item-wrapper">
-        <el-form-item label="是否同意财务委派：">
+        <el-form-item label="是否同意财务外派：">
             <el-select v-model="form.dueFinanceBasic.isAgreeFinancialDelegation" placeholder="请选择">
                 <el-option v-for="item in yesNoStatus" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ccpBaseUrl } from '../../../api/config'
-// import { baseUrl } from '@/api/config'
+import { ossUrl } from '@/api/config'
 /*
 @申请
 */
@@ -159,7 +159,7 @@ export const getDueapprovalconclusion = (params) => {
 }
 // 省市区
 export const provinces = (params) => {
-    return axios.post('http://192.168.20.248:8089/api/httpH5/3041', params)
+    return axios.post(ossUrl + 'api/httpH5/3041', params)
 }
 // 新增
 export const addStandardscore = (params) => {

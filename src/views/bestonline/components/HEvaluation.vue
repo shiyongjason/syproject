@@ -553,7 +553,7 @@ export default {
     methods: {
         async getAssessment () {
             const { data } = await getAssessment(this.applyId)
-            // console.log(data)
+            console.log(data)
             this.actrualSocre = data.data.actrualSocre
             this.standardScore = data.data.dueStandardScoreVo.standardScore || 0
             this.dueStandardScoreVo = data.data.dueStandardScoreVo
