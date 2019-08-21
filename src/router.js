@@ -84,6 +84,18 @@ const routerMapping = [
                 component: () => import('./views/auth/organization')
             },
             {
+                path: 'postset',
+                name: 'postset',
+                meta: {
+                    title: '岗位设置',
+                    tagName: '岗位设置',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/auth/postset'
+                },
+                component: () => import('./views/auth/postset')
+            },
+            {
                 path: 'role',
                 name: 'jinyunPlatform',
                 meta: {
