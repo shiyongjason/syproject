@@ -56,7 +56,7 @@
                 width="500px"
                 height="400px"
                 center>
-                <el-form :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
+                <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
                     <el-form-item
                         label="岗位名称："
                         prop="addpositionName">
@@ -87,7 +87,7 @@
                 :visible.sync="updatedialogVisible"
                 width="500px"
                 center>
-                <el-form :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
+                <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
                     <el-form-item
                         label="岗位名称："
                         prop="updatepositionName">
@@ -200,16 +200,21 @@ export default {
         },
         // 新增岗位保存
         async addsave () {
-            const formData = {
-                createUid: this.userInfo.jobNumber,
-                positionName: this.ruleForm.addpositionName,
-                positionCode: this.ruleForm.addpositionCode
-            }
-            await addList(formData)
-            this.findList()
-            this.adddialogVisible = false
-            this.ruleForm.addpositionName = ''
-            this.ruleForm.addpositionCode = ''
+            console.log(this.$refs['form'])
+            this.$refs['form'].validate(async (validate) => {
+                if (validate) {
+                    const formData = {
+                        createUid: this.userInfo.jobNumber,
+                        positionName: this.ruleForm.addpositionName,
+                        positionCode: this.ruleForm.addpositionCode
+                    }
+                    await addList(formData)
+                    this.findList()
+                    this.adddialogVisible = false
+                    this.ruleForm.addpositionName = ''
+                    this.ruleForm.addpositionCode = ''
+                }
+            })
         },
         // 修改岗位信息
         onupdate (val) {
@@ -270,5 +275,8 @@ export default {
         .el-dialog__body {
             min-height: 0px;
         }
+    }
+    /deep/ .el-message-box__content {
+        min-height: 50px;
     }
 </style>
