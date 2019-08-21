@@ -200,7 +200,6 @@ export default {
         },
         // 新增岗位保存
         async addsave () {
-            console.log(this.$refs['form'])
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
                     const formData = {
