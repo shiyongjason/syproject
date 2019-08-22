@@ -37,7 +37,11 @@ export default {
                 serviceCategory: []
             }
         },
-        organizationData: {},
+        organizationData: {
+            actualControllerSocialId: null,
+            actualCompanyControllerId: null,
+            organizationalStabilityId: null
+        },
         financeData: {
             assessmentList: [], // 财务尽调评估
             dueFinanceYearOperatingCreateForms: [],

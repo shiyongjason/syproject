@@ -26,15 +26,15 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in form.dueOrganizationControllerAssessmentCreateFormList" :key="index">
-                    <td :colspan="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15 ? 1 : 3">
-                        <span class="red-span" v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">*</span>
+                    <td :colspan="item.isTitle ? 3 : 1">
+                        <span class="red-span" v-if="!item.isTitle">*</span>
                         {{item.assessmentDimension}}
                     </td>
-                    <td v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">
+                    <td v-if="!item.isTitle">
                         <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
                     </td>
-                    <td v-if="index !== 0 && index !== 4 && index !== 9 && index !== 12 && index !== 15">
-                        <el-input v-model="item.score" placeholder="满分40" maxlength="2"></el-input>
+                    <td v-if="!item.isTitle">
+                        <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore"></el-input>
                     </td>
                 </tr>
             </tbody>
@@ -52,6 +52,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import echarts from 'echarts'
 const weightMap = new Map([
     ['年龄', 0.2],
     ['健康', 0.3],
@@ -67,8 +68,34 @@ const weightMap = new Map([
     ['社会职务', 0.125],
     ['人脉关系', 0.125]
 ])
+const fullMarkMap = new Map([
+    ['年龄', 40],
+    ['健康', 40],
+    ['认知能力', 40],
+    ['金钱观', 30],
+    ['诚信度', 40],
+    ['家庭观', 40],
+    ['社会贡献', 20],
+    ['压力分析', 30],
+    ['投机心理', 30],
+    ['商业分析', 25],
+    ['好享家', 20],
+    ['社会职务', 20],
+    ['人脉关系', 40]
+])
 export default {
     name: 'organization_controller',
+    props: {
+        isShow: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data () {
+        return {
+            chartList: []
+        }
+    },
     computed: {
         actualControllerScore () {
             const controllerAssement = this.form.dueOrganizationControllerAssessmentCreateFormList
@@ -83,21 +110,81 @@ export default {
             })
             return isNaN(total) ? '' : total
         },
+        radarValueOfData () {
+            return this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle).map(item => item.score)
+        },
+        radarChartData () {
+            return this.chartList.map(item => {
+                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) }
+            })
+        },
         ...mapState({
-            form: state => {
-                // TODO: 稍后处理
-                let organizationData = state.dueDiligence.organizationData
-                // let assessments = organizationData.dueOrganizationControllerAssessmentCreateFormList
-                // assessments.map(item => {
-
-                // })
-                return organizationData
-            }
+            form: state => state.dueDiligence.organizationData
         })
     },
     watch: {
         actualControllerScore (val) {
             this.form.actualControllerScore = val
+        },
+        isShow (val) {
+            val && this.drawRadar()
+        },
+        form (organizationData) {
+            let controllerAssessments = organizationData.dueOrganizationControllerAssessmentCreateFormList
+            if (controllerAssessments && controllerAssessments.length > 0) {
+                this.chartList = JSON.parse(JSON.stringify(controllerAssessments))
+                controllerAssessments.map(item => {
+                    item.fullMarks = fullMarkMap.get(item.assessmentDimension)
+                    return item
+                })
+                controllerAssessments.splice(0, 0, {assessmentDimension: '基本情况', isTitle: true})
+                controllerAssessments.splice(4, 0, {assessmentDimension: '道德风险因素', isTitle: true})
+                controllerAssessments.splice(9, 0, {assessmentDimension: '心理风险因素', isTitle: true})
+                controllerAssessments.splice(12, 0, {assessmentDimension: '经营能力', isTitle: true})
+                controllerAssessments.splice(15, 0, {assessmentDimension: '社会关系', isTitle: true})
+            }
+        }
+    },
+    methods: {
+        onChangeScore () {
+            console.log(111111111)
+            this.drawRadar()
+        },
+        drawRadar () {
+            this.radarChart = echarts.init(this.$refs.radarChart2)
+            this.radarChart.setOption({
+                title: {
+                    text: '经营人评估',
+                    left: 'center'
+                },
+                tooltip: {},
+                grid: {
+                    top: '10%',
+                    left: '5%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                radar: {
+                    name: {
+                        textStyle: {
+                            color: '#000',
+                            borderRadius: 3,
+                            padding: [10, 10]
+                        }
+                    },
+                    indicator: this.radarChartData
+                },
+                series: [{
+                    type: 'radar',
+                    data: [
+                        {
+                            value: this.radarValueOfData,
+                            name: '经营人评估'
+                        }
+                    ]
+                }]
+            })
         }
     }
 }
