@@ -15,8 +15,7 @@
                     </template>
                     <template v-else>
                         <td>
-                            <span class="red-word"
-                                v-if="index === 4 || index === 5 || index === 8 || index === 9 || index === 10 || index === 13">*</span>
+                            <span class="red-word" v-if="index === 4 || index === 5 || index === 8 || index === 9 || index === 10 || index === 13">*</span>
                             {{item.typeName}}
                         </td>
                         <td>
@@ -60,6 +59,11 @@
                         </td>
                     </template>
                 </tr>
+                <tr>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -83,11 +87,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.yearTable{
-    .no_right_border{
-        border: none;
-    }
-}
 .title-p {
     font-size: 18px;
     font-weight: 500;

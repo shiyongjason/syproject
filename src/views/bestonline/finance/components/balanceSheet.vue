@@ -91,7 +91,14 @@ td {
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
 }
-.yearTable{
+.yearTable {
     display: flex;
+    /deep/ .no_right_border {
+        border-right: none;
+        tr,
+        td {
+            border-right: none;
+        }
+    }
 }
 </style>

@@ -82,7 +82,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { WAREHOUSE_ORDER_OPTIONS } from '../const'
+import { WAREHOUSE_ORDER_OPTIONS, WAREHOUSE_FORM } from '../const'
 import { YES_NO_STATUS } from '../../const'
 import { provinces } from '../../api/index.js'
 export default {
@@ -90,7 +90,8 @@ export default {
     data () {
         return {
             warehouseOrderOptions: WAREHOUSE_ORDER_OPTIONS,
-            agreeCustodyOptions: YES_NO_STATUS
+            agreeCustodyOptions: YES_NO_STATUS,
+            storeOptions: WAREHOUSE_FORM
         }
     },
     computed: {

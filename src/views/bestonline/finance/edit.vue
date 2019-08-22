@@ -1,7 +1,7 @@
 <template>
     <div class="jd-manage">
         <el-collapse v-model="activeName" accordion>
-            <el-form :model="form" :rules="rules" label-width="180px">
+            <el-form :model="form" ref='form' :rules="rules" label-width="180px">
                 <!-- KPI -->
                 <KPI />
                 <!-- 盈利能力 -->
@@ -17,7 +17,7 @@
                 <!-- 税务合规 -->
                 <TaxCompliance />
                 <!-- 仓储 -->
-                <Storage />
+                <!-- <Storage /> -->
                 <!-- 财务委派 -->
                 <FinancialAppointment />
                 <!-- 资产负债表 -->
@@ -40,10 +40,9 @@
     </div>
 </template>
 <script>
-import { getFinance, saveFinance, provinces } from '../api/index.js'
+import { saveFinance } from '../api/index.js'
 import { plusOrMinus } from '../../../rules.js'
 import { mapState } from 'vuex'
-import { YES_NO_STATUS, COST_RATIONALITY } from '../const'
 import KPI from './components/kpi.vue'
 import BalanceSheet from './components/balanceSheet.vue'
 import CashFlow from './components/cashFlow.vue'
@@ -54,7 +53,7 @@ import Operational from './components/operational.vue'
 import Profit from './components/profit.vue'
 import Profitability from './components/profitability.vue'
 import Solvency from './components/solvency.vue'
-import Storage from './components/storage.vue'
+// import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 export default {
     components: {
@@ -67,7 +66,7 @@ export default {
         Profit,
         Profitability,
         Solvency,
-        Storage,
+        // Storage,
         TaxCompliance,
         KPI
     },
@@ -76,112 +75,31 @@ export default {
             activeName: '1',
             updateTime: '',
             updateUser: '',
-            assessmentList: [], // 财务尽调评估
-            dueFinanceBasic: {}, // 尽调数据
-            assetsLiabilities: { recordTime: '' }, // 资产负债表
-            dueFinanceProfit: { recordTime: '' }, // 利润表
-            caseFlow: { recordTime: '' }, // 现金流量表
             isdisabled: false,
-            riskoptions: [{
-                value: '',
-                label: '请选择'
-            }, {
-                value: 0,
-                label: '高'
-            }, {
-                value: 1,
-                label: '中'
-            }, {
-                value: 2,
-                label: '低'
-            }],
-            storeOptions: [{
-                value: '',
-                label: '请选择'
-            }, {
-                value: 0,
-                label: '自有'
-            }, {
-                value: 1,
-                label: '租赁'
-            }, {
-                value: 2,
-                label: '第三方监督'
-            }],
-            superviseoptions: [{
-                value: '',
-                label: '请选择'
-            }, {
-                value: 0,
-                label: '资金和货物双重监管'
-            }, {
-                value: 1,
-                label: '资金监管-高'
-            }, {
-                value: 2,
-                label: '资金监管-低'
-            }, {
-                value: 3,
-                label: '不接受'
-            }],
-            costRationalityData: COST_RATIONALITY,
-            yesNoStatus: YES_NO_STATUS,
-            storeProvince: [], // 省
-            storeCity: [], // 市
-            storeArea: [], // 区
             applyId: '',
             type: false,
-            textarea: '',
-            // form: {
-            //     assessmentList: [],
-            //     assessmentItem: '',
-            //     cooperationTarget: '',
-            //     state: '',
-            //     remark: '',
-            //     riskDisclosure: '',
-            //     analysisDescription: '',
-            //     dueFinanceYearOperatingPos: [],
-            //     salesExpensesRatio: '',
-            //     costRationality: '',
-            //     managementExpensesRatio: '',
-            //     costRationalityRemark: '',
-            //     companyDebt: '',
-            //     shareholdersDebt: '',
-            //     companyBorrowsShareholders: '',
-            //     shareholdersBorrowsCompany: '',
-            //     cashFlowRatio: '',
-            //     capitalRiskAssessment: '',
-            //     actualControllerAndMateOperatingLoan: '',
-            //     personalAndCompanyGuarantee: '',
-            //     taxableIncomeRatio: '',
-            //     taxBearingRate: '',
-            //     dueFinanceBasic: [],
-            //     assetsLiabilities: [],
-            //     dueFinanceProfit: [],
-            //     caseFlow: [],
-            //     assetLiabilityRatio: ''
-            // },
             rules: {
-                riskDisclosure: [
-                    { required: true, message: '请输入风险揭示', trigger: 'blur' }
-                ],
-                analysisDescription: [
-                    { required: true, message: '请输入分析描述', trigger: 'blur' }
-                ],
-                shareholdersDebt: [
-                    { required: true, message: '请输入股东借款金额', trigger: 'blur' }
-                ],
-                companyBorrowsShareholders: [
-                    { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
-                ],
-                shareholdersBorrowsCompany: [
-                    { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' }
-                ],
-                capitalRiskAssessment: [
-                    { required: true, message: '请选择资金风险评估', trigger: 'change' }
-                ]
+                dueFinanceBasic: {
+                    riskDisclosure: [
+                        { required: true, message: '请输入风险揭示', trigger: 'blur' }
+                    ],
+                    analysisDescription: [
+                        { required: true, message: '请输入分析描述', trigger: 'blur' }
+                    ],
+                    shareholdersDebt: [
+                        { required: true, message: '请输入股东借款金额', trigger: 'blur' }
+                    ],
+                    companyBorrowsShareholders: [
+                        { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
+                    ],
+                    shareholdersBorrowsCompany: [
+                        { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' }
+                    ],
+                    capitalRiskAssessment: [
+                        { required: true, message: '请选择资金风险评估', trigger: 'change' }
+                    ]
+                }
             },
-            a: '',
             debtDialog: false,
             tabName: 'nowYear',
             onDebtDialog: false
@@ -195,8 +113,6 @@ export default {
         })
     },
     mounted () {
-        // this.provinces({ parentId: 0 }, 0)
-        // this.getFinance()
         this.applyId = this.$route.query.applyId
     },
     methods: {
@@ -238,87 +154,6 @@ export default {
                 return false
             }
         },
-        async getFinance () {
-            const { data } = await getFinance(this.$route.query.applyId)
-            // console.log(data.data)
-            this.form = data.data
-
-            this.form.assessmentList = data.data.assessmentList
-            this.form.riskDisclosure = data.data.riskDisclosure
-            this.form.analysisDescription = data.data.analysisDescription
-
-            this.form.salesExpensesRatio = data.data.salesExpensesRatio
-            this.form.managementExpensesRatio = data.data.managementExpensesRatio
-            this.form.financeExpensesRatio = data.data.financeExpensesRatio
-            this.form.costRationality = data.data.costRationality
-            this.form.costRationalityRemark = data.data.costRationalityRemark
-
-            // this.
-            // if (!data.data.dueFinanceBasic.type) {
-            //     this.isdisabled = (!!data.data.dueFinanceBasic.type) || !this.roleType
-            // } else {
-            //     this.isdisabled = (!!data.data.dueFinanceBasic.type)
-            // }
-            this.type = !!data.data.dueFinanceBasic.type
-            this.updateUser = data.data.dueFinanceBasic.updateUser
-            this.updateTime = data.data.dueFinanceBasic.updateTime
-            this.dueFinanceBasic = data.data.dueFinanceBasic
-            this.assetsLiabilities = data.data.assetsLiabilities
-            this.dueFinanceProfit = data.data.dueFinanceProfit
-            this.caseFlow = data.data.caseFlow
-            // 获取省市区数据
-            if (this.dueFinanceBasic.storeProvince) {
-                this.dueFinanceBasic.storeProvince = +this.dueFinanceBasic.storeProvince
-                this.provinces({ parentId: this.dueFinanceBasic.storeProvince }, 1)
-                if (this.dueFinanceBasic.storeCity) {
-                    this.dueFinanceBasic.storeCity = +this.dueFinanceBasic.storeCity
-                    this.provinces({ parentId: this.dueFinanceBasic.storeCity }, 2)
-                    if (this.dueFinanceBasic.storeArea) {
-                        this.dueFinanceBasic.storeArea = +this.dueFinanceBasic.storeArea
-                    }
-                }
-            }
-            this.dueFinanceBasic.applyId = this.applyId
-            if (this.dueFinanceBasic.id) {
-                this.dueFinanceBasic.updateUser = this.userInfo.name
-            } else {
-                this.dueFinanceBasic.createUser = this.userInfo.name
-            }
-        },
-        async provinces (params, city) {
-            // return false
-            const { data } = await provinces(params)
-            switch (city) {
-                case 0:
-                    this.storeProvince = data.citys
-                    this.storeProvince.unshift({ cityId: '', cityName: '请选择省', id: 0 })
-                    break
-                case 1:
-                    this.storeCity = data.citys
-                    this.storeCity.unshift({ cityId: '', cityName: '请选择市', id: 0 })
-                    break
-                case 2:
-                    this.storeArea = data.citys
-                    this.storeArea.unshift({ cityId: '', cityName: '请选择区', id: 0 })
-                    break
-            }
-        },
-        onProvince (parentId) {
-            this.dueFinanceBasic.storeCity = ''
-            this.dueFinanceBasic.storeArea = ''
-            this.storeCity = []
-            this.storeArea = []
-            if (parentId) {
-                this.provinces({ parentId }, 1)
-            }
-        },
-        onCity (parentId) {
-            this.dueFinanceBasic.storeArea = ''
-            this.storeArea = []
-            if (parentId) {
-                this.provinces({ parentId }, 2)
-            }
-        },
         onSureHandle (i) {
             console.log(this.form)
             // const type = i === 0 ? '保存' : '提交'
@@ -337,6 +172,7 @@ export default {
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
+            console.log(this.form)
             await saveFinance({ ...this.form, type: 0 })
             this.$message({
                 type: 'success',
@@ -345,6 +181,7 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (type) {
+            /** activeName == 1 */
             for (const i of this.form.assessmentList) {
                 if (i.state === null || i.state === '') {
                     this.$message.warning('请选择尽调评估结论')
@@ -352,223 +189,77 @@ export default {
                     return false
                 }
             }
-            for (const i of this.form.dueFinanceYearOperatingPos) {
-                if (i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
-                    this.$message.warning('请输入资产负债率')
-                    this.activeName = '1'
-                    return false
-                } else if (i.profitRatio === null || i.profitRatio === '') {
-                    this.$message.warning('请输入净利率')
-                    this.activeName = '1'
-                    return false
-                } else if (i.grossMargin === null || i.grossMargin === '') {
-                    this.$message.warning('请输入销售毛利率')
-                    this.activeName = '2'
-                    return false
-                } else if (i.rate === null || i.rate === '') {
-                    this.$message.warning('请输入费率')
-                    this.activeName = '2'
-                    return false
-                } else if (i.liquidityRatio === null || i.liquidityRatio === '') {
-                    this.$message.warning('请输入流动比率')
-                    this.activeName = '4'
-                    return false
-                } else if (i.quickRatio === null || i.quickRatio === '') {
-                    this.$message.warning('请输入速动比率')
-                    this.activeName = '4'
-                    return false
-                } else if (i.cashRatio === null || i.cashRatio === '') {
-                    this.$message.warning('请输入现金比率')
-                    this.activeName = '4'
-                    return false
-                } else if (i.assetLiabilityRatio === null || i.assetLiabilityRatio === '') {
-                    this.$message.warning('请输入资产负债率')
-                    this.activeName = '4'
-                    return false
-                }
+            if (
+                this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === ''
+            ) {
+                this.$message.warning('请输入KPI')
+                this.activeName = '1'
+                return false
             }
-            //  this.$refs['form'].validate(async (valid) => {
-            //     if (valid) {
-            //         if (this.dueBusinessId) {
-            //             await putBusiness({
-            //                 id: this.id,
-            //                 operationNode: 1,
-            //                 createUser: createUser,
-            //                 ...this.form
-            //             })
-            //             this.$message.success('提交成功')
-            //         } else {
-            //             await addBusiness({
-            //                 operationNode: 1,
-            //                 createUser: createUser,
-            //                 ...this.form
-            //             })
-            //             this.$message.success('提交成功')
-            //         }
-            //     }
-            // })
-            // const formData = this.format(type)
-            // for (let i = 0;i < this.assessmentList.length;i++) {
-            //     if (this.assessmentList[i].state === null || this.assessmentList[i].state === '') {
-            //         this.showWarnMsg('请选择尽调评估结论')
-            //         this.activeName = '1'
-            //         return false
-            //     }
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.fundingRisks)) {
-            //     this.showWarnMsg('请选择资金风险')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.fundSupervision)) {
-            //     this.showWarnMsg('请选择资金监管')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.warehouseManaged)) {
-            //     this.showWarnMsg('请选择仓库托管')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.financialExpatriates)) {
-            //     this.showWarnMsg('请选择财务外派')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.dueFinanceBasic.riskDisclosure) {
-            //     this.showWarnMsg('请输入风险揭示')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.dueFinanceBasic.analysisDescription) {
-            //     this.showWarnMsg('请输入分析描述')
-            //     this.activeName = '1'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.grossMargin)) {
-            //     this.showWarnMsg('请输入销售毛利率')
-            //     this.activeName = '2'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.rate)) {
-            //     this.showWarnMsg('请输入费率')
-            //     this.activeName = '2'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.profitRatio)) {
-            //     this.showWarnMsg('请输入净利率')
-            //     this.activeName = '2'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.liquidityRatio)) {
-            //     this.showWarnMsg('请输入流动比率')
-            //     this.activeName = '4'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.quickRatio)) {
-            //     this.showWarnMsg('请输入速动比率')
-            //     this.activeName = '4'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.assetLiabilityRatio)) {
-            //     this.showWarnMsg('请输入资产负债率')
-            //     this.activeName = '4'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.cashRatio)) {
-            //     this.showWarnMsg('请输入现金比率')
-            //     this.activeName = '4'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.daysOfReceivable)) {
-            //     this.showWarnMsg('请输入应收账款周转天数')
-            //     this.activeName = '5'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.daysOfInventory)) {
-            //     this.showWarnMsg('请输入库存周转天数')
-            //     this.activeName = '5'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.totalAssetsTurnover)) {
-            //     this.showWarnMsg('请输入总资产周转率')
-            //     this.activeName = '5'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.returnOnEquity)) {
-            //     this.showWarnMsg('请输入净资产收益率')
-            //     this.activeName = '5'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.companyDebt)) {
-            //     this.showWarnMsg('请输入公司借款')
-            //     this.activeName = '6'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersDebt)) {
-            //     this.showWarnMsg('请输入股东借款')
-            //     this.activeName = '6'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.companyBorrowsShareholders)) {
-            //     this.showWarnMsg('请输入公司向股东借款')
-            //     this.activeName = '6'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.shareholdersBorrowsCompany)) {
-            //     this.showWarnMsg('请输入股东向公司借款')
-            //     this.activeName = '6'
-            //     return false
-            // }
-            // // if (!this.dueFinanceBasic.cashFlowRatio) {
-            // //     this.showWarnMsg('请输入现金流量比率')
-            // //     this.activeName = '6'
-            // //     return false
-            // // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.capitalRiskAssessment)) {
-            //     this.showWarnMsg('请选择资金风险评估')
-            //     this.activeName = '6'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.annualTaxableBusinessIncome)) {
-            //     this.showWarnMsg('请输入年度纳税营业收入')
-            //     this.activeName = '7'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.taxableIncomeRatio)) {
-            //     this.showWarnMsg('请输入纳税收入占比')
-            //     this.activeName = '7'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.taxBearingRate)) {
-            //     this.showWarnMsg('请输入税负率')
-            //     this.activeName = '7'
-            //     return false
-            // }
-            // if (!this.vaildEmpty(this.dueFinanceBasic.isAgreeFinancialDelegation)) {
-            //     this.showWarnMsg('请选择是否同意财务委派')
-            //     this.activeName = '9'
-            //     return false
-            // }
-
-            // var result1 = this.assetsLiabilities.assetList.some((v, i) => {
-            //     return v.beginOrPrior || v.endOrCurrent
-            // })
-            // var result2 = this.assetsLiabilities.liabilitiesList.some((v, i) => {
-            //     return v.beginOrPrior || v.endOrCurrent
-            // })
-            // if (!result1 && !result2) {
-            //     this.showWarnMsg('请输入资产负债表')
-            //     this.activeName = '10'
-            //     return false
-            // }
-            await saveFinance({ ...this.form, type: 1 })
-            // this.isdisabled = true
-            this.$message({
-                type: 'success',
-                message: `提交成功`
+            /** activeName == 2 */
+            if (
+                this.form.dueFinanceYearOperatingCreateForms[0].grossMargin === null || this.form.dueFinanceYearOperatingCreateForms[0].grossMargin === '' || this.form.dueFinanceYearOperatingCreateForms[1].grossMargin === null || this.form.dueFinanceYearOperatingCreateForms[1].grossMargin === '' || this.form.dueFinanceYearOperatingCreateForms[0].rate === null || this.form.dueFinanceYearOperatingCreateForms[0].rate === '' || this.form.dueFinanceYearOperatingCreateForms[1].rate === null || this.form.dueFinanceYearOperatingCreateForms[1].rate === '' || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === ''
+            ) {
+                this.$message.warning('请输入盈利能力(必填)')
+                this.activeName = '2'
+                return false
+            }
+            /** activeName == 4 */
+            if (
+                this.form.dueFinanceYearOperatingCreateForms[0].liquidityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].liquidityRatio === '' ||
+                this.form.dueFinanceYearOperatingCreateForms[1].liquidityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].liquidityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].quickRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].quickRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].quickRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].quickRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === ''
+            ) {
+                this.$message.warning('请输入偿债能力(必填)')
+                this.activeName = '4'
+                return false
+            }
+            /** activeName == 5 */
+            if (
+                this.form.dueFinanceYearOperatingCreateForms[0].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[0].daysOfReceivable === '' ||
+                this.form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable === '' || this.form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable === '' || this.form.dueFinanceYearOperatingCreateForms[0].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[0].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[1].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[1].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[2].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[2].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[0].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[0].returnOnEquity === '' || this.form.dueFinanceYearOperatingCreateForms[1].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[1].returnOnEquity === '' || this.form.dueFinanceYearOperatingCreateForms[2].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[2].returnOnEquity === ''
+            ) {
+                this.$message.warning('请输入营运能力(必填)')
+                this.activeName = '5'
+                return false
+            }
+            /** activeName == 7 */
+            if (
+                this.form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome === null || this.form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome === '' ||
+                this.form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome === null || this.form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome === '' || this.form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].taxBearingRate === null || this.form.dueFinanceYearOperatingCreateForms[0].taxBearingRate === '' || this.form.dueFinanceYearOperatingCreateForms[1].taxBearingRate === null || this.form.dueFinanceYearOperatingCreateForms[1].taxBearingRate === ''
+            ) {
+                this.$message.warning('请输入税务合规(必填)')
+                this.activeName = '7'
+                return false
+            }
+            console.log(this.$refs)
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    console.log('成功')
+                    // if (this.dueBusinessId) {
+                    //     await putBusiness({
+                    //         id: this.id,
+                    //         operationNode: 1,
+                    //         createUser: createUser,
+                    //         ...this.form
+                    //     })
+                    //     this.$message.success('提交成功')
+                    // } else {
+                    //     await addBusiness({
+                    //         operationNode: 1,
+                    //         createUser: createUser,
+                    //         ...this.form
+                    //     })
+                    //     this.$message.success('提交成功')
+                    // }
+                }
             })
-            this.$router.go(-1)
+            // await saveFinance({ ...this.form, type: 1 })
+            // // this.isdisabled = true
+            // this.$message({
+            //     type: 'success',
+            //     message: `提交成功`
+            // })
+            // this.$router.go(-1)
         }
     }
 }

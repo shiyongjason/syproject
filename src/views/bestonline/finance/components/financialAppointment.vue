@@ -15,8 +15,8 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="资金监管：">
-            <el-select v-model="form.dueFinanceBasic.isAgreeFinancialDelegation" placeholder="请选择">
-                <el-option v-for="item in yesNoStatus" :key="item.value" :label="item.label" :value="item.value">
+            <el-select v-model="form.dueFinanceBasic.fundSupervision" placeholder="请选择">
+                <el-option v-for="item in superviseoptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
         </el-form-item>
@@ -27,10 +27,12 @@
 <script>
 import { mapState } from 'vuex'
 import { YES_NO_STATUS } from '../../const'
+import { FUND_SUPERVISION } from '../const'
 export default {
     data () {
         return {
-            yesNoStatus: YES_NO_STATUS
+            yesNoStatus: YES_NO_STATUS,
+            superviseoptions: FUND_SUPERVISION
         }
     },
     computed: {
