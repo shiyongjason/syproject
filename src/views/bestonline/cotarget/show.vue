@@ -4,9 +4,7 @@
         <p>已提交 {{updateTime}} {{updateUser}} </p>
         <div>
             <p>尽调规模：{{ scale }}万</p>
-            <basicTable
-                :tableLabel="tableLabel"
-                :tableData="yearRateTabelContents">
+            <basicTable :tableLabel="tableLabel" :tableData="yearRateTabelContents">
                 <template slot="yearGrowthRate" slot-scope="scope">
                     {{ scope.data.row.yearGrowthRate }}%
                 </template>
@@ -20,6 +18,7 @@
 </template>
 <script>
 import { getDueLegal } from '../api/index.js'
+import { mapState, mapActions } from 'vuex'
 export default {
     data () {
         return {
@@ -35,7 +34,15 @@ export default {
             ]
         }
     },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.cotargetData
+        })
+    },
     methods: {
+        ...mapActions([
+            'findCotargetData'
+        ]),
         async getDueLegal () {
             const { data } = await getDueLegal(this.$route.query.applyId)
             this.updateUser = data.data.updateUser
@@ -47,6 +54,7 @@ export default {
     },
     mounted () {
         this.getDueLegal()
+        this.findCotargetData({ applyId: this.$route.query.applyId })
     }
 }
 </script>

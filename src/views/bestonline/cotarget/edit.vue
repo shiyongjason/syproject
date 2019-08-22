@@ -43,18 +43,12 @@
     </div>
 </template>
 <script>
-import { getDueLegal, addCooperativetarget, putCooperativetarget } from '../api/index.js'
+import { addCooperativetarget, putCooperativetarget } from '../api/index.js'
 import { plusOrMinus } from '@/utils/rules.js'
+import { mapState, mapActions } from 'vuex'
 export default {
     data () {
         return {
-            form: {
-                id: '',
-                applyId: '',
-                scale: '',
-                yearRateTabelContents: [],
-                equityRatio: ''
-            },
             rules: {
                 scale: [
                     { required: true, message: '请输入尽调规模', trigger: 'blur' }
@@ -75,9 +69,14 @@ export default {
         }
     },
     computed: {
-
+        ...mapState({
+            form: state => state.dueDiligence.cotargetData
+        })
     },
     methods: {
+        ...mapActions([
+            'findCotargetData'
+        ]),
         oninput (value, e) {
             if (value === 'equityRatio') {
                 // 股权比例
@@ -85,14 +84,6 @@ export default {
                 e.target.value = plusOrMinus(e.target.value.toString())
             }
             this.form[value] = (e.target.value)
-        },
-        async getDueLegal () {
-            const { data } = await getDueLegal(this.$route.query.applyId)
-            this.form.id = data.data.id
-            this.form.applyId = this.$route.query.applyId
-            this.form.equityRatio = data.data.equityRatio
-            this.form.scale = data.data.scale
-            this.form.yearRateTabelContents = data.data.yearRateTabelContents
         },
         async _saveOrUpdate () {
             this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
@@ -137,7 +128,7 @@ export default {
         }
     },
     mounted () {
-        this.getDueLegal()
+        this.findCotargetData({ applyId: this.$route.query.applyId })
     }
 }
 </script>
