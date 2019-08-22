@@ -42,7 +42,6 @@ export default {
                     mobileNo: this.userInfo.phoneNumber,
                     token: token
                 }
-                console.log(gotoJinYun(jinyun,params))
                 window.location.href = gotoJinYun(jinyun, params)
             }
         }
