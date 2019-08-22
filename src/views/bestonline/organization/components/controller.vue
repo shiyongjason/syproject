@@ -137,11 +137,11 @@ export default {
                     item.fullMarks = fullMarkMap.get(item.assessmentDimension)
                     return item
                 })
-                controllerAssessments.splice(0, 0, {assessmentDimension: '基本情况', isTitle: true})
-                controllerAssessments.splice(4, 0, {assessmentDimension: '道德风险因素', isTitle: true})
-                controllerAssessments.splice(9, 0, {assessmentDimension: '心理风险因素', isTitle: true})
-                controllerAssessments.splice(12, 0, {assessmentDimension: '经营能力', isTitle: true})
-                controllerAssessments.splice(15, 0, {assessmentDimension: '社会关系', isTitle: true})
+                controllerAssessments.splice(0, 0, { assessmentDimension: '基本情况', isTitle: true })
+                controllerAssessments.splice(4, 0, { assessmentDimension: '道德风险因素', isTitle: true })
+                controllerAssessments.splice(9, 0, { assessmentDimension: '心理风险因素', isTitle: true })
+                controllerAssessments.splice(12, 0, { assessmentDimension: '经营能力', isTitle: true })
+                controllerAssessments.splice(15, 0, { assessmentDimension: '社会关系', isTitle: true })
             }
         }
     },

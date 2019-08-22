@@ -1,12 +1,9 @@
 <template>
     <div class="jd-manage">
         <el-collapse v-model="activeName" accordion>
-            <el-form
-                :model="form"
-                :rules="rules"
-                ref="form">
+            <el-form :model="form" :rules="rules" ref="form">
                 <KPI />
-                <Controller :isShow="activeName == 2"/>
+                <Controller :isShow="activeName == 2" />
                 <Organization :isShow="activeName == 3" />
                 <MotivationRisk />
             </el-form>
@@ -24,7 +21,7 @@
 <script>
 import { addOrganization, updateOrganization } from '../api/index.js'
 import { mapState } from 'vuex'
-import echarts from 'echarts'
+// import echarts from 'echarts'
 import KPI from './components/kpi.vue'
 import Controller from './components/controller.vue'
 import Organization from './components/organization.vue'

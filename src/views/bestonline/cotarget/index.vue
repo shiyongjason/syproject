@@ -29,7 +29,7 @@ export default {
     },
     mounted () {
         this.findCotargetData({ applyId: this.$route.query.applyId })
-        if(this.form.id){
+        if (this.form.id) {
             this.canEdit = false
         }
     }

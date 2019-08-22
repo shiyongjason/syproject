@@ -1,6 +1,6 @@
 <template>
     <div class="yearTable">
-        <table class="item-wrapper">
+        <table class="item-wrapper no_right_border">
             <thead>
                 <tr>
                     <td>资产</td>
@@ -83,6 +83,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.yearTable{
+    .no_right_border{
+        border: none;
+    }
+}
 .title-p {
     font-size: 18px;
     font-weight: 500;
