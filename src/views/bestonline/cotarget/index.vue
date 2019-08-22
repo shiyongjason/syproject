@@ -1,5 +1,5 @@
 <template>
-    <CotargetEdit v-if="canEdit" />
+    <CotargetEdit v-if="canEdit" @init="init" />
     <CotargetShow v-else />
 </template>
 
@@ -25,11 +25,15 @@ export default {
     methods: {
         ...mapActions([
             'findCotargetData'
-        ])
+        ]),
+        init () {
+            this.$emit('parentFun')
+        }
     },
-    mounted () {
-        this.findCotargetData({ applyId: this.$route.query.applyId })
-        if(this.form.id){
+    async mounted () {
+        await this.findCotargetData({ applyId: this.$route.query.applyId })
+        this.form.applyId = this.$route.query.applyId
+        if (this.form.id) {
             this.canEdit = false
         }
     }

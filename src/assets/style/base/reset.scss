@@ -190,7 +190,7 @@ ul,li{
 }
 
 .el-message-box__content {
-    min-height: 100px;
+    min-height: 0px;
 }
 
 .el-message-box__btns {
@@ -387,6 +387,10 @@ ul,li{
 
 .el-tooltip__popper.is-dark {
     max-width: 500px;
+}
+
+.el-collapse{
+    border-bottom: 0;
 }
 
 /**

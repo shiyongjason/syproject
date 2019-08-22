@@ -1,12 +1,9 @@
 <template>
     <div class="jd-manage">
         <el-collapse v-model="activeName" accordion>
-            <el-form
-                :model="form"
-                :rules="rules"
-                ref="form">
+            <el-form :model="form" :rules="rules" ref="form">
                 <KPI />
-                <Controller :isShow="activeName == 2"/>
+                <Controller :isShow="activeName == 2" />
                 <Organization :isShow="activeName == 3" />
                 <MotivationRisk />
             </el-form>
@@ -24,7 +21,6 @@
 <script>
 import { addOrganization, updateOrganization } from '../api/index.js'
 import { mapState } from 'vuex'
-import echarts from 'echarts'
 import KPI from './components/kpi.vue'
 import Controller from './components/controller.vue'
 import Organization from './components/organization.vue'
@@ -110,6 +106,7 @@ export default {
         async onSaveOrganize () {
             this.form.operationNode = 0
             this.form.applyId = this.applyId
+            this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.title)
             if (this.form.dueOrganizationId) {
                 await updateOrganization(this.form)
             } else {
@@ -122,11 +119,11 @@ export default {
             this.$router.go(-1)
         },
         onSubmit () {
-            this.$refs.form.validate(async function (valid) {
-                console.log(arguments)
+            this.$refs.form.validate(async (valid) => {
                 if (valid) {
                     this.form.operationNode = 1
                     this.form.applyId = this.applyId
+                    this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.title)
                     if (this.form.dueOrganizationId) {
                         await updateOrganization(this.form)
                     } else {

@@ -14,8 +14,6 @@ export default {
         companyName: '', // 现场尽调公司名
         applyCompanyName: '申请', // 尽调申请公司名
         cotargetData: {
-            id: '',
-            applyId: '',
             scale: '',
             yearRateTabelContents: [],
             equityRatio: ''
