@@ -197,7 +197,9 @@ export default {
         },
         async findDepList () {
             const { data } = await findDepList({ organizationType: 1 })
-            this.depArr = data.data
+            if (data.data) {
+                this.depArr = data.data
+            }
             this.depArr.splice(0, 0, {
                 organizationCode: '',
                 organizationName: '全部'

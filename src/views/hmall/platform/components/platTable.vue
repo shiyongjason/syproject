@@ -189,13 +189,21 @@ export default {
                 organizationCode: this.openId,
                 status: 1 // 开启
             }
-            await createOpen(params)
-            this.$message({
-                message: '开启成功！',
-                type: 'success'
-            })
-            this.dialog = false
-            this.onQuery()
+            const { data } = await createOpen(params)
+            // todo 目前格式未统一
+            if (data.code == 200) {
+                this.$message({
+                    message: '开启成功！',
+                    type: 'success'
+                })
+                this.dialog = false
+                this.onQuery()
+            } else {
+                this.$message({
+                    message: data.message,
+                    type: 'error'
+                })
+            }
         },
         onQuery () {
             this.$emit('onQuery')
