@@ -14,8 +14,6 @@ export default {
         companyName: '', // 现场尽调公司名
         applyCompanyName: '申请', // 尽调申请公司名
         cotargetData: {
-            id: '',
-            applyId: '',
             scale: '',
             yearRateTabelContents: [],
             equityRatio: ''
@@ -90,7 +88,6 @@ export default {
             commit(COTARGET_DATA, data)
         },
         async findBusinessData ({ commit }, params) {
-            console.log(params)
             const { data } = await axios.get(`develop/business/${params.applyId}`)
             commit(BUSINESS_DATA, data)
         },

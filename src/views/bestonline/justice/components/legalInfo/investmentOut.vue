@@ -127,7 +127,7 @@ export default {
     border: 1px solid #dcdcdc;
     position: relative;
     padding-right: 40px;
-    padding-top: 25px;
+    padding-top: 10px;
     margin-bottom: 20px;
 
     > i {

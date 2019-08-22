@@ -2,19 +2,19 @@
     <div class="jd-manage">
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
-                <KPI />
-                <CoPartner/>
+                <!-- <KPI />
+                <CoPartner /> -->
                 <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3">
                     <template slot="title">
                         <p class="title-p">{{ title }}</p>
                     </template>
-                    <InvestmentOut v-if="index != 3" :type="index"/>
-                    <CompanyBasic v-if="index == 3" :type="index"/>
-                    <LegalInfo :type="index" @add-event="onAddList"/>
+                    <!-- <InvestmentOut v-if="index != 3" :type="index" />
+                    <CompanyBasic v-if="index == 3" :type="index" /> -->
+                    <LegalInfo :type="index" @add-event="onAddList" />
                 </el-collapse-item>
             </el-collapse>
-            <div class="flex-wrap-row top20 ">
-                <el-col :span="2" :offset="6">
+            <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
+                <el-col :span="2" :offset="8">
                     <el-button type="info" @click="saveJusticeData(true)">暂存</el-button>
                 </el-col>
                 <el-col :span="2" :offset="1">
@@ -84,6 +84,7 @@ export default {
     },
     computed: {
         ...mapState({
+            isCollapse: state => state.isCollapse,
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
@@ -94,6 +95,9 @@ export default {
         // }
     },
     methods: {
+        ...mapActions({
+            findJusticeData: 'findJusticeData'
+        }),
         total (name) {
             let total = 0
             let falg = false
@@ -127,13 +131,6 @@ export default {
             })
             this['justiceData'][fromTo][tempIndex][model] = event.target.value.replace(/[^\d]/g, '')
         },
-        showWarnMsg (msg) {
-            this.$message({
-                showClose: true,
-                message: msg,
-                type: 'warning'
-            })
-        },
         async doSave (params, message) {
             if (!params.affairs.id) {
                 await createJusticeDoFirst(params)
@@ -144,16 +141,9 @@ export default {
                 type: 'success',
                 message: message
             })
-            this.$router.go(-1)
+            this.findJusticeData({ applyId: this.$route.query.applyId })
         },
         saveJusticeData (isSave) {
-            if (this.disabled) {
-                this.$message({
-                    type: 'warning',
-                    message: '已提交数据！'
-                })
-                return
-            }
             const params = JSON.parse(JSON.stringify(this.justiceData))
             params.applyId = this.applyId
             params.createUser = this.userInfo.name
@@ -224,7 +214,7 @@ export default {
     },
     async mounted () {
         this.applyId = this.$route.query.applyId
-        await this.findJusticeData({ applyId: this.applyId })
+        // await this.findJusticeData({ applyId: this.applyId })
     }
 }
 </script>

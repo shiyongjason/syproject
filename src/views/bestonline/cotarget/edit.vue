@@ -32,9 +32,9 @@
             </el-form-item>
         </el-form>
 
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click.native="onSubmit(0)">保存</el-button>
+                <el-button type="info" @click.native="onSubmit(0)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
                 <el-button type="primary" @click.native="onSubmit(1)">提交</el-button>
@@ -45,7 +45,7 @@
 <script>
 import { addCooperativetarget, putCooperativetarget } from '../api/index.js'
 import { plusOrMinus } from '@/utils/rules.js'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 export default {
     data () {
         return {
@@ -70,13 +70,11 @@ export default {
     },
     computed: {
         ...mapState({
-            form: state => state.dueDiligence.cotargetData
+            form: state => state.dueDiligence.cotargetData,
+            isCollapse: state => state.isCollapse
         })
     },
     methods: {
-        ...mapActions([
-            'findCotargetData'
-        ]),
         oninput (value, e) {
             if (value === 'equityRatio') {
                 // 股权比例
@@ -91,15 +89,16 @@ export default {
                 item.netProfitRate = item.netProfitRate - 0
                 return item
             })
-            console.log(this.form.id)
             if (this.form.id) {
                 this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await putCooperativetarget(this.form)
                 this.$message.success('保存成功！')
+                this.$emit('init')
             } else {
                 this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await addCooperativetarget(this.form)
                 this.$message.success('提交成功！')
+                this.$emit('init')
             }
         },
         async onSave () {
@@ -123,12 +122,9 @@ export default {
                     this._saveOrUpdate()
                 }
             })
-            // TODO: ???
-            this.$emit('parentFun')
         }
     },
     mounted () {
-        this.findCotargetData({ applyId: this.$route.query.applyId })
     }
 }
 </script>

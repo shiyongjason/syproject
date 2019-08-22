@@ -8,7 +8,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="assessmentTable">
+                    <table class="item-wrapper0">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
@@ -22,8 +22,6 @@
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
-                                    <i v-if="index === 2">%</i>
-                                    <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
                                     <el-select v-model="item.state" placeholder="请选择">
