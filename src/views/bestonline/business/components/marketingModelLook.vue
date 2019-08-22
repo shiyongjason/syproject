@@ -11,7 +11,7 @@
             </el-checkbox-group>
         </el-form-item>
         <el-form-item label="异业合作渠道：">
-            <el-input v-model="form.interIndustryCooperation"></el-input>
+           {{form.interIndustryCooperation}}
         </el-form-item>
     </el-collapse-item>
 </template>
@@ -36,7 +36,8 @@ export default {
             if (!publicityPromotionChannels) {
                 publicityPromotionChannels = []
             }
-            this.form.publicityPromotionChannels = publicityPromotionChannels
+            publicityPromotionChannels = publicityPromotionChannels.split(',')
+            form.publicityPromotionChannels = publicityPromotionChannels.map(item => parseInt(item))
         }
     },
     computed: {
