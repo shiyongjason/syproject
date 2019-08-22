@@ -209,17 +209,7 @@ export default {
         }
     },
     watch: {
-        justiceData (data) {
-            data.assetList.map(value => {
-                value.attachInfo = JSON.parse(value.attachInfo)
-                if (value.attachInfo == '' || value.attachInfo == 'null' || value.attachInfo == null) {
-                    value.attachInfo = []
-                } else {
 
-                }
-                return value
-            })
-        }
     },
     mounted () {
 
