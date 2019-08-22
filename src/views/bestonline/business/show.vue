@@ -32,7 +32,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                  {{item.remark}}
+                                  {{item.remark }}
                                 </td>
                             </tr>
                         </tbody>
