@@ -1,7 +1,7 @@
 <template>
     <div class="jd-manage">
         <p class="title-p">合作目标</p>
-        <p>已提交 {{updateTime}} {{updateUser}} </p>
+        <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <div>
             <p>尽调规模：{{ form.scale }}万</p>
             <table class="tableStyle">

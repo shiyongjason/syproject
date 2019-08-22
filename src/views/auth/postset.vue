@@ -4,11 +4,7 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-input
-                            placeholder="请输入岗位名称进行检索"
-                            v-model="positionName"
-                            style="width: 415px"
-                            maxlength="25">
+                        <el-input placeholder="请输入岗位名称进行检索" v-model="positionName" style="width: 415px" maxlength="25">
                         </el-input>
                     </div>
                     <el-button type="primary" @click="searchpositionName()">搜索
@@ -23,101 +19,72 @@
             <!--            岗位信息table-->
             <table>
                 <thead>
-                <tr>
-                    <td>序号</td>
-                    <td>岗位名称</td>
-                    <td>
-                        岗位code
-                        <el-tooltip effect="dark" content="code：实现岗位与后台数据相匹配" placement="top-start">
-                                <img src="../../assets/images/icon_tx_white.png"/>
-                        </el-tooltip>
-                    </td>
-                    <td width="250px">更新时间</td>
-                    <td width="250px">操作</td>
-                </tr>
+                    <tr>
+                        <td>序号</td>
+                        <td>岗位名称</td>
+                        <td>
+                            岗位code
+                            <el-tooltip effect="dark" content="code：实现岗位与后台数据相匹配" placement="top-start">
+                                <img src="../../assets/images/icon_tx_white.png" />
+                            </el-tooltip>
+                        </td>
+                        <td width="250px">更新时间</td>
+                        <td width="250px">操作</td>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item,index) in postList" :key="index">
-                    <td>{{index + 1}}</td>
-                    <td>{{item.positionName}}</td>
-                    <td>{{item.positionCode}}</td>
-                    <td>{{item.updateTime}}</td>
-                    <td>
-                        <el-button class="orangeBtn" @click="onupdate(item)">修改</el-button>
-                        <el-button class="orangeBtn" @click="onDelete(item)">删除</el-button>
-                    </td>
-                </tr>
+                    <tr v-for="(item,index) in postList" :key="index">
+                        <td>{{index + 1}}</td>
+                        <td>{{item.positionName}}</td>
+                        <td>{{item.positionCode}}</td>
+                        <td>{{item.updateTime}}</td>
+                        <td>
+                            <el-button class="orangeBtn" @click="onupdate(item)">修改</el-button>
+                            <el-button class="orangeBtn" @click="onDelete(item)">删除</el-button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
-            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true">
+            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" isShowIndex>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
             <!--            新增岗位dialog-->
-            <el-dialog
-                title='新增岗位'
-                :visible.sync="adddialogVisible"
-                width="500px"
-                height="400px"
-                center>
+            <el-dialog title='新增岗位' :visible.sync="adddialogVisible" width="500px" height="400px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
-                    <el-form-item
-                        label="岗位名称："
-                        prop="addpositionName">
-                        <el-input
-                            placeholder="请输入岗位名称"
-                            v-model="ruleForm.addpositionName"
-                            maxlength="25">
+                    <el-form-item label="岗位名称：" prop="addpositionName">
+                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.addpositionName" maxlength="25">
                         </el-input>
                     </el-form-item>
-                    <el-form-item
-                        label="岗位code："
-                        prop="addpositionCode">
-                        <el-input
-                            placeholder="请输入岗位code"
-                            v-model="ruleForm.addpositionCode"
-                            maxlength="25">
+                    <el-form-item label="岗位code：" prop="addpositionCode">
+                        <el-input placeholder="请输入岗位code" v-model="ruleForm.addpositionCode" maxlength="25">
                         </el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                        <el-button @click="adddialogVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="addsave">保 存</el-button>
-                    </span>
+                    <el-button @click="adddialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addsave">保 存</el-button>
+                </span>
             </el-dialog>
             <!--            修改岗位dialog-->
-            <el-dialog
-                title="修改岗位"
-                :visible.sync="updatedialogVisible"
-                width="500px"
-                center>
+            <el-dialog title="修改岗位" :visible.sync="updatedialogVisible" width="500px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
-                    <el-form-item
-                        label="岗位名称："
-                        prop="updatepositionName">
-                        <el-input
-                            placeholder="请输入岗位名称"
-                            v-model="ruleForm.updatepositionName"
-                            maxlength="25">
+                    <el-form-item label="岗位名称：" prop="updatepositionName">
+                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.updatepositionName" maxlength="25">
                         </el-input>
                     </el-form-item>
-                    <el-form-item
-                        label="岗位code："
-                        prop="updatepositionCode">
-                        <el-input
-                            placeholder="请输入岗位code"
-                            v-model="ruleForm.updatepositionCode"
-                            maxlength="25">
+                    <el-form-item label="岗位code：" prop="updatepositionCode">
+                        <el-input placeholder="请输入岗位code" v-model="ruleForm.updatepositionCode" maxlength="25">
                         </el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                        <el-button @click="updatedialogVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="updatesave">保 存</el-button>
-                    </span>
+                    <el-button @click="updatedialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="updatesave">保 存</el-button>
+                </span>
             </el-dialog>
         </div>
     </div>
@@ -132,9 +99,8 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '序号', prop: 'companyName' },
                 { label: '岗位名称', prop: 'positionName' },
-                { label: '岗位code', prop: 'positionCode' },
+                { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: '1111' },
                 { label: '更新时间', prop: 'updateTime' }
             ],
             tableData: [],
@@ -267,6 +233,9 @@ export default {
             }).catch(() => {
                 // 取消删除
             })
+        },
+        renderHeader (h, { column }) {
+            console.log(column)
         }
     },
     mounted () {
@@ -276,34 +245,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    table {
-        border-collapse: collapse;
-        margin-top: 11px;
-        width: 100%;
-        text-align: center;
+table {
+    border-collapse: collapse;
+    margin-top: 11px;
+    width: 100%;
+    text-align: center;
 
-        tr {
-            line-height: 29px;
-            height: 50px;
-            border: 1px solid #DDDDDD;
+    tr {
+        line-height: 29px;
+        height: 50px;
+        border: 1px solid #dddddd;
 
-            td {
-                border: 1px solid #DDDDDD;
-            }
+        td {
+            border: 1px solid #dddddd;
         }
     }
+}
 
-    /deep/ .el-dialog {
-        .el-dialog__body {
-            min-height: 0px;
-        }
+/deep/ .el-dialog {
+    .el-dialog__body {
+        min-height: 0px;
     }
+}
 
-    img{
-        padding-left: 7px;
-        margin-left: -7px;
-        width: 12px;
-        height: 12px;
-        vertical-align: super;
-    }
+img {
+    padding-left: 7px;
+    margin-left: -7px;
+    width: 12px;
+    height: 12px;
+    vertical-align: super;
+}
+/deep/ .el-icon-question {
+    position: absolute;
+    top: 5px;
+    margin-left: 5px;
+    font-size: 12px;
+    color: $grayColor;
+}
 </style>

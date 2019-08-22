@@ -355,10 +355,4 @@ export default {
 .flex-wrap-box {
     width: 100%;
 }
-.el-select {
-    width: 100%;
-}
-// .flex-wrap-title{
-//     line-height: 40px;
-// }
 </style>
