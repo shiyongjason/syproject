@@ -49,6 +49,13 @@
                 </tr>
                 </tbody>
             </table>
+
+            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true">
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                </template>
+            </basicTable>
             <!--            新增岗位dialog-->
             <el-dialog
                 title='新增岗位'
@@ -124,6 +131,13 @@ export default {
     name: 'postset',
     data () {
         return {
+            tableLabel: [
+                { label: '序号', prop: 'companyName' },
+                { label: '岗位名称', prop: 'positionName' },
+                { label: '岗位code', prop: 'positionCode' },
+                { label: '更新时间', prop: 'updateTime' }
+            ],
+            tableData: [],
             adddialogVisible: false,
             updatedialogVisible: false,
             postList: [],

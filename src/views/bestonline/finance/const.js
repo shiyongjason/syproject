@@ -18,3 +18,18 @@ export const WAREHOUSE_ORDER_OPTIONS = [
     { value: 1, label: '中' },
     { value: 2, label: '低' }
 ]
+// 仓库形式
+export const WAREHOUSE_FORM = [
+    { value: '', label: '请选择' },
+    { value: 0, label: '自有' },
+    { value: 1, label: '租赁' },
+    { value: 2, label: '第三方监督' }
+]
+// 财务外派资金监管可选项
+export const FUND_SUPERVISION = [
+    { value: '', label: '请选择' },
+    { value: 0, label: '资金和货物双重监管' },
+    { value: 1, label: '资金监管-高' },
+    { value: 2, label: '资金监管-低' },
+    { value: 3, label: '不接受' }
+]

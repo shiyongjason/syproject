@@ -1,6 +1,6 @@
 <template>
     <div class="yearTable">
-        <table class="item-wrapper">
+        <table class="item-wrapper no_right_border">
             <thead>
                 <tr>
                     <td>资产</td>
@@ -14,12 +14,12 @@
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
-                        <td>{{item.typeName}}</td>
+                        <td>
+                            <span class="red-word" v-if="index === 4 || index === 5 || index === 8 || index === 9 || index === 10 || index === 13">*</span>
+                            {{item.typeName}}
+                        </td>
                         <td>
                             <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                <template slot="prefix">
-                                    <span class="red-word">*</span>
-                                </template>
                                 <template slot="suffix">万</template>
                             </el-input>
                         </td>
@@ -46,12 +46,9 @@
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
-                        <td>{{item.typeName}}</td>
+                        <td><span class="red-word" v-if="index === 4">*</span>{{item.typeName}}</td>
                         <td>
                             <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                <template slot="prefix">
-                                    <span class="red-word">*</span>
-                                </template>
                                 <template slot="suffix">万</template>
                             </el-input>
                         </td>
@@ -61,6 +58,11 @@
                             </el-input>
                         </td>
                     </template>
+                </tr>
+                <tr>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
                 </tr>
             </tbody>
         </table>

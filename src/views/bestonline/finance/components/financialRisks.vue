@@ -12,14 +12,14 @@
             </el-form-item>
         </div>
         <div class="form-cont-col">
-            <el-form-item label="股东借款：" prop="shareholdersDebt">
+            <el-form-item label="股东借款：" prop="dueFinanceBasic.shareholdersDebt">
                 <el-input v-model="form.dueFinanceBasic.shareholdersDebt" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('shareholdersDebt',$event)">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
-            <el-form-item label="公司向股东借款：" prop="companyBorrowsShareholders">
+            <el-form-item label="公司向股东借款：" prop="dueFinanceBasic.companyBorrowsShareholders">
                 <el-input v-model="form.dueFinanceBasic.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('companyBorrowsShareholders',$event)">
                     <template slot="suffix">万</template>
                 </el-input>
@@ -28,7 +28,7 @@
     </div>
     <div class="form-cont-row">
         <div class="form-cont-col">
-            <el-form-item label="股东向公司借款：" prop="shareholdersBorrowsCompany">
+            <el-form-item label="股东向公司借款：" prop="dueFinanceBasic.shareholdersBorrowsCompany">
                 <el-input v-model="form.dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
                     <template slot="suffix">万</template>
                 </el-input>
@@ -42,7 +42,7 @@
             </el-form-item>
         </div>
         <div class="form-cont-col">
-            <el-form-item label="资金风险评估：" prop="capitalRiskAssessment">
+            <el-form-item label="资金风险评估：" prop="dueFinanceBasic.capitalRiskAssessment">
                 <el-select v-model="form.dueFinanceBasic.capitalRiskAssessment" placeholder="请选择资金风险评估">
                     <el-option v-for="item in riskOptions" :key="item.value" :label="item.label" :value="item.value">
                     </el-option>
