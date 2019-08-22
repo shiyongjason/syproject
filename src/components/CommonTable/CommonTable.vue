@@ -4,15 +4,7 @@
         <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <el-table-column v-for="item in tableLabel"
-                :key="item.label"
-                :label="item.label"
-                :prop="item.prop"
-                :sortable="item.sortable"
-                :align="item.align?item.align:'center'"
-                :min-width="item.width?item.width:''"
-                :show-overflow-tooltip="true"
-                v-bind="item">
+            <el-table-column v-for="item in tableLabel" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :render-header="renderHeader" :show-overflow-tooltip="true" v-bind="item">
                 <template slot-scope="scope">
                     <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                     <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
@@ -147,6 +139,20 @@ export default {
         },
         formatter (data) {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
+        },
+        renderHeader (h, { column }) {
+            const result = this.tableLabel.filter(item => item.icon && item.label == column.label)
+            if (result.length > 0) {
+                return (
+                    <div>
+                        <span>{column.label}</span>
+                        <el-tooltip placement="right" content={result[0].content}>
+                            <i class={result[0].icon}></i>
+                        </el-tooltip>
+                    </div>
+                )
+            }
+            return column.label
         }
     },
     mounted () {
