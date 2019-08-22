@@ -8,7 +8,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="assessmentTable">
+                    <table class="item-wrapper">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
@@ -22,8 +22,6 @@
                                 <td>{{item.assessmentItem}}</td>
                                 <td>{{item.cooperationIntention}}
                                     <i v-if="index === 1">w</i>
-
-                                    <i v-if="index === 4">%</i>
                                 </td>
                                 <td>
                                     <el-select v-model="item.state" placeholder="请选择">
@@ -85,7 +83,7 @@
 
         <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSaveBus">保存</el-button>
+                <el-button type="info" @click="onSaveBus">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
                 <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -227,13 +225,8 @@ export default {
             } else {
                 await addBusiness(this.form)
             }
-            await this.findBusinessData({ applyId: this.$route.query.applyId })
-            this.$message({
-                type: 'success',
-                message: '保存成功'
-            })
-
-            // this.$router.go(-1)
+            this.$message.success('暂存成功')
+            this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
             for (const i of this.form.dueBusinessAssessmentCreateFormList) {
@@ -281,15 +274,19 @@ export default {
                             createUser: createUser,
                             ...this.form
                         })
-                        this.$message.success('提交成功')
                     } else {
                         await addBusiness({
                             operationNode: 1,
                             createUser: createUser,
                             ...this.form
                         })
-                        this.$message.success('提交成功')
                     }
+                    this.$message.success('提交成功')
+                }else {
+                    this.$message({
+                        type: 'warning',
+                        message: '有必填项未填写，请重新检查！'
+                    })
                 }
             })
             // this.publicityPromotionChannels = this.checkedCities.join(',')

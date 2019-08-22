@@ -32,9 +32,9 @@
             </el-form-item>
         </el-form>
 
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click.native="onSubmit(0)">保存</el-button>
+                <el-button type="info" @click.native="onSubmit(0)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
                 <el-button type="primary" @click.native="onSubmit(1)">提交</el-button>
@@ -70,7 +70,8 @@ export default {
     },
     computed: {
         ...mapState({
-            form: state => state.dueDiligence.cotargetData
+            form: state => state.dueDiligence.cotargetData,
+            isCollapse: state => state.isCollapse
         })
     },
     methods: {
