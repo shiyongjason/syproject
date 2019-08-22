@@ -18,7 +18,7 @@
         </div>
         <div class="page-body-cont">
             <div class="table-cont-btn">
-                <el-button type="primary" @click="adddialogVisible = true">新增岗位</el-button>
+                <el-button type="primary" @click="onadd">新增岗位</el-button>
             </div>
             <!--            岗位信息table-->
             <table>
@@ -29,7 +29,7 @@
                     <td>
                         岗位code
                         <el-tooltip effect="dark" content="code：实现岗位与后台数据相匹配" placement="top-start">
-                            <i class="el-icon-question"></i>
+                                <img src="../../assets/images/icon_tx_white.png"/>
                         </el-tooltip>
                     </td>
                     <td width="250px">更新时间</td>
@@ -198,7 +198,11 @@ export default {
         searchpositionName () {
             this.findList()
         },
-        // 新增岗位保存
+        // 新增岗位信息
+        onadd () {
+            this.adddialogVisible = true
+            this.$refs['form'].clearValidate()
+        },
         async addsave () {
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
@@ -221,17 +225,22 @@ export default {
             this.ruleForm.updatepositionCode = val.positionCode
             this.id = val.id
             this.updatedialogVisible = true
+            this.$refs['form'].clearValidate()
         },
         async updatesave () {
-            const formData = {
-                id: this.id,
-                positionCode: this.ruleForm.updatepositionCode,
-                positionName: this.ruleForm.updatepositionName,
-                updateUid: this.userInfo.jobNumber
-            }
-            await updateList(formData)
-            this.updatedialogVisible = false
-            this.findList()
+            this.$refs['form'].validate(async (validate) => {
+                if (validate) {
+                    const formData = {
+                        id: this.id,
+                        positionCode: this.ruleForm.updatepositionCode,
+                        positionName: this.ruleForm.updatepositionName,
+                        updateUid: this.userInfo.jobNumber
+                    }
+                    await updateList(formData)
+                    this.updatedialogVisible = false
+                    this.findList()
+                }
+            })
         },
         // 删除岗位信息
         onDelete (val) {
@@ -275,7 +284,12 @@ export default {
             min-height: 0px;
         }
     }
-    /deep/ .el-message-box__content {
-        min-height: 50px;
+
+    img{
+        padding-left: 7px;
+        margin-left: -7px;
+        width: 12px;
+        height: 12px;
+        vertical-align: super;
     }
 </style>
