@@ -4,14 +4,6 @@
         <p>已提交 {{updateTime}} {{updateUser}} </p>
         <div>
             <p>尽调规模：{{ form.scale }}万</p>
-            <!-- <table class="tableStyle" :tableLabel="tableLabel" :tableData="yearRateTabelContents">
-                <template slot="yearGrowthRate" slot-scope="scope">
-                    {{ scope.data.row.yearGrowthRate }}%
-                </template>
-                <template slot="netProfitRate" slot-scope="scope">
-                    {{ scope.data.row.netProfitRate }}%
-                </template>
-            </table> -->
             <table class="tableStyle">
                  <thead>
                      <tr>
@@ -33,16 +25,10 @@
     </div>
 </template>
 <script>
-// import { getDueLegal } from '../api/index.js'
 import { mapState } from 'vuex'
 export default {
     data () {
         return {
-            // scale: '',
-            // yearRateTabelContents: [],
-            // equityRatio: '',
-            // updateUser: '',
-            // updateTime: '',
         }
     },
     computed: {
@@ -51,22 +37,9 @@ export default {
         })
     },
     methods: {
-        // ...mapActions([
-        //     'findCotargetData'
-        // ])
-        // async getDueLegal () {
-        //     const { data } = await getDueLegal(this.$route.query.applyId)
-        //     console.log(data.data)
-        //     this.updateUser = data.data.updateUser
-        //     this.updateTime = data.data.updateTime
-        //     this.equityRatio = data.data.equityRatio
-        //     this.scale = data.data.scale
-        //     this.yearRateTabelContents = data.data.yearRateTabelContents
-        // }
     },
     mounted () {
-        // this.getDueLegal()
-        // this.findCotargetData({ applyId: this.$route.query.applyId })
+
     }
 }
 </script>
