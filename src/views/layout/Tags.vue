@@ -93,9 +93,7 @@ export default {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
             this.tagUpdate(tags || [])
             this.reloadUpdate(false)
-            console.log('open')
         }
-        console.log('close')
         this.setTags(this.$route)
     }
 }
