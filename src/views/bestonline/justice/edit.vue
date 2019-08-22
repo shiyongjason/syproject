@@ -82,17 +82,25 @@ export default {
             }
         }
     },
+    watch: {
+        justiceData (data) {
+            data.assetList.map(value => {
+                value.attachInfo = JSON.parse(value.attachInfo)
+                if (value.attachInfo == '' || value.attachInfo == 'null' || value.attachInfo == null) {
+                    value.attachInfo = []
+                } else {
+
+                }
+                return value
+            })
+        }
+    },
     computed: {
         ...mapState({
             isCollapse: state => state.isCollapse,
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
-        // assetListType0 () {
-        //     return this.justiceData.assetList.filter(value => {
-        //         if (value.type === 0) return value
-        //     })
-        // }
     },
     methods: {
         ...mapActions({
@@ -144,7 +152,8 @@ export default {
             this.findJusticeData({ applyId: this.$route.query.applyId })
         },
         saveJusticeData (isSave) {
-            const params = JSON.parse(JSON.stringify(this.justiceData))
+            // const params = JSON.parse(JSON.stringify(this.justiceData))
+            const params = this.justiceData
             params.applyId = this.applyId
             params.createUser = this.userInfo.name
             params.updateUser = this.userInfo.name

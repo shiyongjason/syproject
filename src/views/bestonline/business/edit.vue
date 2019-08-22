@@ -282,7 +282,7 @@ export default {
                         })
                     }
                     this.$message.success('提交成功')
-                }else {
+                } else {
                     this.$message({
                         type: 'warning',
                         message: '有必填项未填写，请重新检查！'

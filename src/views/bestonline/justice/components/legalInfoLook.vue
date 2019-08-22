@@ -32,7 +32,12 @@
                             </el-button>
                         </el-upload>
                     </div>
-
+                    <div class="cont" v-if="item.attachInfo">
+                        <div v-if="item.attachInfo.length === 0">暂无附件</div>
+                        <p v-else class="upload" v-for="(sub,index) in item.attachInfo" :key="index" @click="uploadId(item)">
+                            <a :href="sub.url" target="_blank">{{sub.name}}</a>
+                        </p>
+                    </div>
                 </div>
 
             <p class="small-title">负债信息（万）</p>
