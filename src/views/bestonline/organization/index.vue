@@ -1,5 +1,5 @@
 <template>
-    <OrganizationEdit v-if="canEdit" />
+    <OrganizationEdit v-if="canEdit" :applyId="applyId" />
     <OrganizationShow v-else />
 </template>
 
@@ -15,7 +15,8 @@ export default {
     },
     data () {
         return {
-            canEdit: true
+            canEdit: true,
+            applyId: ''
         }
     },
     methods: {
@@ -24,6 +25,7 @@ export default {
         ])
     },
     mounted () {
+        this.applyId = this.$route.query.applyId
         this.findOrganizationData({ applyId: this.$route.query.applyId })
     }
 }
