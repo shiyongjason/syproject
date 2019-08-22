@@ -16,7 +16,7 @@
             </el-form-item>
         </div>
         <p class="small-title">综合评估</p>
-        <table class="item-wrapper">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="180">评估维度</td>
@@ -31,10 +31,16 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`"
+                            :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                            <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
+                        </el-form-item>
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore"></el-input>
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`"
+                            :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore"></el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -147,7 +153,6 @@ export default {
     },
     methods: {
         onChangeScore () {
-            console.log(111111111)
             this.drawRadar()
         },
         drawRadar () {
@@ -223,6 +228,13 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+    }
 }
 /deep/ .el-form .el-input {
     width: 100%;

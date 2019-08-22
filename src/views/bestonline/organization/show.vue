@@ -11,7 +11,7 @@
                         <tr>
                             <td width="180">评估项</td>
                             <td width="180">合作目标</td>
-                            <td width="180"><span class="red-span">*</span>结论(必填)</td>
+                            <td width="180">结论</td>
                             <td width="180">备注</td>
                         </tr>
                     </thead>
@@ -33,36 +33,43 @@
                         </tr>
                     </tbody>
                 </table>
-                <p class="small-title">KPI(必填)</p>
+                <p class="small-title">KPI</p>
                 <div class="item-wrapper">
                     <div class="organization-form">
-                        <el-form-item label="实际控制人社会风评：" label-width="250px" prop="actualControllerSocialId">
-                            {{form.actualControllerSocialId}}
-                        </el-form-item>
-                        <el-form-item label="实际控制人对公司的掌控力：" label-width="250px" prop="actualCompanyControllerId">
-                            {{form.actualCompanyControllerId}}
-                        </el-form-item>
-                        <el-form-item label="组织稳定性：" label-width="250px" prop="organizationalStabilityId">
-                            {{form.organizationalStabilityId}}
-                        </el-form-item>
+                        <div>
+                            <label for="">实际控制人社会风评：</label>
+                            <span>{{form.actualControllerSocialId}}</span>
+                        </div>
+                        <div>
+                            <label for="">实际控制人对公司的掌控力：</label>
+                            <span>{{form.actualCompanyControllerId}}</span>
+                        </div>
+                        <div>
+                            <label for="">组织稳定性：</label>
+                            <span>{{form.organizationalStabilityId}}</span>
+                        </div>
                     </div>
                     <div class="organization-form mt20">
-                        <el-form-item label="组织综合评分：" label-width="250px">
-                            <p style="width: 224px">{{ form.organizationScore }}</p>
-                        </el-form-item>
-                        <el-form-item label="实际控制人综合评分：" label-width="250px">
-                            <p style="width: 224px">{{ form.actualControllerScore }}</p>
-                        </el-form-item>
+                        <div>
+                            <label for="">组织综合评分：</label>
+                            <span>{{form.organizationScore}}</span>
+                        </div>
+                        <div>
+                            <label for="">实际控制人综合评分：</label>
+                            <span>{{form.actualControllerScore}}</span>
+                        </div>
                     </div>
                 </div>
                 <p class="small-title">分析报告(必填)</p>
                 <div class="item-wrapper">
-                    <el-form-item label="风险揭示：" label-width="100px" prop="riskDisclosure">
-                        {{form.riskDisclosure}}
-                    </el-form-item>
-                    <el-form-item label="分析描述：" label-width="100px" prop="analysisDescription">
-                        {{form.analysisDescription}}
-                    </el-form-item>
+                    <div>
+                        <label for="">风险揭示：</label>
+                        <span>{{form.riskDisclosure}}</span>
+                    </div>
+                    <div>
+                        <label for="">分析描述：</label>
+                        <span>{{form.analysisDescription}}</span>
+                    </div>
                 </div>
             </el-collapse-item>
             <el-collapse-item name="2">
@@ -71,15 +78,18 @@
                 </template>
                 <p class="small-title">个人简介</p>
                 <div class="item-wrapper">
-                    <el-form-item label="概况：" label-width="150px" prop="actualControllerOverview">
-                        {{form.actualControllerOverview}}
-                    </el-form-item>
-                    <el-form-item label="底线和禁区：" label-width="150px" prop="actualControllerBaseline">
-                        {{form.actualControllerBaseline}}
-                    </el-form-item>
-                    <el-form-item label="个人风格和喜好：" label-width="150px" prop="actualControllerHobby">
-                        {{form.actualControllerHobby}}
-                    </el-form-item>
+                    <div>
+                        <label for="">概况：</label>
+                        <span>{{form.actualControllerOverview}}</span>
+                    </div>
+                    <div>
+                        <label for="">底线和禁区：</label>
+                        <span>{{form.actualControllerBaseline}}</span>
+                    </div>
+                    <div>
+                        <label for="">个人风格和喜好：</label>
+                        <span>{{form.actualControllerHobby}}</span>
+                    </div>
                 </div>
                 <p class="small-title">综合评估</p>
                 <table class="item-wrapper">
@@ -119,33 +129,38 @@
                 </template>
                 <p class="small-title">公司历程和业发展</p>
                 <div class="item-wrapper">
-                    <el-form-item label="公司历程和业务发展：" label-width="200px" prop="companyHistoryBusiness">
-                        {{form.companyHistoryBusiness}}
-                    </el-form-item>
+                    <div>
+                        <label for="">公司历程和业务发展：</label>
+                        <span>{{form.companyHistoryBusiness}}</span>
+                    </div>
                 </div>
                 <p class="small-title">组织架构</p>
                 <div class="organization-form item-wrapper">
-                    <el-form-item label="在职人数：" label-width="200px" prop="incumbency">
-                        {{form.incumbency}}
-                    </el-form-item>
-                    <el-form-item label="在职人员平均薪资：" label-width="200px" prop="averageSalaryOnJob">
-                        {{form.averageSalaryOnJob}}元
-                    </el-form-item>
-                    <el-form-item label="缴纳社保人数：" label-width="200px" prop="socialSecurityNum">
-                        {{form.socialSecurityNum}}
-                    </el-form-item>
-                    <el-form-item label="是否签订用人合同：" label-width="200px" prop="isSignEmployment">
-                        {{form.isSignEmployment}}
-                    </el-form-item>
+                    <div>
+                        <label for="">在职人数：</label>
+                        <span>{{form.incumbency}}</span>
+                    </div>
+                    <div>
+                        <label for="">在职人员平均薪资：</label>
+                        <span>{{form.averageSalaryOnJob}}元</span>
+                    </div>
+                    <div>
+                        <label for="">缴纳社保人数：</label>
+                        <span>{{form.socialSecurityNum}}</span>
+                    </div>
+                    <div>
+                        <label for="">是否签订用人合同：</label>
+                        <span>{{form.isSignEmployment}}</span>
+                    </div>
                 </div>
                 <p class="small-small-p">高管结构</p>
                 <table class="item-wrapper">
                     <thead>
                         <tr>
-                            <td width="180"><span class="red-span">*</span>职位</td>
-                            <td width="180"><span class="red-span">*</span>姓名</td>
-                            <td width="180"><span class="red-span">*</span>岗位职责</td>
-                            <td width="180"><span class="red-span">*</span>人员情况</td>
+                            <td width="180">职位</td>
+                            <td width="180">姓名</td>
+                            <td width="180">岗位职责</td>
+                            <td width="180">人员情况</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -206,21 +221,25 @@
                 </template>
                 <p class="small-title">合作初衷</p>
                 <div class="item-wrapper">
-                    <el-form-item label="合作初衷：" label-width="100px" prop="cooperationIntention">
-                        {{form.cooperationIntention}}
-                    </el-form-item>
+                    <div>
+                        <label for="">合作初衷：</label>
+                        <span>{{form.cooperationIntention}}</span>
+                    </div>
                 </div>
                 <p class="small-title">合作风险</p>
                 <div class="item-wrapper">
-                    <el-form-item label="合作风险：" label-width="100px" prop="cooperationRisk">
+                    <div>
+                        <label for="">合作风险：</label>
                         <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" disabled></el-rate>
-                    </el-form-item>
-                    <el-form-item label="企业优势：" label-width="100px" prop="companyAdvantage">
-                        {{form.companyAdvantage}}
-                    </el-form-item>
-                    <el-form-item label="企业短板：" label-width="100px" prop="companyShortBoard">
-                        {{form.companyShortBoard}}
-                    </el-form-item>
+                    </div>
+                    <div>
+                        <label for="">企业优势：</label>
+                        <span>{{form.companyAdvantage}}</span>
+                    </div>
+                    <div>
+                        <label for="">企业短板：</label>
+                        <span>{{form.companyShortBoard}}</span>
+                    </div>
                 </div>
             </el-collapse-item>
         </el-collapse>
@@ -228,6 +247,8 @@
 </template>
 <script>
 import { mapState } from 'vuex'
+import { YES_NO_STATUS } from '../const'
+import { SOCIAL_REVIEW_OPTIONS, CONTROLL_OPTIONS, STABLE_OPTIONS } from './const'
 export default {
     props: {
         applyId: {
@@ -244,7 +265,17 @@ export default {
             form: state => state.dueDiligence.organizationData
         })
     },
-    methods: {
+    watch: {
+        form () {
+            this.form.dueOrganizationAssessmentCreateFormList = this.form.dueOrganizationAssessmentCreateFormList.map(item => {
+                item.state = YES_NO_STATUS.filter(obj => obj.value === item.state)[0].label
+                return item
+            })
+            this.form.actualControllerSocialId = SOCIAL_REVIEW_OPTIONS.filter(item => item.value === this.form.actualControllerSocialId)[0].label
+            this.form.actualCompanyControllerId = CONTROLL_OPTIONS.filter(item => item.value === this.form.actualCompanyControllerId)[0].label
+            this.form.organizationalStabilityId = STABLE_OPTIONS.filter(item => item.value === this.form.organizationalStabilityId)[0].label
+            this.form.isSignEmployment = YES_NO_STATUS.filter(item => item.value === item.state)[0].label
+        }
     }
 }
 </script>
@@ -281,5 +312,11 @@ export default {
 .assessmentDimension-title {
     width: 320px;
     text-align: center;
+}
+.small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
 }
 </style>
