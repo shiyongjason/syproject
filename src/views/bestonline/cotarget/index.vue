@@ -27,9 +27,9 @@ export default {
             'findCotargetData'
         ])
     },
-    mounted () {
-        this.findCotargetData({ applyId: this.$route.query.applyId })
-        if(this.form.id){
+    async mounted () {
+        await this.findCotargetData({ applyId: this.$route.query.applyId })
+        if (this.form.id) {
             this.canEdit = false
         }
     }
