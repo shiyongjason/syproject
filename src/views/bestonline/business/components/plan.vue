@@ -28,24 +28,24 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince" label-width="170px">
-                    <el-select v-model="businessProvince" placeholder="请选择省" @change="onchangeP(businessProvince)">
-                        <el-option v-for="(item) in provelist" :key="item.key" :label="item.value" :value="item">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省" @change="onchangeP(form.dueBusinessFuturePlanCreateForm.businessProvince)">
+                        <el-option v-for="(item) in provelist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity" label-width="170px">
-                    <el-select v-model="businessCity" @change="onchangeC(businessCity)" placeholder="请选择市">
-                        <el-option v-for="item in citylist" :key="item.key" :label="item.value" :value="item">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" @change="onchangeC(form.dueBusinessFuturePlanCreateForm.businessCity)" placeholder="请选择市">
+                        <el-option v-for="item in citylist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea" label-width="170px">
-                    <el-select v-model="businessArea" placeholder="请选择区"  @change="onchangeA(businessArea)">
-                        <el-option v-for="item in arealist" :key="item.key" :label="item.value" :value="item">
+                    <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessArea" placeholder="请选择区" @change="onchangeA(form.dueBusinessFuturePlanCreateForm.businessArea)">
+                        <el-option v-for="item in arealist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -101,6 +101,7 @@ export default {
     },
     watch: {
         form (form) {
+            console.log(form)
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
                 serviceCategory = ''
@@ -114,6 +115,25 @@ export default {
             }
             businessCategory = businessCategory.split(',')
             form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => parseInt(item))
+        },
+        'form.dueBusinessFuturePlanCreateForm.businessProvince' (val) {
+            if (val) {
+                let list = this.provelist.filter(item => item.key == val)[0].cityList
+                let selectObj = [{ value: '请选择', key: '' }]
+                this.citylist = selectObj.concat(list)
+            } else {
+                this.citylist = []
+                this.arealist = []
+            }
+        },
+        'form.dueBusinessFuturePlanCreateForm.businessCity' (val) {
+            if (val) {
+                let list = this.citylist.filter(item => item.key == val)[0].areaList
+                let selectObj = [{ value: '请选择', key: '' }]
+                this.arealist = selectObj.concat(list)
+            } else {
+                this.arealist = []
+            }
         }
     },
     computed: {
@@ -122,45 +142,41 @@ export default {
         })
 
     },
-    created () {
-
-    },
     async  mounted () {
-        const data = await this.getAreacode()
+        const { data } = await getAreacode()
         let selectObj = [{ value: '请选择', key: '' }]
-        this.provelist = selectObj.concat(data.dictpro)
+        this.provelist = selectObj.concat(data.data.dictpro)
     },
     methods: {
         async  getAreacode () {
             const { data } = await getAreacode()
-
             return data.data
         },
         async onchangeP (val) {
-            if (val) {
-                let list = val.cityList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.citylist = selectObj.concat(list)
-            } else {
-                this.citylist = []
-                this.arealist = []
-            }
-            this.form.dueBusinessFuturePlanCreateForm.businessProvince = val.key ? val.key : ''
+            this.form.dueBusinessFuturePlanCreateForm.businessCity = ''
+            // if (val) {
+            //     let list = this.provelist.filter(item => item.key == val)[0].cityList
+            //     let selectObj = [{ value: '请选择', key: '' }]
+            //     this.citylist = selectObj.concat(list)
+            // } else {
+            //     this.citylist = []
+            //     this.arealist = []
+            // }
+            // this.form.dueBusinessFuturePlanCreateForm.businessProvince = ''
         },
         async onchangeC (val) {
-            if (val) {
-                let list = val.areaList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.arealist = selectObj.concat(list)
-            } else {
-                this.arealist = []
-            }
-            this.form.dueBusinessFuturePlanCreateForm.businessCity = val.key ? val.key : ''
+            this.form.dueBusinessFuturePlanCreateForm.businessArea = ''
+            // if (val) {
+            //     let list = this.citylist.filter(item => item.key == val)[0].areaList
+            //     let selectObj = [{ value: '请选择', key: '' }]
+            //     this.arealist = selectObj.concat(list)
+            // } else {
+            //     this.arealist = []
+            // }
+            // this.form.dueBusinessFuturePlanCreateForm.businessCity = ''
         },
         async onchangeA (val) {
-            if (val) {
-                this.form.dueBusinessFuturePlanCreateForm.businessArea = val.key
-            }
+
         }
     }
 }
