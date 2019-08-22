@@ -1,53 +1,15 @@
 <template>
-    <!-- <el-tabs v-model="editableTabsValue" type="card"  @tab-remove="closeTags">
-  <el-tab-pane
-    v-for="(item, index) in tagsList"
-    :key="item.name"
-    :label="item.title"
-    :name="item.name"
-    :closable="item.name!='index'"
-  >
-
-  </el-tab-pane>
-</el-tabs> -->
-    <div
-        class="tags"
-        v-if="showTags"
-    >
+    <div class="tags" v-if="showTags">
         <ul>
-            <li
-                class="tags-li"
-                v-for="(item,index) in tagsList"
-                :class="{'active': isActive(item.path)}"
-                :key="index"
-            >
-                <router-link
-                    :to="item.path + serializeLink(item.query)"
-                    class="tags-li-title"
-                >
+            <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index">
+                <router-link :to="item.path + serializeLink(item.query)" class="tags-li-title">
                     {{item.title}}
                 </router-link>
-                <span
-                    class="tags-li-icon"
-                    @click="closeTags(index)"
-                ><i class="el-icon-close"></i></span>
+                <span class="tags-li-icon" @click="closeTags(index,isActive(item.path))">
+                    <i class="el-icon-close"></i>
+                </span>
             </li>
         </ul>
-        <!-- <div class="tags-close-box">
-            <el-dropdown @command="handleTags">
-                <div class="tags-li active">
-                    标签选项<i class="el-icon-arrow-down el-icon--right"></i>
-                </div>
-                <el-dropdown-menu
-                    size="small"
-                    slot="dropdown"
-                    background-color="#545c64"
-                >
-                    <el-dropdown-item command="other">关闭其他</el-dropdown-item>
-                   <el-dropdown-item command="all">关闭所有</el-dropdown-item>
-                </el-dropdown-menu>
-            </el-dropdown>
-        </div> -->
     </div>
 </template>
 
@@ -56,7 +18,6 @@ import { mapState, mapMutations } from 'vuex'
 export default {
     data () {
         return {
-            tagsList: [],
             editableTabsValue: '首页'
         }
     },
@@ -65,45 +26,42 @@ export default {
             return this.tagsList.length > 0
         },
         ...mapState({
-            newTags: state => state.tagsInfo
+            tagsList: state => state.layout.tagsList,
+            isReload: state => state.layout.isReload
         })
     },
     methods: {
         ...mapMutations({
-            tagsInfo: 'TAGS_INFO'
+            tagUpdate: 'TAG_UPDATE',
+            reloadUpdate: 'IS_RELOAD'
         }),
         isActive (path) {
             return path === (this.$route.fullPath).split('?')[0]
         },
         // 关闭单个标签
-        closeTags (index) {
+        closeTags (index, isSelf) {
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
                 this.$router.push('/')
-            } else {
+            } else if (isSelf) {
                 this.$router.push(this.tagsList[this.tagsList.length - 1].path)
             }
-        },
-        // 关闭全部标签
-        closeAll () {
-            this.tagsList = []
-            this.tagsInfo(this.tagsList)
-            this.$router.push('/')
-        },
-        // 关闭其他标签
-        closeOther () {
-            const curItem = this.tagsList.filter(item => {
-                return item.path === this.$route.fullPath
-            })
-            this.tagsList = curItem
-            // TODO  session
-            sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
         },
         // 设置标签
         setTags (route) {
             if (route.meta.tagName) {
                 const isExist = this.tagsList.some(item => {
-                    return (item.path === (route.fullPath).split('?')[0])
+                    let flag = false
+                    if (item.path === (route.fullPath).split('?')[0]) {
+                        let queryArr = (route.fullPath).split('?')[1] ? (route.fullPath).split('?')[1].split('&') : []
+                        let query = {}
+                        for (let j = 0; j < queryArr.length; j++) {
+                            query[queryArr[j].split('=')[0]] = queryArr[j].split('=')[1]
+                        }
+                        item.query = query
+                        flag = true
+                    }
+                    return flag
                 })
                 !isExist && this.tagsList.push({
                     title: route.meta.tagName,
@@ -113,10 +71,7 @@ export default {
                 })
             }
             this.editableTabsValue = route.name
-            sessionStorage.setItem('tagsList', JSON.stringify(this.tagsList))
-        },
-        handleTags (command) {
-            command === 'other' ? this.closeOther() : this.closeAll()
+            this.tagUpdate(this.tagsList)
         },
         serializeLink (params) {
             if (Object.keys(params).length < 1) return ''
@@ -133,8 +88,14 @@ export default {
         }
     },
     mounted () {
-        const tags = JSON.parse(sessionStorage.getItem('tagsList'))
-        this.tagsList = tags || []
+        let tags = null
+        if (this.isReload) {
+            tags = JSON.parse(sessionStorage.getItem('tagsList'))
+            this.tagUpdate(tags || [])
+            this.reloadUpdate(false)
+            console.log('open')
+        }
+        console.log('close')
         this.setTags(this.$route)
     }
 }

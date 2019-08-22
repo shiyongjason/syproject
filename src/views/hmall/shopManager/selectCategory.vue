@@ -215,7 +215,7 @@ import { IsChinese } from '@/rules'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
 import { fileUploadUrl } from '@/api/config'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
     name: 'selectCategory',
@@ -310,7 +310,8 @@ export default {
         },
         ...mapState({
             userInfo: state => state.userInfo,
-            userInfoMore: state => state.hmall.userInfo
+            userInfoMore: state => state.hmall.userInfo,
+            tagsList: state => state.layout.tagsList
         }),
         length () {
             return ((this.brandName ? this.brandName : '') + this.categorySelect[2] + (this.form.specification ? this.form.specification : '')).length
@@ -343,6 +344,18 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        }),
+        closeTags () {
+            this.tagsList.some((item, index) => {
+                if (item.path === (this.$route.fullPath).split('?')[0]) {
+                    this.tagsList.splice(index, 1)
+                    return true
+                }
+            })
+            this.tagUpdate(this.tagsList)
+        },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
             const isJPG = file.type
@@ -422,8 +435,10 @@ export default {
             try {
                 await createProduct(params)
                 if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
+                    this.closeTags()
                     this.$router.push('/hmall/shopReviewList')
                 } else {
+                    this.closeTags()
                     this.$router.push({
                         path: '/hmall/shopManager'
                     })
@@ -435,6 +450,7 @@ export default {
         async updateProduct (params) {
             try {
                 await updateProduct(params)
+                this.closeTags()
                 this.$router.push({
                     path: '/hmall/shopManager'
                 })
@@ -610,8 +626,10 @@ export default {
                 this.isNext = false
             } else {
                 if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
+                    this.closeTags()
                     this.$router.push('/hmall/shopReviewList')
                 } else {
+                    this.closeTags()
                     this.$router.push('/hmall/shopManager')
                 }
             }
@@ -664,7 +682,7 @@ export default {
                     } catch (e) {
                         this.saveDisabled = false
                     }
-
+                    this.closeTags()
                     this.$router.push('/hmall/shopReviewList')
                 }
             })
@@ -679,10 +697,12 @@ export default {
                     checkBy: this.userInfo.employeeName
                 }
                 await reviewReject(params)
+                this.closeTags()
                 this.$router.push('/hmall/shopReviewList')
             }
         },
         close () {
+            this.closeTags()
             this.$router.push('/hmall/shopReviewList')
         },
         ...mapActions({
