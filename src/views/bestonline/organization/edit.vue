@@ -1,39 +1,22 @@
 <template>
     <div class="jd-manage">
-        <el-collapse
-            v-model="activeName"
-            accordion
-            @change="onChange"
-        >
+        <el-collapse v-model="activeName" accordion>
             <el-form
                 :model="form"
                 :rules="rules"
-                ref="form"
-            >
+                ref="form">
                 <KPI />
-                <Controller />
-                <Organization />
+                <Controller :isShow="activeName == 2"/>
+                <Organization :isShow="activeName == 3" />
                 <MotivationRisk />
             </el-form>
         </el-collapse>
         <div class="flex-wrap-row top20">
-            <el-col
-                :span="2"
-                :offset="6"
-            >
-                <el-button
-                    type="info"
-                    @click="onSaveOrganize"
-                >暂存</el-button>
+            <el-col :span="2" :offset="6">
+                <el-button type="info" @click="onSaveOrganize">暂存</el-button>
             </el-col>
-            <el-col
-                :span="2"
-                :offset="1"
-            >
-                <el-button
-                    type="primary"
-                    @click="onSubmit"
-                >提交</el-button>
+            <el-col :span="2" :offset="1">
+                <el-button type="primary" @click="onSubmit">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -60,6 +43,21 @@ export default {
         return {
             activeName: '1',
             rules: {
+                actualControllerSocialId: [
+                    { required: true, message: '请选择实际控制人社会风评', trigger: 'change' }
+                ],
+                actualCompanyControllerId: [
+                    { required: true, message: '请选择实际控制人对公司的掌控力', trigger: 'change' }
+                ],
+                organizationalStabilityId: [
+                    { required: true, message: '请选择组织稳定性', trigger: 'change' }
+                ],
+                riskDisclosure: [
+                    { required: true, message: '请输入风险揭示', trigger: 'blur' }
+                ],
+                analysisDescription: [
+                    { required: true, message: '请输入分析描述', trigger: 'blur' }
+                ],
                 actualControllerOverview: [
                     { required: true, message: '请输入概况', trigger: 'blur' }
                 ],
@@ -74,7 +72,7 @@ export default {
                 ],
                 incumbency: [
                     { required: true, message: '请输入在职人数', trigger: 'blur' },
-                    { validator: IsPositiveInteger, message: '在职人数只能输入正整数' }
+                    { validator: IsPositiveInteger, message: '在职人数只能输入正整数', trigger: 'blur' }
                 ],
                 averageSalaryOnJob: [
                     // TODO: 这个校验要看看怎么做
@@ -82,7 +80,7 @@ export default {
                 ],
                 socialSecurityNum: [
                     { required: true, message: '请输入缴纳社保人数', trigger: 'blur' },
-                    { validator: IsPositiveInteger, message: '缴纳社保人数只能输入正整数' }
+                    { validator: IsPositiveInteger, message: '缴纳社保人数只能输入正整数', trigger: 'blur' }
                 ],
                 isSignEmployment: [
                     { required: true, message: '请输入是否签订用人合同', trigger: 'blur' }
@@ -109,62 +107,6 @@ export default {
         })
     },
     methods: {
-        onChange (activeNames) {
-            if (activeNames === '2') {
-                this.drawRadar(1)
-            }
-            if (activeNames === '3') {
-                this.drawRadar(2)
-            }
-        },
-        drawRadar (i) {
-            let indicator, value, text
-            if (i === 1) {
-                this.radarChart = echarts.init(this.$refs.radarChart2)
-                indicator = this.radarChartData2
-                value = this.radartValueOfData2
-                text = '经营人评估'
-            }
-            if (i === 2) {
-                this.radarChart = echarts.init(this.$refs.radarChart)
-                indicator = this.radarChartData
-                value = this.radartValueOfData
-                text = '组织评估'
-            }
-            this.radarChart.setOption({
-                title: {
-                    text,
-                    left: 'center'
-                },
-                tooltip: {},
-                grid: {
-                    top: '10%',
-                    left: '5%',
-                    right: '5%',
-                    bottom: '5%',
-                    containLabel: true
-                },
-                radar: {
-                    name: {
-                        textStyle: {
-                            color: '#000',
-                            borderRadius: 3,
-                            padding: [10, 10]
-                        }
-                    },
-                    indicator
-                },
-                series: [{
-                    type: 'radar',
-                    data: [
-                        {
-                            value,
-                            name: '经营人评估'
-                        }
-                    ]
-                }]
-            })
-        },
         async onSaveOrganize () {
             this.form.operationNode = 0
             this.form.applyId = this.applyId
@@ -180,7 +122,8 @@ export default {
             this.$router.go(-1)
         },
         onSubmit () {
-            this.$refs.form.validate(async (valid) => {
+            this.$refs.form.validate(async function (valid) {
+                console.log(arguments)
                 if (valid) {
                     this.form.operationNode = 1
                     this.form.applyId = this.applyId

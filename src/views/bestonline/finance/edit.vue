@@ -19,7 +19,7 @@
                 <!-- 仓储 -->
                 <!-- <Storage /> -->
                 <!-- 财务委派 -->
-                <!-- <FinancialAppointment /> -->
+                <FinancialAppointment />
                 <!-- 资产负债表 -->
                 <BalanceSheet />
                 <!-- 利润表 -->
@@ -73,7 +73,7 @@ export default {
     },
     data () {
         return {
-            activeName: '10',
+            activeName: '1',
             updateTime: '',
             updateUser: '',
             assessmentList: [], // 财务尽调评估
@@ -132,35 +132,35 @@ export default {
             applyId: '',
             type: false,
             textarea: '',
-            form: {
-                assessmentList: [],
-                assessmentItem: '',
-                cooperationTarget: '',
-                state: '',
-                remark: '',
-                riskDisclosure: '',
-                analysisDescription: '',
-                dueFinanceYearOperatingPos: [],
-                salesExpensesRatio: '',
-                costRationality: '',
-                managementExpensesRatio: '',
-                costRationalityRemark: '',
-                companyDebt: '',
-                shareholdersDebt: '',
-                companyBorrowsShareholders: '',
-                shareholdersBorrowsCompany: '',
-                cashFlowRatio: '',
-                capitalRiskAssessment: '',
-                actualControllerAndMateOperatingLoan: '',
-                personalAndCompanyGuarantee: '',
-                taxableIncomeRatio: '',
-                taxBearingRate: '',
-                dueFinanceBasic: [],
-                assetsLiabilities: [],
-                dueFinanceProfit: [],
-                caseFlow: [],
-                assetLiabilityRatio: ''
-            },
+            // form: {
+            //     assessmentList: [],
+            //     assessmentItem: '',
+            //     cooperationTarget: '',
+            //     state: '',
+            //     remark: '',
+            //     riskDisclosure: '',
+            //     analysisDescription: '',
+            //     dueFinanceYearOperatingPos: [],
+            //     salesExpensesRatio: '',
+            //     costRationality: '',
+            //     managementExpensesRatio: '',
+            //     costRationalityRemark: '',
+            //     companyDebt: '',
+            //     shareholdersDebt: '',
+            //     companyBorrowsShareholders: '',
+            //     shareholdersBorrowsCompany: '',
+            //     cashFlowRatio: '',
+            //     capitalRiskAssessment: '',
+            //     actualControllerAndMateOperatingLoan: '',
+            //     personalAndCompanyGuarantee: '',
+            //     taxableIncomeRatio: '',
+            //     taxBearingRate: '',
+            //     dueFinanceBasic: [],
+            //     assetsLiabilities: [],
+            //     dueFinanceProfit: [],
+            //     caseFlow: [],
+            //     assetLiabilityRatio: ''
+            // },
             rules: {
                 riskDisclosure: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
@@ -191,7 +191,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            financeData: state => state.dueDiligence.financeData
+            form: state => state.dueDiligence.financeData
         })
     },
     mounted () {
@@ -320,6 +320,7 @@ export default {
             }
         },
         onSureHandle (i) {
+            console.log(this.form)
             // const type = i === 0 ? '保存' : '提交'
             // this.$confirm(`确定${type}?`, '提示', {
             //     confirmButtonText: '确定',
@@ -330,29 +331,13 @@ export default {
             if (i === 1) return this.onSubmit(i)
             // }).catch(() => {})
         },
-        initTable () {
-
-        },
-        format (type) {
+        async onSaveGood () {
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
             if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
-            const formData = {
-                assessmentList: this.assessmentList,
-                assetsLiabilities: this.assetsLiabilities,
-                caseFlow: this.caseFlow,
-                dueFinanceBasic: this.dueFinanceBasic,
-                dueFinanceProfit: this.dueFinanceProfit
-            }
-            return formData
-        },
-        async onSaveGood (type) {
-            const formData = this.format(type)
-            // console.log(formData)
-            await saveFinance(formData)
-            // this.getFinance()
+            await saveFinance({ ...this.form, type: 0 })
             this.$message({
                 type: 'success',
                 message: '保存成功!'
@@ -577,13 +562,13 @@ export default {
             //     this.activeName = '10'
             //     return false
             // }
-            // await saveFinance(formData)
+            await saveFinance({ ...form, type: 1 })
             // this.isdisabled = true
-            // this.$message({
-            //     type: 'success',
-            //     message: `提交成功`
-            // })
-            // this.$router.go(-1)
+            this.$message({
+                type: 'success',
+                message: `提交成功`
+            })
+            this.$router.go(-1)
         }
     }
 }

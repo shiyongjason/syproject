@@ -1,6 +1,7 @@
 import {
     GET_COMPANY_NAME,
     GET_APPLY_COMPANY_NAME,
+    COTARGET_DATA,
     JUSTICE_DATA,
     BUSINESS_DATA,
     FINANCE_DATA,
@@ -12,6 +13,13 @@ export default {
     state: {
         companyName: '', // 现场尽调公司名
         applyCompanyName: '申请', // 尽调申请公司名
+        cotargetData: {
+            id: '',
+            applyId: '',
+            scale: '',
+            yearRateTabelContents: [],
+            equityRatio: ''
+        },
         justiceData: {
             affairs: {},
             investmentsOutList: [],
@@ -37,7 +45,11 @@ export default {
                 serviceCategory: []
             }
         },
-        organizationData: {},
+        organizationData: {
+            actualControllerSocialId: null,
+            actualCompanyControllerId: null,
+            organizationalStabilityId: null
+        },
         financeData: {
             assessmentList: [], // 财务尽调评估
             dueFinanceYearOperatingCreateForms: [],
@@ -56,6 +68,9 @@ export default {
             localStorage.setItem('applyCompanyName', val)
             state.applyCompanyName = val
         },
+        [COTARGET_DATA] (state, payload) {
+            state.cotargetData = payload.data
+        },
         [BUSINESS_DATA] (state, payload) {
             state.businessData = payload.data
         },
@@ -70,6 +85,10 @@ export default {
         }
     },
     actions: {
+        async findCotargetData ({ commit }, params) {
+            const { data } = await axios.get(`develop/cooperativetarget/${params.applyId}`)
+            commit(COTARGET_DATA, data)
+        },
         async findBusinessData ({ commit }, params) {
             console.log(params)
             const { data } = await axios.get(`develop/business/${params.applyId}`)

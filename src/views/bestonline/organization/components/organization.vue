@@ -107,7 +107,7 @@
                         <el-input v-model="item.description" placeholder="请输入" maxlength="25"></el-input>
                     </td>
                     <td>
-                        <el-input placeholder="满分40分" maxlength="25" v-model="item.score"></el-input>
+                        <el-input placeholder="满分40分" maxlength="25" v-model="item.score" @change="onChangeScore"></el-input>
                     </td>
                 </tr>
             </tbody>
@@ -126,6 +126,7 @@
 <script>
 import { YES_NO_STATUS } from '../../const'
 import { mapState } from 'vuex'
+import echarts from 'echarts'
 const weightMap = new Map([
     ['社会责任', 0.5],
     ['使命、战略、目标', 0.5],
@@ -136,6 +137,12 @@ const weightMap = new Map([
     ['管理&领导', 0.5]
 ])
 export default {
+    props: {
+        isShow: {
+            type: Boolean,
+            default: false
+        }
+    },
     data () {
         return {
             options: YES_NO_STATUS,
@@ -149,7 +156,6 @@ export default {
     },
     computed: {
         organizationSeniorList () {
-            console.log(2)
             let organizationSeniorList = this.form.dueOrganizationSeniorCreateFormList
             if (!organizationSeniorList) {
                 organizationSeniorList = []
@@ -171,9 +177,25 @@ export default {
             })
             return isNaN(total) ? '' : total
         },
+        radarValueOfData () {
+            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => isNaN(item.score) ? 0 : item.score)
+        },
+        radarChartData () {
+            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
+                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) }
+            })
+        },
         ...mapState({
             form: state => state.dueDiligence.organizationData
         })
+    },
+    watch: {
+        isShow (val) {
+            val && this.drawRadar()
+        },
+        organizationScore (val) {
+            this.form.organizationScore = val
+        }
     },
     methods: {
         onChangeProportion () {
@@ -195,6 +217,45 @@ export default {
         },
         onRemovePerson (index) {
             this.form.dueOrganizationSeniorCreateFormList.splice(index, 1)
+        },
+        onChangeScore () {
+            this.drawRadar()
+        },
+        drawRadar () {
+            this.radarChart = echarts.init(this.$refs.radarChart)
+            this.radarChart.setOption({
+                title: {
+                    text: '组织评估',
+                    left: 'center'
+                },
+                tooltip: {},
+                grid: {
+                    top: '10%',
+                    left: '5%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                radar: {
+                    name: {
+                        textStyle: {
+                            color: '#000',
+                            borderRadius: 3,
+                            padding: [10, 10]
+                        }
+                    },
+                    indicator: this.radarChartData
+                },
+                series: [{
+                    type: 'radar',
+                    data: [
+                        {
+                            value: this.radarValueOfData,
+                            name: '组织评估'
+                        }
+                    ]
+                }]
+            })
         }
     }
 }
@@ -244,6 +305,9 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
+}
+.pointer {
+    cursor: pointer;
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
