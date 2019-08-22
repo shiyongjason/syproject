@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">销售业绩(含税)（万元）</p>
         </template>
-        <table class="item-wrapper">
+        <table class="item-wrapper salerTable">
             <thead>
                 <tr>
                     <td colspan="2" rowspan="2" width="120">月份</td>
@@ -163,3 +163,10 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.salerTable{
+    td{
+        width: 12%;
+    }
+}
+</style>

@@ -59,6 +59,7 @@
 </template>
 <script>
 import { getDuemain, getDueapprovalconclusion, postDuemain } from './api/index.js'
+import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
 export default {
     name: 'reviewform',
@@ -74,7 +75,7 @@ export default {
             },
             paginationData: {},
             totalTableData: [],
-            options: [{ value: '请选择', key: '' }, { value: '未提交', key: 0 }, { value: '审批中', key: 1 }, { value: '审批通过', key: 2 }, { value: '审批驳回', key: 3 }],
+            options: APPROVAL_STATUS_OPTIONS,
             tableLabel: [
                 { label: '公司名称', prop: 'companyName' },
                 { label: '发起人', prop: 'originatorName' },

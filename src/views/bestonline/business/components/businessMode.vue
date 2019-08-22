@@ -146,6 +146,9 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.businessData
         })
+    },
+    mounted () {
+        console.log(this.form)
     }
 }
 </script>

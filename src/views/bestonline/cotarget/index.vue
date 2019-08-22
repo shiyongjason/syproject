@@ -6,7 +6,7 @@
 <script>
 import CotargetEdit from './edit.vue'
 import CotargetShow from './show.vue'
-
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'cotarget',
     components: {
@@ -15,6 +15,22 @@ export default {
     data () {
         return {
             canEdit: true
+        }
+    },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.cotargetData
+        })
+    },
+    methods: {
+        ...mapActions([
+            'findCotargetData'
+        ])
+    },
+    async mounted () {
+        await this.findCotargetData({ applyId: this.$route.query.applyId })
+        if (this.form.id) {
+            this.canEdit = false
         }
     }
 }

@@ -12,7 +12,9 @@
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col ">
-              {{item.purchaseAmount}}
+              <el-form-item label="采购金额：" :prop="`dueBusinessSupplierCreateFormList[${index}].purchaseAmount`" :rules="rules.purchaseAmount">
+                   {{item.purchaseAmount}}
+                </el-form-item>
             </div>
             <div class="form-cont-col ">
                 <el-form-item label="占比：" :prop="`dueBusinessSupplierCreateFormList[${index}].proportion`" :rules="rules.proportion">

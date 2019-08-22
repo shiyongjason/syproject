@@ -1,7 +1,7 @@
 <template>
     <div class="jd-manage">
         <el-collapse v-model="activeName" accordion>
-            <el-form :model="form" :rules="rules" ref="form" label-width="160px">
+            <el-form :model="form" ref="form" label-width="160px">
                 <el-collapse-item name="1">
                     <template slot="title">
                         <p class="title-p">商业尽调评估及KPI</p>
@@ -32,8 +32,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
-                                    </el-input>
+                                  {{item.remark }}
                                 </td>
                             </tr>
                         </tbody>
@@ -42,25 +41,23 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                                <el-input class="proportionKPI" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.projectShare"></el-input>
+                              {{form.wholesaleShare}}<span class="KPISymbol">:</span>
+                               {{form.retailShare}}<span class="KPISymbol">:</span>
+                               {{form.projectShare}}
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="上年销售业绩：" prop="salesPerformanceLastYear">
-                                <el-input v-model="form.salesPerformanceLastYear">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                              {{form.salesPerformanceLastYear}}万
                             </el-form-item>
                         </div>
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
+                      {{form.riskDisclosure}}
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
+                        {{form.analysisDescription}}
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -83,14 +80,6 @@
             </el-form>
         </el-collapse>
 
-        <div class="flex-wrap-row top20">
-            <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSaveBus">保存</el-button>
-            </el-col>
-            <el-col :span="2" :offset="1">
-                <el-button type="primary" @click="onSubmit">提交</el-button>
-            </el-col>
-        </div>
     </div>
 </template>
 <script>

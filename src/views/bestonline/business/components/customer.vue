@@ -102,7 +102,8 @@ export default {
                 let defaultObj = JSON.parse(JSON.stringify(this.defaultComstur))
                 businessCustomerCreateFormList.push(defaultObj)
             }
-            return this.form.dueBusinessCustomerCreateFormList
+            businessCustomerCreateFormList && businessCustomerCreateFormList.map(item => parseInt(item.brandName))
+            return businessCustomerCreateFormList
         }
     },
     methods: {

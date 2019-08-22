@@ -5,19 +5,19 @@
                 <!-- KPI -->
                 <KPI />
                 <!-- 盈利能力 -->
-                <!-- <Profitability /> -->
+                <Profitability />
                 <!-- 费用结构 -->
-                <!-- <CostStructure /> -->
+                <CostStructure />
                 <!-- 偿债能力 -->
-                <!-- <Solvency /> -->
+                <Solvency />
                 <!-- 营运能力 -->
-                <!-- <Operational /> -->
+                <Operational />
                 <!-- 资金风险评估 -->
-                <!-- <FinancialRisks /> -->
+                <FinancialRisks />
                 <!-- 税务合规 -->
-                <!-- <TaxCompliance /> -->
+                <TaxCompliance />
                 <!-- 仓储 -->
-                <!-- <Storage /> -->
+                <Storage />
                 <!-- 财务委派 -->
                 <FinancialAppointment />
                 <!-- 资产负债表 -->
@@ -562,7 +562,7 @@ export default {
             //     this.activeName = '10'
             //     return false
             // }
-            await saveFinance({ ...form, type: 1 })
+            await saveFinance({ ...this.form, type: 1 })
             // this.isdisabled = true
             this.$message({
                 type: 'success',
