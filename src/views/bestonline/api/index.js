@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ccpBaseUrl } from '../../../api/config'
+// import { ccpBaseUrl } from '../../../api/config'
 import { ossUrl } from '@/api/config'
 /*
 @申请
