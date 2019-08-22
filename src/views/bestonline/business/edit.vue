@@ -32,7 +32,7 @@
                                     </el-select>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
+                                    <el-input type="textarea"   :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -40,11 +40,11 @@
                     </table>
                     <p class="small-title ">2、KPI(必填)</p>
                     <div class="form-cont-row mb20">
-                        <div class="form-cont-col">
+                        <div class="form-cont-col proportionKPI">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                                <el-input class="proportionKPI" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input class="proportionKPI" v-model="form.projectShare"></el-input>
+                                <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.projectShare"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
@@ -83,7 +83,7 @@
             </el-form>
         </el-collapse>
 
-        <div class="jd-bottom maxLeft">
+        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveBus">保存</el-button>
             </el-col>
@@ -104,14 +104,14 @@ import Members from './components/members.vue'
 import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     components: {
         BusinessMode, MarketingModel, SalesPerformance, Supplier, Customer, Members, Competitor, Plan
     },
     data () {
         return {
-            activeName: '9',
+            activeName: '1',
             options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [
@@ -209,25 +209,30 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
+            isCollapse: state => state.isCollapse,
             form: state => state.dueDiligence.businessData
         })
     },
     methods: {
+        ...mapActions({
+            findBusinessData: 'findBusinessData'
+        }),
         async onSaveBus () {
             this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
-            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.form.operationNode = 0
-            if (this.dueBusinessId) {
+            if (this.form.dueBusinessId) {
                 await putBusiness(this.form)
             } else {
                 await addBusiness(this.form)
             }
+            await this.findBusinessData({ applyId: this.$route.query.applyId })
             this.$message({
                 type: 'success',
                 message: '保存成功'
             })
+
             // this.$router.go(-1)
         },
         async onSubmit () {
@@ -262,13 +267,14 @@ export default {
                 }
             }
             // console.log(this.form.publicityPromotionChannels)
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    if (this.dueBusinessId) {
+                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+                    if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
                             operationNode: 1,
@@ -369,13 +375,7 @@ table {
     max-width: 200px;
     min-width: 180px;
 }
-.assessmentTable {
-    margin: 15px;
-}
-.assessmentRow {
-    width: calc(100% / 4);
-    height: 36px;
-}
+
 /deep/ .textHeight {
     textarea {
         height: 210px;
@@ -386,7 +386,9 @@ table {
     margin-bottom: 10px;
 }
 .proportionKPI {
-    width: 50px;
+   .el-input {
+        width: 50px;
+    }
 }
 .KPISymbol {
     margin-left: 10px;

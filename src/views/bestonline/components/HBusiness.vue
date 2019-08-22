@@ -1278,9 +1278,6 @@ table {
 .small-title {
     margin-bottom: 10px;
 }
-.proportionKPI {
-    width: 50px;
-}
 .KPISymbol {
     margin-left: 10px;
 }

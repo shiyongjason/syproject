@@ -1,81 +1,93 @@
 <template>
-<el-collapse-item name="7">
-    <template slot="title">
-        <p class="title-p">税务合规(必填)</p>
-    </template>
-    <table class="assessmentTable">
-        <thead>
-            <tr>
-                <td class="assessmentRow">-</td>
-                <td class="assessmentRow">本年度</td>
-                <td class="assessmentRow">上年度</td>
-                <td class="assessmentRow">上上年度</td>
-            </tr>
-        </thead>
-        <tbody v-if="form.dueFinanceYearOperatingPos">
-            <tr>
-                <td class="assessmentRow">年度纳税营业收入</td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[0]" v-model="form.dueFinanceYearOperatingPos[0].annualTaxableBusinessIncome">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].annualTaxableBusinessIncome">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <el-input v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].annualTaxableBusinessIncome">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-            </tr>
-            <tr>
-                <td class="assessmentRow">纳税收入占比</td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[0]" v-model="form.dueFinanceYearOperatingPos[0].taxableIncomeRatio">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].taxableIncomeRatio">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <el-input v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].taxableIncomeRatio">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-            </tr>
-            <tr>
-                <td class="assessmentRow">税负率</td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[0]" v-model="form.dueFinanceYearOperatingPos[0].taxBearingRate">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <span class="red-word">*</span>
-                    <el-input v-if="form.dueFinanceYearOperatingPos[1]" v-model="form.dueFinanceYearOperatingPos[1].taxBearingRate">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-                <td class="assessmentRow">
-                    <el-input v-if="form.dueFinanceYearOperatingPos[2]" v-model="form.dueFinanceYearOperatingPos[2].taxBearingRate">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</el-collapse-item>
+    <el-collapse-item name="7">
+        <template slot="title">
+            <p class="title-p">税务合规(必填)</p>
+        </template>
+        <table class="item-wrapper">
+            <thead>
+                <tr>
+                    <td width="180">-</td>
+                    <td width="180">本年度</td>
+                    <td width="180">上年度</td>
+                    <td width="180">上上年度</td>
+                </tr>
+            </thead>
+            <tbody v-if="form.dueFinanceYearOperatingCreateForms">
+                <tr>
+                    <td>年度纳税营业收入</td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">万</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">万</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome">
+                            <template slot="suffix">万</template>
+                        </el-input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>纳税收入占比</td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio">
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                </tr>
+                <tr>
+                    <td>税负率</td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxBearingRate">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxBearingRate">
+                            <template slot="prefix">
+                                <span class="red-word">*</span>
+                            </template>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxBearingRate">
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </el-collapse-item>
 </template>
 
 <script>
@@ -108,7 +120,9 @@ export default {
 table {
     border-collapse: collapse;
 }
-table, tr, td {
+table,
+tr,
+td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
