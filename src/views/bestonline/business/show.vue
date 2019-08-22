@@ -8,7 +8,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="item-wrapper0">
+                    <table class="item-wrapper">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
@@ -144,61 +144,4 @@ table {
     border-collapse: collapse;
 }
 
-.el-checkbox {
-    margin-right: 20px;
-}
-.el-checkbox + .el-checkbox {
-    margin-left: 0;
-}
-.supplier {
-    border: 1px solid #dcdcdc;
-    position: relative;
-    padding-right: 40px;
-    padding-top: 25px;
-    margin-bottom: 20px;
-    > i {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 25px;
-    }
-    .table-row {
-        position: relative;
-        &:not(:first-child) {
-            border-right: none !important;
-        }
-        > i {
-            position: absolute;
-            top: 10px;
-            right: -38px;
-            font-size: 20px;
-        }
-    }
-}
-.flex-wrap-title {
-    max-width: 200px;
-    min-width: 180px;
-}
-.assessmentTable {
-    margin: 15px;
-}
-.assessmentRow {
-    width: calc(100% / 4);
-    height: 36px;
-}
-/deep/ .textHeight {
-    textarea {
-        height: 210px;
-        border: 0;
-    }
-}
-.small-title {
-    margin-bottom: 10px;
-}
-.KPISymbol {
-    margin-left: 10px;
-}
-/deep/ .supplierSymbol .el-input {
-    width: 100%;
-}
 </style>

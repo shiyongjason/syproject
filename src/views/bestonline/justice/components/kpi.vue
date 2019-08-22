@@ -110,9 +110,7 @@ export default {
     line-height: 40px;
     background: #fafafa;
 }
-.item-wrapper {
-    margin: 20px 0 20px;
-}
+
 .legal-form {
     display: flex;
     flex-direction: row;

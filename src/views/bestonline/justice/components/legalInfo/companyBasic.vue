@@ -52,7 +52,7 @@
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemoverelatedCompanyList(item.id)"></i>
             </template>
             <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="关联公司" :rules="{required: true ,message: '关联公司不能为空',trigger: 'blur'}" :prop="'relatedCompanyList.'+ index + '.relatedCompany'">
+                <el-form-item label="关联公司" :rules="{required: true ,message: '关联公司不能为空',trigger: 'blur'}" :prop="`relatedCompanyList[${index}].relatedCompany`">
                     <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
                 </el-form-item>
             </el-form>

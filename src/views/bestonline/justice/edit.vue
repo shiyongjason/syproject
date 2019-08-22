@@ -2,14 +2,14 @@
     <div class="jd-manage">
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
-                <!-- <KPI />
-                <CoPartner /> -->
+                <KPI />
+                <CoPartner />
                 <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3">
                     <template slot="title">
                         <p class="title-p">{{ title }}</p>
                     </template>
-                    <!-- <InvestmentOut v-if="index != 3" :type="index" />
-                    <CompanyBasic v-if="index == 3" :type="index" /> -->
+                    <InvestmentOut v-if="index != 3" :type="index" />
+                    <CompanyBasic v-if="index == 3" :type="index" />
                     <LegalInfo :type="index" @add-event="onAddList" />
                 </el-collapse-item>
             </el-collapse>
@@ -83,16 +83,18 @@ export default {
         }
     },
     watch: {
-        justiceData (data) {
-            data.assetList.map(value => {
-                value.attachInfo = JSON.parse(value.attachInfo)
-                if (value.attachInfo == '' || value.attachInfo == 'null' || value.attachInfo == null) {
-                    value.attachInfo = []
-                } else {
+        'justiceData.assetList': {
+            handler (data) {
+                data.map(value => {
+                    if (typeof (value.attachInfo) == 'string') {
+                        value.attachInfo = value.attachInfo && JSON.parse(value.attachInfo)
+                    } else {
 
-                }
-                return value
-            })
+                    }
+                    return value
+                })
+            },
+            deep: true
         }
     },
     computed: {
@@ -152,8 +154,8 @@ export default {
             this.findJusticeData({ applyId: this.$route.query.applyId })
         },
         saveJusticeData (isSave) {
-            // const params = JSON.parse(JSON.stringify(this.justiceData))
-            const params = this.justiceData
+            const params = JSON.parse(JSON.stringify(this.justiceData))
+            // const params = this.justiceData
             params.applyId = this.applyId
             params.createUser = this.userInfo.name
             params.updateUser = this.userInfo.name

@@ -21,20 +21,20 @@
                 <el-form-item
                     label="联系方式"
                     label-width="150px"
-                    :rules="item.type == 0 ? {required: true,message: '联系方式不能为空',trigger: 'blur'} : {}"
-                    :prop="'copartnerInfoList.'+ index + '.tel'">
+                    :rules="item.type == 0 ? {required: true,message: '联系方式不能为空',trigger: 'blur'} : {required: false}"
+                    :prop="`copartnerInfoList[${index}].tel`">
                     <el-input
                         placeholder="联系方式"
                         maxlength="25"
-                        v-model="item.tel">
+                        v-model.number="item.tel">
                     </el-input>
                 </el-form-item>
                 <el-form-item
                     label="性别："
                     label-width="150px"
-                    :rules="item.type == 0 ? {required: true,message: '性别不能为空',trigger: 'change'} : {}"
-                    :prop="'copartnerInfoList.'+ index + '.sex'">
-                    <el-select v-model="item.sex">
+                    :rules="item.type == 0 ? {required: true,message: '性别不能为空',trigger: 'change'} : {required: false}"
+                    :prop="`copartnerInfoList[${index}].sex`">
+                    <el-select v-model.number="item.sex">
                         <el-option label="男" :value="0"></el-option>
                         <el-option label="女" :value="1"></el-option>
                     </el-select>
@@ -42,9 +42,9 @@
                 <el-form-item
                     label="婚姻："
                     label-width="150px"
-                    :rules="item.type == 0 ? {required: true,message: '婚姻不能为空',trigger: 'change'} : {}"
-                    :prop="'copartnerInfoList.'+ index + '.marriage'">
-                    <el-select v-model="item.marriage">
+                    :rules="item.type == 0 ? {required: true,message: '婚姻不能为空'} : {required: false}"
+                    :prop="`copartnerInfoList[${index}].marriage`">
+                    <el-select v-model.number="item.marriage">
                         <el-option v-for="item in marriageOptions"
                             :key="item.value"
                             :label="item.label"
@@ -55,7 +55,7 @@
                     label="身份证号："
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '身份证号不能为空',trigger: 'blur'} : {}"
-                    :prop="'copartnerInfoList.'+ index + '.idNumber'">
+                    :prop="`copartnerInfoList[${index}].idNumber`">
                     <el-input v-model="item.idNumber" placeholder="身份证号" maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item label="学历：" label-width="150px">

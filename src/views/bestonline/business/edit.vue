@@ -387,10 +387,5 @@ table {
         width: 50px;
     }
 }
-.KPISymbol {
-    margin-left: 10px;
-}
-/deep/ .supplierSymbol .el-input {
-    width: 100%;
-}
+
 </style>

@@ -168,6 +168,12 @@ export default {
         left: 200px;
         transition: 0.3s;
     }
+    .small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
+}
 }
 .assessmentTable {
     margin: 15px;

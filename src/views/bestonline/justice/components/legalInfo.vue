@@ -1,7 +1,6 @@
 <template>
     <div>
         <p class="small-title">资产信息</p>
-        {{assetList}}
         <div v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
             <el-form label-position="right" label-width="150px">
                 <el-form-item label="不动产：">
@@ -23,7 +22,6 @@
                     <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3"></el-input>
                 </el-form-item>
             </el-form>
-            啊好久考试的贺卡收到{{item}}
                 <div class="flex-wrap-box">
                     <div class="flex-wrap-title">附件：</div>
                     <div class="flex-wrap-cont">
