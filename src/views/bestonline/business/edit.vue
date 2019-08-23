@@ -8,7 +8,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="item-wrapper">
+                    <table class="customTable">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
@@ -24,13 +24,14 @@
                                     <i v-if="index === 1">w</i>
                                 </td>
                                 <td>
-                                    <el-select v-model="item.state" placeholder="请选择">
-                                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-                                    </el-select>
+                                    <el-form-item :prop="`dueBusinessAssessmentCreateFormList[${index}].state`" :rules="rules.state">
+                                        <el-select v-model="item.state" placeholder="请选择">
+                                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input type="textarea"   :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
+                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -192,6 +193,9 @@ export default {
                 ],
                 'dueBusinessFuturePlanCreateForm.fundingRequirements': [
                     { required: true, message: '请输入资金用款需求', trigger: 'blur' }
+                ],
+                state: [
+                    { required: true, message: '此项为必填项！', trigger: 'change' }
                 ]
             }
         }
@@ -216,10 +220,12 @@ export default {
             findBusinessData: 'findBusinessData'
         }),
         async onSaveBus () {
+            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             this.form.operationNode = 0
+            this.form.createUser = createUser
             if (this.form.dueBusinessId) {
                 await putBusiness(this.form)
             } else {
@@ -229,43 +235,12 @@ export default {
             this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
-            for (const i of this.form.dueBusinessAssessmentCreateFormList) {
-                if (i.state === null || i.state === '') {
-                    this.$message.warning('请选择尽调评估结论')
-                    this.activeName = '1'
-                    return false
-                }
-            }
-            for (const i of this.form.dueBusinessCustomerCreateFormList) {
-                if (i.categoryId === null || i.categoryId === '') {
-                    this.$message.warning('请选择品类')
-                    this.activeName = '6'
-                    return false
-                } else if (i.customerName === null || i.customerName === '') {
-                    this.$message.warning('请输入客户名称')
-                    this.activeName = '6'
-                    return false
-                } else if (i.brandName === null || i.brandName === '') {
-                    this.$message.warning('请输入品牌')
-                    this.activeName = '6'
-                    return false
-                } else if (i.salesFee === null || i.salesFee === '') {
-                    this.$message.warning('请输入销售金额')
-                    this.activeName = '6'
-                    return false
-                } else if (i.salesProportion === null || i.salesProportion === '') {
-                    this.$message.warning('请输入销售占比')
-                    this.activeName = '6'
-                    return false
-                }
-            }
             // console.log(this.form.publicityPromotionChannels)
-
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
+                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory && this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
@@ -383,9 +358,8 @@ table {
     margin-bottom: 10px;
 }
 .proportionKPI {
-   .el-input {
+    .el-input {
         width: 50px;
     }
 }
-
 </style>
