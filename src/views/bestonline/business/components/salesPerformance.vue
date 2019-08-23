@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">销售业绩(含税)（万元）</p>
         </template>
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td colspan="2" rowspan="2" width="16%">月份</td>

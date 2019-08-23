@@ -4,7 +4,7 @@
             <p class="title-p">下游-客户结构</p>
         </template>
         <!--start-->
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td><span class="red-word">*</span>客户</td>
