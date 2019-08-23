@@ -228,10 +228,7 @@ export default {
             this.justiceData[key].forEach((value, index) => {
                 if (value.id === id) this.justiceData[key].splice(index, 1)
             })
-        },
-        ...mapActions([
-            'findJusticeData'
-        ])
+        }
     },
     async mounted () {
         this.applyId = this.$route.query.applyId

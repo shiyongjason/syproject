@@ -1,7 +1,6 @@
 <template>
     <div>
         <p class="small-title">资产信息</p>
-        {{assetList}}
         <div v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
             <el-form label-position="right" label-width="150px">
                 <el-form-item label="不动产：">
@@ -23,7 +22,6 @@
                     <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3"></el-input>
                 </el-form-item>
             </el-form>
-            啊好久考试的贺卡收到{{item}}
                 <div class="flex-wrap-box">
                     <div class="flex-wrap-title">附件：</div>
                     <div class="flex-wrap-cont">
@@ -39,7 +37,6 @@
                         </p>
                     </div>
                 </div>
-
             <p class="small-title">负债信息（万）</p>
             <div class="flex-wrap-row">
                 <div class="flex-wrap-box">
@@ -223,169 +220,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
-        }),
-        // assetListType0 () {
-        //     return this.justiceData.assetList.filter(value => {
-        //         if (value.type === 0) {
-        //             if (!value.attachInfo) {
-        //                 value.attachInfo = []
-        //             } else {
-        //                 // value.attachInfo = JSON.parse(value.attachInfo)
-        //             }
-        //             return value
-        //         }
-        //     })
-        // },
-        uploadInfo () {
-            return {
-                action: FileUploadUrl + 'tms/files/upload',
-                data: {
-                    updateUid: this.userInfo.name
-                },
-                accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF,.xlsx,.xls,.ppt,.doc,.docx',
-                name: 'multiFile'
-            }
-        },
-        defaultAsset () {
-            return {
-                realEstate: '',
-                chattelReal: '',
-                movableProperty: '',
-                intangibleAssets: '',
-                patent: '',
-                brand: '',
-                other: '',
-                type: this.type
-            }
-        },
-        assetList () {
-            let assetList = this.justiceData.assetList
-            const result = assetList.filter(item => item.type == this.type)
-            if (result.length == 0) {
-                const tempObj = JSON.parse(JSON.stringify(this.defaultAsset))
-                assetList.push(tempObj)
-            }
-            return assetList.filter(item => item.type == this.type)
-        },
-        defaultDebt () {
-            return {
-                debt: '',
-                type: this.type,
-                id: Date.now()
-            }
-        },
-        debtList () {
-            let debtList = this.justiceData.debtList
-            const result = debtList.filter(item => item.type == this.type)
-            if (result.length == 0) {
-                const tempObj = JSON.parse(JSON.stringify(this.defaultDebt))
-                debtList.push(tempObj)
-            }
-            return debtList.filter(item => item.type == this.type)
-        },
-        defaultAssure () {
-            return {
-                assure: '',
-                money: '',
-                type: this.type,
-                id: Date.now()
-            }
-        },
-        assureList () {
-            let assureList = this.justiceData.assureList
-            const result = assureList.filter(item => item.type == this.type)
-            if (result.length == 0) {
-                const tempObj = JSON.parse(JSON.stringify(this.defaultAssure))
-                assureList.push(tempObj)
-            }
-            return assureList.filter(item => item.type == this.type)
-        },
-        defaultPunishment () {
-            return {
-                punishmentType: 3,
-                ponderance: 0,
-                moneyInvolved: '',
-                type: this.type,
-                id: Date.now()
-            }
-        },
-        punishmentList () {
-            let punishmentList = this.justiceData.punishmentList
-            const result = punishmentList.filter(item => item.type == this.type)
-            if (result.length == 0) {
-                const tempObj = JSON.parse(JSON.stringify(this.defaultPunishment))
-                punishmentList.push(tempObj)
-            }
-            return punishmentList.filter(item => item.type == this.type)
-        },
-        debtTotal () {
-            const debtArr = this.debtList.map(item => item.debt)
-            const result = debtArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
-            return isNaN(result) ? '' : result
-        },
-        assureTotal () {
-            const assureArr = this.assureList.map(item => item.money)
-            const result = assureArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
-            return isNaN(result) ? '' : result
-        }
-    },
-    methods: {
-        uploadId (item) {
-            this.tempFileId = item.id
-        },
-        handleSuccess (response, file, fileList) {
-            if (response.code !== 200) {
-                this.$confirm(response.message, '提示信息').catch(() => {
-                })
-            } else {
-                let uploadedUrl = response.data.accessUrl
-                let name = response.data.fileName
-                this.justiceData.assetList.forEach(value => {
-                    if (value.id === this.tempFileId) {
-                        const val = { url: uploadedUrl, name: name }
-                        value.attachInfo.push(val)
-                    }
-                })
-            }
-        },
-        beforeRemove (file, attachInfo) {
-            return this.$confirm(`确定移除 ${file.name}？`).then(() => {
-                this.justiceData.assetList.forEach(value => {
-                    if (value.attachInfo) {
-                        let temp = -1
-                        value.attachInfo.forEach((value1, index) => {
-                            if (value1.url === file.url) {
-                                temp = index
-                            }
-                        })
-                        if (temp > -1) value.attachInfo.splice(temp, 1)
-                    }
-                })
-            })
-        },
-        handleExceed (files, attachInfo) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + attachInfo.length} 个文件`)
-        },
-        handleUpload (file) {
-            if (file.size / (1024 * 1024) > 10) {
-                this.$message({
-                    message: '建议不要超过10M',
-                    type: 'warning'
-                })
-                return false
-            }
-        },
-        onAddList (key, defaultKey) {
-            const tempObj = JSON.parse(JSON.stringify(this[defaultKey]))
-            tempObj.id = Date.now()
-            this.justiceData[key].push(tempObj)
-        },
-        onRemoveList (key, id) {
-            this.justiceData[key] = this.justiceData[key].filter(item => item.id !== id)
-        }
-        // ...mapActions([
-        //     'findJusticeData'
-        // ])
+        })
     }
 }
 </script>
