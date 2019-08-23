@@ -15,7 +15,7 @@
             </el-date-picker>
         </el-form-item>
         <el-form-item label="资金监管：">
-            <el-select v-model="form.dueFinanceBasic.fundSupervision" placeholder="请选择">
+            <el-select v-model="form.dueFinanceBasic.fundSupervise" placeholder="请选择">
                 <el-option v-for="item in superviseoptions" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
             </el-select>
