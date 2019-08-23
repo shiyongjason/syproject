@@ -23,9 +23,7 @@
             </div>
             <div class="form-cont-col ">
                 <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`" :rules="rules.isProvideContract">
-                    <el-select v-model="item.isProvideContract" placeholder="请选择">
-                        <el-option v-for="item in isProvideContractOptions" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                    </el-select>
+                {{item.isProvideContract==1?'否':item.isProvideContract==0?'是':''}}
                 </el-form-item>
             </div>
         </div>
@@ -99,7 +97,7 @@ export default {
         }
     },
     mounted () {
-        console.log(this.form.dueBusinessSupplierCreateFormList)
+
     },
     methods: {
         onAddSupplier () {

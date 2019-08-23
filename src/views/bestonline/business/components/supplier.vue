@@ -103,7 +103,7 @@ export default {
         }
     },
     mounted () {
-        console.log(this.form.dueBusinessSupplierCreateFormList)
+
     },
     methods: {
         onAddSupplier () {

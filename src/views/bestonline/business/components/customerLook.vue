@@ -51,9 +51,7 @@
         </div>
     </div>
     <el-form-item label="是否健康:" prop="customersHealth" label-width="80px">
-        <el-select v-model="form.customersHealth" placeholder="请选择" >
-            <el-option v-for="item in customersHealthData" :key="item.value" :label="item.label" :value="item.value"></el-option>
-        </el-select>
+         {{item.customersHealth==1?'否':item.customersHealth==0?'是':''}}
     </el-form-item>
     <span>（不健康：超30%的业务聚焦在1个客户上）</span>
     <!--end-->

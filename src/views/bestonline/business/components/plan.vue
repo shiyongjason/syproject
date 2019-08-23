@@ -101,7 +101,6 @@ export default {
     },
     watch: {
         form (form) {
-            console.log(form)
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
                 serviceCategory = ''
@@ -116,15 +115,19 @@ export default {
             businessCategory = businessCategory.split(',')
             form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => parseInt(item))
         },
-        'form.dueBusinessFuturePlanCreateForm.businessProvince' (val) {
-            if (val) {
-                let list = this.provelist.filter(item => item.key == val)[0].cityList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.citylist = selectObj.concat(list)
-            } else {
-                this.citylist = []
-                this.arealist = []
-            }
+        'form.dueBusinessFuturePlanCreateForm.businessProvince': {
+            handler (val) {
+                if (val) {
+                    let list = this.provelist.filter(item => item.key == val)[0].cityList
+                    console.log(list)
+                    let selectObj = [{ value: '请选择', key: '' }]
+                    this.citylist = selectObj.concat(list)
+                } else {
+                    this.citylist = []
+                    this.arealist = []
+                }
+            },
+            deep: true
         },
         'form.dueBusinessFuturePlanCreateForm.businessCity' (val) {
             if (val) {

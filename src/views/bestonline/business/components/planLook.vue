@@ -4,14 +4,14 @@
             <p class="title-p">新合资公司规划</p>
         </template>
         <el-form-item label="业务类别：" prop="serviceCategory">
-            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px">
+            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px" disabled>
                 <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
-                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory" label-width="170px">
-                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
+                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory" label-width="170px" >
+                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory" disabled>
                         <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>

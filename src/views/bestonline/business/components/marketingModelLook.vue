@@ -4,9 +4,9 @@
             <p class="title-p">营销模式</p>
         </template>
         <el-form-item label="宣传推广渠道：" prop="checkedWays">
-            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="onCheckAll">全选</el-checkbox>
+            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="onCheckAll" disabled>全选</el-checkbox>
             <div style="margin: 15px 0;"></div>
-            <el-checkbox-group v-model="form.publicityPromotionChannels" @change="onCheckChannel">
+            <el-checkbox-group v-model="form.publicityPromotionChannels" @change="onCheckChannel" disabled>
                 <el-checkbox v-for="item in channelList" :label="item.code" :key="item.code">{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>

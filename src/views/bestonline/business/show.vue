@@ -24,10 +24,7 @@
                                     <i v-if="index === 1">w</i>
                                 </td>
                                 <td>
-                                    <el-select v-model="item.state" placeholder="请选择">
-                                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                                        </el-option>
-                                    </el-select>
+                                    {{item.state?'否':'是'}}
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
                                   {{item.remark }}
@@ -39,9 +36,9 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                              {{form.wholesaleShare}}<span class="KPISymbol">:</span>
-                               {{form.retailShare}}<span class="KPISymbol">:</span>
-                               {{form.projectShare}}
+                              {{form.wholesaleShare?form.wholesaleShare:'-'}}<span class="KPISymbol">:</span>
+                               {{form.retailShare?form.retailShare:'-'}}<span class="KPISymbol">:</span>
+                               {{form.projectShare?form.projectShare:'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">

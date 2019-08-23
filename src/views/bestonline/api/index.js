@@ -5,7 +5,7 @@ import { ossUrl } from '@/api/config'
 @申请
 */
 
-// axios.defaults.baseURL = 'http://192.168.27.176:30000/'
+// axios.defaults.baseURL = 'http://192.168.27.251:34000/'
 export const getDueapply = (params) => {
     return axios.get('/develop/dueapply/queryPageList', { params })
 }
