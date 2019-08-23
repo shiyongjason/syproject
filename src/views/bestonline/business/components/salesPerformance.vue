@@ -3,21 +3,21 @@
         <template slot="title">
             <p class="title-p">销售业绩(含税)（万元）</p>
         </template>
-        <table class="item-wrapper salerTable">
+        <table class="customTable">
             <thead>
                 <tr>
-                    <td colspan="2" rowspan="2" width="120">月份</td>
-                    <td colspan="2" width="120">本年度</td>
-                    <td colspan="2" width="120">上年度</td>
-                    <td colspan="2" width="120">上上年度</td>
+                    <td colspan="2" rowspan="2" width="16%">月份</td>
+                    <td colspan="2" width="28%">本年度</td>
+                    <td colspan="2" width="28%">上年度</td>
+                    <td colspan="2" width="28%">上上年度</td>
                 </tr>
                 <tr>
-                    <td width="120">销售</td>
-                    <td width="120">占比</td>
-                    <td width="120">销售</td>
-                    <td width="120">占比</td>
-                    <td width="120">销售</td>
-                    <td width="120">占比</td>
+                    <td width="14%">销售</td>
+                    <td width="14%">占比</td>
+                    <td width="14%">销售</td>
+                    <td width="14%">占比</td>
+                    <td width="14%">销售</td>
+                    <td width="14%">占比</td>
                 </tr>
             </thead>
             <tbody>
@@ -164,8 +164,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.salerTable{
-    td{
+.salerTable {
+    td {
         width: 12%;
     }
 }
