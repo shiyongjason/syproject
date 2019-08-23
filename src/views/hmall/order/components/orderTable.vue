@@ -22,7 +22,10 @@
                 {{scope.data.row.orderDiscountInfoDTO.activityCode}}
             </template>
             <template slot-scope="scope" slot="activityType" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.activityType==1?'满减活动':'折扣活动'}}
+                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===0">-</span>
+                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===1">满减活动</span>
+                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===2">折扣活动</span>
+                <!--{{scope.data.row.orderDiscountInfoDTO.activityType==1?'满减活动':'折扣活动'}}-->
             </template>
             <template slot-scope="scope" slot="activityAmount" v-if="scope.data.row.orderDiscountInfoDTO">
                 {{scope.data.row.orderDiscountInfoDTO.activityAmount}}
