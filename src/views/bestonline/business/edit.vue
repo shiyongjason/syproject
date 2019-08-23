@@ -8,7 +8,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="customTable">
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
@@ -110,7 +110,7 @@ export default {
     },
     data () {
         return {
-            activeName: '6',
+            activeName: '9',
             options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [

@@ -23,16 +23,10 @@
                         <i v-if="index === 1">w</i>
                     </td>
                     <td>
-                        <el-form-item :prop="`assessmentList[${index}].state`" :rules="rules.state" label-width="0">
-                            <el-select v-model="item.state" placeholder="请选择">
-                                <el-option v-for="i in options" :key="i.value" :label="i.label" :value="i.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
+                        {{item.state?'是':'否'}}
                     </td>
                     <td :rowspan="form.assessmentList.length" v-if="index == 0">
-                        <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
-                        </el-input>
+                        {{item.remark }}
                     </td>
                 </tr>
             </tbody>
@@ -78,11 +72,10 @@
         <p class="small-title mb15">分析报告(必填)</p>
         <div class="item-wrappper">
             <el-form-item label="风险揭示：" prop="dueFinanceBasic.riskDisclosure">
-                <el-input type="textarea" v-model="form.dueFinanceBasic.riskDisclosure" style="width:600px" rows="6" placeholder="请输入内容">
-                </el-input>
+                {{form.dueFinanceBasic.riskDisclosure}}
             </el-form-item>
             <el-form-item label="分析描述：" prop="dueFinanceBasic.analysisDescription">
-                <el-input type="textarea" v-model="form.dueFinanceBasic.analysisDescription" style="width:600px" rows="6" placeholder="请输入内容"></el-input>
+                {{form.dueFinanceBasic.analysisDescription}}
             </el-form-item>
         </div>
     </el-collapse-item>

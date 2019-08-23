@@ -7,7 +7,7 @@
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
-            <table class="customTable">
+            <table class="custom-table">
                 <thead>
                     <tr>
                         <td>年份</td>
@@ -151,7 +151,7 @@ export default {
         border-bottom: 1px solid #dcdfe6;
     }
 }
-.customTable {
+.custom-table {
     width: 50%;
 }
 </style>

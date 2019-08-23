@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form :model="formData" :rules="formRules" label-position="right" label-width="150px">
+            <el-form :model="formData" :rules="formRules" ref="form" label-position="right" label-width="150px">
                 <el-form-item label="目标合伙人：" prop="targetPartner">
                     <el-input placeholder="请输入目标合伙人" maxlength="25" :disabled="isdisabled" v-model="formData.targetPartner">
                     </el-input>
@@ -17,7 +17,7 @@
                             新合作模式
                         </el-radio>
                         <el-tooltip effect="dark" content="新合作模式：拟合资公司操作新品类、股权结构等，和好享家规定的不同" placement="top-start">
-                            <i class="el-icon-question"></i>
+                            <i class="el-icon-question" style="padding-left: 7px"></i>
                         </el-tooltip>
                     </div>
                 </el-form-item>
@@ -309,6 +309,7 @@ export default {
             this.formData.mainBusinessName = obj.label
         },
         async  onSave () {
+            this.$refs['form'].clearValidate()
             this.formData.mainSystem = this.checkList.toString()
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
             this.formData.organizationCode = this.userdata.organizationCode

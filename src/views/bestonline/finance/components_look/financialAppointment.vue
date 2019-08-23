@@ -5,20 +5,13 @@
     </template>
     <div class="item-wrapper">
         <el-form-item label="是否同意财务外派：">
-            <el-select v-model="form.dueFinanceBasic.isAgreeFinancialDelegation" placeholder="请选择">
-                <el-option v-for="item in yesNoStatus" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
+            {{form.dueFinanceBasic.isAgreeFinancialDelegation === 0?'否':form.dueFinanceBasic.isAgreeFinancialDelegation == 1?'是':'-'}}
         </el-form-item>
         <el-form-item label="开始时间：">
-            <el-date-picker v-model="form.dueFinanceBasic.startDateOfDelegation" type="date" placeholder="选择日期">
-            </el-date-picker>
+            {{form.dueFinanceBasic.startDateOfDelegation}}
         </el-form-item>
         <el-form-item label="资金监管：">
-            <el-select v-model="form.dueFinanceBasic.fundSupervise" placeholder="请选择">
-                <el-option v-for="item in superviseoptions" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
+            {{form.dueFinanceBasic.fundSupervise === 0?'财务委派':form.dueFinanceBasic.fundSupervise == 1?'财务外派':'-'}}
         </el-form-item>
     </div>
 </el-collapse-item>

@@ -4,7 +4,7 @@
         <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <div>
             <p>尽调规模：{{ form.scale }}万</p>
-            <table class="customTable">
+            <table class="custom-table">
                 <thead>
                     <tr>
                         <td>年份</td>
@@ -60,7 +60,7 @@ p {
         color: #fda015;
     }
 }
-.customTable {
+.custom-table {
     width: 50%;
 }
 </style>
