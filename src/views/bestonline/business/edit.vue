@@ -110,7 +110,7 @@ export default {
     },
     data () {
         return {
-            activeName: '6',
+            activeName: '9',
             options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [

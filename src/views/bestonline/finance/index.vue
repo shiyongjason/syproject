@@ -23,8 +23,9 @@ export default {
             'findFinanceData'
         ])
     },
-    mounted () {
-        this.findFinanceData({ applyId: this.$route.query.applyId })
+    async mounted () {
+        const data = await this.findFinanceData({ applyId: this.$route.query.applyId })
+        console.log(data)
     }
 }
 </script>
