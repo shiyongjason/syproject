@@ -92,8 +92,10 @@ export default {
         if (this.isReload) {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
             this.tagUpdate(tags || [])
+            console.log(1111)
             this.reloadUpdate(false)
         }
+        console.log(2222)
         this.setTags(this.$route)
     }
 }
@@ -103,9 +105,7 @@ export default {
 <style  lang="scss">
 .tags {
     position: relative;
-
     overflow: hidden;
-    // background: #fff;
     padding-left: 10px;
     padding-right: 120px;
 }

@@ -13,7 +13,6 @@ const store = new Vuex.Store({
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
         'isSaving': false,
-        'tagsInfo': [],
         'menuList': [],
         'isCollapse': false
 
