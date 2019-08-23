@@ -103,6 +103,11 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
+        // assetListType0 () {
+        //     return this.justiceData.assetList.filter(value => {
+        //         if (value.type === 0) return value
+        //     })
+        // }
     },
     methods: {
         ...mapActions({
@@ -155,7 +160,6 @@ export default {
         },
         saveJusticeData (isSave) {
             const params = JSON.parse(JSON.stringify(this.justiceData))
-            // const params = this.justiceData
             params.applyId = this.applyId
             params.createUser = this.userInfo.name
             params.updateUser = this.userInfo.name

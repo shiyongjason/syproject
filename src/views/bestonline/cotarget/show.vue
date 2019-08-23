@@ -4,21 +4,21 @@
         <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <div>
             <p>尽调规模：{{ form.scale }}万</p>
-            <table class="tableStyle">
-                 <thead>
-                     <tr>
-                         <td>年份</td>
-                         <td><span class="red-word">*</span>年度递增率</td>
-                         <td><span class="red-word">*</span>净利润率</td>
-                     </tr>
-                 </thead>
-                 <tbody>
-                     <tr v-for="(item,index) in form.yearRateTabelContents" :key="index">
-                         <td>{{item.year}}</td>
-                         <td>{{item.yearGrowthRate}}%</td>
-                         <td>{{item.netProfitRate}}%</td>
-                     </tr>
-                 </tbody>
+            <table class="customTable">
+                <thead>
+                    <tr>
+                        <td>年份</td>
+                        <td><span class="red-word">*</span>年度递增率</td>
+                        <td><span class="red-word">*</span>净利润率</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in form.yearRateTabelContents" :key="index">
+                        <td>{{item.year}}</td>
+                        <td>{{item.yearGrowthRate}}%</td>
+                        <td>{{item.netProfitRate}}%</td>
+                    </tr>
+                </tbody>
             </table>
             <p>股权比例：{{ form.equityRatio }}</p>
         </div>
@@ -59,9 +59,8 @@ p {
     .title-p {
         color: #fda015;
     }
-    .tableStyle {
-        width: 40%;
-    }
 }
-
+.customTable {
+    width: 50%;
+}
 </style>

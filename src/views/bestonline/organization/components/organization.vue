@@ -30,7 +30,7 @@
             </el-form-item>
         </div>
         <p class="small-small-p">高管结构</p>
-        <table class="item-wrapper">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="180"><span class="red-span">*</span>职位</td>
@@ -43,17 +43,28 @@
             <tbody>
                 <tr v-for="(item, index) in organizationSeniorList" :key="index">
                     <td>
-                        <el-input v-model="item.position" placeholder="请输入职位" maxlength="25"></el-input>
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].position`"
+                            :rules="{ required: true, message: '请输入职位', trigger: 'blur' }">
+                            <el-input v-model="item.position" placeholder="请输入职位" maxlength="25"></el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-model="item.name" placeholder="请输入姓名" maxlength="25"></el-input>
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].name`"
+                            :rules="{ required: true, message: '请输入姓名', trigger: 'blur' }">
+                            <el-input v-model="item.name" placeholder="请输入姓名" maxlength="25"></el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-model="item.positionDuty" placeholder="请输入岗位职责" maxlength="25"></el-input>
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].positionDuty`"
+                            :rules="{ required: true, message: '请输入岗位职责', trigger: 'blur' }">
+                            <el-input v-model="item.positionDuty" placeholder="请输入岗位职责" maxlength="25"></el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input type="textarea" :rows="1" :autosize="{ minRows: 1, maxRows: 1}" placeholder="请输入人员情况" v-model="item.personnelSituation">
-                        </el-input>
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].personnelSituation`"
+                            :rules="{ required: true, message: '请输入岗位职责', trigger: 'blur' }">
+                            <el-input type="textarea" :rows="1" :autosize="{ minRows: 1, maxRows: 1}" placeholder="请输入人员情况" v-model="item.personnelSituation"></el-input>
+                        </el-form-item>
                     </td>
                     <td>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddPerson()"></i>
@@ -63,7 +74,7 @@
             </tbody>
         </table>
         <p class="small-small-p">岗位分布</p>
-        <table class="item-wrapper">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="320">岗位</td>
@@ -78,9 +89,12 @@
                         {{item.post}}
                     </td>
                     <td>
-                        <el-input placeholder maxlength="25" v-model="item.proportion" @change="onChangeProportion">
-                            <template slot="suffix">人</template>
-                        </el-input>
+                        <el-form-item :prop="`dueOrganizationPostCreateFormList[${index}].proportion`"
+                            :rules="{ required: true, message: '请输入人数', trigger: 'blur' }">
+                            <el-input placeholder maxlength="25" v-model="item.proportion" @change="onChangeProportion">
+                                <template slot="suffix">人</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
                         {{item.percentage}}%
@@ -89,7 +103,7 @@
             </tbody>
         </table>
         <p class="small-small-p">综合评估(必填)</p>
-        <table class="item-wrapper">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="320">评估维度</td>
@@ -104,10 +118,16 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td>
-                        <el-input v-model="item.description" placeholder="请输入" maxlength="25"></el-input>
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].description`"
+                            :rules="{ required: true, message: '请输入描述', trigger: 'blur' }">
+                            <el-input v-model="item.description" placeholder="请输入" maxlength="25"></el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input placeholder="满分40分" maxlength="25" v-model="item.score" @change="onChangeScore"></el-input>
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`"
+                            :rules="{ required: true, message: '请输入分数', trigger: 'blur' }">
+                            <el-input v-model="item.score" placeholder="满分40分" maxlength="25" @change="onChangeScore"></el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -164,6 +184,7 @@ export default {
                 let defaultObj = JSON.parse(JSON.stringify(this.defaultOrganizationSenior))
                 organizationSeniorList.push(defaultObj)
             }
+            this.$set(this.form, 'dueOrganizationSeniorCreateFormList', organizationSeniorList)
             return organizationSeniorList
         },
         organizationScore () {

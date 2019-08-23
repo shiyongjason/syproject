@@ -6,21 +6,21 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="公司借款：">
-                <el-input v-model="form.dueFinanceBasic.companyDebt" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('companyDebt',$event)">
+                <el-input v-model="form.dueFinanceBasic.companyDebt" placeholder="请输入金额" maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="股东借款：" prop="dueFinanceBasic.shareholdersDebt">
-                <el-input v-model="form.dueFinanceBasic.shareholdersDebt" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('shareholdersDebt',$event)">
+                <el-input v-model="form.dueFinanceBasic.shareholdersDebt" placeholder="请输入金额" maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="公司向股东借款：" prop="dueFinanceBasic.companyBorrowsShareholders">
-                <el-input v-model="form.dueFinanceBasic.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('companyBorrowsShareholders',$event)">
+                <el-input v-model="form.dueFinanceBasic.companyBorrowsShareholders" placeholder="请输入金额" maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -29,14 +29,14 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="股东向公司借款：" prop="dueFinanceBasic.shareholdersBorrowsCompany">
-                <el-input v-model="form.dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                <el-input v-model="form.dueFinanceBasic.shareholdersBorrowsCompany" placeholder="请输入金额" maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="现金流量比率：">
-                <el-input v-model="form.dueFinanceBasic.cashFlowRatio" placeholder="请输入现金流量比率" maxlength="25" @keyup.native="oninput('cashFlowRatio',$event)">
+                <el-input v-model="form.dueFinanceBasic.cashFlowRatio" placeholder="请输入现金流量比率" maxlength="25">
                     <template slot="suffix">%</template>
                 </el-input>
             </el-form-item>
@@ -53,14 +53,14 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                <el-input v-model="form.dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25" @keyup.native="oninput('shareholdersBorrowsCompany',$event)">
+                <el-input v-model="form.dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="个人及公司担保：">
-                <el-input v-model="form.dueFinanceBasic.cashFlowRatio" placeholder="请输入比例" maxlength="25" @keyup.native="oninput('cashFlowRatio',$event)">
+                <el-input v-model="form.dueFinanceBasic.personalAndCompanyGuarantee" placeholder="请输入比例" maxlength="25">
                     <template slot="suffix">%</template>
                 </el-input>
             </el-form-item>

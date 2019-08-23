@@ -48,18 +48,12 @@
                 <tr>
                     <td width="180">资产负债率</td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="请输入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>
@@ -67,18 +61,12 @@
                 <tr>
                     <td width="180">净利率</td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].profitRatio" placeholder="自动录入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].profitRatio" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].profitRatio" placeholder="请输入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].profitRatio" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>

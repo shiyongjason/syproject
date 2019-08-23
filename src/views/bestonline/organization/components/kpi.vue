@@ -4,7 +4,7 @@
             <p class="title-p">组织尽调评估及KPI</p>
         </template>
         <p class="small-title">组织尽调评估</p>
-        <table class="item-wrapper">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="180">评估项</td>
@@ -23,9 +23,12 @@
                         <i v-if="index === 4">%</i>
                     </td>
                     <td>
-                        <el-select v-model="item.state" placeholder="请选择">
-                            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
+                        <el-form-item :prop="`dueOrganizationAssessmentCreateFormList[${index}].state`"
+                            :rules="{required: true, message: '此项为必填项！', trigger: 'change'}">
+                            <el-select v-model="item.state" placeholder="请选择">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
                     </td>
                     <td :rowspan="form.dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
                         <el-input type="textarea" :rows="8" placeholder="请输入内容" maxlength="25" v-model="item.remark">
@@ -136,6 +139,13 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+    }
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;

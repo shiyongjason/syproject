@@ -7,26 +7,34 @@
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
-            <div class="table-flex table-width">
-                <div class="table-row">
-                    <div class="table-col">年份</div>
-                    <div class="table-col"><span class="red-word">*</span>年度递增率</div>
-                    <div class="table-col"><span class="red-word">*</span>净利润率</div>
-                </div>
-                <div class="table-row" v-for="(item,index) in form.yearRateTabelContents" :key="index">
-                    <div class="table-col">{{item.year}}</div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                    <div class="table-col">
-                        <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="25">
-                            <template slot="suffix">%</template>
-                        </el-input>
-                    </div>
-                </div>
-            </div>
+            <table class="customTable">
+                <thead>
+                    <tr>
+                        <td>年份</td>
+                        <td><span class="red-word">*</span>年度递增率</td>
+                        <td><span class="red-word">*</span>净利润率</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in form.yearRateTabelContents" :key="index">
+                        <td>{{item.year}}</td>
+                        <td>
+                            <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate">
+                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="25">
+                                    <template slot="suffix">%</template>
+                                </el-input>
+                            </el-form-item>
+                        </td>
+                        <td>
+                            <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate">
+                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="25">
+                                    <template slot="suffix">%</template>
+                                </el-input>
+                            </el-form-item>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <el-form-item label="股权比例：" prop="equityRatio">
                 <el-input v-model="form.equityRatio" placeholder="请输入内容" maxlength="25"></el-input>
             </el-form-item>
@@ -64,6 +72,12 @@ export default {
                             return callback()
                         }
                     }
+                ],
+                yearGrowthRate: [
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                ],
+                netProfitRate: [
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
                 ]
             }
         }
@@ -137,10 +151,7 @@ export default {
         border-bottom: 1px solid #dcdfe6;
     }
 }
-.table-width {
+.customTable {
     width: 50%;
-}
-.el-input__inner {
-    text-align: center;
 }
 </style>

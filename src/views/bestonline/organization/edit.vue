@@ -32,7 +32,7 @@ export default {
     },
     props: {
         applyId: {
-            type: Number
+            type: String
         }
     },
     data () {
@@ -106,7 +106,7 @@ export default {
         async onSaveOrganize () {
             this.form.operationNode = 0
             this.form.applyId = this.applyId
-            this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.title)
+            this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
             if (this.form.dueOrganizationId) {
                 await updateOrganization(this.form)
             } else {
@@ -123,7 +123,7 @@ export default {
                 if (valid) {
                     this.form.operationNode = 1
                     this.form.applyId = this.applyId
-                    this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.title)
+                    this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
                     if (this.form.dueOrganizationId) {
                         await updateOrganization(this.form)
                     } else {
