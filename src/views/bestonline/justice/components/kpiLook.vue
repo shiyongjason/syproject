@@ -5,7 +5,7 @@
         </template>
         <!--start-->
         <p class="small-title">法务尽调评估</p>
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="180">评估项</td>

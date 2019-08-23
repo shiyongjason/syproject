@@ -4,7 +4,7 @@
             <p class="title-p">财务尽调评估及KPI</p>
         </template>
         <p class="small-title">财务尽调评估</p>
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="25%">评估项</td>
@@ -38,7 +38,7 @@
             </tbody>
         </table>
         <p class="small-title">KPI（必填）</p>
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="180">-</td>
