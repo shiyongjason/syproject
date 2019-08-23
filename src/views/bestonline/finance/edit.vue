@@ -172,56 +172,6 @@ export default {
             })
         },
         async onSubmit (firstTime) {
-            /** activeName == 1 */
-            for (const i of this.form.assessmentList) {
-                if (i.state === null || i.state === '') {
-                    this.$message.warning('请选择尽调评估结论')
-                    this.activeName = '1'
-                    return false
-                }
-            }
-            if (
-                this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === ''
-            ) {
-                this.$message.warning('请输入KPI')
-                this.activeName = '1'
-                return false
-            }
-            /** activeName == 2 */
-            if (
-                this.form.dueFinanceYearOperatingCreateForms[0].grossMargin === null || this.form.dueFinanceYearOperatingCreateForms[0].grossMargin === '' || this.form.dueFinanceYearOperatingCreateForms[1].grossMargin === null || this.form.dueFinanceYearOperatingCreateForms[1].grossMargin === '' || this.form.dueFinanceYearOperatingCreateForms[0].rate === null || this.form.dueFinanceYearOperatingCreateForms[0].rate === '' || this.form.dueFinanceYearOperatingCreateForms[1].rate === null || this.form.dueFinanceYearOperatingCreateForms[1].rate === '' || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].profitRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].profitRatio === ''
-            ) {
-                this.$message.warning('请输入盈利能力(必填)')
-                this.activeName = '2'
-                return false
-            }
-            /** activeName == 4 */
-            if (
-                this.form.dueFinanceYearOperatingCreateForms[0].liquidityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].liquidityRatio === '' ||
-                this.form.dueFinanceYearOperatingCreateForms[1].liquidityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].liquidityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].quickRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].quickRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].quickRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].quickRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio === ''
-            ) {
-                this.$message.warning('请输入偿债能力(必填)')
-                this.activeName = '4'
-                return false
-            }
-            /** activeName == 5 */
-            if (
-                this.form.dueFinanceYearOperatingCreateForms[0].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[0].daysOfReceivable === '' ||
-                this.form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable === '' || this.form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable === null || this.form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable === '' || this.form.dueFinanceYearOperatingCreateForms[0].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[0].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[1].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[1].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[2].daysOfInventory === null || this.form.dueFinanceYearOperatingCreateForms[2].daysOfInventory === '' || this.form.dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover === null || this.form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover === '' || this.form.dueFinanceYearOperatingCreateForms[0].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[0].returnOnEquity === '' || this.form.dueFinanceYearOperatingCreateForms[1].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[1].returnOnEquity === '' || this.form.dueFinanceYearOperatingCreateForms[2].returnOnEquity === null || this.form.dueFinanceYearOperatingCreateForms[2].returnOnEquity === ''
-            ) {
-                this.$message.warning('请输入营运能力(必填)')
-                this.activeName = '5'
-                return false
-            }
-            /** activeName == 7 */
-            if (
-                this.form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome === null || this.form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome === '' ||
-                this.form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome === null || this.form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome === '' || this.form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio === null || this.form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio === '' || this.form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio === null || this.form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio === '' || this.form.dueFinanceYearOperatingCreateForms[0].taxBearingRate === null || this.form.dueFinanceYearOperatingCreateForms[0].taxBearingRate === '' || this.form.dueFinanceYearOperatingCreateForms[1].taxBearingRate === null || this.form.dueFinanceYearOperatingCreateForms[1].taxBearingRate === ''
-            ) {
-                this.$message.warning('请输入税务合规(必填)')
-                this.activeName = '7'
-                return false
-            }
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1

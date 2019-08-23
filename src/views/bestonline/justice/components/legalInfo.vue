@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <el-form-item>
         <p class="small-title">资产信息</p>
-        <div v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
+        <el-form-item v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
             <el-form label-position="right" label-width="150px">
                 <el-form-item label="不动产：">
                     <el-input type="textarea" v-model="item.realEstate" placeholder="请输入不动产" rows="3"></el-input>
@@ -183,8 +183,8 @@
                     </el-form>
                 </div>
             </div>
-        </div>
-    </div>
+        </el-form-item>
+    </el-form-item>
 </template>
 
 <script>

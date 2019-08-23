@@ -12,80 +12,56 @@
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '姓名不能为空',trigger: 'blur'} : {}"
                     :prop="`copartnerInfoList[${index}].name`">
-                    <el-input
-                        :placeholder="copartnerTitles[item.type]"
-                        maxlength="25"
-                        v-model="item.name">
-                    </el-input>
+                   {{item.name}}
                 </el-form-item>
                 <el-form-item
                     label="联系方式"
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '联系方式不能为空',trigger: 'blur'} : {required: false}"
                     :prop="`copartnerInfoList[${index}].tel`">
-                    <el-input
-                        placeholder="联系方式"
-                        maxlength="25"
-                        v-model="item.tel">
-                    </el-input>
+                    {{item.tel}}
                 </el-form-item>
                 <el-form-item
                     label="性别："
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '性别不能为空',trigger: 'change'} : {required: false}"
                     :prop="`copartnerInfoList[${index}].sex`">
-                    <el-select v-model.number="item.sex">
-                        <el-option label="男" :value="0"></el-option>
-                        <el-option label="女" :value="1"></el-option>
-                    </el-select>
+                   {{item.sex==0?'男':'女'}}
                 </el-form-item>
                 <el-form-item
                     label="婚姻："
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '婚姻不能为空'} : {required: false}"
                     :prop="`copartnerInfoList[${index}].marriage`">
-                    <el-select v-model.number="item.marriage">
-                        <el-option v-for="item in marriageOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                    </el-select>
+                    {{marriageOptions[item.marriage]}}
                 </el-form-item>
                 <el-form-item
                     label="身份证号："
                     label-width="150px"
                     :rules="item.type == 0 ? {required: true,message: '身份证号不能为空',trigger: 'blur'} : {}"
                     :prop="`copartnerInfoList[${index}].idNumber`">
-                    <el-input v-model="item.idNumber" placeholder="身份证号" maxlength="25"></el-input>
+                 {{item.idNumber}}
                 </el-form-item>
                 <el-form-item label="学历：" label-width="150px">
-                    <el-select v-model="item.education">
-                        <el-option v-for="item in educationOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                    </el-select>
+                    {{educationOptions[item.education]}}
                 </el-form-item>
                 <el-form-item label="持股比例：" label-width="150px" v-if="item.type != 2">
-                    <el-input v-model="item.shareholdingRatio" placeholder="持股比例" maxlength="25"></el-input>
+                   {{item.shareholdingRatio}}
                 </el-form-item>
                 <el-form-item label="是否在外兼职：" label-width="150px">
-                    <el-select v-model="item.partTimeJob">
-                        <el-option label="是" :value="0"></el-option>
-                        <el-option label="否" :value="1"></el-option>
-                    </el-select>
+                   {{item.partTimeJob==0?'是':item.partTimeJob=1?'否':''}}
                 </el-form-item>
                 <el-form-item label="行业身份：" label-width="150px">
-                    <el-input v-model="item.industryStatus" placeholder="行业身份" maxlength="25"></el-input>
+                  {{item.industryStatus}}
                 </el-form-item>
                 <el-form-item label="个人经营能力：" label-width="150px" v-if="item.type == 0 || item.type == 5">
-                    <el-input v-model="item.managementAbility" placeholder="个人经营能力" maxlength="25"></el-input>
+                  {{item.managementAbility}}
                 </el-form-item>
                 <el-form-item label="行业口碑：" label-width="150px" v-if="item.type == 0">
-                    <el-input v-model="item.industryReputation" placeholder="行业口碑" maxlength="25"></el-input>
+                {{item.industryReputation}}
                 </el-form-item>
                 <el-form-item label="社会资源：" label-width="150px">
-                    <el-input v-model="item.socialResources" placeholder="社会资源" maxlength="25"></el-input>
+                   {{item.socialResources}}
                 </el-form-item>
             </div>
         </div>
