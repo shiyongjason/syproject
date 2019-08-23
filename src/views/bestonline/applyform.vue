@@ -334,31 +334,36 @@ export default {
             }
         },
         async  onSubmit () {
-            console.log(this.userdata)
-            this.formData.mainSystem = this.checkList.toString()
-            this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-            this.formData.createUserName = this.userdata.name
-            this.formData.createUser = this.userInfo.jobNumber
-            this.formData.organizationCode = this.userdata.organizationCode
-            // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
-            if (this.applyId) {
-                this.formData.applyId = this.applyId
-                // this.formData.createUser = dce5239f-0829-487f-9903-c0a0d16380ed'
-                await appDueapply(this.formData)
-                this.$message({
-                    showClose: true,
-                    message: '修改成功',
-                    type: 'success'
-                })
-            } else {
-                await appDueapply(this.formData)
-                this.$message({
-                    showClose: true,
-                    message: '提交成功',
-                    type: 'success'
-                })
-            }
-            this.$router.go(-1)
+            this.$refs['form'].validate(async (validate) => {
+                if (validate) {
+                    this.formData.mainSystem = this.checkList.toString()
+                    this.formData.attachmentsUrl = JSON.stringify(this.arrList)
+                    this.formData.createUserName = this.userdata.name
+                    this.formData.createUser = this.userInfo.jobNumber
+                    this.formData.organizationCode = this.userdata.organizationCode
+                    // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
+                    if (this.applyId) {
+                        this.formData.applyId = this.applyId
+                        // this.formData.createUser = dce5239f-0829-487f-9903-c0a0d16380ed'
+                        await appDueapply(this.formData)
+                        this.$message({
+                            showClose: true,
+                            message: '修改成功',
+                            type: 'success'
+                        })
+                    } else {
+                        await appDueapply(this.formData)
+                        this.$message({
+                            showClose: true,
+                            message: '提交成功',
+                            type: 'success'
+                        })
+                    }
+                    this.$router.go(-1)
+                } else {
+                    this.showWarnMsg('有必填项未填')
+                }
+            })
         }
     }
 }
