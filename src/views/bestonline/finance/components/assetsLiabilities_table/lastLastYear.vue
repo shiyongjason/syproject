@@ -10,12 +10,13 @@
             </thead>
             <tbody v-if="form.assetsLiabilities.assetListB">
                 <tr v-for="(item,index) in form.assetsLiabilities.assetListB" :key="index">
-                    <template v-if="index === 0 || index === 13">
+                    <template v-if="item.typeName === '流动资产' || item.typeName === '非流动资产'">
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
                         <td>
-                            <span class="red-word" v-if="index === 4 || index === 5 || index === 8 || index === 9 || index === 10 || index === 13">*</span>
+                            <span class="red-word"
+                                v-if="item.typeName === '应收账款' || item.typeName === '预付款项' || item.typeName === '其他应收款' || item.typeName === '存货' || item.typeName === '待摊费用' || item.typeName === '流动资产合计' || item.typeName === '非流动资产合计' || item.typeName === '资产总计'">*</span>
                             {{item.typeName}}
                         </td>
                         <td>
@@ -42,11 +43,11 @@
             </thead>
             <tbody v-if="form.assetsLiabilities.liabilitiesListB">
                 <tr v-for="(item,index) in form.assetsLiabilities.liabilitiesListB" :key="index">
-                    <template v-if="index === 0 || index === 14 || index === 24">
+                    <template v-if="item.typeName === '流动负债' || item.typeName === '非流动负债' || item.typeName === '所有者权益（或股东权益）'">
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
-                        <td><span class="red-word" v-if="index === 4">*</span>{{item.typeName}}</td>
+                        <td><span class="red-word" v-if="item.typeName === '短期借款' || item.typeName === '流动负债合计' || item.typeName === '非流动负债合计' || item.typeName === '负债合计'">*</span>{{item.typeName}}</td>
                         <td>
                             <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
                                 <template slot="suffix">万</template>
