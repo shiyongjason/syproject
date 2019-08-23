@@ -41,7 +41,7 @@ export default {
     data () {
         return {
             legalInfoTitles: ['实际控制人法务信息', '实际控制人配偶法务信息', '拟选合伙人法务信息', '尽调公司法务信息'],
-            activeName: '1',
+            activeName: '6',
             applyId: '',
             type: 1,
             updateTime: '',
@@ -58,6 +58,9 @@ export default {
                 id: ''
             },
             rules: {
+                state: [
+                    { required: true, message: '此项为必填项！', trigger: 'change' }
+                ],
                 'affairs.legalRisksOfCompany': [
                     { required: true, message: '尽调公司法律风险不能为空', trigger: 'change' }
                 ],
@@ -78,6 +81,9 @@ export default {
                 ],
                 'affairs.analysisDescription': [
                     { required: true, message: '分析描述不能为空', trigger: 'blur' }
+                ],
+                'affairs.annualReport': [
+                    { required: true, message: '工商年报不能为空', trigger: 'blur' }
                 ]
             }
         }
@@ -88,8 +94,8 @@ export default {
                 data.map(value => {
                     if (typeof (value.attachInfo) == 'string') {
                         value.attachInfo = value.attachInfo && JSON.parse(value.attachInfo)
-                    } else {
-
+                    } else if (value.attachInfo == null) {
+                        value.attachInfo = []
                     }
                     return value
                 })
@@ -103,11 +109,11 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
-        // assetListType0 () {
-        //     return this.justiceData.assetList.filter(value => {
-        //         if (value.type === 0) return value
-        //     })
-        // }
+    // assetListType0 () {
+    //     return this.justiceData.assetList.filter(value => {
+    //         if (value.type === 0) return value
+    //     })
+    // }
     },
     methods: {
         ...mapActions({
@@ -164,7 +170,7 @@ export default {
             params.createUser = this.userInfo.name
             params.updateUser = this.userInfo.name
             params.assetList.forEach(value => {
-                value.attachInfo = JSON.stringify(value.attachInfo)
+                value.attachInfo = value.attachInfo && JSON.stringify(value.attachInfo)
             })
             let messageTip = ''
             if (isSave) {
@@ -229,7 +235,7 @@ export default {
     },
     async mounted () {
         this.applyId = this.$route.query.applyId
-        // await this.findJusticeData({ applyId: this.applyId })
+    // await this.findJusticeData({ applyId: this.applyId })
     }
 }
 </script>

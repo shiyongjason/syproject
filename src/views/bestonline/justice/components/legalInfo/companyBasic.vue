@@ -39,7 +39,7 @@
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemovebranchAgencyList(item.id)"></i>
             </template>
             <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="分支机构" :rules="{required: true ,message: '分支机构不能为空',trigger: 'blur'}" :prop="'branchAgencyList.'+ index + '.branch'">
+                <el-form-item label="分支机构" :rules="{required: true ,message: '分支机构不能为空',trigger: 'blur'}" :prop="`branchAgencyList[${index}].branch`">
                     <el-input v-model="item.branch" placeholder="分支机构" maxlength="25"></el-input>
                 </el-form-item>
             </el-form>
@@ -52,7 +52,7 @@
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemoverelatedCompanyList(item.id)"></i>
             </template>
             <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="关联公司" :rules="{required: true ,message: '关联公司不能为空',trigger: 'blur'}" :prop="`relatedCompanyList[${index}].relatedCompany`">
+                <el-form-item label="关联公司" :rules="rules.relatedCompany" :prop="`relatedCompanyList[${index}].relatedCompany`">
                     <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
                 </el-form-item>
             </el-form>
@@ -69,6 +69,15 @@ export default {
         type: {
             type: Number,
             default: 0
+        }
+    },
+    data () {
+        return {
+            rules: {
+                relatedCompany: [
+                    { required: true, message: '关联公司不能为空', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -121,6 +130,9 @@ export default {
         onRemoverelatedCompanyList (id) {
             this.justiceData.relatedCompanyList = this.justiceData.relatedCompanyList.filter(item => item.id !== id)
         }
+    },
+    mounted () {
+        console.log(this.justiceData)
     }
 }
 </script>
@@ -147,7 +159,7 @@ export default {
     padding-right: 40px;
     padding-top: 15px;
     margin-bottom: 20px;
- padding-bottom: 15px;
+    padding-bottom: 15px;
     &:not(:last-child) {
         padding-bottom: 15px;
     }
