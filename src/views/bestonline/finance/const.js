@@ -36,8 +36,6 @@ export const SUPERVISION_METHOD = [
 // 财务外派资金监管可选项
 export const FUND_SUPERVISION = [
     { value: '', label: '请选择' },
-    { value: 0, label: '资金和货物双重监管' },
-    { value: 1, label: '资金监管-高' },
-    { value: 2, label: '资金监管-低' },
-    { value: 3, label: '不接受' }
+    { value: 0, label: '财务委派' },
+    { value: 1, label: '财务外派' }
 ]

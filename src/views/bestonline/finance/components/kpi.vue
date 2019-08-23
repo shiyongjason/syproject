@@ -99,9 +99,6 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.financeData
         })
-    },
-    mounted () {
-        console.log(this.form)
     }
 }
 </script>
