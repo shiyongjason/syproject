@@ -4,13 +4,13 @@
             <p class="title-p">财务尽调评估及KPI</p>
         </template>
         <p class="small-title">财务尽调评估</p>
-        <table class="item-wrapper">
+        <table class="customTable">
             <thead>
                 <tr>
-                    <td width="180">评估项</td>
-                    <td width="180">合作目标</td>
-                    <td width="180"><span class="red-word">*</span>结论</td>
-                    <td width="180">备注</td>
+                    <td width="25%">评估项</td>
+                    <td width="25%">合作目标</td>
+                    <td width="25%"><span class="red-word">*</span>结论</td>
+                    <td width="25%">备注</td>
                 </tr>
             </thead>
             <tbody>
@@ -23,10 +23,12 @@
                         <i v-if="index === 1">w</i>
                     </td>
                     <td>
-                        <el-select v-model="item.state" placeholder="请选择">
-                            <el-option v-for="i in options" :key="i.value" :label="i.label" :value="i.value">
-                            </el-option>
-                        </el-select>
+                        <el-form-item :prop="`assessmentList[${index}].state`" :rules="rules.state" label-width="0">
+                            <el-select v-model="item.state" placeholder="请选择">
+                                <el-option v-for="i in options" :key="i.value" :label="i.label" :value="i.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
                     </td>
                     <td :rowspan="form.assessmentList.length" v-if="index == 0">
                         <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
@@ -36,7 +38,7 @@
             </tbody>
         </table>
         <p class="small-title">KPI（必填）</p>
-        <table class="item-wrapper">
+        <table class="customTable">
             <thead>
                 <tr>
                     <td width="180">-</td>
@@ -92,7 +94,12 @@ import { YES_NO_STATUS } from '../../const'
 export default {
     data () {
         return {
-            options: YES_NO_STATUS
+            options: YES_NO_STATUS,
+            rules: {
+                state: [
+                    { required: true, message: '请选择结论', trigger: 'change' }
+                ]
+            }
         }
     },
     computed: {

@@ -75,7 +75,7 @@ export default {
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ],
                 isProvideContract: [
-                    { required: true, message: '请选择', trigger: 'blur' }
+                    { required: true, message: '请选择', trigger: 'change' }
                 ],
                 purchaseAmount: [
                     { required: true, message: '请输入采购金额', trigger: 'blur' }

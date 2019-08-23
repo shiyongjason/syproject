@@ -17,8 +17,8 @@
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.manageCategory" label-width=0>
-                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.businessCategoryOther" label-width=0>
+                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.businessCategoryOther" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                 </el-form-item>
             </div>
         </div>
