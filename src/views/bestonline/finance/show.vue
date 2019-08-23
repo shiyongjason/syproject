@@ -32,8 +32,6 @@
     </div>
 </template>
 <script>
-import { saveFinance } from '../api/index.js'
-import { plusOrMinus } from '../../../rules.js'
 import { mapState } from 'vuex'
 import KPI from './components/kpi.vue'
 import BalanceSheet from './components/balanceSheet.vue'
