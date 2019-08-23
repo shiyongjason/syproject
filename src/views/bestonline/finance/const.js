@@ -26,7 +26,7 @@ export const WAREHOUSE_FORM = [
     { value: 2, label: '第三方监督' }
 ]
 // 仓库接受好享家仓库监管方式
-export const SUPERVISION_METHOD  = [
+export const SUPERVISION_METHOD = [
     { value: '', label: '请选择' },
     { value: 0, label: '将仓库移至我司指定的第三方仓库进行管理' },
     { value: 1, label: '接受我司指定的第三方对仓库进行监管' },
