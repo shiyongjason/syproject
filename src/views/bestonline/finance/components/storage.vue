@@ -7,7 +7,7 @@
             <div class="form-cont-col">
                 <el-form-item label="仓库地址">
                     <el-select v-model="form.dueFinanceBasic.storeProvince" placeholder="省" @change="onProvince">
-                        <el-option v-for="item in storeProvince" :key="item.id" :label="item.cityName" :value="item.cityId">
+                        <el-option v-for="item in storeProvince" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -15,7 +15,7 @@
             <div class="form-cont-col">
                 <el-form-item>
                     <el-select v-model="form.dueFinanceBasic.storeCity" placeholder="市" @change="onCity">
-                        <el-option v-for="item in storeCity" :key="item.id" :label="item.cityName" :value="item.cityId">
+                        <el-option v-for="item in storeCity" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -23,7 +23,7 @@
             <div class="form-cont-col">
                 <el-form-item>
                     <el-select v-model="form.dueFinanceBasic.storeArea" placeholder="区">
-                        <el-option v-for="item in storeArea" :key="item.id" :label="item.cityName" :value="item.cityId">
+                        <el-option v-for="item in storeArea" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -40,7 +40,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="仓库面积（㎡）：">
-                    <el-input v-model="form.dueFinanceBasicstoreSize" placeholder="" maxlength="25" @keyup.native="oninput('storeSize',$event)">
+                    <el-input v-model="form.dueFinanceBasic.storeSize" placeholder="请输入仓库面积（㎡）" maxlength="25">
                     </el-input>
                 </el-form-item>
             </div>
@@ -82,16 +82,18 @@
 
 <script>
 import { mapState } from 'vuex'
-import { WAREHOUSE_ORDER_OPTIONS, WAREHOUSE_FORM } from '../const'
-import { YES_NO_STATUS } from '../../const'
-import { provinces } from '../../api/index.js'
+import { WAREHOUSE_ORDER_OPTIONS, WAREHOUSE_FORM, SUPERVISION_METHOD } from '../const'
+import { getAreacode } from '../../api/index.js'
 export default {
     name: 'finance_profitability',
     data () {
         return {
             warehouseOrderOptions: WAREHOUSE_ORDER_OPTIONS,
-            agreeCustodyOptions: YES_NO_STATUS,
-            storeOptions: WAREHOUSE_FORM
+            agreeCustodyOptions: SUPERVISION_METHOD,
+            storeOptions: WAREHOUSE_FORM,
+            storeProvince: [],
+            storeCity: [],
+            storeArea: []
         }
     },
     computed: {
@@ -99,45 +101,50 @@ export default {
             form: state => state.dueDiligence.financeData
         })
     },
+    watch: {
+        'form.dueFinanceBasic.storeProvince': {
+            handler (val) {
+                if (val) {
+                    this.storeCity = this.storeProvince.filter((value, index) => {
+                        return value.key == val
+                    })[0].cityList
+                }
+            },
+            deep: true
+        },
+        'form.dueFinanceBasic.storeCity': {
+            handler (val) {
+                if (val) {
+                    this.storeArea = this.storeCity.filter((value, index) => {
+                        return value.key == val
+                    })[0].areaList
+                }
+            },
+            deep: true
+        }
+    },
     methods: {
-        onProvince (parentId) {
-            this.dueFinanceBasic.storeCity = ''
-            this.dueFinanceBasic.storeArea = ''
-            this.storeCity = []
-            this.storeArea = []
-            if (parentId) {
-                this.provinces({ parentId }, 1)
-            }
+        async getAreacode () {
+            const { data } = await getAreacode()
+            this.storeProvince = data.data.dictpro
         },
-        onCity (parentId) {
-            this.dueFinanceBasic.storeArea = ''
+        onProvince (key) {
+            this.form.dueFinanceBasic.storeCity = ''
+            this.form.dueFinanceBasic.storeArea = ''
             this.storeArea = []
-            if (parentId) {
-                this.provinces({ parentId }, 2)
-            }
+            this.storeCity = this.storeProvince.filter((val, index) => {
+                return val.key == key
+            })[0].cityList
         },
-        async provinces (params, city) {
-            const { data } = await provinces(params)
-            console.log(data)
-            switch (city) {
-                case 0:
-                    this.storeProvince = data.citys
-                    this.storeProvince.unshift({ cityId: '', cityName: '请选择省', id: 0 })
-                    break
-                case 1:
-                    this.storeCity = data.citys
-                    this.storeCity.unshift({ cityId: '', cityName: '请选择市', id: 0 })
-                    break
-                case 2:
-                    this.storeArea = data.citys
-                    this.storeArea.unshift({ cityId: '', cityName: '请选择区', id: 0 })
-                    break
-            }
+        onCity (key) {
+            this.form.dueFinanceBasic.storeArea = ''
+            this.storeArea = this.storeCity.filter((val, index) => {
+                return val.key == key
+            })[0].areaList
         }
     },
     mounted () {
-        // 签名错误，请确认请求签名或私钥是否正确
-        // this.provinces({ parentId: 0 }, 0)
+        this.getAreacode()
     }
 }
 </script>

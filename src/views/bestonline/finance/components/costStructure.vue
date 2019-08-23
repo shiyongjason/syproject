@@ -6,21 +6,21 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="销售费用占比：">
-                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.salesExpensesRatio" @keyup.native="oninput('salesExpensesRatio',$event)">
+                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.salesExpensesRatio">
                     <template slot="suffix">%</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="管理费用占比：">
-                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.managementExpensesRatio" @keyup.native="oninput('managementExpensesRatio',$event)">
+                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.managementExpensesRatio">
                     <template slot="suffix">%</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="财务费用占比：">
-                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.financeExpensesRatio" @keyup.native="oninput('financeExpensesRatio',$event)">
+                <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.financeExpensesRatio">
                     <template slot="suffix">%</template>
                 </el-input>
             </el-form-item>

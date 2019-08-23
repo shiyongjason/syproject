@@ -17,7 +17,7 @@
                 <!-- 税务合规 -->
                 <TaxCompliance />
                 <!-- 仓储 -->
-                <!-- <Storage /> -->
+                <Storage />
                 <!-- 财务委派 -->
                 <FinancialAppointment />
                 <!-- 资产负债表 -->
@@ -31,7 +31,7 @@
 
         <div class="flex-wrap-row top20 " v-show="!isdisabled">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSureHandle(0)">保存</el-button>
+                <el-button type="info" @click="onSureHandle(0)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
                 <el-button type="primary" @click="onSureHandle(1)">提交</el-button>
@@ -53,7 +53,7 @@ import Operational from './components/operational.vue'
 import Profit from './components/profit.vue'
 import Profitability from './components/profitability.vue'
 import Solvency from './components/solvency.vue'
-// import Storage from './components/storage.vue'
+import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 export default {
     components: {
@@ -66,7 +66,7 @@ export default {
         Profit,
         Profitability,
         Solvency,
-        // Storage,
+        Storage,
         TaxCompliance,
         KPI
     },
@@ -103,7 +103,6 @@ export default {
             debtDialog: false,
             tabName: 'nowYear',
             onDebtDialog: false
-
         }
     },
     computed: {
@@ -140,21 +139,13 @@ export default {
         //     e.target.value = e.target.value.replace(/[^\d]/g, '')
         //     this.dueFinanceBasic[value] = e.target.value
         // },
-        showWarnMsg (msg) {
-            this.$message({
-                showClose: true,
-                message: msg,
-                type: 'warning'
-            })
-        },
-        vaildEmpty (value) {
-            if (value !== null && value !== undefined && value !== '') {
-                return true
-            } else {
-                return false
-            }
-        },
         onSureHandle (i) {
+            const firstTime = this.form.dueFinanceBasic.id
+            if (firstTime) {
+                this.form.dueFinanceBasic.updateUser = this.userInfo.employeeName
+            } else {
+                this.form.dueFinanceBasic.createUser = this.userInfo.employeeName
+            }
             console.log(this.form)
             // const type = i === 0 ? '保存' : '提交'
             // this.$confirm(`确定${type}?`, '提示', {
@@ -162,25 +153,25 @@ export default {
             //     cancelButtonText: '取消',
             //     type: 'info'
             // }).then(() => {
-            if (i === 0) return this.onSaveGood(i)
-            if (i === 1) return this.onSubmit(i)
+            if (i === 0) return this.onSaveGood(firstTime)
+            if (i === 1) return this.onSubmit(firstTime)
             // }).catch(() => {})
         },
-        async onSaveGood () {
+        async onSaveGood (firstTime) {
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
             if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
-            console.log(this.form)
+            // console.log(this.form)
+            this.form.dueFinanceBasic.type = 0
             await saveFinance({ ...this.form, type: 0 })
             this.$message({
                 type: 'success',
-                message: '保存成功!'
+                message: '暂存成功!'
             })
-            this.$router.go(-1)
         },
-        async onSubmit (type) {
+        async onSubmit (firstTime) {
             /** activeName == 1 */
             for (const i of this.form.assessmentList) {
                 if (i.state === null || i.state === '') {
@@ -231,35 +222,13 @@ export default {
                 this.activeName = '7'
                 return false
             }
-            console.log(this.$refs)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    console.log('成功')
-                    // if (this.dueBusinessId) {
-                    //     await putBusiness({
-                    //         id: this.id,
-                    //         operationNode: 1,
-                    //         createUser: createUser,
-                    //         ...this.form
-                    //     })
-                    //     this.$message.success('提交成功')
-                    // } else {
-                    //     await addBusiness({
-                    //         operationNode: 1,
-                    //         createUser: createUser,
-                    //         ...this.form
-                    //     })
-                    //     this.$message.success('提交成功')
-                    // }
+                    this.form.dueFinanceBasic.type = 1
+                    await saveFinance({ ...this.form, type: 1 })
+                    this.$message.success('提交成功')
                 }
             })
-            // await saveFinance({ ...this.form, type: 1 })
-            // // this.isdisabled = true
-            // this.$message({
-            //     type: 'success',
-            //     message: `提交成功`
-            // })
-            // this.$router.go(-1)
         }
     }
 }
