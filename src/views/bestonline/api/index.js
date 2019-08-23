@@ -155,7 +155,7 @@ export const getAssessment = (params) => {
     return axios.get(`develop/dueapply/assessment/${params}`)
 }
 export const getDueapprovalconclusion = (params) => {
-    return axios.get('develop/dueapprovalconclusion/queryList', { params })
+    return axios.get('develop/dueapprovalconclusion/list', { params })
 }
 // 省市区
 export const provinces = (params) => {
