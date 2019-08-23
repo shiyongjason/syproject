@@ -20,35 +20,23 @@
             <tbody>
                 <tr v-for="(item,index) in businessSupplierCreateFormList" :key=index>
                     <td>
-                        <el-input v-model="item.customerName" placeholder="客户" maxlength="25">
-                        </el-input>
+                        <el-input v-model="item.customerName" placeholder="客户" maxlength="25"></el-input>
                     </td>
                     <td>
                         <el-select v-model="item.categoryId" placeholder="请选择">
-                            <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key">
-                            </el-option>
+                            <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
                         </el-select>
                     </td>
+                    <td>{{item.brandName}}</td>
+                    <td>{{item.salesFee}}万</td>
+                    <td>{{item.salesProportion}}%</td>
                     <td>
-                        {{item.brandName}}
+                        <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate"></el-date-picker>
                     </td>
                     <td>
-                        {{item.salesFee}}万
+                        <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" value-format="yyyy-MM-dd"></el-date-picker>
                     </td>
-                    <td>
-                        {{item.salesProportion}}%
-                    </td>
-                    <td>
-                        <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate">
-                        </el-date-picker>
-                    </td>
-                    <td>
-                        <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" value-format="yyyy-MM-dd">
-                        </el-date-picker>
-                    </td>
-                    <td>
-                        {{item.agreementScale}}万
-                    </td>
+                    <td>{{item.agreementScale}}万</td>
                 </tr>
             </tbody>
         </table>
