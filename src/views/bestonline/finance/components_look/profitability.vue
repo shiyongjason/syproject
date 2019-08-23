@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">盈利能力(必填)</p>
         </template>
-        <table class="customTable">
+        <table class="custom-table">
             <thead>
                 <tr>
                     <td width="25%">-</td>
