@@ -152,12 +152,13 @@ export default {
         async next () {
             const { data } = await findMenuList()
             const menu = this.makeMenus(routerMapping, data)
-            this.$router.addRoutes(menu)
+            // this.$router.addRoutes(menu)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
         },
         ...mapMutations({
-            setUserInfo: 'USER_INFO'
+            setUserInfo: 'USER_INFO',
+            tagUpdate: 'TAG_UPDATE'
         }),
         ...mapActions({
             resetVuex: 'resetVuex'
@@ -165,8 +166,7 @@ export default {
     },
     mounted () {
         sessionStorage.removeItem('token')
-        this.resetVuex()
-        // window.addEventListener('message', this.handleMessage)
+        this.tagUpdate([])
         // 获取iframe 对象
         this.iframeWin = this.$refs.iframe.contentWindow
         document.onkeypress = (e) => {
@@ -175,9 +175,6 @@ export default {
                 this.onLogin()
             }
         }
-    },
-    created () {
-
     }
 }
 </script>

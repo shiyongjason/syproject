@@ -611,7 +611,8 @@ export default {
             this.relationBrand.forEach(value => {
                 if (value.brandId === this.form.brandId) {
                     isNull = false
-                    this.brandName = value.brandName + value.brandNameEn
+                    //  + value.brandNameEn bug v1.7删除
+                    this.brandName = value.brandName
                 }
             })
             if (isNull) {
