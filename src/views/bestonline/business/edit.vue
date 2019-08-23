@@ -24,7 +24,7 @@
                                     <i v-if="index === 1">w</i>
                                 </td>
                                 <td>
-                                    <el-form-item :prop="`dueBusinessAssessmentCreateFormList[${index}].state`" :rules="rules.state">
+                                    <el-form-item :prop="`dueBusinessAssessmentCreateFormList[${index}].state`" :rules="rules.state"  label-width="0">
                                         <el-select v-model="item.state" placeholder="请选择">
                                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                         </el-select>
@@ -149,9 +149,7 @@ export default {
                 brandOneSalesRatio: [
                     { required: true, message: '请输入销售比重', trigger: 'blur' }
                 ],
-                supplierName: [
-                    { required: true, message: '请输入供应商名称', trigger: 'blur' }
-                ],
+
                 isProvideContract: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
