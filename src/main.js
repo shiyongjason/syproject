@@ -11,6 +11,15 @@ import HosjoyUI from 'hosjoy-ui'
 import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
+import moment from 'moment'
+moment.locale('zh-cn')
+Vue.filter('formatDate', (time, param) => {
+    if (!time) return '-'
+    if (param) {
+        return moment(time).format(param)
+    }
+    return moment(time).format('YYYY-MM-DD HH:mm')
+})
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
