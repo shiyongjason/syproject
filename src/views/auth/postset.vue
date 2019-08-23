@@ -17,35 +17,6 @@
                 <el-button type="primary" @click="onadd">新增岗位</el-button>
             </div>
             <!--            岗位信息table-->
-            <table>
-                <thead>
-                    <tr>
-                        <td>序号</td>
-                        <td>岗位名称</td>
-                        <td>
-                            岗位code
-                            <el-tooltip effect="dark" content="code：实现岗位与后台数据相匹配" placement="top-start">
-                                <img src="../../assets/images/icon_tx_white.png" />
-                            </el-tooltip>
-                        </td>
-                        <td width="250px">更新时间</td>
-                        <td width="250px">操作</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(item,index) in postList" :key="index">
-                        <td>{{index + 1}}</td>
-                        <td>{{item.positionName}}</td>
-                        <td>{{item.positionCode}}</td>
-                        <td>{{item.updateTime}}</td>
-                        <td>
-                            <el-button class="orangeBtn" @click="onupdate(item)">修改</el-button>
-                            <el-button class="orangeBtn" @click="onDelete(item)">删除</el-button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
             <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" isShowIndex>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
@@ -100,13 +71,12 @@ export default {
         return {
             tableLabel: [
                 { label: '岗位名称', prop: 'positionName' },
-                { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: '1111' },
+                { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
                 { label: '更新时间', prop: 'updateTime' }
             ],
-            tableData: [],
+            postList: [],
             adddialogVisible: false,
             updatedialogVisible: false,
-            postList: [],
             positionName: '',
             id: Number,
             ruleForm: {
