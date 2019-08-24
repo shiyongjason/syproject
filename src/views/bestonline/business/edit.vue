@@ -224,7 +224,7 @@ export default {
         }),
         async onSaveBus () {
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
             this.form.operationNode = 0
@@ -361,5 +361,8 @@ table {
     .el-input {
         width: 50px;
     }
+}
+.KPISymbol {
+    margin-left: 10px;
 }
 </style>

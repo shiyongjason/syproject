@@ -15,7 +15,7 @@ export default {
     },
     data () {
         return {
-            canEdit: false
+            canEdit: true
         }
     },
     methods: {
