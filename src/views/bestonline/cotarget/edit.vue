@@ -1,7 +1,7 @@
 <template>
     <div class="jd-manage">
         <p class="title-p">合作目标</p>
-        <el-form :model="form" :rules="rules" ref="form">
+        <el-form :model="form" :rules="rules" ref="form" label-width="100px">
             <el-form-item label="尽调规模：" prop="scale">
                 <el-input v-model="form.scale" placeholder="请输入金额" @keyup.native="oninput('scale',$event)" maxlength="25">
                     <template slot="suffix">万</template>
@@ -19,14 +19,14 @@
                     <tr v-for="(item,index) in form.yearRateTabelContents" :key="index">
                         <td>{{item.year}}</td>
                         <td>
-                            <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate">
+                            <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate" label-width="0">
                                 <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="25">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </td>
                         <td>
-                            <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate">
+                            <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate" label-width="0">
                                 <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="25">
                                     <template slot="suffix">%</template>
                                 </el-input>

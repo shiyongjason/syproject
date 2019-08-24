@@ -56,9 +56,6 @@ p {
         line-height: 40px;
         border-bottom: 1px solid #dcdfe6;
     }
-    .title-p {
-        color: #fda015;
-    }
 }
 .custom-table {
     width: 50%;

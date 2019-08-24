@@ -135,7 +135,6 @@ export default {
                         message: '提交成功',
                         type: 'success'
                     })
-                    this.$router.go(-1)
                 }
             })
         },
