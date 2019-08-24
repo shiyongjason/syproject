@@ -19,3 +19,11 @@ export const STABLE_OPTIONS = [
     { value: 1, label: '中' },
     { value: 2, label: '低' }
 ]
+// KPI 校验字段
+export const kpiValidProps = new Set(['actualControllerSocialId', 'actualCompanyControllerId', 'organizationalStabilityId', 'riskDisclosure', 'analysisDescription', 'dueOrganizationAssessmentCreateFormList'])
+// 实际控制人 校验字段
+export const controllerValidProps = new Set(['actualControllerOverview', 'actualControllerBaseline', 'actualControllerHobby', 'dueOrganizationControllerAssessmentCreateFormList'])
+// 组织 校验字段
+export const organizationValidProps = new Set(['companyHistoryBusiness', 'incumbency', 'averageSalaryOnJob', 'socialSecurityNum', 'isSignEmployment', 'dueOrganizationSeniorCreateFormList', 'dueOrganizationPostCreateFormList', 'dueOrganizationOrgAssessmentCreateFormList'])
+// 合作动机和风险 校验字段
+export const motivationRiskValidProps = new Set(['cooperationIntention', 'cooperationRisk', 'companyAdvantage', 'companyShortBoard'])
