@@ -79,7 +79,7 @@ export default {
                     { validator: IsPositiveInteger, message: '缴纳社保人数只能输入正整数', trigger: 'blur' }
                 ],
                 isSignEmployment: [
-                    { required: true, message: '请输入是否签订用人合同', trigger: 'blur' }
+                    { required: true, message: '请输入是否签订用人合同', trigger: 'change' }
                 ],
                 cooperationIntention: [
                     { required: true, message: '请输入合作初衷', trigger: 'blur' }
