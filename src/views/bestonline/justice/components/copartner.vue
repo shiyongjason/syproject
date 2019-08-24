@@ -110,6 +110,7 @@ export default {
             var restaurants = JSON.parse(JSON.stringify(this.restaurants))
             let hash = {}
             restaurants = restaurants.reduce((preVal, curVal) => {
+                // eslint-disable-next-line
                 hash[curVal.name] ? '' : hash[curVal.name] = true && preVal.push(curVal)
                 return preVal
             }, [])
@@ -128,7 +129,7 @@ export default {
         handleSelect (item) {
             const { ...newItem } = item
             newItem.type = this.newIndex
-            const copartnerInfoList = this.justiceData.copartnerInfoList.splice(this.newIndex, 1, newItem)
+            this.justiceData.copartnerInfoList.splice(this.newIndex, 1, newItem)
         }
     }
 }

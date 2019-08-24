@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <p v-if="form.dueFinanceBasic.type == 1">已提交 {{form.dueFinanceBasic.updateTime}} {{ form.dueFinanceBasic.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" ref='form' :rules="rules" label-width="180px">
                 <!-- KPI -->
@@ -29,7 +30,7 @@
             </el-form>
         </el-collapse>
 
-        <div class="flex-wrap-row top20 " v-show="!isdisabled">
+        <div class="flex-wrap-row top20 ">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSureHandle(0)">暂存</el-button>
             </el-col>
@@ -42,7 +43,7 @@
 <script>
 import { saveFinance } from '../api/index.js'
 import { plusOrMinus } from '../../../rules.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import KPI from './components/kpi.vue'
 import BalanceSheet from './components/balanceSheet.vue'
 import CashFlow from './components/cashFlow.vue'
@@ -57,27 +58,11 @@ import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 export default {
     components: {
-        BalanceSheet,
-        CashFlow,
-        CostStructure,
-        FinancialAppointment,
-        FinancialRisks,
-        Operational,
-        Profit,
-        Profitability,
-        Solvency,
-        Storage,
-        TaxCompliance,
-        KPI
+        BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
     },
     data () {
         return {
             activeName: '1',
-            updateTime: '',
-            updateUser: '',
-            isdisabled: false,
-            applyId: '',
-            type: false,
             rules: {
                 dueFinanceBasic: {
                     riskDisclosure: [
@@ -99,10 +84,7 @@ export default {
                         { required: true, message: '请选择资金风险评估', trigger: 'change' }
                     ]
                 }
-            },
-            debtDialog: false,
-            tabName: 'nowYear',
-            onDebtDialog: false
+            }
         }
     },
     computed: {
@@ -111,34 +93,10 @@ export default {
             form: state => state.dueDiligence.financeData
         })
     },
-    mounted () {
-        this.applyId = this.$route.query.applyId
-    },
     methods: {
-        oninput (value, e) {
-            // 通过正则过滤小数点后两位
-            e.target.value = plusOrMinus(e.target.value.toString())
-            this.dueFinanceBasic[value] = e.target.value
-        },
-        oninputAssets (list, index, value, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            this.assetsLiabilities[list][index][value] = e.target.value
-        },
-        oninputDueAndCase (index, value, e, n) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            if (n === 0) {
-                this.dueFinanceProfit.contentList[index][value] = e.target.value
-                return
-            }
-            if (n === 1) {
-                this.caseFlow.contentList[index][value] = e.target.value
-            }
-        },
-        // 整数验证
-        // oninputInt (value, e) {
-        //     e.target.value = e.target.value.replace(/[^\d]/g, '')
-        //     this.dueFinanceBasic[value] = e.target.value
-        // },
+        ...mapActions([
+            'findFinanceData'
+        ]),
         onSureHandle (i) {
             const firstTime = this.form.dueFinanceBasic.id
             if (firstTime) {
@@ -146,16 +104,8 @@ export default {
             } else {
                 this.form.dueFinanceBasic.createUser = this.userInfo.employeeName
             }
-            console.log(this.form)
-            // const type = i === 0 ? '保存' : '提交'
-            // this.$confirm(`确定${type}?`, '提示', {
-            //     confirmButtonText: '确定',
-            //     cancelButtonText: '取消',
-            //     type: 'info'
-            // }).then(() => {
             if (i === 0) return this.onSaveGood(firstTime)
             if (i === 1) return this.onSubmit(firstTime)
-            // }).catch(() => {})
         },
         async onSaveGood (firstTime) {
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
@@ -163,7 +113,6 @@ export default {
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
-            // console.log(this.form)
             this.form.dueFinanceBasic.type = 0
             await saveFinance({ ...this.form, type: 0 })
             this.$message({
@@ -176,6 +125,7 @@ export default {
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
                     await saveFinance({ ...this.form, type: 1 })
+                    await this.findFinanceData({ applyId: this.$route.query.applyId })
                     this.$message.success('提交成功')
                 }
             })

@@ -61,7 +61,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'four',
+            activeName: 'five',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -102,7 +102,6 @@ export default {
     methods: {
         async getCooperativetarget () {
             const { data } = await getCooperativetarget(this.applyId)
-            console.log(data)
             if (data.data.operationNode === 1) {
                 this.Cooperation = true
             } else {
