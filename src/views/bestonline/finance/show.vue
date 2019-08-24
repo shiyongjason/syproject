@@ -2,7 +2,7 @@
     <div class="jd-manage">
         <p>已提交 {{form.dueFinanceBasic.updateTime}} {{ form.dueFinanceBasic.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
-            <el-form :model="form" ref='form' :rules="rules" label-width="180px">
+            <el-form :model="form" ref='form' label-width="180px">
                 <!-- KPI -->
                 <KPI />
                 <!-- 盈利能力 -->
@@ -47,52 +47,11 @@ import Storage from './components_look/storage.vue'
 import TaxCompliance from './components_look/taxCompliance.vue'
 export default {
     components: {
-        BalanceSheet,
-        CashFlow,
-        CostStructure,
-        FinancialAppointment,
-        FinancialRisks,
-        Operational,
-        Profit,
-        Profitability,
-        Solvency,
-        Storage,
-        TaxCompliance,
-        KPI
+        BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
     },
     data () {
         return {
-            activeName: '1',
-            updateTime: '',
-            updateUser: '',
-            isdisabled: false,
-            applyId: '',
-            type: false,
-            rules: {
-                dueFinanceBasic: {
-                    riskDisclosure: [
-                        { required: true, message: '请输入风险揭示', trigger: 'blur' }
-                    ],
-                    analysisDescription: [
-                        { required: true, message: '请输入分析描述', trigger: 'blur' }
-                    ],
-                    shareholdersDebt: [
-                        { required: true, message: '请输入股东借款金额', trigger: 'blur' }
-                    ],
-                    companyBorrowsShareholders: [
-                        { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
-                    ],
-                    shareholdersBorrowsCompany: [
-                        { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' }
-                    ],
-                    capitalRiskAssessment: [
-                        { required: true, message: '请选择资金风险评估', trigger: 'change' }
-                    ]
-                }
-            },
-            debtDialog: false,
-            tabName: 'nowYear',
-            onDebtDialog: false
+            activeName: '1'
         }
     },
     computed: {
@@ -100,10 +59,6 @@ export default {
             userInfo: state => state.userInfo,
             form: state => state.dueDiligence.financeData
         })
-    },
-    mounted () {
-        this.applyId = this.$route.query.applyId
-        console.log(this.form)
     }
 }
 </script>

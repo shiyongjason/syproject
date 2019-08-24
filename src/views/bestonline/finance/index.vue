@@ -15,7 +15,7 @@ export default {
     },
     data () {
         return {
-            canEdit: false
+            canEdit: true
         }
     },
     methods: {
@@ -24,8 +24,7 @@ export default {
         ])
     },
     async mounted () {
-        const data = await this.findFinanceData({ applyId: this.$route.query.applyId })
-        console.log(data)
+        await this.findFinanceData({ applyId: this.$route.query.applyId })
     }
 }
 </script>

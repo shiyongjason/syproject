@@ -16,7 +16,7 @@
                 <tr>
                     <td width="25%">销售毛利率</td>
                     <td width="25%">
-                        <el-form-item label-width="0">
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].grossMargin" :rules="rules.grossMargin">
                             <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].grossMargin" placeholder="请输入内容">
                                 <template slot="prefix">
                                     <span class="red-word">*</span>
@@ -26,12 +26,14 @@
                         </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].grossMargin" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].grossMargin" :rules="rules.grossMargin">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].grossMargin" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td width="25%">
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].grossMargin" placeholder="请输入内容">
@@ -45,20 +47,24 @@
                 <tr>
                     <td width="25%">费率</td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].rate" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].rate" :rules="rules.rate">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].rate" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].rate" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].rate" :rules="rules.rate">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].rate" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td width="25%">
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].rate" placeholder="请输入内容">
@@ -72,20 +78,24 @@
                 <tr>
                     <td width="25%">净利率</td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].profitRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].profitRatio" :rules="rules.profitRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].profitRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].profitRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].profitRatio" :rules="rules.profitRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].profitRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td width="25%">
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].profitRatio" placeholder="请输入内容">
@@ -109,6 +119,21 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.financeData
         })
+    },
+    data () {
+        return {
+            rules: {
+                grossMargin: [
+                    { required: true, message: '请填写销售毛利率', trigger: 'blur' }
+                ],
+                rate: [
+                    { required: true, message: '请填写费率', trigger: 'blur' }
+                ],
+                profitRatio: [
+                    { required: true, message: '请填写净利率', trigger: 'blur' }
+                ]
+            }
+        }
     }
 }
 </script>

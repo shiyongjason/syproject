@@ -15,39 +15,47 @@
                 <tr>
                     <td>流动比率</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].liquidityRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].liquidityRatio" :rules="rules.liquidityRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].liquidityRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].liquidityRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].liquidityRatio" :rules="rules.liquidityRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].liquidityRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
                     <td>速动比率</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].quickRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].quickRatio" :rules="rules.quickRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].quickRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].quickRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].quickRatio" :rules="rules.quickRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].quickRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -72,20 +80,24 @@
                 <tr>
                     <td>资产负债率</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" :rules="rules.assetLiabilityRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" :rules="rules.assetLiabilityRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -138,7 +150,18 @@ export default {
     name: 'finance_profitability',
     data () {
         return {
-            debtDialogVisible: false
+            debtDialogVisible: false,
+            rules: {
+                liquidityRatio: [
+                    { required: true, message: '请填写流动比率', trigger: 'blur' }
+                ],
+                quickRatio: [
+                    { required: true, message: '请填写速动比率', trigger: 'blur' }
+                ],
+                assetLiabilityRatio: [
+                    { required: true, message: '请填写资产负债率', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -177,9 +200,17 @@ td {
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
 }
-.question .el-icon-question{
+.question .el-icon-question {
     position: absolute;
     left: 656.5px;
     top: 13.5px;
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+    }
 }
 </style>
