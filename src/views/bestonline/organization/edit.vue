@@ -26,6 +26,7 @@ import Controller from './components/controller.vue'
 import Organization from './components/organization.vue'
 import MotivationRisk from './components/motivationRisk.vue'
 import { IsPositiveInteger } from '@/utils/rules'
+import { kpiValidProps, controllerValidProps, organizationValidProps, motivationRiskValidProps } from './const.js'
 export default {
     components: {
         KPI, Controller, Organization, MotivationRisk
@@ -119,7 +120,8 @@ export default {
             this.$router.go(-1)
         },
         onSubmit () {
-            this.$refs.form.validate(async (valid) => {
+            this.$refs.form.validate(async (valid, errors) => {
+                this.findValidFailIndex(errors)
                 if (valid) {
                     this.form.operationNode = 1
                     this.form.applyId = this.applyId
@@ -136,6 +138,33 @@ export default {
                     this.$router.go(-1)
                 }
             })
+        },
+        findValidFailIndex (errors) {
+            const expandKpi = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandController = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return controllerValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandOrganization = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return organizationValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandMotivationRisk = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return motivationRiskValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            if (expandKpi) {
+                this.activeName = '1'
+            } else if (expandController) {
+                this.activeName = '2'
+            } else if (expandOrganization) {
+                this.activeName = '3'
+            } else if (expandMotivationRisk) {
+                this.activeName = '4'
+            }
         }
     }
 }
