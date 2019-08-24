@@ -84,7 +84,6 @@ export default {
         }),
         copartnerInfoList () {
             let copartnerInfoList = this.justiceData.copartnerInfoList
-
             // 做排序，根据type顺序排序
             if (copartnerInfoList) {
                 copartnerInfoList = copartnerInfoList.sort((itemA, itemB) => itemA.type - itemB.type)
