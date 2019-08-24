@@ -16,7 +16,7 @@
                 <tr>
                     <td width="25%">销售毛利率</td>
                     <td width="25%">
-                        <el-form-item>
+                        <el-form-item label-width="0">
                             <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].grossMargin" placeholder="请输入内容">
                                 <template slot="prefix">
                                     <span class="red-word">*</span>
