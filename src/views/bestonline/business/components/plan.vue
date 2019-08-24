@@ -11,14 +11,14 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory" label-width="170px">
-                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory">
+                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory" @change="onChange">
                         <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </div>
-            <div class="form-cont-col">
-                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.businessCategoryOther" label-width=0>
-                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.businessCategoryOther" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+            <div class="form-cont-col" v-if="maxShow==7">
+                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.manageCategory" label-width=0>
+                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                 </el-form-item>
             </div>
         </div>
@@ -96,24 +96,26 @@ export default {
             arealist: [],
             businessProvince: '',
             businessCity: '',
-            businessArea: ''
+            businessArea: '',
+            maxShow: ''
         }
     },
     watch: {
         form (form) {
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
+
             if (!serviceCategory) {
                 serviceCategory = ''
             }
             serviceCategory = serviceCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => parseInt(item))
+            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
 
             let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
                 businessCategory = ''
             }
             businessCategory = businessCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => parseInt(item))
+            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => item && parseInt(item))
         },
         'form.dueBusinessFuturePlanCreateForm.businessProvince': {
             handler (val) {
@@ -129,14 +131,17 @@ export default {
             },
             deep: true
         },
-        'form.dueBusinessFuturePlanCreateForm.businessCity' (val) {
-            if (val) {
-                let list = this.citylist.filter(item => item.key == val)[0].areaList
-                let selectObj = [{ value: '请选择', key: '' }]
-                this.arealist = selectObj.concat(list)
-            } else {
-                this.arealist = []
-            }
+        'form.dueBusinessFuturePlanCreateForm.businessCity': {
+            handler (val) {
+                if (val) {
+                    let list = this.citylist.filter(item => item.key == val)[0].areaList
+                    let selectObj = [{ value: '请选择', key: '' }]
+                    this.arealist = selectObj.concat(list)
+                } else {
+                    this.arealist = []
+                }
+            },
+            deep: true
         }
     },
     computed: {
@@ -157,29 +162,15 @@ export default {
         },
         async onchangeP (val) {
             this.form.dueBusinessFuturePlanCreateForm.businessCity = ''
-            // if (val) {
-            //     let list = this.provelist.filter(item => item.key == val)[0].cityList
-            //     let selectObj = [{ value: '请选择', key: '' }]
-            //     this.citylist = selectObj.concat(list)
-            // } else {
-            //     this.citylist = []
-            //     this.arealist = []
-            // }
-            // this.form.dueBusinessFuturePlanCreateForm.businessProvince = ''
         },
         async onchangeC (val) {
             this.form.dueBusinessFuturePlanCreateForm.businessArea = ''
-            // if (val) {
-            //     let list = this.citylist.filter(item => item.key == val)[0].areaList
-            //     let selectObj = [{ value: '请选择', key: '' }]
-            //     this.arealist = selectObj.concat(list)
-            // } else {
-            //     this.arealist = []
-            // }
-            // this.form.dueBusinessFuturePlanCreateForm.businessCity = ''
         },
         async onchangeA (val) {
 
+        },
+        onChange (val) {
+            this.maxShow = val && val.sort().reverse()[0]
         }
     }
 }

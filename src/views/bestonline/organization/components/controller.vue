@@ -117,7 +117,7 @@ export default {
             return isNaN(total) ? '' : total
         },
         radarValueOfData () {
-            return this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle).map(item => item.score)
+            return this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle).map(item => isNaN(item.score) ? 0 : item.score)
         },
         radarChartData () {
             return this.chartList.map(item => {

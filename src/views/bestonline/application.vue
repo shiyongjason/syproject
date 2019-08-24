@@ -53,7 +53,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}/{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}
+                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -126,15 +126,16 @@ export default {
             this.getDueapply()
         },
         async showProcess (applyId) {
-            this.dialogVisible = true
             const { data } = await getDueApproval({ applyId: applyId })
             this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
+            console.log(this.dueApproval)
             this.dueApproval && this.dueApproval.reverse().map(value => {
                 if (value.approvalStatus === 1) {
                     value.color = '#f88825'
                 }
                 return value
             })
+            this.dialogVisible = true
         },
         async getDueapply () {
             this.params.organizationCode = this.userInfo.organizationCode

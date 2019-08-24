@@ -63,12 +63,12 @@
                 <p class="small-title">分析报告(必填)</p>
                 <div class="item-wrapper">
                     <div>
-                        <label for="">风险揭示：</label>
-                        <span>{{form.riskDisclosure}}</span>
+                        <label class="el-form-item__label" style="width: 150px;">风险揭示：</label>
+                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.riskDisclosure}}</div>
                     </div>
                     <div>
-                        <label for="">分析描述：</label>
-                        <span>{{form.analysisDescription}}</span>
+                        <label class="el-form-item__label" style="width: 150px;">分析描述：</label>
+                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.analysisDescription}}</div>
                     </div>
                 </div>
             </el-collapse-item>
@@ -79,16 +79,16 @@
                 <p class="small-title">个人简介</p>
                 <div class="item-wrapper">
                     <div>
-                        <label for="">概况：</label>
-                        <span>{{form.actualControllerOverview}}</span>
+                        <label class="el-form-item__label" style="width: 150px;">概况：</label>
+                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerOverview}}</div>
                     </div>
                     <div>
-                        <label for="">底线和禁区：</label>
-                        <span>{{form.actualControllerBaseline}}</span>
+                        <label class="el-form-item__label" style="width: 150px;">底线和禁区：</label>
+                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerBaseline}}</div>
                     </div>
                     <div>
-                        <label for="">个人风格和喜好：</label>
-                        <span>{{form.actualControllerHobby}}</span>
+                        <label class="el-form-item__label" style="width: 150px;">个人风格和喜好：</label>
+                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerHobby}}</div>
                     </div>
                 </div>
                 <p class="small-title">综合评估</p>
@@ -130,27 +130,29 @@
                 <p class="small-title">公司历程和业发展</p>
                 <div class="item-wrapper">
                     <div>
-                        <label for="">公司历程和业务发展：</label>
-                        <span>{{form.companyHistoryBusiness}}</span>
+                        <label class="el-form-item__label label200">公司历程和业务发展：</label>
+                        <div class="el-form-item__content content200" style="width: 600px;">{{form.companyHistoryBusiness}}</div>
                     </div>
                 </div>
                 <p class="small-title">组织架构</p>
                 <div class="organization-form item-wrapper">
                     <div>
-                        <label for="">在职人数：</label>
-                        <span>{{form.incumbency}}</span>
+                        <label class="el-form-item__label label150">在职人数：</label>
+                        <div class="el-form-item__content content150">{{form.incumbency}}</div>
                     </div>
                     <div>
-                        <label for="">在职人员平均薪资：</label>
-                        <span>{{form.averageSalaryOnJob}}元</span>
+                        <label class="el-form-item__label label150">在职人员平均薪资：</label>
+                        <div class="el-form-item__content content150">
+                            <span v-if="form.averageSalaryOnJob">{{form.averageSalaryOnJob}}元</span>
+                        </div>
                     </div>
                     <div>
-                        <label for="">缴纳社保人数：</label>
-                        <span>{{form.socialSecurityNum}}</span>
+                        <label class="el-form-item__label label150">缴纳社保人数：</label>
+                        <div class="el-form-item__content content150">{{form.socialSecurityNum}}</div>
                     </div>
                     <div>
-                        <label for="">是否签订用人合同：</label>
-                        <span>{{form.isSignEmployment}}</span>
+                        <label class="el-form-item__label label150">是否签订用人合同：</label>
+                        <div class="el-form-item__content content150">{{form.isSignEmployment}}</div>
                     </div>
                 </div>
                 <p class="small-small-p">高管结构</p>
@@ -164,11 +166,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in organizationSeniorList" :key="index">
+                        <tr v-for="(item, index) in form.dueOrganizationSeniorCreateFormList" :key="index">
                             <td>{{item.position}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.positionDuty}}</td>
                             <td>{{item.personnelSituation}}</td>
+                        </tr>
+                        <tr v-if="!form.dueOrganizationSeniorCreateFormList || form.dueOrganizationSeniorCreateFormList.length === 0">
+                            <td colspan="4">暂无数据</td>
                         </tr>
                     </tbody>
                 </table>
@@ -184,8 +189,12 @@
                     <tbody>
                         <tr v-for="(item, index) in form.dueOrganizationPostCreateFormList" :key="index">
                             <td>{{item.post}}</td>
-                            <td>{{item.proportion}}人</td>
-                            <td>{{item.percentage}}%</td>
+                            <td>
+                                <span v-if="item.proportion">{{item.proportion}}人</span>
+                            </td>
+                            <td>
+                                <span v-if="item.percentage">{{item.percentage}}%</span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -222,23 +231,25 @@
                 <p class="small-title">合作初衷</p>
                 <div class="item-wrapper">
                     <div>
-                        <label for="">合作初衷：</label>
-                        <span>{{form.cooperationIntention}}</span>
+                        <label class="el-form-item__label label150">合作初衷：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.cooperationIntention}}</div>
                     </div>
                 </div>
                 <p class="small-title">合作风险</p>
                 <div class="item-wrapper">
                     <div>
-                        <label for="">合作风险：</label>
-                        <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" disabled></el-rate>
+                        <label class="el-form-item__label label150">合作风险：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">
+                            <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" disabled></el-rate>
+                        </div>
                     </div>
                     <div>
-                        <label for="">企业优势：</label>
-                        <span>{{form.companyAdvantage}}</span>
+                        <label class="el-form-item__label label150">企业优势：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.companyAdvantage}}</div>
                     </div>
                     <div>
-                        <label for="">企业短板：</label>
-                        <span>{{form.companyShortBoard}}</span>
+                        <label class="el-form-item__label label150">企业短板：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.companyShortBoard}}</div>
                     </div>
                 </div>
             </el-collapse-item>
@@ -249,6 +260,7 @@
 import { mapState } from 'vuex'
 import { YES_NO_STATUS } from '../const'
 import { SOCIAL_REVIEW_OPTIONS, CONTROLL_OPTIONS, STABLE_OPTIONS } from './const'
+import echarts from 'echarts'
 export default {
     props: {
         applyId: {
@@ -257,24 +269,118 @@ export default {
     },
     data () {
         return {
-            activeName: '1'
+            activeName: '1',
+            chartList: []
         }
     },
     computed: {
+        controllerRadarData () {
+            const controllerAssessment = this.form.dueOrganizationControllerAssessmentCreateFormList
+            return controllerAssessment ? controllerAssessment.filter(item => !item.isTitle).map(item => !item.score || isNaN(item.score) ? 0 : item.score) : []
+        },
+        controllerRadarIndicator () {
+            return this.chartList.map(item => {
+                return { name: item.assessmentDimension, max: Math.max.apply(null, this.controllerRadarData) }
+            })
+        },
+        organizationRadarData () {
+            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => !item.score || isNaN(item.score) ? 0 : item.score)
+        },
+        organizationRadarIndicator () {
+            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
+                return { name: item.assessmentDimension, max: Math.max.apply(null, this.organizationRadarData) }
+            })
+        },
         ...mapState({
             form: state => state.dueDiligence.organizationData
         })
     },
     watch: {
-        form () {
-            this.form.dueOrganizationAssessmentCreateFormList = this.form.dueOrganizationAssessmentCreateFormList.map(item => {
-                item.state = YES_NO_STATUS.filter(obj => obj.value === item.state)[0].label
-                return item
+        form (form) {
+            if (form.dueOrganizationAssessmentCreateFormList) {
+                form.dueOrganizationAssessmentCreateFormList = form.dueOrganizationAssessmentCreateFormList.map(item => {
+                    item.state = this.switchValueToLabel(YES_NO_STATUS, item.state)
+                    return item
+                })
+            }
+            form.actualControllerSocialId = this.switchValueToLabel(SOCIAL_REVIEW_OPTIONS, form.actualControllerSocialId)
+            form.actualCompanyControllerId = this.switchValueToLabel(CONTROLL_OPTIONS, form.actualCompanyControllerId)
+            form.organizationalStabilityId = this.switchValueToLabel(STABLE_OPTIONS, form.organizationalStabilityId)
+            form.isSignEmployment = this.switchValueToLabel(YES_NO_STATUS, form.isSignEmployment)
+            let controllerAssessments = form.dueOrganizationControllerAssessmentCreateFormList
+            if (controllerAssessments && controllerAssessments.length > 0) {
+                this.chartList = JSON.parse(JSON.stringify(controllerAssessments))
+                controllerAssessments.splice(0, 0, { assessmentDimension: '基本情况', isTitle: true })
+                controllerAssessments.splice(4, 0, { assessmentDimension: '道德风险因素', isTitle: true })
+                controllerAssessments.splice(9, 0, { assessmentDimension: '心理风险因素', isTitle: true })
+                controllerAssessments.splice(12, 0, { assessmentDimension: '经营能力', isTitle: true })
+                controllerAssessments.splice(15, 0, { assessmentDimension: '社会关系', isTitle: true })
+            }
+        },
+        activeName (activeName) {
+            if (activeName == '2') {
+                this.drawRadar('controller')
+            }
+            if (activeName == '3') {
+                this.drawRadar('organization')
+            }
+        }
+    },
+    methods: {
+        switchValueToLabel (options, value) {
+            const filterOptions = options.filter(item => item.value === value)
+            return filterOptions && filterOptions.length > 0 ? filterOptions[0].label : ''
+        },
+        drawRadar (type) {
+            let props = {}
+            if (type == 'controller') {
+                props = {
+                    text: '控制人评估',
+                    indicator: this.controllerRadarIndicator,
+                    value: this.controllerRadarData
+                }
+                this.radarChart = echarts.init(this.$refs.radarChart2)
+            } else {
+                props = {
+                    text: '组织评估',
+                    indicator: this.organizationRadarIndicator,
+                    value: this.organizationRadarData
+                }
+                this.radarChart = echarts.init(this.$refs.radarChart)
+            }
+            this.radarChart.setOption({
+                title: {
+                    text: props.text,
+                    left: 'center'
+                },
+                tooltip: {},
+                grid: {
+                    top: '10%',
+                    left: '5%',
+                    right: '5%',
+                    bottom: '5%',
+                    containLabel: true
+                },
+                radar: {
+                    name: {
+                        textStyle: {
+                            color: '#000',
+                            borderRadius: 3,
+                            padding: [10, 10]
+                        }
+                    },
+                    indicator: props.indicator
+                },
+                series: [{
+                    type: 'radar',
+                    data: [
+                        {
+                            value: props.value,
+                            name: props.text
+                        }
+                    ]
+                }]
             })
-            this.form.actualControllerSocialId = SOCIAL_REVIEW_OPTIONS.filter(item => item.value === this.form.actualControllerSocialId)[0].label
-            this.form.actualCompanyControllerId = CONTROLL_OPTIONS.filter(item => item.value === this.form.actualCompanyControllerId)[0].label
-            this.form.organizationalStabilityId = STABLE_OPTIONS.filter(item => item.value === this.form.organizationalStabilityId)[0].label
-            this.form.isSignEmployment = YES_NO_STATUS.filter(item => item.value === item.state)[0].label
         }
     }
 }
@@ -306,9 +412,6 @@ export default {
 .organization-table {
     margin: 20px;
 }
-.red-span {
-    color: red;
-}
 .assessmentDimension-title {
     width: 320px;
     text-align: center;
@@ -318,5 +421,19 @@ export default {
     font-size: 17px;
     line-height: 40px;
     background: #fafafa;
+}
+.label150 {
+    width: 150px;
+}
+.label200 {
+    width: 200px;
+}
+.content150 {
+    margin-left: 150px;
+    width: 224px;
+}
+.label200 {
+    margin-left: 200px;
+    width: 224px;
 }
 </style>
