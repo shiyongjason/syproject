@@ -34,10 +34,11 @@ export default {
         form (form) {
             let publicityPromotionChannels = form.publicityPromotionChannels
             if (!publicityPromotionChannels) {
-                publicityPromotionChannels = ''
+                publicityPromotionChannels = []
+            } else {
+                publicityPromotionChannels = publicityPromotionChannels.split(',')
             }
-            publicityPromotionChannels = publicityPromotionChannels.length > 0 && publicityPromotionChannels.split(',')
-            form.publicityPromotionChannels = publicityPromotionChannels.map(item => parseInt(item))
+            form.publicityPromotionChannels = publicityPromotionChannels.map(item => item && parseInt(item))
         }
     },
     computed: {
@@ -56,6 +57,7 @@ export default {
             this.isIndeterminate = false
         },
         onCheckChannel (val) {
+            console.log(this.form.publicityPromotionChannels)
             let checkedLen = val.length
             this.checkAll = checkedLen === this.channelCodes.length
             this.isIndeterminate = checkedLen > 0 && checkedLen < this.channelCodes.length

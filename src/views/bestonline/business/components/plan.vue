@@ -3,8 +3,8 @@
         <template slot="title">
             <p class="title-p">新合资公司规划</p>
         </template>
-        <el-form-item label="业务类别：" prop="serviceCategory">
-            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px">
+        <el-form-item label="业务类别：" prop="dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px">
+            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" >
                 <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
@@ -103,18 +103,21 @@ export default {
     watch: {
         form (form) {
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
-
             if (!serviceCategory) {
-                serviceCategory = ''
+                serviceCategory = []
+            } else {
+                serviceCategory = serviceCategory.split(',')
             }
-            serviceCategory = serviceCategory.split(',')
+
             form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
 
             let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
-                businessCategory = ''
+                console.log(1)
+                businessCategory = []
+            } else {
+                businessCategory = businessCategory.split(',')
             }
-            businessCategory = businessCategory.split(',')
             form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => item && parseInt(item))
         },
         'form.dueBusinessFuturePlanCreateForm.businessProvince': {
@@ -168,6 +171,7 @@ export default {
 
         },
         onChange (val) {
+            console.log(val)
             this.maxShow = val && val.sort().reverse()[0]
         }
     }

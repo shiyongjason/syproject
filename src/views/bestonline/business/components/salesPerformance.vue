@@ -25,8 +25,7 @@
                     <td colspan="2">{{item.month}}</td>
                     <td>
                         <template v-if="index === 0">
-                            <el-input placeholder="" maxlength="25" v-model="currentYearAllSales" @keyup.native="oninput('currentYearAllSales',$event)">
-                            </el-input>
+                            {{currentYearAllSales}}
                         </template>
                         <template v-else>
                             <el-input placeholder="" maxlength="25" v-model="item.currentYearSales" @keyup.native="oninputSale(index,'currentYearSales',$event)">
@@ -39,8 +38,7 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                            <el-input placeholder="" maxlength="25" v-model="lastYearAllSales" @keyup.native="oninput('lastYearAllSales',$event)">
-                            </el-input>
+                           {{lastYearAllSales}}
                         </template>
                         <template v-else>
                             <el-input placeholder="" maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
@@ -53,8 +51,7 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                            <el-input placeholder="" maxlength="25" v-model="lastTwoYearAllSales" @keyup.native="oninput('lastTwoYearAllSales',$event)">
-                            </el-input>
+                           {{lastTwoYearAllSales}}
                         </template>
                         <template v-else>
                             <el-input placeholder="" maxlength="25" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
@@ -133,6 +130,9 @@ export default {
                 this.watchTime++
             },
             deep: true
+        },
+        lastYearAllSales (val) {
+            this.form.salesPerformanceLastYear = val
         }
     },
     methods: {

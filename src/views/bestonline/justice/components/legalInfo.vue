@@ -98,7 +98,7 @@
                 </div>
             </div>
             <div v-if="type === 3">
-                <p class="legallnfoTitle">经营性担保</p>
+                <p class="legallnfoTitle">经营性担保444444</p>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
@@ -133,7 +133,7 @@
                 </el-form-item>
             </el-form>
             <div v-if="type === 3">
-                <p class="legallnfoTitle">非经营性担保</p>
+                <p class="legallnfoTitle">非经营性担保{{type}}</p>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>

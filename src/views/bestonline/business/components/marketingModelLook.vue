@@ -35,9 +35,10 @@ export default {
             let publicityPromotionChannels = form.publicityPromotionChannels
             if (!publicityPromotionChannels) {
                 publicityPromotionChannels = []
+            } else {
+                publicityPromotionChannels = publicityPromotionChannels.split(',')
             }
-            publicityPromotionChannels = publicityPromotionChannels.split(',')
-            form.publicityPromotionChannels = publicityPromotionChannels.map(item => parseInt(item))
+            form.publicityPromotionChannels = publicityPromotionChannels.map(item => item && parseInt(item))
         }
     },
     computed: {
