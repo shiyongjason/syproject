@@ -33,18 +33,18 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import KPI from './components_look/kpi.vue'
-import BalanceSheet from './components_look/balanceSheet.vue'
-import CashFlow from './components_look/cashFlow.vue'
-import CostStructure from './components_look/costStructure.vue'
-import FinancialAppointment from './components_look/financialAppointment.vue'
-import FinancialRisks from './components_look/financialRisks.vue'
-import Operational from './components_look/operational.vue'
-import Profit from './components_look/profit.vue'
-import Profitability from './components_look/profitability.vue'
-import Solvency from './components_look/solvency.vue'
-import Storage from './components_look/storage.vue'
-import TaxCompliance from './components_look/taxCompliance.vue'
+import KPI from './components_show/kpi.vue'
+import BalanceSheet from './components_show/balanceSheet.vue'
+import CashFlow from './components_show/cashFlow.vue'
+import CostStructure from './components_show/costStructure.vue'
+import FinancialAppointment from './components_show/financialAppointment.vue'
+import FinancialRisks from './components_show/financialRisks.vue'
+import Operational from './components_show/operational.vue'
+import Profit from './components_show/profit.vue'
+import Profitability from './components_show/profitability.vue'
+import Solvency from './components_show/solvency.vue'
+import Storage from './components_show/storage.vue'
+import TaxCompliance from './components_show/taxCompliance.vue'
 export default {
     components: {
         BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
