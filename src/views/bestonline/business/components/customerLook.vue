@@ -20,12 +20,10 @@
             <tbody>
                 <tr v-for="(item,index) in businessSupplierCreateFormList" :key=index>
                     <td>
-                        <el-input v-model="item.customerName" placeholder="客户" maxlength="25"></el-input>
+                       {{item.customerName}}
                     </td>
                     <td>
-                        <el-select v-model="item.categoryId" placeholder="请选择">
-                            <el-option v-for="item in mainCategoryData" :key="item.key" :label="item.value" :value="item.key"></el-option>
-                        </el-select>
+                        {{item.categoryId?mainCategoryData[item.categoryId].value:''}}
                     </td>
                     <td>{{item.brandName}}</td>
                     <td>{{item.salesFee}}万</td>
@@ -41,7 +39,7 @@
             </tbody>
         </table>
         <el-form-item label="是否健康:" prop="customersHealth" label-width="80px">
-            {{item.customersHealth==1?'否':item.customersHealth==0?'是':''}}
+            {{form.customersHealth==1?'否':form.customersHealth==0?'是':''}}
         </el-form-item>
         <span>（不健康：超30%的业务聚焦在1个客户上）</span>
         <!--end-->

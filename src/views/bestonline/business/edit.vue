@@ -230,6 +230,7 @@ export default {
             this.form.operationNode = 0
             this.form.createUser = createUser
             if (this.form.dueBusinessId) {
+                console.log(12)
                 await putBusiness(this.form)
             } else {
                 await addBusiness(this.form)
@@ -244,7 +245,7 @@ export default {
                 if (valid) {
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory && this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory && this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
@@ -260,6 +261,7 @@ export default {
                         })
                     }
                     this.$message.success('提交成功')
+                    this.findBusinessData({ applyId: this.$route.query.applyId })
                 } else {
                     this.$message({
                         type: 'warning',
@@ -267,11 +269,6 @@ export default {
                     })
                 }
             })
-            // this.publicityPromotionChannels = this.checkedCities.join(',')
-            // this.dueBusinessSaleCreateFormList[0].currentYearSales = this.currentYearAllSales
-            // this.dueBusinessSaleCreateFormList[0].lastYearSales = this.lastYearAllSales
-            // this.dueBusinessSaleCreateFormList[0].lastTwoYearSales = this.lastTwoYearAllSales
-            // this.$router.go(-1)
         }
     },
     filters: {

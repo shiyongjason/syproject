@@ -39,7 +39,9 @@
                 </el-form-item>
             </div>
             <div class="form-cont-col">
+                  <el-form-item label="合同规模：">
               {{item.contractScale}}
+               </el-form-item>
             </div>
         </div>
     </div>

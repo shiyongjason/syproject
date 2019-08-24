@@ -121,7 +121,6 @@ export default {
             handler (val) {
                 if (val) {
                     let list = this.provelist.filter(item => item.key == val)[0].cityList
-                    console.log(list)
                     let selectObj = [{ value: '请选择', key: '' }]
                     this.citylist = selectObj.concat(list)
                 } else {
@@ -148,7 +147,6 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.businessData
         })
-
     },
     async  mounted () {
         const { data } = await getAreacode()

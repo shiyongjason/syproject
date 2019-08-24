@@ -88,7 +88,7 @@ import Customer from './components/customerLook.vue'
 import Members from './components/membersLook.vue'
 import Competitor from './components/competitorLook.vue'
 import Plan from './components/planLook.vue'
-import SalesPerformance from './components/salesPerformance.vue'
+import SalesPerformance from './components/salesPerformanceLook.vue'
 import { mapState } from 'vuex'
 export default {
     components: {

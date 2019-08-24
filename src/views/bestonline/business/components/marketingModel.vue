@@ -36,7 +36,7 @@ export default {
             if (!publicityPromotionChannels) {
                 publicityPromotionChannels = ''
             }
-            publicityPromotionChannels = publicityPromotionChannels.split(',')
+            publicityPromotionChannels = publicityPromotionChannels.length > 0 && publicityPromotionChannels.split(',')
             form.publicityPromotionChannels = publicityPromotionChannels.map(item => parseInt(item))
         }
     },
@@ -50,7 +50,6 @@ export default {
             const { data } = await findChannels()
             this.channelList = data
             this.channelCodes = data.map(item => item.code)
-            console.log(this.channelCodes)
         },
         onCheckAll (val) {
             this.form.publicityPromotionChannels = val ? this.channelCodes : []
