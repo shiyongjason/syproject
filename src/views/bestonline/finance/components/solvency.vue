@@ -80,8 +80,8 @@
                 <tr>
                     <td>资产负债率</td>
                     <td>
-                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" :rules="rules.assetLiabilityRatio">
-                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入">
+                        <el-form-item label-width="0">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入" disabled>
                                 <template slot="prefix">
                                     <span class="red-word">*</span>
                                 </template>
@@ -90,8 +90,8 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" :rules="rules.assetLiabilityRatio">
-                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入">
+                        <el-form-item label-width="0">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入" disabled>
                                 <template slot="prefix">
                                     <span class="red-word">*</span>
                                 </template>

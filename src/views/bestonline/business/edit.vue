@@ -170,7 +170,7 @@ export default {
                 'dueBusinessFuturePlanCreateForm.serviceCategory': [
                     { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
                 ],
-                'dueBusinessFuturePlanCreateForm.businessCategory': [
+                'dueBusinessFuturePlanCreateForm.webServiceCategory': [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
                 'dueBusinessFuturePlanCreateForm.manageCategory': [
@@ -225,8 +225,8 @@ export default {
         async onSaveBus () {
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
             this.form.operationNode = 0
             this.form.createUser = createUser
             if (this.form.dueBusinessId) {
@@ -244,8 +244,8 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory && this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory && this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
