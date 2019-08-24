@@ -362,4 +362,7 @@ table {
         width: 50px;
     }
 }
+.KPISymbol {
+    margin-left: 10px;
+}
 </style>
