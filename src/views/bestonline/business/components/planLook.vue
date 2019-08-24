@@ -100,16 +100,19 @@ export default {
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
                 serviceCategory = ''
+            } else {
+                serviceCategory = serviceCategory.split(',')
             }
-            serviceCategory = serviceCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => parseInt(item))
+            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
 
             let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
                 businessCategory = ''
+            } else {
+                businessCategory = businessCategory.split(',')
             }
-            businessCategory = businessCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => parseInt(item))
+
+            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => item && parseInt(item))
         }
     },
     computed: {

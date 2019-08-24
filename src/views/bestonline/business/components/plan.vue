@@ -168,6 +168,7 @@ export default {
 
         },
         onChange (val) {
+            console.log(val)
             this.maxShow = val && val.sort().reverse()[0]
         }
     }
