@@ -23,7 +23,7 @@
                         <i v-if="index === 1">w</i>
                     </td>
                     <td>
-                        {{item.state?'是':'否'}}
+                        {{item.state === 0?'否':item.state === 1?'是':''}}
                     </td>
                     <td :rowspan="form.assessmentList.length" v-if="index == 0">
                         {{item.remark }}
