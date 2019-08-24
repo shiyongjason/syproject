@@ -179,8 +179,9 @@ export default {
                 //     }
                 //     await postDuemain({ applyId: row.applyId, createUser: row.createUser })
                 //  this.$message.success({ showClose: true, message: '提交成功' })
-                // }+
+                // }
                 await postDuemain({ applyId: row.applyId, createUser: row.createUser })
+                this.getDuemain()
                 this.$message.success({ showClose: true, message: '提交成功' })
             }
         }
