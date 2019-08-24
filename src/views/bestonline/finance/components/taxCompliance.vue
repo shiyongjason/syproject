@@ -16,20 +16,24 @@
                 <tr>
                     <td>年度纳税营业收入</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">万</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome" :rules="rules.annualTaxableBusinessIncome">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">万</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">万</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome" :rules="rules.annualTaxableBusinessIncome">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">万</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome">
@@ -40,20 +44,24 @@
                 <tr>
                     <td>纳税收入占比</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio" :rules="rules.taxableIncomeRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio" :rules="rules.taxableIncomeRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio">
@@ -64,20 +72,24 @@
                 <tr>
                     <td>税负率</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxBearingRate">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].taxBearingRate" :rules="rules.taxBearingRate">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].taxBearingRate">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxBearingRate">
-                            <template slot="prefix">
-                                <span class="red-word">*</span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].taxBearingRate" :rules="rules.taxBearingRate">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].taxBearingRate">
+                                <template slot="prefix">
+                                    <span class="red-word">*</span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
                         <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxBearingRate">
@@ -98,6 +110,22 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.financeData
         })
+    },
+    data () {
+        return {
+            debtDialogVisible: false,
+            rules: {
+                annualTaxableBusinessIncome: [
+                    { required: true, message: '请填写年度纳税营业收入', trigger: 'blur' }
+                ],
+                taxableIncomeRatio: [
+                    { required: true, message: '请填写纳税收入占比', trigger: 'blur' }
+                ],
+                taxBearingRate: [
+                    { required: true, message: '请填写税负率', trigger: 'blur' }
+                ]
+            }
+        }
     }
 }
 </script>
@@ -129,5 +157,13 @@ td {
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+    }
 }
 </style>

@@ -50,7 +50,11 @@ export default {
         },
         financeData: {
             assessmentList: [], // 财务尽调评估
-            dueFinanceYearOperatingCreateForms: [],
+            dueFinanceYearOperatingCreateForms: [
+                {},
+                {},
+                {}
+            ],
             dueFinanceBasic: {},
             caseFlow: {},
             dueFinanceProfit: {},
