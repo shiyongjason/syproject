@@ -61,7 +61,6 @@ export {
     ossUrl,
     iframeUrl,
     jinyun,
-    FileUploadUrl,
     ccpBaseUrl,
     B2bUrl,
     fileUploadUrl

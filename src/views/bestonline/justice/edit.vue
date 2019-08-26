@@ -33,7 +33,7 @@ import CoPartner from './components/copartner.vue'
 import LegalInfo from './components/legalInfo.vue'
 import CompanyBasic from './components/legalInfo/companyBasic.vue'
 import InvestmentOut from './components/legalInfo/investmentOut.vue'
-// import { FileUploadUrl } from '@/api/config'
+// import { fileUploadUrl } from '@/api/config'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo

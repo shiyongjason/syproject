@@ -109,7 +109,7 @@
     </div>
 </template>
 <script>
-import { FileUploadUrl } from '@/api/config'
+import { fileUploadUrl } from '@/api/config'
 import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from './api/index'
 import { mapState } from 'vuex'
 import { plusOrMinus } from '../../utils/rules.js'
@@ -213,7 +213,7 @@ export default {
         }),
         uploadInfo () {
             return {
-                action: FileUploadUrl + 'tms/files/upload',
+                action: fileUploadUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userdata.name
                 },
