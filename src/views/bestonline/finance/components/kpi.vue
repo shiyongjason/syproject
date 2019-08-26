@@ -85,8 +85,6 @@
                 <el-input type="textarea" v-model="form.dueFinanceBasic.analysisDescription" style="width:600px" rows="6" placeholder="请输入内容"></el-input>
             </el-form-item>
         </div>
-        {{assetListT}}
-        {{assetListL}}
     </el-collapse-item>
 </template>
 
