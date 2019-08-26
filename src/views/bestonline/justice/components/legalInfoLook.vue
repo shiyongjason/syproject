@@ -194,7 +194,7 @@
 <script>
 import { mapState } from 'vuex'
 import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
-import { FileUploadUrl } from '@/api/config'
+import { fileUploadUrl } from '@/api/config'
 export default {
     name: 'legal_info',
     props: {

@@ -58,7 +58,7 @@
     </div>
 </template>
 <script>
-import { FileUploadUrl } from '@/api/config'
+import { fileUploadUrl } from '@/api/config'
 import { addAttach, getAttach } from '../api/index'
 import { mapState } from 'vuex'
 export default {
@@ -81,7 +81,7 @@ export default {
         }),
         uploadInfo () {
             return {
-                action: FileUploadUrl + 'tms/files/upload',
+                action: fileUploadUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.name
                 },
