@@ -167,10 +167,10 @@ export default {
                 switchDate: [
                     { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanCreateForm.serviceCategory': [
+                'dueBusinessFuturePlanCreateForm.webServiceCategory': [
                     { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
                 ],
-                'dueBusinessFuturePlanCreateForm.webServiceCategory': [
+                'dueBusinessFuturePlanCreateForm.webBusinessCategory': [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
                 'dueBusinessFuturePlanCreateForm.manageCategory': [

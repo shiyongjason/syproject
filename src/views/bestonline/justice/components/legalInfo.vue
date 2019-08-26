@@ -81,7 +81,7 @@
             </el-form>
 
             <p class="small-title">担保信息（万）</p>
-            <div v-if="type !== 3">
+            <div v-if="type != 2 && type != 3">
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
@@ -97,8 +97,8 @@
                     </el-form>
                 </div>
             </div>
-            <div v-if="type === 3">
-                <p class="legallnfoTitle">经营性担保444444</p>
+            <div v-if="type ==2 || type == 3">
+                <p class="legallnfoTitle">经营性担保</p>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
@@ -132,9 +132,9 @@
                     </el-input>
                 </el-form-item>
             </el-form>
-            <div v-if="type === 3">
+            <div v-if="type ==2 || type === 3">
                 <p class="legallnfoTitle">非经营性担保{{type}}</p>
-                <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
+                <div v-for="(item, index) in nonOperationalAssureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
@@ -286,12 +286,26 @@ export default {
         },
         assureList () {
             let assureList = this.justiceData.assureList
-            const result = assureList.filter(item => item.type == this.type)
+            // type = 2和3的情况下分为经营性担保和非经营担保，2的经营性担保对应的是2,3的经营性担保对应的是4
+            // 0：实际控制人 1：实际控制人配偶 2：拟选合伙人（经营性担保）3：拟选合伙人（非经营性担保）4：尽调公司（经营性担保）5：尽调公司（非经营性担保）
+            const result = assureList.filter(item => item.type == (this.type == 3 ? 4 : this.type))
             if (result.length == 0) {
                 const tempObj = JSON.parse(JSON.stringify(this.defaultAssure))
+                tempObj.type = (this.type == 3 ? 4 : this.type)
                 assureList.push(tempObj)
             }
-            return assureList.filter(item => item.type == this.type)
+            return assureList.filter(item => item.type == (this.type == 3 ? 4 : this.type))
+        },
+        nonOperationalAssureList () {
+            // 非经营性担保,只有type=2和3的时候是有效的
+            let assureList = this.justiceData.assureList
+            const result = assureList.filter(item => item.type == (this.type == 2 ? 3 : 5))
+            if (result.length == 0) {
+                const tempObj = JSON.parse(JSON.stringify(this.defaultAssure))
+                tempObj.type = (this.type == 2 ? 3 : 5)
+                assureList.push(tempObj)
+            }
+            return assureList.filter(item => item.type == (this.type == 2 ? 3 : 5))
         },
         defaultPunishment () {
             return {
