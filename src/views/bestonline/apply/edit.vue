@@ -11,15 +11,13 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="合作模式：" prop="cooperateType">
-                    <div class="flex-wrap-cont">
-                        <el-radio v-model="formData.cooperateType" :label="0">现有模式</el-radio>
-                        <el-radio v-model="formData.cooperateType" :label="1" class="newcooperateType">
-                            新合作模式
-                        </el-radio>
+                    <el-radio-group v-model="formData.cooperateType">
+                        <el-radio :label="0">现有模式</el-radio>
+                        <el-radio :label="1">新合作模式</el-radio>
                         <el-tooltip effect="dark" content="新合作模式：拟合资公司操作新品类、股权结构等，和好享家规定的不同" placement="top-start">
-                            <i class="el-icon-question" style="padding-left: 7px"></i>
+                            <i class="el-icon-question" style="padding-left: 7px;font-size: 14px;margin-left: -30px"></i>
                         </el-tooltip>
-                    </div>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="" prop="newCooperateContent" v-if="formData.cooperateType == 1">
                     <el-input type="textarea" rows="4" placeholder="请说明新合作模式" class="remark" v-model="formData.newCooperateContent">
@@ -53,12 +51,10 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="销售形式：" prop="salesType">
-                    <div class="flex-wrap-cont">
-                        <div class="flex-wrap-cont">
-                            <el-radio v-model="formData.salesType" :label="1">线上</el-radio>
-                            <el-radio v-model="formData.salesType" :label="2">线下</el-radio>
-                        </div>
-                    </div>
+                    <el-radio-group v-model="formData.salesType">
+                        <el-radio :label="0">线上</el-radio>
+                        <el-radio :label="1">线下</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="合作目的：" prop="cooperateTarget">
                     <div class="flex-wrap-cont">
@@ -72,8 +68,8 @@
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-input placeholder="请输入拟签约规模" maxlength="25" v-model="formData.signScale" @keyup.native="oninteger($event)">
+                                <template slot="suffix">万</template>
                             </el-input>
-                            <span class="unit">万</span>
                         </div>
                     </div>
                 </el-form-item>
@@ -288,9 +284,10 @@ export default {
             this.formData = data.data
             this.fileList = JSON.parse(this.formData.attachmentsUrl)
             this.arrList = JSON.parse(data.data.attachmentsUrl)
-            // console.log(this.formData.mainSystem)
             if (this.formData.mainSystem) {
-                this.checkList = this.formData.mainSystem.split(',')
+                this.formData.mainSystem.split(',').map(item => {
+                    this.checkList.push(Number(item))
+                })
             }
         },
         selectGet (vId) {
@@ -328,7 +325,7 @@ export default {
         async onSubmit () {
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
-                    this.formData.mainSystem = this.checkList.toString()
+                    this.formData.mainSystem = this.checkList.join(',')
                     this.formData.attachmentsUrl = JSON.stringify(this.arrList)
                     this.formData.createUserName = this.userdata.name
                     this.formData.createUser = this.userInfo.jobNumber

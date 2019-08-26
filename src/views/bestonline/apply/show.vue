@@ -25,7 +25,7 @@
                 <label class="el-form-item__label" style="width: 150px;">主营品类：</label>
                 <div class="el-form-item__content" style="margin-left: 150px;">{{ formData.mainSystemName }}</div>
             </div>
-            <div>
+            <div v-if="checkList.indexOf('4') != -1">
                 <label class="el-form-item__label" style="width: 150px;">主营品类其他说明：</label>
                 <div class="el-form-item__content" style="margin-left: 150px;">{{ formData.mainSystemOther }}</div>
             </div>
@@ -86,6 +86,7 @@ export default {
                 organizationCode: ''
             },
             fileList: [],
+            checkList: [],
             applyId: ''
         }
     },
@@ -102,8 +103,8 @@ export default {
             this.fileList = JSON.parse(this.formData.attachmentsUrl)
             this.formData.cooperateTypeName = COOPERATE_TYPE_MAP.get(this.formData.cooperateType)
             this.formData.salesTypeName = SALES_TYPE_MAP.get(this.formData.salesType)
-            const mainSystemArr = this.formData.mainSystem.split(',')
-            this.formData.mainSystemName = mainSystemArr.map(item => CATEGORY_MAP.get(Number(item))).join(',')
+            this.checkList = this.formData.mainSystem.split(',')
+            this.formData.mainSystemName = this.checkList.map(item => CATEGORY_MAP.get(Number(item))).join(',')
         }
     }
 }
