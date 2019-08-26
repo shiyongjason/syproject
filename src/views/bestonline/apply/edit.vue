@@ -79,7 +79,9 @@
                         </el-input>
                     </div>
                 </el-form-item>
-                <el-form-item label="附件：" prop="attachmentsUrl" ref="attachmentsUrl">
+            </el-form>
+            <el-form :model="formData" :rules="formRules" ref="attachmentsUrl" label-position="right" label-width="150px">
+                <el-form-item label="附件：" prop="attachmentsUrl">
                     <div class="flex-wrap-cont">
                         <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess" :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
                             <el-button size="small" type="primary">点击上传</el-button>
@@ -238,7 +240,7 @@ export default {
             this.arrList = this.arrList && this.arrList.filter(value =>
                 value.url !== fileurl
             )
-            this.$refs['form'].validate(async (validate) => {
+            this.$refs['attachmentsUrl'].validate(async (validate) => {
             })
         },
         handleSuccess (file) {
@@ -250,6 +252,8 @@ export default {
                 this.arrList.push({ url: uploadedUrl, name: name })
                 this.$refs.form.clearValidate('attachmentsUrl')
             }
+            this.$refs['attachmentsUrl'].validate(async (validate) => {
+            })
         },
         handleExceed (files, fileList) {
             this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
@@ -325,6 +329,8 @@ export default {
             }
         },
         async onSubmit () {
+            this.$refs['attachmentsUrl'].validate(async (validate) => {
+            })
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
                     this.formData.mainSystem = this.checkList.join(',')
