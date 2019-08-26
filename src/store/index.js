@@ -3,6 +3,8 @@ import Vuex from 'vuex'
 import mutations from './mutations'
 import { findMenuList } from '../views/layout/api'
 import dueDiligence from '@/views/bestonline/store/index'
+import hmall from '@/views/hmall/store/index.js'
+import layout from '@/views/layout/store/index.js'
 
 Vue.use(Vuex)
 
@@ -14,7 +16,6 @@ const store = new Vuex.Store({
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
         'userdata': userdata ? JSON.parse(userdata) : {},
         'isSaving': false,
-        'tagsInfo': [],
         'menuList': [],
         'isCollapse': false
 
@@ -31,7 +32,9 @@ const store = new Vuex.Store({
     },
     modules: {
         // 视图的 store
-        dueDiligence
+        dueDiligence,
+        hmall,
+        layout
     }
 })
 
