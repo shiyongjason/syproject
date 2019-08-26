@@ -159,9 +159,9 @@ const routerMapping = [
                     tagName: '尽调申请',
                     isMenu: true,
                     icon: '',
-                    component: './views/bestonline/application'
+                    component: './views/bestonline/apply/index'
                 },
-                component: () => import('./views/bestonline/application')
+                component: () => import('./views/bestonline/apply/index')
             },
             {
                 path: 'review',
@@ -239,9 +239,9 @@ const routerMapping = [
                     tagName: '尽调申请详情',
                     isMenu: false,
                     icon: '',
-                    component: './views/bestonline/applyform'
+                    component: './views/bestonline/apply/applyForm'
                 },
-                component: () => import('./views/bestonline/applyform')
+                component: () => import('./views/bestonline/apply/applyForm')
             }
         ]
     }

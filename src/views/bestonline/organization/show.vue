@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <p v-show="roleType">已提交 {{form.updateTime}} {{form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
@@ -37,38 +38,38 @@
                 <div class="item-wrapper">
                     <div class="organization-form">
                         <div>
-                            <label for="">实际控制人社会风评：</label>
-                            <span>{{form.actualControllerSocialId}}</span>
+                            <label class="el-form-item__label label200">实际控制人社会风评：</label>
+                            <div class="el-form-item__content content200">{{form.actualControllerSocialId}}</div>
                         </div>
                         <div>
-                            <label for="">实际控制人对公司的掌控力：</label>
-                            <span>{{form.actualCompanyControllerId}}</span>
+                            <label class="el-form-item__label label200">实际控制人对公司的掌控力：</label>
+                            <div class="el-form-item__content content200">{{form.actualCompanyControllerId}}</div>
                         </div>
                         <div>
-                            <label for="">组织稳定性：</label>
-                            <span>{{form.organizationalStabilityId}}</span>
+                            <label class="el-form-item__label label200">组织稳定性：</label>
+                            <div class="el-form-item__content content200">{{form.organizationalStabilityId}}</div>
                         </div>
                     </div>
                     <div class="organization-form mt20">
                         <div>
-                            <label for="">组织综合评分：</label>
-                            <span>{{form.organizationScore}}</span>
+                            <label class="el-form-item__label label200">组织综合评分：</label>
+                            <div class="el-form-item__content content200">{{form.organizationScore}}</div>
                         </div>
                         <div>
-                            <label for="">实际控制人综合评分：</label>
-                            <span>{{form.actualControllerScore}}</span>
+                            <label class="el-form-item__label label200">实际控制人综合评分：</label>
+                            <div class="el-form-item__content content200">{{form.actualControllerScore}}</div>
                         </div>
                     </div>
                 </div>
                 <p class="small-title">分析报告(必填)</p>
                 <div class="item-wrapper">
                     <div>
-                        <label class="el-form-item__label" style="width: 150px;">风险揭示：</label>
-                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.riskDisclosure}}</div>
+                        <label class="el-form-item__label label150">风险揭示：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.riskDisclosure}}</div>
                     </div>
                     <div>
-                        <label class="el-form-item__label" style="width: 150px;">分析描述：</label>
-                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.analysisDescription}}</div>
+                        <label class="el-form-item__label label150">分析描述：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.analysisDescription}}</div>
                     </div>
                 </div>
             </el-collapse-item>
@@ -79,16 +80,16 @@
                 <p class="small-title">个人简介</p>
                 <div class="item-wrapper">
                     <div>
-                        <label class="el-form-item__label" style="width: 150px;">概况：</label>
-                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerOverview}}</div>
+                        <label class="el-form-item__label label150">概况：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.actualControllerOverview}}</div>
                     </div>
                     <div>
-                        <label class="el-form-item__label" style="width: 150px;">底线和禁区：</label>
-                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerBaseline}}</div>
+                        <label class="el-form-item__label label150">底线和禁区：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.actualControllerBaseline}}</div>
                     </div>
                     <div>
-                        <label class="el-form-item__label" style="width: 150px;">个人风格和喜好：</label>
-                        <div class="el-form-item__content" style="margin-left: 150px;">{{form.actualControllerHobby}}</div>
+                        <label class="el-form-item__label label150">个人风格和喜好：</label>
+                        <div class="el-form-item__content content150" style="width: 600px;">{{form.actualControllerHobby}}</div>
                     </div>
                 </div>
                 <p class="small-title">综合评估</p>
@@ -432,7 +433,7 @@ export default {
     margin-left: 150px;
     width: 224px;
 }
-.label200 {
+.content200 {
     margin-left: 200px;
     width: 224px;
 }

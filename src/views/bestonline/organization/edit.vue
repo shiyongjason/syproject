@@ -117,7 +117,6 @@ export default {
                 message: '暂存成功',
                 type: 'success'
             })
-            this.$router.go(-1)
         },
         onSubmit () {
             this.$refs.form.validate(async (valid, errors) => {
