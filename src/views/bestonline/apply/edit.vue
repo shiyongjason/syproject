@@ -79,7 +79,7 @@
                         </el-input>
                     </div>
                 </el-form-item>
-                <el-form-item label="附件：" prop="attachmentsUrl">
+                <el-form-item label="附件：" prop="attachmentsUrl" ref="attachmentsUrl">
                     <div class="flex-wrap-cont">
                         <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess" :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
                             <el-button size="small" type="primary">点击上传</el-button>
@@ -238,6 +238,8 @@ export default {
             this.arrList = this.arrList && this.arrList.filter(value =>
                 value.url !== fileurl
             )
+            this.$refs['form'].validate(async (validate) => {
+            })
         },
         handleSuccess (file) {
             if (file.code !== 200) {
