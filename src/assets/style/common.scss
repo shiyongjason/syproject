@@ -108,6 +108,60 @@
         margin-left: 10px;
     }
 }
+.query-cont-col-double {
+    position: relative;
+    margin-bottom: 20px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 24px;
+
+    // input标题
+    .query-col-title {
+        color: #000000;
+        font-size: 14px;
+    }
+
+    // 有标题input
+    .query-col-input {
+        .el-input {
+            width: 200px;
+        }
+
+        .el-select {
+            width: auto;
+        }
+
+        .el-date-editor:not(:first-child) {
+            margin-left: 10px;
+        }
+    }
+
+    // 无标题input
+    .query-col-input.noTitle {
+        .el-input {
+            width: 224px;
+        }
+
+        .el-input__inner {
+            padding-left: 40px;
+        }
+    }
+
+    // 无标题input图标
+    .icon {
+        position: absolute;
+        left: 14px;
+        top: 12px;
+        z-index: 9;
+        color: $grayLight;
+    }
+
+    .el-button {
+        margin-left: 10px;
+    }
+}
 
 .query-cont-col:not(:last-child) {
     margin-right: 24px;
@@ -195,7 +249,8 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    min-width: calc((100% - 15px) / 3);
+    min-width: calc((100% - 15px) / 4);
+    margin-bottom: 20px;
 
     p,
     span {
@@ -226,10 +281,12 @@ a.isLink {
 
 .isOrangeColor {
     color: $hosjoyColor !important;
+    cursor: pointer;
 }
 
 .isGreenColor {
     color: $greenColor !important;
+    cursor: pointer;
 }
 
 .isGrayColor {
@@ -239,6 +296,7 @@ a.isLink {
 
 .isRedColor {
     color: $redColor !important;
+    cursor: pointer;
 }
 
 /***************************    文字按钮end    ************************************************************************************************/
@@ -487,3 +545,49 @@ a.isLink {
     text-indent: 10px;
     margin-bottom: 30px;
 }
+
+/*******************  自定义table start *******************************************************************************************************/
+
+.custom-table {
+    width: calc(100% - 20px);
+    margin: 20px 10px;
+    font-weight: 400;
+    thead {
+        tr {
+            background: #f2f2f4;
+        }
+        td {
+            padding: 0 20px;
+        }
+    }
+    tbody {
+        tr {
+
+        }
+        td {
+            padding: 0 10px;
+        }
+    }
+    .el-input {
+        width: 100%;
+        .el-input__inner{
+            border: 0;
+        }
+    }
+    .el-textarea {
+        .el-textarea__inner {
+            border: 0;
+        }
+    }
+    .el-select {
+        width: 100%;
+    }
+    .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+    }
+}
+
+/*******************  自定义table end *******************************************************************************************************/

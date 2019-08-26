@@ -55,10 +55,10 @@ export default {
     },
     mounted () {
         let menu = sessionStorage.getItem('menuList')
-        if (menu) {
+        if (menu) { // 没有登录是取不到菜单的
             menu = JSON.parse(menu)
+            this.menus = this.resolveMenus(menu)
         }
-        this.menus = this.resolveMenus(menu)
     }
 }
 </script>

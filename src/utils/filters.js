@@ -39,9 +39,23 @@ const money = function (val) {
 
     return (((sign) ? '' : '-') + val + '.' + cents)
 }
+const formatDateDuration = function (time) {
+    if (!time) return '-'
+    let tempTime = ''
+    const days = Math.floor(time / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    if (days > 0) {
+        tempTime += (days + ' 天 ')
+    }
+    if (hours > 0) {
+        tempTime += (hours + ' 时')
+    }
+    return tempTime
+}
 
 export default {
     formatterTime,
     formatterDate,
+    formatDateDuration,
     money
 }
