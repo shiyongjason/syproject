@@ -47,8 +47,8 @@
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
-                            <el-form-item label="上年销售业绩：" prop="salesPerformanceLastYear">
-                                <el-input v-model="form.salesPerformanceLastYear">
+                            <el-form-item label="上年销售业绩：">
+                                <el-input v-model="form.salesPerformanceLastYear" disabled>
                                     <template slot="suffix">万</template>
                                 </el-input>
                             </el-form-item>
@@ -110,7 +110,7 @@ export default {
     },
     data () {
         return {
-            activeName: '9',
+            activeName: '0',
             options: DOWN_OPTIONS,
             rules: {
                 wholesaleShare: [
@@ -122,9 +122,9 @@ export default {
                 projectShare: [
                     { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
                 ],
-                salesPerformanceLastYear: [
-                    { required: true, message: '请输入上年销售业绩', trigger: 'blur' }
-                ],
+                // salesPerformanceLastYear: [
+                //     { required: true, message: '请输入上年销售业绩', trigger: 'blur' }
+                // ],
                 riskDisclosure: [
                     { required: true, message: '请输入风险揭示', trigger: 'blur' }
                 ],
@@ -167,10 +167,10 @@ export default {
                 switchDate: [
                     { type: 'date', required: false, message: '请选择日期', trigger: 'blur' }
                 ],
-                'dueBusinessFuturePlanCreateForm.serviceCategory': [
+                'dueBusinessFuturePlanCreateForm.webServiceCategory': [
                     { type: 'array', required: true, message: '请至少选择一个业务类别', trigger: 'change' }
                 ],
-                'dueBusinessFuturePlanCreateForm.businessCategory': [
+                'dueBusinessFuturePlanCreateForm.webBusinessCategory': [
                     { type: 'array', required: true, message: '请至少选择一个经营品类', trigger: 'change' }
                 ],
                 'dueBusinessFuturePlanCreateForm.manageCategory': [
@@ -224,13 +224,12 @@ export default {
         }),
         async onSaveBus () {
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
+            this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
             this.form.operationNode = 0
             this.form.createUser = createUser
             if (this.form.dueBusinessId) {
-                console.log(12)
                 await putBusiness(this.form)
             } else {
                 await addBusiness(this.form)
@@ -244,8 +243,8 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.businessCategory && this.form.dueBusinessFuturePlanCreateForm.businessCategory.join(',')
-                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.serviceCategory && this.form.dueBusinessFuturePlanCreateForm.serviceCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
+                    this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
@@ -262,11 +261,6 @@ export default {
                     }
                     this.$message.success('提交成功')
                     this.findBusinessData({ applyId: this.$route.query.applyId })
-                } else {
-                    this.$message({
-                        type: 'warning',
-                        message: '有必填项未填写，请重新检查！'
-                    })
                 }
             })
         }

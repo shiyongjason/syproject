@@ -3,22 +3,22 @@
         <template slot="title">
             <p class="title-p">新合资公司规划</p>
         </template>
-        <el-form-item label="业务类别：" prop="serviceCategory">
-            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.serviceCategory" label-width="170px">
+        <el-form-item label="业务类别：" prop="dueBusinessFuturePlanCreateForm.webServiceCategory">
+            <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.webServiceCategory" label-width="170px">
                 <el-checkbox v-for="item in mainCommercialData" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
             </el-checkbox-group>
         </el-form-item>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
-                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.businessCategory" label-width="170px">
-                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.businessCategory" @change="onChange">
+                <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.webBusinessCategory" label-width="170px">
+                    <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.webBusinessCategory" @change="onChange">
                         <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </div>
-            <div class="form-cont-col" v-if="maxShow==7">
-                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.manageCategory" label-width=0>
-                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.manageCategory" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+            <div class="form-cont-col" v-if="maxShow==7||form.dueBusinessFuturePlanCreateForm.otherPlansNeeds">
+                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.otherPlansNeeds" label-width=0>
+                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                 </el-form-item>
             </div>
         </div>
@@ -102,20 +102,18 @@ export default {
     },
     watch: {
         form (form) {
-            let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
-
-            if (!serviceCategory) {
-                serviceCategory = ''
+            let webServiceCategory = form.dueBusinessFuturePlanCreateForm.webServiceCategory
+            if (!webServiceCategory) {
+                webServiceCategory = ''
             }
-            serviceCategory = serviceCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
-
-            let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
-            if (!businessCategory) {
-                businessCategory = ''
+            webServiceCategory = webServiceCategory.split(',')
+            form.dueBusinessFuturePlanCreateForm.webServiceCategory = webServiceCategory.map(item => item && parseInt(item))
+            let webBusinessCategory = form.dueBusinessFuturePlanCreateForm.webBusinessCategory
+            if (!webBusinessCategory) {
+                webBusinessCategory = ''
             }
-            businessCategory = businessCategory.split(',')
-            form.dueBusinessFuturePlanCreateForm.businessCategory = businessCategory.map(item => item && parseInt(item))
+            webBusinessCategory = webBusinessCategory.split(',')
+            form.dueBusinessFuturePlanCreateForm.webBusinessCategory = webBusinessCategory.map(item => item && parseInt(item))
         },
         'form.dueBusinessFuturePlanCreateForm.businessProvince': {
             handler (val) {
@@ -168,6 +166,7 @@ export default {
 
         },
         onChange (val) {
+            console.log(val)
             this.maxShow = val && val.sort().reverse()[0]
         }
     }

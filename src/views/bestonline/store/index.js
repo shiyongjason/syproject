@@ -93,6 +93,8 @@ export default {
         },
         async findBusinessData ({ commit }, params) {
             const { data } = await axios.get(`develop/business/${params.applyId}`)
+            data.data.dueBusinessFuturePlanCreateForm.webServiceCategory = data.data.dueBusinessFuturePlanCreateForm.serviceCategory
+            data.data.dueBusinessFuturePlanCreateForm.webBusinessCategory = data.data.dueBusinessFuturePlanCreateForm.businessCategory
             commit(BUSINESS_DATA, data)
         },
         async findFinanceData ({ commit }, params) {

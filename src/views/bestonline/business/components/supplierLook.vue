@@ -31,6 +31,7 @@
             <div class="form-cont-col">
                 <el-form-item label="合同开始时间：">
                     <el-date-picker type="date" placeholder="选择日期" v-model="item.contractStartDate" :editable="false" value-format="yyyy-MM-dd"></el-date-picker>
+                    {{item.contractStartDate|formatDate}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
