@@ -23,7 +23,7 @@
             </div>
             <div>
                 <label class="el-form-item__label" style="width: 150px;">主营品类：</label>
-                <div class="el-form-item__content" style="margin-left: 150px;">{{ formData.mainSystem }}</div>
+                <div class="el-form-item__content" style="margin-left: 150px;">{{ formData.mainSystemName }}</div>
             </div>
             <div>
                 <label class="el-form-item__label" style="width: 150px;">主营品类其他说明：</label>
@@ -60,7 +60,7 @@
 </template>
 <script>
 import { getDueapplydetail } from '../api/index'
-import { COOPERATE_TYPE_MAP, CATEGORY_MAP, SALES_TYPE_MAP } from './const.js'
+import { COOPERATE_TYPE_MAP, SALES_TYPE_MAP, CATEGORY_MAP } from './const.js'
 export default {
     name: 'applyShow',
     data () {
@@ -73,6 +73,7 @@ export default {
                 mainBusinessName: '',
                 mainBusinessId: '',
                 mainSystem: '',
+                mainSystemName: '',
                 mainSystemOther: '',
                 brand: '',
                 salesType: '',
@@ -102,7 +103,7 @@ export default {
             this.formData.cooperateTypeName = COOPERATE_TYPE_MAP.get(this.formData.cooperateType)
             this.formData.salesTypeName = SALES_TYPE_MAP.get(this.formData.salesType)
             const mainSystemArr = this.formData.mainSystem.split(',')
-            this.formData.mainSystemName = mainSystemArr.map(item => CATEGORY_MAP.get(item)).join(',')
+            this.formData.mainSystemName = mainSystemArr.map(item => CATEGORY_MAP.get(Number(item))).join(',')
         }
     }
 }
