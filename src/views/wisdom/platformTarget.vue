@@ -134,7 +134,7 @@
                             auto-upload
                         >
                             <el-button
-                                type="primary"
+                                type="info"
                                 class="ml20"
                             >
                                 批量导入

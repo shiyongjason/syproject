@@ -115,14 +115,14 @@ export default {
             formData: {
                 targetPartner: '',
                 companyName: '',
-                cooperateType: '',
+                cooperateType: Number,
                 newCooperateContent: '',
                 mainBusinessName: '',
                 mainBusinessId: '',
                 mainSystem: '',
                 mainSystemOther: '',
                 brand: '',
-                salesType: '',
+                salesType: Number,
                 cooperateTarget: '',
                 signScale: '',
                 remark: '',
@@ -305,6 +305,7 @@ export default {
         },
         async onSave () {
             this.$refs['form'].clearValidate()
+            this.$refs['attachmentsUrl'].clearValidate()
             this.formData.mainSystem = this.checkList.join(',')
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
             this.formData.organizationCode = this.userdata.organizationCode
@@ -329,6 +330,7 @@ export default {
             }
         },
         async onSubmit () {
+            console.log(this.formData)
             this.$refs['attachmentsUrl'].validate(async (validate) => {
             })
             this.$refs['form'].validate(async (validate) => {

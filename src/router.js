@@ -448,6 +448,7 @@ function makeMenus (Route, Data) {
 async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
+    sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
 }
@@ -466,6 +467,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             if (isFirst) {
                 isFirst = false
+
                 await getMenu(to, next)
             }
         }
