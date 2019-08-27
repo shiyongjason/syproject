@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { findList, addList, updateList, deleteList } from './api/index'
+import { findpostList, addpostList, updatepostList, deletepostList } from './api/index'
 import { mapState } from 'vuex'
 
 export default {
@@ -138,7 +138,7 @@ export default {
         },
         // 查询岗位信息列表
         async findList () {
-            const { data } = await findList(this.positionName)
+            const { data } = await findpostList(this.positionName)
             this.postList = data
             this.postList.map(value => {
                 value.updateTime = this.datetimeFormat(value.updateTime)
@@ -161,7 +161,7 @@ export default {
                         positionName: this.ruleForm.addpositionName,
                         positionCode: this.ruleForm.addpositionCode
                     }
-                    await addList(formData)
+                    await addpostList(formData)
                     this.findList()
                     this.adddialogVisible = false
                     this.ruleForm.addpositionName = ''
@@ -186,7 +186,7 @@ export default {
                         positionName: this.ruleForm.updatepositionName,
                         updateUid: this.userInfo.jobNumber
                     }
-                    await updateList(formData)
+                    await updatepostList(formData)
                     this.updatedialogVisible = false
                     this.findList()
                 }
@@ -198,7 +198,7 @@ export default {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
-                await deleteList(val.id)
+                await deletepostList(val.id)
                 this.findList()
             }).catch(() => {
                 // 取消删除
