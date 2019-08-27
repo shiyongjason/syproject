@@ -199,8 +199,8 @@ const routerMapping = [
                 path: 'piecevote',
                 name: 'piecevote',
                 meta: {
-                    title: '一项否决',
-                    tagName: '一项否决',
+                    title: '一项否决配置',
+                    tagName: '一项否决配置',
                     isMenu: true,
                     icon: '',
                     component: './views/bestonline/piecevote'
