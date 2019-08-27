@@ -281,26 +281,23 @@ export default {
             }
             this.dialogVisible = false
         },
-        SureToDelete (val) {
+        async onDelete (id) {
             this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                this.deleteDue(val)
-            }).catch(() => { })
-        },
-        async onDelete (id) {
-            await deleteoneticketveto(id)
-            this.getoneticketveto()
-            this.$message({
-                showClose: true,
-                message: '删除成功',
-                type: 'success',
-                onClose: () => {
+            }).then(async () => {
+                await deleteoneticketveto(id)
+                this.getoneticketveto()
+                this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success',
+                    onClose: () => {
 
-                }
-            })
+                    }
+                })
+            }).catch(() => { })
         },
         async onUpdate (row) {
             this.isdisabled = true
