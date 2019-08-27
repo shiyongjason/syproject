@@ -4,7 +4,7 @@
             <div class="table-cont-title">
                 <span class="table-title-name">一项否决</span>
                 <el-button type="info" @click="newDueFrom">
-                    新增一项否决
+                    新增一项否决项
                 </el-button>
             </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isShowIndex='true'>

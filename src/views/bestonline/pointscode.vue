@@ -1,9 +1,10 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="table-cont-btn">
-                <el-button type="primary" @click="newDueFrom">
-                    新增评分规则
+            <div class="table-cont-title">
+                <span class="table-title-name">评分规则</span>
+                <el-button type="info" @click="newDueFrom">
+                    新增评分规则项
                 </el-button>
             </div>
             <table class="table-example" style="width: 100%">
@@ -20,7 +21,7 @@
                 <tbody>
                     <template v-for="(item,pindex) in testList">
                         <!--  eslint-disable -->
-                        <tr v-for="(seconditem,index) in item.dueScoreRuleVoList">
+                        <tr v-for="(seconditem,index) in item.dueScoreRuleVoList" :key="index">
                             <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length"> {{pindex+1}}
                             </td>
                             <td v-if="index == 0" :rowspan=" item.dueScoreRuleVoList.length">{{item.classifyName}}</td>

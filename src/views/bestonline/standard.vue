@@ -1,9 +1,10 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="table-cont-btn">
-                <el-button type="primary" @click="newDueFrom">
-                    新增标准分数配置
+            <div class="table-cont-title">
+                <span class="table-title-name">标准评分</span>
+                <el-button type="info" @click="newDueFrom">
+                    新增标准分数项
                 </el-button>
             </div>
             <div style="margin-left: 20px" v-if="testList.length<1"><i class="el-icon-warning"></i>请先配置标准分数，若未配置，则默认标准分数为-。</div>
