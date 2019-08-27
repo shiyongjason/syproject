@@ -289,20 +289,16 @@ export default {
             // } else {
 
             // }
-            if (!this.dingCode) {
-                this.$message({ message: '请输入钉钉ID', type: 'warning' })
-                console.log(this.positionCodeList)
-            } else {
-                const params = {
-                    employeeAuthLists: this.tableList,
-                    jobNumber: this.jobNumber,
-                    dingCode: this.dingCode,
-                    positionCodeList: this.positionCodeList
-                }
-                await saveAuthRole(params)
-                this.$message({ message: '权限保存成功', type: 'success' })
-                this.$router.push({ path: '/auth/organization' })
+
+            const params = {
+                employeeAuthLists: this.tableList,
+                jobNumber: this.jobNumber,
+                dingCode: this.dingCode,
+                positionCodeList: this.positionCodeList
             }
+            await saveAuthRole(params)
+            this.$message({ message: '权限保存成功', type: 'success' })
+            this.$router.push({ path: '/auth/organization' })
         },
         onCancelRole () {
             if (JSON.stringify(this.newTableList) != JSON.stringify(this.tableList)) {
