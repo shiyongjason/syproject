@@ -27,12 +27,14 @@
             <el-dialog title='新增岗位' :visible.sync="adddialogVisible" width="500px" height="400px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
                     <el-form-item label="岗位名称：" prop="addpositionName">
-                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.addpositionName" maxlength="25">
+                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.addpositionName" maxlength="40">
                         </el-input>
+                        <p v-if="count" class="message">岗位名称已存在</p>
                     </el-form-item>
                     <el-form-item label="岗位code：" prop="addpositionCode">
-                        <el-input placeholder="请输入岗位code" v-model="ruleForm.addpositionCode" maxlength="25">
+                        <el-input placeholder="请输入岗位code" v-model="ruleForm.addpositionCode" maxlength="40">
                         </el-input>
+                        <p v-if="count" class="message">岗位code已存在</p>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -44,11 +46,11 @@
             <el-dialog title="修改岗位" :visible.sync="updatedialogVisible" width="500px" center>
                 <el-form ref="form" :model="ruleForm" :rules="rules" label-position="right" label-width="150px">
                     <el-form-item label="岗位名称：" prop="updatepositionName">
-                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.updatepositionName" maxlength="25">
+                        <el-input placeholder="请输入岗位名称" v-model="ruleForm.updatepositionName" maxlength="40">
                         </el-input>
                     </el-form-item>
                     <el-form-item label="岗位code：" prop="updatepositionCode">
-                        <el-input placeholder="请输入岗位code" v-model="ruleForm.updatepositionCode" maxlength="25">
+                        <el-input placeholder="请输入岗位code" v-model="ruleForm.updatepositionCode" maxlength="40">
                         </el-input>
                     </el-form-item>
                 </el-form>
@@ -62,13 +64,14 @@
 </template>
 
 <script>
-import { findList, addList, updateList, deleteList } from './api/index'
+import { findpostList, addpostList, updatepostList, deletepostList } from './api/index'
 import { mapState } from 'vuex'
 
 export default {
     name: 'postset',
     data () {
         return {
+            count: 0,
             tableLabel: [
                 { label: '岗位名称', prop: 'positionName' },
                 { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
@@ -138,8 +141,9 @@ export default {
         },
         // 查询岗位信息列表
         async findList () {
-            const { data } = await findList(this.positionName)
+            const { data } = await findpostList(this.positionName)
             this.postList = data
+            console.log(this.postList)
             this.postList.map(value => {
                 value.updateTime = this.datetimeFormat(value.updateTime)
             })
@@ -151,21 +155,32 @@ export default {
         // 新增岗位信息
         onadd () {
             this.adddialogVisible = true
-            this.$refs['form'].clearValidate()
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
+            this.count = 0
         },
         async addsave () {
             this.$refs['form'].validate(async (validate) => {
                 if (validate) {
-                    const formData = {
-                        createUid: this.userInfo.jobNumber,
-                        positionName: this.ruleForm.addpositionName,
-                        positionCode: this.ruleForm.addpositionCode
+                    await this.postList.map(value => {
+                        if (value.positionName === this.ruleForm.addpositionName && value.positionCode === this.ruleForm.addpositionCode) {
+                            this.count = 1
+                        }
+                    })
+                    if (!this.count) {
+                        const formData = {
+                            createUid: this.userInfo.jobNumber,
+                            positionName: this.ruleForm.addpositionName,
+                            positionCode: this.ruleForm.addpositionCode
+                        }
+                        await addpostList(formData)
+                        this.findList()
+                        this.adddialogVisible = false
+                        this.ruleForm.addpositionName = ''
+                        this.ruleForm.addpositionCode = ''
+                    } else {
                     }
-                    await addList(formData)
-                    this.findList()
-                    this.adddialogVisible = false
-                    this.ruleForm.addpositionName = ''
-                    this.ruleForm.addpositionCode = ''
                 }
             })
         },
@@ -176,6 +191,7 @@ export default {
             this.id = val.id
             this.updatedialogVisible = true
             this.$refs['form'].clearValidate()
+            this.count = 0
         },
         async updatesave () {
             this.$refs['form'].validate(async (validate) => {
@@ -186,7 +202,7 @@ export default {
                         positionName: this.ruleForm.updatepositionName,
                         updateUid: this.userInfo.jobNumber
                     }
-                    await updateList(formData)
+                    await updatepostList(formData)
                     this.updatedialogVisible = false
                     this.findList()
                 }
@@ -198,7 +214,7 @@ export default {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
-                await deleteList(val.id)
+                await deletepostList(val.id)
                 this.findList()
             }).catch(() => {
                 // 取消删除
@@ -251,5 +267,14 @@ img {
     margin-left: 5px;
     font-size: 12px;
     color: $grayColor;
+}
+.message{
+    color: #F56C6C;
+    font-size: 12px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
 }
 </style>

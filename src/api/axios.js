@@ -12,7 +12,9 @@ import store from '@/store/index'
 
 // 配置全局axios请求前缀
 axios.defaults.baseURL = interfaceUrl
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
+const configUrl = [
+    { method: 'get', url: 'api/login/bossLogin' }
+]
 // 配置request过滤器
 axios.interceptors.request.use(function (config) {
     const token = sessionStorage.getItem('token')
@@ -26,6 +28,13 @@ axios.interceptors.request.use(function (config) {
 
 // 配置response过滤器
 axios.interceptors.response.use(function (response) {
+    //  TODO 处理 老boss用户不存在不提示错误直接进入首页
+    const config = response.config
+    const oldOss = configUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+    if (oldOss.length > 0) {
+        store.commit('LOAD_STATE', false)
+        return response
+    }
     // TODO status==200 异常处理 200 || '200'
     if (response.data.code && response.data.code != 200) {
         Message({ message: response.data.msg || response.data.message, type: 'error' })

@@ -107,8 +107,10 @@ export default {
                         user_agent: navigator.userAgent
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                    sessionStorage.setItem('user_data', JSON.stringify(userData.data))
-                    this.sendMessage(userData)
+                    if (userData.code != 400) {
+                        sessionStorage.setItem('user_data', JSON.stringify(userData.data))
+                        this.sendMessage(userData)
+                    }
                     // await this.findMenuList()
                     await this.next()
                     // this.$router.push('/')

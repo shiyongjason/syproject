@@ -16,13 +16,13 @@ export const findBOSSOrganization = () => axios.get('/uaa/api/department/getDepa
 export const findOrganizationEmployee = (params) => axios.post('/uaa/api/employee/queryListByDeptCode', params)
 
 // 查询岗位信息
-export const findList = (params) => axios.get(`/uaa/position/list?positionName=${params}`, params)
+export const findpostList = (params) => axios.get(`/uaa/position/list?positionName=${params}`, params)
 
 // 增加岗位信息
-export const addList = (params) => axios.post('/uaa/position', params)
+export const addpostList = (params) => axios.post('/uaa/position', params)
 
 // 更新岗位信息
-export const updateList = (params) => axios.put('/uaa/position', params)
+export const updatepostList = (params) => axios.put('/uaa/position', params)
 
 // 删除岗位信息
-export const deleteList = (params) => axios.delete(`/uaa/position/${params}`, params)
+export const deletepostList = (params) => axios.delete(`/uaa/position/${params}`, params)

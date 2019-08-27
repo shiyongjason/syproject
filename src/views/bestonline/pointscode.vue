@@ -258,17 +258,19 @@ export default {
                     return (/^\d+(\.\d+)?$/).test(item.indicatorVal)
                 }
             })
-            if (!RegResult) {
-                this.$message({
-                    showClose: true,
-                    message: `指标值输入应为${errType}`,
-                    type: 'warning'
-                })
-                return
-            }
             let verifyResult = formData.dueScoreRuleCreateFormList.every((value, index) => {
                 return value.indicatorType && value.indicatorVal && value.score
             })
+            if (verifyResult) {
+                if (!RegResult) {
+                    this.$message({
+                        showClose: true,
+                        message: `指标值输入应为${errType}`,
+                        type: 'warning'
+                    })
+                    return
+                }
+            }
             if (!verifyResult) {
                 this.$message({
                     showClose: true,

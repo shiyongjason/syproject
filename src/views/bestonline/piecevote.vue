@@ -221,10 +221,18 @@ export default {
                 })
                 return false
             }
-            if (!this.dueForm.indicatorType || !this.dueForm.indicatorVal || !this.dueForm.proposedPlan) {
+            if (!this.dueForm.indicatorType || !this.dueForm.indicatorVal) {
                 this.$message({
                     showClose: true,
-                    message: '请填写指标值及建议方案',
+                    message: '请填写指标值',
+                    type: 'warning'
+                })
+                return false
+            }
+            if (!this.dueForm.proposedPlan) {
+                this.$message({
+                    showClose: true,
+                    message: '请填写建议方案',
                     type: 'warning'
                 })
                 return false
@@ -273,26 +281,23 @@ export default {
             }
             this.dialogVisible = false
         },
-        SureToDelete (val) {
+        async onDelete (id) {
             this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                this.deleteDue(val)
-            }).catch(() => { })
-        },
-        async onDelete (id) {
-            await deleteoneticketveto(id)
-            this.getoneticketveto()
-            this.$message({
-                showClose: true,
-                message: '删除成功',
-                type: 'success',
-                onClose: () => {
+            }).then(async () => {
+                await deleteoneticketveto(id)
+                this.getoneticketveto()
+                this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success',
+                    onClose: () => {
 
-                }
-            })
+                    }
+                })
+            }).catch(() => { })
         },
         async onUpdate (row) {
             this.isdisabled = true
