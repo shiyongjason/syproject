@@ -10,19 +10,19 @@
             <div style="margin-left: 20px" v-if="testList.length<1"><i class="el-icon-warning"></i>请先配置标准分数，若未配置，则默认标准分数为-。</div>
             <div style="margin-left: 20px" v-if="platformLevel"><i class="el-icon-warning"></i>请先配置总分区间，若未配置，则默认平台等级、辅导期、注资方式皆为-。</div>
             <div class="page-box ">
-                <table class="table-example">
+                <table class="table-example el-table el-table--border">
                     <thead>
                         <tr class="tableTitle">
-                            <td width="180">序号</td>
-                            <td width="180">分类</td>
-                            <td width="180">指标</td>
-                            <td width="180">指标值</td>
-                            <td width="180">标准分数</td>
-                            <td width="180">分数区间</td>
-                            <td width="180">平台等级</td>
-                            <td width="180">辅导期</td>
-                            <td width="180">注资方式</td>
-                            <td width="180">操作</td>
+                            <th width="80" class="is-leaf">序号</th>
+                            <th width="180" class="is-leaf">分类</th>
+                            <th width="180" class="is-leaf">指标</th>
+                            <th width="180" class="is-leaf">指标值</th>
+                            <th width="180" class="is-leaf">标准分数</th>
+                            <th width="180" class="is-leaf">分数区间</th>
+                            <th width="180" class="is-leaf">平台等级</th>
+                            <th width="180" class="is-leaf">辅导期</th>
+                            <th width="180" class="is-leaf">注资方式</th>
+                            <th width="200" class="is-leaf">操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -521,13 +521,16 @@ export default {
 table {
     border-collapse: collapse;
     td {
-        border: 1px solid #dddddd !important;
         text-align: center;
-        line-height: 40px;
-        position: relative;
     }
 }
-
+.el-table th {
+    color: #000000;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    background: #f2f2f4;
+}
 .el-select {
     width: 100%;
 }

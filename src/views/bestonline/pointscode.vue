@@ -7,15 +7,15 @@
                     新增评分规则项
                 </el-button>
             </div>
-            <table class="table-example" style="width: 100%">
+            <table class="el-table el-table--border" style="width: 100%">
                 <thead>
-                    <tr class="tableTitle">
-                        <td width="180">序号</td>
-                        <td width="180">分类</td>
-                        <td width="180">指标</td>
-                        <td width="180">指标值</td>
-                        <td width="180">分数</td>
-                        <td width="180">操作</td>
+                    <tr>
+                        <th width="80" class="is-leaf">序号</th>
+                        <th width="180" class="is-leaf">分类</th>
+                        <th width="180" class="is-leaf">指标</th>
+                        <th width="180" class="is-leaf">指标值</th>
+                        <th width="180" class="is-leaf">分数</th>
+                        <th width="200" class="is-leaf">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -370,11 +370,15 @@ export default {
 table {
     border-collapse: collapse;
     td {
-        border: 1px solid #dddddd !important;
         text-align: center;
-        line-height: 40px;
-        position: relative;
     }
+}
+.el-table th {
+    color: #000000;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: center;
+    background: #f2f2f4;
 }
 .line {
     margin: 0 15px;
