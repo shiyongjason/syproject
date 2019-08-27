@@ -366,7 +366,7 @@ export default {
     }
 }
 </script>
-<style lang="scss" scope>
+<style lang="scss" scoped>
 table {
     border-collapse: collapse;
     td {
