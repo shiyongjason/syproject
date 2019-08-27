@@ -13,6 +13,19 @@
                     <div class="flex-row">登录名：{{roleInfo.mobile}}</div>
                     <div class="flex-row">所属部门：{{roleInfo.deptName}}</div>
                 </div>
+                <div class="flex-col">
+                    <div class="flex-row">钉钉ID：
+                        <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
+                    </div>
+                    <div class="flex-row">岗位：
+                        <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 400px;">
+                            <el-option v-for="item in postOptions"
+                                :key="item.id"
+                                :label="item.positionName"
+                                :value="item.positionCode"></el-option>
+                        </el-select>
+                    </div>
+                </div>
             </div>
             <div class="h-page-title">
                 权限管理
@@ -130,7 +143,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findList } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -152,7 +165,10 @@ export default {
                 psncode: '',
                 psnname: ''
             },
-            jobNumber: ''
+            jobNumber: '',
+            postOptions: [],
+            positionCodeList: [],
+            dingCode: ''
         }
     },
     computed: {
@@ -169,6 +185,8 @@ export default {
         this.newTableList = JSON.parse(JSON.stringify(data))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
+        const { data: postOptions } = await findList('')
+        this.postOptions = postOptions
     },
     methods: {
         restArr (data) {
@@ -268,7 +286,12 @@ export default {
             // } else {
 
             // }
-            const params = { employeeAuthLists: this.tableList, jobNumber: this.jobNumber }
+            const params = {
+                employeeAuthLists: this.tableList,
+                jobNumber: this.jobNumber,
+                dingCode: this.dingCode,
+                positionCodeList: this.positionCodeList
+            }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
             this.$router.push({ path: '/auth/organization' })
@@ -347,7 +370,7 @@ export default {
     padding-left: 10px;
 }
 .h-page-flex {
-    height: 120px;
+    height: 180px;
     padding: 0 10px;
     .flex-col {
         height: 45px;

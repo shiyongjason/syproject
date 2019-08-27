@@ -13,8 +13,8 @@ export const CATEGORY_MAP = new Map([
 ])
 // 销售形势
 export const SALES_TYPE_MAP = new Map([
-    [1, '线上'],
-    [2, '线下']
+    [0, '线上'],
+    [1, '线下']
 ])
 // 主营业务可选项
 export const BUSINESS_MAP = new Map([
