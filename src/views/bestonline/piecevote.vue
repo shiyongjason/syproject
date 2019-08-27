@@ -221,10 +221,18 @@ export default {
                 })
                 return false
             }
-            if (!this.dueForm.indicatorType || !this.dueForm.indicatorVal || !this.dueForm.proposedPlan) {
+            if (!this.dueForm.indicatorType || !this.dueForm.indicatorVal) {
                 this.$message({
                     showClose: true,
-                    message: '请填写指标值及建议方案',
+                    message: '请填写指标值',
+                    type: 'warning'
+                })
+                return false
+            }
+            if (!this.dueForm.proposedPlan) {
+                this.$message({
+                    showClose: true,
+                    message: '请填写建议方案',
                     type: 'warning'
                 })
                 return false
