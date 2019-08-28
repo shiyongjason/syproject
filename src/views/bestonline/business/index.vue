@@ -25,6 +25,9 @@ export default {
     },
     mounted () {
         this.findBusinessData({ applyId: this.$route.query.applyId })
+        if (this.$route.query.status != 0) {
+            this.canEdit = false
+        }
     }
 }
 </script>

@@ -13,14 +13,6 @@
                     <LegalInfo :type="index" @add-event="onAddList" />
                 </el-collapse-item>
             </el-collapse>
-            <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
-                <el-col :span="2" :offset="8">
-                    <el-button type="info" @click="saveJusticeData(true)">暂存</el-button>
-                </el-col>
-                <el-col :span="2" :offset="1">
-                    <el-button type="primary" @click="saveJusticeData(false)">提交</el-button>
-                </el-col>
-            </div>
         </el-form>
     </div>
 </template>

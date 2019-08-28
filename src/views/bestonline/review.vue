@@ -34,7 +34,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onCommit(scope.data.row)">提交审核</el-button>
-                    <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row.applyId)">查看</el-button>
+                    <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
                 </template>
             </basicTable>
         </div>
@@ -134,10 +134,10 @@ export default {
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName } })
         },
-        onCheck (applyId) {
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: applyId } })
+        onCheck (row) {
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName } })
         },
         async onCommit (row) {
             if (row.signScale == 0) {

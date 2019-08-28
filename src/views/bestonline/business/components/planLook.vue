@@ -16,8 +16,8 @@
                     </el-checkbox-group>
                 </el-form-item>
             </div>
-            <div class="form-cont-col" v-if="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds">
-                <el-form-item label="" label-width=0>
+            <div class="form-cont-col ml10 otherCategory" v-if="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds">
+                <el-form-item label="" label-width="20px">
                     {{form.dueBusinessFuturePlanCreateForm.otherPlansNeeds}}
                 </el-form-item>
             </div>
@@ -140,3 +140,8 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+/deep/ .el-form-item__content {
+    height: 40px;
+}
+</style>
