@@ -1,9 +1,10 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="table-cont-btn">
-                <el-button type="primary" @click="newDueFrom">
-                    新增一票否决
+            <div class="table-cont-title">
+                <span class="table-title-name">一项否决</span>
+                <el-button type="info" @click="newDueFrom">
+                    新增一项否决项
                 </el-button>
             </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isShowIndex='true'>
@@ -328,7 +329,6 @@ export default {
         async judgeTextOrPullDown (classifyId) {
             const { data } = await getDueconfig({ classifyId })
             if (data.data.pageContent.length === 1) {
-                console.log(data)
                 this.type = +data.data.pageContent[0].type
                 this.unit = data.data.pageContent[0].unit
                 if (this.type === 1) {
@@ -341,6 +341,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.table-cont-title {
+    margin-bottom: 10px
+}
 .due-wrap {
     .flex-wrap-cont {
         width: 433px !important;

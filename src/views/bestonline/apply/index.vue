@@ -30,8 +30,9 @@
 
         </div>
         <div class="page-body-cont">
-            <div class="table-cont-btn">
-                <el-button type="primary" class="addbutton" @click="addNewApply">
+            <div class="table-cont-title">
+                <span class="table-title-name"></span>
+                <el-button type="info" @click="addNewApply">
                     添加申请
                 </el-button>
             </div>

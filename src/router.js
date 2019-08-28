@@ -199,8 +199,8 @@ const routerMapping = [
                 path: 'piecevote',
                 name: 'piecevote',
                 meta: {
-                    title: '一项否决',
-                    tagName: '一项否决',
+                    title: '一项否决配置',
+                    tagName: '一项否决配置',
                     isMenu: true,
                     icon: '',
                     component: './views/bestonline/piecevote'
@@ -448,6 +448,7 @@ function makeMenus (Route, Data) {
 async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
+    sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
 }
@@ -466,6 +467,7 @@ router.beforeEach(async (to, from, next) => {
         } else {
             if (isFirst) {
                 isFirst = false
+
                 await getMenu(to, next)
             }
         }

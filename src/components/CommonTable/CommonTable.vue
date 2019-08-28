@@ -185,8 +185,7 @@ export default {
 <style lang="scss" scoped>
 .el-pagination {
     margin: 20px auto;
-    // float: right;
-    // text-align: center;
+    float: right;
     text-align: center;
 }
 /deep/ .el-pagination__editor.el-input {

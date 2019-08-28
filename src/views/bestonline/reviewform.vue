@@ -141,7 +141,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .jd-manage {
     margin-bottom: 200px;
     .title-p {
