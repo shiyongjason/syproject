@@ -145,14 +145,14 @@ export default {
     .index {
         overflow: hidden;
         .tree {
-            width: 316px;
+            width: 220px;
             padding-right: 24px;
             float: left;
 
         }
         .table{
             /*width: 810px;*/
-            margin-left: 340px;
+            margin-left: 244px;
             padding-left: 24px;
             box-sizing: border-box;
             border-left: 1px solid #E5E5EA;
