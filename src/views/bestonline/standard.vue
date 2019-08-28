@@ -73,7 +73,7 @@
                             <template slot="suffix" v-if="unit">{{unit}}</template>
                         </el-input>
                         <span class="line" :span="1">-</span>
-                        <el-select v-model="item.indicatorVal" placeholder="请选择" clearable>
+                        <el-select v-model="item.scoresType" placeholder="请选择" clearable>
                             <el-option v-for="item in selectList" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                             </el-option>
                         </el-select>
@@ -307,7 +307,7 @@ export default {
                 if (!this.dueStandardScoreCreateFormList[i].indicatorType || !this.dueStandardScoreCreateFormList[i].indicatorVal || !this.dueStandardScoreCreateFormList[i].standardScore) {
                     this.$message({
                         showClose: true,
-                        message: '请输入/选择指标值',
+                        message: '请选择/输入标准分数',
                         type: 'warning'
                     })
                     return false
