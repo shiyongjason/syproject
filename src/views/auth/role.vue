@@ -18,7 +18,7 @@
                         <el-input v-model="dingCode" maxlength="40" placeholder="请输入钉钉ID" style="width: 224px;"></el-input>
                     </div>
                     <div class="flex-row">岗位：
-                        <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 400px;">
+                        <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
                             <el-option v-for="item in postOptions"
                                 :key="item.id"
                                 :label="item.positionName"
@@ -374,10 +374,10 @@ export default {
     padding-left: 10px;
 }
 .h-page-flex {
-    height: 180px;
-    padding: 0 10px;
+    min-height: 180px;
+    padding: 0 10px 10px;
     .flex-col {
-        height: 45px;
+        min-height: 45px;
         align-items: center;
         display: flex;
         .flex-row {
