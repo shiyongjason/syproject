@@ -280,18 +280,12 @@ export default {
             })
         },
         async  onSaveRole () {
-            // const isHave = this.tableList && this.tableList.filter(item => item.have == true).length > 0
-            // if (!isHave) {
-            //     this.$message({ message: '请先设置权限', type: 'warning' })
-            // } else {
-
-            // }
-
             const params = {
                 employeeAuthLists: this.tableList,
                 jobNumber: this.jobNumber,
                 dingCode: this.dingCode,
-                positionCodeList: this.positionCodeList
+                positionCodeList: this.positionCodeList,
+                userCode: this.jobNumber
             }
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
