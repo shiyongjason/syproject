@@ -44,13 +44,13 @@ axios.interceptors.response.use(function (response) {
     return response
 }, function (error) {
     // TODO: 后面还是按照后台返回401解决 error.response.status === 401
-    // if (error.config.url.indexOf('/uaa/api/') > -1 && error.config.timeout === 0) {
-    //     Message({ message: '权限无效，已为你重定向到登录页', type: 'error' })
-    //     setTimeout(function () {
-    //         location.href = '/login'
-    //     }, 1200)
-    //     return Promise.reject(error)
-    // }
+    if (error.config.url.indexOf('/uaa/api/auth/details') > -1 && error.config.timeout === 0) {
+        Message({ message: '权限无效，已为你重定向到登录页', type: 'error' })
+        setTimeout(function () {
+            location.href = '/login'
+        }, 1200)
+        return Promise.reject(error)
+    }
     // if (error.request.status === 0 && error.request.readyState === 4 && error.request.timeout === 0) {
     //     Message({ message: '网络异常，请检查网络链接', type: 'error' })
     //     return Promise.reject(error)

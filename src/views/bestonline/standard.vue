@@ -122,7 +122,7 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/HAutocomplete'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getStandardscore, getDueconfig, addStandardscore, updateStandardscore, deleteStandardscore } from './api/index.js'
 import { mapState } from 'vuex'
 import { deepCopy } from '@/utils/index'
@@ -303,7 +303,7 @@ export default {
                 })
                 return false
             }
-            for (let i = 0;i < this.dueStandardScoreCreateFormList.length;i++) {
+            for (let i = 0; i < this.dueStandardScoreCreateFormList.length; i++) {
                 if (!this.dueStandardScoreCreateFormList[i].indicatorType || !this.dueStandardScoreCreateFormList[i].indicatorVal || !this.dueStandardScoreCreateFormList[i].standardScore) {
                     this.$message({
                         showClose: true,

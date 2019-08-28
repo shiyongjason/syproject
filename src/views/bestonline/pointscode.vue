@@ -80,7 +80,7 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/HAutocomplete'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getScorerules, getDueconfig, addScorerules, putScorerules, deleteScorerules } from './api/index.js'
 import { mapState } from 'vuex'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
