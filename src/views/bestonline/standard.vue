@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-title">
                 <span class="table-title-name">标准评分</span>
-                <el-button type="info" @click="newDueFrom">
+                <el-button type="info" @click="newDueFrom" v-if="testList.length<1">
                     新增标准分数项
                 </el-button>
             </div>
@@ -68,12 +68,12 @@
                             <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
                             </el-option>
                         </el-select>
-                        <span class="line" :span="1">-</span>
-                        <el-input v-model="item.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot(index, $event, 'dueStandardScoreCreateFormList', 'indicatorVal')">
+                        <span class="line" :span="1" v-if="type === '0'">-</span>
+                        <el-input v-model="item.indicatorVal" placeholder="输入指标值" maxlength="25" @keyup.native="onDot(index, $event, 'dueStandardScoreCreateFormList', 'indicatorVal')" v-if="type ==='0'">
                             <template slot="suffix" v-if="unit">{{unit}}</template>
                         </el-input>
-                        <span class="line" :span="1">-</span>
-                        <el-select v-model="item.indicatorVal" placeholder="请选择" clearable>
+                        <span class="line" :span="1" v-if="type === '1'">-</span>
+                        <el-select v-model="item.indicatorVal" placeholder="请选择" clearable v-if="type === '1'">
                             <el-option v-for="item in selectList" :key="item.itemValue" :label="item.itemName" :value="item.itemValue">
                             </el-option>
                         </el-select>
@@ -303,11 +303,11 @@ export default {
                 })
                 return false
             }
-            for (let i = 0; i < this.dueStandardScoreCreateFormList.length; i++) {
+            for (let i = 0;i < this.dueStandardScoreCreateFormList.length;i++) {
                 if (!this.dueStandardScoreCreateFormList[i].indicatorType || !this.dueStandardScoreCreateFormList[i].indicatorVal || !this.dueStandardScoreCreateFormList[i].standardScore) {
                     this.$message({
                         showClose: true,
-                        message: '请输入/选择指标值',
+                        message: '请选择/输入标准分数',
                         type: 'warning'
                     })
                     return false
@@ -563,9 +563,12 @@ table {
     }
 }
 .indicator {
-    .el-form-item {
+    /deep/ .el-form-item {
         .el-select {
             width: 140px;
+            .el-input {
+                width: 140px;
+            }
         }
         .el-input {
             width: 140px;

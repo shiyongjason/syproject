@@ -393,9 +393,14 @@ table {
     width: 100%;
 }
 .indicator {
-    .el-form-item {
+   /deep/ .el-form-item {
         .el-select {
             width: 130px;
+            .el-dialog {
+                .el-input{
+                width: 130px;
+                }
+            }
         }
         .el-input {
             width: 130px;
@@ -405,10 +410,10 @@ table {
 .reset {
     .el-form-item {
         .el-select {
-            width: 520px;
+            width: 224px;
         }
         .el-input{
-            width: 520px;
+            width: 224px;
         }
     }
 }
