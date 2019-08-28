@@ -25,11 +25,6 @@
         </div>
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="160" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
-                <template slot="companyName" slot-scope="scope">
-                    <router-link class="isLink" :to="{path:'/bestonline/evaluation',query:{'applyId':scope.data.row.applyId}}">
-                        <span>{{scope.data.row.companyName}}</span>
-                    </router-link>
-                </template>
                 <template slot="status" slot-scope="scope">
                     <span v-if="scope.data.row.status == 0">未提交</span>
                     <span v-if="scope.data.row.status == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
@@ -77,8 +72,8 @@ export default {
             totalTableData: [],
             options: APPROVAL_STATUS_OPTIONS,
             tableLabel: [
-                { label: '公司名称', prop: 'companyName' },
-                { label: '发起人', prop: 'originatorName' },
+                { label: '公司名称', prop: 'companyName', align: 'left' },
+                { label: '发起人', prop: 'originatorName', align: 'left' },
                 { label: '发起人所在机构', prop: 'institution' },
                 { label: '发起时间', prop: 'originTime' },
                 { label: '全部提交时间', prop: 'allSubmitTime' },

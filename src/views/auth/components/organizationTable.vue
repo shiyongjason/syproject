@@ -1,18 +1,18 @@
 <template>
     <div class="content">
-        <el-table :data="tableData" style="width: 100%" border stripe>
-            <el-table-column type="index" :index="indexMethod" align="left" width="100" prop="date" label="序号">
+        <el-table :data="tableData" border stripe width="100%">
+            <el-table-column type="index" :index="indexMethod" align="center" width="60" prop="date" label="序号">
             </el-table-column>
-            <el-table-column prop="psncode" align="left" width="180" label="工号">
+            <el-table-column prop="psncode" align="left" label="工号">
             </el-table-column>
-            <el-table-column prop="psnname" align="center" width="180" label="姓名">
+            <el-table-column prop="psnname" align="left" label="姓名">
             </el-table-column>
-            <el-table-column prop="mobile" align="center" width="180" label="登录名">
+            <el-table-column prop="mobile" align="left" label="登录名">
             </el-table-column>
             <el-table-column label="更新时间" align="center" width="200">
                 <template slot-scope="scope">{{ scope.row.ts| formatterTime }}</template>
             </el-table-column>
-            <el-table-column prop="address" align="center" label="操作">
+            <el-table-column prop="address" align="center" label="操作" width="140">
                 <template slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="goTo(scope.row)">修改</el-button>
                 </template>
