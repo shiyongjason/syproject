@@ -1,6 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
+            <div class="companyName">{{$route.query.companyName}}</div>
             <div class="reviewform">
                 <el-tabs :tab-position="tabPosition" v-model="activeName">
                     <el-tab-pane label="合作目标" name="one">
@@ -61,7 +62,7 @@ export default {
     data () {
         return {
             tabPosition: 'left',
-            activeName: 'five',
+            activeName: 'one',
             applyId: '',
             Cooperation: '',
             oneType: false,
@@ -359,5 +360,10 @@ select:disabled::-webkit-input-placeholder {
 .el-textarea.is-disabled .el-textarea__inner {
     outline: none;
     resize: none;
+}
+.companyName {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 600;
 }
 </style>

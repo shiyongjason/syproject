@@ -39,6 +39,9 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.findOrganizationData({ applyId: this.$route.query.applyId })
+        if (this.$route.query.status != 0) {
+            this.canEdit = false
+        }
     }
 }
 </script>
