@@ -15,6 +15,9 @@ export const adddueapply = (params) => {
 export const updateDueapply = (params) => {
     return axios.post('/develop/dueapply/update', params)
 }
+export const deleteDueapply = (params) => {
+    return axios.delete(`/develop/dueapply/delete/${params}`, params)
+}
 export const appDueapply = (params) => {
     return axios.post('/develop/dueapply/apply', params)
 }

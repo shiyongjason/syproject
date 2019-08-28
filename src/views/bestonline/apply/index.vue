@@ -30,7 +30,7 @@
 
         </div>
         <div class="page-body-cont">
-            <div class="table-cont-title">
+            <div class="table-cont-title" v-if="userInfo.deptName.indexOf('分部发展') !== -1">
                 <span class="table-title-name"></span>
                 <el-button type="info" @click="addNewApply">
                     添加申请
@@ -44,9 +44,9 @@
                     <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="scope.data.row.approvalStatus==0">修改</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if='scope.data.row.approvalStatus==0'>删除</el-button>
-                    <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-if='scope.data.row.approvalStatus!=0'>查看</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0 || scope.data.row.approvalStatus==3) && userInfo.deptName.indexOf('分部发展') !== -1">修改</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if="scope.data.row.approvalStatus==0 && userInfo.deptName.indexOf('分部发展') !== -1">删除</el-button>
+                    <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-if='scope.data.row.approvalStatus == 1 || scope.data.row.approvalStatus == 2'>查看</el-button>
                 </template>
             </basicTable>
         </div>
@@ -54,7 +54,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}
+                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}<span> {{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -65,7 +65,7 @@
     </div>
 </template>
 <script>
-import { getDueapply, getDueApproval, updateDueapply } from '../api/index.js'
+import { getDueapply, getDueApproval, deleteDueapply } from '../api/index.js'
 import { mapState, mapMutations } from 'vuex'
 import { APPROVAL_STATUS_OPTIONS } from '../const'
 export default {
@@ -128,6 +128,7 @@ export default {
         async showProcess (applyId) {
             const { data } = await getDueApproval({ applyId: applyId })
             this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
+            console.log(this.dueApproval)
             this.dueApproval && this.dueApproval.reverse().map(value => {
                 if (value.approvalStatus === 1 || value.approvalStatus === 2) {
                     value.color = '#f88825'
@@ -155,7 +156,7 @@ export default {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
-                await updateDueapply({ deleted: 1, applyId: val.applyId })
+                await deleteDueapply(val.applyId)
                 this.$message({
                     showClose: true,
                     message: '删除成功',
