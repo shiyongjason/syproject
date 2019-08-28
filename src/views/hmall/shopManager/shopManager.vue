@@ -76,21 +76,79 @@
                             <el-button type="primary" class="ml20" @click="onExport()">
                                 导出
                             </el-button>
+                            <el-button type="primary" class="ml20" @click="dialogFormVisible = true">
+                                导入
+                            </el-button>
                         </div>
                     </div>
                 </div>
             </div>
             <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable>
         </div>
+        <el-dialog title="商品库导入" :visible.sync="dialogFormVisible">
+            <div class="table-cont-title clearfix">
+                <span class="table-title-name fll">选择商品类目</span>
+            </div>
+            <div class="buildGoods-cont-select mb20 clearfix">
+                <div class="goods-select-item">
+                    <ul>
+                        <li :class="item.selected ? 'selected' : ''" v-for="item in categoryFirst" :key="item.id" @click="onNext(item,1)">
+                            <span :title="item.value">{{item.categoryName}}</span>
+                            <i class="iconfont icon-hosjoy_right"></i>
+                        </li>
+                    </ul>
+                </div>
+                <div class="goods-select-item">
+                    <ul>
+                        <li :class="item.selected ? 'selected' : ''" v-for="item in categorySecond" :key="item.id" @click="onNext(item,2)">
+                            <span :title="item.value">{{item.categoryName}}</span>
+                            <i class="iconfont icon-hosjoy_right"></i>
+                        </li>
+                    </ul>
+                </div>
+                <div class="goods-select-item">
+                    <ul>
+                        <li :class="item.selected ? 'selected' : ''" v-for="item in categoryThird" :key="item.id">
+                            <span :title="item.value">{{item.categoryName}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <span clas bvs="current-select">当前选择：{{ this.selectedCategoryValue }}</span>
+            <div class="table-cont-title clearfix">
+                <span class="table-title-name fll">下载模板</span>
+            </div>
+            <el-button type="primary" class="ml20" @click="downloadTem()">点击下载模板</el-button>
+            <div class="table-cont-title clearfix">
+                <span class="table-title-name fll">上传模板</span>
+            </div>
+            <input type="file" accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'>
+            <!-- <el-upload
+                class="upload-demo"
+                ref="upload"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :file-list="fileList"
+                accept=".txt,.xls"
+                :auto-upload="false">
+                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            </el-upload> -->
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import shopManagerTable from './components/shopManagerTable'
 import { findProducts, findProductSource, findProductCategory } from './api/index'
-// import { findCategoryByParent } from '@/views/hmall/category/api/index'
+import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { B2bUrl } from '@/api/config'
 import { mapMutations } from 'vuex'
+import { Message } from 'element-ui'
 export default {
     name: 'shopManager',
     components: {
@@ -120,6 +178,7 @@ export default {
     },
     data () {
         return {
+            dialogFormVisible: false,
             queryParams: {
                 productCode: '',
                 productName: '',
@@ -135,13 +194,61 @@ export default {
             tableData: [],
             paginationData: {},
             productSource: [],
-            productCategoryList: []
+            productCategoryList: [],
+            categoryFirst: [],
+            categorySecond: [],
+            categoryThird: [],
+            selectedCategoryValue: '',
+            secondCategoryId: '' // 选中二级类目id
         }
     },
     methods: {
+        handlePreview () {
+            console.log('handlePreview')
+        },
+        handleRemove () {
+            console.log('handleRemove')
+        },
+        fileList () {
+            console.log('fileList')
+        },
         ...mapMutations({
             changePage: 'CHANGE_MANAGE_PAGE_NUMBER'
         }),
+        onNext (item, index) {
+            console.log(item)
+            if (index === 1) {
+                this.selectedCategoryValue = item.categoryName
+                this.categoryThird = []
+                this.categoryFirst.map((i) => {
+                    i.selected = false
+                })
+            } else if (index === 2) {
+                this.secondCategoryId = item.id
+                const first = this.selectedCategoryValue.split('>')[0]
+                this.selectedCategoryValue = first + '>' + item.categoryName
+                this.categorySecond.map((i) => {
+                    i.selected = false
+                })
+            }
+            item.selected = true
+            this.findCategoryByParent(item.id, index)
+        },
+        async findCategoryByParent (parentId, index) {
+            const { data } = await findCategoryByParent({
+                parentId
+            })
+            data.map((item) => {
+                item.selected = false
+            })
+            if (parentId === 0) {
+                this.categoryFirst = data
+            } else if (index === 1) {
+                this.categorySecond = data
+            } else if (index === 2) {
+                this.categoryThird = data
+            }
+        },
         async onQuery () {
             const { ...params } = this.queryParams
             if (params.startDate) {
@@ -186,11 +293,23 @@ export default {
                 '&productCode=' + this.queryParams.productCode +
                 '&updateBy=' + this.queryParams.updateBy +
                 '&brandName=' + this.queryParams.brandName
+        },
+        async downloadTem () {
+            if (!this.secondCategoryId) {
+                Message({ message: '请选择二级类目', type: 'warning' })
+                return
+            }
+            if (this.categoryThird.length === 0) {
+                Message({ message: '二级类目下无三级类目', type: 'warning' })
+                return
+            }
+            window.location = B2bUrl + 'product/api/products/import/template?templateType=1&secondCategoryId=' + this.secondCategoryId
         }
     },
     async mounted () {
         this.queryParams.pageNumber = this.$store.state.hmall.managePageNumber
         this.onQuery()
+        this.findCategoryByParent(0)
         const { data } = await findProductSource()
         this.productSource = data
         const { data: productCategory } = await findProductCategory()
@@ -225,11 +344,29 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .status-on {
     color: #999999;
 }
 .flex-wrap-row {
     max-width: 1350px;
+}
+.buildGoods-cont-select {
+    display: flex;
+    justify-content: flex-start;
+    .goods-select-item {
+        width: 33%;
+        height: 100px;
+        overflow-y: scroll;
+        border: 2px solid #f0f0f0;
+        margin-right: 10px;
+        li {
+            padding: 5px 0 0 10%;
+        }
+    }
+}
+.selected {
+    background-color: #ff7a45;
+    color: #ffffff;
 }
 </style>
