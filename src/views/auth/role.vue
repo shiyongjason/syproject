@@ -181,7 +181,6 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        console.log(data)
         this.tableList = this.restArr(data)
         this.newTableList = JSON.parse(JSON.stringify(data))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
@@ -213,7 +212,6 @@ export default {
             })
         },
         changeChildHave (itemArr, value) {
-            // console.log(1, itemArr, value)
             return itemArr.map(item => {
                 item.have = value
                 item.allhave = value
@@ -247,7 +245,6 @@ export default {
             } else {
                 if (len > 1) {
                     itemArr = itemArr.slice(0, len - 1).reverse()
-                    //  console.log(itemArr)
                     itemArr = itemArr.map(item => {
                         item.have = item.childAuthList.filter(itemC => itemC.have == true).length > 0
                     })
