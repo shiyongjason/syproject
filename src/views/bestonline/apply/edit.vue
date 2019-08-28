@@ -15,18 +15,21 @@
                         <el-radio :label="0">现有模式</el-radio>
                         <el-radio :label="1">新合作模式</el-radio>
                         <el-tooltip effect="dark" content="新合作模式：拟合资公司操作新品类、股权结构等，和好享家规定的不同" placement="top-start">
-                            <i class="el-icon-question" style="padding-left: 7px;font-size: 14px;margin-left: -30px"></i>
+                            <i class="el-icon-question"
+                               style="padding-left: 7px;font-size: 14px;margin-left: -30px"></i>
                         </el-tooltip>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="" prop="newCooperateContent" v-if="formData.cooperateType == 1">
-                    <el-input type="textarea" rows="4" placeholder="请说明新合作模式" class="remark" v-model="formData.newCooperateContent">
+                    <el-input type="textarea" rows="4" placeholder="请说明新合作模式" class="remark"
+                              v-model="formData.newCooperateContent">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="主营业态：" prop="mainBusinessId">
                     <div class="flex-wrap-cont">
                         <el-select v-model="formData.mainBusinessId" placeholder="请选择" @change="selectGet">
-                            <el-option v-for="item in busOptions" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in busOptions" :key="item.value" :label="item.label"
+                                       :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -43,11 +46,13 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="" prop="mainSystemOther" v-if="checkList.indexOf(4) != -1">
-                    <el-input type="textarea" rows="4" placeholder="请详细说明" class="remark" v-model="formData.mainSystemOther">
+                    <el-input type="textarea" rows="4" placeholder="请详细说明" class="remark"
+                              v-model="formData.mainSystemOther">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="品牌：" prop="brand">
-                    <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入品牌" maxlength="250" v-model="formData.brand">
+                    <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入品牌" maxlength="250"
+                              v-model="formData.brand">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="销售形式：" prop="salesType">
@@ -59,7 +64,8 @@
                 <el-form-item label="合作目的：" prop="cooperateTarget">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
-                            <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入合作目的" v-model="formData.cooperateTarget" maxlength="250">
+                            <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入合作目的"
+                                      v-model="formData.cooperateTarget" maxlength="250">
                             </el-input>
                         </div>
                     </div>
@@ -67,7 +73,8 @@
                 <el-form-item label="拟签约规模：" prop="signScale">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
-                            <el-input placeholder="请输入拟签约规模" maxlength="25" v-model="formData.signScale" @keyup.native="oninteger($event)">
+                            <el-input placeholder="请输入拟签约规模" maxlength="10" v-model="formData.signScale"
+                                      @keyup.native="oninteger($event)">
                                 <template slot="suffix">万</template>
                             </el-input>
                         </div>
@@ -75,16 +82,23 @@
                 </el-form-item>
                 <el-form-item label="备注：">
                     <div class="flex-wrap-cont">
-                        <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入备注" v-model="formData.remark" width="30%">
+                        <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入备注"
+                                  v-model="formData.remark" width="30%">
                         </el-input>
                     </div>
                 </el-form-item>
             </el-form>
-            <el-form :model="formData" :rules="formRules" ref="attachmentsUrl" label-position="right" label-width="150px">
+            <el-form :model="formData" :rules="formRules" ref="attachmentsUrl" label-position="right"
+                     label-width="150px">
                 <el-form-item label="附件：" prop="attachmentsUrl">
                     <div class="flex-wrap-cont">
-                        <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess" :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
+                        <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess"
+                                   :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed"
+                                   :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
                             <el-button size="small" type="primary">点击上传</el-button>
+                            <p style="line-height: 16px;color: #666666;margin-top: 10px">
+                                附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,必须支持,附件每个大小限制10M以内
+                            </p>
                         </el-upload>
                     </div>
                 </el-form-item>
@@ -108,6 +122,7 @@ import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from '../
 import { mapState } from 'vuex'
 import { plusOrMinus } from '@/utils/rules.js'
 import { BUSINESS_OPTIONS } from './const.js'
+
 export default {
     name: 'applyEdit',
     data () {
@@ -245,7 +260,8 @@ export default {
         },
         handleSuccess (file) {
             if (file.code !== 200) {
-                this.$confirm(file.message, '提示信息').catch(() => { })
+                this.$confirm(file.message, '提示信息').catch(() => {
+                })
             } else {
                 let uploadedUrl = file.data.accessUrl
                 let name = file.data.fileName
@@ -330,7 +346,6 @@ export default {
             }
         },
         async onSubmit () {
-            console.log(this.formData)
             this.$refs['attachmentsUrl'].validate(async (validate) => {
             })
             this.$refs['form'].validate(async (validate) => {
@@ -340,10 +355,8 @@ export default {
                     this.formData.createUserName = this.userdata.name
                     this.formData.createUser = this.userInfo.jobNumber
                     this.formData.organizationCode = this.userdata.organizationCode
-                    // this.formData.createUser = 'dce5239f-0829-487f-9903-c0a0d16380ed'
                     if (this.applyId) {
                         this.formData.applyId = this.applyId
-                        // this.formData.createUser = dce5239f-0829-487f-9903-c0a0d16380ed'
                         await appDueapply(this.formData)
                         this.$message({
                             showClose: true,
@@ -366,23 +379,29 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.remark {
-    width: 598px;
-}
-.newcooperateType {
-    margin-right: 10px;
-}
-.applyW {
-    width: 30%;
-}
+    .remark {
+        width: 598px;
+    }
 
-.unit {
-    margin: 0 0 0 12px;
-}
-/*主题内容*/
+    .newcooperateType {
+        margin-right: 10px;
+    }
 
-/*flex  横布局*/
-.flex-wrap-row {
-    display: flex;
-}
+    .applyW {
+        width: 30%;
+    }
+
+    .unit {
+        margin: 0 0 0 12px;
+    }
+
+    /*主题内容*/
+
+    /*flex  横布局*/
+    .flex-wrap-row {
+        display: flex;
+    }
+    /deep/ .el-upload{
+        text-align: left;
+    }
 </style>
