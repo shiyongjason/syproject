@@ -104,12 +104,12 @@ export default {
                 return item
             })
             if (this.form.id) {
-                this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                // this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await putCooperativetarget(this.form)
                 this.$message.success('保存成功！')
                 this.$emit('init')
             } else {
-                this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                // this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 await addCooperativetarget(this.form)
                 this.$message.success('提交成功！')
                 this.$emit('init')
