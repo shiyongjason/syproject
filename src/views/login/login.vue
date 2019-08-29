@@ -178,6 +178,8 @@ export default {
                 this.onLogin()
             }
         }
+        // TODO 防止不刷新无法初始vuex数据
+        this.resetVuex()
     }
 }
 </script>

@@ -131,18 +131,21 @@ export default {
     position: relative;
     overflow: hidden;
     padding-left: 10px;
-    padding-right: 120px;
+    padding-right: 10px;
 }
 
 .tags ul {
-    box-sizing: border-box;
+    // box-sizing: border-box;
     width: 100%;
     height: 100%;
-    overflow-x: inherit;
+    white-space: nowrap;
+    overflow-x: scroll;
 }
 
 .tags-li {
-    float: left;
+    white-space: nowrap;
+    display: inline-block;
+    // float: left;
     margin: 0px 2px 0px 0px;
     font-size: 12px;
     overflow: hidden;
@@ -201,5 +204,4 @@ export default {
     background-color: #ff7a45;
     border-color: #ff7a45;
 }
-
 </style>
