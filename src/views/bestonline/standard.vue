@@ -13,7 +13,7 @@
                 <table class="table-example el-table el-table--border">
                     <thead>
                         <tr class="tableTitle">
-                            <th width="80" class="is-leaf">序号</th>
+                            <!-- <th width="80" class="is-leaf">序号</th> -->
                             <th width="180" class="is-leaf">分类</th>
                             <th width="180" class="is-leaf">指标</th>
                             <th width="180" class="is-leaf">指标值</th>
@@ -26,10 +26,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item,index) in testList">
+                        <template v-for="item in testList">
                             <template v-for="(sitem) in item.dueStandardScoreVoList">
                                 <tr v-for="(titem,tindex) in sitem.dueStandardScoreVoList" :key="titem.total">
-                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{index + 1}}</td>
+                                    <!-- <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{index + 1}}</td> -->
                                     <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{item.classifyName}}</td>
                                     <td :rowspan="item.total" v-if="titem.sindex ==0 ">{{item.indicatorName}}</td>
                                     <td :rowspan="sitem.total" v-if='tindex==0'>{{titem.indicatorType}}{{titem.itemName}}</td>
