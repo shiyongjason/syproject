@@ -14,7 +14,6 @@ switch (env) {
     case 'development':
         interfaceUrl = 'http://192.168.20.248:30000/'
         ossUrl = 'http://192.168.20.248:8089/'
-        interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         uploadUrl = 'http://192.168.20.248:30000/tms'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
