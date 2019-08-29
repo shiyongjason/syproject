@@ -8,8 +8,8 @@
                 <thead>
                     <tr>
                         <td>年份</td>
-                        <td><span class="red-word">*</span>年度递增率</td>
-                        <td><span class="red-word">*</span>净利润率</td>
+                        <td>年度递增率</td>
+                        <td>净利润率</td>
                     </tr>
                 </thead>
                 <tbody>

@@ -33,7 +33,9 @@ export default {
     async mounted () {
         await this.findCotargetData({ applyId: this.$route.query.applyId })
         this.form.applyId = this.$route.query.applyId
-        if (this.$route.query.status != 0 || this.$route.query.status != 3) {
+        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
+            this.canEdit = true
+        } else {
             this.canEdit = false
         }
     }

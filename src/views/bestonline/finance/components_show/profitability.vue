@@ -52,7 +52,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].profitRatio}}%
                     </td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].profitRatio}}%
                     </td>
                 </tr>

@@ -24,7 +24,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable}}天
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable}}天
                     </td>
                 </tr>
@@ -39,7 +38,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfInventory}}天
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].daysOfInventory}}天
                     </td>
                 </tr>
@@ -54,7 +52,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover}}%
                     </td>
                 </tr>
@@ -69,7 +66,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].returnOnEquity}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].returnOnEquity}}%
                     </td>
                 </tr>

@@ -10,7 +10,7 @@
                 <tr>
                     <td width="180">评估项</td>
                     <td width="180">合作目标</td>
-                    <td width="180"><span class="red-span">*</span>结论(必填)</td>
+                    <td width="180">结论(必填)</td>
                     <td width="180">备注</td>
                 </tr>
             </thead>

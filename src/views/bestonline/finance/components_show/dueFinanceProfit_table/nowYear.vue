@@ -15,7 +15,7 @@
                     </template>
                     <template v-else>
                         <td>
-                            <span class="red-word" v-if="index === 16">*</span>
+                            <span v-if="index === 16"></span>
                             {{item.typeName}}
                         </td>
                         <td>

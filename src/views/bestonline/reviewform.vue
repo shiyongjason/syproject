@@ -65,11 +65,11 @@ export default {
             activeName: 'one',
             applyId: '',
             Cooperation: '',
-            oneType: false,
-            twoType: false,
-            threeType: false,
-            fourType: false,
-            fiveType: false,
+            oneType: true,
+            twoType: true,
+            threeType: true,
+            fourType: true,
+            fiveType: true,
             target: ''
         }
     },
@@ -98,7 +98,7 @@ export default {
         this.applyId = this.$route.query.applyId
         this.target = this.$route.query.target
         this.getCooperativetarget()
-        this.getRoletype()
+        // this.getRoletype()
     },
     methods: {
         async getCooperativetarget () {
