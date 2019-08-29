@@ -24,7 +24,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome}}万
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome}}万
                     </td>
                 </tr>
@@ -39,7 +38,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio}}%
                     </td>
                 </tr>
@@ -54,7 +52,6 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].taxBearingRate}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[2].taxBearingRate}}%
                     </td>
                 </tr>

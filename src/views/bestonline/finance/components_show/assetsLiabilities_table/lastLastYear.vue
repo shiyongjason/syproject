@@ -15,8 +15,8 @@
                     </template>
                     <template v-else>
                         <td>
-                            <span class="red-word"
-                                v-if="item.typeName === '应收账款' || item.typeName === '预付款项' || item.typeName === '其他应收款' || item.typeName === '存货' || item.typeName === '待摊费用' || item.typeName === '流动资产合计' || item.typeName === '非流动资产合计' || item.typeName === '资产总计'">*</span>
+                            <span
+                                v-if="item.typeName === '应收账款' || item.typeName === '预付款项' || item.typeName === '其他应收款' || item.typeName === '存货' || item.typeName === '待摊费用' || item.typeName === '流动资产合计' || item.typeName === '非流动资产合计' || item.typeName === '资产总计'"></span>
                             {{item.typeName}}
                         </td>
                         <td>
@@ -45,7 +45,7 @@
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
-                        <td><span class="red-word" v-if="item.typeName === '短期借款' || item.typeName === '流动负债合计' || item.typeName === '非流动负债合计' || item.typeName === '负债合计'">*</span>{{item.typeName}}</td>
+                        <td><span class="red-word" v-if="item.typeName === '短期借款' || item.typeName === '流动负债合计' || item.typeName === '非流动负债合计' || item.typeName === '负债合计'"></span>{{item.typeName}}</td>
                         <td>
                             <span v-if="item.endOrCurrent">{{item.endOrCurrent}}万</span>
                             <span v-else>-</span>

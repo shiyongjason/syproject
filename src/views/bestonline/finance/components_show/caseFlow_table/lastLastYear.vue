@@ -10,7 +10,7 @@
             </thead>
             <tbody v-if="form.caseFlow.contentListB">
                 <tr v-for="(item,index) in form.caseFlow.contentListB" :key="index">
-                    <template v-if="index === 17">
+                    <template v-if="index === 0 || index === 11 || index === 24">
                         <td colspan="3">{{item.typeName}}</td>
                     </template>
                     <template v-else>
