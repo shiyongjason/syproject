@@ -63,7 +63,7 @@
                     </td>
                     <td>
                         <el-form-item label-width="0">
-                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" @keyup.native="oninput3(index, 'agreementScale', $event)">
+                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" >
                                 <template slot="suffix">万</template>
                             </el-input>
                         </el-form-item>

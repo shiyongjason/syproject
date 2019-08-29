@@ -74,10 +74,10 @@ export default {
                     }
                 ],
                 yearGrowthRate: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入年度递增率', trigger: 'blur' }
                 ],
                 netProfitRate: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ]
             }
         }
