@@ -20,7 +20,8 @@ export default {
     },
     data () {
         return {
-            applyId: ''
+            applyId: '',
+            canEdit: ''
         }
     },
     computed: {
@@ -39,7 +40,9 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.findOrganizationData({ applyId: this.$route.query.applyId })
-        if (this.$route.query.status != 0 || this.$route.query.status != 3) {
+        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
+            this.canEdit = true
+        } else {
             this.canEdit = false
         }
     }
