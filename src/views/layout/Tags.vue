@@ -38,11 +38,35 @@ export default {
         isActive (path) {
             return path === (this.$route.fullPath).split('?')[0]
         },
+        makeIndex (data) {
+            let index = []
+            if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    index.push(data[i].path.replace('/', ''))
+                    if (data[i].children) {
+                        if (data[i].children.length > 0) {
+                            index.push(data[i].children[0].path.replace('/', ''))
+                        }
+                    }
+                    break
+                }
+                let path = '/' + index.join('/')
+                if (!path) {
+                    path = '/'
+                }
+                this.$router.push({
+                    path: path
+                })
+            }
+        },
         // 关闭单个标签
         closeTags (index, isSelf) {
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
-                this.$router.push('/')
+                // this.$router.push('/')
+                // TODO 不存在首页 默认跳转有权限的第一个路由
+                const menu = JSON.parse(sessionStorage.getItem('menuList'))
+                this.makeIndex(menu)
             } else if (isSelf) {
                 this.$router.push(this.tagsList[this.tagsList.length - 1].path)
             }
@@ -74,12 +98,14 @@ export default {
             this.tagUpdate(this.tagsList)
         },
         serializeLink (params) {
-            if (Object.keys(params).length < 1) return ''
-            let link = '?'
-            for (let key in params) {
-                link += (key + '=' + params[key] + '&')
+            if (params) {
+                if (Object.keys(params).length < 1) return ''
+                let link = '?'
+                for (let key in params) {
+                    link += (key + '=' + params[key] + '&')
+                }
+                return link
             }
-            return link
         }
     },
     watch: {
@@ -88,14 +114,12 @@ export default {
         }
     },
     mounted () {
-        let tags = null
+        let tags = []
         if (this.isReload) {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
             this.tagUpdate(tags || [])
-            console.log(1111)
             this.reloadUpdate(false)
         }
-        console.log(2222)
         this.setTags(this.$route)
     }
 }

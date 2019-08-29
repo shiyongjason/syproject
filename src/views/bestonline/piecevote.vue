@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/HAutocomplete'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getoneticketveto, getDueconfig, addoneticketveto, deleteoneticketveto, updateoneticketveto } from './api/index.js'
 import { mapState } from 'vuex'
 import { decimals } from '../../utils/rules'

@@ -37,7 +37,7 @@ export default {
     async mounted () {
         await this.findFinanceData({ applyId: this.$route.query.applyId })
         this.init()
-        if (this.$route.query.status != 0) {
+        if (this.$route.query.status != 0 || this.$route.query.status != 3) {
             this.canEdit = false
         }
     }

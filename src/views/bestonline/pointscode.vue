@@ -24,7 +24,7 @@
                         <tr v-for="(seconditem,index) in item.dueScoreRuleVoList" :key="index">
                             <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length"> {{pindex+1}}
                             </td>
-                            <td v-if="index == 0" :rowspan=" item.dueScoreRuleVoList.length">{{item.classifyName}}</td>
+                            <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">{{item.classifyName}}</td>
                             <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">{{item.indicatorName}}</td>
                             <td>{{seconditem.indicatorType}}{{seconditem.itemName}}</td>
                             <td>{{seconditem.score}}</td>
@@ -49,7 +49,7 @@
                             <HAutocomplete ref="HAutocomplete" :selectArr="targetArr" :selectObj="targetObj" :disabled="isdisabled" v-if="targetArr" @back-event="backFindTarget"></HAutocomplete>
                         </el-form-item>
                     </div>
-                    <div v-for="(item,index) in  dueForm.dueScoreRuleCreateFormList" :key=index class="indicator">
+                    <div v-for="(item,index) in  dueForm.dueScoreRuleCreateFormList" :key="index" class="indicator">
                         <el-form-item label="指标值:">
                             <el-select v-model="item.indicatorType" placeholder="请选择" clearable>
                                 <el-option v-for="item in dueArr" :key="item.label" :label="item.value" :value="item.label">
@@ -80,7 +80,7 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/HAutocomplete'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getScorerules, getDueconfig, addScorerules, putScorerules, deleteScorerules } from './api/index.js'
 import { mapState } from 'vuex'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
