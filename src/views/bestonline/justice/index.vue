@@ -25,7 +25,9 @@ export default {
     },
     mounted () {
         this.findJusticeData({ applyId: this.$route.query.applyId })
-        if (this.$route.query.status != 0 || this.$route.query.status != 3) {
+        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
+            this.canEdit = true
+        } else {
             this.canEdit = false
         }
     }
