@@ -16,11 +16,9 @@
                 <tr>
                     <td>年度纳税营业收入</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].annualTaxableBusinessIncome}}万
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome}}万
                     </td>
                     <td>
@@ -30,11 +28,9 @@
                 <tr>
                     <td>纳税收入占比</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].taxableIncomeRatio}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio}}%
                     </td>
                     <td>
@@ -44,11 +40,9 @@
                 <tr>
                     <td>税负率</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].taxBearingRate}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].taxBearingRate}}%
                     </td>
                     <td>

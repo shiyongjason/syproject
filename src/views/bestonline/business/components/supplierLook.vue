@@ -4,7 +4,7 @@
             <p class="title-p">上游-供应商结构</p>
         </template>
         <div class="supplier" v-for="(item, index) in dueBusinessSupplierCreateFormList" :key=index>
-            <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
+            <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`">
                 {{item.supplierName}}
             </el-form-item>
             <el-form-item label="品牌:">
@@ -12,17 +12,17 @@
             </el-form-item>
             <div class="form-cont-row mb20">
                 <div class="form-cont-col ">
-                    <el-form-item label="采购金额：" :prop="`dueBusinessSupplierCreateFormList[${index}].purchaseAmount`" :rules="rules.purchaseAmount">
+                    <el-form-item label="采购金额：" :prop="`dueBusinessSupplierCreateFormList[${index}].purchaseAmount`">
                         {{item.purchaseAmount}}
                     </el-form-item>
                 </div>
                 <div class="form-cont-col ">
-                    <el-form-item label="占比：" :prop="`dueBusinessSupplierCreateFormList[${index}].proportion`" :rules="rules.proportion">
+                    <el-form-item label="占比：" :prop="`dueBusinessSupplierCreateFormList[${index}].proportion`">
                         {{item.proportion}}%
                     </el-form-item>
                 </div>
                 <div class="form-cont-col ">
-                    <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`" :rules="rules.isProvideContract">
+                    <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`" >
                         {{item.isProvideContract==1?'否':item.isProvideContract==0?'是':''}}
                     </el-form-item>
                 </div>
@@ -66,20 +66,6 @@ export default {
                 contractStartDate: '',
                 contractEndDate: '',
                 contractScale: ''
-            },
-            rules: {
-                supplierName: [
-                    { required: true, message: '请输入供应商名称', trigger: 'blur' }
-                ],
-                isProvideContract: [
-                    { required: true, message: '请选择', trigger: 'blur' }
-                ],
-                purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' }
-                ],
-                proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' }
-                ]
             }
         }
     },

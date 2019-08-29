@@ -16,11 +16,9 @@
                 <tr>
                     <td>应收账款周转天数</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].daysOfReceivable}}天
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable}}天
                     </td>
                     <td>
@@ -30,11 +28,9 @@
                 <tr>
                     <td>库存周转天数</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].daysOfInventory}}天
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfInventory}}天
                     </td>
                     <td>
@@ -44,11 +40,9 @@
                 <tr>
                     <td>总资产周转率</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover}}%
                     </td>
                     <td>
@@ -58,11 +52,9 @@
                 <tr>
                     <td>净资产收益率</td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].returnOnEquity}}%
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].returnOnEquity}}%
                     </td>
                     <td>

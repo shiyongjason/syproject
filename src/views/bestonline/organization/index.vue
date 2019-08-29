@@ -20,8 +20,7 @@ export default {
     },
     data () {
         return {
-            applyId: '',
-            canEdit: ''
+            applyId: ''
         }
     },
     computed: {
