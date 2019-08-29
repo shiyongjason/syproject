@@ -16,11 +16,9 @@
                 <tr>
                     <td width="25%">销售毛利率</td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].grossMargin}}%
                     </td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].grossMargin}}%
                     </td>
                     <td width="25%">
@@ -30,11 +28,9 @@
                 <tr>
                     <td width="25%">费率</td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].rate}}%
                     </td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].rate}}%
                     </td>
                     <td width="25%">
@@ -44,11 +40,9 @@
                 <tr>
                     <td width="25%">净利率</td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[0].profitRatio}}%
                     </td>
                     <td width="25%">
-                        <span class="red-word">*</span>
                         {{form.dueFinanceYearOperatingCreateForms[1].profitRatio}}%
                     </td>
                     <td width="25%">

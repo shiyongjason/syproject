@@ -9,7 +9,7 @@
                 <tr>
                     <td width="25%">评估项</td>
                     <td width="25%">合作目标</td>
-                    <td width="25%"><span class="red-word">*</span>结论</td>
+                    <td width="25%">结论</td>
                     <td width="25%">备注</td>
                 </tr>
             </thead>
