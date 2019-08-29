@@ -31,6 +31,7 @@ export default {
             dueLegalRemarkCreateForm: {}
         },
         businessData: {
+            publicityPromotionChannels: [],
             dueBusinessAssessmentCreateFormList: [], // 商业尽调评估
             dueBusinessSaleCreateFormList: [], // 12月份
             dueBusinessSupplierCreateFormList: [], // 商业尽调供应商
@@ -40,7 +41,9 @@ export default {
             dueBusinessCustomerDemandCreateForm: {},
             dueBusinessFuturePlanCreateForm: {
                 businessCategory: [],
-                serviceCategory: []
+                serviceCategory: [],
+                webServiceCategory: [],
+                webBusinessCategory: []
             }
         },
         organizationData: {
