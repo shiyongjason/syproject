@@ -130,14 +130,14 @@ export default {
             formData: {
                 targetPartner: '',
                 companyName: '',
-                cooperateType: Number,
+                cooperateType: '',
                 newCooperateContent: '',
                 mainBusinessName: '',
                 mainBusinessId: '',
                 mainSystem: '',
                 mainSystemOther: '',
                 brand: '',
-                salesType: Number,
+                salesType: '',
                 cooperateTarget: '',
                 signScale: '',
                 remark: '',
@@ -347,31 +347,35 @@ export default {
         },
         async onSubmit () {
             this.$refs['attachmentsUrl'].validate(async (validate) => {
-            })
-            this.$refs['form'].validate(async (validate) => {
                 if (validate) {
-                    this.formData.mainSystem = this.checkList.join(',')
-                    this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-                    this.formData.createUserName = this.userdata.name
-                    this.formData.createUser = this.userInfo.jobNumber
-                    this.formData.organizationCode = this.userdata.organizationCode
-                    if (this.applyId) {
-                        this.formData.applyId = this.applyId
-                        await appDueapply(this.formData)
-                        this.$message({
-                            showClose: true,
-                            message: '修改成功',
-                            type: 'success'
-                        })
-                    } else {
-                        await appDueapply(this.formData)
-                        this.$message({
-                            showClose: true,
-                            message: '提交成功',
-                            type: 'success'
-                        })
-                    }
-                    this.$router.go(-1)
+                    this.$refs['form'].validate(async (validate) => {
+                        if (validate) {
+                            this.formData.mainSystem = this.checkList.join(',')
+                            this.formData.attachmentsUrl = JSON.stringify(this.arrList)
+                            this.formData.createUserName = this.userdata.name
+                            this.formData.createUser = this.userInfo.jobNumber
+                            this.formData.organizationCode = this.userdata.organizationCode
+                            if (this.applyId) {
+                                this.formData.applyId = this.applyId
+                                await appDueapply(this.formData)
+                                this.$message({
+                                    showClose: true,
+                                    message: '修改成功',
+                                    type: 'success'
+                                })
+                            } else {
+                                await appDueapply(this.formData)
+                                this.$message({
+                                    showClose: true,
+                                    message: '提交成功',
+                                    type: 'success'
+                                })
+                            }
+                            this.$router.go(-1)
+                        }
+                    })
+                } else {
+                    this.$refs['form'].validate()
                 }
             })
         }
