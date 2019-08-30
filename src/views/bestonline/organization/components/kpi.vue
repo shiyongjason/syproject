@@ -29,7 +29,7 @@
                         </el-form-item>
                     </td>
                     <td :rowspan="form.dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
-                        <el-input type="textarea" :rows="8" placeholder="请输入内容" maxlength="25" v-model="item.remark">
+                        <el-input type="textarea" :rows="8" placeholder="请输入备注" maxlength="25" v-model="item.remark">
                         </el-input>
                     </td>
                 </tr>
