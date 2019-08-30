@@ -33,7 +33,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && userInfo.deptType == 2 && (userInfo.role.indexOf('fazhanzongj') !== -1)" @click="onCommit(scope.data.row)">提交审核</el-button>
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
                 </template>
             </basicTable>
