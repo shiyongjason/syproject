@@ -1,6 +1,6 @@
 <template>
     <el-form-item>
-        <p class="small-title">资产信息</p>
+        <p class="small-title">资产信息（万）</p>
         <el-form-item v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
             <el-form label-position="right" label-width="150px">
                 <el-form-item label="不动产：">
@@ -170,18 +170,18 @@
                     </template>
                     <el-form label-position="right" label-width="150px" class="legal-form">
                         <el-form-item label="事件类型：">
-                            <el-select v-model="item.punishmentType" placeholder="诉讼、仲裁">
+                            <el-select v-model="item.punishmentType" placeholder="请选择事件类型">
                                 <el-option v-for="item in punishmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="事件名称：">
-                            <el-input v-model="item.caseInfo" placeholder="请输入" maxlength="25"></el-input>
+                            <el-input v-model="item.caseInfo" placeholder="请输入事件名称" maxlength="25"></el-input>
                         </el-form-item>
                         <el-form-item label="涉及金额：">
-                            <el-input v-model="item.moneyInvolved" placeholder="涉及金额" maxlength="25"></el-input>
+                            <el-input v-model="item.moneyInvolved" placeholder="请输入涉及金额" maxlength="25"></el-input>
                         </el-form-item>
                         <el-form-item label="严重性：">
-                            <el-select placeholder="诉讼、仲裁" v-model="item.ponderance">
+                            <el-select placeholder="请选择严重性" v-model="item.ponderance">
                                 <el-option v-for="item in ponderanceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
