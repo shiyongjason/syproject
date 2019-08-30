@@ -85,7 +85,7 @@
             </div>
             <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable>
         </div>
-        <el-dialog title="商品库导入" :visible.sync="dialogFormVisible">
+        <el-dialog title="商品库导入" :visible.sync="dialogFormVisible" :before-close="handleClose">
             <div class="table-cont-title clearfix">
                 <span class="table-title-name fll">选择商品类目</span>
             </div>
@@ -122,21 +122,28 @@
             <div class="table-cont-title clearfix">
                 <span class="table-title-name fll">上传模板</span>
             </div>
-            <input type="file" accept='application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'>
-            <!-- <el-upload
-                class="upload-demo"
-                ref="upload"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList"
-                accept=".txt,.xls"
-                :auto-upload="false">
-                <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload> -->
+            <div class="ml20">
+                <el-upload
+                    ref="importFile"
+                    :show-file-list="true"
+                    :action="B2bUrl + '/product/api/products/import'"
+                    :file-list="importFileList"
+                    :auto-upload="false"
+                    :limit="1"
+                    :on-exceed="maxLength"
+                    :http-request="fileUpload"
+                    :on-change="onProgress"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    <el-button>选择文件</el-button>
+                </el-upload>
+            </div>
+            <div v-if="errMsg.length != 0">
+                <div>错误提示：</div>
+                <div v-for="(item, index) in errMsg" :key="index" class="ml20">{{Object.keys(item)[0]}}{{item[Object.keys(item)[0]]}}</div>
+            </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button @click="cancle">取 消</el-button>
+                <el-button type="primary" @click="onSure">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -144,10 +151,10 @@
 
 <script>
 import shopManagerTable from './components/shopManagerTable'
-import { findProducts, findProductSource, findProductCategory } from './api/index'
+import { findProducts, findProductSource, findProductCategory, importProductList } from './api/index'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { B2bUrl } from '@/api/config'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapState, mapActions } from 'vuex'
 import { Message } from 'element-ui'
 export default {
     name: 'shopManager',
@@ -174,11 +181,18 @@ export default {
                     }
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo,
+            userInfo2: state => state.hmall.userInfo
+        })
     },
     data () {
         return {
             dialogFormVisible: false,
+            B2bUrl: B2bUrl,
+            file: '',
+            errMsg: [],
             queryParams: {
                 productCode: '',
                 productName: '',
@@ -199,26 +213,97 @@ export default {
             categorySecond: [],
             categoryThird: [],
             selectedCategoryValue: '',
-            secondCategoryId: '' // 选中二级类目id
+            secondCategoryId: '', // 选中二级类目id
+            importFileList: []
         }
     },
     methods: {
-        handlePreview () {
-            console.log('handlePreview')
+        handleClose (done) {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    this.initDialog()
+                    done()
+                })
+                .catch(_ => {})
         },
-        handleRemove () {
-            console.log('handleRemove')
+        initDialog () {
+            this.categorySecond = []
+            this.categoryThird = []
+            this.secondCategoryId = ''
+            this.selectedCategoryValue = ''
+            this.categoryFirst.map((i) => {
+                i.selected = false
+            })
+            this.errMsg = []
+            this.$refs.importFile.clearFiles()
         },
-        fileList () {
-            console.log('fileList')
+        cancle () {
+            this.$confirm('确认关闭？')
+                .then(_ => {
+                    this.initDialog()
+                    this.dialogFormVisible = false
+                })
+                .catch(_ => {})
+        },
+        maxLength () {
+            this.$message({
+                type: 'warn',
+                message: '只能导入一个文件！'
+            })
+        },
+        onProgress (e, file, list) {
+            // this.errMsg = []
+            console.log(e, file, list)
+        },
+        async fileUpload (file) {
+            console.log(file)
+            const data = new FormData()
+            data.append('file', file.file)
+            data.append('importType', 2)
+            data.append('secondCategoryId', this.secondCategoryId)
+            data.append('createBy', this.userInfo.employeeName)
+            data.append('merchantName', '好享家')
+            data.append('merchantCode', 'top')
+            console.log(data)
+            const res = await importProductList(data)
+            console.log(res)
+            if (res.data.length === 0) {
+                this.$message({
+                    type: 'success',
+                    message: '导入成功'
+                })
+                this.dialogFormVisible = false
+                this.$refs.importFile.clearFiles()
+            } else {
+                this.errMsg = res.data
+                this.$message({
+                    type: 'error',
+                    message: res.data
+                })
+            }
+            // this.onQuery()
+        },
+        onSure () {
+            if (!this.secondCategoryId) {
+                Message({ message: '请选择二级类目', type: 'warning' })
+                return
+            }
+            if (this.categoryThird.length === 0) {
+                Message({ message: '二级类目下无三级类目', type: 'warning' })
+                return
+            }
+            this.$refs.importFile.submit()
         },
         ...mapMutations({
             changePage: 'CHANGE_MANAGE_PAGE_NUMBER'
         }),
+        ...mapActions({
+            getUserInfoMore: 'getUserInfoMore'
+        }),
         onNext (item, index) {
-            console.log(item)
             if (index === 1) {
                 this.selectedCategoryValue = item.categoryName
+                this.secondCategoryId = ''
                 this.categoryThird = []
                 this.categoryFirst.map((i) => {
                     i.selected = false
@@ -303,11 +388,12 @@ export default {
                 Message({ message: '二级类目下无三级类目', type: 'warning' })
                 return
             }
-            window.location = B2bUrl + 'product/api/products/import/template?templateType=1&secondCategoryId=' + this.secondCategoryId
+            window.location = B2bUrl + 'product/api/products/import/template?templateType=2&secondCategoryId=' + this.secondCategoryId
         }
     },
     async mounted () {
         this.queryParams.pageNumber = this.$store.state.hmall.managePageNumber
+        // this.getUserInfoMore() // 接口404
         this.onQuery()
         this.findCategoryByParent(0)
         const { data } = await findProductSource()
@@ -356,12 +442,12 @@ export default {
     justify-content: flex-start;
     .goods-select-item {
         width: 33%;
-        height: 100px;
+        height: 200px;
         overflow-y: scroll;
         border: 2px solid #f0f0f0;
         margin-right: 10px;
         li {
-            padding: 5px 0 0 10%;
+            padding: 5px 0 5px 10%;
         }
     }
 }

@@ -9,6 +9,8 @@
             </el-table-column>
             <el-table-column prop="principalPerson" align="center" label="负责人姓名">
             </el-table-column>
+            <el-table-column prop="principalMobile" align="center" label="负责人手机号">
+            </el-table-column>
             <el-table-column align="center" label="审核状态">
                 <template slot-scope="scope">
                     <span v-if="scope.row.checkStatus === 0">新申请</span>
@@ -35,7 +37,7 @@
             <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :onQuery="onQuery" :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="850px" center :close-on-click-modal="false">
+        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="680px" center :close-on-click-modal="false">
             <el-form class="base" :inline="true">
                 <div>
                     <h2 class="sub-title">基本信息</h2>
@@ -61,20 +63,26 @@
                         {{merchantDetail.enterpriseLegalPerson}}
                     </el-form-item>
                     <el-form-item label="身份证照片：">
-                        <img :src="merchantDetail.certPhotoA" alt="">
-                        <img :src="merchantDetail.certPhotoB" alt="">
+                        <div class="idCard">
+                            <a :href="merchantDetail.certPhotoA" target="_blank" class="preview-container"><img :src="merchantDetail.certPhotoA" alt="身份证正面" class="preview"></a>
+                            <a :href="merchantDetail.certPhotoB" target="_blank" class="preview-container"><img :src="merchantDetail.certPhotoB" alt="身份证反面" class="preview"></a>
+                        </div>
                     </el-form-item>
                     <el-form-item label="地区：">
-                        {{merchantDetail.address + merchantDetail.addressName}}
+                        {{address + merchantDetail.addressName}}
                     </el-form-item>
                     <el-form-item label="营业执照号：">
                         {{merchantDetail.businessLicenseNo}}
                     </el-form-item>
                     <el-form-item label="营业执照照片：">
-                        {{merchantDetail.businessLicensePhone}}
+                        <div class="pic">
+                            <a :href="merchantDetail.businessLicensePhone" target="_blank" class="preview-container"><img :src="merchantDetail.businessLicensePhone" alt="营业执照照片" class="preview"></a>
+                        </div>
                     </el-form-item>
                     <el-form-item label="开户许可证：">
-                        {{merchantDetail.accountOpenPermitPhone}}
+                        <div class="pic">
+                            <a :href="merchantDetail.accountOpenPermitPhone" target="_blank" class="preview-container"><img :src="merchantDetail.accountOpenPermitPhone" alt="开户许可证" class="preview"></a>
+                        </div>
                     </el-form-item>
                 </div>
             </el-form>
@@ -133,6 +141,7 @@ export default {
     },
     data () {
         return {
+            address: '',
             dialogParams: {
                 show: false,
                 title: '商户审核',
@@ -166,6 +175,7 @@ export default {
         async showDialog (merchantCode, type) {
             this.merchantCode = merchantCode
             this.suggest = {}
+            this.address = ''
             if (type === 'review') {
                 this.dialogParams.title = '商户审核'
                 this.dialogParams.type = type
@@ -178,9 +188,10 @@ export default {
         },
         async findMerchantDetail (merchantCode) {
             const { data } = await findMerchantDetail(merchantCode)
-            console.log(data)
+            // console.log(data)
             this.merchantDetail = data
-            // this.suggest = data.merchantCheck
+            let address = JSON.parse(this.merchantDetail.address)
+            this.address = address.province_name + address.city_name + address.area_name
         },
         async checkMerchant () {
             this.$refs['form'].validate(async (valid) => {
@@ -208,7 +219,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style  lang="scss" scoped>
 .suggest-btn {
     padding-top: 20px;
     text-align: right;
@@ -217,6 +228,20 @@ export default {
     font-size: 18px;
     margin: 0;
     padding: 0;
+}
+.base {
+    img {
+        width: 70px;
+        max-height: 70px;
+    }
+    .idCard {
+        display: flex;
+    }
+    .pic {
+    }
+}
+.el-dialog .el-form .el-form-item{
+    margin-bottom: 20px;
 }
 </style>
 <style>
