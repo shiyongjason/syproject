@@ -82,6 +82,11 @@
 
             <p class="small-title">担保信息（万）</p>
             <div v-if="type != 2 && type != 3">
+                 <el-form label-position="left" label-width="100px" class="fawuForm">
+                        <el-form-item label="合计：">
+                            {{ assureTotal }}
+                        </el-form-item>
+                    </el-form>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>

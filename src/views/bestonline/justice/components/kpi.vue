@@ -23,13 +23,13 @@
                     </td>
                     <td>
                         <el-form-item :prop="`assessmentList[${index}].state`" :rules="rules.state" label-width="0">
-                            <el-select v-model="item.state" placeholder="请选择">
+                            <el-select v-model="item.state" placeholder="请选择结论">
                                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </td>
                     <td :rowspan="justiceData.assessmentList.length" v-if="index === 0">
-                        <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
+                        <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
                         </el-input>
                     </td>
                 </tr>
@@ -38,17 +38,17 @@
         <p class="small-title mt10">KPI(必填)</p>
         <div class="item-wrapper legal-form">
             <el-form-item label="尽调公司法律风险：" label-width="250px" prop="affairs.legalRisksOfCompany">
-                <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择结论">
+                <el-select v-model="justiceData.affairs.legalRisksOfCompany" placeholder="请选择">
                     <el-option v-for="item in companyLegalRisksOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="实际控制人法律风险：" label-width="250px" prop="affairs.legalRisksOfController">
-                <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择结论">
+                <el-select v-model="justiceData.affairs.legalRisksOfController" placeholder="请选择">
                     <el-option v-for="item in controllerLegalRisksOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="实际控制人配偶法律风险：" label-width="250px" prop="affairs.legalRisksOfControllerMate" class="single-row">
-                <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择结论">
+                <el-select v-model="justiceData.affairs.legalRisksOfControllerMate" placeholder="请选择">
                     <el-option v-for="item in controllerMateLegalRisksOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                 </el-select>
             </el-form-item>

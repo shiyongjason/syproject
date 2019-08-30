@@ -114,7 +114,7 @@ export default {
                     total += item.score * weightMap.get(item.assessmentDimension)
                 }
             })
-            return isNaN(total) ? '' : total
+            return isNaN(total) ? '' : total.toFixed(2)
         },
         radarValueOfData () {
             return this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle).map(item => isNaN(item.score) ? 0 : item.score)
