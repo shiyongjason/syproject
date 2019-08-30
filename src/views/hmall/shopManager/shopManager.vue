@@ -119,32 +119,26 @@
                 <span class="table-title-name fll">下载模板</span>
             </div>
             <el-button type="primary" class="ml20" @click="downloadTem()">点击下载模板</el-button>
+            <el-button type="primary" class="ml20" v-if="errMsg.length != 0" @click="lookErrMsg()">查看错误信息</el-button>
             <div class="table-cont-title clearfix">
                 <span class="table-title-name fll">上传模板</span>
             </div>
             <div class="ml20">
-                <el-upload
-                    ref="importFile"
-                    :show-file-list="true"
-                    :action="B2bUrl + '/product/api/products/import'"
-                    :file-list="importFileList"
-                    :auto-upload="false"
-                    :limit="1"
-                    :on-exceed="maxLength"
-                    :http-request="fileUpload"
-                    :on-change="onProgress"
-                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <el-upload ref="importFile" :show-file-list="true" :action="B2bUrl + '/product/api/products/import'" :file-list="importFileList" :auto-upload="false" :limit="1" :on-exceed="maxLength" :http-request="fileUpload" :on-change="onChange" :on-remove="onRemove" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <el-button>选择文件</el-button>
                 </el-upload>
-            </div>
-            <div v-if="errMsg.length != 0">
-                <div>错误提示：</div>
-                <div v-for="(item, index) in errMsg" :key="index" class="ml20">{{Object.keys(item)[0]}}{{item[Object.keys(item)[0]]}}</div>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="cancle">取 消</el-button>
                 <el-button type="primary" @click="onSure">确 定</el-button>
             </div>
+            <el-dialog width="50%" title="错误信息" :visible.sync="innerVisible" append-to-body class="shy">
+                <div>
+                    <div v-for="(item, index) in errMsg" :key="index" class="errMsg">
+                        {{Object.keys(item)[0]}}{{item[Object.keys(item)[0]]}}
+                    </div>
+                </div>
+            </el-dialog>
         </el-dialog>
     </div>
 </template>
@@ -190,6 +184,7 @@ export default {
     data () {
         return {
             dialogFormVisible: false,
+            innerVisible: false,
             B2bUrl: B2bUrl,
             file: '',
             errMsg: [],
@@ -214,19 +209,27 @@ export default {
             categoryThird: [],
             selectedCategoryValue: '',
             secondCategoryId: '', // 选中二级类目id
-            importFileList: []
+            importFileList: [],
+            middleStatus: 0
         }
     },
     methods: {
+        onChange () {
+            this.middleStatus = 0
+        },
+        lookErrMsg () {
+            this.innerVisible = true
+        },
         handleClose (done) {
             this.$confirm('确认关闭？')
                 .then(_ => {
                     this.initDialog()
                     done()
                 })
-                .catch(_ => {})
+                .catch(_ => { })
         },
         initDialog () {
+            this.middleStatus = 0
             this.categorySecond = []
             this.categoryThird = []
             this.secondCategoryId = ''
@@ -243,20 +246,19 @@ export default {
                     this.initDialog()
                     this.dialogFormVisible = false
                 })
-                .catch(_ => {})
+                .catch(_ => { })
         },
         maxLength () {
             this.$message({
                 type: 'warn',
-                message: '只能导入一个文件！'
+                message: '请删除后重新上传文件'
             })
         },
-        onProgress (e, file, list) {
-            // this.errMsg = []
-            console.log(e, file, list)
+        onRemove () {
+            this.errMsg = []
+            this.middleStatus = 1
         },
         async fileUpload (file) {
-            console.log(file)
             const data = new FormData()
             data.append('file', file.file)
             data.append('importType', 2)
@@ -264,7 +266,6 @@ export default {
             data.append('createBy', this.userInfo.employeeName)
             data.append('merchantName', '好享家')
             data.append('merchantCode', 'top')
-            console.log(data)
             const res = await importProductList(data)
             console.log(res)
             if (res.data.length === 0) {
@@ -278,10 +279,10 @@ export default {
                 this.errMsg = res.data
                 this.$message({
                     type: 'error',
-                    message: res.data
+                    message: '导入数据异常'
                 })
             }
-            // this.onQuery()
+            this.onQuery()
         },
         onSure () {
             if (!this.secondCategoryId) {
@@ -290,6 +291,10 @@ export default {
             }
             if (this.categoryThird.length === 0) {
                 Message({ message: '二级类目下无三级类目', type: 'warning' })
+                return
+            }
+            if (this.errMsg.length !== 0 || this.middleStatus === 1) {
+                Message({ message: '请重新上传文件', type: 'warning' })
                 return
             }
             this.$refs.importFile.submit()
@@ -454,5 +459,16 @@ export default {
 .selected {
     background-color: #ff7a45;
     color: #ffffff;
+}
+.errMsg{
+    padding: 10px 0;
+    color: red;
+}
+</style>
+
+<style lang="scss">
+.shy .el-dialog__body {
+    max-height: 500px;
+    overflow-y: scroll;
 }
 </style>
