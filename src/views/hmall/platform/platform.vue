@@ -2,22 +2,16 @@
     <div class="platform">
         <div class="page-body">
             <div class="page-body-cont">
+                <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                    <el-tab-pane label="平台公司功能管理" name="first"></el-tab-pane>
+                    <el-tab-pane label="商户管理" name="second"></el-tab-pane>
+                </el-tabs>
                 <div class="page-body-cont query-cont">
                     <div class="query-cont-col">
                         <div class="query-col-title">分部：</div>
                         <div class="query-col-input">
-                            <el-select
-                                v-model="queryParams.organizationCode"
-                                placeholder="选择分部"
-                                :clearable=true
-                                @change="branchChange"
-                            >
-                                <el-option
-                                    v-for="item in depArr"
-                                    :key="item.organizationCode"
-                                    :label="item.organizationName"
-                                    :value="item.organizationCode"
-                                >
+                            <el-select v-model="queryParams.organizationCode" placeholder="选择分部" :clearable=true @change="branchChange">
+                                <el-option v-for="item in depArr" :key="item.organizationCode" :label="item.organizationName" :value="item.organizationCode">
                                 </el-option>
                             </el-select>
                         </div>
@@ -25,32 +19,13 @@
                     <div class="query-cont-col-double">
                         <div class="query-col-title">城市：</div>
                         <div class="query-col-input">
-                            <el-select
-                                v-model="queryParams.provinceCode"
-                                @change="onCityChange"
-                                placeholder="省"
-                                :clearable=true
-                            >
-                                <el-option
-                                    v-for="item in provinceDataList"
-                                    :key="item.cityId"
-                                    :label="item.cityName"
-                                    :value="item.cityId"
-                                >
+                            <el-select v-model="queryParams.provinceCode" @change="onCityChange" placeholder="省" :clearable=true>
+                                <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                                 </el-option>
                             </el-select>
                             <span class="ml10 mr10">-</span>
-                            <el-select
-                                v-model="queryParams.cityCode"
-                                placeholder="市"
-                                :clearable=true
-                            >
-                                <el-option
-                                    v-for="item in cityList"
-                                    :key="item.cityId"
-                                    :label="item.cityName"
-                                    :value="item.cityId"
-                                >
+                            <el-select v-model="queryParams.cityCode" placeholder="市" :clearable=true>
+                                <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                                 </el-option>
                             </el-select>
                         </div>
@@ -68,47 +43,29 @@
                     <div class="query-cont-col">
                         <div class="flex-wrap-title">平台公司名称：</div>
                         <div class="flex-wrap-cont">
-                            <el-input type="text"
-                                      v-model="queryParams.organizationName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
+                            <el-input type="text" v-model="queryParams.organizationName" maxlength="50" placeholder="请输入平台公司名称"></el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">开启时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker
-                                v-model="queryParams.startDate"
-                                type="datetime"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                placeholder="开始日期"
-                                :picker-options="pickerOptionsStart"
-                            >
+                            <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10">-</span>
-                            <el-date-picker
-                                v-model="queryParams.endDate"
-                                type="datetime"
-                                format="yyyy-MM-dd HH:mm:ss"
-                                placeholder="结束日期"
-                                :picker-options="pickerOptionsEnd"
-                            >
+                            <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-cont">
-                            <el-button type="primary" class="ml20" @click="onQuery()">
-                                搜索
-                            </el-button>
+                            <el-button type="primary" class="ml20" @click="onQueryPlat()">搜索</el-button>
+                            <el-button type="primary" class="ml20" @click="reset()">重置</el-button>
                         </div>
                     </div>
                 </div>
+                <platTable :tableData="tableData" :paginationData="paginationData" @onQuery="onQueryPlat" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                </platTable>
             </div>
-            <platTable
-                :tableData="tableData"
-                :paginationData="paginationData"
-                @onQuery="onQuery"
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"></platTable>
         </div>
     </div>
 </template>
@@ -149,6 +106,7 @@ export default {
     },
     data () {
         return {
+            activeName: '',
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -164,28 +122,50 @@ export default {
         }
     },
     async mounted () {
-        this.onQuery()
         this.findDepList()
         this.provinceDataList = await this.findProvinceAndCity(0)
-
+        let haveStorage = localStorage.getItem('ManageStatus')
+        if (!haveStorage || haveStorage === 'first') {
+            this.activeName = 'first'
+            this.onQueryPlat()
+        } else if (haveStorage === 'second') {
+            this.activeName = 'second'
+            this.onQueryPlat()
+        }
         // this.findProvinceAndCity(0, this.userInfo.organizationCode)
     },
     methods: {
+        async reset () {
+            this.queryParams.organizationCode = ''
+            this.queryParams.provinceCode = null
+            this.queryParams.cityCode = ''
+            this.queryParams.status = ''
+            this.queryParams.organizationName = ''
+            this.queryParams.startDate = ''
+            this.queryParams.endDate = ''
+            this.provinceDataList = await this.findProvinceAndCity(0)
+            this.cityList = []
+        },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.onQuery()
+            this.onQueryPlat()
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val
-            this.onQuery()
+            this.onQueryPlat()
         },
-        async onQuery () {
+        async onQueryPlat () {
             const { ...params } = this.queryParams
             if (params.startDate) {
                 params.startDate = this.$root.$options.filters.formatDate(params.startDate, 'YYYY-MM-DD HH:mm:ss')
             }
             if (params.endDate) {
                 params.endDate = this.$root.$options.filters.formatDate(params.endDate, 'YYYY-MM-DD HH:mm:ss')
+            }
+            if (this.activeName === 'first') {
+                params.organizationSource = 0
+            } else if (this.activeName === 'second') {
+                params.organizationSource = 1
             }
             const { data } = await findplatformList(params)
             this.tableData = data.data.pageContent
@@ -236,13 +216,18 @@ export default {
             this.cityList = []
             this.$set(this.queryParams, 'provinceCode', '')
             this.$set(this.queryParams, 'cityCode', '')
+        },
+        async handleClick () {
+            localStorage.setItem('ManageStatus', this.activeName)
+            await this.reset()
+            this.onQueryPlat()
         }
     }
 }
 </script>
 
 <style scoped>
-    .flex-wrap-row{
-        max-width: 1350px;
-    }
+.flex-wrap-row {
+    max-width: 1350px;
+}
 </style>

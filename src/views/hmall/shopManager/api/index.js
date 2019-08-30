@@ -35,3 +35,5 @@ export const deleteCategory = (params) => instance.delete(B2bUrl + `product/api/
 export const createPublicShop = (params) => instance.post(B2bUrl + `product/api/categories/batch/share`, params)
 // 查询平台公司及共享平台公司下的二级类目
 export const findPublicShopCategory = (params) => instance.get(B2bUrl + `product/api/categories/company-share`, { params })
+// // 商品导入
+export const importProductList = (params) => instance.post(B2bUrl + `product/api/products/import`, params)
