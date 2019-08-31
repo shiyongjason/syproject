@@ -32,9 +32,15 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0" @click="onEdit(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && userInfo.deptType == 2 && (userInfo.role.indexOf('fazhanzongj') !== -1)" @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <el-button
+                        class="orangeBtn"
+                        v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu)"
+                        @click="onEdit(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
+                    <el-button
+                        class="orangeBtn"
+                        v-if="scope.data.row.status == 0 && submitbtn"
+                        @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -60,6 +66,10 @@ export default {
     name: 'reviewform',
     data () {
         return {
+            updatebtn: true,
+            submitbtn: false,
+            // 是否是总部的角色
+            iszongbu: true,
             params: {
                 status: '',
                 companyName: '',
@@ -91,6 +101,7 @@ export default {
     },
     mounted () {
         this.getDuemain()
+        this.Permission()
     },
     computed: {
         ...mapState({
@@ -98,6 +109,30 @@ export default {
         })
     },
     methods: {
+        // 权限判断
+        Permission () {
+            const deptType = this.userInfo.deptType
+            const role = this.userInfo.role
+            // 尽调管理员
+            if (role.indexOf('JDmanager') !== -1) {
+                this.updatebtn = false
+                this.iszongbu = false
+            }
+            // 分部发展
+            if (deptType === 2 && (role.indexOf('fazhanzongj') !== -1)) {
+                this.iszongbu = false
+                this.updatebtn = false
+                this.submitbtn = true
+            }
+            // 分部财务
+            if (deptType === 2 && (role.indexOf('JDgroup-SegmentFinance') !== -1)) {
+                this.iszongbu = false
+            }
+            // 分部运营
+            if (deptType === 2 && (role.indexOf('fenbuyunying') !== -1)) {
+                this.iszongbu = false
+            }
+        },
         onSizeChange (val) {
             this.params.pageSize = val
             this.getDuemain()

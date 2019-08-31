@@ -19,8 +19,8 @@
                 >
                     <span>{{item.fileName}}</span> <span>{{item.createUser}} {{item.createTime}}</span> <span> <a :href="item.fileUrl" target="_blank">下载</a></span>
                 </div>
-                <p class="small-title ">附件上传</p>
-                <div class="upload">
+                <p class="small-title " v-if="roleType">附件上传</p>
+                <div class="upload" v-if="roleType">
                     <el-upload
                         class="upload-demo"
                         v-bind="uploadInfo"
@@ -44,7 +44,7 @@
                 <!--end-->
             </el-collapse-item>
         </el-collapse>
-        <div class="flex-wrap-row">
+        <div class="flex-wrap-row" v-if="roleType">
             <el-col
                 :span="2"
                 :offset="8"
@@ -62,6 +62,12 @@ import { fileUploadUrl } from '@/api/config'
 import { addAttach, getAttach } from '../api/index'
 import { mapState } from 'vuex'
 export default {
+    props: {
+        roleType: {
+            type: Boolean,
+            default: false
+        }
+    },
     data () {
         return {
             activeName: '1',
