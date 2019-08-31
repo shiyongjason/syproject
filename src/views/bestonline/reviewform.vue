@@ -97,7 +97,7 @@ export default {
         this.applyId = this.$route.query.applyId
         this.target = this.$route.query.target
         this.getCooperativetarget()
-        // this.getRoletype()
+        this.getRoletype()
     },
     methods: {
         async getCooperativetarget () {
@@ -110,53 +110,56 @@ export default {
             }
         },
         getRoletype () {
-            const deptType = this.userInfo.deptType
-            const role = this.userInfo.role
-            // const target = this.target
-            // 尽调管理员
-            if (role.indexOf('JDmanager') !== -1) {
-            }
-            // 总部法务
-            if (deptType === 0 && role.indexOf('fawuzj') !== -1) {
-                this.fourType = true
-                this.sixType = true
-            }
-            // 总部平台组织
-            if (deptType === 0 && role.indexOf('pintaizuzhizongj') !== -1) {
-                this.fiveType = true
-                this.sixType = true
-            }
-            // 总部平台运营
-            if (deptType === 0 && role.indexOf('pingtaiyunyingzj') !== -1) {
-                this.twoType = true
-                this.sixType = true
-            }
-            // 总部财务
-            if (deptType === 0 && role.indexOf('caiwuzongj') !== -1) {
-                this.threeType = true
-                this.sixType = true
-            }
-            // 总部发展
-            if (deptType === 0 && role.indexOf('fazhanzongj') !== -1) {
-                this.oneType = true
-                this.sixType = true
-            }
-            // 分部发展
-            if (deptType === 2 && role.indexOf('fenbufazhan') !== -1) {
-            }
-            // 分部财务
-            if (deptType === 2 && role.indexOf('JDgroup-SegmentFinance') !== -1) {
-                this.twoType = true
-                this.threeType = true
-                this.fiveType = true
-                this.sixType = true
-            }
-            // 分部运营
-            if (deptType === 2 && role.indexOf('fenbuyunying') !== -1) {
-                this.twoType = true
-                this.threeType = true
-                this.fiveType = true
-                this.sixType = true
+            if (this.$route.query.status === 0) {
+                console.log(this.$route.query.status)
+                const deptType = this.userInfo.deptType
+                const role = this.userInfo.role
+                // const target = this.target
+                // 尽调管理员
+                if (role.indexOf('JDmanager') !== -1) {
+                }
+                // 总部法务
+                if (deptType === 0 && role.indexOf('fawuzj') !== -1) {
+                    this.fourType = true
+                    this.sixType = true
+                }
+                // 总部平台组织
+                if (deptType === 0 && role.indexOf('pintaizuzhizongj') !== -1) {
+                    this.fiveType = true
+                    this.sixType = true
+                }
+                // 总部平台运营
+                if (deptType === 0 && role.indexOf('pingtaiyunyingzj') !== -1) {
+                    this.twoType = true
+                    this.sixType = true
+                }
+                // 总部财务
+                if (deptType === 0 && role.indexOf('caiwuzongj') !== -1) {
+                    this.threeType = true
+                    this.sixType = true
+                }
+                // 总部发展
+                if (deptType === 0 && role.indexOf('fazhanzongj') !== -1) {
+                    this.oneType = true
+                    this.sixType = true
+                }
+                // 分部发展
+                if (deptType === 2 && role.indexOf('fenbufazhan') !== -1) {
+                }
+                // 分部财务
+                if (deptType === 2 && role.indexOf('JDgroup-SegmentFinance') !== -1) {
+                    this.twoType = true
+                    this.threeType = true
+                    this.fiveType = true
+                    this.sixType = true
+                }
+                // 分部运营
+                if (deptType === 2 && role.indexOf('fenbuyunying') !== -1) {
+                    this.twoType = true
+                    this.threeType = true
+                    this.fiveType = true
+                    this.sixType = true
+                }
             }
         //     if (target >= 3000) {
         //         if (role === 'JDgroup-ChiefOperation') { // 尽调规模>=3000W 时，只有“尽调小组-总部平台运营”  = >商业
