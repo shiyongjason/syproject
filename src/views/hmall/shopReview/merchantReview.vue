@@ -81,7 +81,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -91,7 +91,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -129,10 +129,13 @@ export default {
         },
         async findMerchantList () {
             const { ...params } = this.queryParams
-            if (params.startDate) params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
-            if (params.endDate) params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
+            if (params.startTime) {
+                params.startTime = this.$root.$options.filters.formatDate(params.startTime, 'YYYY-MM-DD HH:mm:ss')
+            }
+            if (params.endTime) {
+                params.endTime = this.$root.$options.filters.formatDate(params.endTime, 'YYYY-MM-DD HH:mm:ss')
+            }
             const { data } = await findMerchantList(params)
-            console.log(data)
             this.tableData = data.records
             this.paginationData = {
                 pageNumber: data.current,

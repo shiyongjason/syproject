@@ -115,6 +115,10 @@
                                 </el-upload>
                             </ul>
                         </el-form-item>
+                        <!-- v-if="$route.query.sourceType === 0" -->
+                        <el-form-item label="销售价：" prop="sellingPrice">
+                            <el-input placeholder="请输入销售价" v-model="form.sellingPrice" maxlength="16" :disabled="$route.query.checkStatus == 2 || $route.query.type == 'see'"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <div class="upload-tips">
                                 最多上传5张，500x500，不超过2m，仅支持jpg、jpeg、png
@@ -216,7 +220,7 @@ import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions, mapMutations } from 'vuex'
-
+import { Money } from '@/utils/rules.js'
 export default {
     name: 'selectCategory',
     data () {
@@ -265,6 +269,10 @@ export default {
                 ],
                 reqPictures: [
                     { required: true, message: '请选择商品主图' }
+                ],
+                sellingPrice: [
+                    { required: true, message: '请输入销售价', trigger: 'blur' },
+                    { validator: Money, trigger: 'blur' }
                 ]
             },
             pictureContainer: [],
@@ -552,6 +560,7 @@ export default {
             this.$set(this.form, 'productCode', data.product.productCode)
             this.$set(this.form, 'sourceCode', data.product.sourceCode)
             this.$set(this.form, 'sourceName', data.product.sourceName)
+            this.$set(this.form, 'sellingPrice', data.sellingPrice)
             this.causeFailure = data.causeFailure
             this.pictureContainer = []
             data.productPictures.forEach((value, index) => {
