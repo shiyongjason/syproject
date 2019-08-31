@@ -203,7 +203,7 @@ td {
 .question .el-icon-question {
     position: absolute;
     left: 656.5px;
-    top: 13.5px;
+    bottom: 850px;
 }
 table {
     /deep/ .el-form-item__error {

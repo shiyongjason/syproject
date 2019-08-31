@@ -7,11 +7,11 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <td><span class="red-word">*</span>客户</td>
-                    <td><span class="red-word">*</span>品类</td>
-                    <td><span class="red-word">*</span>品牌</td>
-                    <td><span class="red-word">*</span>销售金额（万元）</td>
-                    <td><span class="red-word">*</span>销售占比</td>
+                    <td>客户</td>
+                    <td>品类</td>
+                    <td>品牌</td>
+                    <td>销售金额（万元）</td>
+                    <td>销售占比</td>
                     <td>协议期开始(非必填)</td>
                     <td>协议期结束(非必填)</td>
                     <td width="15%">协议规模（万元）(非必填)</td>

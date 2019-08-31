@@ -12,6 +12,14 @@ let fileUploadUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
+        // interfaceUrl = 'http://192.168.20.248:30000/'
+        // ossUrl = 'http://192.168.20.248:8089/'
+        // uploadUrl = 'http://192.168.20.248:30000/tms'
+        // iframeUrl = 'http://devcrm.hosjoy.com/'
+        // jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        // ccpBaseUrl = 'http://192.168.20.248:8021/'
+        // B2bUrl = 'http://192.168.20.248:40000/'
+        // fileUploadUrl = 'http://192.168.20.248:30000/'
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         ossUrl = 'https://testroute.hosjoy.com:4832/'
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
@@ -19,15 +27,6 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
-        // interfaceUrl = 'http://192.168.20.248:30000/'
-        // ossUrl = 'http://192.168.20.248:8089/'
-        // interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        // uploadUrl = 'http://192.168.20.248:30000/tms'
-        // iframeUrl = 'http://devcrm.hosjoy.com/'
-        // jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        // ccpBaseUrl = 'http://192.168.20.248:8021/'
-        // B2bUrl = 'http://192.168.20.248:40000/'
-        // fileUploadUrl = 'http://192.168.20.248:30000/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'

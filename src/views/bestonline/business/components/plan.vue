@@ -12,7 +12,7 @@
             <div class="form-cont-col">
                 <el-form-item label="经营品类：" prop="dueBusinessFuturePlanCreateForm.webBusinessCategory" label-width="170px">
                     <el-checkbox-group v-model="form.dueBusinessFuturePlanCreateForm.webBusinessCategory" @change="onChange">
-                        <el-checkbox v-for="item in maincategory" :key="item.key" :label='item.key'>{{item.value}}</el-checkbox>
+                        <el-checkbox v-for="(item,index) in maincategory" :key="index" :label='item.key'>{{item.value}}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </div>
@@ -104,15 +104,17 @@ export default {
         form (form) {
             let webServiceCategory = form.dueBusinessFuturePlanCreateForm.webServiceCategory
             if (!webServiceCategory) {
-                webServiceCategory = ''
+                webServiceCategory = []
+            } else {
+                webServiceCategory = webServiceCategory.split(',')
             }
-            webServiceCategory = webServiceCategory.split(',')
             form.dueBusinessFuturePlanCreateForm.webServiceCategory = webServiceCategory.map(item => item && parseInt(item))
             let webBusinessCategory = form.dueBusinessFuturePlanCreateForm.webBusinessCategory
             if (!webBusinessCategory) {
-                webBusinessCategory = ''
+                webBusinessCategory = []
+            } else {
+                webBusinessCategory = webBusinessCategory.split(',')
             }
-            webBusinessCategory = webBusinessCategory.split(',')
             form.dueBusinessFuturePlanCreateForm.webBusinessCategory = webBusinessCategory.map(item => item && parseInt(item))
         },
         'form.dueBusinessFuturePlanCreateForm.businessProvince': {
@@ -144,7 +146,10 @@ export default {
     computed: {
         ...mapState({
             form: state => state.dueDiligence.businessData
-        })
+        }),
+        'form.dueBusinessFuturePlanCreateForm.webServiceCategory' () {
+            return []
+        }
     },
     async  mounted () {
         const { data } = await getAreacode()

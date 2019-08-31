@@ -20,14 +20,14 @@
                         <td>{{item.year}}</td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="25">
+                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="25">
+                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -42,7 +42,7 @@
 
         <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click.native="onSubmit(0)">暂存</el-button>
+                <el-button type="info" @click.native="onSave(0)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
                 <el-button type="primary" @click.native="onSubmit(1)">提交</el-button>
@@ -59,7 +59,7 @@ export default {
         return {
             rules: {
                 scale: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入尽调规模', trigger: 'change' }
                 ],
                 equityRatio: [
                     { required: true, message: '请输入股权比例', trigger: 'blur' },
@@ -74,10 +74,10 @@ export default {
                     }
                 ],
                 yearGrowthRate: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入年度递增率', trigger: 'blur' }
                 ],
                 netProfitRate: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ]
             }
         }
@@ -118,7 +118,7 @@ export default {
         async onSave () {
             this.form.operationNode = 0
             await this._saveOrUpdate()
-            this.$router.go(-1)
+            // this.$router.go(-1)
         },
         async onSubmit () {
             this.form.operationNode = 1

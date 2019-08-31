@@ -15,22 +15,18 @@
                 <tr>
                     <td>流动比率</td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[0].liquidityRatio > 200?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].liquidityRatio}}%</span>
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[1].liquidityRatio > 200?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].liquidityRatio}}%</span>
                     </td>
                 </tr>
                 <tr>
                     <td>速动比率</td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[0].quickRatio > 100?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].quickRatio}}%</span>
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[1].quickRatio > 100?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].quickRatio}}%</span>
                     </td>
                 </tr>
@@ -46,11 +42,9 @@
                 <tr>
                     <td>资产负债率</td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio > 70?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio}}%</span>
                     </td>
                     <td>
-                        <span class="red-word">*</span>
                         <span :class="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio > 70?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio}}%</span>
                     </td>
                 </tr>

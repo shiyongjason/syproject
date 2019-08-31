@@ -311,6 +311,12 @@ export default {
                     this.checkList.push(Number(item))
                 })
             }
+            if (this.formData.cooperateType === null) {
+                this.formData.cooperateType = ''
+            }
+            if (this.formData.salesType === null) {
+                this.formData.salesType = ''
+            }
         },
         selectGet (vId) {
             let obj = {}

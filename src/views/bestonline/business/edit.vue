@@ -31,7 +31,7 @@
                                     </el-form-item>
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入内容" v-model="item.remark">
+                                    <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
                                     </el-input>
                                 </td>
                             </tr>
@@ -56,10 +56,10 @@
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.riskDisclosure"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入风险揭示" v-model="form.riskDisclosure"></el-input>
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入内容" v-model="form.analysisDescription"></el-input>
+                        <el-input type="textarea" style="width:600px" rows="6" placeholder="请输入分析描述" v-model="form.analysisDescription"></el-input>
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -224,7 +224,7 @@ export default {
         }),
         async onSaveBus () {
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.join(',')
+            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
             this.form.operationNode = 0
@@ -242,7 +242,7 @@ export default {
             const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels && this.form.publicityPromotionChannels.join(',')
+                    this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {

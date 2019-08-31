@@ -19,8 +19,6 @@
                     <td>
                         {{item.cooperationTarget}}
                         <i v-if="index === 1">w</i>
-                        <i v-if="index === 2">%</i>
-                        <i v-if="index === 4">%</i>
                     </td>
                     <td>
                         <el-form-item :prop="`dueOrganizationAssessmentCreateFormList[${index}].state`"
@@ -31,7 +29,7 @@
                         </el-form-item>
                     </td>
                     <td :rowspan="form.dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
-                        <el-input type="textarea" :rows="8" placeholder="请输入内容" maxlength="25" v-model="item.remark">
+                        <el-input type="textarea" :rows="8" placeholder="请输入备注" maxlength="25" v-model="item.remark">
                         </el-input>
                     </td>
                 </tr>

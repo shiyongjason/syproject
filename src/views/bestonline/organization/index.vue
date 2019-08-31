@@ -21,13 +21,13 @@ export default {
     data () {
         return {
             applyId: '',
-            canEdit: ''
+            canEdit: true
         }
     },
     computed: {
-        canEdit () {
-            return this.form.operationNode != 1 && this.roleType
-        },
+        // canEdit () {
+        //     return this.form.operationNode != 1 && this.roleType
+        // },
         ...mapState({
             form: state => state.dueDiligence.organizationData
         })

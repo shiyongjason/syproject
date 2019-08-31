@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
-
+import store from '@/store/index'
 Vue.use(Router)
 
 const routerMapping = [
@@ -453,8 +453,9 @@ async function getMenu (to, next) {
     next({ ...to, replace: true })
 }
 
-let isFirst = true
+// let isFirst = true
 router.beforeEach(async (to, from, next) => {
+    let isFirst = store.state.isFirst
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非/login下需要验证
@@ -466,8 +467,8 @@ router.beforeEach(async (to, from, next) => {
             })
         } else {
             if (isFirst) {
-                isFirst = false
-
+                // isFirst = false
+                store.commit('IS_FIRST', false)
                 await getMenu(to, next)
             }
         }

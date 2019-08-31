@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-show="roleType">已提交 {{form.updateTime}} {{form.updateUser}} </p>
+        <p>已提交 {{form.updateTime}} {{form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
@@ -103,8 +103,8 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in form.dueOrganizationControllerAssessmentCreateFormList" :key="index">
-                            <td :colspan="item.isTitle ? 3 : 1">
-                                {{item.assessmentDimension}}
+                            <td :colspan="item.isTitle ? 3 : 1" style="text-align: left">
+                                <div style="width: 180px;text-align: center">{{item.assessmentDimension}}</div>
                             </td>
                             <td v-if="!item.isTitle">
                                 {{item.description}}
@@ -241,7 +241,7 @@
                     <div>
                         <label class="el-form-item__label label150">合作风险：</label>
                         <div class="el-form-item__content content150" style="width: 600px;">
-                            <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" disabled></el-rate>
+                            <el-rate v-model="form.cooperationRisk" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" disabled style="line-height: 50px"></el-rate>
                         </div>
                     </div>
                     <div>
