@@ -31,7 +31,7 @@
                         </el-tab-pane>
 
                         <el-tab-pane label="附件上传" name="seven">
-                            <HAccessory v-if="activeName=='seven'" />
+                            <HAccessory v-if="activeName=='seven'" :roleType='sixType' />
                         </el-tab-pane>
                         <el-tab-pane label="尽调评估及KPI" name="eight">
                             <HEvaluation v-if="activeName=='eight'" />
@@ -47,10 +47,8 @@
 import HInformation from './components/HInformation'
 import HCotarget from './cotarget/index'
 import HBusiness from './business/index'
-// import HFinance from './components/HFinance'
 import HFinance from './finance/index'
 import HOrganization from './organization/index'
-// import HOrganization from './components/HOrganization'
 import HAccessory from './components/HAccessory'
 import HJustice from './justice/index'
 import HEvaluation from './components/HEvaluation'
@@ -65,11 +63,12 @@ export default {
             activeName: 'one',
             applyId: '',
             Cooperation: '',
-            oneType: true,
-            twoType: true,
-            threeType: true,
-            fourType: true,
-            fiveType: true,
+            oneType: false,
+            twoType: false,
+            threeType: false,
+            fourType: false,
+            fiveType: false,
+            sixType: false,
             target: ''
         }
     },
@@ -102,6 +101,7 @@ export default {
     },
     methods: {
         async getCooperativetarget () {
+            console.log(this.userInfo)
             const { data } = await getCooperativetarget(this.applyId)
             if (data.data.operationNode === 1) {
                 this.Cooperation = true
@@ -110,34 +110,80 @@ export default {
             }
         },
         getRoletype () {
-            const role = this.userInfo.positionCode
-            const target = this.target
-            if (target >= 3000) {
-                if (role === 'JDgroup-ChiefOperation') { // 尽调规模>=3000W 时，只有“尽调小组-总部平台运营”  = >商业
-                    this.twoType = true
-                } else if (role === 'JDgroup-ChiefFinance') { //  尽调小组-财务 = > 财务
-                    this.threeType = true
-                } else if (role === 'JDgroup-LegalAffairs') { //  尽调小组-法务 = > 法务
-                    this.fourType = true
-                } else if (role === 'JDgroup-PlatformOrganization') { //  尽调小组-平台组织 = > 组织
-                    this.fiveType = true
-                }
-            } else if (target < 3000 && target > 0) {
-                if (role === 'JDgroup-SegmentFinance' || role === 'JDgroup-SegmentOperation') { // 分部财务 分部运营
-                    // this.oneType = true
-                    this.twoType = true
-                    this.threeType = true
-                    this.fourType = true
-                    this.fiveType = true
-                } else if (role === 'JDgroup-LegalAffairs') {
-                    this.fourType = true
-                }
+            const deptType = this.userInfo.deptType
+            const role = this.userInfo.role
+            // const target = this.target
+            // 尽调管理员
+            if (role.indexOf('JDmanager') !== -1) {
             }
-            if (role === 'JDmanager' || role === 'JDgroup-ChiefBD') { // “尽调管理员”“总部发展”  合作目标
+            // 总部法务
+            if (deptType === 0 && role.indexOf('fawuzj') !== -1) {
+                this.fourType = true
+                this.sixType = true
+            }
+            // 总部平台组织
+            if (deptType === 0 && role.indexOf('pintaizuzhizongj') !== -1) {
+                this.fiveType = true
+                this.sixType = true
+            }
+            // 总部平台运营
+            if (deptType === 0 && role.indexOf('pingtaiyunyingzj') !== -1) {
+                this.twoType = true
+                this.sixType = true
+            }
+            // 总部财务
+            if (deptType === 0 && role.indexOf('caiwuzongj') !== -1) {
+                this.threeType = true
+                this.sixType = true
+            }
+            // 总部发展
+            if (deptType === 0 && role.indexOf('fazhanzongj') !== -1) {
                 this.oneType = true
-            } else {
-                this.oneType = false
+                this.sixType = true
             }
+            // 分部发展
+            if (deptType === 2 && role.indexOf('fenbufazhan') !== -1) {
+            }
+            // 分部财务
+            if (deptType === 2 && role.indexOf('JDgroup-SegmentFinance') !== -1) {
+                this.twoType = true
+                this.threeType = true
+                this.fiveType = true
+                this.sixType = true
+            }
+            // 分部运营
+            if (deptType === 2 && role.indexOf('fenbuyunying') !== -1) {
+                this.twoType = true
+                this.threeType = true
+                this.fiveType = true
+                this.sixType = true
+            }
+        //     if (target >= 3000) {
+        //         if (role === 'JDgroup-ChiefOperation') { // 尽调规模>=3000W 时，只有“尽调小组-总部平台运营”  = >商业
+        //             this.twoType = true
+        //         } else if (role === 'JDgroup-ChiefFinance') { //  尽调小组-财务 = > 财务
+        //             this.threeType = true
+        //         } else if (role === 'JDgroup-LegalAffairs') { //  尽调小组-法务 = > 法务
+        //             this.fourType = true
+        //         } else if (role === 'JDgroup-PlatformOrganization') { //  尽调小组-平台组织 = > 组织
+        //             this.fiveType = true
+        //         }
+        //     } else if (target < 3000 && target > 0) {
+        //         if (role === 'JDgroup-SegmentFinance' || role === 'JDgroup-SegmentOperation') { // 分部财务 分部运营
+        //             // this.oneType = true
+        //             this.twoType = true
+        //             this.threeType = true
+        //             this.fourType = true
+        //             this.fiveType = true
+        //         } else if (role === 'JDgroup-LegalAffairs') {
+        //             this.fourType = true
+        //         }
+        //     }
+        //     if (role === 'jindiaofz' || (deptType === 0 && role.indexOf('fazhanzongj') !== -1)) { // “尽调管理员”“总部发展”  合作目标
+        //         this.oneType = true
+        //     } else {
+        //         this.oneType = false
+        //     }
         }
     }
 }
