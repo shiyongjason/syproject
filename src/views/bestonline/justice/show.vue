@@ -8,9 +8,9 @@
                     <template slot="title">
                         <p class="title-p">{{ title }}</p>
                     </template>
-                    <InvestmentOut v-if="index != 3" :type="index" />
-                    <CompanyBasic v-if="index == 3" :type="index" />
-                    <LegalInfo :type="index" @add-event="onAddList" />
+                    <InvestmentOutLook v-if="index != 3" :type="index" />
+                    <CompanyBasicLook v-if="index == 3" :type="index" />
+                    <LegalInfoLook :type="index" />
                 </el-collapse-item>
             </el-collapse>
         </el-form>
@@ -21,13 +21,13 @@
 import { mapState, mapActions } from 'vuex'
 import KPI from './components/kpiLook.vue'
 import CoPartner from './components/copartnerLook.vue'
-import LegalInfo from './components/legalInfo.vue'
-import CompanyBasic from './components/legalInfo/companyBasic.vue'
-import InvestmentOut from './components/legalInfo/investmentOut.vue'
+import LegalInfoLook from './components/legalInfoLook.vue'
+import CompanyBasicLook from './components/legalInfo/companyBasicLook.vue'
+import InvestmentOutLook from './components/legalInfo/investmentOutLook.vue'
 // import { fileUploadUrl } from '@/api/config'
 export default {
     components: {
-        KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
+        KPI, CoPartner, CompanyBasicLook, InvestmentOutLook, LegalInfoLook
     },
     data () {
         return {
@@ -97,11 +97,11 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
-    // assetListType0 () {
-    //     return this.justiceData.assetList.filter(value => {
-    //         if (value.type === 0) return value
-    //     })
-    // }
+        // assetListType0 () {
+        //     return this.justiceData.assetList.filter(value => {
+        //         if (value.type === 0) return value
+        //     })
+        // }
     },
     methods: {
         ...mapActions({
@@ -147,7 +147,7 @@ export default {
     },
     async mounted () {
         this.applyId = this.$route.query.applyId
-    // await this.findJusticeData({ applyId: this.applyId })
+        // await this.findJusticeData({ applyId: this.applyId })
     }
 }
 </script>

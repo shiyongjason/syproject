@@ -33,7 +33,7 @@
         </div>
 
         <p class="small-title">分支机构</p>
-        <div class="flex-wrap-col info-wrap" v-for="(item, index) in branchAgencyList" :key="'branchAgencyList'+item.type+index">
+        <div class="flex-wrap-col info-wrap" v-for="(item, index) in justiceData.branchAgencyList" :key="'branchAgencyList'+item.type+index">
             <template>
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddbranchAgencyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemovebranchAgencyList(item.id)"></i>
@@ -46,7 +46,7 @@
         </div>
 
         <p class="small-title">关联公司</p>
-        <div class="flex-wrap-col info-wrap" v-for="(item, index) in relatedCompanyList" :key="'relatedCompanyList'+item.type+index">
+        <div class="flex-wrap-col info-wrap" v-for="(item, index) in justiceData.relatedCompanyList" :key="'relatedCompanyList'+item.type+index">
             <template>
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddrelatedCompanyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemoverelatedCompanyList(item.id)"></i>

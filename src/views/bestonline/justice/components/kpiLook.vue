@@ -106,6 +106,9 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
 }
+/deep/.legal-form .el-form-label {
+    margin-bottom: 0;
+}
 .red-span {
     color: red;
 }

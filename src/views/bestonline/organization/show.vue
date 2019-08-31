@@ -294,7 +294,17 @@ export default {
         },
         ...mapState({
             form: state => state.dueDiligence.organizationData
-        })
+        }),
+        debtTotal () {
+            const debtArr = this.debtList.map(item => item.debt)
+            const result = debtArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
+            return isNaN(result) ? '' : result
+        },
+        assureTotal () {
+            const assureArr = this.assureList.map(item => item.money)
+            const result = assureArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
+            return isNaN(result) ? '' : result
+        }
     },
     watch: {
         form (form) {
