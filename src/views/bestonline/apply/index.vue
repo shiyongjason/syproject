@@ -30,7 +30,7 @@
 
         </div>
         <div class="page-body-cont">
-            <div class="table-cont-title" v-if="add">
+            <div class="table-cont-title" v-if="addbtn">
                 <span class="table-title-name"></span>
                 <el-button type="info" @click="addNewApply">
                     添加申请
@@ -44,7 +44,7 @@
                     <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0 || scope.data.row.approvalStatus==3) && update">修改</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0 || scope.data.row.approvalStatus==3) && updatebtn">修改</el-button>
                     <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-else>查看</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if="scope.data.row.approvalStatus==0 && deletebtn">删除</el-button>
                 </template>
@@ -72,8 +72,8 @@ export default {
     name: 'application',
     data () {
         return {
-            add: false,
-            update: false,
+            addbtn: false,
+            updatebtn: false,
             deletebtn: false,
             tableLabel: [
                 { label: '公司名称', prop: 'companyName', align: 'left' },
@@ -118,8 +118,8 @@ export default {
             const role = this.userInfo.role
             // 分部发展
             if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
-                this.add = true
-                this.update = true
+                this.addbtn = true
+                this.updatebtn = true
                 this.deletebtn = true
             }
         },
