@@ -1,7 +1,7 @@
 <template>
     <div class="customerManagement">
-        <searchForm @search='onSearch' @add="onAddCustomer" v-model="queryParams" />
-        <customerTable :tableData='list' :tableLabel="tableLabel" :paginationData="paginationOrderData"  @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
+        <search-form @search='onSearch' @add="onAddCustomer" v-model="queryParams" />
+        <customer-table :tableData='list' :tableLabel="tableLabel" :paginationData="paginationOrderData"  @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
         <add-or-updata :visible.sync="dialogCustomerEdit"/>
     </div>
 </template>
@@ -61,6 +61,12 @@ export default {
         async getList () {
             const { data } = await findCustomerList(this.queryParams)
             console.log('list', data)
+            this.list = data.records
+            this.paginationOrderData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
         }
     },
     mounted () {
