@@ -220,13 +220,14 @@ export default {
             selectedCategoryValue: '',
             secondCategoryId: '', // 选中二级类目id
             importFileList: [],
-            middleStatus: 0
+            middleStatus: 0 // 0无文件 1有文件已提交 2有文件未提交
         }
     },
     methods: {
         onChange (file, fileArr) {
-            if (file.raw.type === 'application/vnd.ms-excel' || file.raw.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.raw.type === '.csv') {
-                this.middleStatus = 0
+            const fileSuffix = file.raw.name.substring(file.raw.name.indexOf('.'))
+            if (fileSuffix == '.xls' || fileSuffix == '.xlsx' || fileSuffix == '.csv') {
+                this.middleStatus = 1
                 return
             }
             this.importFileList = []
@@ -274,7 +275,7 @@ export default {
         },
         onRemove () {
             this.errMsg = []
-            this.middleStatus = 1
+            this.middleStatus = 0
         },
         async fileUpload (file) {
             const data = new FormData()
@@ -285,7 +286,6 @@ export default {
             data.append('merchantName', '好享家')
             data.append('merchantCode', 'top')
             const res = await importProductList(data)
-            console.log(res)
             if (res.data.length === 0) {
                 this.$message({
                     type: 'success',
@@ -294,6 +294,7 @@ export default {
                 this.dialogFormVisible = false
                 this.$refs.importFile.clearFiles()
             } else {
+                this.middleStatus = 2
                 this.errMsg = res.data
                 this.$message({
                     type: 'error',
@@ -311,8 +312,12 @@ export default {
                 Message({ message: '二级类目下无三级类目', type: 'warning' })
                 return
             }
-            if (this.errMsg.length !== 0 || this.middleStatus === 1) {
-                Message({ message: '请重新上传文件', type: 'warning' })
+            if (this.errMsg.length !== 0 && this.middleStatus === 1) {
+                Message({ message: '请删除后重新上传文件', type: 'warn' })
+                return
+            }
+            if (this.middleStatus === 0) {
+                Message({ message: '请上传文件', type: 'warning' })
                 return
             }
             this.$refs.importFile.submit()
