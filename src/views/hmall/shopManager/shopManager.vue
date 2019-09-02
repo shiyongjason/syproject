@@ -124,7 +124,17 @@
                 <span class="table-title-name fll">上传模板</span>
             </div>
             <div class="ml20">
-                <el-upload ref="importFile" :show-file-list="true" :action="B2bUrl + '/product/api/products/import'" :file-list="importFileList" :auto-upload="false" :limit="1" :on-exceed="maxLength" :http-request="fileUpload" :on-change="onChange" :on-remove="onRemove" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                <el-upload ref="importFile"
+                    :show-file-list="true"
+                    :action="B2bUrl + '/product/api/products/import'"
+                    :file-list="importFileList"
+                    :auto-upload="false"
+                    :limit="1"
+                    :on-exceed="maxLength"
+                    :http-request="fileUpload"
+                    :on-change="onChange"
+                    :on-remove="onRemove"
+                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <el-button>选择文件</el-button>
                 </el-upload>
             </div>
@@ -214,8 +224,16 @@ export default {
         }
     },
     methods: {
-        onChange () {
-            this.middleStatus = 0
+        onChange (file, fileArr) {
+            if (file.raw.type === 'application/vnd.ms-excel' || file.raw.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || file.raw.type === '.csv') {
+                this.middleStatus = 0
+                return
+            }
+            this.importFileList = []
+            this.$message({
+                type: 'warn',
+                message: '上传文件格式不正确'
+            })
         },
         lookErrMsg () {
             this.innerVisible = true
