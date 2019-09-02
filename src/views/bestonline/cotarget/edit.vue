@@ -35,7 +35,7 @@
                     </tr>
                 </tbody>
             </table>
-            <el-form-item label="股权比例：" prop="equityRatio">
+            <el-form-item label="股权比例（合作方:好享家）：" prop="equityRatio">
                 <el-input v-model="form.equityRatio" placeholder="请输入股权比例（例：3:4）" maxlength="25"></el-input>
             </el-form-item>
         </el-form>
