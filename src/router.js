@@ -320,6 +320,17 @@ const router = new Router({
                         icon: ''
                     },
                     component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+                },
+                {
+                    path: 'orderCenter',
+                    name: 'orderCenter',
+                    meta: {
+                        title: '订单中心',
+                        tagName: '订单中心',
+                        isMenu: true,
+                        icon: ''
+                    },
+                    component: () => import('@/views/serviceManagement/orderCenter/order.vue')
                 }
             ]
         },
