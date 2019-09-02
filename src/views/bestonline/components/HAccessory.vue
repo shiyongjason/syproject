@@ -147,7 +147,7 @@ export default {
                 this.type = 1
                 var e = document.createEvent('MouseEvents')
                 e.initEvent('click', true, true) // 这里的click可以换成你想触发的行为
-                for (let i = 0;i < this.arrList.length;i++) {
+                for (let i = 0; i < this.arrList.length; i++) {
                     document.getElementsByClassName('el-icon-close')[i].dispatchEvent(e) // 这里的clickME可以换成你想触发行为的DOM结点
                 }
                 this.arrList = []
