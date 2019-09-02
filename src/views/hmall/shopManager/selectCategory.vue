@@ -582,7 +582,9 @@ export default {
             arr.forEach(value => {
                 this.categorySelectId.push(value.id)
             })
-            this.form.details = data.productDetails.details
+            if (data.productDetails) {
+                this.form.details = data.productDetails.details
+            }
             this.findAttributeDetails(true)
         },
         async findAttributeDetails (isMofify) {
