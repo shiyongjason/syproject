@@ -13,7 +13,7 @@
                 </div>
                 <p class="small-title ">附件上传</p>
                 <div class="upload">
-                    <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
+                    <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList" :before-upload="handleUpload">
                         <el-button size="small" type="primary">点击上传</el-button>
                         <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制10M以内</div>
                     </el-upload>
@@ -97,6 +97,7 @@ export default {
         },
         beforeRemove (file, fileList) {
             if (this.type === 1) {
+                this.type = 0
                 return true
             }
             return this.$confirm(`确定移除 ${file.name}？`).then(() => {
@@ -107,31 +108,24 @@ export default {
                 })
             }).catch(() => { })
         },
-        handleCheckedSize (input, inputList) {
-            console.log(input)
-            const fileSuffix = input.name.substring(input.name.indexOf('.'))
-            if (this.uploadInfo.accept.indexOf(fileSuffix) > -1) {
-                this.$message.error('格式不正确！')
-                return false
-            }
-            // 判断是否符合要求
-            if (input.size / (1024 * 1024) < 10) {
-                this.is10M = false
-            } else {
-                this.is10M = true
-            }
-        },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
-            if (this.is10M) {
+            if (file.size / (1024 * 1024) > 10) {
                 this.$message({
                     message: '附件要保持10M以内',
                     type: 'warning'
                 })
+                this.type = 1
+                return false
+            }
+            const fileSuffix = file.name.substring(file.name.indexOf('.'))
+            if (this.uploadInfo.accept.indexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                this.type = 1
                 return false
             }
         },
-        async   getAttach () {
+        async getAttach () {
             const { data } = await getAttach(this.applyId)
             this.tableList = data.data.pageContent
         },
