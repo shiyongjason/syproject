@@ -9,12 +9,12 @@ import layout from '@/views/layout/store/index.js'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
-const userdata = sessionStorage.getItem('user_data')
+// const userdata = sessionStorage.getItem('user_data')
 const store = new Vuex.Store({
     state: {
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
-        'userdata': userdata ? JSON.parse(userdata) : {},
+        // 'userdata': userdata ? JSON.parse(userdata) : {},
         'isSaving': false,
         'isFirst': true,
         'menuList': [],

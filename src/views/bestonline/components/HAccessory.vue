@@ -19,8 +19,8 @@
                 >
                     <span>{{item.fileName}}</span> <span>{{item.createUser}} {{item.createTime}}</span> <span> <a :href="item.fileUrl" target="_blank">下载</a></span>
                 </div>
-                <p class="small-title " v-if="roleType">附件上传</p>
-                <div class="upload" v-if="roleType">
+                <p class="small-title ">附件上传</p>
+                <div class="upload">
                     <el-upload
                         class="upload-demo"
                         v-bind="uploadInfo"
@@ -44,7 +44,7 @@
                 <!--end-->
             </el-collapse-item>
         </el-collapse>
-        <div class="flex-wrap-row" v-if="roleType">
+        <div class="flex-wrap-row">
             <el-col
                 :span="2"
                 :offset="8"
@@ -78,7 +78,8 @@ export default {
             dueAttachCreateFormList: [],
             tableList: [],
             type: 0,
-            is10M: false
+            is10M: false,
+            canEdit: true
         }
     },
     computed: {
@@ -99,6 +100,11 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.getAttach(this.applyId)
+        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
+            this.canEdit = true
+        } else {
+            this.canEdit = false
+        }
     },
     methods: {
         // handleRemove (file, fileList) {
