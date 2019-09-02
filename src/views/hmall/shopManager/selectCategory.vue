@@ -739,6 +739,9 @@ export default {
         this.modify = query.id || false
         this.isStatus = query.status
         this.isReview = this.$route.query.isReview
+        if (query.type === 'add') {
+            this.isShowSellingPrice = false
+        }
         if (this.modify) {
             this.isAdd = false
             this.isNext = true
