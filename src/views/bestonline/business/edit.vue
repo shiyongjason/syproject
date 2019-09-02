@@ -224,7 +224,8 @@ export default {
         }),
         async onSaveBus () {
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
-            this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
+            const publicityPromotionChannels = this.form.publicityPromotionChannels
+            this.form.publicityPromotionChannels = publicityPromotionChannels ? (Array.isArray(publicityPromotionChannels) ? publicityPromotionChannels.join(',') : publicityPromotionChannels) : ''
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
             this.form.operationNode = 0
