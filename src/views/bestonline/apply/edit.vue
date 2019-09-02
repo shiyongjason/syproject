@@ -339,7 +339,6 @@ export default {
                 this.formData.applyId = this.applyId
                 this.formData.updateUser = this.userInfo.jobNumber
                 await updateDueapply(this.formData)
-                this.$router.go(-1)
             } else {
                 this.formData.createUser = this.userInfo.jobNumber
                 await adddueapply(this.formData)
@@ -348,7 +347,6 @@ export default {
                     message: '暂存成功',
                     type: 'success'
                 })
-                this.$router.go(-1)
             }
         },
         async onSubmit () {
