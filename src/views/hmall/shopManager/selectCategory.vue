@@ -115,14 +115,14 @@
                                 </el-upload>
                             </ul>
                         </el-form-item>
-                        <!-- v-if="$route.query.sourceType === 0" -->
-                        <el-form-item label="销售价：" prop="sellingPrice">
-                            <el-input placeholder="请输入销售价" v-model="form.sellingPrice" maxlength="16" :disabled="$route.query.checkStatus == 2 || $route.query.type == 'see'"></el-input>
-                        </el-form-item>
                         <el-form-item>
                             <div class="upload-tips">
                                 最多上传5张，500x500，不超过2m，仅支持jpg、jpeg、png
                             </div>
+                        </el-form-item>
+                        <!-- v-if="$route.query.sourceType === 0" -->
+                        <el-form-item label="销售价：" prop="sellingPrice" v-if="isShowSellingPrice">
+                            <el-input placeholder="请输入销售价" v-model="form.sellingPrice" maxlength="16" :disabled="$route.query.checkStatus == 2 || $route.query.type == 'see'"></el-input>
                         </el-form-item>
                         <div v-if="form.attributeList.length>0" style="position: relative;z-index: 2">
                             <div class="table-cont-title clearfix">
@@ -284,7 +284,8 @@ export default {
             rejectContainer: '',
             causeFailure: '',
             isReview: false,
-            saveDisabled: false
+            saveDisabled: false,
+            isShowSellingPrice: true
         }
     },
     computed: {
@@ -561,6 +562,10 @@ export default {
             this.$set(this.form, 'sourceCode', data.product.sourceCode)
             this.$set(this.form, 'sourceName', data.product.sourceName)
             this.$set(this.form, 'sellingPrice', data.sellingPrice)
+            if (data.product.merchantCode === 'top') {
+                this.isShowSellingPrice = false
+                this.form.sellingPrice = 0
+            }
             this.causeFailure = data.causeFailure
             this.pictureContainer = []
             data.productPictures.forEach((value, index) => {

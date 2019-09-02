@@ -294,7 +294,6 @@ export default {
                 this.dialogFormVisible = false
                 this.$refs.importFile.clearFiles()
             } else {
-                this.middleStatus = 2
                 this.errMsg = res.data
                 this.$message({
                     type: 'error',
