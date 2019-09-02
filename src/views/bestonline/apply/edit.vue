@@ -218,14 +218,13 @@ export default {
     },
     computed: {
         ...mapState({
-            userdata: state => state.userdata,
             userInfo: state => state.userInfo
         }),
         uploadInfo () {
             return {
                 action: fileUploadUrl + 'tms/files/upload',
                 data: {
-                    updateUid: this.userdata.name
+                    updateUid: this.userInfo.name
                 },
                 accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF,.xlsx,.xls,.ppt,.doc,.docx,.rar,.zip',
                 name: 'multiFile'
@@ -330,7 +329,7 @@ export default {
             this.$refs['attachmentsUrl'].clearValidate()
             this.formData.mainSystem = this.checkList.join(',')
             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-            this.formData.organizationCode = this.userdata.organizationCode
+            this.formData.organizationCode = this.userInfo.deptDoc
             if (!this.formData.companyName) {
                 this.showWarnMsg('请输入尽调公司名称')
                 return false
@@ -356,9 +355,9 @@ export default {
                         if (validate) {
                             this.formData.mainSystem = this.checkList.join(',')
                             this.formData.attachmentsUrl = JSON.stringify(this.arrList)
-                            this.formData.createUserName = this.userdata.name
+                            this.formData.createUserName = this.userInfo.name
                             this.formData.createUser = this.userInfo.jobNumber
-                            this.formData.organizationCode = this.userdata.organizationCode
+                            this.formData.organizationCode = this.userInfo.deptDoc
                             if (this.applyId) {
                                 this.formData.applyId = this.applyId
                                 await appDueapply(this.formData)

@@ -140,7 +140,7 @@ export default {
             this.getDuemain()
         },
         async  getDuemain () {
-            this.params.organizationCode = this.userInfo.organizationCode
+            this.params.organizationCode = this.userInfo.deptDoc
             this.params.role = this.userInfo.positionCode
             const { data } = await getDuemain(this.params)
             this.tableData = data.data.pageContent

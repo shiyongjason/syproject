@@ -154,7 +154,7 @@ export default {
             this.dialogVisible = true
         },
         async getDueapply () {
-            this.params.organizationCode = this.userInfo.organizationCode
+            this.params.organizationCode = this.userInfo.deptDoc
             this.params.role = this.userInfo.positionCode
             const { data } = await getDueapply(this.params)
             this.tableData = data.data.pageContent
