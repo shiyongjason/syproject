@@ -295,11 +295,34 @@ const routerMapping = [
             }
         ]
     }
+
 ]
 
 const router = new Router({
     mode: 'history',
     routes: [
+        {
+            path: '/serviceManagement',
+            meta: {
+                title: '服务管理',
+                isMenu: true,
+                icon: 'hosjoy_operation'
+            },
+            component: Layout,
+            children: [
+                {
+                    path: 'customerManagement',
+                    name: 'customerManagement',
+                    meta: {
+                        title: '客户管理',
+                        tagName: '客户管理',
+                        isMenu: true,
+                        icon: ''
+                    },
+                    component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+                }
+            ]
+        },
         {
             path: '/login',
             name: 'login',
