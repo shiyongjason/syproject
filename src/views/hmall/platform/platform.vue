@@ -136,13 +136,20 @@ export default {
     },
     methods: {
         async reset () {
-            this.queryParams.organizationCode = ''
-            this.queryParams.provinceCode = null
-            this.queryParams.cityCode = ''
-            this.queryParams.status = ''
-            this.queryParams.organizationName = ''
-            this.queryParams.startDate = ''
-            this.queryParams.endDate = ''
+            // this.queryParams.organizationCode = ''
+            // this.queryParams.provinceCode = null
+            // this.queryParams.cityCode = ''
+            // this.queryParams.status = ''
+            // this.queryParams.organizationName = ''
+            // this.queryParams.startDate = ''
+            // this.queryParams.endDate = ''
+            this.$set(this.queryParams, 'organizationCode', '')
+            this.$set(this.queryParams, 'provinceCode', null)
+            this.$set(this.queryParams, 'cityCode', '')
+            this.$set(this.queryParams, 'status', '')
+            this.$set(this.queryParams, 'organizationName', '')
+            this.$set(this.queryParams, 'startDate', '')
+            this.$set(this.queryParams, 'endDate', '')
             this.provinceDataList = await this.findProvinceAndCity(0)
             this.cityList = []
         },
@@ -217,9 +224,11 @@ export default {
             this.$set(this.queryParams, 'provinceCode', '')
             this.$set(this.queryParams, 'cityCode', '')
         },
-        async handleClick () {
+        handleClick () {
             localStorage.setItem('ManageStatus', this.activeName)
-            await this.reset()
+            this.reset()
+            // this.queryParams.organizationName = ''
+            // this.$set(this.queryParams, 'organizationName', '')
             this.onQueryPlat()
         }
     }
