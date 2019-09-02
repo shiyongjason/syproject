@@ -32,15 +32,9 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button
-                        class="orangeBtn"
-                        v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu)"
-                        @click="onEdit(scope.data.row)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu)" @click="onEdit(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
-                    <el-button
-                        class="orangeBtn"
-                        v-if="scope.data.row.status == 0 && submitbtn"
-                        @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && submitbtn" @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -146,7 +140,7 @@ export default {
             this.getDuemain()
         },
         async  getDuemain () {
-            this.params.organizationCode = this.userInfo.organizationCode
+            this.params.organizationCode = this.userInfo.deptDoc
             this.params.role = this.userInfo.positionCode
             const { data } = await getDuemain(this.params)
             this.tableData = data.data.pageContent

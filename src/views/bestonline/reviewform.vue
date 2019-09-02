@@ -194,7 +194,7 @@ export default {
 <style lang="scss" scoped>
 .jd-manage {
     margin-bottom: 200px;
-    .title-p {
+    /deep/ .title-p {
         font-size: 18px;
         font-weight: 500;
         margin: 0;

@@ -6,26 +6,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="仓库地址">
-                    <el-select v-model="form.dueFinanceBasic.storeProvince" placeholder="省" @change="onProvince">
-                        <el-option v-for="item in storeProvince" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </div>
-            <div class="form-cont-col">
-                <el-form-item>
-                    <el-select v-model="form.dueFinanceBasic.storeCity" placeholder="市" @change="onCity">
-                        <el-option v-for="item in storeCity" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-            </div>
-            <div class="form-cont-col">
-                <el-form-item>
-                    <el-select v-model="form.dueFinanceBasic.storeArea" placeholder="区">
-                        <el-option v-for="item in storeArea" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
+                    <p>{{form.dueFinanceBasic.storeProvince + form.dueFinanceBasic.storeCity + form.dueFinanceBasic.storeArea}}</p>
                 </el-form-item>
             </div>
         </div>

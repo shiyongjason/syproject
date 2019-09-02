@@ -223,7 +223,7 @@ export default {
             findBusinessData: 'findBusinessData'
         }),
         async onSaveBus () {
-            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+            const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
             this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
             this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
@@ -239,7 +239,7 @@ export default {
         },
         async onSubmit () {
             // console.log(this.form.publicityPromotionChannels)
-            const createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+            const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
