@@ -316,6 +316,28 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
             },
             {
+                path: 'orderCenter',
+                name: 'orderCenter',
+                meta: {
+                    title: '订单中心',
+                    tagName: '订单中心',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/order.vue')
+            },
+            {
+                path: 'customerManagement',
+                name: 'customerManagement',
+                meta: {
+                    title: '客户管理',
+                    tagName: '客户管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+            },
+            {
                 path: 'customerRecord',
                 name: 'customerRecord',
                 meta: {
@@ -338,12 +360,45 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/customerReport/index.vue')
             }
         ]
-    },
+    }
 ]
 
 const router = new Router({
     mode: 'history',
     routes: [
+        {
+            path: '/serviceManagement',
+            meta: {
+                title: '服务管理',
+                isMenu: true,
+                icon: 'hosjoy_operation'
+            },
+            component: Layout,
+            children: [
+                {
+                    path: 'customerManagement',
+                    name: 'customerManagement',
+                    meta: {
+                        title: '客户管理',
+                        tagName: '客户管理',
+                        isMenu: true,
+                        icon: ''
+                    },
+                    component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+                },
+                {
+                    path: 'orderCenter',
+                    name: 'orderCenter',
+                    meta: {
+                        title: '订单中心',
+                        tagName: '订单中心',
+                        isMenu: true,
+                        icon: ''
+                    },
+                    component: () => import('@/views/serviceManagement/orderCenter/order.vue')
+                }
+            ]
+        },
         {
             path: '/login',
             name: 'login',
