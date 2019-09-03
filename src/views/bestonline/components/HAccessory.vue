@@ -1,9 +1,6 @@
 <template>
     <div class="jd-manage">
-        <el-collapse
-            v-model="activeName"
-            accordion
-        >
+        <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
                     <p class="titlt-p">附件上传</p>
@@ -11,48 +8,22 @@
                 <!--start-->
                 <p class="small-title">已上传附件</p>
                 <div v-if="tableList.length === 0" class="noannex">暂无附件</div>
-                <div
-                    v-else
-                    class="upload"
-                    v-for="(item,index) in tableList"
-                    :key="index"
-                >
+                <div v-else class="upload" v-for="(item,index) in tableList" :key="index">
                     <span>{{item.fileName}}</span> <span>{{item.createUser}} {{item.createTime}}</span> <span> <a :href="item.fileUrl" target="_blank">下载</a></span>
                 </div>
                 <p class="small-title ">附件上传</p>
                 <div class="upload">
-                    <el-upload
-                        class="upload-demo"
-                        v-bind="uploadInfo"
-                        :on-success="handleSuccess"
-                        :before-remove="beforeRemove"
-                        :on-exceed="handleExceed"
-                        :file-list="fileList"
-                        :on-change = "handleCheckedSize"
-                         :before-upload= "handleUpload"
-                    >
-                        <el-button
-                            size="small"
-                            type="primary"
-                        >点击上传</el-button>
-                        <div
-                            slot="tip"
-                            class="el-upload__tip"
-                        >附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制10M以内</div>
+                    <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList" :before-upload="handleUpload">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制10M以内</div>
                     </el-upload>
                 </div>
                 <!--end-->
             </el-collapse-item>
         </el-collapse>
         <div class="flex-wrap-row">
-            <el-col
-                :span="2"
-                :offset="8"
-            >
-                <el-button
-                    type="primary"
-                    @click="onSvaeattach"
-                >提交</el-button>
+            <el-col :span="2" :offset="8">
+                <el-button type="primary" @click="onSvaeattach">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -126,6 +97,7 @@ export default {
         },
         beforeRemove (file, fileList) {
             if (this.type === 1) {
+                this.type = 0
                 return true
             }
             return this.$confirm(`确定移除 ${file.name}？`).then(() => {
@@ -134,27 +106,26 @@ export default {
                         this.arrList.splice(index, 1)
                     }
                 })
-            }).catch(() => {})
-        },
-        handleCheckedSize (input, inputList) {
-            // 判断是否符合要求
-            if (input.size / (1024 * 1024) < 10) {
-                this.is10M = false
-            } else {
-                this.is10M = true
-            }
+            }).catch(() => { })
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
-            if (this.is10M) {
+            if (file.size / (1024 * 1024) > 10) {
                 this.$message({
-                    message: '建议不要超过10M',
+                    message: '附件要保持10M以内',
                     type: 'warning'
                 })
+                this.type = 1
+                return false
+            }
+            const fileSuffix = file.name.substring(file.name.indexOf('.'))
+            if (this.uploadInfo.accept.indexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                this.type = 1
                 return false
             }
         },
-        async   getAttach () {
+        async getAttach () {
             const { data } = await getAttach(this.applyId)
             this.tableList = data.data.pageContent
         },
@@ -226,13 +197,13 @@ export default {
         }
     }
 }
-.noannex{
+.noannex {
     margin-top: 10px;
 }
-.small-title{
+.small-title {
     padding: 10px 0;
 }
-.flex-wrap-row{
+.flex-wrap-row {
     margin-top: 20px;
 }
 </style>

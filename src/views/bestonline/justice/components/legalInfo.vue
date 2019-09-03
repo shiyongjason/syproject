@@ -89,7 +89,7 @@
                     </el-form>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
-                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
+                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 3 ? 4 : type)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
                     <el-form label-position="right" label-width="150px" class="legal-form">
@@ -106,7 +106,7 @@
                 <p class="legallnfoTitle">经营性担保</p>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
-                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
+                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 3 ? 4 : type)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
                     <el-form label-position="right" label-width="150px" class="legal-form">
@@ -141,7 +141,7 @@
                 <p class="legallnfoTitle">非经营性担保{{type}}</p>
                 <div v-for="(item, index) in nonOperationalAssureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
-                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure')"></i>
+                        <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 2 ? 3 : 5)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
                     <el-form label-position="right" label-width="150px" class="legal-form">
@@ -387,9 +387,13 @@ export default {
                 return false
             }
         },
-        onAddList (key, defaultKey) {
+        onAddList (key, defaultKey, type) {
+            console.log(key)
+            console.log(defaultKey)
+            console.log(this.justiceData)
             const tempObj = JSON.parse(JSON.stringify(this[defaultKey]))
             tempObj.id = Date.now()
+            tempObj.type = type
             this.justiceData[key].push(tempObj)
         },
         onRemoveList (key, id) {

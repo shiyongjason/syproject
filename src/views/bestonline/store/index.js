@@ -25,7 +25,11 @@ export default {
             debtList: [],
             assureList: [],
             punishmentList: [],
-            branchAgencyList: [],
+            branchAgencyList: [
+                {
+                    branch: ''
+                }
+            ],
             relatedCompanyList: [],
             copartnerInfoList: [],
             dueLegalRemarkCreateForm: {}
