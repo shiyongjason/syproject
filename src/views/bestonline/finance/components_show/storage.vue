@@ -6,7 +6,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="仓库地址">
-                    <p>{{form.dueFinanceBasic.storeProvince + form.dueFinanceBasic.storeCity + form.dueFinanceBasic.storeArea}}</p>
+                    <p>{{proveName + cityName + areaName}}</p>
                 </el-form-item>
             </div>
         </div>
@@ -52,7 +52,7 @@
 <script>
 import { mapState } from 'vuex'
 import { WAREHOUSE_ORDER_OPTIONS, WAREHOUSE_FORM, SUPERVISION_METHOD } from '../const'
-import { getAreacode } from '../../api/index.js'
+import { getChiness } from '../../api/index.js'
 export default {
     name: 'finance_profitability',
     data () {
@@ -62,7 +62,10 @@ export default {
             storeOptions: WAREHOUSE_FORM,
             storeProvince: [],
             storeCity: [],
-            storeArea: []
+            storeArea: [],
+            proveName: '',
+            cityName: '',
+            areaName: ''
         }
     },
     computed: {
@@ -71,49 +74,26 @@ export default {
         })
     },
     watch: {
-        'form.dueFinanceBasic.storeProvince': {
-            handler (val) {
-                if (val) {
-                    this.storeCity = this.storeProvince.filter((value, index) => {
-                        return value.key == val
-                    })[0].cityList
-                }
-            },
-            deep: true
-        },
-        'form.dueFinanceBasic.storeCity': {
-            handler (val) {
-                if (val) {
-                    this.storeArea = this.storeCity.filter((value, index) => {
-                        return value.key == val
-                    })[0].areaList
-                }
-            },
-            deep: true
+        async form (form) {
+            if (form.dueFinanceBasic.storeProvince) {
+                const { data } = await this.getChiness(form.dueFinanceBasic.storeProvince)
+                this.proveName = data.citys.cityName
+            }
+            if (form.dueFinanceBasic.storeCity) {
+                const { data } = await this.getChiness(form.dueFinanceBasic.storeCity)
+                this.cityName = data.citys.cityName
+            }
+            if (form.dueFinanceBasic.storeArea) {
+                const { data } = await this.getChiness(form.dueFinanceBasic.storeArea)
+                this.areaName = data.citys.cityName
+            }
         }
     },
     methods: {
-        async getAreacode () {
-            const { data } = await getAreacode()
-            this.storeProvince = data.data.dictpro
-        },
-        onProvince (key) {
-            this.form.dueFinanceBasic.storeCity = ''
-            this.form.dueFinanceBasic.storeArea = ''
-            this.storeArea = []
-            this.storeCity = this.storeProvince.filter((val, index) => {
-                return val.key == key
-            })[0].cityList
-        },
-        onCity (key) {
-            this.form.dueFinanceBasic.storeArea = ''
-            this.storeArea = this.storeCity.filter((val, index) => {
-                return val.key == key
-            })[0].areaList
+        async getChiness (value) {
+            const { data } = await getChiness({ id: value })
+            return data
         }
-    },
-    mounted () {
-        this.getAreacode()
     }
 }
 </script>

@@ -80,7 +80,7 @@ export default {
         }
     },
     watch: {
-        async   form (form) {
+        async form (form) {
             if (form.dueBusinessFuturePlanCreateForm.businessProvince) {
                 const { data } = await this.getChiness(form.dueBusinessFuturePlanCreateForm.businessProvince)
                 this.proveName = data.citys.cityName
@@ -116,14 +116,8 @@ export default {
         })
 
     },
-    created () {
-
-    },
-    mounted () {
-        console.log(this.form.dueBusinessFuturePlanCreateForm)
-    },
     methods: {
-        async  getChiness (value) {
+        async getChiness (value) {
             const { data } = await getChiness({ id: value })
             return data
         }
