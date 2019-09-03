@@ -823,6 +823,7 @@ export default {
         margin-right: 12px;
         float: left;
         margin-bottom: 12px;
+        cursor: pointer;
     }
     .picture-container li img{
         position: absolute;
