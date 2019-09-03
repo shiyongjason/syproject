@@ -264,6 +264,7 @@ export default {
                     }
                     this.$message.success('提交成功')
                     this.findBusinessData({ applyId: this.$route.query.applyId })
+                    this.$router.go(-1)
                 }
             })
         }
