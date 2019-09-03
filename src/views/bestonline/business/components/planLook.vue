@@ -96,14 +96,14 @@ export default {
 
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
-                serviceCategory = ''
+                serviceCategory = []
             } else {
                 serviceCategory = serviceCategory.split(',')
             }
             form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
             let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
-                businessCategory = ''
+                businessCategory = []
             } else {
                 businessCategory = businessCategory.split(',')
             }
@@ -119,8 +119,8 @@ export default {
     created () {
 
     },
-    async  mounted () {
-
+    mounted () {
+        console.log(this.form.dueBusinessFuturePlanCreateForm)
     },
     methods: {
         async  getChiness (value) {
