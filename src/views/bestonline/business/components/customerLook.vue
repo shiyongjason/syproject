@@ -26,15 +26,15 @@
                         {{item.categoryId?mainCategoryData[item.categoryId].value:''}}
                     </td>
                     <td>{{item.brandName}}</td>
-                    <td>{{item.salesFee}}万</td>
-                    <td>{{item.salesProportion}}%</td>
+                    <td>{{item.salesFee?item.salesFee+'万':''}}</td>
+                    <td>{{item.salesProportion?item.salesProportion:''}}</td>
                     <td>
                         <el-date-picker type="date" placeholder="选择日期" :editable="false" value-format="yyyy-MM-dd" v-model="item.agreementStartDate"></el-date-picker>
                     </td>
                     <td>
                         <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="item.agreementEndDate" value-format="yyyy-MM-dd"></el-date-picker>
                     </td>
-                    <td>{{item.agreementScale}}万</td>
+                    <td>{{item.agreementScale?item.agreementScale+'万':''}}</td>
                 </tr>
             </tbody>
         </table>

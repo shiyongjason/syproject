@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <!-- <p>已提交 {{form.updateTime}} {{form.updateUser}} </p> -->
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form">
                 <KPI />

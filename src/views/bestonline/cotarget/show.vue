@@ -20,7 +20,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p>股权比例：{{ form.equityRatio }}</p>
+            <p>股权比例（合作方:好享家）：{{ form.equityRatio }}</p>
         </div>
     </div>
 </template>

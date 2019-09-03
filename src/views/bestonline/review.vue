@@ -113,7 +113,7 @@ export default {
                 this.iszongbu = false
             }
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fazhanzongj') !== -1)) {
+            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
                 this.iszongbu = false
                 this.updatebtn = false
                 this.submitbtn = true
@@ -123,7 +123,7 @@ export default {
                 this.iszongbu = false
             }
             // 分部运营
-            if (deptType === 2 && (role.indexOf('fenbuyunying') !== -1)) {
+            if (deptType === 2 && (role.indexOf('JDgroup-SegmentOperation') !== -1)) {
                 this.iszongbu = false
             }
         },
@@ -163,44 +163,45 @@ export default {
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: true } })
         },
         onCheck (row) {
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: false } })
+            console.log(row.status)
         },
         async onCommit (row) {
-            if (row.signScale == 0) {
-                this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
-                return false
-            } else {
-                if (row.signScale < 3000) {
-                    if (row.financalFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
-                        return false
-                    }
-                    if (row.legalFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
-                        return false
-                    }
-                } else {
-                    if (row.businessFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交商业尽调信息' })
-                        return false
-                    }
-                    if (row.financalFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
-                        return false
-                    }
-                    if (row.legalFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
-                        return false
-                    }
-                    if (row.organizationFlag == 1) {
-                        this.$message.warning({ showClose: true, message: '请先提交组织尽调信息' })
-                        return false
-                    }
-                }
-            }
+            // if (row.signScale == 0) {
+            //     this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
+            //     return false
+            // } else {
+            //     if (row.signScale < 3000) {
+            //         if (row.financalFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
+            //             return false
+            //         }
+            //         if (row.legalFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
+            //             return false
+            //         }
+            //     } else {
+            //         if (row.businessFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交商业尽调信息' })
+            //             return false
+            //         }
+            //         if (row.financalFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
+            //             return false
+            //         }
+            //         if (row.legalFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
+            //             return false
+            //         }
+            //         if (row.organizationFlag == 1) {
+            //             this.$message.warning({ showClose: true, message: '请先提交组织尽调信息' })
+            //             return false
+            //         }
+            //     }
+            // }
             await postDuemain({ applyId: row.applyId, createUser: row.createUser })
             this.$message.success({ showClose: true, message: '提交成功' })
             this.getDuemain()
