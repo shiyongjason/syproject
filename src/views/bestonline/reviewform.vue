@@ -59,10 +59,11 @@ export default {
     name: 'reviewform',
     data () {
         return {
+            operationNode: '',
             tabPosition: 'left',
             activeName: 'one',
             applyId: '',
-            Cooperation: '',
+            Cooperation: true,
             oneType: false,
             twoType: false,
             threeType: false,
@@ -96,17 +97,21 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.target = this.$route.query.target
-        this.getCooperativetarget()
+        // this.getCooperativetarget()
         this.getRoletype()
     },
     methods: {
         async getCooperativetarget () {
             console.log(this.userInfo)
-            const { data } = await getCooperativetarget(this.applyId)
+            const { data } = await getCooperativetarget(this.$route.query.applyId)
+            this.operationNode = data.data.operationNode
+            console.log(this.operationNode)
             if (data.data.operationNode === 1) {
                 this.Cooperation = true
+                this.oneType = false
             } else {
                 this.Cooperation = false
+                this.oneType = true
             }
         },
         getRoletype () {
@@ -140,7 +145,7 @@ export default {
                 }
                 // 总部发展
                 if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
-                    this.oneType = true
+                    this.getCooperativetarget()
                     this.sixType = true
                 }
                 // 分部发展

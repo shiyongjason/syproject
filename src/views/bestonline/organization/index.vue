@@ -18,6 +18,11 @@ export default {
             default: false
         }
     },
+    data () {
+        return {
+            applyId: ''
+        }
+    },
     computed: {
         ...mapState({
             form: state => state.dueDiligence.organizationData
