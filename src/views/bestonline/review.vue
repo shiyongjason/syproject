@@ -97,6 +97,7 @@ export default {
     mounted () {
         this.getDuemain()
         this.Permission()
+        console.log(this.userInfo)
     },
     computed: {
         ...mapState({
