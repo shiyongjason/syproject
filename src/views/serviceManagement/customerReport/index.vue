@@ -51,6 +51,7 @@
 import CustomerReportTable from './components/customerReportTable'
 import { mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { findReportList } from '../api/index'
 export default {
     name: 'customerReport',
     components: {
@@ -107,13 +108,13 @@ export default {
         },
         async search () {
             console.log(this.searchParams)
-            // const { data } = await findAttributeList(this.searchParams)
-            // this.tableData = data.records
-            // this.paginationData = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     totalElements: data.total
-            // }
+            const { data } = await findReportList(this.searchParams)
+            this.tableData = data.records
+            this.paginationData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                totalElements: data.total
+            }
         },
         onSizeChange (val) {
             this.paginationData.pageSize = val

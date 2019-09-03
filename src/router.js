@@ -326,28 +326,18 @@ const routerMapping = [
                 },
                 component: () => import('@/views/serviceManagement/orderCenter/order.vue')
             },
-            {
-                path: 'customerManagement',
-                name: 'customerManagement',
-                meta: {
-                    title: '客户管理',
-                    tagName: '客户管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
-            },
-            {
-                path: 'customerRecord',
-                name: 'customerRecord',
-                meta: {
-                    title: '客户档案',
-                    tagName: '客户档案',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerRecord/index.vue')
-            },
+            // 一期不做
+            // {
+            //     path: 'customerRecord',
+            //     name: 'customerRecord',
+            //     meta: {
+            //         title: '客户档案',
+            //         tagName: '客户档案',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/serviceManagement/customerRecord/index.vue')
+            // },
             {
                 path: 'customerReport',
                 name: 'customerReport',
