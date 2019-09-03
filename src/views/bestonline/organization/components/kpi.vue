@@ -128,24 +128,24 @@ export default {
 .red-span {
     color: red;
 }
-table {
-    border-collapse: collapse;
-}
-table,
-tr,
-td {
-    border: 1px solid #dddddd;
-    text-align: center;
-    line-height: 40px;
-}
-table {
-    /deep/ .el-form-item__error {
-        position: relative;
-        text-align: left;
-        padding-left: 10px;
-    }
-}
-/deep/ .el-collapse-item__wrap {
-    padding: 15px 0;
-}
+// table {
+//     border-collapse: collapse;
+// }
+// table,
+// tr,
+// td {
+//     border: 1px solid #dddddd;
+//     text-align: center;
+//     line-height: 40px;
+// }
+// table {
+//     /deep/ .el-form-item__error {
+//         position: relative;
+//         text-align: left;
+//         padding-left: 10px;
+//     }
+// }
+// /deep/ .el-collapse-item__wrap {
+//     padding: 15px 0;
+// }
 </style>

@@ -6,7 +6,7 @@
                     <p class="title-p">组织尽调评估及KPI</p>
                 </template>
                 <p class="small-title">组织尽调评估</p>
-                <table class="item-wrapper">
+                <table class="custom-table">
                     <thead>
                         <tr>
                             <td width="180">评估项</td>
