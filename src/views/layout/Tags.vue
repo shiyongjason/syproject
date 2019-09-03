@@ -92,10 +92,8 @@ export default {
         if (this.isReload) {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
             this.tagUpdate(tags || [])
-            console.log(1111)
             this.reloadUpdate(false)
         }
-        console.log(2222)
         this.setTags(this.$route)
     }
 }
