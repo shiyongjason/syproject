@@ -155,7 +155,7 @@
 
 <script>
 import shopManagerTable from './components/shopManagerTable'
-import { findProducts, findProductSource, findProductCategory, importProductList } from './api/index'
+import { findProducts, findProductSource, findProductCategory, importProductList, getHaveBrand } from './api/index'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { B2bUrl } from '@/api/config'
 import { mapMutations, mapState, mapActions } from 'vuex'
@@ -413,6 +413,11 @@ export default {
             }
             if (this.categoryThird.length === 0) {
                 Message({ message: '二级类目下无三级类目', type: 'warning' })
+                return
+            }
+            const { data } = await getHaveBrand(this.secondCategoryId)
+            if (data.length <= 0) {
+                Message({ message: '二级类目下无品牌', type: 'warning' })
                 return
             }
             window.location = B2bUrl + 'product/api/products/import/template?templateType=2&secondCategoryId=' + this.secondCategoryId
