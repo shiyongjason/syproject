@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <!-- <p v-if="form.dueFinanceBasic.type == 1">已提交 {{form.dueFinanceBasic.updateTime}} {{ form.dueFinanceBasic.updateUser}} </p> -->
+        <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -206,6 +206,7 @@ export default {
     },
     mounted () {
         this.nowMonth = (new Date()).getMonth()
+        console.log(this.form)
     },
     watch: {
         form (form) {

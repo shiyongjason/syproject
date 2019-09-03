@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <!-- <p v-if="form.dueFinanceBasic.type == 1">已提交 {{form.dueFinanceBasic.updateTime}} {{ form.dueFinanceBasic.updateUser}} </p> -->
+        <p v-if="form.dueFinanceBasic.type == 1">已提交 {{form.dueFinanceBasic.updateTime}} {{ form.dueFinanceBasic.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" ref='form' :rules="rules" label-width="180px">
                 <!-- KPI -->
