@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <!-- <p>已提交 {{form.affairs.updateTime}} {{ form.affairs.updateUser}} </p> -->
+        <p>已提交 {{form.affairs.updateTime}} {{ form.affairs.updateUser}} </p>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
                 <KPI />
@@ -42,7 +42,7 @@ export default {
     data () {
         return {
             legalInfoTitles: ['实际控制人法务信息', '实际控制人配偶法务信息', '拟选合伙人法务信息', '尽调公司法务信息'],
-            activeName: '6',
+            activeName: '',
             applyId: '',
             type: 1,
             updateTime: '',
@@ -110,11 +110,6 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         })
-    // assetListType0 () {
-    //     return this.justiceData.assetList.filter(value => {
-    //         if (value.type === 0) return value
-    //     })
-    // }
     },
     methods: {
         ...mapActions({

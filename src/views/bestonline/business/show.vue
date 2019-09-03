@@ -9,7 +9,7 @@
                     </template>
                     <!--start-->
                     <p class="small-title">1、商业尽调评估</p>
-                    <table class="item-wrapper">
+                    <table class="custom-table">
                         <thead>
                             <tr>
                                 <td class="assessmentRow">评估项</td>
