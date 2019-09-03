@@ -13,7 +13,7 @@
             <div class="form-cont-row mb20">
                 <div class="form-cont-col ">
                     <el-form-item label="采购金额：" :prop="`dueBusinessSupplierCreateFormList[${index}].purchaseAmount`">
-                        {{item.purchaseAmount}}
+                        {{item.purchaseAmount + '万'}}
                     </el-form-item>
                 </div>
                 <div class="form-cont-col ">

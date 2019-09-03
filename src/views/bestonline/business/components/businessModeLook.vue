@@ -1,105 +1,105 @@
 <template>
-<el-collapse-item name="2">
-    <template slot="title">
-        <p class="title-p">业务模式</p>
-    </template>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                {{form.mainBusinessFormatOneId?mainCommercialOptions[form.mainBusinessFormatOneId].value:''}}
-            </el-form-item>
+    <el-collapse-item name="2">
+        <template slot="title">
+            <p class="title-p">业务模式</p>
+        </template>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
+                    {{form.mainBusinessFormatOneId?mainCommercialOptions[form.mainBusinessFormatOneId].value:''}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
+                    {{form.businessFormatOneRatio}}
+                </el-form-item>
+            </div>
         </div>
-        <div class="form-cont-col">
-            <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-               {{form.businessFormatOneRatio}}
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营业态2：">
+                    {{form.mainBusinessFormatTwoId?mainCommercialOptions[form.mainBusinessFormatTwoId].value:''}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="业态占比2：">
+                    {{form.businessFormatTwoRatio?form.businessFormatTwoRatio + '%':''}}
+                </el-form-item>
+            </div>
         </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营业态2：">
-                 {{form.mainBusinessFormatTwoId?mainCommercialOptions[form.mainBusinessFormatTwoId].value:''}}
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营业态3：">
+                    {{form.mainBusinessFormatThreeId?mainCommercialOptions[form.mainBusinessFormatThreeId].value:''}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="业态占比3：">
+                    {{form.businessFormatTwoThreeRatio?form.businessFormatTwoThreeRatio +'%':''}}
+                </el-form-item>
+            </div>
         </div>
-        <div class="form-cont-col">
-            <el-form-item label="业态占比2：">
-              {{form.businessFormatTwoRatio}}%
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营品类1：" prop="mainCategoryOneId">
+                    {{form.mainCategoryOneId?mainCategoryOptions[form.mainCategoryOneId].value:''}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="销售比重1：" prop="categoryOneSalesRatio">
+                    {{form.categoryOneSalesRatio?form.categoryOneSalesRatio +'%':''}}
+                </el-form-item>
+            </div>
         </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营业态3：">
-                     {{form.mainBusinessFormatThreeId?mainCommercialOptions[form.mainBusinessFormatThreeId].value:''}}
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营品类2：">
+                    {{form.mainCategoryTwoId?mainCategoryOptions[form.mainCategoryTwoId].value:''}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="销售比重2：">
+                    {{form.categoryTwoSalesRatio?form.categoryTwoSalesRatio +'%':''}}
+                </el-form-item>
+            </div>
         </div>
-        <div class="form-cont-col">
-            <el-form-item label="业态占比3：">
-              {{form.businessFormatTwoThreeRatio}}%
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营品牌1：" prop="mainBrandOneName">
+                    {{form.mainBrandOneName}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="销售比重1：" prop="brandOneSalesRatio">
+                    {{form.brandOneSalesRatio}}%
+                </el-form-item>
+            </div>
         </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营品类1：" prop="mainCategoryOneId">
-                     {{form.mainCategoryOneId?mainCategoryOptions[form.mainCategoryOneId].value:''}}
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营品牌2：">
+                    {{form.mainBrandTwoName}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="销售比重2：">
+                    {{form.brandTwoSalesRatio?form.brandTwoSalesRatio +'%':''}}
+                </el-form-item>
+            </div>
         </div>
-        <div class="form-cont-col">
-            <el-form-item label="销售比重1：" prop="categoryOneSalesRatio">
-             {{form.categoryOneSalesRatio}}%
-            </el-form-item>
+        <div class="form-cont-row mb20">
+            <div class="form-cont-col">
+                <el-form-item label="主营品牌3：">
+                    {{form.mainBrandThreeName}}
+                </el-form-item>
+            </div>
+            <div class="form-cont-col">
+                <el-form-item label="销售比重3：">
+                    {{form.brandThreeSalesRatio?form.brandThreeSalesRatio +'%':''}}
+                </el-form-item>
+            </div>
         </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营品类2：">
-                 {{form.mainCategoryTwoId?mainCategoryOptions[form.mainCategoryTwoId].value:''}}
-            </el-form-item>
-        </div>
-        <div class="form-cont-col">
-            <el-form-item label="销售比重2：">
-               {{form.categoryTwoSalesRatio}}%
-            </el-form-item>
-        </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营品牌1：" prop="mainBrandOneName">
-            {{form.mainBrandOneName}}
-            </el-form-item>
-        </div>
-        <div class="form-cont-col">
-            <el-form-item label="销售比重1：" prop="brandOneSalesRatio">
-               {{form.brandOneSalesRatio}}%
-            </el-form-item>
-        </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营品牌2：">
-               {{form.mainBrandTwoName}}
-            </el-form-item>
-        </div>
-        <div class="form-cont-col">
-            <el-form-item label="销售比重2：">
-               {{form.brandTwoSalesRatio}}&
-            </el-form-item>
-        </div>
-    </div>
-    <div class="form-cont-row mb20">
-        <div class="form-cont-col">
-            <el-form-item label="主营品牌3：">
-               {{form.mainBrandThreeName}}
-            </el-form-item>
-        </div>
-        <div class="form-cont-col">
-            <el-form-item label="销售比重3：">
-               {{form.brandThreeSalesRatio}}%
-            </el-form-item>
-        </div>
-    </div>
-</el-collapse-item>
+    </el-collapse-item>
 </template>
 
 <script>
