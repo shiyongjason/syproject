@@ -32,7 +32,7 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu)" @click="onEdit(scope.data.row)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)" @click="onEdit(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
                     <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && submitbtn" @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
@@ -64,6 +64,7 @@ export default {
             submitbtn: false,
             // 是否是总部的角色
             iszongbu: true,
+            isshow: false,
             params: {
                 status: '',
                 companyName: '',
@@ -111,6 +112,10 @@ export default {
             if (role.indexOf('JDmanager') !== -1) {
                 this.updatebtn = false
                 this.iszongbu = false
+            }
+            // 总部发展
+            if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
+                this.isshow = true
             }
             // 分部发展
             if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
@@ -167,7 +172,6 @@ export default {
         },
         onCheck (row) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: false } })
-            console.log(row.status)
         },
         async onCommit (row) {
             // if (row.signScale == 0) {
@@ -204,6 +208,7 @@ export default {
             // }
             await postDuemain({ applyId: row.applyId, createUser: row.createUser })
             this.$message.success({ showClose: true, message: '提交成功' })
+            alert(111)
             this.getDuemain()
         }
     }
