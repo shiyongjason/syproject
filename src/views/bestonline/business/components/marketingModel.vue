@@ -57,7 +57,6 @@ export default {
             this.isIndeterminate = false
         },
         onCheckChannel (val) {
-            console.log(this.form.publicityPromotionChannels)
             let checkedLen = val.length
             this.checkAll = checkedLen === this.channelCodes.length
             this.isIndeterminate = checkedLen > 0 && checkedLen < this.channelCodes.length

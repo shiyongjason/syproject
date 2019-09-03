@@ -42,7 +42,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.createUser}}/{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'已审核':'已驳回'}}
+                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { getDuemain, getDueapprovalconclusion, postDuemain } from './api/index.js'
+import { getDuemain, postDuemain, getFlow } from './api/index.js'
 import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
 export default {
@@ -158,14 +158,16 @@ export default {
         },
         async showProcess (applyId) {
             this.dialogVisible = true
-            const { data } = await getDueapprovalconclusion({ applyId: applyId })
-            this.dueApproval = data.data.generalConclusionList.concat(data.data.judgesConclusionList).concat(data.data.caucusConclusionList).concat(data.data.ceoConclusionList)
+            const { data } = await getFlow({ applyId: applyId, origin: 1 })
+            console.log(data)
+            this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approvalStatus === 1) {
+                if (value.approveStatus == 1) {
                     value.color = '#f88825'
                 }
                 return value
             })
+            console.log(this.dueApproval)
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
@@ -209,7 +211,6 @@ export default {
             }
             await postDuemain({ applyId: row.applyId, createUser: row.createUser })
             this.$message.success({ showClose: true, message: '提交成功' })
-            alert(111)
             this.getDuemain()
         }
     }

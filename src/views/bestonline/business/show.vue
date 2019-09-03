@@ -25,10 +25,10 @@
                                     <i v-if="index === 1">w</i>
                                 </td>
                                 <td>
-                                    {{item.state?'否':'是'}}
+                                    {{item.state == 0?'是':'否'}}
                                 </td>
                                 <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
-                                  {{item.remark }}
+                                    {{item.remark }}
                                 </td>
                             </tr>
                         </tbody>
@@ -37,20 +37,20 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col">
                             <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                              {{form.wholesaleShare?form.wholesaleShare:'-'}}<span class="KPISymbol">:</span>
-                               {{form.retailShare?form.retailShare:'-'}}<span class="KPISymbol">:</span>
-                               {{form.projectShare?form.projectShare:'-'}}
+                                {{form.wholesaleShare?form.wholesaleShare:'-'}}<span class="KPISymbol">:</span>
+                                {{form.retailShare?form.retailShare:'-'}}<span class="KPISymbol">:</span>
+                                {{form.projectShare?form.projectShare:'-'}}
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
                             <el-form-item label="上年销售业绩：" prop="salesPerformanceLastYear">
-                              {{form.salesPerformanceLastYear}}万
+                                {{form.salesPerformanceLastYear}}万
                             </el-form-item>
                         </div>
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                      {{form.riskDisclosure}}
+                        {{form.riskDisclosure}}
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
                         {{form.analysisDescription}}
@@ -141,5 +141,4 @@ export default {
 table {
     border-collapse: collapse;
 }
-
 </style>

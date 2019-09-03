@@ -206,7 +206,6 @@ export default {
     },
     mounted () {
         this.nowMonth = (new Date()).getMonth()
-        console.log(this.form)
     },
     watch: {
         form (form) {
@@ -241,7 +240,6 @@ export default {
             this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
-            // console.log(this.form.publicityPromotionChannels)
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {

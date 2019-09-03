@@ -28,7 +28,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince" label-width="170px">
-                    {{form.dueBusinessFuturePlanCreateForm.businessProvince + form.dueBusinessFuturePlanCreateForm.businessCity + form.dueBusinessFuturePlanCreateForm.businessArea}}
+                    {{proveName + cityName + areaName}}
                 </el-form-item>
             </div>
         </div>

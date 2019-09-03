@@ -22,10 +22,10 @@
                         <i v-if="index === 1">w</i>
                     </td>
                     <td>
-                      {{item.state==1?'否':item.state==0?'是':''}}
+                        {{item.state==1?'否':item.state==0?'是':''}}
                     </td>
                     <td :rowspan="justiceData.assessmentList.length" v-if="index === 0">
-                      {{item.remark}}
+                        {{item.remark}}
                     </td>
                 </tr>
             </tbody>
@@ -33,10 +33,10 @@
         <p class="small-title mt10">KPI(必填)</p>
         <div class="item-wrapper legal-form">
             <el-form-item label="尽调公司法律风险：" label-width="250px" prop="affairs.legalRisksOfCompany">
-               {{justiceData.affairs.legalRisksOfCompany}}
+                {{justiceData.affairs.legalRisksOfCompany}}
             </el-form-item>
             <el-form-item label="实际控制人法律风险：" label-width="250px" prop="affairs.legalRisksOfController">
-               {{justiceData.affairs.legalRisksOfController}}
+                {{justiceData.affairs.legalRisksOfController}}
             </el-form-item>
             <el-form-item label="实际控制人配偶法律风险：" label-width="250px" prop="affairs.legalRisksOfControllerMate" class="single-row">
                 {{justiceData.affairs.legalRisksOfControllerMate}}
@@ -45,16 +45,16 @@
                 {{justiceData.affairs.personalOperatingloansTotalGuarantees}}
             </el-form-item>
             <el-form-item label="公司借款及担保总额：" label-width="250px" prop="affairs.companyLoanTotalGuarantee">
-               {{justiceData.affairs.companyLoanTotalGuarantee}}
+                {{justiceData.affairs.companyLoanTotalGuarantee}}
             </el-form-item>
         </div>
         <p class="small-title">分析报告</p>
         <div class="item-wrapper">
             <el-form-item label="风险揭示：" label-width="100px" label-position="top" prop="affairs.riskDisclosure">
-              {{justiceData.affairs.riskDisclosure}}
+                {{justiceData.affairs.riskDisclosure}}
             </el-form-item>
             <el-form-item label="分析描述：" label-width="100px" label-position="top" prop="affairs.analysisDescription">
-               {{justiceData.affairs.analysisDescription}}
+                {{justiceData.affairs.analysisDescription}}
             </el-form-item>
         </div>
         <!--end-->
