@@ -99,6 +99,7 @@ export default {
             this.form[value] = (e.target.value)
         },
         async _saveOrUpdate () {
+            this.form.applyId = this.$route.query.applyId
             this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
                 item.yearGrowthRate = item.yearGrowthRate - 0
                 item.netProfitRate = item.netProfitRate - 0
