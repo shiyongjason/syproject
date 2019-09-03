@@ -1,5 +1,5 @@
 <template>
-    <FinanceEdit v-if="canEdit" />
+    <FinanceEdit v-if="roleType" />
     <FinanceShow v-else />
 </template>
 
@@ -10,13 +10,14 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
     name: 'cotarget',
+    props: {
+        roleType: {
+            type: Boolean,
+            default: false
+        }
+    },
     components: {
         FinanceEdit, FinanceShow
-    },
-    data () {
-        return {
-            canEdit: true
-        }
     },
     computed: {
         ...mapState({
@@ -37,11 +38,6 @@ export default {
     async mounted () {
         await this.findFinanceData({ applyId: this.$route.query.applyId })
         this.init()
-        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
-            this.canEdit = true
-        } else {
-            this.canEdit = false
-        }
     }
 }
 </script>

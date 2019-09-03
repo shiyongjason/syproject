@@ -163,10 +163,10 @@ export default {
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: true } })
         },
         onCheck (row) {
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: false } })
             console.log(row.status)
         },
         async onCommit (row) {

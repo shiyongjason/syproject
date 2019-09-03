@@ -1,5 +1,5 @@
 <template>
-    <OrganizationEdit v-if="canEdit" :applyId="applyId" />
+    <OrganizationEdit v-if="roleType" :applyId="applyId" />
     <OrganizationShow v-else />
 </template>
 
@@ -18,16 +18,7 @@ export default {
             default: false
         }
     },
-    data () {
-        return {
-            applyId: '',
-            canEdit: true
-        }
-    },
     computed: {
-        // canEdit () {
-        //     return this.form.operationNode != 1 && this.roleType
-        // },
         ...mapState({
             form: state => state.dueDiligence.organizationData
         })
@@ -40,11 +31,6 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.findOrganizationData({ applyId: this.$route.query.applyId })
-        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
-            this.canEdit = true
-        } else {
-            this.canEdit = false
-        }
     }
 }
 </script>
