@@ -207,6 +207,7 @@ export default {
         },
         // 敏感字段和敏感操作的checkbox转换的处理
         onChangeAuthType (item) {
+            item.status = 0
             item.authResourceList && item.authResourceList.filter(authResource => {
                 authResource.have = item.have
             })
