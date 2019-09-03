@@ -1,7 +1,7 @@
 <template>
     <div class="order">
         <searchForm @search='onSearch' v-model="searchForm" />
-        <order-table :tableData='list' />
+        <order-table :tableData='list' @search-event="getData"/>
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNum" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
@@ -31,8 +31,11 @@ export default {
         onSearch () {
             this.getData()
         },
-        async getData () {
+        async getData (param) {
             let params = { ...this.searchForm, ...this.queryParams }
+            if (param) {
+                params.status = param.status
+            }
             const { data } = await findOrderList(params)
             this.list = data.records
             this.page.total = data.total

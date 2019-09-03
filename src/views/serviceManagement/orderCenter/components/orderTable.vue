@@ -1,13 +1,11 @@
 <template>
     <div class="orderTable">
-        <el-tabs v-model="activeName" type="card" @tab-click="onHandleClick">
-            <el-tab-pane label="全部" name="a"></el-tab-pane>
-            <el-tab-pane label="待付款" name="b"></el-tab-pane>
-            <el-tab-pane label="待发货" name="c"></el-tab-pane>
-            <el-tab-pane label="已发货" name="d"></el-tab-pane>
-            <el-tab-pane label="已完成" name="e"></el-tab-pane>
-            <el-tab-pane label="已关闭" name="f"></el-tab-pane>
-            <el-tab-pane label="退款中" name="g"></el-tab-pane>
+        <el-tabs v-model="activeName" type="card" @tab-click="onChangeTab">
+            <el-tab-pane label="全部" name=""></el-tab-pane>
+            <el-tab-pane label="待发货" name="1"></el-tab-pane>
+            <el-tab-pane label="已发货" name="2"></el-tab-pane>
+            <el-tab-pane label="已完成" name="3"></el-tab-pane>
+            <el-tab-pane label="退款中" name="4"></el-tab-pane>
         </el-tabs>
         <div class="list">
             <div class="list-head">
@@ -26,15 +24,12 @@
                     <div class="head-info">
                         <span style="padding-left:10px">订单号：{{item.orderNo}}</span>
                         <span class="more">
-                            <el-tooltip class="item" effect="light" placement="bottom">
-                                <div slot="content">多行信息<br/>第二行信息</div>
-                                <el-button class="btnmore">更多</el-button>
-                            </el-tooltip>
+                            外部订单号订单号：{{item.channelOrderNo}}
                         </span>
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
                         <span class="yybtn"><el-button type="primary" size='mini'>预约信息</el-button></span>
                         <span class="beizhu">
-                            <font @click="onRemark(index)">备注</font>
+                            <font @click="onShowRemark(item, index)">备注</font>
                             <div class="beizhu-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -42,11 +37,11 @@
                                         <el-button class="bhover" @click="onClose" style="float: right; padding: 3px 0" type="text">关闭</el-button>
                                     </div>
                                     <div class="text item">
-                                        <el-input type="textarea" placeholder="请输入内容" v-model="textarea" maxlength="255" show-word-limit rows='4'>
+                                        <el-input type="textarea" placeholder="请输入内容" v-model="remark" maxlength="256" show-word-limit rows='4'>
                                         </el-input>
                                     </div>
                                     <div class="sub">
-                                        <el-button type="primary" size="mini">确定</el-button>
+                                        <el-button type="primary" size="mini" @click="onRemark(item)">确定</el-button>
                                     </div>
                                 </el-card>
                             </div>
@@ -69,12 +64,10 @@
                             <li>无需配送</li>
                             <li>{{jtem.goodsPrice}}</li>
                             <li>{{orderStatus(item.status)}}</li>
-                            <!-- <li>
-                                 <el-button type="primary" size='mini'>预约信息</el-button>
-                            </li> -->
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
                         <div class="bzt" v-if="item.sellerRemark">卖家备注：{{item.sellerRemark}}</div>
+                        <div class="bzt" v-if="item.remark">备注：{{item.remark}}</div>
                     </div>
                 </div>
             </div>
@@ -84,7 +77,7 @@
 
 <script>
 import moment from 'moment'
-
+import { updateOrderRemark } from '../api/index'
 export default {
     name: 'orderTable',
     props: {
@@ -99,27 +92,36 @@ export default {
     data () {
         return {
             curIndex: null,
-            activeName: 'a',
-            textarea: ''
+            activeName: '0',
+            remark: ''
         }
     },
     methods: {
         orderStatus (val) {
             return val === 1 ? '待发货' : val === 2 ? '已发货' : val === 3 ? '已完成' : '待评价'
         },
-        onHandleClick () {
-
-        },
         formatTime (time, type) {
             let dateType = 'YYYY-MM-DD HH:mm:ss'
             type && (dateType = type)
             return moment(time).format(dateType)
         },
-        onRemark (index) {
+        onShowRemark (item, index) {
+            this.remark = item.remark
             this.curIndex = index
         },
         onClose () {
             this.curIndex = null
+        },
+        async onRemark (item) {
+            await updateOrderRemark({
+                id: item.id,
+                remark: this.remark
+            })
+            item.remark = this.remark
+            this.curIndex = null
+        },
+        onChangeTab () {
+            this.$emit('search-event', { status: this.activeName })
         }
     },
     mounted () {}
