@@ -113,7 +113,7 @@ export default {
                 this.iszongbu = false
             }
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fazhanzongj') !== -1)) {
+            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
                 this.iszongbu = false
                 this.updatebtn = false
                 this.submitbtn = true
@@ -123,7 +123,7 @@ export default {
                 this.iszongbu = false
             }
             // 分部运营
-            if (deptType === 2 && (role.indexOf('fenbuyunying') !== -1)) {
+            if (deptType === 2 && (role.indexOf('JDgroup-SegmentOperation') !== -1)) {
                 this.iszongbu = false
             }
         },
@@ -167,6 +167,7 @@ export default {
         },
         onCheck (row) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName } })
+            console.log(row.status)
         },
         async onCommit (row) {
             if (row.signScale == 0) {

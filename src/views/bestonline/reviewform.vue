@@ -110,7 +110,7 @@ export default {
             }
         },
         getRoletype () {
-            if (this.$route.query.status === 0) {
+            if (this.$route.query.status !== 0) {
                 console.log(this.$route.query.status)
                 const deptType = this.userInfo.deptType
                 const role = this.userInfo.role
@@ -119,27 +119,27 @@ export default {
                 if (role.indexOf('JDmanager') !== -1) {
                 }
                 // 总部法务
-                if (deptType === 0 && role.indexOf('fawuzj') !== -1) {
+                if (deptType === 0 && role.indexOf('JDgroup-LegalAffairs') !== -1) {
                     this.fourType = true
                     this.sixType = true
                 }
                 // 总部平台组织
-                if (deptType === 0 && role.indexOf('pintaizuzhizongj') !== -1) {
+                if (deptType === 0 && role.indexOf('JDgroup-PlatformOrganization') !== -1) {
                     this.fiveType = true
                     this.sixType = true
                 }
                 // 总部平台运营
-                if (deptType === 0 && role.indexOf('pingtaiyunyingzj') !== -1) {
+                if (deptType === 0 && role.indexOf('JDgroup-ChiefOperation') !== -1) {
                     this.twoType = true
                     this.sixType = true
                 }
                 // 总部财务
-                if (deptType === 0 && role.indexOf('caiwuzongj') !== -1) {
+                if (deptType === 0 && role.indexOf('JDgroup-ChiefFinance') !== -1) {
                     this.threeType = true
                     this.sixType = true
                 }
                 // 总部发展
-                if (deptType === 0 && role.indexOf('fazhanzongj') !== -1) {
+                if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
                     this.oneType = true
                     this.sixType = true
                 }
@@ -154,39 +154,13 @@ export default {
                     this.sixType = true
                 }
                 // 分部运营
-                if (deptType === 2 && role.indexOf('fenbuyunying') !== -1) {
+                if (deptType === 2 && role.indexOf('JDgroup-SegmentOperation') !== -1) {
                     this.twoType = true
                     this.threeType = true
                     this.fiveType = true
                     this.sixType = true
                 }
             }
-        //     if (target >= 3000) {
-        //         if (role === 'JDgroup-ChiefOperation') { // 尽调规模>=3000W 时，只有“尽调小组-总部平台运营”  = >商业
-        //             this.twoType = true
-        //         } else if (role === 'JDgroup-ChiefFinance') { //  尽调小组-财务 = > 财务
-        //             this.threeType = true
-        //         } else if (role === 'JDgroup-LegalAffairs') { //  尽调小组-法务 = > 法务
-        //             this.fourType = true
-        //         } else if (role === 'JDgroup-PlatformOrganization') { //  尽调小组-平台组织 = > 组织
-        //             this.fiveType = true
-        //         }
-        //     } else if (target < 3000 && target > 0) {
-        //         if (role === 'JDgroup-SegmentFinance' || role === 'JDgroup-SegmentOperation') { // 分部财务 分部运营
-        //             // this.oneType = true
-        //             this.twoType = true
-        //             this.threeType = true
-        //             this.fourType = true
-        //             this.fiveType = true
-        //         } else if (role === 'JDgroup-LegalAffairs') {
-        //             this.fourType = true
-        //         }
-        //     }
-        //     if (role === 'jindiaofz' || (deptType === 0 && role.indexOf('fazhanzongj') !== -1)) { // “尽调管理员”“总部发展”  合作目标
-        //         this.oneType = true
-        //     } else {
-        //         this.oneType = false
-        //     }
         }
     }
 }
