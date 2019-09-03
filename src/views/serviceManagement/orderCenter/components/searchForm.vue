@@ -11,17 +11,17 @@
                                         <el-option label="订单号" value="1"></el-option>
                                         <el-option label="外部订单号" value="2"></el-option>
                                         <el-option label="收货人姓名" value="3"></el-option>
-                                        <el-option label="收货人手机号后四位" value="4"></el-option>
+                                        <el-option label="收货人手机号" value="4"></el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
                             <div class="m-l">
-                                <el-input v-model="searchForm.d" style="width:100%" clearable placeholder="请输入手机号" maxlength='11'/>
+                                <el-input v-model="searchForm.d" style="width:100%" clearable placeholder="请输入" maxlength='11'/>
                             </div>
                         </div>
                     </el-col>
                     <el-col :span="11">
-                        <el-form-item label="维护时间：">
+                        <el-form-item label="下单时间：">
                             <el-date-picker v-model="searchForm.startDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10"> --</span>
@@ -48,17 +48,17 @@ export default {
     props: ['value'],
     data () {
         return {
-            searchForm: {
-                a: '',
-                b: '',
-                c: '',
-                d: '',
-                startDate: '',
-                endDate: ''
-            }
         }
     },
     computed: {
+        searchForm: {
+            get () {
+                return this.value
+            },
+            set (val) {
+                this.$emit('input', val)
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
