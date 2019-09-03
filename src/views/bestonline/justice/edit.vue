@@ -182,6 +182,7 @@ export default {
                 params.affairs.type = 1
                 messageTip = '提交成功'
                 this.type = 1
+                this.$router.go(-1)
             }
             params.applyId = this.applyId
             if (this.type === 1) {
