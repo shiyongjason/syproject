@@ -1,5 +1,5 @@
 <template>
-    <CotargetEdit v-if="canEdit" @init="init" />
+    <CotargetEdit v-if="roleType" @init="init" />
     <CotargetShow v-else />
 </template>
 
@@ -9,13 +9,14 @@ import CotargetShow from './show.vue'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'cotarget',
+    props: {
+        roleType: {
+            type: Boolean,
+            default: false
+        }
+    },
     components: {
         CotargetEdit, CotargetShow
-    },
-    data () {
-        return {
-            canEdit: true
-        }
     },
     computed: {
         ...mapState({
@@ -33,11 +34,6 @@ export default {
     async mounted () {
         await this.findCotargetData({ applyId: this.$route.query.applyId })
         this.form.applyId = this.$route.query.applyId
-        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
-            this.canEdit = true
-        } else {
-            this.canEdit = false
-        }
     }
 }
 </script>

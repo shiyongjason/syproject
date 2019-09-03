@@ -1,5 +1,5 @@
 <template>
-    <BusinessEdit v-if="canEdit" />
+    <BusinessEdit v-if="roleType" />
     <BusinessShow v-else />
 </template>
 
@@ -10,13 +10,14 @@ import { mapActions } from 'vuex'
 
 export default {
     name: 'cotarget',
+    props: {
+        roleType: {
+            type: Boolean,
+            default: false
+        }
+    },
     components: {
         BusinessEdit, BusinessShow
-    },
-    data () {
-        return {
-            canEdit: true
-        }
     },
     methods: {
         ...mapActions([
@@ -25,11 +26,6 @@ export default {
     },
     mounted () {
         this.findBusinessData({ applyId: this.$route.query.applyId })
-        if (this.$route.query.status == 0 || this.$route.query.status == 3) {
-            this.canEdit = true
-        } else {
-            this.canEdit = false
-        }
     }
 }
 </script>
