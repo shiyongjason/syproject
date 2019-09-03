@@ -152,6 +152,7 @@ export default {
         async next () {
             const { data } = await findMenuList()
             const menu = this.makeMenus(routerMapping, data)
+            // const menu = routerMapping // 开发路由
             // this.$router.addRoutes(menu)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
