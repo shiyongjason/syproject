@@ -25,7 +25,7 @@
                                 <i v-if="index === 4">%</i>
                             </td>
                             <td>
-                                {{item.state==0?'是':'否'}}
+                                {{item.state === 0?'否':item.state === 1?'是':''}}
                             </td>
                             <td :rowspan="form.dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
                                 {{item.remark}}
