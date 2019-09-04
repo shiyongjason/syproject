@@ -63,7 +63,7 @@
                             </li>
                             <li>{{index.userName}}</li>
                             <li>无需配送</li>
-                            <li>{{item.payAmount}}</li>
+                            <li>{{parseToMoney(item.payAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li><el-button type="primary" size='mini'>预约信息</el-button></li>
                         </ul>
@@ -99,6 +99,13 @@ export default {
         }
     },
     methods: {
+        parseToMoney (money) {
+            if (money) {
+                const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                return res
+            }
+            return ''
+        },
         orderStatus (val) {
             return val === 1 ? '待发货' : val === 2 ? '已发货' : val === 3 ? '已完成' : '待评价'
         },
@@ -158,7 +165,7 @@ export default {
 .table ul .nopadding .goods:nth-child(1){border-bottom:1px solid #DCDFE6}
 .table ul li:not(:first-child){ display: flex; align-items: center;justify-content: center;}
 .name{ margin-left: 15px}
-.name font{color: #0033FF; margin-top: 10px;display: block;}
+.name font{color: #0033FF; margin-top: 10px;display: block; cursor: pointer;}
 .name p{color:#6B6B6B; margin-top: 30px}
 .priceandnums{ position: absolute; right:20px}
 .priceandnums p:nth-child(1){margin-top: 10px;display: block; text-align: right}

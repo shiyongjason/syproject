@@ -4,7 +4,7 @@
             <el-row>
                 <el-col :span="12">
                     <el-form-item prop="channelType" label="渠道名称">
-                        <el-select v-model="customerForm.channelType" style="width:100%">
+                        <el-select v-model="customerForm.channelType" :disabled='!isAdd' style="width:100%">
                             <template v-if="isAdd">
                                 <el-option label="好享家" :value="0"></el-option>
                             </template>
@@ -18,8 +18,10 @@
                 <el-col :span="12">
                     <el-form-item prop="role" label="客户身份">
                         <el-select v-model="customerForm.role" style="width: 100%">
-                            <el-option v-for="(item,index) in Object.values(roles)" :key="index" :label="item" :value="index">
+                            <el-option v-for="(item,index) in Object.values(roles)" :key="index" :label="item" :value="index" :disabled="index===0||index===3">
                             </el-option>
+                            <!-- <el-option  label="线下管家" :value="1" :key="1"></el-option>
+                            <el-option  label="线上管家" :value="2" :key="2"></el-option> -->
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -132,11 +134,11 @@ export default {
                         let method = 'editCustomerInfo'
                         if (this.isAdd) method = 'addCustomerInfo'
                         await Api[method](this.customerForm)
-                        this.$message.success('提交成功！')
-                        this.dialog = false
+                        this.$message.success(`${this.isAdd ? '新增' : '编辑'}成功！`)
+                        this.onCancel()
                         this.isSaving = false
-                        this.$emit('getList')
-                        // this.getData()
+                        // this.$emit('getList')
+                        this.getData()
                     } catch (e) {
                         this.isSaving = false
                     }
@@ -148,7 +150,7 @@ export default {
         onCancel () {
             this.dialog = false
             this.customerForm = {}
-            this.$refs['dialogForm'].resetFields()
+            this.$refs['dialogForm'].clearValidate()
         }
     }
 }
