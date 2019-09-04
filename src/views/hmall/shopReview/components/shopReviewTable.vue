@@ -143,6 +143,7 @@ export default {
             this.$emit('onCurrentChange', val)
         },
         goToChecked (val) {
+            console.log(val)
             this.$router.push({
                 path: 'selectCategory',
                 query: {
