@@ -114,6 +114,10 @@ export default {
                 this.updatebtn = false
                 this.iszongbu = false
             }
+            // 总部法务
+            if (deptType === 0 && role.indexOf('JDgroup-LegalAffairs') !== -1) {
+                this.isshow = true
+            }
             // 总部发展
             if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
                 this.isshow = true

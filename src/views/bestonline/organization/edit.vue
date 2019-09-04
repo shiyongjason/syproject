@@ -109,7 +109,6 @@ export default {
             this.form.operationNode = 0
             this.form.applyId = this.applyId
             this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
-            alert(this.form.applyId)
             if (this.form.dueOrganizationId) {
                 await updateOrganization(this.form)
             } else {
@@ -135,6 +134,7 @@ export default {
                         message: '提交成功',
                         type: 'success'
                     })
+                    this.$router.go(-1)
                 }
             })
         },
