@@ -9,35 +9,34 @@
                         </el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">渠道名称：</div>
                     <div class="query-col-input">
                         <el-input type="text" maxlength="50" v-model="queryParams.parameterName" placeholder="请输入渠道名称">
                         </el-input>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">手机：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.phone" placeholder="请输入手机">
+                        <el-input type="text" maxlength="50" v-model="queryParams.mobile" placeholder="请输入手机">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">维护时间：</div>
+                    <div class="flex-wrap-title">创建时间：</div>
                     <div class="flex-wrap-cont">
-                        <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.createTimeStart" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.createTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onQuery()">
-                            搜索
-                        </el-button>
+                        <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                     </div>
                 </div>
             </div>
@@ -60,11 +59,10 @@ export default {
     data () {
         return {
             queryParams: {
-                type: '',
-                parameterName: '',
-                phone: '',
-                startDate: '',
-                endDate: ''
+                name: '',
+                mobile: '',
+                createTimeStart: '',
+                createTimeEnd: ''
             },
             searchParams: {},
             tableData: [],
@@ -79,7 +77,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -89,7 +87,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -101,12 +99,22 @@ export default {
         })
     },
     methods: {
+        onReset () {
+            this.$set(this.queryParams, 'name', '')
+            this.$set(this.queryParams, 'mobile', '')
+            this.$set(this.queryParams, 'beginCreateTime', '')
+            this.$set(this.queryParams, 'endCreateTime', '')
+            this.onQuery()
+        },
         onQuery () {
             const { ...params } = this.queryParams
-            this.searchParams = params
+            this.searchParams = { ...params }
             this.search()
         },
         async search () {
+            console.log(this.searchParams)
+            this.searchParams.pageSize = this.paginationData.pageSize
+            this.searchParams.pageNumber = this.paginationData.pageNumber
             console.log(this.searchParams)
             const { data } = await findReportList(this.searchParams)
             this.tableData = data.records

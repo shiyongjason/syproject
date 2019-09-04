@@ -5,19 +5,19 @@
             </el-table-column>
             <el-table-column type="index" label="序号" :index="indexMethod" align="center" width="60">
             </el-table-column>
-            <el-table-column prop="parameterCode" label="档案ID">
+            <el-table-column prop="id" label="档案ID" align="center">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.parameterCode }}</span>
+                    <span>{{ scope.row.id }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="parameterName" label="姓名">
+            <el-table-column prop="name" label="姓名" align="center">
                 <template slot-scope="scope">
-                    <span>{{ scope.row.parameterName }}</span>
+                    <span>{{ scope.row.name }}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="unit" label="手机号" align="center">
+            <el-table-column prop="mobile" label="手机号" align="center">
                 <template slot-scope="scope">
-                    {{scope.row.unit ? scope.row.unit : '-'}}
+                    {{scope.row.mobile ? scope.row.mobile : '-'}}
                 </template>
             </el-table-column>
             <el-table-column prop="address" label="地址">
@@ -25,30 +25,25 @@
                     {{ scope.row.address }}
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="房型">
+            <el-table-column prop="roomType" label="房型">
                 <template slot-scope="scope">
-                    {{ scope.row.address }}
+                    {{ scope.row.roomType }}
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="人口">
+            <el-table-column prop="population" label="人口">
                 <template slot-scope="scope">
-                    {{ scope.row.address }}
-                </template>
-            </el-table-column>
-            <el-table-column prop="address" label="渠道名称">
-                <template slot-scope="scope">
-                    {{ scope.row.address }}
+                    {{ scope.row.population }}
                 </template>
             </el-table-column>
             <el-table-column label="维护时间" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.updateTime | formatterTime }}
+                    {{ scope.row.createTime | formatterTime }}
                 </template>
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="modify(scope.row)" class="orangeBtn">查看</el-button>
-                    <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
+                    <el-button @click="onShow(scope.row)" class="orangeBtn">查看</el-button>
+                    <el-button @click="onEdit(scope.row)" class="orangeBtn">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -56,13 +51,37 @@
             <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
             </el-pagination>
         </div>
+        <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                <el-tab-pane v-for="(value, index) in data" :key="index" :label="value.name" :name="(index + 1).toString()"></el-tab-pane>
+            </el-tabs>
+            <table>
+                <thead>
+                    <tr>
+                        <th>类目</th>
+                        <th>序号</th>
+                        <th>项目</th>
+                        <th>小项目</th>
+                        <th>品牌</th>
+                        <th>型号</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(v, i) in childArchiveNodes" :key="i">
+                        <th>Month</th>
+                        <th>Savings</th>
+                    </tr>
+                </tbody>
+            </table>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import { findReportDetail } from '../../api/index'
 export default {
-    name: 'customerReportTable',
+    name: 'customerRecordTable',
     props: {
         tableData: {
             type: Array,
@@ -84,7 +103,11 @@ export default {
     },
     data () {
         return {
-            selectId: []
+            selectId: [],
+            dialogTableVisible: false,
+            activeName: '1',
+            data: [],
+            childArchiveNodes: []
         }
     },
     computed: {
@@ -99,8 +122,14 @@ export default {
                 this.selectId.push(value.id)
             })
         },
-        modify (row) {
-            console.log(row)
+        async onShow (row) {
+            this.$router.push({ path: 'customerReportDetail', query: { id: row.id, action: 'show' } })
+        },
+        async onEdit (row) {
+            this.$router.push({ path: 'customerReportDetail', query: { id: row.id, action: 'edit' } })
+        },
+        handleClick () {
+            console.log(this.activeName)
         },
         handleSizeChange (val) {
             this.loading = true

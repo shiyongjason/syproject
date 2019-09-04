@@ -348,6 +348,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/customerReport/index.vue')
+            },
+            {
+                path: 'customerReportDetail',
+                name: 'customerReportDetail',
+                meta: {
+                    title: '报告详情',
+                    tagName: '报告详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerReport/detail.vue')
             }
         ]
     }
