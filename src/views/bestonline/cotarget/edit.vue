@@ -1,6 +1,5 @@
 <template>
     <div class="jd-manage">
-        <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <p class="title-p">合作目标</p>
         <el-form :model="form" :rules="rules" ref="form" label-width="100px">
             <el-form-item label="尽调规模：" prop="scale">
@@ -86,7 +85,8 @@ export default {
     computed: {
         ...mapState({
             form: state => state.dueDiligence.cotargetData,
-            isCollapse: state => state.isCollapse
+            isCollapse: state => state.isCollapse,
+            userInfo: state => state.userInfo
         })
     },
     methods: {
@@ -105,16 +105,19 @@ export default {
                 item.netProfitRate = item.netProfitRate - 0
                 return item
             })
+            console.log(this.userInfo)
             if (this.form.id) {
                 // this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                this.form.updateUser = this.userInfo.employeeName
                 await putCooperativetarget(this.form)
-                this.$message.success('保存成功！')
+                this.$message.success('提交成功！')
                 this.$router.go(-1)
                 this.$emit('init')
             } else {
                 // this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
+                this.form.createUser = this.userInfo.employeeName
                 await addCooperativetarget(this.form)
-                this.$message.success('提交成功！')
+                this.$message.success('暂存成功！')
                 this.$router.go(-1)
                 this.$emit('init')
             }

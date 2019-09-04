@@ -143,7 +143,7 @@ export default {
         async showProcess (applyId) {
             const { data } = await getDueApproval({ applyId: applyId })
             this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
-            this.dueApproval && this.dueApproval.reverse().map(value => {
+            this.dueApproval && this.dueApproval.map(value => {
                 if (value.approvalStatus === 1 || value.approvalStatus === 2) {
                     value.color = '#f88825'
                 }
