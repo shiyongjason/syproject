@@ -8,6 +8,7 @@
                             <div>
                                 <el-form-item label="订单搜索：" prop="a">
                                     <el-select v-model="searchForm.searchKey" clearable>
+                                        <el-option label="全部" value=""></el-option>
                                         <el-option label="订单号" value="orderNo"></el-option>
                                         <el-option label="外部订单号" value="channelOrderNo"></el-option>
                                         <el-option label="姓名" value="userName"></el-option>
@@ -104,7 +105,9 @@ export default {
                 this.$set(this.searchForm, this.searchForm.searchKey, this.searchForm.searchValue)
             }
             if (!this.searchForm.searchKey) {
-                this.searchForm = {}
+                this.searchForm = {
+                    searchKey: ''
+                }
             }
             this.$emit('search', this.searchForm)
         }

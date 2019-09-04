@@ -26,7 +26,10 @@ export default {
         return {
             dialogCustomerEdit: false,
             list: [],
-            searchForm: {},
+            searchForm: {
+                role: '',
+                channelType: ''
+            },
             editInfo: {},
             channelType: [
                 { value: '', label: '全部' }, { value: 0, label: '好享家' }, { value: 1, label: '有赞商城' }, { value: 2, label: '孩子王成长家' }
