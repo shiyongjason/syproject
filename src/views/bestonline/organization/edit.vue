@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <!-- <p>已提交 {{form.updateTime}} {{form.updateUser}} </p> -->
+         <p v-if="form.updateTime">已提交 {{form.updateTime}} {{form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form">
                 <KPI />
@@ -107,7 +107,7 @@ export default {
     methods: {
         async onSaveOrganize () {
             this.form.operationNode = 0
-            this.form.applyId = this.applyId
+            this.form.applyId = this.$route.query.applyId
             this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
             if (this.form.dueOrganizationId) {
                 await updateOrganization(this.form)
@@ -123,6 +123,7 @@ export default {
             this.$refs.form.validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
+                    this.form.updateUser = this.userInfo.employeeName
                     this.form.operationNode = 1
                     this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
                     if (this.form.dueOrganizationId) {

@@ -108,7 +108,7 @@
         </table>
 
 <!--       CEO审批信息 -->
-        <table v-if="ceoConclusionList.length">
+        <table>
             <thead>
             <tr>
                 <td colspan="5">CEO审批信息</td>
@@ -124,7 +124,7 @@
             </tr>
             <tr>
                 <td>{{ceoConclusionList.isCooperate | judgeTureOrFalse}}</td>
-                <td>{{ceoConclusionList.scale}}<i>w</i></td>
+                <td>{{ceoConclusionList.scale}}<i v-if="ceoConclusionList.scale">w</i></td>
                 <td>{{ceoConclusionList.yearGrowthRate}}</td>
                 <td>{{ceoConclusionList.equityRatio}}</td>
                 <td>{{ceoConclusionList.netProfitRate}}</td>
@@ -368,7 +368,7 @@ export default {
     filters: {
         judgeTureOrFalse (value) {
             if (value === null || value === '' || value === undefined) return '-'
-            return value ? '否' : '是'
+            return value ? '是' : '否'
         },
         judgeThreeLevel (value, arugment) {
             if (value === null || value === '' || value === undefined) return '-'

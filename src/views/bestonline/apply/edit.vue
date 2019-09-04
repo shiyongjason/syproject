@@ -21,7 +21,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="" prop="newCooperateContent" v-if="formData.cooperateType == 1">
-                    <el-input type="textarea" rows="4" placeholder="请说明新合作模式" class="remark"
+                    <el-input type="textarea" rows="4" placeholder="请说明新合作模式" class="remark" maxlength="250"
                               v-model="formData.newCooperateContent">
                     </el-input>
                 </el-form-item>
@@ -46,7 +46,7 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="" prop="mainSystemOther" v-if="checkList.indexOf(4) != -1">
-                    <el-input type="textarea" rows="4" placeholder="请详细说明" class="remark"
+                    <el-input type="textarea" rows="4" placeholder="请详细说明" class="remark" maxlength="250"
                               v-model="formData.mainSystemOther">
                     </el-input>
                 </el-form-item>
@@ -82,7 +82,7 @@
                 </el-form-item>
                 <el-form-item label="备注：">
                     <div class="flex-wrap-cont">
-                        <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入备注"
+                        <el-input type="textarea" style="width:600px" rows="4" placeholder="请输入备注" maxlength="250"
                                   v-model="formData.remark" width="30%">
                         </el-input>
                     </div>
@@ -346,6 +346,7 @@ export default {
                     message: '暂存成功',
                     type: 'success'
                 })
+                this.$router.go(-1)
             }
         },
         async onSubmit () {
