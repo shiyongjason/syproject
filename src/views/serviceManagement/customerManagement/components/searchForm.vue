@@ -11,7 +11,7 @@
                     <el-col :span="6">
                         <el-form-item label="渠道名称：" prop="channelType">
                             <el-select v-model="searchForm.channelType" clearable style="width: 100%">
-                                <el-option v-for="(item,index) in Object.values(channelTypes)" :key="index" :label="item" :value="index">
+                                <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -19,8 +19,8 @@
                     <el-col :span="6">
                         <el-form-item label="客户身份：" prop="role">
                             <el-select v-model="searchForm.role" clearable style="width: 100%">
-                                <el-option v-for="(item,index) in Object.values(roles)" :key="index" :label="item" :value="index">
-                            </el-option>
+                                <el-option v-for="(item,index) in role" :key="index" :label="item.label" :value="item.value">
+                                </el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -57,8 +57,7 @@
 <script>
 export default {
     name: 'searchForm',
-    props: ['value'],
-    inject: ['getTypes'],
+    props: ['value', 'role', 'channelType'],
     data () {
         var validateMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
@@ -89,14 +88,17 @@ export default {
             return this.getTypes('channelType')
         },
         roles () {
-            return this.getTypes('role')
+            let temp = Object.values(this.getTypes('role'))
+            temp.unshift('全部')
+            console.log(temp)
+            return temp
         },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
                     let beginDateVal = this.searchForm.createTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -106,7 +108,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.searchForm.createTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
