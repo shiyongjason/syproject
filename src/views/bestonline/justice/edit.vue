@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p>已提交 {{form.affairs.updateTime}} {{ form.affairs.updateUser}} </p>
+        <p>已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
                 <KPI />
@@ -159,6 +159,7 @@ export default {
                 message: message
             })
             this.findJusticeData({ applyId: this.$route.query.applyId })
+            this.$router.go(-1)
         },
         saveJusticeData (isSave) {
             const params = JSON.parse(JSON.stringify(this.justiceData))
@@ -177,7 +178,6 @@ export default {
                 params.affairs.type = 1
                 messageTip = '提交成功'
                 this.type = 1
-                this.$router.go(-1)
             }
             params.applyId = this.applyId
             if (this.type === 1) {
