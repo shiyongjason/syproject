@@ -510,7 +510,7 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     const { ...params } = this.form
-                    params.createBy = this.userInfo.employeeName
+                    params.updateBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfoMore.organizationCode
 
