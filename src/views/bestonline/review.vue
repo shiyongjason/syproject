@@ -32,7 +32,7 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu)" @click="onEdit(scope.data.row)">修改</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)" @click="onEdit(scope.data.row)">修改</el-button>
                     <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
                     <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && submitbtn" @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
@@ -42,7 +42,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.createUser}}/{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'已审核':'已驳回'}}
+                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { getDuemain, getDueapprovalconclusion, postDuemain } from './api/index.js'
+import { getDuemain, postDuemain, getFlow } from './api/index.js'
 import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
 export default {
@@ -64,6 +64,7 @@ export default {
             submitbtn: false,
             // 是否是总部的角色
             iszongbu: true,
+            isshow: false,
             params: {
                 status: '',
                 companyName: '',
@@ -96,6 +97,7 @@ export default {
     mounted () {
         this.getDuemain()
         this.Permission()
+        console.log(this.userInfo)
     },
     computed: {
         ...mapState({
@@ -111,6 +113,10 @@ export default {
             if (role.indexOf('JDmanager') !== -1) {
                 this.updatebtn = false
                 this.iszongbu = false
+            }
+            // 总部发展
+            if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
+                this.isshow = true
             }
             // 分部发展
             if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
@@ -152,14 +158,16 @@ export default {
         },
         async showProcess (applyId) {
             this.dialogVisible = true
-            const { data } = await getDueapprovalconclusion({ applyId: applyId })
-            this.dueApproval = data.data.generalConclusionList.concat(data.data.judgesConclusionList).concat(data.data.caucusConclusionList).concat(data.data.ceoConclusionList)
+            const { data } = await getFlow({ applyId: applyId, origin: 1 })
+            console.log(data)
+            this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approvalStatus === 1) {
+                if (value.approveStatus == 1) {
                     value.color = '#f88825'
                 }
                 return value
             })
+            console.log(this.dueApproval)
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
@@ -167,41 +175,40 @@ export default {
         },
         onCheck (row) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: false } })
-            console.log(row.status)
         },
         async onCommit (row) {
-            // if (row.signScale == 0) {
-            //     this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
-            //     return false
-            // } else {
-            //     if (row.signScale < 3000) {
-            //         if (row.financalFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
-            //             return false
-            //         }
-            //         if (row.legalFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
-            //             return false
-            //         }
-            //     } else {
-            //         if (row.businessFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交商业尽调信息' })
-            //             return false
-            //         }
-            //         if (row.financalFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
-            //             return false
-            //         }
-            //         if (row.legalFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
-            //             return false
-            //         }
-            //         if (row.organizationFlag == 1) {
-            //             this.$message.warning({ showClose: true, message: '请先提交组织尽调信息' })
-            //             return false
-            //         }
-            //     }
-            // }
+            if (row.signScale == 0) {
+                this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
+                return false
+            } else {
+                if (row.signScale < 3000) {
+                    if (row.financalFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
+                        return false
+                    }
+                    if (row.legalFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
+                        return false
+                    }
+                } else {
+                    if (row.businessFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交商业尽调信息' })
+                        return false
+                    }
+                    if (row.financalFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
+                        return false
+                    }
+                    if (row.legalFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交法务尽调信息' })
+                        return false
+                    }
+                    if (row.organizationFlag == 1) {
+                        this.$message.warning({ showClose: true, message: '请先提交组织尽调信息' })
+                        return false
+                    }
+                }
+            }
             await postDuemain({ applyId: row.applyId, createUser: row.createUser })
             this.$message.success({ showClose: true, message: '提交成功' })
             this.getDuemain()

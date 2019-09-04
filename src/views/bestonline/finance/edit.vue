@@ -105,6 +105,7 @@ export default {
             }
             if (i === 0) return this.onSaveGood(firstTime)
             if (i === 1) return this.onSubmit(firstTime)
+            this.form.dueFinanceBasic.applyId = this.applyId
         },
         async onSaveGood (firstTime) {
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')

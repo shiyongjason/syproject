@@ -29,6 +29,7 @@
             <div class="form-cont-col">
                 <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince" label-width="170px">
                     <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessProvince" placeholder="请选择省" @change="onchangeP(form.dueBusinessFuturePlanCreateForm.businessProvince)">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="(item) in provelist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -37,6 +38,7 @@
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessCity" label-width="170px">
                     <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessCity" @change="onchangeC(form.dueBusinessFuturePlanCreateForm.businessCity)" placeholder="请选择市">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="item in citylist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -45,6 +47,7 @@
             <div class="form-cont-col">
                 <el-form-item prop="dueBusinessFuturePlanCreateForm.businessArea" label-width="170px">
                     <el-select v-model="form.dueBusinessFuturePlanCreateForm.businessArea" placeholder="请选择区" @change="onchangeA(form.dueBusinessFuturePlanCreateForm.businessArea)">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="item in arealist" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -92,8 +95,6 @@ export default {
             mainCommercialData: MAIN_COMMERCIAL_OPTIONS,
             maincategory: MAIN_CATEGORY_OPTIONS,
             provelist: [],
-            citylist: [],
-            arealist: [],
             businessProvince: '',
             businessCity: '',
             businessArea: '',
@@ -116,31 +117,6 @@ export default {
                 webBusinessCategory = webBusinessCategory.split(',')
             }
             form.dueBusinessFuturePlanCreateForm.webBusinessCategory = webBusinessCategory.map(item => item && parseInt(item))
-        },
-        'form.dueBusinessFuturePlanCreateForm.businessProvince': {
-            handler (val) {
-                if (val) {
-                    let list = this.provelist.filter(item => item.key == val)[0].cityList
-                    let selectObj = [{ value: '请选择', key: '' }]
-                    this.citylist = selectObj.concat(list)
-                } else {
-                    this.citylist = []
-                    this.arealist = []
-                }
-            },
-            deep: true
-        },
-        'form.dueBusinessFuturePlanCreateForm.businessCity': {
-            handler (val) {
-                if (val) {
-                    let list = this.citylist.filter(item => item.key == val)[0].areaList
-                    let selectObj = [{ value: '请选择', key: '' }]
-                    this.arealist = selectObj.concat(list)
-                } else {
-                    this.arealist = []
-                }
-            },
-            deep: true
         }
     },
     computed: {
@@ -149,12 +125,25 @@ export default {
         }),
         'form.dueBusinessFuturePlanCreateForm.webServiceCategory' () {
             return []
+        },
+        citylist () {
+            const province = this.provelist.filter(item => item.key == this.form.dueBusinessFuturePlanCreateForm.businessProvince)
+            if (province.length > 0) {
+                return province[0].cityList
+            }
+            return []
+        },
+        arealist () {
+            const city = this.citylist.filter(item => item.key == this.form.dueBusinessFuturePlanCreateForm.businessCity)
+            if (city.length > 0) {
+                return city[0].areaList
+            }
+            return []
         }
     },
     async  mounted () {
         const { data } = await getAreacode()
-        let selectObj = [{ value: '请选择', key: '' }]
-        this.provelist = selectObj.concat(data.data.dictpro)
+        this.provelist = data.data.dictpro
     },
     methods: {
         async  getAreacode () {
@@ -163,6 +152,7 @@ export default {
         },
         async onchangeP (val) {
             this.form.dueBusinessFuturePlanCreateForm.businessCity = ''
+            this.form.dueBusinessFuturePlanCreateForm.businessArea = ''
         },
         async onchangeC (val) {
             this.form.dueBusinessFuturePlanCreateForm.businessArea = ''
@@ -171,7 +161,6 @@ export default {
 
         },
         onChange (val) {
-            console.log(val)
             this.maxShow = val && val.sort().reverse()[0]
         }
     }

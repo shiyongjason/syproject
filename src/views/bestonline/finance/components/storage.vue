@@ -7,6 +7,7 @@
             <div class="form-cont-col">
                 <el-form-item label="仓库地址">
                     <el-select v-model="form.dueFinanceBasic.storeProvince" placeholder="省" @change="onProvince">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="item in storeProvince" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -15,6 +16,7 @@
             <div class="form-cont-col">
                 <el-form-item>
                     <el-select v-model="form.dueFinanceBasic.storeCity" placeholder="市" @change="onCity">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="item in storeCity" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -23,6 +25,7 @@
             <div class="form-cont-col">
                 <el-form-item>
                     <el-select v-model="form.dueFinanceBasic.storeArea" placeholder="区">
+                        <el-option label="请选择" value=""></el-option>
                         <el-option v-for="item in storeArea" :key="item.key" :label="item.value" :value="item.key">
                         </el-option>
                     </el-select>
@@ -91,36 +94,26 @@ export default {
             warehouseOrderOptions: WAREHOUSE_ORDER_OPTIONS,
             agreeCustodyOptions: SUPERVISION_METHOD,
             storeOptions: WAREHOUSE_FORM,
-            storeProvince: [],
-            storeCity: [],
-            storeArea: []
+            storeProvince: []
         }
     },
     computed: {
         ...mapState({
             form: state => state.dueDiligence.financeData
-        })
-    },
-    watch: {
-        'form.dueFinanceBasic.storeProvince': {
-            handler (val) {
-                if (val) {
-                    this.storeCity = this.storeProvince.filter((value, index) => {
-                        return value.key == val
-                    })[0].cityList
-                }
-            },
-            deep: true
+        }),
+        storeCity () {
+            const province = this.storeProvince.filter(item => item.key == this.form.dueFinanceBasic.storeProvince)
+            if (province.length > 0) {
+                return province[0].cityList
+            }
+            return []
         },
-        'form.dueFinanceBasic.storeCity': {
-            handler (val) {
-                if (val) {
-                    this.storeArea = this.storeCity.filter((value, index) => {
-                        return value.key == val
-                    })[0].areaList
-                }
-            },
-            deep: true
+        storeArea () {
+            const city = this.storeCity.filter(item => item.key == this.form.dueFinanceBasic.storeCity)
+            if (city.length > 0) {
+                return city[0].areaList
+            }
+            return []
         }
     },
     methods: {
@@ -131,16 +124,9 @@ export default {
         onProvince (key) {
             this.form.dueFinanceBasic.storeCity = ''
             this.form.dueFinanceBasic.storeArea = ''
-            this.storeArea = []
-            this.storeCity = this.storeProvince.filter((val, index) => {
-                return val.key == key
-            })[0].cityList
         },
         onCity (key) {
             this.form.dueFinanceBasic.storeArea = ''
-            this.storeArea = this.storeCity.filter((val, index) => {
-                return val.key == key
-            })[0].areaList
         }
     },
     mounted () {

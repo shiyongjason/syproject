@@ -27,6 +27,9 @@ export const getDueapplydetail = (params) => {
 export const getDueApproval = (params) => {
     return axios.get('/develop/dueapply/queryApplyFlowDetail/', { params })
 }
+export const getFlow = (params) => {
+    return axios.get('/develop/dueflowprocess/queryList/', { params })
+}
 /*
 @评审
 */

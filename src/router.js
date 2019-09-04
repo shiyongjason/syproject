@@ -398,6 +398,18 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
             },
+            // 暂做成弹框
+            // {
+            //     path: 'shopManagerImport',
+            //     name: 'shopManagerImport',
+            //     meta: {
+            //         title: '商品库导入模板',
+            //         tagName: '商品库导入模板',
+            //         isMenu: false,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopReview/shopManagerImport.vue')
+            // },
             {
                 path: 'wallet',
                 name: 'wallet',

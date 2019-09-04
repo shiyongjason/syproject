@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -206,7 +206,6 @@ export default {
     },
     mounted () {
         this.nowMonth = (new Date()).getMonth()
-        console.log(this.form)
     },
     watch: {
         form (form) {
@@ -241,7 +240,6 @@ export default {
             this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
-            // console.log(this.form.publicityPromotionChannels)
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
@@ -264,6 +262,7 @@ export default {
                     }
                     this.$message.success('提交成功')
                     this.findBusinessData({ applyId: this.$route.query.applyId })
+                    this.$router.go(-1)
                 }
             })
         }

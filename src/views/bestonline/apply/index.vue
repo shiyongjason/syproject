@@ -101,8 +101,6 @@ export default {
         }
     },
     mounted () {
-        console.log(this.userInfo)
-        console.log(this.userInfo.role.indexOf('fenbufazhan') !== -1)
         this.getDueapply()
         this.Permission()
     },

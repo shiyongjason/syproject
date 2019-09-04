@@ -28,7 +28,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="经营区域：" prop="dueBusinessFuturePlanCreateForm.businessProvince" label-width="170px">
-                    {{form.dueBusinessFuturePlanCreateForm.businessProvince + form.dueBusinessFuturePlanCreateForm.businessCity + form.dueBusinessFuturePlanCreateForm.businessArea}}
+                    {{proveName + cityName + areaName}}
                 </el-form-item>
             </div>
         </div>
@@ -80,7 +80,7 @@ export default {
         }
     },
     watch: {
-        async   form (form) {
+        async form (form) {
             if (form.dueBusinessFuturePlanCreateForm.businessProvince) {
                 const { data } = await this.getChiness(form.dueBusinessFuturePlanCreateForm.businessProvince)
                 this.proveName = data.citys.cityName
@@ -96,14 +96,14 @@ export default {
 
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
             if (!serviceCategory) {
-                serviceCategory = ''
+                serviceCategory = []
             } else {
                 serviceCategory = serviceCategory.split(',')
             }
             form.dueBusinessFuturePlanCreateForm.serviceCategory = serviceCategory.map(item => item && parseInt(item))
             let businessCategory = form.dueBusinessFuturePlanCreateForm.businessCategory
             if (!businessCategory) {
-                businessCategory = ''
+                businessCategory = []
             } else {
                 businessCategory = businessCategory.split(',')
             }
@@ -116,14 +116,8 @@ export default {
         })
 
     },
-    created () {
-
-    },
-    async  mounted () {
-
-    },
     methods: {
-        async  getChiness (value) {
+        async getChiness (value) {
             const { data } = await getChiness({ id: value })
             return data
         }
