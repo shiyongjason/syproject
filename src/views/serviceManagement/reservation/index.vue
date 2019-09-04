@@ -176,6 +176,8 @@ export default {
         }
     },
     async mounted () {
+        const channelOrderNo = this.$route.query.channelOrderNo
+        if (channelOrderNo) this.queryParams.channelOrderNo = channelOrderNo
         this.onQuery()
     }
 }
