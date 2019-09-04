@@ -89,7 +89,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findRecordDetail } from '../../api/index'
+import { findRecordDetail } from '../api/index'
 export default {
     name: 'customerRecordTable',
     props: {
@@ -168,13 +168,11 @@ export default {
 }
 </script>
 
-<style>
-.el-dialog {
+<style lang="scss" scoped>
+/deep/ .el-dialog {
     width: 100%;
     height: 100%;
 }
-</style>
-<style scoped>
 table {
     border-collapse: collapse;
 }

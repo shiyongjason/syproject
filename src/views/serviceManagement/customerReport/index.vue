@@ -50,7 +50,7 @@
 import CustomerReportTable from './components/customerReportTable'
 import { mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { findReportList } from '../api/index'
+import { findReportList } from './api/index'
 export default {
     name: 'customerReport',
     components: {

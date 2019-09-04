@@ -79,7 +79,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findReportDetail } from '../../api/index'
+import { findReportDetail } from '../api/index'
 export default {
     name: 'customerRecordTable',
     props: {

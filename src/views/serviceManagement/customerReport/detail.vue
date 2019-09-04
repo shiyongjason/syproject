@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { findReportDetail } from '../api/index'
+import { findReportDetail } from './api/index'
 export default {
     name: 'customerReportDetail',
     data () {
