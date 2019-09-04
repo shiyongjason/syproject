@@ -70,36 +70,37 @@
         <el-dialog :title="title" :visible.sync="dialogTableVisible">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item label="订单号">
-                    <el-input v-model="form.parameterName" placeholder="请输入订单号" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.orderId" placeholder="请输入订单号" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="预约单号">
-                    <el-input v-model="form.parameterName" placeholder="请输入预约单号" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.reservationNo" placeholder="请输入预约单号" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="预约内容">
-                    <el-input v-model="form.parameterName" placeholder="请输入预约内容" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.reservationName" placeholder="请输入预约内容" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名">
-                    <el-input v-model="form.parameterName" placeholder="请输入姓名" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.reservationPerson" placeholder="请输入姓名" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="type" label="渠道名称">
-                    <el-select v-model="form.type" style="width: 300px">
+                    <el-input v-model="form.sourceName" disabled maxlength="25" style="width: 300px"></el-input>
+                    <!-- <el-select v-model="form.type" style="width: 300px">
                         <el-option label="有赞商城" :value="1"></el-option>
                         <el-option label="孩子王成长家" :value="2"></el-option>
-                    </el-select>
+                    </el-select> -->
                 </el-form-item>
                 <el-form-item prop="type" label="商品名称">
                     <el-select v-model="form.type" style="width: 300px">
                         <el-option label="清洗服务" :value="1"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="手机号" v-if="form.type ===1">
-                    <el-input v-model="form.unit" placeholder="请输入手机号" maxlength="10" style="width: 300px"></el-input>
+                <el-form-item label="手机号">
+                    <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
-                <el-form-item label="地址" v-if="form.type ===1">
-                    <el-input v-model="form.unit" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
+                <el-form-item label="地址">
+                    <el-input v-model="form.address" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="type" label="预约方式">
-                    <el-select v-model="form.type" style="width: 300px">
+                    <el-select v-model="form.reservationMethod" style="width: 300px">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="公众号预约" value="1"></el-option>
                         <el-option label="电话预约" value="2"></el-option>
@@ -107,7 +108,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="type" label="预约状态">
-                    <el-select v-model="form.type" style="width: 300px">
+                    <el-select v-model="form.reservationStatus" style="width: 300px">
                         <el-option label="全部" value=""></el-option>
                         <el-option label="已预约（未确认）" value="1"></el-option>
                         <el-option label="已预约（已确认）" value="2"></el-option>
@@ -115,10 +116,17 @@
                         <el-option label="取消" value="4"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item>
+                    <el-date-picker v-model="form.reservationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerStart">
+                    </el-date-picker>
+                    <span class="ml10 mr10">-</span>
+                    <el-date-picker v-model="form.reservationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerEnd" default-time="23:59:59">
+                    </el-date-picker>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer" v-show="show">
                 <el-button @click="dialogTableVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogTableVisible = false">修 改</el-button>
+                <el-button type="primary" @click="updata">修 改</el-button>
             </span>
         </el-dialog>
     </div>
@@ -126,7 +134,7 @@
 
 <script>
 import { mapState } from 'vuex'
-// import { findRecordDetail } from '../api/index'
+import { findReservationsDetail, updataReservations } from '../api/index'
 export default {
     name: 'customerRecordTable',
     props: {
@@ -158,14 +166,34 @@ export default {
             title: '修改预约单',
             show: false,
             form: {
-                parameterName: '',
-                unit: '',
-                type: ''
+
             },
             rules: {}
         }
     },
     computed: {
+        pickerStart () {
+            return {
+                disabledDate: (time) => {
+                    console.log(this.form.reservationEndTime)
+                    if (this.form.reservationEndTime) return
+                    let beginDateVal = new Date(this.form.reservationEndTime)
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = new Date(this.form.reservationStartTime)
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -178,11 +206,16 @@ export default {
             })
         },
         async onEdit (row) {
-            console.log(row)
             this.show = true
             this.dialogTableVisible = true
-            // const { data } = await findRecordDetail(row.id)
-            // console.log(data)
+            const { data } = await findReservationsDetail(row.id)
+            console.log(data)
+            this.form = data
+        },
+        async updata () {
+            this.dialogTableVisible = false
+            console.log(this.form)
+            // const { data } = await updataReservations()
         },
         handleClick () {
             this.childArchiveNodes = this.data[this.activeName - 1].childArchiveNodes
@@ -203,7 +236,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-form{
+/deep/ .el-form {
     display: flex;
     flex-wrap: wrap;
 }
