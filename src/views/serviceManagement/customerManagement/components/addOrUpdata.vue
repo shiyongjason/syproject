@@ -138,7 +138,6 @@ export default {
             if (!this.isAdd) {
                 dialogRole = this.role.concat()
                 dialogRole.splice(0, 1)
-                console.log('dialogRole', dialogRole)
             }
             return dialogRole
         },

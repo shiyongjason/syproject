@@ -87,12 +87,6 @@ export default {
         channelTypes () {
             return this.getTypes('channelType')
         },
-        roles () {
-            let temp = Object.values(this.getTypes('role'))
-            temp.unshift('全部')
-            console.log(temp)
-            return temp
-        },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {

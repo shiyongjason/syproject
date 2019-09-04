@@ -104,11 +104,6 @@ export default {
             if (this.searchForm.searchKey) {
                 this.$set(this.searchForm, this.searchForm.searchKey, this.searchForm.searchValue)
             }
-            if (!this.searchForm.searchKey) {
-                this.searchForm = {
-                    searchKey: ''
-                }
-            }
             this.$emit('search', this.searchForm)
         }
     },
