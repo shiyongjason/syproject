@@ -31,10 +31,10 @@
                     </el-col>
                     <el-col :span="11">
                         <el-form-item label="创建时间：">
-                            <el-date-picker v-model="searchForm.beginCreateTime" type="date" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="searchForm.createTimeStart" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10"> --</span>
-                            <el-date-picker v-model="searchForm.endCreateTime" type="date" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="searchForm.createTimeEnd" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -94,7 +94,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.searchForm.endCreateTime
+                    let beginDateVal = this.searchForm.createTimeEnd
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -104,7 +104,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.searchForm.beginCreateTime
+                    let beginDateVal = this.searchForm.createTimeStart
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }

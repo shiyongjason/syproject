@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNum" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata :visible.sync="dialogCustomerEdit" v-model="editInfo"/>
+        <add-or-updata :visible.sync="dialogCustomerEdit" v-model="editInfo" @getList='getData'/>
     </div>
 </template>
 
@@ -67,7 +67,7 @@ export default {
             this.queryParams.pageSize = val
         },
         onCurrentChange (val) {
-            this.queryParams.pageNum = val
+            this.queryParams.pageNumber = val
         },
         onAddCustomer () {
             this.dialogCustomerEdit = true
