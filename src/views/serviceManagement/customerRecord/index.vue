@@ -77,7 +77,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.createTimeEnd
+                    let beginDateVal = new Date(this.queryParams.createTimeEnd)
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -87,7 +87,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.createTimeStart
+                    let beginDateVal = new Date(this.queryParams.createTimeStart)
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
