@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
