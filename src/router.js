@@ -326,6 +326,17 @@ const routerMapping = [
                 },
                 component: () => import('@/views/serviceManagement/orderCenter/order.vue')
             },
+            {
+                path: 'reservation',
+                name: 'reservation',
+                meta: {
+                    title: '预约信息',
+                    tagName: '预约信息',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/reservation/index.vue')
+            },
             // 一期不做
             // {
             //     path: 'customerRecord',
