@@ -408,17 +408,6 @@ const router = new Router({
                         icon: ''
                     },
                     component: () => import('@/views/serviceManagement/orderCenter/order.vue')
-                },
-                {
-                    path: 'information',
-                    name: 'information',
-                    meta: {
-                        title: '预约信息',
-                        tagName: '预约信息',
-                        isMenu: true,
-                        icon: ''
-                    },
-                    component: () => import('@/views/serviceManagement/information/information.vue')
                 }
             ]
         },
