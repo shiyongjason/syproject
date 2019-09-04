@@ -29,13 +29,12 @@ export default {
     },
     methods: {
         onSearch () {
+            this.queryParams.pageNumber = 1
             this.getData()
         },
         async getData (param) {
             let params = { ...this.searchForm, ...this.queryParams }
-            if (param) {
-                params.status = param.status
-            }
+            if (param && param.status && param.status !== '0') params.status = param.status
             const { data } = await findOrderList(params)
             this.list = data.records
             this.page.total = data.total

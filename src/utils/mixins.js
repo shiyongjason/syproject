@@ -3,7 +3,7 @@ export const pagination = {
         return {
             queryParams: {
                 pageSize: 10,
-                pageNum: 1
+                pageNumber: 1
             },
             page: {
                 sizes: [10, 20, 50, 100],
@@ -18,7 +18,7 @@ export const pagination = {
             this.getData()
         },
         handleCurrentChange (val) {
-            this.queryParams.pageNum = val
+            this.queryParams.pageNumber = val
             this.getData()
         }
     }

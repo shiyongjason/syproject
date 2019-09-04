@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="customeredit" :title="isAdd?'编辑客户信息':'新增客户信息'" :visible.sync="dialog" :close-on-click-modal="false">
+    <el-dialog class="customeredit" :title="isAdd?'新增客户信息':'编辑客户信息'" :visible.sync="dialog" :close-on-click-modal="false" :before-close="onCancel">
         <el-form :model="customerForm" class="customerForm" :rules="rules" ref="dialogForm" label-width="100px">
             <el-row>
                 <el-col :span="12">
@@ -27,7 +27,7 @@
             <el-row>
                 <el-col :span="12">
                     <el-form-item prop="name" label="姓名">
-                        <el-input v-model="customerForm.name" :disabled="isAdd" placeholder="请输入姓名"></el-input>
+                        <el-input v-model="customerForm.name" :disabled="!isAdd" placeholder="请输入姓名"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -39,7 +39,7 @@
             <el-row>
                 <el-col :span="12">
                     <el-form-item prop="mobile" label="手机号">
-                        <el-input v-model="customerForm.mobile" :disabled="isAdd" placeholder="请输入姓名" maxlength='11'></el-input>
+                        <el-input v-model="customerForm.mobile" :disabled="!isAdd" placeholder="请输入姓名" maxlength='11'></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -51,7 +51,7 @@
             <el-row>
                 <el-col :span="12" v-if="!isAdd" >
                     <el-form-item prop="createTime" label="成为客户">
-                        <el-date-picker v-model="customerForm.createTime" type="date" format="yyyy-MM-dd" placeholder="成为客户日期">
+                        <el-date-picker v-model="customerForm.createTime" :disabled="!isAdd" type="date" format="yyyy-MM-dd" placeholder="成为客户日期">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -64,19 +64,13 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="onCancel">取 消</el-button>
-            <el-button type="primary" @click="submitForm('dialogForm')" :loading="isSaving">保 存</el-button>
+            <el-button type="primary" @click="onSubmitForm('dialogForm')" :loading="isSaving">保 存</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
-import { editCustomerInfo, addCustomerInfo } from '../api/index'
-const form = {
-    channelType: '',
-    role: '',
-    name: '',
-    d: ''
-}
+import Api from '../api/index'
 
 export default {
     name: 'addOrUpdata',
@@ -94,7 +88,6 @@ export default {
             }
         }
         return {
-            // customerForm: JSON.parse(JSON.stringify(form)),
             rules: {
                 name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
                 role: [{ required: true, message: '请选择客户身份', trigger: 'blur' }],
@@ -111,7 +104,7 @@ export default {
             return this.getTypes('role')
         },
         isAdd () {
-            return !!this.value.id
+            return !this.value.id
         },
         customerForm: {
             get () {
@@ -131,31 +124,31 @@ export default {
         }
     },
     methods: {
-        submitForm (formName) {
+        onSubmitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
-                console.log(this.customerForm)
+                this.isSaving = true
                 if (valid) {
-                    this.isSaving = true
-                    let res = ''
-                    if (this.isAdd) {
-                        res = await editCustomerInfo(this.customerForm)
-                    } else {
-                        res = await addCustomerInfo(this.customerForm)
-                    }
-                    console.log(res)
-                    if (res.status == 200) {
-                        this.isSaving = false
+                    try {
+                        let method = 'editCustomerInfo'
+                        if (this.isAdd) method = 'addCustomerInfo'
+                        await Api[method](this.customerForm)
+                        this.$message.success('提交成功！')
                         this.dialog = false
-                        this.getData()
-                    } else {
+                        this.isSaving = false
+                        this.$emit('getList')
+                        // this.getData()
+                    } catch (e) {
                         this.isSaving = false
                     }
+                } else {
+                    this.isSaving = false
                 }
             })
         },
         onCancel () {
             this.dialog = false
-            this.customerForm = JSON.parse(JSON.stringify(form))
+            this.customerForm = {}
+            this.$refs['dialogForm'].resetFields()
         }
     }
 }
