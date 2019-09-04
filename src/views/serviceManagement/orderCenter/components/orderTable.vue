@@ -100,7 +100,7 @@ export default {
     },
     methods: {
         onLink (item) {
-            this.$router.push({ path: '/serviceManagement/reservation', query: { orderId: item.id } })
+            this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
         },
         parseToMoney (money) {
             if (money) {
