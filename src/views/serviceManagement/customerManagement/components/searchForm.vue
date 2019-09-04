@@ -3,7 +3,7 @@
         <div class="search-head">
             <el-row :gutter="10" class="searchTable">
                 <el-form :model="searchForm" :rules="rulesValidate" ref="form" label-width="120px">
-                    <el-col :span="6" >
+                    <el-col :span="6">
                         <el-form-item label="姓名：" prop="name">
                             <el-input v-model="searchForm.name" clearable maxlength='20' />
                         </el-form-item>
@@ -26,7 +26,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="手机号：" prop="mobile">
-                            <el-input v-model="searchForm.mobile" clearable placeholder="请输入手机号" maxlength='11'/>
+                            <el-input v-model="searchForm.mobile" clearable placeholder="请输入手机号" maxlength='11' />
                         </el-form-item>
                     </el-col>
                     <el-col :span="11">
@@ -59,20 +59,7 @@ export default {
     name: 'searchForm',
     props: ['value', 'role', 'channelType'],
     data () {
-        var validateMobile = (rule, value, callback) => {
-            const Reg = /^1\d{10}$/
-            if (!value) {
-                callback(new Error('请输入手机号码'))
-            } else if (Reg.test(value) === false) {
-                callback(new Error('手机号码格式不正确'))
-            } else {
-                callback()
-            }
-        }
         return {
-            rulesValidate: {
-                mobile: [{ validator: validateMobile, trigger: 'blur' }]
-            }
         }
     },
     computed: {
@@ -89,20 +76,24 @@ export default {
         },
         pickerOptionsStart () {
             return {
-                disabledDate: (time) => {
+                disabledDate: time => {
                     let beginDateVal = this.searchForm.createTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return (
+                            time.getTime() > new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
         },
         pickerOptionsEnd () {
             return {
-                disabledDate: (time) => {
+                disabledDate: time => {
                     let beginDateVal = this.searchForm.createTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return (
+                            time.getTime() < new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
@@ -111,11 +102,12 @@ export default {
     methods: {
         search (formName) {
             if (this.searchForm.mobile) {
-                this.$refs[formName].validate(valid => {
-                    if (valid) {
-                        this.$emit('search', this.searchForm)
-                    }
-                })
+                const Reg = /^1\d{10}$/
+                if (Reg.test(this.searchForm.mobile) === false) {
+                    this.$message.error('手机号码格式不正确')
+                } else {
+                    this.$emit('search', this.searchForm)
+                }
             } else {
                 this.$emit('search', this.searchForm)
             }
@@ -125,8 +117,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search{min-width: 1400px}
-.searchTable{ width: 1400px;}
+.search {
+    min-width: 1400px;
+}
+.searchTable {
+    width: 1400px;
+}
 .search-head {
     box-shadow: 0px 1px 0px 0px #e5e5ea;
     background: #fafafa;
@@ -134,6 +130,6 @@ export default {
     box-sizing: border-box;
 }
 .el-col {
-    margin-bottom: 20px
+    margin-bottom: 20px;
 }
 </style>
