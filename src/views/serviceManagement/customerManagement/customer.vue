@@ -63,6 +63,7 @@ export default {
             this.queryParams.pageNumber = val
         },
         onAddCustomer () {
+            this.showDetail = false
             this.dialogCustomerEdit = true
         },
         async getData () {
