@@ -10,7 +10,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="渠道名称：" prop="channelType">
-                            <el-select v-model="searchForm.channelType" style="width: 100%">
+                            <el-select v-model="searchForm.channelType" clearable style="width: 100%">
                                 <el-option v-for="(item,index) in Object.values(channelTypes)" :key="index" :label="item" :value="index">
                                 </el-option>
                             </el-select>
@@ -18,7 +18,7 @@
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="客户身份：" prop="role">
-                            <el-select v-model="searchForm.role" style="width: 100%">
+                            <el-select v-model="searchForm.role" clearable style="width: 100%">
                                 <el-option v-for="(item,index) in Object.values(roles)" :key="index" :label="item" :value="index">
                             </el-option>
                             </el-select>

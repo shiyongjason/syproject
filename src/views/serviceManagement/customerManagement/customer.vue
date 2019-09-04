@@ -56,7 +56,6 @@ export default {
             }
         },
         onEdit (row) {
-            console.log(row)
             this.editInfo = row
             this.dialogCustomerEdit = true
         },
