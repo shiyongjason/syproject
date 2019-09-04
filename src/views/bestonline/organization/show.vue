@@ -22,8 +22,8 @@
                             <td>
                                 {{item.cooperationTarget}}
                                 <i v-if="index === 1">w</i>
-                                <i v-if="index === 2">%</i>
-                                <i v-if="index === 4">%</i>
+                                <i v-if="index === 2"></i>
+                                <i v-if="index === 4"></i>
                             </td>
                             <td>
                                 {{item.state === 0?'否':item.state === 1?'是':''}}
