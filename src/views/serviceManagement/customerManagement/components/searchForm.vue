@@ -2,7 +2,7 @@
     <div class="search">
         <div class="search-head">
             <el-row :gutter="10" class="searchTable">
-                <el-form :model="searchForm" :rules="rulesValidate" ref="form" label-width="120px">
+                <el-form :model="searchForm" ref="form" label-width="120px">
                     <el-col :span="6">
                         <el-form-item label="姓名：" prop="name">
                             <el-input v-model="searchForm.name" clearable maxlength='20' />
