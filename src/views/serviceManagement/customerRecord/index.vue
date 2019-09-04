@@ -26,10 +26,10 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">维护时间：</div>
                     <div class="flex-wrap-cont">
-                        <el-date-picker v-model="queryParams.beginCreateTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endCreateTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.createTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -61,8 +61,8 @@ export default {
             queryParams: {
                 name: '',
                 mobile: '',
-                beginCreateTime: '',
-                endCreateTime: ''
+                createTimeStart: '',
+                createTimeEnd: ''
             },
             searchParams: {},
             tableData: [],
@@ -77,7 +77,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endCreateTime
+                    let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -87,7 +87,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.beginCreateTime
+                    let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -107,11 +107,13 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'name', '')
             this.$set(this.queryParams, 'mobile', '')
-            this.$set(this.queryParams, 'beginCreateTime', '')
-            this.$set(this.queryParams, 'endCreateTime', '')
+            this.$set(this.queryParams, 'createTimeStart', '')
+            this.$set(this.queryParams, 'createTimeEnd', '')
             this.onQuery()
         },
         async search () {
+            this.searchParams.pageSize = this.paginationData.pageSize
+            this.searchParams.pageNumber = this.paginationData.pageNumber
             const { data } = await findRecordList(this.searchParams)
             // console.log(data)
             this.tableData = data.records
