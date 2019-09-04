@@ -4,4 +4,4 @@ export const findReservations = (params) => axios.get('service/api/reservations/
 // 预约信息详情
 export const findReservationsDetail = (params) => axios.get(`service/api/reservations/${params}`)
 // 更新服务预约记录
-export const updataReservations = (params) => axios.get(`service/api/reservations`, { params })
+export const updataReservations = (params) => axios.put(`service/api/reservations`, params)
