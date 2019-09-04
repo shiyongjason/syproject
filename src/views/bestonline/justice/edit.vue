@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p>已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
+        <p v-if="justiceData.affairs.updateTime">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
                 <KPI />
@@ -180,6 +180,7 @@ export default {
                 this.type = 1
             }
             params.applyId = this.applyId
+            params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate) => {
                     if (validate) {
