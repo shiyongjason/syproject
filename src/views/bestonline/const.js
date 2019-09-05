@@ -29,6 +29,12 @@ export const YES_NO_STATUS = [
     { label: '否', value: 0 }
 ]
 
+export const YES_NO_STATUS_COPY = [
+    { label: '请选择', value: '' },
+    { label: '是', value: 0 },
+    { label: '否', value: 1 }
+]
+
 export const ISPROVIDE_CONTRACT = [
     { value: '是', key: 0 },
     { value: '否', key: 1 }

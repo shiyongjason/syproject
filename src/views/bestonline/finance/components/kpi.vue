@@ -90,11 +90,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import { YES_NO_STATUS } from '../../const'
+import { YES_NO_STATUS_COPY } from '../../const'
 export default {
     data () {
         return {
-            options: YES_NO_STATUS,
+            options: YES_NO_STATUS_COPY,
             rules: {
                 state: [
                     { required: true, message: '请选择结论', trigger: 'change' }
