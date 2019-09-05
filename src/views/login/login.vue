@@ -139,7 +139,15 @@ export default {
                 const authArr = Data.filter(item => item.authUri === value.path)
                 // const authArr = Data.filter(item => item.authUri === value.path)
                 if (value.children && authArr.length > 0) {
-                    value.children = this.makeMenus(value.children, authArr[0].childAuthList)
+                    let authList = authArr[0].childAuthList || []
+                    let temp = []
+                    authList.forEach(item => {
+                        if (item.authResourceList) {
+                            temp = temp.concat(item.authResourceList)
+                        }
+                    })
+                    authList = authList.concat(temp)
+                    value.children = this.makeMenus(value.children, authList)
                 }
                 return authArr.length > 0
             })

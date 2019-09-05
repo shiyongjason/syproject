@@ -398,14 +398,18 @@ function makeMenus (Route, Data) {
         if (value.path === '') {
             return true
         }
-        const authArr = Data.filter(item => item.authUri === value.path)
+        const authArr = Data.filter(item => item.authUri === value.path || item.resourceAddress === value.path)
         // const authArr = Data.filter(item => item.authUri === value.path)
         if (value.children && authArr.length > 0) {
             let authList = authArr[0].childAuthList || []
-            if (authList.authResourceList) {
-                authList.concat(authList.authResourceList)
-            }
-            value.children = makeMenus(value.children, authArr[0].childAuthList)
+            let temp = []
+            authList.forEach(item => {
+                if (item.authResourceList) {
+                    temp = temp.concat(item.authResourceList)
+                }
+            })
+            authList = authList.concat(temp)
+            value.children = makeMenus(value.children, authList)
         }
         return authArr.length > 0
     })
