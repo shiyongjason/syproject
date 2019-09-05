@@ -166,7 +166,7 @@ export default {
             this.$router.push({ path: './applyform', query: { id: val.applyId } })
         },
         onDelete (val) {
-            this.$confirm(`是否确认删除该公司平台?`, '确认删除', {
+            this.$confirm(`是否确认删除该平台公司?`, '确认删除', {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
