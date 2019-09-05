@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
-
+import store from '@/store/index'
 Vue.use(Router)
 
 const routerMapping = [
@@ -379,39 +379,6 @@ const router = new Router({
     mode: 'history',
     routes: [
         {
-            path: '/serviceManagement',
-            meta: {
-                title: '服务管理',
-                isMenu: true,
-                icon: 'hosjoy_operation'
-            },
-            component: Layout,
-            children: [
-                {
-                    path: 'customerManagement',
-                    name: 'customerManagement',
-                    meta: {
-                        title: '客户管理',
-                        tagName: '客户管理',
-                        isMenu: true,
-                        icon: ''
-                    },
-                    component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
-                },
-                {
-                    path: 'orderCenter',
-                    name: 'orderCenter',
-                    meta: {
-                        title: '订单中心',
-                        tagName: '订单中心',
-                        isMenu: true,
-                        icon: ''
-                    },
-                    component: () => import('@/views/serviceManagement/orderCenter/order.vue')
-                }
-            ]
-        },
-        {
             path: '/login',
             name: 'login',
             component: () => import('./views/login/login'),
@@ -431,8 +398,13 @@ function makeMenus (Route, Data) {
         if (value.path === '') {
             return true
         }
-        const authArr = Data.filter(item => item.authUri === value.path && item.have)
+        const authArr = Data.filter(item => item.authUri === value.path)
+        // const authArr = Data.filter(item => item.authUri === value.path)
         if (value.children && authArr.length > 0) {
+            let authList = authArr[0].childAuthList || []
+            if (authList.authResourceList) {
+                authList.concat(authList.authResourceList)
+            }
             value.children = makeMenus(value.children, authArr[0].childAuthList)
         }
         return authArr.length > 0
@@ -442,13 +414,14 @@ function makeMenus (Route, Data) {
 async function getMenu (to, next) {
     const { data } = await findMenuList()
     const menu = makeMenus(routerMapping, data)
+    sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
-    // router.addRoutes(routerMapping) // 开发固定路由
     next({ ...to, replace: true })
 }
 
-let isFirst = true
+// let isFirst = true
 router.beforeEach(async (to, from, next) => {
+    let isFirst = store.state.isFirst
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非/login下需要验证
@@ -460,7 +433,8 @@ router.beforeEach(async (to, from, next) => {
             })
         } else {
             if (isFirst) {
-                isFirst = false
+                // isFirst = false
+                store.commit('IS_FIRST', false)
                 await getMenu(to, next)
             }
         }

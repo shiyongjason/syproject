@@ -84,7 +84,6 @@
 import ReservationTable from './components/reservationTable'
 import { findReservations } from './api/index'
 import { mapState } from 'vuex'
-import { deepCopy } from '@/utils/utils'
 export default {
     name: 'reservation',
     components: {

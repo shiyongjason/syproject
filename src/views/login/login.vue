@@ -13,21 +13,13 @@
                             <span class="form-icon">
                                 <i class="iconfont hosjoy_account"></i>
                             </span>
-                            <el-input
-                                v-model="loginForm.username"
-                                placeholder="请输入您的手机号码"
-                                maxlength="11"
-                            ></el-input>
+                            <el-input v-model="loginForm.username" placeholder="请输入您的手机号码" maxlength="11"></el-input>
                         </el-form-item>
                         <el-form-item prop="password">
                             <span class="form-icon">
                                 <i class="iconfont hosjoy_password"></i>
                             </span>
-                            <el-input
-                                v-model.trim="loginForm.password"
-                                :type="passwordType? 'password' : 'text'"
-                                placeholder="请输入您的密码"
-                            ></el-input>
+                            <el-input v-model.trim="loginForm.password" :type="passwordType? 'password' : 'text'" placeholder="请输入您的密码"></el-input>
                             <span class="form-icon-end" @click="passwordType = !passwordType">
                                 <i class="iconfont" :class="passwordType? 'hosjoy_eye_close' : 'hosjoy_eye'"></i>
                             </span>
@@ -91,7 +83,7 @@ export default {
             }, '*')
         },
         async onLogin () {
-            this.$refs[ 'loginForm' ].validate(async (valid) => {
+            this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
                     const { data } = await login(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
@@ -184,146 +176,146 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-    .page-body-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        min-width: 1280px;
-        z-index: -10;
-        background-image: url("../../assets/images/login_bg@2x.png");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center 0;
+.page-body-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-width: 1280px;
+    z-index: -10;
+    background-image: url("../../assets/images/login_bg@2x.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center 0;
 
-        img {
-            z-index: 0;
+    img {
+        z-index: 0;
+    }
+}
+.login-window {
+    position: absolute;
+    top: 50%;
+    margin-left: -240px;
+    margin-top: -240px;
+    width: 480px;
+    background: $whiteColor;
+    z-index: 1;
+    left: 50%;
+    padding: 70px;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+.title {
+    text-align: center;
+    color: #000000;
+    font-size: 28px;
+    line-height: 48px;
+    img {
+        margin-right: 16px;
+        width: 48px;
+        vertical-align: bottom;
+    }
+}
+.login-form {
+    margin-top: 70px;
+    .el-form-item {
+        margin-bottom: 36px;
+
+        .form-icon {
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            z-index: 99;
+            width: 42px;
+            height: 42px;
+            color: $blackLight;
+            text-align: center;
+            background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 1) 0%,
+                rgba(245, 245, 245, 1) 100%
+            );
+            border-radius: 4px 0px 0px 4px;
+            border-right: 1px solid rgba(229, 229, 234, 1);
         }
-    }
-    .login-window {
-        position: absolute;
-        top: 50%;
-        margin-left: -240px;
-        margin-top: -240px;
-        width: 480px;
-        background: $whiteColor;
-        z-index: 1;
-        left: 50%;
-        padding: 70px;
-        box-sizing: border-box;
-        border-radius: 4px;
-    }
-    .title{
-        text-align: center;
-        color: #000000;
-        font-size: 28px;
-        line-height: 48px;
-        img{
-            margin-right: 16px;
-            width: 48px;
-            vertical-align: bottom;
+        .form-icon-end {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            z-index: 99;
+            width: 42px;
+            height: 42px;
+            color: $blackLight;
+            text-align: center;
+            cursor: pointer;
         }
-    }
-    .login-form {
-        margin-top: 70px;
-        .el-form-item {
-            margin-bottom: 36px;
+        .el-input {
+            width: 100%;
+            float: left;
 
-            .form-icon {
-                position: absolute;
-                top: 1px;
-                left: 1px;
-                z-index: 99;
-                width: 42px;
-                height: 42px;
-                color: $blackLight;
-                text-align: center;
-                background: linear-gradient(
-                        180deg,
-                        rgba(255, 255, 255, 1) 0%,
-                        rgba(245, 245, 245, 1) 100%
-                );
-                border-radius: 4px 0px 0px 4px;
-                border-right: 1px solid rgba(229, 229, 234, 1);
-            }
-            .form-icon-end {
-                position: absolute;
-                top: 1px;
-                right: 1px;
-                z-index: 99;
-                width: 42px;
-                height: 42px;
-                color: $blackLight;
-                text-align: center;
-                cursor: pointer;
-            }
-            .el-input {
-                width: 100%;
-                float: left;
-
-                &:not(:first-child) {
-                    margin-left: 0;
-                }
-
-                /deep/ .el-input__inner {
-                    padding-left: 57px;
-                    height: 44px;
-                }
+            &:not(:first-child) {
+                margin-left: 0;
             }
 
-            &:nth-child(3) {
-                .el-input {
-                    width: 196px;
-
-                    /deep/ .el-input__inner {
-                        padding-left: 15px;
-                        height: 44px;
-                        border-radius: 4px;
-                    }
-                }
-
-                span {
-                    margin-left: 16px;
-                    float: left;
-                    width: 128px;
-                    height: 44px;
-                    cursor: pointer;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                    }
-                }
-            }
-
-            .el-button {
-                width: 100%;
+            /deep/ .el-input__inner {
+                padding-left: 57px;
                 height: 44px;
             }
         }
-        .el-form-item:last-child{
-            margin-bottom: 0;
-        }
-    }
 
-    /deep/ .el-form-item {
-        &.is-error {
-            margin-bottom: 36px;
-            transition: 0.3s;
+        &:nth-child(3) {
+            .el-input {
+                width: 196px;
+
+                /deep/ .el-input__inner {
+                    padding-left: 15px;
+                    height: 44px;
+                    border-radius: 4px;
+                }
+            }
+
+            span {
+                margin-left: 16px;
+                float: left;
+                width: 128px;
+                height: 44px;
+                cursor: pointer;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
-        &.is-error .el-form-item__error {
-            color: $hosjoyColor;
-            padding: 5px 0;
+
+        .el-button {
+            width: 100%;
+            height: 44px;
         }
     }
-    /deep/ .el-icon-success {
-        display: none;
-        color: #67c23a;
+    .el-form-item:last-child {
+        margin-bottom: 0;
     }
-    /deep/ .el-form-item.is-success {
-        .el-icon-success {
-            display: inline;
-        }
+}
+
+/deep/ .el-form-item {
+    &.is-error {
+        margin-bottom: 36px;
+        transition: 0.3s;
     }
+    &.is-error .el-form-item__error {
+        color: $hosjoyColor;
+        padding: 5px 0;
+    }
+}
+/deep/ .el-icon-success {
+    display: none;
+    color: #67c23a;
+}
+/deep/ .el-form-item.is-success {
+    .el-icon-success {
+        display: inline;
+    }
+}
 </style>

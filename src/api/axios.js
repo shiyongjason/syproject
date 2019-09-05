@@ -1,13 +1,9 @@
 /**
- * axios 全局配置
- */
+* axios 全局配置
+*/
 import axios from 'axios'
-import {
-    interfaceUrl
-} from './config'
-import {
-    Message
-} from 'element-ui'
+import { interfaceUrl } from './config'
+import { Message } from 'element-ui'
 import store from '@/store/index'
 
 // 配置全局axios请求前缀
