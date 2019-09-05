@@ -88,7 +88,7 @@
                 align="center"
                 label="操作">
                 <template slot-scope="scope">
-                    <el-button class="orangeBtn" @click="open(scope.row.organizationCode)" v-if="scope.row.status != 1">开启</el-button>
+                    <el-button class="orangeBtn" @click="open(scope.row)" v-if="scope.row.status != 1">开启</el-button>
                     <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
                 </template>
             </el-table-column>
@@ -187,7 +187,8 @@ export default {
                 account: this.form.phoneNumber,
                 createBy: this.userInfo.employeeName,
                 organizationCode: this.openId,
-                status: 1 // 开启
+                status: 1, // 开启
+                organizationSource: this.organizationSource
             }
             const { data } = await createOpen(params)
             // todo 目前格式未统一
@@ -208,8 +209,9 @@ export default {
         onQuery () {
             this.$emit('onQuery')
         },
-        open (id) {
-            this.openId = id
+        open (row) {
+            this.openId = row.organizationCode
+            this.organizationSource = row.organizationSource
             this.form.phoneNumber = ''
             this.dialog = true
         },

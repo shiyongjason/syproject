@@ -16,3 +16,5 @@ export const TAGS_INFO = 'TAGS_INFO'
 export const MENU_LIST = 'MENU_LIST'
 // 左侧菜单收缩 数据
 export const IS_COLLAPSE = 'IS_COLLAPSE'
+// 第一次登陆状态
+export const IS_FIRST = 'IS_FIRST'

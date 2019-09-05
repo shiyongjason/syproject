@@ -21,3 +21,9 @@ export const findActiveDetails = (params) => instance.get(`/ops/api/boss/activit
 export const findActiveList = (params) => instance.get(`/ops/api/boss/activity`, { params })
 // 活动审核操作
 export const createActiveReview = (params) => instance.post(`ops/api/boss/activity/audit`, params)
+// 商户审核列表
+export const findMerchantList = (params) => instance.get(`merchant/api/merchants/check`, { params })
+// 商户审核详情
+export const findMerchantDetail = (params) => instance.get(`merchant/api/merchants/check/${params}`)
+// // 商户审核
+export const checkMerchant = (params) => instance.put(`merchant/api/merchants/check`, params)
