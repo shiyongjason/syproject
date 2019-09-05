@@ -107,8 +107,10 @@ export default {
                         user_agent: navigator.userAgent
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                    localStorage.setItem('user_data', JSON.stringify(userData.data))
-                    this.sendMessage(userData)
+                    if (userData.code != 400) {
+                        sessionStorage.setItem('user_Data', JSON.stringify(userData))
+                        this.sendMessage(userData)
+                    }
                     // await this.findMenuList()
                     await this.next()
                     // this.$router.push('/')
@@ -142,7 +144,8 @@ export default {
                 if (value.path == '') {
                     return true
                 }
-                const authArr = Data.filter(item => item.authUri === value.path && item.have)
+                const authArr = Data.filter(item => item.authUri === value.path)
+                // const authArr = Data.filter(item => item.authUri === value.path)
                 if (value.children && authArr.length > 0) {
                     value.children = this.makeMenus(value.children, authArr[0].childAuthList)
                 }
@@ -152,7 +155,6 @@ export default {
         async next () {
             const { data } = await findMenuList()
             const menu = this.makeMenus(routerMapping, data)
-            // const menu = routerMapping // 开发路由
             // this.$router.addRoutes(menu)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
@@ -176,6 +178,8 @@ export default {
                 this.onLogin()
             }
         }
+        // TODO 防止不刷新无法初始vuex数据
+        this.resetVuex()
     }
 }
 </script>
