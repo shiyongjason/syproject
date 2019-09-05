@@ -52,7 +52,7 @@
                 <el-row>
                     <el-col :span="12" v-if="!isAdd">
                         <el-form-item prop="createTime" label="成为客户">
-                            <el-date-picker v-model="customerForm.createTime" :disabled="!isAdd" type="date" format="yyyy-MM-dd" placeholder="成为客户日期">
+                            <el-date-picker v-model="customerForm.createTime" :disabled="!isAdd" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="成为客户日期">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -135,10 +135,8 @@ export default {
     computed: {
         getRole () {
             let dialogRole = []
-            if (!this.isAdd) {
-                dialogRole = this.role.concat()
-                dialogRole.splice(0, 1)
-            }
+            dialogRole = this.role.concat()
+            dialogRole.splice(0, 1)
             return dialogRole
         },
         getTitle () {
