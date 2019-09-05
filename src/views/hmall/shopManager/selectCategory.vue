@@ -512,7 +512,8 @@ export default {
                     const { ...params } = this.form
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfoMore.organizationCode
-
+                    params.updateBy = this.userInfo.employeeName
+                    params.createBy = this.userInfo.employeeName
                     if (this.form.productShortName) {
                         params.productName = this.brandName + this.categorySelect[2] + this.form.specification + this.form.productShortName
                     } else {
@@ -534,11 +535,9 @@ export default {
                         if (this.isAdd) {
                             params.sourceCode = this.userInfoMore.organizationCode
                             params.sourceName = this.userInfoMore.organizationName
-                            params.createBy = this.userInfo.employeeName
                             this.createProduct(params)
                         } else {
                             params.id = this.modify
-                            params.updateBy = this.userInfo.employeeName
                             if (this.$route.query.isReview === 'yes') {
                                 this.createProduct(params)
                             } else {
