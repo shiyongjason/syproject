@@ -22,16 +22,16 @@
                     <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3"></el-input>
                 </el-form-item>
             </el-form>
-                <div class="flex-wrap-box">
-                    <div class="flex-wrap-title">附件：</div>
-                    <div class="flex-wrap-cont">
-                        <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="item.attachInfo" :before-upload="handleUpload">
-                            <el-button size="small" type="primary" @click="uploadId(item)">点击上传
-                            </el-button>
-                        </el-upload>
-                    </div>
-
+            <div class="flex-wrap-box">
+                <div class="flex-wrap-title">附件：</div>
+                <div class="flex-wrap-cont">
+                    <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="item.attachInfo" :before-upload="handleUpload">
+                        <el-button size="small" type="primary" @click="uploadId(item)">点击上传
+                        </el-button>
+                    </el-upload>
                 </div>
+
+            </div>
 
             <p class="small-title">负债信息（万）</p>
             <div class="flex-wrap-row">
@@ -82,11 +82,11 @@
 
             <p class="small-title">担保信息（万）</p>
             <div v-if="type != 2 && type != 3">
-                 <el-form label-position="left" label-width="100px" class="fawuForm">
-                        <el-form-item label="合计：">
-                            {{ assureTotal }}
-                        </el-form-item>
-                    </el-form>
+                <el-form label-position="left" label-width="100px" class="fawuForm">
+                    <el-form-item label="合计：">
+                        {{ assureTotal }}
+                    </el-form-item>
+                </el-form>
                 <div v-for="(item, index) in assureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 3 ? 4 : type)"></i>
