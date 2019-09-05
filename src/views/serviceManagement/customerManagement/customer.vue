@@ -64,6 +64,7 @@ export default {
         },
         onAddCustomer () {
             this.showDetail = false
+            this.editInfo.channelType = 0
             this.dialogCustomerEdit = true
         },
         async getData () {

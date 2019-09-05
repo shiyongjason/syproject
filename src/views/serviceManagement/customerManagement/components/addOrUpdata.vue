@@ -135,10 +135,8 @@ export default {
     computed: {
         getRole () {
             let dialogRole = []
-            if (!this.isAdd) {
-                dialogRole = this.role.concat()
-                dialogRole.splice(0, 1)
-            }
+            dialogRole = this.role.concat()
+            dialogRole.splice(0, 1)
             return dialogRole
         },
         getTitle () {
