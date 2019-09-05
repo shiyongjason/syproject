@@ -16,9 +16,9 @@
                     </el-checkbox-group>
                 </el-form-item>
             </div>
-            <div class="form-cont-col" v-if="maxShow==7||form.dueBusinessFuturePlanCreateForm.otherPlansNeeds">
-                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.otherPlansNeeds" label-width=0>
-                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
+            <div class="form-cont-col" v-if="maxShow==7||form.dueBusinessFuturePlanCreateForm.businessCategoryOther">
+                <el-form-item label="" prop="dueBusinessFuturePlanCreateForm.businessCategoryOther" label-width=0>
+                    <el-input type="textarea" v-model="form.dueBusinessFuturePlanCreateForm.businessCategoryOther" placeholder="如选择其他，请对其他进行说明" row=1 style="width: 250px;"></el-input>
                 </el-form-item>
             </div>
         </div>

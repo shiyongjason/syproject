@@ -16,9 +16,9 @@
                     </el-checkbox-group>
                 </el-form-item>
             </div>
-            <div class="form-cont-col ml10 otherCategory" v-if="form.dueBusinessFuturePlanCreateForm.otherPlansNeeds">
+            <div class="form-cont-col ml10 otherCategory" v-if="form.dueBusinessFuturePlanCreateForm.businessCategoryOther">
                 <el-form-item label="" label-width="20px">
-                    {{form.dueBusinessFuturePlanCreateForm.otherPlansNeeds}}
+                    {{form.dueBusinessFuturePlanCreateForm.businessCategoryOther}}
                 </el-form-item>
             </div>
         </div>

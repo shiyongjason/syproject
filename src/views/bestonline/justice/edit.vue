@@ -179,7 +179,7 @@ export default {
                 messageTip = '提交成功'
                 this.type = 1
             }
-            params.applyId = this.applyId
+            params.applyId = this.$route.query.applyId
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate) => {
