@@ -142,7 +142,8 @@ export default {
             this.$router.push({
                 path: '/hmall/selectCategory',
                 query: {
-                    status: 'add'
+                    status: 'add',
+                    type: 'add'
                 }
             })
         },

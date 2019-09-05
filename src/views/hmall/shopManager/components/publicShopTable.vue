@@ -9,75 +9,40 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-table :data="tableData"
-                      border
-                      style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column
-                    type="selection"
-                    align="center"
-                    width="55">
+            <el-table :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" align="center" width="55">
                 </el-table-column>
-                <el-table-column
-                    prop="merchantName"
-                    align="left"
-                    label="平台公司名称">
+                <el-table-column prop="merchantName" align="left" label="平台公司名称">
                 </el-table-column>
-                <el-table-column
-                    prop="shareMerchantName"
-                    align="left"
-                    label="共享平台公司名称">
+                <el-table-column prop="shareMerchantName" align="left" label="共享平台公司名称">
                 </el-table-column>
-                <el-table-column
-                    prop="shareCategoryName"
-                    align="left"
-                    label="共享类目名称">
+                <el-table-column prop="shareCategoryName" align="left" label="共享类目名称">
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="状态">
-                    <template  slot-scope="scope">
+                <el-table-column align="center" label="状态">
+                    <template slot-scope="scope">
                         <span v-text="scope.row.isEnable === 0 ? '停用' : '启用'"></span>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    prop="modifyOperator"
-                    align="left"
-                    label="维护人">
+                <el-table-column prop="modifyOperator" align="left" label="维护人">
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="维护时间">
+                <el-table-column align="center" label="维护时间">
                     <template slot-scope="scope">
                         {{scope.row.modifyTime | formatterTime}}
                     </template>
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="操作">
+                <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
-                        <el-button v-if="scope.row.isEnable === 0" class="orangeBtn"
-                                   @click="updatePublicShop(scope.row, 1)">启用
+                        <el-button v-if="scope.row.isEnable === 0" class="orangeBtn" @click="updatePublicShop(scope.row, 1)">启用
                         </el-button>
-                        <el-button v-if="scope.row.isEnable === 1" class="orangeBtn"
-                                   @click="updatePublicShop(scope.row, 0)">停用
+                        <el-button v-if="scope.row.isEnable === 1" class="orangeBtn" @click="updatePublicShop(scope.row, 0)">停用
                         </el-button>
-                        <el-button class="orangeBtn"
-                                   @click="deleteCategory(scope.row)">删除
+                        <el-button class="orangeBtn" @click="deleteCategory(scope.row)">删除
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="page clearfix" style="text-align: center;margin-top: 20px">
-                <el-pagination
-                    class="el-page"
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="paginationData.pageNumber"
-                    :page-sizes="[10,20,30,40,50]"
-                    layout="total, sizes, prev, pager, next, jumper"
-                    :onQuery="onQuery"
-                    :total="paginationData.totalElements">
+                <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :onQuery="onQuery" :total="paginationData.totalElements">
                 </el-pagination>
             </div>
         </div>
@@ -87,11 +52,7 @@
                     <div class="query-col-title">选择平台公司：</div>
                     <div class="query-col-input">
                         <el-select ref="companyLeft" v-model="dialogSearch.company" :filterable="true" placeholder="请选择" @change="handleCompany">
-                            <el-option
-                                v-for="item in companyListLeft"
-                                :key="item.organizationCode"
-                                :label="item.organizationShortName"
-                                :value="item.organizationCode">
+                            <el-option v-for="item in companyListLeft" :key="item.organizationCode" :label="item.organizationShortName" :value="item.organizationCode">
                             </el-option>
                         </el-select>
                     </div>
@@ -100,23 +61,15 @@
                     <div class="query-col-title">选择共享平台公司：</div>
                     <div class="query-col-input">
                         <el-select ref="companyRight" v-model="dialogSearch.publicCompany" :filterable="true" placeholder="请选择" @change="handleCompany">
-                            <el-option
-                                v-for="item in companyListRight"
-                                :key="item.organizationCode"
-                                :label="item.organizationShortName"
-                                :value="item.organizationCode">
+                            <el-option v-for="item in companyListRight" :key="item.organizationCode" :label="item.organizationShortName" :value="item.organizationCode">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
             </div>
-            <el-transfer v-model="publicModel" :data="publicData" class="transfer" ref="dialogSearch"
-                         :titles="['已添加的类目', '可添加的类目']"
-                         filter-placeholder="请输入类目"
-                         filterable
-            ></el-transfer>
+            <el-transfer v-model="publicModel" :data="publicData" class="transfer" ref="dialogSearch" :titles="['已添加的类目', '可添加的类目']" filter-placeholder="请输入类目" filterable></el-transfer>
             <span slot="footer" class="dialog-footer">
-                <el-button name="hosjoy-color"  @click="onSave">确认</el-button>
+                <el-button name="hosjoy-color" @click="onSave">确认</el-button>
                 <el-button name="hosjoy-color" @click="reset">重置</el-button>
                 <el-button name="white-color" @click="cancel">取消</el-button>
             </span>
@@ -328,7 +281,18 @@ export default {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消'
                 }).then(async () => {
+                    if (params.isEnable === 1) {
+                        this.$message({
+                            type: 'warning',
+                            message: '请先停用共享商品'
+                        })
+                        return
+                    }
                     await deleteCategory({ ids: params.id })
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功'
+                    })
                     this.onQuery()
                 })
             } else {
@@ -342,8 +306,22 @@ export default {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消'
                     }).then(async () => {
+                        const res = this.selectList.some((value) => {
+                            return value.isEnable === 1
+                        })
+                        if (res) {
+                            this.$message({
+                                type: 'warning',
+                                message: '请先停用共享商品'
+                            })
+                            return
+                        }
                         const temp = this.selectList.map(value => value.id)
                         await deleteCategory({ ids: temp.join(',') })
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功'
+                        })
                         this.onQuery()
                     })
                 }
@@ -359,26 +337,26 @@ export default {
 .dialog-query {
     display: flex;
     justify-content: space-around;
-    .dialog-query-cont-col{
+    .dialog-query-cont-col {
         display: flex;
         padding: 20px 0;
-        .query-col-title{
+        .query-col-title {
             line-height: 40px;
         }
-        .el-input{
+        .el-input {
             width: 160px;
         }
     }
 }
-.transfer{
+.transfer {
     margin-bottom: 20px;
 }
 </style>
 <style>
-    .el-transfer-panel{
-        width: 312px;
-    }
-    .el-transfer-panel__item.el-checkbox{
-        width: 100%;
-    }
+.el-transfer-panel {
+    width: 312px;
+}
+.el-transfer-panel__item.el-checkbox {
+    width: 100%;
+}
 </style>
