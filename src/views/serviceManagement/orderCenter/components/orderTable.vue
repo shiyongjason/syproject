@@ -1,5 +1,5 @@
 <template>
-    <div class="orderTable">
+    <div class="page-body-cont">
         <el-tabs v-model="activeName" type="card" @tab-click="onChangeTab">
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="待发货" name="1"></el-tab-pane>
@@ -148,7 +148,7 @@ export default {
 .list-head ul li:nth-child(1){ flex:0 0 260px;}
 .list-head ul li:nth-child(2){ flex:0 0 168px;}
 .list-head ul li:nth-child(3){ flex:1;}
-.list-table{ width: 100%; border-top:1px solid #ccc;margin-top: 10px; background: #fff;box-sizing: border-box; padding: 0 10px 10px}
+.list-table{ width: 100%; border-top:1px solid #ccc;margin-top: 10px; background: #fff;box-sizing: border-box;}
 .remark{color: #0033FF !important; position: relative; cursor: pointer;display: block;float: right; margin-right: 55px !important;}
 .appointbtn{ float:right;margin-top: -4px;}
 .remark-box{ position:absolute;width: 398px;top:25px;z-index: 999;right: 0;}

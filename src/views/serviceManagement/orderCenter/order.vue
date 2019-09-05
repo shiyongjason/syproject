@@ -1,5 +1,5 @@
 <template>
-    <div class="order">
+    <div class="order page-body">
         <searchForm @search='onSearch' v-model="searchForm" />
         <order-table :tableData='list' @search-event="getData"/>
         <div class="pages">
@@ -49,9 +49,6 @@ export default {
 </script>
 
 <style scoped>
-.order {
-    padding: 36px 10px 20px 10px;
-}
 .el-col {
     margin-bottom: 20px
 }

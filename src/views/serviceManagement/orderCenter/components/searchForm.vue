@@ -1,44 +1,42 @@
 <template>
-    <div class="search">
+    <div class="search page-body-cont query-cont">
         <div class="search-head">
-            <el-row :gutter="10" class="searchTable">
-                <el-form :model="searchForm" ref="form" label-width="120px">
-                    <el-col :span="11" >
-                        <div class="row-flex">
-                            <div>
-                                <el-form-item label="订单搜索：" prop="a">
-                                    <el-select v-model="searchForm.searchKey" clearable>
-                                        <el-option label="全部" value=""></el-option>
-                                        <el-option label="订单号" value="orderNo"></el-option>
-                                        <el-option label="外部订单号" value="channelOrderNo"></el-option>
-                                        <el-option label="姓名" value="userName"></el-option>
-                                        <el-option label="手机号" value="mobile"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                            </div>
-                            <div class="m-l">
-                                <el-input v-model="searchForm.searchValue" style="width:100%" clearable :placeholder="getPlaceholderText" :maxlength="inputLength" />
-                            </div>
+            <div class="query-cont-row">
+                <el-form :model="searchForm" ref="form">
+                    <div class="query-cont-col">
+                        <div class="query-col-title">订单搜索：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="searchForm.searchKey" clearable>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="订单号" value="orderNo"></el-option>
+                                <el-option label="外部订单号" value="channelOrderNo"></el-option>
+                                <el-option label="姓名" value="userName"></el-option>
+                                <el-option label="手机号" value="mobile"></el-option>
+                            </el-select>
                         </div>
-                    </el-col>
-                    <el-col :span="11">
-                        <el-form-item label="下单时间：">
+                        <div class="m-l">
+                            <el-input v-model="searchForm.searchValue" style="width:250px" clearable :placeholder="getPlaceholderText" :maxlength="inputLength" />
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">下单时间：</div>
+                        <div class="query-col-input">
                             <el-date-picker v-model="searchForm.startTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10"> --</span>
                             <el-date-picker v-model="searchForm.endTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="2">
-                        <div class="options">
-                            <el-button type="primary" class="ml20" @click="onSearch">
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-input">
+                            <el-button type="primary" @click="onSearch">
                                 筛选
                             </el-button>
                         </div>
-                    </el-col>
+                    </div>
                 </el-form>
-            </el-row>
+            </div>
         </div>
     </div>
 </template>
@@ -80,20 +78,24 @@ export default {
         },
         pickerOptionsStart () {
             return {
-                disabledDate: (time) => {
+                disabledDate: time => {
                     let beginDateVal = this.searchForm.endTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return (
+                            time.getTime() > new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
         },
         pickerOptionsEnd () {
             return {
-                disabledDate: (time) => {
+                disabledDate: time => {
                     let beginDateVal = this.searchForm.startTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return (
+                            time.getTime() < new Date(beginDateVal).getTime()
+                        )
                     }
                 }
             }
@@ -103,28 +105,15 @@ export default {
         onSearch () {
             if (this.searchForm.searchKey) {
                 this.$set(this.searchForm, this.searchForm.searchKey, this.searchForm.searchValue)
+            } else {
+                if (this.searchForm.searchValue) this.searchForm.searchValue = null
             }
             this.$emit('search', this.searchForm)
         }
-    },
-    mounted () {
-
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.search{min-width: 1400px}
-.searchTable{ width: 1400px;}
-.search-head {
-    box-shadow: 0px 1px 0px 0px #e5e5ea;
-    background: #fafafa;
-    padding: 20px 0 10px 0;
-    box-sizing: border-box;
-}
-.el-col {
-    margin-bottom: 20px
-}
-.row-flex{ display: flex}
-.m-l{ margin-left: 10px;flex: 0 0 263px;}
+.m-l{ margin-left:5px}
 </style>

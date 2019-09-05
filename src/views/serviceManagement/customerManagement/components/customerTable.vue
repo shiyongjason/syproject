@@ -1,6 +1,6 @@
 <template>
-    <div class="customerTable">
-        <el-table :data="tableData" border style="width: 100%" size="small">
+    <div class="page-body-cont">
+        <el-table :data="tableData" border stripe style="width: 100%" size="small">
             <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="60"></el-table-column>
             <el-table-column align="center" label="渠道名称">
                 <template slot-scope="scope">

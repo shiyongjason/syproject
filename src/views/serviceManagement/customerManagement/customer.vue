@@ -1,5 +1,5 @@
 <template>
-    <div class="customerManagement">
+    <div class="customerManagement page-body">
         <search-form @search='onSearch' @add="onAddCustomer" v-model="searchForm" :role='role' :channelType='channelType' />
         <customer-table :tableData='list' @edit="onEdit" :pageSize='queryParams.pageSize' :pageNumber='queryParams.pageNumber' :role='role' :channelType='channelType' />
         <div class="pages">
@@ -81,9 +81,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.customerManagement {
-    padding: 36px 10px 20px 10px;
-}
 .pages{ text-align: center; padding: 15px 0; background: #fff}
 /deep/ .customeredit .el-input{
     width: 100%
