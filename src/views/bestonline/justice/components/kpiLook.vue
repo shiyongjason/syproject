@@ -33,13 +33,13 @@
         <p class="small-title mt10">KPI(必填)</p>
         <div class="item-wrapper legal-form">
             <el-form-item label="尽调公司法律风险：" label-width="250px" prop="affairs.legalRisksOfCompany">
-                {{justiceData.affairs.legalRisksOfCompany}}
+                {{justiceData.affairs.legalRisksOfCompany?companyLegalRisksOptions[justiceData.affairs.legalRisksOfCompany].label:''}}
             </el-form-item>
             <el-form-item label="实际控制人法律风险：" label-width="250px" prop="affairs.legalRisksOfController">
-                {{justiceData.affairs.legalRisksOfController}}
+                {{justiceData.affairs.legalRisksOfController?controllerLegalRisksOptions[justiceData.affairs.legalRisksOfController].label:''}}
             </el-form-item>
             <el-form-item label="实际控制人配偶法律风险：" label-width="250px" prop="affairs.legalRisksOfControllerMate" class="single-row">
-                {{justiceData.affairs.legalRisksOfControllerMate}}
+                {{justiceData.affairs.legalRisksOfControllerMate?controllerMateLegalRisksOptions[justiceData.affairs.legalRisksOfControllerMate].label:''}}
             </el-form-item>
             <el-form-item label="个人经营性借款及担保总额：" label-width="250px" prop="affairs.personalOperatingloansTotalGuarantees">
                 {{justiceData.affairs.personalOperatingloansTotalGuarantees}}
