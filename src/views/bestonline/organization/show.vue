@@ -26,7 +26,7 @@
                                 <i v-if="index === 4"></i>
                             </td>
                             <td>
-                                {{item.state === 0?'否':item.state === 1?'是':''}}
+                                {{item.state}}
                             </td>
                             <td :rowspan="form.dueOrganizationAssessmentCreateFormList.length" v-if="index === 0">
                                 {{item.remark}}
@@ -259,7 +259,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { YES_NO_STATUS } from '../const'
+import { YES_NO_STATUS_COPY } from '../const'
 import { SOCIAL_REVIEW_OPTIONS, CONTROLL_OPTIONS, STABLE_OPTIONS } from './const'
 import echarts from 'echarts'
 export default {
@@ -310,14 +310,15 @@ export default {
         form (form) {
             if (form.dueOrganizationAssessmentCreateFormList) {
                 form.dueOrganizationAssessmentCreateFormList = form.dueOrganizationAssessmentCreateFormList.map(item => {
-                    item.state = this.switchValueToLabel(YES_NO_STATUS, item.state)
+                    item.state = this.switchValueToLabel(YES_NO_STATUS_COPY, item.state)
                     return item
                 })
             }
+            console.log(form.dueOrganizationAssessmentCreateFormList)
             form.actualControllerSocialId = this.switchValueToLabel(SOCIAL_REVIEW_OPTIONS, form.actualControllerSocialId)
             form.actualCompanyControllerId = this.switchValueToLabel(CONTROLL_OPTIONS, form.actualCompanyControllerId)
             form.organizationalStabilityId = this.switchValueToLabel(STABLE_OPTIONS, form.organizationalStabilityId)
-            form.isSignEmployment = this.switchValueToLabel(YES_NO_STATUS, form.isSignEmployment)
+            form.isSignEmployment = this.switchValueToLabel(YES_NO_STATUS_COPY, form.isSignEmployment)
             let controllerAssessments = form.dueOrganizationControllerAssessmentCreateFormList
             if (controllerAssessments && controllerAssessments.length > 0) {
                 this.chartList = JSON.parse(JSON.stringify(controllerAssessments))
