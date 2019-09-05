@@ -26,12 +26,12 @@
 
 <script>
 import { mapState } from 'vuex'
-import { YES_NO_STATUS } from '../../const'
+import { YES_NO_STATUS_COPY } from '../../const'
 import { FUND_SUPERVISION } from '../const'
 export default {
     data () {
         return {
-            yesNoStatus: YES_NO_STATUS,
+            yesNoStatus: YES_NO_STATUS_COPY,
             superviseoptions: FUND_SUPERVISION
         }
     },
