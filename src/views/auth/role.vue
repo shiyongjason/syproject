@@ -245,7 +245,7 @@ export default {
                 }
                 // 最后一级目录才过滤，因为如果只有二级菜单没有三级菜单的时候，会在补充的三级菜单中增加authTypeList，导致会出现重复的数据
                 if (item.authTypeList && !item.childAuthList) {
-                    item.authTypeList.filter(authType => authType.have).forEach(authType => {
+                    item.authTypeList.filter(authType => authType.have && authType.id).forEach(authType => {
                         authType.authResourceList && authType.authResourceList.filter(resource => resource.have).forEach(resource => {
                             resourceObj.resourceIds.push(resource.id)
                         })
