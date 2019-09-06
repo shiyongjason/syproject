@@ -99,11 +99,10 @@ export default {
                         user_agent: navigator.userAgent
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
-                    if (userData.code !=400) {
-                        localStorage.setItem('user_data', JSON.stringify(userData.data))
+                    if (userData.code != 400) {
+                        sessionStorage.setItem('user_Data', JSON.stringify(userData))
                         this.sendMessage(userData)
                     }
-
                     // await this.findMenuList()
                     await this.next()
                     // this.$router.push('/')
@@ -113,7 +112,7 @@ export default {
         makeIndex (data) {
             let index = []
             if (data.length > 0) {
-                for (let i = 0;i < data.length;i++) {
+                for (let i = 0; i < data.length; i++) {
                     index.push(data[i].path.replace('/', ''))
                     if (data[i].children) {
                         if (data[i].children.length > 0) {
@@ -137,9 +136,18 @@ export default {
                 if (value.path == '') {
                     return true
                 }
-                const authArr = Data.filter(item => item.authUri === value.path && item.have)
+                const authArr = Data.filter(item => item.authUri === value.path)
+                // const authArr = Data.filter(item => item.authUri === value.path)
                 if (value.children && authArr.length > 0) {
-                    value.children = this.makeMenus(value.children, authArr[0].childAuthList)
+                    let authList = authArr[0].childAuthList || []
+                    let temp = []
+                    authList.forEach(item => {
+                        if (item.authResourceList) {
+                            temp = temp.concat(item.authResourceList)
+                        }
+                    })
+                    authList = authList.concat(temp)
+                    value.children = this.makeMenus(value.children, authList)
                 }
                 return authArr.length > 0
             })
@@ -147,7 +155,6 @@ export default {
         async next () {
             const { data } = await findMenuList()
             const menu = this.makeMenus(routerMapping, data)
-            // const menu = routerMapping // 开发路由
             // this.$router.addRoutes(menu)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
@@ -171,6 +178,8 @@ export default {
                 this.onLogin()
             }
         }
+        // TODO 防止不刷新无法初始vuex数据
+        this.resetVuex()
     }
 }
 </script>

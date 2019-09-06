@@ -120,6 +120,10 @@
                                 最多上传5张，500x500，不超过2m，仅支持jpg、jpeg、png
                             </div>
                         </el-form-item>
+                        <!-- v-if="$route.query.sourceType === 0" -->
+                        <el-form-item label="销售价：" prop="sellingPrice" v-if="isShowSellingPrice">
+                            <el-input placeholder="请输入销售价" v-model="form.sellingPrice" maxlength="16" :disabled="$route.query.checkStatus == 2 || $route.query.type == 'see'"></el-input>
+                        </el-form-item>
                         <div v-if="form.attributeList.length>0" style="position: relative;z-index: 2">
                             <div class="table-cont-title clearfix">
                                 <span class="table-title-name fll">属性信息</span>
@@ -216,7 +220,7 @@ import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions, mapMutations } from 'vuex'
-
+import { Money } from '@/utils/rules.js'
 export default {
     name: 'selectCategory',
     data () {
@@ -265,6 +269,10 @@ export default {
                 ],
                 reqPictures: [
                     { required: true, message: '请选择商品主图' }
+                ],
+                sellingPrice: [
+                    { required: true, message: '请输入销售价', trigger: 'blur' },
+                    { validator: Money, trigger: 'blur' }
                 ]
             },
             pictureContainer: [],
@@ -276,7 +284,8 @@ export default {
             rejectContainer: '',
             causeFailure: '',
             isReview: false,
-            saveDisabled: false
+            saveDisabled: false,
+            isShowSellingPrice: true
         }
     },
     computed: {
@@ -501,10 +510,10 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     const { ...params } = this.form
-                    params.createBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfoMore.organizationCode
-
+                    params.updateBy = this.userInfo.employeeName
+                    params.createBy = this.userInfo.employeeName
                     if (this.form.productShortName) {
                         params.productName = this.brandName + this.categorySelect[2] + this.form.specification + this.form.productShortName
                     } else {
@@ -552,6 +561,11 @@ export default {
             this.$set(this.form, 'productCode', data.product.productCode)
             this.$set(this.form, 'sourceCode', data.product.sourceCode)
             this.$set(this.form, 'sourceName', data.product.sourceName)
+            this.$set(this.form, 'sellingPrice', data.sellingPrice)
+            if (data.product.merchantCode === 'top') {
+                this.isShowSellingPrice = false
+                this.form.sellingPrice = 0
+            }
             this.causeFailure = data.causeFailure
             this.pictureContainer = []
             data.productPictures.forEach((value, index) => {
@@ -573,7 +587,9 @@ export default {
             arr.forEach(value => {
                 this.categorySelectId.push(value.id)
             })
-            this.form.details = data.productDetails.details
+            if (data.productDetails) {
+                this.form.details = data.productDetails.details
+            }
             this.findAttributeDetails(true)
         },
         async findAttributeDetails (isMofify) {
@@ -723,6 +739,9 @@ export default {
         this.modify = query.id || false
         this.isStatus = query.status
         this.isReview = this.$route.query.isReview
+        if (query.type === 'add') {
+            this.isShowSellingPrice = false
+        }
         if (this.modify) {
             this.isAdd = false
             this.isNext = true
@@ -804,6 +823,7 @@ export default {
         margin-right: 12px;
         float: left;
         margin-bottom: 12px;
+        cursor: pointer;
     }
     .picture-container li img{
         position: absolute;
