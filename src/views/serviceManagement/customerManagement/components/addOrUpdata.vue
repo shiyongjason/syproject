@@ -28,24 +28,24 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item prop="name" label="姓名">
-                            <el-input v-model="customerForm.name" :disabled="!isAdd" placeholder="请输入姓名"></el-input>
+                            <el-input v-model="customerForm.name" :disabled="!isAdd" placeholder="请输入姓名" maxlength='20'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item prop="wechatId" label="微信号">
-                            <el-input placeholder="请输入微信号" v-model="customerForm.wechatId"></el-input>
+                            <el-input placeholder="请输入微信号" v-model="customerForm.wechatId" maxlength='20'></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="12">
                         <el-form-item prop="mobile" label="手机号">
-                            <el-input v-model="customerForm.mobile" :disabled="!isAdd" placeholder="请输入姓名" maxlength='11'></el-input>
+                            <el-input v-model="customerForm.mobile" :disabled="!isAdd" placeholder="请输入手机号" maxlength='11'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item prop="nickname" label="微信昵称">
-                            <el-input placeholder="微信昵称" v-model="customerForm.nickname"></el-input>
+                            <el-input placeholder="请输入微信昵称" v-model="customerForm.nickname" maxlength='20'></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -58,7 +58,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item prop="address" label="地址">
-                            <el-input type="textarea" placeholder="请输入地址" v-model="customerForm.address"></el-input>
+                            <el-input type="textarea" placeholder="请输入地址" v-model="customerForm.address" maxlength="50" show-word-limit></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
