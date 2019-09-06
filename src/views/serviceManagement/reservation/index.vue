@@ -74,7 +74,7 @@
                     </div>
                 </div>
             </div>
-            <ReservationTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+            <ReservationTable :tableData="tableData" :paginationData="paginationData" @updateStatus="search" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
             </ReservationTable>
         </div>
     </div>
