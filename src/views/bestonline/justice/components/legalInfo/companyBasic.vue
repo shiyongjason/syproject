@@ -38,11 +38,9 @@
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddbranchAgencyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemovebranchAgencyList(item.id)"></i>
             </template>
-            <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="分支机构" :prop="`branchAgencyList[${index}].branch`" :rules="rules.branch">
-                    <el-input v-model="item.branch" placeholder="分支机构" maxlength="25"></el-input>
-                </el-form-item>
-            </el-form>
+            <el-form-item label="分支机构" :prop="`branchAgencyList[${index}].branch`" :rules="rules.branch" label-width="150px">
+                <el-input v-model="item.branch" placeholder="分支机构" maxlength="25"></el-input>
+            </el-form-item>
         </div>
 
         <p class="small-title">关联公司</p>
@@ -51,11 +49,9 @@
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddrelatedCompanyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemoverelatedCompanyList(item.id)"></i>
             </template>
-            <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="关联公司" :rules="rules.relatedCompany" :prop="`relatedCompanyList[${index}].relatedCompany`">
-                    <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
-                </el-form-item>
-            </el-form>
+            <el-form-item label="关联公司" :rules="rules.relatedCompany" :prop="`relatedCompanyList[${index}].relatedCompany`" label-width="150px">
+                <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
+            </el-form-item>
         </div>
     </div>
 </template>
