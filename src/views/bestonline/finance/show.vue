@@ -159,4 +159,10 @@ td {
 .el-dialog span {
     text-align: center;
 }
+
+/deep/ .item-wrapper {
+    table {
+        width: 100%;
+    }
+}
 </style>

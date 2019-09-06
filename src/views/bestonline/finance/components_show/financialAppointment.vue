@@ -5,7 +5,7 @@
     </template>
     <div class="item-wrapper">
         <el-form-item label="是否同意财务外派：">
-            {{form.dueFinanceBasic.isAgreeFinancialDelegation === 0?'否':form.dueFinanceBasic.isAgreeFinancialDelegation == 1?'是':'-'}}
+            {{form.dueFinanceBasic.isAgreeFinancialDelegation === 0?'是':form.dueFinanceBasic.isAgreeFinancialDelegation == 1?'否':'-'}}
         </el-form-item>
         <el-form-item label="开始时间：">
             {{form.dueFinanceBasic.startDateOfDelegation}}
@@ -19,12 +19,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import { YES_NO_STATUS } from '../../const'
 import { FUND_SUPERVISION } from '../const'
 export default {
     data () {
         return {
-            yesNoStatus: YES_NO_STATUS,
             superviseoptions: FUND_SUPERVISION
         }
     },
