@@ -115,7 +115,8 @@ export default {
             }
         },
         getRoletype () {
-            if (this.$route.query.canEidt) {
+            console.log(1221, this.$route.query.canEidt)
+            if (this.$route.query.canEidt == 1) {
                 console.log(this.$route.query.status)
                 const deptType = this.userInfo.deptType
                 const role = this.userInfo.role
@@ -165,6 +166,13 @@ export default {
                     this.fiveType = true
                     this.sixType = true
                 }
+            } else {
+                this.oneType = false
+                this.twoType = false
+                this.threeType = false
+                this.fourType = false
+                this.fiveType = false
+                this.sixType = false
             }
         }
     }
