@@ -44,12 +44,12 @@
                 <tr>
                     <td width="180">资产负债率</td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio" placeholder="自动录入" disabled>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="assetListT" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>
                     <td width="180">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio" placeholder="自动录入" disabled>
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="assetListL" placeholder="自动录入" disabled>
                             <template slot="suffix">%</template>
                         </el-input>
                     </td>
@@ -98,7 +98,21 @@ export default {
     computed: {
         ...mapState({
             form: state => state.dueDiligence.financeData
-        })
+        }),
+        assetListT () {
+            if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+                const result = (+this.form.totalLiability / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent / 100).toFixed(2)
+                return result
+            }
+            return 0
+        },
+        assetListL () {
+            if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+                const result = (+this.form.totalLiability / +this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent / 100).toFixed(2)
+                return result
+            }
+            return 0
+        }
     }
 }
 </script>

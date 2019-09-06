@@ -42,10 +42,10 @@
                 <tr>
                     <td>资产负债率</td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio > 70?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].assetLiabilityRatio}}%</span>
+                        <span :class="assetListT > 70?'red-word':'green-word'">{{assetListT}}%</span>
                     </td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio > 70?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].assetLiabilityRatio}}%</span>
+                        <span :class="assetListL > 70?'red-word':'green-word'">{{assetListL}}%</span>
                     </td>
                 </tr>
             </tbody>
@@ -104,7 +104,21 @@ export default {
     computed: {
         ...mapState({
             form: state => state.dueDiligence.financeData
-        })
+        }),
+        assetListT () {
+            if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+                const result = (+this.form.totalLiability / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent / 100).toFixed(2)
+                return result
+            }
+            return 0
+        },
+        assetListL () {
+            if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+                const result = (+this.form.totalLiability / +this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent / 100).toFixed(2)
+                return result
+            }
+            return 0
+        }
     }
 }
 </script>
