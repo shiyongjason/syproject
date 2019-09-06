@@ -60,7 +60,7 @@
                                     <p>{{jtem.goodsNum}}件</p>
                                 </div>
                             </li>
-                            <li>{{index.userName}}</li>
+                            <li>{{item.userName}}</li>
                             <li>无需配送</li>
                             <li>{{jtem.goodsPrice}}</li>
                             <li>{{orderStatus(item.status)}}</li>
