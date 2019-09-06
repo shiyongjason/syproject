@@ -11,7 +11,7 @@
                 <template slot="indicatorType" slot-scope="scope">
                     <span>{{scope.data.row.indicatorType+scope.data.row.itemName}}</span>
                 </template>
-                <template slot="action" slot-scope="scope">
+                <template slot="action" slot-scope="scope" >
                     <el-button class="orangeBtn" @click="onUpdate(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>

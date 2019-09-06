@@ -42,7 +42,7 @@ export default {
     data () {
         return {
             legalInfoTitles: ['实际控制人法务信息', '实际控制人配偶法务信息', '拟选合伙人法务信息', '尽调公司法务信息'],
-            activeName: '',
+            activeName: '1',
             applyId: '',
             type: 1,
             updateTime: '',

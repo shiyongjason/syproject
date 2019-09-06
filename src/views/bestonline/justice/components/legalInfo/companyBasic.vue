@@ -38,11 +38,9 @@
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddbranchAgencyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemovebranchAgencyList(item.id)"></i>
             </template>
-            <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="分支机构" :rules="{required: true ,message: '分支机构不能为空',trigger: 'blur'}" :prop="`branchAgencyList[${index}].branch`">
-                    <el-input v-model="item.branch" placeholder="分支机构" maxlength="25"></el-input>
-                </el-form-item>
-            </el-form>
+            <el-form-item label="分支机构" :prop="`branchAgencyList[${index}].branch`" :rules="rules.branch" label-width="150px">
+                <el-input v-model="item.branch" placeholder="分支机构" maxlength="25"></el-input>
+            </el-form-item>
         </div>
 
         <p class="small-title">关联公司</p>
@@ -51,11 +49,9 @@
                 <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddrelatedCompanyList"></i>
                 <i class="el-icon-remove-outline pointer" v-else @click="onRemoverelatedCompanyList(item.id)"></i>
             </template>
-            <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="关联公司" :rules="rules.relatedCompany" :prop="`relatedCompanyList[${index}].relatedCompany`">
-                    <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
-                </el-form-item>
-            </el-form>
+            <el-form-item label="关联公司" :rules="rules.relatedCompany" :prop="`relatedCompanyList[${index}].relatedCompany`" label-width="150px">
+                <el-input v-model="item.relatedCompany" placeholder="关联公司" maxlength="25"></el-input>
+            </el-form-item>
         </div>
     </div>
 </template>
@@ -76,6 +72,9 @@ export default {
             rules: {
                 relatedCompany: [
                     { required: true, message: '关联公司不能为空', trigger: 'blur' }
+                ],
+                branch: [
+                    { required: true, message: '分支机构不能为空', trigger: 'blur' }
                 ]
             }
         }
@@ -90,27 +89,29 @@ export default {
                 id: Date.now()
             }
         },
-        branchAgencyList () {
-            let branchAgencyList = this.justiceData.branchAgencyList
-            if (branchAgencyList.length === 0) {
-                const { ...tempObj } = this.defaultBranchAgency
-                branchAgencyList.push(tempObj)
-            }
-            return branchAgencyList
-        },
         defaultRelatedCompany () {
             return {
                 relatedCompany: '',
                 id: Date.now()
             }
-        },
-        relatedCompanyList () {
-            let relatedCompanyList = this.justiceData.relatedCompanyList
+        }
+    },
+    watch: {
+        'justiceData.relatedCompanyList' (val) {
+            let relatedCompanyList = val
             if (relatedCompanyList.length === 0) {
                 const tempObj = JSON.parse(JSON.stringify(this.defaultRelatedCompany))
                 relatedCompanyList.push(tempObj)
             }
-            return relatedCompanyList
+            this.justiceData.relatedCompanyList = relatedCompanyList
+        },
+        'justiceData.branchAgencyList' (val) {
+            let branchAgencyList = val
+            if (branchAgencyList.length === 0) {
+                const { ...tempObj } = this.defaultBranchAgency
+                branchAgencyList.push(tempObj)
+            }
+            justiceData.branchAgencyList = branchAgencyList
         }
     },
     methods: {
@@ -179,7 +180,7 @@ export default {
         height: 75px;
     }
 }
-/deep/.flex-wrap-row{
+/deep/.flex-wrap-row {
     .el-form-item__content {
         display: inline-block;
     }
