@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p>已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <p class="title-p">合作目标</p>
         <div>
             <p>尽调规模：{{ form.scale }}万</p>
