@@ -1,9 +1,9 @@
 <template>
-    <div class="order">
+    <div class="order page-body">
         <searchForm @search='onSearch' v-model="searchForm" />
         <order-table :tableData='list' @search-event="getData"/>
         <div class="pages">
-            <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNum" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
+            <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
     </div>
 </template>
@@ -24,18 +24,19 @@ export default {
     data () {
         return {
             list: [],
-            searchForm: {}
+            searchForm: {
+                searchKey: ''
+            }
         }
     },
     methods: {
         onSearch () {
+            this.queryParams.pageNumber = 1
             this.getData()
         },
         async getData (param) {
             let params = { ...this.searchForm, ...this.queryParams }
-            if (param) {
-                params.status = param.status
-            }
+            if (param && param.status && param.status !== '0') params.status = param.status
             const { data } = await findOrderList(params)
             this.list = data.records
             this.page.total = data.total
@@ -48,9 +49,6 @@ export default {
 </script>
 
 <style scoped>
-.order {
-    padding: 36px 10px 20px 10px;
-}
 .el-col {
     margin-bottom: 20px
 }

@@ -1,5 +1,5 @@
 <template>
-    <div class="orderTable">
+    <div class="page-body-cont">
         <el-tabs v-model="activeName" type="card" @tab-click="onChangeTab">
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="待发货" name="1"></el-tab-pane>
@@ -16,7 +16,7 @@
                     <li>配送方式</li>
                     <li>实付金额(元)</li>
                     <li>订单状态</li>
-                    <!-- <li>操作</li> -->
+                    <li>操作</li>
                 </ul>
             </div>
             <div class="list-table">
@@ -27,10 +27,9 @@
                             外部订单号订单号：{{item.channelOrderNo}}
                         </span>
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
-                        <span class="yybtn"><el-button type="primary" size='mini'>预约信息</el-button></span>
-                        <span class="beizhu">
+                        <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
-                            <div class="beizhu-box" v-if="curIndex===index">
+                            <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
                                         <span>备注信息</span>
@@ -48,22 +47,25 @@
                         </span>
                     </div>
                     <div class="table">
-                        <ul v-for="(jtem,jndex) in item.orderGoodsList" :key="jndex">
-                            <li>
-                                <img style="width: 80px; height: 80px" :src="jtem.goodsImg" />
-                                <div class="name">
-                                    <font>{{item.shopName}}</font>
-                                    <p>{{jtem.goodsName}}</p>
-                                </div>
-                                <div class="priceandnums">
-                                    <p>{{jtem.goodsPrice}}</p>
-                                    <p>{{jtem.goodsNum}}件</p>
+                        <ul>
+                            <li :class="item.orderGoodsList.length>1?'nopadding':''">
+                                <div class="goods" v-for="(jtem,jndex) in item.orderGoodsList" :key="jndex">
+                                    <img style="width: 80px; height: 80px" :src="jtem.goodsImg" />
+                                    <div class="name">
+                                        <font>{{item.shopName}}</font>
+                                        <p>{{jtem.goodsName}}</p>
+                                    </div>
+                                    <div class="priceandnums">
+                                        <p>{{jtem.goodsPrice}}</p>
+                                        <p>{{jtem.goodsNum}}件</p>
+                                    </div>
                                 </div>
                             </li>
                             <li>{{item.userName}}</li>
                             <li>无需配送</li>
-                            <li>{{jtem.goodsPrice}}</li>
+                            <li>{{parseToMoney(item.payAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
+                            <li><el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button></li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
                         <div class="bzt" v-if="item.sellerRemark">卖家备注：{{item.sellerRemark}}</div>
@@ -97,6 +99,16 @@ export default {
         }
     },
     methods: {
+        onLink (item) {
+            this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
+        },
+        parseToMoney (money) {
+            if (money) {
+                const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                return res
+            }
+            return ''
+        },
         orderStatus (val) {
             return val === 1 ? '待发货' : val === 2 ? '已发货' : val === 3 ? '已完成' : '待评价'
         },
@@ -134,22 +146,27 @@ export default {
 .list-head ul{ display: flex}
 .list-head ul li{ flex:1; font-size: 14px; color: #000;text-align: center;}
 .list-head ul li:nth-child(1){ flex:0 0 260px;}
-.list-head ul li:nth-child(2){ flex:0 0 180px;}
+.list-head ul li:nth-child(2){ flex:0 0 168px;}
 .list-head ul li:nth-child(3){ flex:1;}
-.list-table{ width: 100%; border-top:1px solid #ccc;margin-top: 10px; background: #fff;box-sizing: border-box; padding: 0 10px 10px}
-.beizhu{color: #0033FF !important; position: relative; cursor: pointer;display: block;float: right; margin-right: 55px !important;}
-.yybtn{ float:right;margin-top: -4px;}
-.beizhu-box{ position:absolute;width: 398px;top:25px;z-index: 999;right: 0;}
+.list-table{ width: 100%; border-top:1px solid #ccc;margin-top: 10px; background: #fff;box-sizing: border-box;}
+.remark{color: #0033FF !important; position: relative; cursor: pointer;display: block;float: right; margin-right: 55px !important;}
+.appointbtn{ float:right;margin-top: -4px;}
+.remark-box{ position:absolute;width: 398px;top:25px;z-index: 999;right: 0;}
 .btnmore{ color: #0033FF;border:none;background:none; margin: 0;padding:0}
 .head-info span{color:#B4B4B4; margin-right: 60px;font-size: 14px;}
 .head-info{ padding:15px 0;border: 1px solid #DCDFE6;}
 .head-info span:nth-child(1){margin-right: 20px;}
 .content{ background: #fff;box-shadow:0px 3px 12px 3px rgba(45,108,238,0.08); margin-top: 10px }
-.table ul{ display: flex; height: 100px;}
+.table ul{ display: flex;}
 // .table ul:last-child{border-bottom:1px solid #DCDFE6;border-right:1px solid #DCDFE6;}
-.table ul li{ flex:1; font-size: 14px; color: #000; border-left:1px solid #DCDFE6;text-align: center;box-sizing: border-box; padding: 10px;line-height: 83px;border-bottom:1px solid #DCDFE6; position: relative;}
+.table ul li{ flex:1; font-size: 14px; color: #000; border-left:1px solid #DCDFE6;text-align: center;box-sizing: border-box; padding: 10px;border-bottom:1px solid #DCDFE6; position: relative;}
 .table ul li:last-child{border-right:1px solid #DCDFE6;}
-.table ul li:nth-child(1){ flex:0 0 430px;  text-align: left;display: flex;line-height: normal;}
+.table ul li:nth-child(1){ flex:0 0 430px;  text-align: left;line-height: normal; }
+.table ul li .goods{  text-align: left;display: flex;line-height: normal;}
+.table ul .nopadding{padding:0}
+.table ul .nopadding .goods{padding:10px}
+.table ul .nopadding .goods:nth-child(1){border-bottom:1px solid #DCDFE6}
+.table ul li:not(:first-child){ display: flex; align-items: center;justify-content: center;}
 .name{ margin-left: 15px}
 .name font{color: #0033FF; margin-top: 10px;display: block;}
 .name p{color:#6B6B6B; margin-top: 30px}

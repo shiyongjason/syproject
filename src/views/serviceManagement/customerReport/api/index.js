@@ -7,3 +7,5 @@ export const findRecordDetail = (params) => axios.get(`/service/api/house/archiv
 export const findReportList = (params) => axios.get('service/api/house/reports', { params })
 // 报告信息详情
 export const findReportDetail = (params) => axios.get(`/service/api/house/reports/${params}`)
+// 修改报告
+export const updataReportDetail = (params) => axios.put(`/service/api/house/reports/${params.id}`, params)
