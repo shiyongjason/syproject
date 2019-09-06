@@ -21,7 +21,10 @@
                         <tbody>
                             <tr v-for="(item,index) in form.dueBusinessAssessmentCreateFormList" :key=index>
                                 <td>{{item.assessmentItem}}</td>
-                                <td>{{item.cooperationIntention}}
+                                <td v-if="index === 2 || index === 4">
+                                    <p v-for="(v, i) in item.cooperationIntention.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
+                                </td>
+                                <td v-else>{{ item.cooperationIntention }}
                                     <i v-if="index === 1">w</i>
                                 </td>
                                 <td>

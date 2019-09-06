@@ -19,11 +19,11 @@
                     <tbody>
                         <tr v-for="(item, index) in form.dueOrganizationAssessmentCreateFormList" :key="index">
                             <td>{{item.assessmentItem}}</td>
-                            <td>
-                                {{item.cooperationTarget}}
+                            <td v-if="index === 2 || index === 4">
+                                <p v-for="(v, i) in item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
+                            </td>
+                            <td v-else>{{ item.cooperationTarget }}
                                 <i v-if="index === 1">w</i>
-                                <i v-if="index === 2"></i>
-                                <i v-if="index === 4"></i>
                             </td>
                             <td>
                                 {{item.state}}
