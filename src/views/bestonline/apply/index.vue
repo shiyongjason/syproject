@@ -44,7 +44,7 @@
                     <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0 || scope.data.row.approvalStatus==3) && updatebtn">修改</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0) && updatebtn">修改</el-button>
                     <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-else>查看</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if="scope.data.row.approvalStatus==0 && deletebtn">删除</el-button>
                 </template>
@@ -166,7 +166,7 @@ export default {
             this.$router.push({ path: './applyform', query: { id: val.applyId } })
         },
         onDelete (val) {
-            this.$confirm(`是否确认删除该公司平台?`, '确认删除', {
+            this.$confirm(`是否确认删除该平台公司?`, '确认删除', {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {

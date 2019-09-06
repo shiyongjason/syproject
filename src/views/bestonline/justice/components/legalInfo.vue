@@ -388,12 +388,14 @@ export default {
             }
         },
         onAddList (key, defaultKey, type) {
-            console.log(key)
-            console.log(defaultKey)
+            console.log(this.justiceData[key])
+            console.log(this[defaultKey])
             console.log(this.justiceData)
             const tempObj = JSON.parse(JSON.stringify(this[defaultKey]))
             tempObj.id = Date.now()
-            tempObj.type = type
+            if (type || type == 0) {
+                tempObj.type = type
+            }
             this.justiceData[key].push(tempObj)
         },
         onRemoveList (key, id) {
