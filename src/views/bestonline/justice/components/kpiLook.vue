@@ -17,8 +17,10 @@
             <tbody>
                 <tr v-for="(item,index) in justiceData.assessmentList" :key="index">
                     <td>{{item.assessmentItem}}</td>
-                    <td>
-                        {{item.cooperationTarget}}
+                    <td v-if="index === 2 || index === 4">
+                        <p v-for="(v, i) in item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
+                    </td>
+                    <td v-else>{{ item.cooperationTarget }}
                         <i v-if="index === 1">w</i>
                     </td>
                     <td>

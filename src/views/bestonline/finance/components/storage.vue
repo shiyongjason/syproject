@@ -67,7 +67,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="接受好享家仓库监管方式：">
-                    <el-select v-model="form.dueFinanceBasic.isAgreeCustody" placeholder="请选择">
+                    <el-select v-model="form.dueFinanceBasic.custodyType" placeholder="请选择">
                         <el-option v-for="item in agreeCustodyOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>

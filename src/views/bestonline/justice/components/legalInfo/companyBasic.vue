@@ -111,7 +111,7 @@ export default {
                 const { ...tempObj } = this.defaultBranchAgency
                 branchAgencyList.push(tempObj)
             }
-            justiceData.branchAgencyList = branchAgencyList
+            this.justiceData.branchAgencyList = branchAgencyList
         }
     },
     methods: {

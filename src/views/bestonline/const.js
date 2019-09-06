@@ -40,9 +40,10 @@ export const ISPROVIDE_CONTRACT = [
     { value: '否', key: 1 }
 ]
 
+// 前10个月销售是否持续下滑
 export const IS_DOWN = [
-    { value: '否', key: 0 },
-    { value: '是', key: 1 }
+    { value: '正常', key: 0 },
+    { value: '下滑', key: 1 }
 ]
 
 export const IS_HEALTH = [
