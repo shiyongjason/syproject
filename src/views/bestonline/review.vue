@@ -42,7 +42,8 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}
+                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
+                        {{item.approvalOpinion}}
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -220,6 +221,9 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" >
+<style lang="scss" scoped>
+/deep/ .el-dialog__body {
+    height: 500px;
+    overflow-y: auto;
+}
 </style>
