@@ -95,7 +95,7 @@
 </template>
 <script>
 import { addBusiness, putBusiness } from '../api/index.js'
-import { DOWN_OPTIONS } from './const'
+import { YES_NO_STATUS_COPY } from '../const'
 import BusinessMode from './components/businessMode.vue'
 import MarketingModel from './components/marketingModel.vue'
 import Supplier from './components/supplier.vue'
@@ -112,7 +112,7 @@ export default {
     data () {
         return {
             activeName: '0',
-            options: DOWN_OPTIONS,
+            options: YES_NO_STATUS_COPY,
             rules: {
                 wholesaleShare: [
                     { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }

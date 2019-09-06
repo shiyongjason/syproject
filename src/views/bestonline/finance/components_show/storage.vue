@@ -37,7 +37,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="接受好享家仓库监管方式：">
-                    {{form.dueFinanceBasic.isAgreeCustody === 0?'将仓库移至我司指定的第三方仓库进行管理':form.dueFinanceBasic.isAgreeCustody == 1?'接受我司指定的第三方对仓库进行监管':form.dueFinanceBasic.isAgreeCustody == 2?'设立单独库区 ,接受我司定期盘点':form.dueFinanceBasic.isAgreeCustody == 3?'不接受':'-'}}
+                    {{form.dueFinanceBasic.custodyType === 0?'将仓库移至我司指定的第三方仓库进行管理':form.dueFinanceBasic.custodyType == 1?'接受我司指定的第三方对仓库进行监管':form.dueFinanceBasic.custodyType == 2?'设立单独库区 ,接受我司定期盘点':form.dueFinanceBasic.custodyType == 3?'不接受':'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
