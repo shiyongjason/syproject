@@ -57,14 +57,56 @@
                     <template v-for="(item) in params.suggests">
                         <el-checkbox v-model="item.checked" :key="item.id" :disabled="disabled">{{item.name}}</el-checkbox>
                     </template>
-                    <div class="btn" v-if="action == 'edit'">
-                        <el-button type="primary" @click="cancle">取消</el-button>
-                        <el-button type="primary" @click="updata">修改</el-button>
-                    </div>
                 </template>
                 <template v-else>
                     <div class="title">全面检测报告</div>
+                    <table class="table-example el-table el-table--border">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">类目</th>
+                                <th rowspan="2">序号</th>
+                                <th rowspan="2">项目</th>
+                                <th rowspan="2">标准</th>
+                                <th rowspan="2">取样位置</th>
+                                <th colspan="2">结果</th>
+                            </tr>
+                            <tr>
+                                <th>检测结果</th>
+                                <th>是否超标</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template v-for="(item, index) in params.overallProperties">
+                                <tr v-for="(titem, tindex) in item.children" :key="index+ '' + tindex">
+                                    <td :rowspan="rowLength" v-if="index == 0 && tindex == 0" width='10px'>环境指标检测</td>
+                                    <td :rowspan="item.children.length" v-if="tindex == 0">{{index + 1}}</td>
+                                    <td :rowspan="item.children.length" v-if="tindex == 0">{{item.name}}</td>
+                                    <template v-if="item.standard">
+                                        <td :rowspan="item.children.length" v-if="tindex == 0">{{item.standard}}</td>
+                                    </template>
+                                    <template v-else>
+                                        <td>{{titem.standard}}</td>
+                                    </template>
+                                    <td>{{titem.name}}</td>
+                                    <td>
+                                        <textarea v-model="titem.testResult" :disabled="disabled" cols="30" rows="3"></textarea>
+                                        <!-- <el-input v-model="titem.testResult" :disabled="disabled"></el-input> -->
+                                    </td>
+                                    <td>
+                                        <el-select v-model="titem.qualified" style="width: 100px" :disabled="disabled">
+                                            <el-option label="是" :value="true"></el-option>
+                                            <el-option label="否" :value="false"></el-option>
+                                        </el-select>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
                 </template>
+                <div class="btn" v-if="action == 'edit'">
+                    <el-button type="primary" @click="cancle">取消</el-button>
+                    <el-button type="primary" @click="updata">修改</el-button>
+                </div>
             </div>
         </div>
     </div>
@@ -83,7 +125,8 @@ export default {
             action: '',
             reportType: '',
             disabled: true,
-            params: {}
+            params: {},
+            rowLength: ''
         }
     },
     methods: {
@@ -92,6 +135,13 @@ export default {
             console.log(data)
             this.params = data
             this.reportType = data.reportType
+            let nums = 0
+            if (data.overallProperties) {
+                data.overallProperties.map((item) => {
+                    nums += item.children.length
+                })
+                this.rowLength = nums
+            }
         },
         arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
             if (columnIndex === 6) {
@@ -106,7 +156,13 @@ export default {
             this.$router.push('customerReport')
         },
         async updata () {
-            console.log(this.params)
+            if (this.reportType == 2) {
+                let params = []
+                this.params.overallProperties.map((item) => {
+                    params = params.concat(item.children)
+                })
+                this.params.overallProperties = params
+            }
             const { data } = await updataReportDetail(this.params)
             console.log(data)
             Message({ message: '修改成功', type: 'success' })
@@ -141,6 +197,11 @@ export default {
     font-size: 18px;
     font-weight: 500;
 }
-.btn {
+table {
+    border-collapse: collapse;
+}
+table th,
+table td {
+    text-align: center;
 }
 </style>
