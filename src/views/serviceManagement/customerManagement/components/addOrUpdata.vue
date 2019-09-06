@@ -19,7 +19,7 @@
                     <el-col :span="12">
                         <el-form-item prop="role" label="客户身份">
                             <el-select v-model="customerForm.role" style="width: 100%">
-                                <el-option v-for="(item,index) in getRole" :key="index" :label="item.label" :value="item.value" :disabled="index===0||index===3">
+                                <el-option v-for="(item,index) in getRole" :key="index" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-form-item>

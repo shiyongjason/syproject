@@ -35,7 +35,7 @@ export default {
                 { value: '', label: '全部' }, { value: 0, label: '好享家' }, { value: 1, label: '有赞商城' }, { value: 2, label: '孩子王成长家' }
             ],
             role: [
-                { value: '', label: '全部' }, { value: 0, label: '员工' }, { value: 1, label: '线下管家' }, { value: 2, label: '线上管家' }, { value: 3, label: '客户' }
+                { value: '', label: '全部' }, { value: 0, label: '客户' }, { value: 1, label: '线下管家' }, { value: 2, label: '线上管家' }
             ],
             showDetail: false
         }
