@@ -99,7 +99,7 @@ export default {
     },
     data () {
         return {
-            activeName: '9',
+            activeName: '1',
             options: DOWN_OPTIONS
         }
     },

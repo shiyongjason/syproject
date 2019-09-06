@@ -18,6 +18,6 @@ export const MAIN_CATEGORY_OPTIONS = [
 // 下拉是否
 export const DOWN_OPTIONS = [
     { value: '', label: '请选择' },
-    { value: 0, label: '是' },
-    { value: 1, label: '否' }
+    { value: '正常', key: 0 },
+    { value: '下滑', key: 1 }
 ]
