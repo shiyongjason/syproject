@@ -304,7 +304,7 @@ export default {
             }
         },
         uploadImgServer () {
-            return fileUploadUrl + 'tms/files/upload'
+            return fileUploadUrl + 'tms/files/upload-list'
         },
         uploadImgParams () {
             return {
