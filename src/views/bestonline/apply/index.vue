@@ -44,7 +44,7 @@
                     <span class="isRedColor" v-if="scope.data.row.approvalStatus == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0 || scope.data.row.approvalStatus==3) && updatebtn">修改</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)" v-if="(scope.data.row.approvalStatus==0) && updatebtn">修改</el-button>
                     <el-button class="orangeBtn" @click="onShow(scope.data.row)" v-else>查看</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)" v-if="scope.data.row.approvalStatus==0 && deletebtn">删除</el-button>
                 </template>

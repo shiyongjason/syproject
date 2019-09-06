@@ -21,7 +21,7 @@ export default {
         if (this.$route.query.id) {
             const { data } = await getDueapplydetail({ applyId: this.$route.query.id })
             this.approvalStatus = data.data.approvalStatus
-            if (this.approvalStatus == 1 || this.approvalStatus == 2) {
+            if (this.approvalStatus > 0) {
                 this.canEdit = false
             }
         }
