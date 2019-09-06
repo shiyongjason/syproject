@@ -54,7 +54,7 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="onEdit(scope.row)" class="orangeBtn">修改</el-button>
+                    <el-button @click="onEdit(scope.row)" class="orangeBtn" :disabled="scope.row.status == '已完成' || scope.row.status == '取消'">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -209,6 +209,7 @@ export default {
             const { data } = await updataReservations(this.form)
             Message({ message: '修改成功', type: 'success' })
             this.dialogTableVisible = false
+            this.$emit('updateStatus')
         },
         handleClick () {
             this.childArchiveNodes = this.data[this.activeName - 1].childArchiveNodes
