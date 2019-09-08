@@ -162,7 +162,7 @@
             <tbody>
                 <tr>
                     <td>总分</td>
-                    <td><span @click="showSocreDetial" style="color: #49b3f3">{{actrualSocre}}</span></td>
+                    <td><span @click="showSocreDetial" style="color: #49b3f3;cursor: pointer">{{actrualSocre}}</span></td>
                     <td>{{standardScore}}</td>
                     <td :class="(actrualSocre - standardScore)<=0?'red':'black'">{{actrualSocre - standardScore}}</td>
                 </tr>
