@@ -162,7 +162,7 @@
             <tbody>
                 <tr>
                     <td>总分</td>
-                    <td><span @click="showSocreDetial" style="color: #49b3f3">{{actrualSocre}}</span></td>
+                    <td><span @click="showSocreDetial" style="color: #49b3f3;cursor: pointer">{{actrualSocre}}</span></td>
                     <td>{{standardScore}}</td>
                     <td :class="(actrualSocre - standardScore)<=0?'red':'black'">{{actrualSocre - standardScore}}</td>
                 </tr>
@@ -211,11 +211,14 @@
                 <tr>
                     <td rowspan="2">财务尽调</td>
                     <td>资产负债率</td>
-                    <td>{{dueFinanceBasicVo.assetLiabilityRatio === null?'-':dueFinanceBasicVo.assetLiabilityRatio}}</td>
+                    <td v-if="dueFinanceBasicVo.assetLiabilityRatio != null && dueFinanceBasicVo.assetT">
+                        {{dueFinanceBasicVo.assetLiabilityRatio/dueFinanceBasicVo.assetT*100}}%
+                    </td>
+                    <!-- <td>{{dueFinanceBasicVo.assetLiabilityRatio === null?'-':dueFinanceBasicVo.assetLiabilityRatio}}</td> -->
                 </tr>
                 <tr>
                     <td>净利率</td>
-                    <td>{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio}}</td>
+                    <td>{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}</td>
                 </tr>
                 <tr>
                     <td rowspan="5">财务尽调</td>

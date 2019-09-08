@@ -30,7 +30,6 @@
 <script>
 import OrganizationTable from './components/organizationTable'
 import Pagination from '@/components/pagination/HPagination'
-import { mapState } from 'vuex'
 import { findBOSSOrganization, findOrganizationEmployee } from './api'
 
 export default {
@@ -38,11 +37,6 @@ export default {
     components: {
         OrganizationTable,
         Pagination
-    },
-    computed: {
-        ...mapState({
-            menuList: state => state.menuList
-        })
     },
     data () {
         return {

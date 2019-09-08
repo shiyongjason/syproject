@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
 import store from '@/store/index'
+import { makeMenus, handleMenuResources } from '@/utils/auth'
 Vue.use(Router)
 
 const routerMapping = [
@@ -398,18 +399,6 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
             },
-            // 暂做成弹框
-            // {
-            //     path: 'shopManagerImport',
-            //     name: 'shopManagerImport',
-            //     meta: {
-            //         title: '商品库导入模板',
-            //         tagName: '商品库导入模板',
-            //         isMenu: false,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/hmall/shopReview/shopManagerImport.vue')
-            // },
             {
                 path: 'wallet',
                 name: 'wallet',
@@ -442,24 +431,12 @@ const router = new Router({
         }
     ]
 })
-// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
-function makeMenus (Route, Data) {
-    return Route.filter(value => {
-        if (value.path === '') {
-            return true
-        }
-        const authArr = Data.filter(item => item.authUri === value.path)
-        // const authArr = Data.filter(item => item.authUri === value.path)
-        if (value.children && authArr.length > 0) {
-            value.children = makeMenus(value.children, authArr[0].childAuthList)
-        }
-        return authArr.length > 0
-    })
-}
-
 async function getMenu (to, next) {
     const { data } = await findMenuList()
-    const menu = makeMenus(routerMapping, data)
+    sessionStorage.setItem('authResourceKeys', data.resourceKeys)
+    let resourceList = []
+    handleMenuResources(data.employeeAuthDetailsList, resourceList)
+    const menu = makeMenus(routerMapping, resourceList)
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })

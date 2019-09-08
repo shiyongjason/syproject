@@ -46,11 +46,11 @@
 import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
 import { routerMapping } from '../../router'
-
+import { makeMenus, handleMenuResources } from '@/utils/auth'
 export default {
     data () {
         return {
@@ -76,11 +76,6 @@ export default {
             src: iframeUrl,
             iframeWin: {}
         }
-    },
-    computed: {
-        ...mapState({
-            menuList: state => state.menuList
-        })
     },
     methods: {
         sendMessage (userData) {
@@ -138,24 +133,12 @@ export default {
                 })
             }
         },
-        makeMenus (Route, Data) {
-            // console.log(Route, Data)
-            return Route.filter(value => {
-                if (value.path == '') {
-                    return true
-                }
-                const authArr = Data.filter(item => item.authUri === value.path)
-                // const authArr = Data.filter(item => item.authUri === value.path)
-                if (value.children && authArr.length > 0) {
-                    value.children = this.makeMenus(value.children, authArr[0].childAuthList)
-                }
-                return authArr.length > 0
-            })
-        },
         async next () {
             const { data } = await findMenuList()
-            const menu = this.makeMenus(routerMapping, data)
-            // this.$router.addRoutes(menu)
+            sessionStorage.setItem('authResourceKeys', data.resourceKeys)
+            let resourceList = []
+            handleMenuResources(data.employeeAuthDetailsList, resourceList)
+            const menu = makeMenus(routerMapping, resourceList)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
             this.makeIndex(menu)
         },

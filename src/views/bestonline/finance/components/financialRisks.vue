@@ -6,7 +6,7 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="公司借款：">
-                <el-input v-model="form.dueFinanceBasic.companyDebt" placeholder="请输入金额" maxlength="25">
+                <el-input v-model="form.dueFinanceBasic.companyDebt" placeholder="自动录入" maxlength="25" disabled>
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -53,15 +53,15 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                <el-input v-model="form.dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="请输入金额" maxlength="25">
+                <el-input v-model="form.dueFinanceBasic.actualControllerAndMateOperatingLoan" placeholder="自动录入" maxlength="25" disabled>
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="个人及公司担保：">
-                <el-input v-model="form.dueFinanceBasic.personalAndCompanyGuarantee" placeholder="请输入比例" maxlength="25">
-                    <template slot="suffix">%</template>
+                <el-input v-model="form.dueFinanceBasic.personalAndCompanyGuarantee" placeholder="自动录入" maxlength="25" disabled>
+                    <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
         </div>

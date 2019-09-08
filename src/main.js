@@ -49,6 +49,14 @@ Vue.component(
     'basicTable', basicTable
 )
 
+Vue.mixin({
+    methods: {
+        hosAuthCheck (id) {
+            const auth = sessionStorage.getItem('authResourceKeys')
+            return auth.includes(id)
+        }
+    }
+})
 new Vue({
     router,
     store,
