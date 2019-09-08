@@ -107,10 +107,10 @@
             </div>
             <div class="flex-wrap-row">
                 <el-col :span="2" :offset="6">
-                    <el-button @click="onSave">暂存</el-button>
+                    <el-button @click="onSave" v-if="hosAuthCheck(draftResource)">暂存</el-button>
                 </el-col>
                 <el-col :span="2" :offset="1">
-                    <el-button type="primary" @click="onSubmit">提交</el-button>
+                    <el-button type="primary" @click="onSubmit" v-if="hosAuthCheck(commitResource)">提交</el-button>
                 </el-col>
             </div>
         </div>
@@ -122,7 +122,7 @@ import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from '../
 import { mapState } from 'vuex'
 import { plusOrMinus } from '@/utils/rules.js'
 import { BUSINESS_OPTIONS } from './const.js'
-
+import { AUTH_BESTONLINE_APPLY_ADD_DRAFT, AUTH_BESTONLINE_APPLY_ADD_COMMIT } from '@/utils/auth_const.js'
 export default {
     name: 'applyEdit',
     data () {
@@ -207,7 +207,9 @@ export default {
             arrList: [],
             applyId: '',
             approvalStatus: '',
-            checkList: []
+            checkList: [],
+            draftResource: AUTH_BESTONLINE_APPLY_ADD_DRAFT,
+            commitResource: AUTH_BESTONLINE_APPLY_ADD_COMMIT
         }
     },
     mounted () {
