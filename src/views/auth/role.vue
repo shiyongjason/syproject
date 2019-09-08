@@ -143,8 +143,7 @@ export default {
     },
     computed: {
         ...mapState({
-            isCollapse: state => state.isCollapse,
-            menuList: state => state.menuList
+            isCollapse: state => state.isCollapse
         })
     },
     async mounted () {
