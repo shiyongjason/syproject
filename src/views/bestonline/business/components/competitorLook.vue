@@ -5,10 +5,10 @@
         </template>
         <div class="compete supplier" v-for="(item,index) in competitorCreateFormList" :key=index>
             <el-form-item label="竞争对手：" prop="competitorName " placeholder="竞争对手" maxlength="25">
-                {{item.competitorName}}
+                {{item.competitorName?item.competitorName:'-'}}
             </el-form-item>
             <el-form-item label="主营业态：" prop="mainForms" placeholder="主营业态" maxlength="25" class="mb20">
-                {{item.mainForms}}
+                {{item.mainForms?item.mainForms:'-'}}
             </el-form-item>
         </div>
     </el-collapse-item>
