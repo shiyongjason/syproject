@@ -1,23 +1,22 @@
 <template>
     <div>
         <p class="small-title">对外投资信息</p>
-        <div class="flex-wrap-col info-wrap" v-for="(item, index) in justiceData.investmentsOutList"
-            :key="'investmentsOutList'+item.type + index">
+        <div class="flex-wrap-col info-wrap">
             <el-form label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="投资公司：">
-                    <p>{{item.investmentCompany}}</p>
+                    <p>{{investmentsOutList[this.type].investmentCompany||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资金额：">
-                    <p>{{item.investmentAmount}}</p>
+                    <p>{{investmentsOutList[this.type].investmentAmount||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资比例：">
-                    <p>{{item.investmentRatio}}</p>
+                    <p>{{investmentsOutList[this.type].investmentRatio||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资性质：">
-                    <p>{{item.investmentType?investmentTypeOptions[item.investmentType].value:''}}</p>
+                    <p>{{investmentsOutList[this.type].investmentType == 0?'债务性投资':investmentsOutList[this.type].investmentType == 1?'权益性投资':investmentsOutList[this.type].investmentType == 1?'混合性投资':'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资收益：">
-                    <p>{{item.investmentIncome}}</p>
+                    <p>{{investmentsOutList[this.type].investmentIncome||'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
@@ -43,10 +42,13 @@ export default {
     },
     computed: {
         ...mapState({
-            justiceData: state => state.dueDiligence.justiceData
+            investmentsOutList: state => state.dueDiligence.justiceData.investmentsOutList
         })
     },
     methods: {
+    },
+    mounted () {
+        console.log(this.type)
     }
 }
 </script>
@@ -82,7 +84,7 @@ export default {
         font-size: 25px;
     }
 }
-.small-title{
+.small-title {
     margin-bottom: 20px;
 }
 </style>

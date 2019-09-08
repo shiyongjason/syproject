@@ -42,7 +42,8 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}
+                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
+                        {{item.approvalOpinion}}
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -175,10 +176,10 @@ export default {
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: true } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: 1 } })
         },
         onCheck (row) {
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: false } })
+            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
         async onCommit (row) {
             if (row.signScale == 0) {
@@ -220,6 +221,9 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" >
+<style lang="scss" scoped>
+/deep/ .el-dialog__body {
+    height: 500px;
+    overflow-y: auto;
+}
 </style>
