@@ -16,10 +16,10 @@
             </el-collapse>
             <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
                 <el-col :span="2" :offset="8">
-                    <el-button type="info" @click="saveJusticeData(true)">暂存</el-button>
+                    <el-button type="info" @click="saveJusticeData(true)" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
                 </el-col>
                 <el-col :span="2" :offset="1">
-                    <el-button type="primary" @click="saveJusticeData(false)">提交</el-button>
+                    <el-button type="primary" @click="saveJusticeData(false)" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
                 </el-col>
             </div>
         </el-form>
@@ -34,7 +34,7 @@ import CoPartner from './components/copartner.vue'
 import LegalInfo from './components/legalInfo.vue'
 import CompanyBasic from './components/legalInfo/companyBasic.vue'
 import InvestmentOut from './components/legalInfo/investmentOut.vue'
-// import { fileUploadUrl } from '@/api/config'
+import { AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT, AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT } from '@/utils/auth_const'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
@@ -86,7 +86,9 @@ export default {
                 'affairs.annualReport': [
                     { required: true, message: '工商年报不能为空', trigger: 'blur' }
                 ]
-            }
+            },
+            draftAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT
         }
     },
     watch: {

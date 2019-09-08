@@ -32,10 +32,10 @@
 
         <div class="flex-wrap-row top20 ">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSureHandle(0)">暂存</el-button>
+                <el-button type="info" @click="onSureHandle(0)" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
-                <el-button type="primary" @click="onSureHandle(1)">提交</el-button>
+                <el-button type="primary" @click="onSureHandle(1)" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -55,6 +55,7 @@ import Profitability from './components/profitability.vue'
 import Solvency from './components/solvency.vue'
 import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
+import { AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT, AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT } from '@/utils/auth_const'
 export default {
     components: {
         BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
@@ -83,7 +84,9 @@ export default {
                         { required: true, message: '请选择资金风险评估', trigger: 'change' }
                     ]
                 }
-            }
+            },
+            draftAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT
         }
     },
     computed: {

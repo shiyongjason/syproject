@@ -96,10 +96,10 @@
             </div>
             <div class="flex-wrap-row">
                 <el-col :span="2" :offset="6">
-                    <el-button @click="onSave" v-if="hosAuthCheck(draftResource)">暂存</el-button>
+                    <el-button @click="onSave" v-if="canShowSave">暂存</el-button>
                 </el-col>
                 <el-col :span="2" :offset="1">
-                    <el-button type="primary" @click="onSubmit" v-if="hosAuthCheck(commitResource)">提交</el-button>
+                    <el-button type="primary" @click="onSubmit" v-if="canShowSubmit">提交</el-button>
                 </el-col>
             </div>
         </div>
@@ -111,7 +111,7 @@ import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from '../
 import { mapState } from 'vuex'
 import { plusOrMinus } from '@/utils/rules.js'
 import { BUSINESS_OPTIONS } from './const.js'
-import { AUTH_BESTONLINE_APPLY_ADD_DRAFT, AUTH_BESTONLINE_APPLY_ADD_COMMIT } from '@/utils/auth_const.js'
+import { AUTH_BESTONLINE_APPLY_ADD_DRAFT, AUTH_BESTONLINE_APPLY_ADD_COMMIT, AUTH_BESTONLINE_APPLY_EDIT_DRAFT, AUTH_BESTONLINE_APPLY_EDIT_COMMIT } from '@/utils/auth_const.js'
 export default {
     name: 'applyEdit',
     data () {
@@ -197,8 +197,10 @@ export default {
             applyId: '',
             approvalStatus: '',
             checkList: [],
-            draftResource: AUTH_BESTONLINE_APPLY_ADD_DRAFT,
-            commitResource: AUTH_BESTONLINE_APPLY_ADD_COMMIT
+            addDraftAuthCode: AUTH_BESTONLINE_APPLY_ADD_DRAFT,
+            addCommitAuthCode: AUTH_BESTONLINE_APPLY_ADD_COMMIT,
+            editDraftAuthCode: AUTH_BESTONLINE_APPLY_EDIT_DRAFT,
+            editCommitAuthCode: AUTH_BESTONLINE_APPLY_EDIT_COMMIT
         }
     },
     mounted () {
@@ -379,6 +381,12 @@ export default {
                     this.$refs['form'].validate()
                 }
             })
+        },
+        canShowSave () {
+            return this.applyId ? this.hosAuthCheck(this.editDraftAuthCode) : this.hosAuthCheck(this.addDraftAuthCode)
+        },
+        canShowSubmit () {
+            return this.applyId ? this.hosAuthCheck(this.editCommitAuthCode) : this.hosAuthCheck(this.addCommitAuthCode)
         }
     }
 }

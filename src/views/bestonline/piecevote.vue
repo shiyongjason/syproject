@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-title">
                 <span class="table-title-name">一项否决</span>
-                <el-button type="info" @click="newDueFrom">
+                <el-button type="info" @click="newDueFrom" v-if="hosAuthCheck(addAuthCode)">
                     新增一项否决项
                 </el-button>
             </div>
@@ -12,8 +12,8 @@
                     <span>{{scope.data.row.indicatorType+scope.data.row.itemName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope" >
-                    <el-button class="orangeBtn" @click="onUpdate(scope.data.row)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onUpdate(scope.data.row)" v-if="hosAuthCheck(editAuthCode)">编辑</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)" v-if="hosAuthCheck(delAuthCode)">删除</el-button>
                 </template>
             </basicTable>
             <el-dialog title="配置" :visible.sync="dialogVisible" width="650px" center :close-on-click-modal=false>
@@ -57,6 +57,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getoneticketveto, getDueconfig, addoneticketveto, deleteoneticketveto, updateoneticketveto } from './api/index.js'
 import { mapState } from 'vuex'
 import { decimals } from '../../utils/rules'
+import { AUTH_BESTONLINE_PIECE_VOTE_ADD, AUTH_BESTONLINE_PIECE_VOTE_EDIT, AUTH_BESTONLINE_PIECE_VOTE_DEL } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -135,7 +136,10 @@ export default {
                 { label: '指标值', prop: 'indicatorType' },
                 { label: '建议方案', prop: 'proposedPlan' }
             ],
-            tableData: []
+            tableData: [],
+            addAuthCode: AUTH_BESTONLINE_PIECE_VOTE_ADD,
+            editAuthCode: AUTH_BESTONLINE_PIECE_VOTE_EDIT,
+            delAuthCode: AUTH_BESTONLINE_PIECE_VOTE_DEL
         }
     },
     components: {

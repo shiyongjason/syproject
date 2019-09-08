@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-title">
                 <span class="table-title-name">标准评分</span>
-                <el-button type="info" @click="newDueFrom" v-if="testList.length<1">
+                <el-button type="info" @click="newDueFrom" v-if="testList.length<1 && hosAuthCheck(addAuthCode)">
                     新增标准分数项
                 </el-button>
             </div>
@@ -39,8 +39,8 @@
                                     <td>{{titem.coachPeriod}}</td>
                                     <td>{{titem.capitalInjectionWay}}</td>
                                     <td :rowspan="item.total" v-if="titem.sindex ==0 ">
-                                        <el-button class="orangeBtn" @click="onEditStand(item)">编辑</el-button>
-                                        <el-button class="orangeBtn" @click="ondeleteStandard(item)">删除</el-button>
+                                        <el-button class="orangeBtn" @click="onEditStand(item)" v-if="hosAuthCheck(editAuthCode)">编辑</el-button>
+                                        <el-button class="orangeBtn" @click="ondeleteStandard(item)" v-if="hosAuthCheck(delAuthCode)">删除</el-button>
                                     </td>
                                 </tr>
                             </template>
@@ -127,6 +127,7 @@ import { getStandardscore, getDueconfig, addStandardscore, updateStandardscore, 
 import { mapState } from 'vuex'
 import { deepCopy } from '@/utils/index'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
+import { AUTH_BESTONLINE_STANDARD_ADD, AUTH_BESTONLINE_STANDARD_EDIT, AUTH_BESTONLINE_STANDARD_DEL } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -237,7 +238,10 @@ export default {
                 { label: '财务尽调', prop: 'classifyName' },
                 { label: '财务尽调', prop: 'classifyName' }
             ],
-            tableData: []
+            tableData: [],
+            addAuthCode: AUTH_BESTONLINE_STANDARD_ADD,
+            editAuthCode: AUTH_BESTONLINE_STANDARD_EDIT,
+            delAuthCode: AUTH_BESTONLINE_STANDARD_DEL
         }
     },
     components: {

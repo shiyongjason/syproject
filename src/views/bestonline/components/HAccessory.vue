@@ -23,7 +23,7 @@
         </el-collapse>
         <div class="flex-wrap-row" v-if="roleType">
             <el-col :span="2" :offset="8">
-                <el-button type="primary" @click="onSvaeattach">提交</el-button>
+                <el-button type="primary" @click="onSvaeattach" v-if="hosAuthCode(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -32,6 +32,7 @@
 import { fileUploadUrl } from '@/api/config'
 import { addAttach, getAttach } from '../api/index'
 import { mapState } from 'vuex'
+import { AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT } from '@/utils/auth_const'
 export default {
     props: {
         roleType: {
@@ -49,7 +50,8 @@ export default {
             dueAttachCreateFormList: [],
             tableList: [],
             type: 0,
-            is10M: false
+            is10M: false,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT
         }
     },
     computed: {

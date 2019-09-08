@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-title">
                 <span class="table-title-name">评分规则</span>
-                <el-button type="info" @click="newDueFrom">
+                <el-button type="info" @click="newDueFrom" v-if="hosAuthCheck(addAuthCode)">
                     新增评分规则项
                 </el-button>
             </div>
@@ -29,8 +29,8 @@
                             <td>{{seconditem.indicatorType}}{{seconditem.itemName}}</td>
                             <td>{{seconditem.score}}</td>
                             <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">
-                                <el-button class="orangeBtn" @click="onEditScore(item)">编辑</el-button>
-                                <el-button class="orangeBtn" @click="SureToDelete(item)">删除</el-button>
+                                <el-button class="orangeBtn" @click="onEditScore(item)" v-if="hosAuthCheck(editAuthCode)">编辑</el-button>
+                                <el-button class="orangeBtn" @click="SureToDelete(item)" v-if="hosAuthCheck(delAuthCode)">删除</el-button>
                             </td>
                         </tr>
                     </template>
@@ -84,6 +84,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getScorerules, getDueconfig, addScorerules, putScorerules, deleteScorerules } from './api/index.js'
 import { mapState } from 'vuex'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
+import { AUTH_BESTONLINE_POINTS_CODE_ADD, AUTH_BESTONLINE_POINTS_CODE_EDIT, AUTH_BESTONLINE_POINTS_CODE_DEL } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -155,7 +156,10 @@ export default {
             },
             targetArr: [],
             scoreType: '',
-            isdisabled: false
+            isdisabled: false,
+            addAuthCode: AUTH_BESTONLINE_POINTS_CODE_ADD,
+            editAuthCode: AUTH_BESTONLINE_POINTS_CODE_EDIT,
+            delAuthCode: AUTH_BESTONLINE_POINTS_CODE_DEL
         }
     },
     components: {

@@ -32,9 +32,13 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)" @click="onEdit(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" v-else @click="onCheck(scope.data.row)">查看</el-button>
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && submitbtn" @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <template v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)">
+                        <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
+                    </template>
+                    <template v-else>
+                        <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
+                    </template>
+                    <el-button class="orangeBtn" v-if="scope.data.row.status == 0 && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -57,6 +61,7 @@
 import { getDuemain, postDuemain, getFlow } from './api/index.js'
 import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
+import { AUTH_BESTONLINE_REVIEW_EDIT, AUTH_BESTONLINE_REVIEW_SHOW, AUTH_BESTONLINE_REVIEW_COMMIT } from '@/utils/auth_const'
 export default {
     name: 'reviewform',
     data () {
@@ -92,7 +97,10 @@ export default {
             tableData: [],
             pagination: {},
             dialogVisible: false,
-            dueApproval: []
+            dueApproval: [],
+            editAuthCode: AUTH_BESTONLINE_REVIEW_EDIT,
+            showAuthCode: AUTH_BESTONLINE_REVIEW_SHOW,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_COMMIT
         }
     },
     mounted () {
