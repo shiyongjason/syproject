@@ -52,7 +52,7 @@
                                 <div class="goods" v-for="(jtem,jndex) in item.orderGoodsList" :key="jndex">
                                     <img style="width: 80px; height: 80px" :src="jtem.goodsImg" />
                                     <div class="name">
-                                        <font>{{item.shopName}}</font>
+                                        <!-- <font>{{item.shopName}}</font> -->
                                         <p>{{jtem.goodsName}}</p>
                                     </div>
                                     <div class="priceandnums">
