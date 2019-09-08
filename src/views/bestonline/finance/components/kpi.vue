@@ -107,8 +107,10 @@ export default {
             form: state => state.dueDiligence.financeData
         }),
         assetListT () {
+            const _this = this
             if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
                 const result = (+this.form.totalLiability / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent / 100).toFixed(2)
+                _this.form.dueFinanceBasic.assetLiabilityRatio = result // 法务的负债金额
                 return result
             }
             return 0

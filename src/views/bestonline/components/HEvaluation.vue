@@ -211,11 +211,14 @@
                 <tr>
                     <td rowspan="2">财务尽调</td>
                     <td>资产负债率</td>
-                    <td>{{dueFinanceBasicVo.assetLiabilityRatio === null?'-':dueFinanceBasicVo.assetLiabilityRatio}}</td>
+                    <td v-if="dueFinanceBasicVo.assetLiabilityRatio != null && dueFinanceBasicVo.assetT">
+                        {{dueFinanceBasicVo.assetLiabilityRatio/dueFinanceBasicVo.assetT*100}}%
+                    </td>
+                    <!-- <td>{{dueFinanceBasicVo.assetLiabilityRatio === null?'-':dueFinanceBasicVo.assetLiabilityRatio}}</td> -->
                 </tr>
                 <tr>
                     <td>净利率</td>
-                    <td>{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio}}</td>
+                    <td>{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}</td>
                 </tr>
                 <tr>
                     <td rowspan="5">财务尽调</td>
