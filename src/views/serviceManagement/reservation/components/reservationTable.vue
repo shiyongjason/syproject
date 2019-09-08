@@ -206,7 +206,7 @@ export default {
         async updata () {
             this.form.reservationStartTime = this.date + ' ' + this.startTime
             this.form.reservationEndTime = this.date + ' ' + this.endTime
-            const { data } = await updataReservations(this.form)
+            await updataReservations(this.form)
             Message({ message: '修改成功', type: 'success' })
             this.dialogTableVisible = false
             this.$emit('updateStatus')
