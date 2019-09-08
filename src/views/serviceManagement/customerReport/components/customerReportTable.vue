@@ -1,8 +1,6 @@
 <template>
     <div class="page-body-cont">
         <el-table :data="tableData" border ref="attributeTable" @selection-change="selectionChange" style="width: 100%">
-            <el-table-column type="selection" label="序号" align="center">
-            </el-table-column>
             <el-table-column type="index" label="序号" :index="indexMethod" align="center" width="60">
             </el-table-column>
             <el-table-column prop="id" label="报告ID" align="center">
