@@ -4,10 +4,10 @@
             <p class="title-p">门店/会员店</p>
         </template>
         <el-form-item label="自营门店数量：" placeholder="自营门店数量">
-            {{form.selfStoresNum}}
+            {{form.selfStoresNum?form.selfStoresNum:'-'}}
         </el-form-item>
         <el-form-item label="会员店数量：" placeholder="会员店数量">
-            {{form.memberShopNum}}
+            {{form.memberShopNum?form.memberShopNum:'-'}}
         </el-form-item>
     </el-collapse-item>
 </template>
