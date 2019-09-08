@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <p class="title-p">合作目标</p>
         <el-form :model="form" :rules="rules" ref="form" label-width="100px">
             <el-form-item label="尽调规模：" prop="scale">
