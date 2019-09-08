@@ -105,7 +105,7 @@
                 </template>
                 <div class="btn" v-if="action == 'edit'">
                     <el-button type="primary" @click="cancle">取消</el-button>
-                    <el-button type="primary" @click="updata">修改</el-button>
+                    <el-button type="primary" @click="updata">保存</el-button>
                 </div>
             </div>
         </div>
