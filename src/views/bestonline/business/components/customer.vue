@@ -75,7 +75,7 @@
         </table>
         <el-form-item label="是否健康:" prop="customersHealth" label-width="80px">
             <el-select v-model="form.customersHealth" placeholder="请选择">
-                <el-option v-for="item in customersHealthData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in customersHealthData" :key="item.key" :label="item.value" :value="item.key"></el-option>
             </el-select>
         </el-form-item>
         <span>（不健康：超30%的业务聚焦在1个客户上）</span>
@@ -84,11 +84,11 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { DOWN_OPTIONS, MAIN_CATEGORY_OPTIONS } from '../const'
+import { MAIN_CATEGORY_OPTIONS, SELECT_OPTIONS } from '../const'
 export default {
     data () {
         return {
-            customersHealthData: DOWN_OPTIONS,
+            customersHealthData: SELECT_OPTIONS,
             mainCategoryData: MAIN_CATEGORY_OPTIONS,
             defaultComstur: {
                 agreementEndDate: '',
