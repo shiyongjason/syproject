@@ -15,37 +15,37 @@
                 <tr>
                     <td>流动比率</td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[0].liquidityRatio > 200?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].liquidityRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[0].liquidityRatio > 200?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[0].liquidityRatio}}%</span>
                     </td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[1].liquidityRatio > 200?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].liquidityRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[1].liquidityRatio > 200?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[1].liquidityRatio}}%</span>
                     </td>
                 </tr>
                 <tr>
                     <td>速动比率</td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[0].quickRatio > 100?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].quickRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[0].quickRatio > 100?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[0].quickRatio}}%</span>
                     </td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[1].quickRatio > 100?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].quickRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[1].quickRatio > 100?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[1].quickRatio}}%</span>
                     </td>
                 </tr>
                 <tr>
                     <td>现金比率</td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[0].cashRatio > 20?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[0].cashRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[0].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[0].cashRatio}}%</span>
                     </td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[1].cashRatio > 20?'red-word':'green-word'">{{form.dueFinanceYearOperatingCreateForms[1].cashRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[1].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[1].cashRatio}}%</span>
                     </td>
                 </tr>
                 <tr>
                     <td>资产负债率</td>
                     <td>
-                        <span :class="assetListT > 70?'red-word':'green-word'">{{assetListT}}%</span>
+                        <span :class="assetListT > 70?'green-word':'red-word'">{{assetListT}}%</span>
                     </td>
                     <td>
-                        <span :class="assetListL > 70?'red-word':'green-word'">{{assetListL}}%</span>
+                        <span :class="assetListL > 70?'green-word':'red-word'">{{assetListL}}%</span>
                     </td>
                 </tr>
             </tbody>

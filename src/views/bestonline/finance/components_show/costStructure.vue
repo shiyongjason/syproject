@@ -23,7 +23,9 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="费用合理性：">
-                {{form.dueFinanceBasic.costRationality == 0?'合理':'不合理'}}
+                <template v-if="form.dueFinanceBasic.costRationality == 0">合理</template>
+                <template v-else-if="form.dueFinanceBasic.costRationality == 1">不合理</template>
+                <template v-else>-</template>
             </el-form-item>
         </div>
     </div>
