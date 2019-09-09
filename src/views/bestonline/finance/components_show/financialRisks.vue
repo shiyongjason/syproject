@@ -45,7 +45,7 @@
         </div>
         <div class="form-cont-col">
             <el-form-item label="个人及公司担保：">
-                {{form.dueFinanceBasic.personalAndCompanyGuarantee}}%
+                {{form.dueFinanceBasic.personalAndCompanyGuarantee}}万
             </el-form-item>
         </div>
     </div>
