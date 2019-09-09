@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-if="justiceData.assetList&&justiceData.assetList.length>0">
         <p class="small-title">资产信息</p>
-        <el-form label-position="right" label-width="150px">
+        <el-form label-position="right" label-width="150px" >
             <el-form-item label="不动产：">
                 <p>{{justiceData.assetList[type].realEstate}}</p>
             </el-form-item>
