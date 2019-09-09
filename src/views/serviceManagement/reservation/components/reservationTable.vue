@@ -108,7 +108,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="预约时间">
-                    <el-date-picker v-model="date" type="date" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker v-model="date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                     <el-time-select placeholder="起始时间" v-model="startTime" :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -175,7 +175,12 @@ export default {
             rules: {},
             date: '',
             startTime: '',
-            endTime: ''
+            endTime: '',
+            pickerOptions: {
+                disabledDate (time) {
+                    return time.getTime() < Date.now() - 60*60*24*1000;
+                }
+            }
         }
     },
     computed: {
