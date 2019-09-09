@@ -77,7 +77,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findReportDetail } from '../api/index'
 import { AUTH_SERVICE_CUSTOMER_REPORT_SHOW, AUTH_SERVICE_CUSTOMER_REPORT_EDIT } from '@/utils/auth_const'
 export default {
     name: 'customerRecordTable',

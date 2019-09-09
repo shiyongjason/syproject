@@ -178,7 +178,7 @@ export default {
             endTime: '',
             pickerOptions: {
                 disabledDate (time) {
-                    return time.getTime() < Date.now() - 60*60*24*1000;
+                    return time.getTime() < Date.now() - 60 * 60 * 24 * 1000
                 }
             }
         }
