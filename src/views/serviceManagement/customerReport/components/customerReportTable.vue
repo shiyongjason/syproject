@@ -1,8 +1,6 @@
 <template>
     <div class="page-body-cont">
         <el-table :data="tableData" border ref="attributeTable" @selection-change="selectionChange" style="width: 100%">
-            <el-table-column type="selection" label="序号" align="center">
-            </el-table-column>
             <el-table-column type="index" label="序号" :index="indexMethod" align="center" width="60">
             </el-table-column>
             <el-table-column prop="id" label="报告ID" align="center">
@@ -42,8 +40,8 @@
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button @click="onShow(scope.row)" class="orangeBtn">查看</el-button>
-                    <el-button @click="onEdit(scope.row)" class="orangeBtn">修改</el-button>
+                    <el-button @click="onShow(scope.row)" class="orangeBtn" v-if="hosAuthCheck(showAuthCode)">查看</el-button>
+                    <el-button @click="onEdit(scope.row)" class="orangeBtn" v-if="hosAuthCheck(editAuthCode)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -80,6 +78,7 @@
 <script>
 import { mapState } from 'vuex'
 import { findReportDetail } from '../api/index'
+import { AUTH_SERVICE_CUSTOMER_REPORT_SHOW, AUTH_SERVICE_CUSTOMER_REPORT_EDIT } from '@/utils/auth_const'
 export default {
     name: 'customerRecordTable',
     props: {
@@ -107,7 +106,9 @@ export default {
             dialogTableVisible: false,
             activeName: '1',
             data: [],
-            childArchiveNodes: []
+            childArchiveNodes: [],
+            showAuthCode: AUTH_SERVICE_CUSTOMER_REPORT_SHOW,
+            editAuthCode: AUTH_SERVICE_CUSTOMER_REPORT_EDIT
         }
     },
     computed: {
