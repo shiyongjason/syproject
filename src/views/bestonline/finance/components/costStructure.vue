@@ -38,7 +38,7 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="备注：">
-                <el-input type="textarea" style="width:50px" placeholder="请对合理性评估进行备注" v-model="form.dueFinanceBasic.costRationalityRemark"></el-input>
+                <el-input type="textarea" row="6" style="width:600px" placeholder="请对合理性评估进行备注" v-model="form.dueFinanceBasic.costRationalityRemark"></el-input>
             </el-form-item>
         </div>
     </div>

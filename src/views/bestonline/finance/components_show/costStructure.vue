@@ -86,6 +86,6 @@ td {
 }
 .remark {
     display: inline-block;
-    word-break: break-word;
+    word-break: break-all;
 }
 </style>
