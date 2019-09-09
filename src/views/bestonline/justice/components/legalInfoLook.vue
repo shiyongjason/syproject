@@ -39,13 +39,13 @@
                 </el-form>
             </div>
         </div>
-        <div class="flex-wrap-col info-wrap">
+        <div class="flex-wrap-col info-wrap" v-for="(item,index) in debtInformation" :key="index">
             <el-form label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="借款：">
-                    <p>{{justiceData.debtList[type].debt||'-'}}</p>
+                    <p>{{item.debt||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="用途：">
-                    <p>{{justiceData.debtList[type].purpose?debtPurposeOptions[justiceData.debtList[type].purpose].label:'-'}}</p>
+                    <p>{{item.purpose?debtPurposeOptions[item.purpose].label:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
@@ -168,15 +168,29 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         }),
-        debtTotal () {
+        /* debtTotal () {
             const debtArr = this.justiceData.debtList.map(item => item.debt)
             const result = debtArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
             return isNaN(result) ? '' : result
-        },
+        }, */
         assureTotal () {
             const assureArr = this.justiceData.assureList.map(item => item.money)
             const result = assureArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
             return isNaN(result) ? '' : result
+        },
+        debtInformation () {
+            let res = []
+            if (this.justiceData.debtList && this.justiceData.debtList.length > 0) {
+                res = this.justiceData.debtList.filter(item => item.type === this.type)
+            }
+            return res
+        },
+        debtTotal () {
+            let total = 0
+            this.debtInformation.map(item => {
+                total += item.debt
+            })
+            return total || '-'
         }
     },
     methods: {
