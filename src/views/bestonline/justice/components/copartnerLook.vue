@@ -17,7 +17,10 @@
                         <p>{{item.sex==0?'男':'女'}}</p>
                     </el-form-item>
                     <el-form-item label="婚姻：" label-width="120px">
-                        <p>{{item.marriage?marriageOptions[item.marriage].label:''}}</p>
+                        <p v-if="item.marriage == 0">已婚</p>
+                        <p v-if="item.marriage == 1">未婚</p>
+                        <p v-if="item.marriage == 2">离异</p>
+                        <p v-if="item.marriage == 3">丧偶</p>
                     </el-form-item>
                     <el-form-item label="身份证号：" label-width="120px">
                         <p>{{item.idNumber}}</p>

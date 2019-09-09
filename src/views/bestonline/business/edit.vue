@@ -85,10 +85,10 @@
 
         <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSaveBus">暂存</el-button>
+                <el-button type="info" @click="onSaveBus" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
-                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button type="primary" @click="onSubmit" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -105,6 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
+import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 export default {
     components: {
         BusinessMode, MarketingModel, SalesPerformance, Supplier, Customer, Members, Competitor, Plan
@@ -201,7 +202,9 @@ export default {
                 customerName: [
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ]
-            }
+            },
+            draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT
         }
     },
     mounted () {

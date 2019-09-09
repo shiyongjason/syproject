@@ -43,10 +43,10 @@
 
         <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click.native="onSave(0)">暂存</el-button>
+                <el-button type="info" @click.native="onSave(0)" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
-                <el-button type="primary" @click.native="onSubmit(1)">提交</el-button>
+                <el-button type="primary" @click.native="onSubmit(1)" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -55,6 +55,7 @@
 import { addCooperativetarget, putCooperativetarget } from '../api/index.js'
 import { plusOrMinus } from '@/utils/rules.js'
 import { mapState } from 'vuex'
+import { AUTH_BESTONLINE_REVIEW_TARGET_DRAFT, AUTH_BESTONLINE_REVIEW_TARGET_COMMIT } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -80,7 +81,9 @@ export default {
                 netProfitRate: [
                     { required: true, message: '请输入净利润率', trigger: 'blur' }
                 ]
-            }
+            },
+            draftAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_DRAFT,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_COMMIT
         }
     },
     computed: {

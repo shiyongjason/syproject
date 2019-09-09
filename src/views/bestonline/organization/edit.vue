@@ -11,10 +11,10 @@
         </el-collapse>
         <div class="flex-wrap-row top20">
             <el-col :span="2" :offset="6">
-                <el-button type="info" @click="onSaveOrganize">暂存</el-button>
+                <el-button type="info" @click="onSaveOrganize" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
             <el-col :span="2" :offset="1">
-                <el-button type="primary" @click="onSubmit">提交</el-button>
+                <el-button type="primary" @click="onSubmit" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -28,6 +28,7 @@ import Organization from './components/organization.vue'
 import MotivationRisk from './components/motivationRisk.vue'
 import { IsPositiveInteger } from '@/utils/rules'
 import { kpiValidProps, controllerValidProps, organizationValidProps, motivationRiskValidProps } from './const.js'
+import { AUTH_BESTONLINE_REVIEW_ORGANIZATION_DRAFT, AUTH_BESTONLINE_REVIEW_ORGANIZATION_COMMIT } from '@/utils/auth_const'
 export default {
     components: {
         KPI, Controller, Organization, MotivationRisk
@@ -95,7 +96,9 @@ export default {
                 companyShortBoard: [
                     { required: true, message: '请填写企业短板', trigger: 'blur' }
                 ]
-            }
+            },
+            draftAuthCode: AUTH_BESTONLINE_REVIEW_ORGANIZATION_DRAFT,
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_ORGANIZATION_COMMIT
         }
     },
     computed: {

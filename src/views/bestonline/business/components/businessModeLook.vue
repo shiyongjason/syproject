@@ -11,7 +11,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-                    {{form.businessFormatOneRatio + '%'}}
+                    {{form.businessFormatOneRatio?form.businessFormatOneRatio + '%':'-'}}
                 </el-form-item>
             </div>
         </div>

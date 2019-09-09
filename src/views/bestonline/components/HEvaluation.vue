@@ -211,10 +211,7 @@
                 <tr>
                     <td rowspan="2">财务尽调</td>
                     <td>资产负债率</td>
-                    <td v-if="dueFinanceBasicVo.assetLiabilityRatio != null && dueFinanceBasicVo.assetT">
-                        {{dueFinanceBasicVo.assetLiabilityRatio/dueFinanceBasicVo.assetT*100}}%
-                    </td>
-                    <!-- <td>{{dueFinanceBasicVo.assetLiabilityRatio === null?'-':dueFinanceBasicVo.assetLiabilityRatio}}</td> -->
+                    <td>{{dueFinanceBasicVo.assetLiabilityRatio ? dueFinanceBasicVo.assetLiabilityRatio + '%' : '-'}}</td>
                 </tr>
                 <tr>
                     <td>净利率</td>
@@ -347,13 +344,14 @@ export default {
             roleConclusionVoList: [],
             dueStandardScoreVo: [],
             achieveScoreDtos: [], // 得分详情
-            totalScore: Number, // 得分详情总分
+            totalScore: '', // 得分详情总分
             ceoConclusionList: [], // CEO审批信息
             dueItemStatics: {}, // 审批统计占比
             dueItemRecommend: {}, // 结论参考
             generalConclusionList: [], // 分总和大区总的审批结论
             judgesConclusionList: [], // 尽调评审委员会结论
-            caucusConclusionList: []// 尽调决策委员会结论
+            caucusConclusionList: [], // 尽调决策委员会结论
+            assetLiabilityRatio: ''
         }
     },
     computed: {
@@ -462,7 +460,7 @@ export default {
 .red {
     color: red;
 }
-.black{
+.black {
     color: #000000;
 }
 </style>

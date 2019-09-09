@@ -67,7 +67,7 @@
         </table>
         <el-form-item label="前10个月销售是否持续下滑：" label-width="200px" class="mt20">
             <el-select v-model="form.firstTenMonthsDown" placeholder="请选择">
-                <el-option v-for="item in firstTenMonthsDownData" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
             </el-select>
         </el-form-item>
     </el-collapse-item>

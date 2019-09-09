@@ -14,7 +14,7 @@ export const makeMenus = (Route, Data) => {
 
 // 拍平后端返回的权限数据
 export const handleMenuResources = (data, resourceList) => {
-    data.forEach(item => {
+    data && data.forEach(item => {
         const url = item.authUri || item.resourceAddress
         if (url) {
             resourceList.push(url)
