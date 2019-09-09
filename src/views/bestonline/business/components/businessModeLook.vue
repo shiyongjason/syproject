@@ -6,48 +6,48 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                    {{form.mainBusinessFormatOneId?mainCommercialOptions[form.mainBusinessFormatOneId].value:'-'}}
+                    {{form.mainBusinessFormatOneId?mainCommercialOptions[form.mainBusinessFormatOneId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-                    {{form.businessFormatOneRatio?form.businessFormatOneRatio + '%':'-'}}
+                    {{form.businessFormatOneRatio?form.businessFormatOneRatio + '%':''}}
                 </el-form-item>
             </div>
         </div>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态2：">
-                    {{form.mainBusinessFormatTwoId?mainCommercialOptions[form.mainBusinessFormatTwoId].value:'-'}}
+                    {{form.mainBusinessFormatTwoId?mainCommercialOptions[form.mainBusinessFormatTwoId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比2：">
-                    {{form.businessFormatTwoRatio?form.businessFormatTwoRatio + '%':'-'}}
+                    {{form.businessFormatTwoRatio?form.businessFormatTwoRatio + '%':''}}
                 </el-form-item>
             </div>
         </div>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态3：">
-                    {{form.mainBusinessFormatThreeId?mainCommercialOptions[form.mainBusinessFormatThreeId].value:'-'}}
+                    {{form.mainBusinessFormatThreeId?mainCommercialOptions[form.mainBusinessFormatThreeId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比3：">
-                    {{form.businessFormatTwoThreeRatio?form.businessFormatTwoThreeRatio +'%':'-'}}
+                    {{form.businessFormatTwoThreeRatio?form.businessFormatTwoThreeRatio +'%':''}}
                 </el-form-item>
             </div>
         </div>
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营品类1：" prop="mainCategoryOneId">
-                    {{form.mainCategoryOneId?mainCategoryOptions[form.mainCategoryOneId].value:'-'}}
+                    {{form.mainCategoryOneId?mainCategoryOptions[form.mainCategoryOneId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="销售比重1：" prop="categoryOneSalesRatio">
-                    {{form.categoryOneSalesRatio?form.categoryOneSalesRatio +'%':'-'}}
+                    {{form.categoryOneSalesRatio?form.categoryOneSalesRatio +'%':''}}
                 </el-form-item>
             </div>
         </div>

@@ -314,8 +314,8 @@ export default {
         },
         defaultPunishment () {
             return {
-                punishmentType: 3,
-                ponderance: 0,
+                punishmentType: '',
+                ponderance: '',
                 moneyInvolved: '',
                 type: this.type,
                 id: Date.now()
