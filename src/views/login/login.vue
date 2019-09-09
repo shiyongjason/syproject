@@ -142,7 +142,7 @@ export default {
                 if (value.path == '') {
                     return true
                 }
-                const authArr = Data.filter(item => item.authUri === value.path && item.have)
+                const authArr = Data.filter(item => item.authUri === value.path)
                 if (value.children && authArr.length > 0) {
                     value.children = this.makeMenus(value.children, authArr[0].childAuthList)
                 }
