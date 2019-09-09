@@ -304,7 +304,7 @@ export default {
             }
         },
         uploadImgServer () {
-            return fileUploadUrl + 'tms/files/upload'
+            return fileUploadUrl + 'tms/files/upload-list'
         },
         uploadImgParams () {
             return {
@@ -510,10 +510,10 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     const { ...params } = this.form
-                    params.createBy = this.userInfo.employeeName
                     params.categoryId = this.categorySelectId[2]
                     params.merchantCode = this.userInfoMore.organizationCode
-
+                    params.updateBy = this.userInfo.employeeName
+                    params.createBy = this.userInfo.employeeName
                     if (this.form.productShortName) {
                         params.productName = this.brandName + this.categorySelect[2] + this.form.specification + this.form.productShortName
                     } else {
