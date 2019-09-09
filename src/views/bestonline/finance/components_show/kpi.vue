@@ -72,10 +72,10 @@
         <p class="small-title mb15">分析报告(必填)</p>
         <div class="item-wrappper">
             <el-form-item label="风险揭示：" prop="dueFinanceBasic.riskDisclosure">
-                {{form.dueFinanceBasic.riskDisclosure}}
+                <p class="remark">{{form.dueFinanceBasic.riskDisclosure}}</p>
             </el-form-item>
             <el-form-item label="分析描述：" prop="dueFinanceBasic.analysisDescription">
-                {{form.dueFinanceBasic.analysisDescription}}
+                <p class="remark">{{form.dueFinanceBasic.analysisDescription}}</p>
             </el-form-item>
         </div>
     </el-collapse-item>
@@ -147,5 +147,8 @@ td {
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
+}
+.remark {
+    word-break: break-all;
 }
 </style>

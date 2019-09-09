@@ -115,9 +115,7 @@ export default {
             }
         },
         getRoletype () {
-            console.log(1221, this.$route.query.canEidt)
             if (this.$route.query.canEidt == 1) {
-                console.log(this.$route.query.status)
                 const deptType = this.userInfo.deptType
                 const role = this.userInfo.role
                 // const target = this.target

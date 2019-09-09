@@ -18,7 +18,7 @@
             </div>
             <div class="form-cont-col ml10 otherCategory" v-if="form.dueBusinessFuturePlanCreateForm.businessCategoryOther">
                 <el-form-item label="" label-width="20px">
-                    {{form.dueBusinessFuturePlanCreateForm.businessCategoryOther}}
+                    <p class="remark">{{form.dueBusinessFuturePlanCreateForm.businessCategoryOther}}</p>
                 </el-form-item>
             </div>
         </div>
@@ -127,5 +127,8 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-form-item__content {
     height: 40px;
+}
+.remark {
+    word-break: break-all;
 }
 </style>
