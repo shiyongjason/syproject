@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div v-if="justiceData.assetList&&justiceData.assetList.length>0">
         <p class="small-title">资产信息</p>
-        <el-form label-position="right" label-width="150px">
+        <el-form label-position="right" label-width="150px" >
             <el-form-item label="不动产：">
                 <p>{{justiceData.assetList[type].realEstate}}</p>
             </el-form-item>
@@ -66,26 +66,44 @@
 
         <p class="small-title">担保信息（万）</p>
         <div v-if="type !== 3">
-            <div class="flex-wrap-col info-wrap">
+            <div class="flex-wrap-row">
+                <div class="flex-wrap-box">
+                    <el-form label-position="left" label-width="100px" class="fawuForm">
+                        <el-form-item label="合计：">
+                            {{ assureTotal }}
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+            <div class="flex-wrap-col info-wrap" v-for="(item,index) in assureInformation" :key="index">
                 <el-form label-position="right" label-width="150px" class="legal-form">
                     <el-form-item label="担保：">
-                        <p>{{justiceData.assureList[type].assure||'-'}}</p>
+                        <p>{{item.assure||'-'}}</p>
                     </el-form-item>
                     <el-form-item label="对应金额：">
-                        <p>{{justiceData.assureList[type].money||'-'}}</p>
+                        <p>{{item.money||'-'}}</p>
                     </el-form-item>
                 </el-form>
             </div>
         </div>
         <div v-if="type === 3">
             <p class="legallnfoTitle">经营性担保</p>
-            <div class="flex-wrap-col info-wrap">
+            <div class="flex-wrap-row">
+                <div class="flex-wrap-box">
+                    <el-form label-position="left" label-width="100px" class="fawuForm">
+                        <el-form-item label="合计：">
+                            {{ assureTotal }}
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+            <div class="flex-wrap-col info-wrap" v-for="(item,index) in assureInformation" :key="index">
                 <el-form label-position="right" label-width="150px" class="legal-form">
                     <el-form-item label="担保：">
-                        <p>{{justiceData.assureList[type].assure||'-'}}</p>
+                        <p>{{item.assure||'-'}}</p>
                     </el-form-item>
                     <el-form-item label="对应金额：">
-                        <p>{{justiceData.assureList[type].money||'-'}}</p>
+                        <p>{{item.money||'-'}}</p>
                     </el-form-item>
                 </el-form>
             </div>
@@ -104,15 +122,24 @@
                 <p>{{justiceData.dueLegalRemarkCreateForm.companyOperatingAssureRemark||'-'}}</p>
             </el-form-item>
         </el-form>
-        <div v-if="type === 3">
+        <div v-if="type === 2||3">
             <p class="legallnfoTitle">非经营性担保</p>
-            <div class="flex-wrap-col info-wrap">
+            <div class="flex-wrap-row">
+                <div class="flex-wrap-box">
+                    <el-form label-position="left" label-width="100px" class="fawuForm">
+                        <el-form-item label="合计：">
+                            {{ noAssureTotal }}
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+            <div class="flex-wrap-col info-wrap" v-for="(item,index) in noAssureInformation" :key="index">
                 <el-form label-position="right" label-width="150px" class="legal-form">
                     <el-form-item label="担保：">
-                        <p>{{justiceData.assureList[type].assure||'-'}}</p>
+                        <p>{{item.assure||'-'}}</p>
                     </el-form-item>
                     <el-form-item label="对应金额：">
-                        <p>{{justiceData.assureList[type].assure||'-'}}</p>
+                        <p>{{item.money||'-'}}</p>
                     </el-form-item>
                 </el-form>
             </div>
@@ -144,6 +171,7 @@
 </template>
 
 <script>
+// 数据来源 0：实际控制人 1：实际控制人配偶 2：拟选合伙人（经营性担保）3：拟选合伙人（非经营性担保）4：尽调公司（经营性担保）5：尽调公司（非经营性担保）
 import { mapState } from 'vuex'
 import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
 export default {
@@ -173,11 +201,11 @@ export default {
             const result = debtArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
             return isNaN(result) ? '' : result
         }, */
-        assureTotal () {
+        /* assureTotal () {
             const assureArr = this.justiceData.assureList.map(item => item.money)
             const result = assureArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
             return isNaN(result) ? '' : result
-        },
+        }, */
         debtInformation () {
             let res = []
             if (this.justiceData.debtList && this.justiceData.debtList.length > 0) {
@@ -185,10 +213,40 @@ export default {
             }
             return res
         },
+        assureInformation () {
+            let res = []
+            let type = this.type === 3 ? 4 : this.type
+            if (this.justiceData.assureList && this.justiceData.assureList.length > 0) {
+                res = this.justiceData.assureList.filter(item => item.type === type)
+            }
+            return res
+        },
+        noAssureInformation () {
+            let res = []
+            let type = this.type === 2 ? 3 : 5
+            if (this.justiceData.assureList && this.justiceData.assureList.length > 0) {
+                res = this.justiceData.assureList.filter(item => item.type === type)
+            }
+            return res
+        },
         debtTotal () {
             let total = 0
             this.debtInformation.map(item => {
                 total += item.debt
+            })
+            return total || '-'
+        },
+        assureTotal () {
+            let total = 0
+            this.assureInformation.map(item => {
+                total += item.money
+            })
+            return total || '-'
+        },
+        noAssureTotal () {
+            let total = 0
+            this.noAssureInformation.map(item => {
+                total += item.money
             })
             return total || '-'
         }

@@ -53,10 +53,10 @@
                     </div>
                     <p class="small-title ">3、分析报告(必填)</p>
                     <el-form-item label="风险揭示：" prop="riskDisclosure" label-width="100px">
-                        {{form.riskDisclosure}}
+                        <p class="remark">{{form.riskDisclosure}}</p>
                     </el-form-item>
                     <el-form-item label="分析描述：" prop="analysisDescription" label-width="100px">
-                        {{form.analysisDescription}}
+                        <p class="remark">{{form.analysisDescription}}</p>
                     </el-form-item>
                     <!--end-->
                 </el-collapse-item>
@@ -143,5 +143,8 @@ export default {
 }
 table {
     border-collapse: collapse;
+}
+.remark{
+    word-break: break-all;
 }
 </style>

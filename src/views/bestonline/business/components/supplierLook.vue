@@ -22,7 +22,7 @@
                     </el-form-item>
                 </div>
                 <div class="form-cont-col ">
-                    <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`" >
+                    <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`">
                         {{item.isProvideContract==1?'否':item.isProvideContract==0?'是':''}}
                     </el-form-item>
                 </div>
@@ -30,18 +30,17 @@
             <div class="form-cont-row mb20">
                 <div class="form-cont-col">
                     <el-form-item label="合同开始时间：">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="item.contractStartDate" :editable="false" value-format="yyyy-MM-dd"></el-date-picker>
-                        {{item.contractStartDate|formatDate}}
+                        {{item.contractStartDate}}
                     </el-form-item>
                 </div>
                 <div class="form-cont-col">
                     <el-form-item label="合同结束时间：">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="item.contractEndDate" :editable="false" value-format="yyyy-MM-dd"></el-date-picker>
+                        {{item.contractEndDate}}
                     </el-form-item>
                 </div>
                 <div class="form-cont-col">
                     <el-form-item label="合同规模：">
-                        {{item.contractScale}}
+                        {{item.contractScale?item.contractScale + '万':''}}
                     </el-form-item>
                 </div>
             </div>
