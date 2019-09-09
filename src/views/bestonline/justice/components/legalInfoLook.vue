@@ -163,7 +163,7 @@
                     <p>{{justiceData.punishmentList[type].moneyInvolved||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="严重性：">
-                    <p>{{justiceData.punishmentList[type].ponderance?ponderanceOptions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
+                    <p>{{justiceData.punishmentList[type].ponderance!==null?ponderanceOptions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
