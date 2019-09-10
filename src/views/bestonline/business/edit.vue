@@ -105,6 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
+import { IsPositiveInteger } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 export default {
     components: {
@@ -201,6 +202,9 @@ export default {
                 ],
                 customerName: [
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
+                ],
+                selfStoresNum: [
+                    { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,

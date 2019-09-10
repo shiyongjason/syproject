@@ -93,7 +93,8 @@ export default {
                 { label: '最终得分', prop: 'finalScore' },
                 { label: '标准分数', prop: 'standardScore' },
                 { label: '状态', prop: 'status' },
-                { label: '未操作人', prop: 'noOperator' }
+                { label: '未操作人', prop: 'noOperator' },
+                { label: '操作', prop: 'action' }
             ],
             tableData: [],
             pagination: {},
