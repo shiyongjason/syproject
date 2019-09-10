@@ -6,21 +6,17 @@
         <div class="table-cont-tabs">
             <el-tabs type="card" v-model="tabName" @tab-click="onChangeYear">
                 <div class="form-cont-row">
-                    <div class="form-cont-col">
+                    <el-form label-width="100px" inline>
                         <el-form-item label="编制单位：">
                             <el-input v-model="form.assetsLiabilities.writer" placeholder="请输入编制单位"></el-input>
                         </el-form-item>
-                    </div>
-                    <div class="form-cont-col">
                         <el-form-item label="时间：">
                             <el-date-picker v-model="form.assetsLiabilities.recordTime" type="date" placeholder="选择日期">
                             </el-date-picker>
                         </el-form-item>
-                    </div>
-                    <div class="form-cont-col">
                         <el-form-item label="单位：万">
                         </el-form-item>
-                    </div>
+                    </el-form>
                 </div>
                 <el-tab-pane label="本年度" name="nowYear">
                     <NowYear />
@@ -64,6 +60,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .title-p {
     font-size: 18px;
     font-weight: 500;
