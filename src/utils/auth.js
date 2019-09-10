@@ -1,6 +1,7 @@
 // 根据后端返回的URI，生成router
 export const makeMenus = (Route, Data) => {
-    return Route.filter(value => {
+    const routerMapping = JSON.parse(JSON.stringify(Route))
+    return routerMapping.filter(value => {
         if (value.path === '') {
             return true
         }
