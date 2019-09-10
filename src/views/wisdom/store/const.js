@@ -5,14 +5,14 @@ export const BUS_TYPE = [
     },
     {
         name: '批发',
-        value: 1
+        value: '批发'
     },
     {
         name: '零售',
-        value: 2
+        value: '零售'
     },
     {
         name: '工程',
-        value: 3
+        value: '工程'
     }
 ]

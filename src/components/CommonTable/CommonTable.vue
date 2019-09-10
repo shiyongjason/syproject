@@ -204,7 +204,7 @@ export default {
         },
         handleCheckedCitiesChange (value) {
             let checkedCount = value.length
-            this.checkAll = checkedCount === this.selectTh.length
+            this.checkAll = checkedCount === this.defaultTh.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
         }
     },

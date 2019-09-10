@@ -14,7 +14,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                         <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlatcode" :placeholder="'选择平台公司'"></HAutocomplete>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlatcode" :remove-value='removeValue' :placeholder="'选择平台公司'"></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -36,7 +36,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">业务类型：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable  placeholder="全部">
+                        <el-select v-model="queryParams.businessType" clearable placeholder="全部">
                             <el-option v-for="item in bustype" :key="item.value" :label="item.name" :value="item.value">
                             </el-option>
                         </el-select>
@@ -74,6 +74,9 @@
         <div class="page-body-cont">
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+                    <template slot-scope="scope" slot="grossProfitRate">
+                        {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
+                    </template>
                 </basicTable>
             </div>
         </div>
@@ -151,9 +154,9 @@ export default {
             branchList: [],
             brandList: [],
             sysList: [],
+            platList: [],
             bustype: BUS_TYPE,
-            regionDisabled: false,
-            branchDisabled: false
+            removeValue: false
         }
     },
     computed: {
@@ -163,6 +166,14 @@ export default {
     },
     components: {
         HAutocomplete
+    },
+    watch: {
+        async 'queryParams.subsectionCode' (newV, oldV) {
+            const code = newV
+            this.platList = await this.findPaltList(code)
+            this.queryParams.companyCode = ''
+            this.removeValue = !this.removeValue
+        }
     },
     methods: {
         async getPaltCategory () {
@@ -220,6 +231,9 @@ export default {
             }
             this.platList = data.data.pageContent
             return this.platList
+        },
+        backPlatcode (value) {
+            this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         }
     },
     async mounted () {
@@ -229,6 +243,7 @@ export default {
         this.findDepList()
         this.getPaltbarnd()
         this.getPaltSys()
+        this.platList = await this.findPaltList()
     }
 }
 </script>
