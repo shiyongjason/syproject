@@ -411,6 +411,84 @@ const routerMapping = [
                 component: () => import('./views/hmall/walletPay/walletPay.vue')
             }
         ]
+    },
+    {
+        path: '/serviceManagement',
+        meta: {
+            title: '服务管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'customerManagement',
+                name: 'customerManagement',
+                meta: {
+                    title: '客户管理',
+                    tagName: '客户管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+            },
+            {
+                path: 'orderCenter',
+                name: 'orderCenter',
+                meta: {
+                    title: '订单中心',
+                    tagName: '订单中心',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/order.vue')
+            },
+            {
+                path: 'reservation',
+                name: 'reservation',
+                meta: {
+                    title: '预约信息',
+                    tagName: '预约信息',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/reservation/index.vue')
+            },
+            // 一期不做
+            // {
+            //     path: 'customerRecord',
+            //     name: 'customerRecord',
+            //     meta: {
+            //         title: '客户档案',
+            //         tagName: '客户档案',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/serviceManagement/customerRecord/index.vue')
+            // },
+            {
+                path: 'customerReport',
+                name: 'customerReport',
+                meta: {
+                    title: '客户报告',
+                    tagName: '客户报告',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerReport/index.vue')
+            },
+            {
+                path: 'customerReportDetail',
+                name: 'customerReportDetail',
+                meta: {
+                    title: '报告详情',
+                    tagName: '报告详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerReport/detail.vue')
+            }
+        ]
     }
 ]
 
@@ -431,6 +509,7 @@ const router = new Router({
         }
     ]
 })
+
 async function getMenu (to, next) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
