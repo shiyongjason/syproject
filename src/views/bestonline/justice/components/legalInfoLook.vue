@@ -11,13 +11,16 @@
             <el-form-item label="动产：">
                 <p>{{justiceData.assetList[type].movableProperty}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-专利：">
+            <el-form-item label="无形资产：">
+                <p>{{justiceData.assetList[type].intangibleAssets||'-'}}</p>
+            </el-form-item>
+            <el-form-item label="专利：">
                 <p>{{justiceData.assetList[type].patent}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-商标：">
+            <el-form-item label="商标：">
                 <p>{{justiceData.assetList[type].brand}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-其他：">
+            <el-form-item label="其他：">
                 <p>{{justiceData.assetList[type].other}}</p>
             </el-form-item>
             <el-form-item label="附件：">
@@ -66,6 +69,7 @@
 
         <p class="small-title">担保信息（万）</p>
         <div v-if="type !== 3">
+            <p v-if="type === 2" class="legallnfoTitle">经营性担保</p>
             <div class="flex-wrap-row">
                 <div class="flex-wrap-box">
                     <el-form label-position="left" label-width="100px" class="fawuForm">
@@ -122,7 +126,7 @@
                 <p>{{justiceData.dueLegalRemarkCreateForm.companyOperatingAssureRemark||'-'}}</p>
             </el-form-item>
         </el-form>
-        <div v-if="type === 2||3">
+        <div v-if="type === 2||type === 3">
             <p class="legallnfoTitle">非经营性担保</p>
             <div class="flex-wrap-row">
                 <div class="flex-wrap-box">

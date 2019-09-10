@@ -57,6 +57,7 @@ Vue.mixin({
         }
     }
 })
+
 new Vue({
     router,
     store,
