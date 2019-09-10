@@ -1,5 +1,9 @@
 import axios from 'axios'
-import { interfaceUrl } from '@/api/config'
+import {
+    interfaceUrl,
+    ossUrl
+} from '@/api/config'
+
 // 公司概览 公司统计信息
 export const getStatistics = (params) => {
     return axios.get(interfaceUrl + 'ims/report/overall/company/statistics', {
@@ -64,7 +68,9 @@ export const findBranchList = (params) => {
 }
 // 新增－－－－分部列表查询
 export const findBranchListNew = (params) => {
-    return axios.get(interfaceUrl + 'ims/subsectiontarget/subsection', { params })
+    return axios.get(interfaceUrl + 'ims/subsectiontarget/subsection', {
+        params
+    })
 }
 // 大区列表查询
 export const findRegionList = (params) => {
@@ -82,19 +88,27 @@ export const queryCompanyByParams = (params) => {
 }
 // 获取平台销售分析列表
 export const getPlatformSale = (params) => {
-    return axios.get(interfaceUrl + 'ims/platSaleAnalyze', { params })
+    return axios.get(interfaceUrl + 'ims/platSaleAnalyze', {
+        params
+    })
 }
 // 获取平台销售分析列表 合计
 export const getPlatformSaleSum = (params) => {
-    return axios.get(interfaceUrl + 'ims/platSaleAnalyzeSum', { params })
+    return axios.get(interfaceUrl + 'ims/platSaleAnalyzeSum', {
+        params
+    })
 }
 // 获取分部销售分析列表
 export const getBranchSale = (params) => {
-    return axios.get(interfaceUrl + 'ims/subsection-sale/adjective', { params })
+    return axios.get(interfaceUrl + 'ims/subsection-sale/adjective', {
+        params
+    })
 }
 // 获取分部销售分析列表 合计
 export const getBranchSaleSum = (params) => {
-    return axios.get(interfaceUrl + 'ims/subsection-sale/total', { params })
+    return axios.get(interfaceUrl + 'ims/subsection-sale/total', {
+        params
+    })
 }
 // 查询平台公司基本信息
 export const findCompanyList = (params) => {
@@ -103,7 +117,7 @@ export const findCompanyList = (params) => {
 
 // 机构在线的 分部查询
 export const findDepList = (params) => {
-    return axios.get('api/httpH5/3107', {
+    return axios.get(ossUrl + 'api/httpH5/3107', {
         params
     })
 }
@@ -135,7 +149,29 @@ export const findSubsectionList = (params) => {
         params
     })
 }
+export const getCompany = (params) => {
+    return axios.get(interfaceUrl + 'ims/companyTarget/queryCompanyShortName', {
+        params
+    })
+}
+export const getCityList = (params) => {
+    return axios.get(interfaceUrl + 'ims/companyTarget/queryCity', {
+        params
+    })
+}
 // 新增 公司分类级别
 export const updateBasicinfo = (params) => {
     return axios.post(interfaceUrl + 'develop/developbasicinfo/update', params)
+}
+// 平台品类销售分析
+export const getPaltCategory = (params) => {
+    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy', { params })
+}
+// 平台品牌列表查询
+export const getPaltbarnd = (params) => {
+    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy/brand', { params })
+}
+// 平台品类查询
+export const getPaltSys = (params) => {
+    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy/system-category', { params })
 }

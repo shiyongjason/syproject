@@ -1,27 +1,43 @@
 <template>
     <div class="page-table clearfix">
+        <div class="collapse">
+            <img src="../../../src/assets/images/typeIcon.png" alt="" class="collapse" @click="collapse = !collapse">
+        </div>
+        <el-collapse-transition>
+            <div class="collapse-content" v-if="collapse">
+                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                <div style="margin: 15px 0;"></div>
+                <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
+                    <el-checkbox v-for="(item) in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
+                </el-checkbox-group>
+            </div>
+        </el-collapse-transition>
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange"  @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey"  :load="load"  :indent="4">
+        <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <el-table-column v-for="item in tableLabel"
-                :key="item.label"
-                :label="item.label"
-                :prop="item.prop"
-                :sortable="item.sortable"
-                :align="item.align?item.align:'center'"
-                :min-width="item.width?item.width:''"
-                :show-overflow-tooltip="true"
-                v-bind="item">
-                <template slot-scope="scope">
-                    <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
-                    <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
-                    <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
-                    <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
-                    <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
-                </template>
-            </el-table-column>
-
+            <template v-for="item in tableLabel">
+                <el-table-column v-if="selectTh.indexOf(item.label)>-1" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+                    <template slot-scope="scope">
+                        <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
+                        <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
+                        <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
+                        <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                        <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
+                    </template>
+                    <template v-if="selectTh.indexOf(item.label)>-1">
+                        <el-table-column v-for="obj in item.tableLabel" :key="obj.label" :label="obj.label" :prop="obj.prop" :sortable="obj.sortable" :align="obj.align?obj.align:'center'" :min-width="obj.width?obj.width:''" :show-overflow-tooltip="true" v-bind="obj">
+                            <template slot-scope="scope">
+                                <slot v-if="obj.formatter === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
+                                <slot v-else-if="obj.formatter === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
+                                <slot v-else-if="obj.formatter === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
+                                <slot v-else-if="obj.formatter === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
+                                <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
+                            </template>
+                        </el-table-column>
+                    </template>
+                </el-table-column>
+            </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
@@ -39,7 +55,12 @@ export default {
     data () {
         return {
             minWidth: '',
-            paginationInfo: {}
+            paginationInfo: {},
+            checkAll: true,
+            checkedCities: [],
+            isIndeterminate: true,
+            collapse: false,
+            selectTh: []
         }
     },
     props: {
@@ -121,12 +142,29 @@ export default {
                 pageSizes: [10, 20, 30, 40, 50]
             })
             return paginationStyle
+        },
+        defaultTh () {
+            const arr = []
+            this.tableLabel.map(item => {
+                arr.push(item.label)
+            })
+            return arr
         }
     },
     watch: {
         pagination: {
             handler (val) {
                 this.paginationInfo = val
+            },
+            immediate: true
+        },
+        tableLabel: {
+            handler (val) {
+                this.tableLabel.map(item => {
+                    if (item.choosed) {
+                        this.selectTh.push(item.label)
+                    }
+                })
             },
             immediate: true
         }
@@ -159,6 +197,15 @@ export default {
         },
         formatter (data) {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
+        },
+        handleCheckAllChange (val) {
+            this.selectTh = val ? this.defaultTh : []
+            this.isIndeterminate = false
+        },
+        handleCheckedCitiesChange (value) {
+            let checkedCount = value.length
+            this.checkAll = checkedCount === this.selectTh.length
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
         }
     },
     mounted () {
@@ -168,11 +215,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-table {
+    position: relative;
+}
 .el-pagination {
     margin: 20px auto;
     // float: right;
     // text-align: center;
-        text-align: center;
+    text-align: center;
 }
 /deep/ .el-pagination__editor.el-input {
     width: 50px !important;
@@ -200,5 +250,41 @@ export default {
 }
 .action {
     cursor: pointer;
+}
+.collapse {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    top: 2px;
+    z-index: 1;
+    cursor: pointer;
+}
+.collapse-content {
+    position: absolute;
+    width: 180px;
+    top: 35px;
+    right: 10px;
+    background: #ffffff;
+    z-index: 2;
+    padding: 10px 18px;
+    box-sizing: border-box;
+}
+.el-checkbox + .el-checkbox {
+    margin-left: 0;
+    float: left;
+    width: 100%;
+}
+/deep/ td {
+    padding: 12px 0;
+}
+/deep/ .is-group th {
+    text-align: center;
+}
+/deep/ .el-table__row td {
+    text-align: right;
+}
+/deep/ .el-table_1_column_1 {
+    text-align: center !important;
 }
 </style>

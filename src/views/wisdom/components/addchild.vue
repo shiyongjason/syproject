@@ -61,11 +61,14 @@ export default {
         }
     },
     mounted () {
-        this.addStatistics()
-        var that = this
-        window.addEventListener('resize', function () {
-            that.myChart.resize()
+        this.$nextTick(() => {
+            this.addStatistics()
         })
+
+        // var that = this
+        // window.addEventListener('resize', function () {
+        //     // that.myChart.resize()
+        // })
     },
     // beforeDestroy () {
     //     if (!this.chart) {

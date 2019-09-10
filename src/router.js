@@ -127,6 +127,78 @@ const routerMapping = [
                     component: './views/wisdom/platformTarget'
                 },
                 component: () => import('./views/wisdom/platformTarget')
+            },
+            {
+                path: 'manageoverview',
+                name: 'manageoverview',
+                meta: {
+                    title: '经营概览',
+                    tagName: '经营概览',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/manageoverview'
+                },
+                component: () => import('./views/wisdom/manageoverview')
+            },
+            {
+                path: 'platcompanyinfo',
+                name: 'platcompanyinfo',
+                meta: {
+                    title: '平台公司基本信息',
+                    tagName: '平台公司基本信息',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/platcompanyinfo'
+                },
+                component: () => import('./views/wisdom/platcompanyinfo')
+            },
+            {
+                path: 'branchTarget',
+                name: 'branchTarget',
+                meta: {
+                    title: '分部目标管理',
+                    tagName: '分部目标管理',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/branchTarget'
+                },
+                component: () => import('./views/wisdom/branchTarget')
+            },
+            {
+                path: 'platformSale',
+                name: 'platformSale',
+                meta: {
+                    title: '平台销售分析',
+                    tagName: '平台销售分析',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/platformSale'
+                },
+                component: () => import('./views/wisdom/platformSale')
+            },
+            {
+                path: 'branchSale',
+                name: 'branchSale',
+                meta: {
+                    title: '分部销售分析',
+                    tagName: '分部销售分析',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/branchSale'
+                },
+                component: () => import('./views/wisdom/branchSale')
+            },
+            {
+                path: 'categorySale',
+                name: 'categorySale',
+                meta: {
+                    title: '品类销售分析',
+                    tagName: '分部销售分析',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/categorySale'
+                },
+                component: () => import('./views/wisdom/categorySale')
             }
         ]
     },

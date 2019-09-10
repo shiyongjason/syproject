@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="collapse">
             <img
-                src="../../../assets/typeIcon.png"
+                src="../../../assets/images/typeIcon.png"
                 alt=""
                 class="collapse"
                 @click="collapse = !collapse"
