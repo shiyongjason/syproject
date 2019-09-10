@@ -1,5 +1,5 @@
 import {
-    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, IS_COLLAPSE, MENU_LIST
+    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, IS_COLLAPSE, MENU_LIST, IS_FIRST
 } from './const'
 
 export default {
@@ -20,5 +20,8 @@ export default {
     },
     [MENU_LIST] (state, v) {
         state.menuList = v
+    },
+    [IS_FIRST] (state, payload) {
+        state.isFirst = payload
     }
 }

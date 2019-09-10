@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "echarts": "^4.2.1",
-    "hosjoy-ui": "^1.0.12",
+    "hosjoy-ui": "^1.1.1",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
     "save": "^2.3.3",
