@@ -61,7 +61,7 @@ export default {
         return {
             rules: {
                 scale: [
-                    { required: true, message: '请输入尽调规模', trigger: 'change' }
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
                 ],
                 equityRatio: [
                     { required: true, message: '请输入股权比例', trigger: 'blur' },
