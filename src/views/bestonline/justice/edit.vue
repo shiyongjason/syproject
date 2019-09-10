@@ -88,7 +88,15 @@ export default {
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT,
+            /** key:activeName   value:必填项 */
+            active: {
+                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList[0].state', 'assessmentList[1].state', 'assessmentList[2].state', 'assessmentList[3].state', 'assessmentList[4].state'],
+                '2': ['copartnerInfoList[0].name', 'copartnerInfoList[0].tel', 'copartnerInfoList[0].sex', 'copartnerInfoList[0].marriage', 'copartnerInfoList[0].idNumber'],
+                '6': ['branchAgencyList[0].branch', 'relatedCompanyList[0].relatedCompany']
+            },
+            /** key:必填项   value:activeName */
+            activePlus: {}
         }
     },
     watch: {
@@ -184,7 +192,10 @@ export default {
             params.applyId = this.$route.query.applyId
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
-                this.$refs['form'].validate(async (validate) => {
+                this.$refs['form'].validate(async (validate, errors) => {
+                    let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
+                    this.activeName = this.activePlus[key]
+                    window.scrollTo(0, 0)// todo
                     if (validate) {
                         this.doSave(params, messageTip)
                     } else {
@@ -232,7 +243,14 @@ export default {
     },
     async mounted () {
         this.applyId = this.$route.query.applyId
-    // await this.findJusticeData({ applyId: this.applyId })
+        // await this.findJusticeData({ applyId: this.applyId })
+        for (const key in this.active) {
+            let all = this.active[key].reduce((res, item) => {
+                res[item] = key
+                return res
+            }, {})
+            this.activePlus = Object.assign({}, this.activePlus, all)
+        }
     }
 }
 </script>
