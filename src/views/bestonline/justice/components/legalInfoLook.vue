@@ -11,13 +11,16 @@
             <el-form-item label="动产：">
                 <p>{{justiceData.assetList[type].movableProperty}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-专利：">
+            <el-form-item label="无形资产：">
+                <p>{{justiceData.assetList[type].intangibleAssets||'-'}}</p>
+            </el-form-item>
+            <el-form-item label="专利：">
                 <p>{{justiceData.assetList[type].patent}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-商标：">
+            <el-form-item label="商标：">
                 <p>{{justiceData.assetList[type].brand}}</p>
             </el-form-item>
-            <el-form-item label="无形资产-其他：">
+            <el-form-item label="其他：">
                 <p>{{justiceData.assetList[type].other}}</p>
             </el-form-item>
             <el-form-item label="附件：">
