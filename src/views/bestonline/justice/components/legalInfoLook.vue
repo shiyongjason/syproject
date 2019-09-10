@@ -163,7 +163,7 @@
                     <p>{{justiceData.punishmentList[type].moneyInvolved||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="严重性：">
-                    <p>{{justiceData.punishmentList[type].ponderance?ponderanceOptions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
+                    <p>{{justiceData.punishmentList[type].ponderance>=0?newOpitions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
@@ -173,7 +173,7 @@
 <script>
 // 数据来源 0：实际控制人 1：实际控制人配偶 2：拟选合伙人（经营性担保）3：拟选合伙人（非经营性担保）4：尽调公司（经营性担保）5：尽调公司（非经营性担保）
 import { mapState } from 'vuex'
-import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
+import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS, CONTROLLER_MATE_LEGAL_RISKS_OPTIONS } from '../const'
 export default {
     name: 'legal_info',
     props: {
@@ -186,7 +186,8 @@ export default {
         return {
             debtPurposeOptions: DEBT_PURPOSE_OPTIONS,
             punishmentTypeOptions: PUNISHMENT_TYPE_OPTIONS,
-            ponderanceOptions: PONDERANCE_OPTIONS
+            ponderanceOptions: PONDERANCE_OPTIONS,
+            newOpitions: CONTROLLER_MATE_LEGAL_RISKS_OPTIONS
         }
     },
     watch: {
@@ -196,6 +197,12 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         }),
+        newPonderOpitons () {
+            const newarr = { ...this.newPonderOpitons }
+            const arr = newarr.splice(0, 1)
+            console.log(newarr)
+            return arr
+        },
         /* debtTotal () {
             const debtArr = this.justiceData.debtList.map(item => item.debt)
             const result = debtArr.reduce((itemA, itemB) => (itemA - 0) + (itemB - 0), 0)
