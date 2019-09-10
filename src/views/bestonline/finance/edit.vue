@@ -103,6 +103,7 @@ export default {
         onSureHandle (i) {
             this.form.dueFinanceBasic.applyId = this.$route.query.applyId
             this.form.dueFinanceBasic.profitRatio = this.form.dueFinanceYearOperatingCreateForms[0].profitRatio // 本年度净利率入库
+            this.form.dueFinanceBasic.profitRatioL = this.form.dueFinanceYearOperatingCreateForms[1].profitRatio // 上年度净利率入库
             const firstTime = this.form.dueFinanceBasic.id
             if (firstTime) {
                 this.form.dueFinanceBasic.updateUser = this.userInfo.employeeName

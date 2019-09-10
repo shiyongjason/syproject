@@ -211,11 +211,19 @@
                 <tr>
                     <td rowspan="2">财务尽调</td>
                     <td>资产负债率</td>
-                    <td>{{dueFinanceBasicVo.assetLiabilityRatio ? dueFinanceBasicVo.assetLiabilityRatio + '%' : '-'}}</td>
+                    <td>
+                        本年度{{dueFinanceBasicVo.assetLiabilityRatio ? dueFinanceBasicVo.assetLiabilityRatio + '%' : '-'}}
+                        <br>
+                        上年度{{dueFinanceBasicVo.assetLiabilityRatioL ? dueFinanceBasicVo.assetLiabilityRatioL + '%' : '-'}}
+                    </td>
                 </tr>
                 <tr>
-                    <td>净利率</td>
-                    <td>{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}</td>
+                    <td>净利率</td>12232
+                    <td>
+                        本年度{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}
+                        <br>
+                        上年度{{dueFinanceBasicVo.profitRatioL === null?'-':dueFinanceBasicVo.profitRatioL + '%'}}
+                    </td>
                 </tr>
                 <tr>
                     <td rowspan="5">财务尽调</td>
