@@ -13,7 +13,7 @@
                     </div>
                     <div class="form-cont-col">
                         <el-form-item label="时间：">
-                            {{form.assetsLiabilities.recordTime}}
+                            {{form.assetsLiabilities.recordTime | formatterDate}}
                         </el-form-item>
                     </div>
                     <div class="form-cont-col">
