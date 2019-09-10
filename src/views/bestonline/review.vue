@@ -32,13 +32,13 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <template v-if="scope.data.row.status == (0||3) && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu || isfawu)) || isfazhang)">
+                    <template v-if="(scope.data.row.status ==0||scope.data.row.status ==3) && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu || isfawu)) || isfazhang)">
                         <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
                     </template>
                     <template v-else>
                         <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
                     </template>
-                    <el-button class="orangeBtn" v-if="scope.data.row.status == (0||3) && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-if="(scope.data.row.status == 0||scope.data.row.status ==3) && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row)">提交审核</el-button>
                 </template>
             </basicTable>
         </div>
