@@ -32,7 +32,7 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <template v-if="scope.data.row.status == (0||3) && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)">
+                    <template v-if="scope.data.row.status == (0||3) && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu || isfawu)) || isfazhang)">
                         <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
                     </template>
                     <template v-else>
@@ -70,7 +70,8 @@ export default {
             submitbtn: false,
             // 是否是总部的角色
             iszongbu: true,
-            isshow: false,
+            isfawu: false,
+            isfazhang: false,
             params: {
                 status: '',
                 companyName: '',
@@ -125,11 +126,11 @@ export default {
             }
             // 总部法务
             if (deptType === 0 && role.indexOf('JDgroup-LegalAffairs') !== -1) {
-                this.isshow = true
+                this.isfawu = true
             }
             // 总部发展
             if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
-                this.isshow = true
+                this.isfazhang = true
             }
             // 分部发展
             if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
