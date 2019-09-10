@@ -30,12 +30,18 @@
                             <HOrganization v-if="activeName=='six'" :roleType='fiveType' />
                         </el-tab-pane>
 
+                    </template>
+
                         <el-tab-pane label="附件上传" name="seven">
                             <HAccessory v-if="activeName=='seven'" :roleType='sixType' />
                         </el-tab-pane>
+
+                    <template v-if="Cooperation">
+
                         <el-tab-pane label="尽调评估及KPI" name="eight">
                             <HEvaluation v-if="activeName=='eight'" />
                         </el-tab-pane>
+
                     </template>
                 </el-tabs>
             </div>
@@ -63,7 +69,7 @@ export default {
             tabPosition: 'left',
             activeName: 'one',
             applyId: '',
-            Cooperation: true,
+            Cooperation: false,
             oneType: false,
             twoType: false,
             threeType: false,
@@ -97,7 +103,7 @@ export default {
     mounted () {
         this.applyId = this.$route.query.applyId
         this.target = this.$route.query.target
-        // this.getCooperativetarget()
+        this.getCooperativetarget()
         this.getRoletype()
     },
     methods: {
@@ -108,10 +114,8 @@ export default {
             console.log(this.operationNode)
             if (data.data.operationNode === 1) {
                 this.Cooperation = true
-                this.oneType = false
             } else {
                 this.Cooperation = false
-                this.oneType = true
             }
         },
         getRoletype () {

@@ -123,6 +123,7 @@ export default {
                 type: 'success',
                 message: '暂存成功!'
             })
+            this.$router.go(-1)
         },
         async onSubmit (firstTime) {
             this.$refs['form'].validate(async (valid) => {
@@ -131,6 +132,7 @@ export default {
                     await saveFinance({ ...this.form, type: 1 })
                     await this.findFinanceData({ applyId: this.$route.query.applyId })
                     this.$message.success('提交成功')
+                    this.$router.go(-1)
                 }
             })
         }
