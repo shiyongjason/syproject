@@ -1,6 +1,9 @@
+import { deepCopy } from '@/utils/index'
+
 // 根据后端返回的URI，生成router
 export const makeMenus = (Route, Data) => {
-    return Route.filter(value => {
+    const tempRoute = deepCopy(Route)
+    return tempRoute.filter(value => {
         if (value.path === '') {
             return true
         }
