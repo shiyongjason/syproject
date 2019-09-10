@@ -23,7 +23,7 @@
         </el-collapse>
         <div class="flex-wrap-row" v-if="roleType">
             <el-col :span="2" :offset="8">
-                <el-button type="primary" @click="onSvaeattach" v-if="hosAuthCode(commitAuthCode)">提交</el-button>
+                <el-button type="primary" @click="onSvaeattach" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>

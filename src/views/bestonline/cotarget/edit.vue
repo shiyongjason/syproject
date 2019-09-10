@@ -61,7 +61,7 @@ export default {
         return {
             rules: {
                 scale: [
-                    { required: true, message: '请输入尽调规模', trigger: 'change' }
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
                 ],
                 equityRatio: [
                     { required: true, message: '请输入股权比例', trigger: 'blur' },
@@ -100,7 +100,7 @@ export default {
             } else {
                 e.target.value = plusOrMinus(e.target.value.toString())
             }
-            this.form[value] = (e.target.value)
+            this.$set(this.form, value, e.target.value)
         },
         async _saveOrUpdate () {
             this.form.applyId = this.$route.query.applyId
