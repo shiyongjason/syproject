@@ -205,7 +205,6 @@ export default {
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ],
                 selfStoresNum: [
-                    { message: '', trigger: 'blur' },
                     { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
                 ]
             },
