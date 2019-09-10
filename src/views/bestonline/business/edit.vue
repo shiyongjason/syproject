@@ -112,7 +112,7 @@ export default {
     },
     data () {
         return {
-            activeName: '0',
+            activeName: '1',
             options: YES_NO_STATUS_COPY,
             rules: {
                 wholesaleShare: [

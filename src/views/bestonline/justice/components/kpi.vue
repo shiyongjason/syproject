@@ -29,7 +29,7 @@
                         </el-form-item>
                     </td>
                     <td :rowspan="justiceData.assessmentList.length" v-if="index === 0">
-                        <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
+                        <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark" maxlength="230">
                         </el-input>
                     </td>
                 </tr>

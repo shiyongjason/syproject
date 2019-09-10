@@ -31,7 +31,7 @@
                         </el-form-item>
                     </td>
                     <td :rowspan="form.assessmentList.length" v-if="index == 0">
-                        <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark">
+                        <el-input class="textHeight" type="textarea" row='30' placeholder="请输入内容" v-model="item.remark" maxlength="230" >
                         </el-input>
                     </td>
                 </tr>

@@ -63,7 +63,7 @@
             </tbody>
         </table>
         <el-form-item label="前10个月销售是否持续下滑：" label-width="200px" class="mt20">
-            {{form.firstTenMonthsDown==1?'下滑':form.firstTenMonthsDown==0?'正常':""}}
+            {{form.firstTenMonthsDown==1?'否':form.firstTenMonthsDown==0?'是':""}}
         </el-form-item>
     </el-collapse-item>
 </template>
