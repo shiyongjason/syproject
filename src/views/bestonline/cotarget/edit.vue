@@ -100,7 +100,7 @@ export default {
             } else {
                 e.target.value = plusOrMinus(e.target.value.toString())
             }
-            this.form[value] = (e.target.value)
+            this.$set(this.form, value, e.target.value)
         },
         async _saveOrUpdate () {
             this.form.applyId = this.$route.query.applyId
