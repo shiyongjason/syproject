@@ -7,7 +7,7 @@
                     新增一项否决项
                 </el-button>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isShowIndex='true'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="isAction" :isShowIndex='true'>
                 <template slot="indicatorType" slot-scope="scope">
                     <span>{{scope.data.row.indicatorType+scope.data.row.itemName}}</span>
                 </template>
@@ -57,7 +57,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getoneticketveto, getDueconfig, addoneticketveto, deleteoneticketveto, updateoneticketveto } from './api/index.js'
 import { mapState } from 'vuex'
 import { decimals } from '../../utils/rules'
-import { AUTH_BESTONLINE_PIECE_VOTE_ADD, AUTH_BESTONLINE_PIECE_VOTE_EDIT, AUTH_BESTONLINE_PIECE_VOTE_DEL } from '@/utils/auth_const'
+import { AUTH_BESTONLINE_PIECE_VOTE_ADD, AUTH_BESTONLINE_PIECE_VOTE_EDIT, AUTH_BESTONLINE_PIECE_VOTE_DEL, AUTH_BESTONLINE_PIECE_VOTE_OPERATE } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -146,6 +146,9 @@ export default {
         HAutocomplete
     },
     computed: {
+        isAction () {
+            return this.hosAuthCheck(AUTH_BESTONLINE_PIECE_VOTE_OPERATE)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })

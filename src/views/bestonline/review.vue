@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="true" :actionMinWidth="160" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :isAction="isAction" :actionMinWidth="160" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
                 <template slot="status" slot-scope="scope">
                     <span v-if="scope.data.row.status == 0">未提交</span>
                     <span class="isOrangeColor" v-if="scope.data.row.status == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
@@ -61,7 +61,7 @@
 import { getDuemain, postDuemain, getFlow } from './api/index.js'
 import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
-import { AUTH_BESTONLINE_REVIEW_EDIT, AUTH_BESTONLINE_REVIEW_SHOW, AUTH_BESTONLINE_REVIEW_COMMIT } from '@/utils/auth_const'
+import { AUTH_BESTONLINE_REVIEW_EDIT, AUTH_BESTONLINE_REVIEW_SHOW, AUTH_BESTONLINE_REVIEW_COMMIT, AUTH_BESTONLINE_REVIEW_OPERATE } from '@/utils/auth_const'
 export default {
     name: 'reviewform',
     data () {
@@ -107,9 +107,11 @@ export default {
     mounted () {
         this.getDuemain()
         this.Permission()
-        console.log(this.userInfo)
     },
     computed: {
+        isAction () {
+            return this.hosAuthCheck(AUTH_BESTONLINE_REVIEW_OPERATE)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })

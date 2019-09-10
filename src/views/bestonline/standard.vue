@@ -22,7 +22,7 @@
                             <th width="180" class="is-leaf">平台等级</th>
                             <th width="180" class="is-leaf">辅导期</th>
                             <th width="180" class="is-leaf">注资方式</th>
-                            <th width="200" class="is-leaf">操作</th>
+                            <th width="200" class="is-leaf" v-if="isAction">操作</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,7 +38,7 @@
                                     <td>{{titem.platformLevel}}</td>
                                     <td>{{titem.coachPeriod}}</td>
                                     <td>{{titem.capitalInjectionWay}}</td>
-                                    <td :rowspan="item.total" v-if="titem.sindex ==0 ">
+                                    <td :rowspan="item.total" v-if="titem.sindex ==0 && isAction">
                                         <el-button class="orangeBtn" @click="onEditStand(item)" v-if="hosAuthCheck(editAuthCode)">编辑</el-button>
                                         <el-button class="orangeBtn" @click="ondeleteStandard(item)" v-if="hosAuthCheck(delAuthCode)">删除</el-button>
                                     </td>
@@ -127,7 +127,7 @@ import { getStandardscore, getDueconfig, addStandardscore, updateStandardscore, 
 import { mapState } from 'vuex'
 import { deepCopy } from '@/utils/index'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
-import { AUTH_BESTONLINE_STANDARD_ADD, AUTH_BESTONLINE_STANDARD_EDIT, AUTH_BESTONLINE_STANDARD_DEL } from '@/utils/auth_const'
+import { AUTH_BESTONLINE_STANDARD_ADD, AUTH_BESTONLINE_STANDARD_EDIT, AUTH_BESTONLINE_STANDARD_DEL, AUTH_BESTONLINE_STANDARD_OPERATE } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -248,6 +248,9 @@ export default {
         HAutocomplete
     },
     computed: {
+        isAction () {
+            return this.hosAuthCheck(AUTH_BESTONLINE_STANDARD_OPERATE)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })
