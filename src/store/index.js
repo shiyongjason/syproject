@@ -13,6 +13,7 @@ const store = new Vuex.Store({
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
         'isSaving': false,
+        'isFirst': true,
         'menuList': [],
         'isCollapse': false
 
@@ -21,6 +22,7 @@ const store = new Vuex.Store({
     actions: {
         resetVuex (context) {
             this.state.tagsInfo = []
+            this.state.isFirst = true
         },
         async findMenuList ({ commit }) {
             const { data } = await findMenuList()
