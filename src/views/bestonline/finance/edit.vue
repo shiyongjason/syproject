@@ -56,6 +56,7 @@ import Solvency from './components/solvency.vue'
 import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 import { AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT, AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT } from '@/utils/auth_const'
+import { kpiValidProps, profitabilityValidProps, solvencyValidProps, operationAbilityValidProps, capitalRiskAssessmentValidProps, taxComplianceValidProps, balanceSheetValidProps } from './const.js'
 export default {
     components: {
         BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
@@ -126,7 +127,8 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (firstTime) {
-            this.$refs['form'].validate(async (valid) => {
+            this.$refs['form'].validate(async (valid, errors) => {
+                this.findValidFailIndex(errors)
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
                     await saveFinance({ ...this.form, type: 1 })
@@ -135,6 +137,51 @@ export default {
                     this.$router.go(-1)
                 }
             })
+        },
+        findValidFailIndex (errors) {
+            const expandKpi = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandController = Object.keys(errors).filter(item => {
+                const index = item.indexOf('].') + 2
+                return profitabilityValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandOrganization = Object.keys(errors).filter(item => {
+                const index = item.indexOf('].') + 2
+                return solvencyValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandMotivationRisk = Object.keys(errors).filter(item => {
+                const index = item.indexOf('].') + 2
+                return operationAbilityValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandCapitalRiskAssessment = Object.keys(errors).filter(item => {
+                const index = item.indexOf('.') + 1
+                return capitalRiskAssessmentValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandTaxCompliance = Object.keys(errors).filter(item => {
+                const index = item.indexOf('].') + 2
+                return taxComplianceValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandBalanceSheet = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return balanceSheetValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            if (expandKpi) {
+                this.activeName = '1'
+            } else if (expandController) {
+                this.activeName = '2'
+            } else if (expandOrganization) {
+                this.activeName = '4'
+            } else if (expandMotivationRisk) {
+                this.activeName = '5'
+            } else if (expandCapitalRiskAssessment) {
+                this.activeName = '6'
+            } else if (expandTaxCompliance) {
+                this.activeName = '7'
+            } else if (expandBalanceSheet) {
+                this.activeName = '10'
+            }
         }
     }
 }
