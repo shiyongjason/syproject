@@ -65,7 +65,7 @@
                             <el-checkbox label=3>淘汰</el-checkbox>
                         </el-checkbox-group>
                     </div>
-                    <el-button type="primary" class="ml20" @click="getPaltCategory()">
+                    <el-button type="primary" class="ml20" @click="getPlatCategory()">
                         查询
                     </el-button>
                 </div>
@@ -73,7 +73,15 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+                <basicTable :tableData="tableData"
+                    :tableLabel="tableLabel"
+                    :pagination="paginationInfo"
+                    @onCurrentChange="onCurrentChange"
+                    @onSizeChange="onSizeChange"
+                    :isMultiple="false"
+                    :isAction="false"
+                    :actionMinWidth=250
+                    @field-change="onFieldChange">
                     <template slot-scope="scope" slot="grossProfitRate">
                         {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
                     </template>
@@ -85,7 +93,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList } from './api/index.js'
+import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE } from './store/const'
 export default {
@@ -98,9 +106,9 @@ export default {
                 { label: 'mis编码', prop: 'misCode', choosed: true },
                 { label: '平台公司', prop: 'companyShortName', choosed: true },
                 { label: '上线状态', prop: 'onLineStatus', choosed: true },
-                { label: '业务类型', prop: 'businessType', choosed: true },
-                { label: '品类', prop: 'systemName', choosed: true },
-                { label: '品牌', prop: 'brandName', choosed: true },
+                { label: '业务类型', prop: 'businessType', choosed: true, queryParams: { businessTypeStatus: 1 } },
+                { label: '品类', prop: 'systemName', choosed: true, queryParams: { systemStatus: 1 } },
+                { label: '品牌', prop: 'brandName', choosed: true, queryParams: { brandStatus: 1 } },
                 { label: '销售收入（无税）', prop: 'saleGross', choosed: true },
                 { label: '销售占比', prop: 'saleRatio', choosed: true },
                 { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true },
@@ -108,7 +116,6 @@ export default {
                 { label: '成本', prop: 'orderCost', choosed: true },
                 { label: '毛利', prop: 'grossProfit', choosed: true },
                 { label: '毛利率', prop: 'grossProfitRate', choosed: true }
-
             ],
             pickerOptionsStart: {
                 disabledDate: (time) => {
@@ -176,10 +183,12 @@ export default {
         }
     },
     methods: {
-        async getPaltCategory () {
+        async getPlatCategory () {
             this.queryParams.onLineStatus = this.onLineStatus.join(',')
             const { data } = await getPaltCategory(this.queryParams)
+            const { data: sumData } = await findPlatCategorySum(this.queryParams)
             this.tableData = data.records
+            this.tableData.splice(0, 0, sumData)
             this.paginationInfo = {
                 total: data.total,
                 pageSize: data.size,
@@ -199,11 +208,11 @@ export default {
         },
         onCurrentChange (val) {
             this.queryParams.current = val.pageNumber
-            this.getPaltCategory()
+            this.getPlatCategory()
         },
         onSizeChange (val) {
             this.queryParams.size = val
-            this.getPaltCategory()
+            this.getPlatCategory()
         },
         async getPaltbarnd () {
             const { data } = await getPaltbarnd()
@@ -234,12 +243,29 @@ export default {
         },
         backPlatcode (value) {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
+        },
+        onFieldChange (selectedTh) {
+            const queryFields = this.tableLabel.filter(item => item.queryParams)
+            let isFind = false
+            queryFields.forEach(field => {
+                const hasField = selectedTh.filter(item => item === field.label).length > 0
+                for (let key in field.queryParams) {
+                    if (!hasField) {
+                        isFind = !isFind ? this.queryParams[key] != field.queryParams[key] : isFind
+                        this.queryParams[key] = field.queryParams[key]
+                    } else {
+                        isFind = !isFind ? (this.queryParams[key] && this.queryParams[key] != 0) : isFind
+                        this.queryParams[key] = 0
+                    }
+                }
+            })
+            isFind && this.getPlatCategory()
         }
     },
     async mounted () {
         // 如果 当前人大区 -1  总部 0  分部 1 organizationType
         // console.log(this.userInfo.organizationType)
-        this.getPaltCategory()
+        this.getPlatCategory()
         this.findDepList()
         this.getPaltbarnd()
         this.getPaltSys()

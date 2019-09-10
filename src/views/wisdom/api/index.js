@@ -167,6 +167,8 @@ export const updateBasicinfo = (params) => {
 export const getPaltCategory = (params) => {
     return axios.get('http://192.168.27.20:33400' + '/platform/category-analy', { params })
 }
+// 平台品类销售分析
+export const findPlatCategorySum = (params) => axios.get('http://192.168.27.20:33400' + '/platform/category-analy/total', { params })
 // 平台品牌列表查询
 export const getPaltbarnd = (params) => {
     return axios.get('http://192.168.27.20:33400' + '/platform/category-analy/brand', { params })

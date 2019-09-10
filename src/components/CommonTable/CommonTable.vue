@@ -201,11 +201,13 @@ export default {
         handleCheckAllChange (val) {
             this.selectTh = val ? this.defaultTh : []
             this.isIndeterminate = false
+            this.$emit('field-change', this.selectTh)
         },
         handleCheckedCitiesChange (value) {
             let checkedCount = value.length
             this.checkAll = checkedCount === this.defaultTh.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
+            this.$emit('field-change', this.selectTh)
         }
     },
     mounted () {
