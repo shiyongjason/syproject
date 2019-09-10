@@ -161,7 +161,6 @@
                             </div>
                         </div>
                         <el-row style="position: relative;z-index: 1">
-                            {{uploadImgServer}}
                             <el-form-item>
                                 <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName"
                                             :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;"></RichEditor>
