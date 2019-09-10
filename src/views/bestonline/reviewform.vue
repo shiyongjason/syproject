@@ -149,6 +149,7 @@ export default {
                 // 总部发展
                 if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
                     this.getCooperativetarget()
+                    this.oneType = true
                     this.sixType = true
                 }
                 // 分部发展
