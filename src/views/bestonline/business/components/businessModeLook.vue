@@ -6,7 +6,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                    {{form.mainBusinessFormatOneId?mainCommercialOptions[form.mainBusinessFormatOneId].value:''}}
+                    {{form.mainBusinessFormatOneId>=0?mainCommercialOptions[form.mainBusinessFormatOneId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -18,7 +18,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态2：">
-                    {{form.mainBusinessFormatTwoId?mainCommercialOptions[form.mainBusinessFormatTwoId].value:''}}
+                    {{form.mainBusinessFormatTwoId>=0?mainCommercialOptions[form.mainBusinessFormatTwoId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -30,7 +30,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态3：">
-                    {{form.mainBusinessFormatThreeId?mainCommercialOptions[form.mainBusinessFormatThreeId].value:''}}
+                    {{form.mainBusinessFormatThreeId>=0?mainCommercialOptions[form.mainBusinessFormatThreeId].value:''}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
