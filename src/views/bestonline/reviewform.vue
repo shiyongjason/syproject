@@ -37,11 +37,9 @@
                         </el-tab-pane>
 
                     <template v-if="Cooperation">
-
                         <el-tab-pane label="尽调评估及KPI" name="eight">
                             <HEvaluation v-if="activeName=='eight'" />
                         </el-tab-pane>
-
                     </template>
                 </el-tabs>
             </div>
@@ -100,19 +98,17 @@ export default {
             return this.$store.state.dueDiligence.companyName
         }
     },
-    mounted () {
+    async mounted () {
         this.applyId = this.$route.query.applyId
         this.target = this.$route.query.target
-        this.getCooperativetarget()
+        await this.getCooperativetarget()
         this.getRoletype()
     },
     methods: {
         async getCooperativetarget () {
-            console.log(this.userInfo)
             const { data } = await getCooperativetarget(this.$route.query.applyId)
             this.operationNode = data.data.operationNode
-            console.log(this.operationNode)
-            if (data.data.operationNode === 1) {
+            if (data.data.operationNode == 1) {
                 this.Cooperation = true
             } else {
                 this.Cooperation = false
@@ -148,8 +144,11 @@ export default {
                 }
                 // 总部发展
                 if (deptType === 0 && role.indexOf('JDgroup-ChiefBD') !== -1) {
-                    this.getCooperativetarget()
-                    this.oneType = true
+                    if (this.operationNode === 1) {
+                        this.oneType = false
+                    } else {
+                        this.oneType = true
+                    }
                     this.sixType = true
                 }
                 // 分部发展

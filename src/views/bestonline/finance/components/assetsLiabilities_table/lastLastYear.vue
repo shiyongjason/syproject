@@ -55,7 +55,7 @@
         <table class="item-wrapper">
             <thead>
                 <tr>
-                    <td>负债和所有者权益（或股东权益）</td>
+                    <td style="width:210px">负债和所有者权益（或股东权益）</td>
                     <td>期末余额</td>
                     <td>年初余额</td>
                 </tr>
@@ -162,6 +162,7 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
+    min-width: 100px
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
@@ -173,5 +174,10 @@ table {
         padding-left: 10px;
         padding-bottom: 5px;
     }
+}
+</style>
+<style  scoped>
+.yearTable >>> .el-input{
+    width: 100%
 }
 </style>
