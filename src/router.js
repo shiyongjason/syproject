@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
-
+import store from '@/store/index'
+import { makeMenus, handleMenuResources } from '@/utils/auth'
 Vue.use(Router)
 
 const routerMapping = [
@@ -306,6 +307,84 @@ const routerMapping = [
                 component: () => import('./views/hmall/walletPay/walletPay.vue')
             }
         ]
+    },
+    {
+        path: '/serviceManagement',
+        meta: {
+            title: '服务管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'customerManagement',
+                name: 'customerManagement',
+                meta: {
+                    title: '客户管理',
+                    tagName: '客户管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
+            },
+            {
+                path: 'orderCenter',
+                name: 'orderCenter',
+                meta: {
+                    title: '订单中心',
+                    tagName: '订单中心',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/order.vue')
+            },
+            {
+                path: 'reservation',
+                name: 'reservation',
+                meta: {
+                    title: '预约信息',
+                    tagName: '预约信息',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/reservation/index.vue')
+            },
+            // 一期不做
+            // {
+            //     path: 'customerRecord',
+            //     name: 'customerRecord',
+            //     meta: {
+            //         title: '客户档案',
+            //         tagName: '客户档案',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/serviceManagement/customerRecord/index.vue')
+            // },
+            {
+                path: 'customerReport',
+                name: 'customerReport',
+                meta: {
+                    title: '客户报告',
+                    tagName: '客户报告',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerReport/index.vue')
+            },
+            {
+                path: 'customerReportDetail',
+                name: 'customerReportDetail',
+                meta: {
+                    title: '报告详情',
+                    tagName: '报告详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerReport/detail.vue')
+            }
+        ]
     }
 ]
 
@@ -326,29 +405,21 @@ const router = new Router({
         }
     ]
 })
-// // 这边是动态添加路由  未来还可以和渲染菜单一起优化
-function makeMenus (Route, Data) {
-    return Route.filter(value => {
-        if (value.path === '') {
-            return true
-        }
-        const authArr = Data.filter(item => item.authUri === value.path)
-        if (value.children && authArr.length > 0) {
-            value.children = makeMenus(value.children, authArr[0].childAuthList)
-        }
-        return authArr.length > 0
-    })
-}
 
 async function getMenu (to, next) {
     const { data } = await findMenuList()
-    const menu = makeMenus(routerMapping, data)
+    sessionStorage.setItem('authResourceKeys', data.resourceKeys)
+    let resourceList = []
+    handleMenuResources(data.employeeAuthDetailsList, resourceList)
+    const menu = makeMenus(routerMapping, resourceList)
+    sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
 }
 
-let isFirst = true
+// let isFirst = true
 router.beforeEach(async (to, from, next) => {
+    let isFirst = store.state.isFirst
     const isLogin = to.name === 'login'
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非/login下需要验证
@@ -360,7 +431,8 @@ router.beforeEach(async (to, from, next) => {
             })
         } else {
             if (isFirst) {
-                isFirst = false
+                // isFirst = false
+                store.commit('IS_FIRST', false)
                 await getMenu(to, next)
             }
         }
