@@ -32,7 +32,7 @@
                     <span class="isRedColor" v-if="scope.data.row.status == 3" @click="showProcess(scope.data.row.applyId)">审批驳回</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <template v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale >= 3000) === iszongbu || isshow)">
+                    <template v-if="scope.data.row.status == 0 && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu)) || isshow)">
                         <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
                     </template>
                     <template v-else>
