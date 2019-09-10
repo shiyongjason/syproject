@@ -193,7 +193,7 @@ const routerMapping = [
                 name: 'categorySale',
                 meta: {
                     title: '品类销售分析',
-                    tagName: '分部销售分析',
+                    tagName: '品类销售分析',
                     isMenu: true,
                     icon: '',
                     component: './views/wisdom/categorySale'
