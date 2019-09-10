@@ -82,9 +82,9 @@
                     <td>
                         <el-form-item label-width="0">
                             <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="assetListT" placeholder="自动录入" disabled>
-                                <template slot="prefix">
+                                <!-- <template slot="prefix">
                                     <span class="red-word">*</span>
-                                </template>
+                                </template> -->
                                 <template slot="suffix">%</template>
                             </el-input>
                         </el-form-item>
@@ -92,9 +92,9 @@
                     <td>
                         <el-form-item label-width="0">
                             <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="assetListL" placeholder="自动录入" disabled>
-                                <template slot="prefix">
+                                <!-- <template slot="prefix">
                                     <span class="red-word">*</span>
-                                </template>
+                                </template> -->
                                 <template slot="suffix">%</template>
                             </el-input>
                         </el-form-item>
