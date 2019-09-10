@@ -12,13 +12,16 @@
                 <el-form-item label="动产：">
                     <el-input type="textarea" v-model="item.movableProperty" placeholder="请输入动产" rows="3"></el-input>
                 </el-form-item>
-                <el-form-item label="无形资产-专利：">
+                <el-form-item label="无形资产：">
+                    <el-input type="textarea" v-model="item.intangibleAssets" placeholder="请输入无形资产" rows="3"></el-input>
+                </el-form-item>
+                <el-form-item label="专利：">
                     <el-input type="textarea" v-model="item.patent" placeholder="专利" rows="3"></el-input>
                 </el-form-item>
-                <el-form-item label="无形资产-商标：">
+                <el-form-item label="商标：">
                     <el-input type="textarea" v-model="item.brand" placeholder="商标" rows="3"></el-input>
                 </el-form-item>
-                <el-form-item label="无形资产-其他：">
+                <el-form-item label="其他：">
                     <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3"></el-input>
                 </el-form-item>
             </el-form>
@@ -138,7 +141,7 @@
                 </el-form-item>
             </el-form>
             <div v-if="type ==2 || type === 3">
-                <p class="legallnfoTitle">非经营性担保{{type}}</p>
+                <p class="legallnfoTitle">非经营性担保</p>
                 <div v-for="(item, index) in nonOperationalAssureList" :key="'assureList'+item.type+index" class="flex-wrap-col info-wrap">
                     <template>
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 2 ? 3 : 5)"></i>
