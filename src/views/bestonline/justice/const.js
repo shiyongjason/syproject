@@ -48,6 +48,7 @@ export const INVESTMENT_TYPE_OPTIONS = [
 ]
 // 诉讼、仲裁及行政处罚事件类型可选项
 export const PUNISHMENT_TYPE_OPTIONS = [
+    { value: '', label: '请选择' },
     { value: 0, label: '诉讼、仲裁事件' },
     { value: 1, label: '被执行案件' },
     { value: 2, label: '行政处罚' },
@@ -55,6 +56,7 @@ export const PUNISHMENT_TYPE_OPTIONS = [
 ]
 // 诉讼、仲裁及行政处罚事件严重性可选项
 export const PONDERANCE_OPTIONS = [
+    { value: '', label: '请选择' },
     { value: 0, label: '高' },
     { value: 1, label: '中' },
     { value: 2, label: '低' }
