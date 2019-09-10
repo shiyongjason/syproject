@@ -14,19 +14,13 @@
                         <p>{{item.tel}}</p>
                     </el-form-item>
                     <el-form-item label="性别：" label-width="120px">
-                        <p v-if="!item.sex&&item.sex!==0"></p>
-                        <p v-else>{{item.sex==0?'男':'女'}}</p>
+                        <p>{{item.sex==0?'男':item.sex==1?'女':''}}</p>
                     </el-form-item>
                     <el-form-item label="婚姻：" label-width="120px">
-                        <template v-if="!item.marriage&&item.marriage!==0">
-                            <p ></p>
-                        </template>
-                        <template v-else>
-                            <p v-if="item.marriage == 0">已婚</p>
-                            <p v-if="item.marriage == 1">未婚</p>
-                            <p v-if="item.marriage == 2">离异</p>
-                            <p v-if="item.marriage == 3">丧偶</p>
-                        </template>
+                        <p v-if="item.marriage == 0">已婚</p>
+                        <p v-if="item.marriage == 1">未婚</p>
+                        <p v-if="item.marriage == 2">离异</p>
+                        <p v-if="item.marriage == 3">丧偶</p>
                     </el-form-item>
                     <el-form-item label="身份证号：" label-width="120px">
                         <p>{{item.idNumber}}</p>
@@ -38,8 +32,7 @@
                         <p>{{item.shareholdingRatio}}</p>
                     </el-form-item>
                     <el-form-item label="是否在外兼职：" label-width="120px">
-                        <p v-if="!item.partTimeJob&&item.partTimeJob!==0"></p>
-                        <p v-else>{{item.partTimeJob==0?'是':item.partTimeJob=1?'否':''}}</p>
+                        <p>{{item.partTimeJob==0?'是':item.partTimeJob=1?'否':''}}</p>
                     </el-form-item>
                     <el-form-item label="行业身份：" label-width="120px">
                         <p>{{item.industryStatus}}</p>
