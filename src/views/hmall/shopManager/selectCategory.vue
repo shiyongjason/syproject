@@ -168,17 +168,17 @@
                             <el-form-item v-if="isStatus === 'details' && causeFailure" label="驳回原因">
                                 {{causeFailure}}
                             </el-form-item>
-                            <div :span="13" v-if="isStatus === 'add' || isStatus === 'back'|| isReview === 'yes'">
-                                <el-form-item style="text-align: center">
-                                    <el-button @click="cancel">取消</el-button>
-                                    <el-button type="primary" @click="save('form')" :disabled="saveDisabled">保存</el-button>
-                                </el-form-item>
-                            </div>
                         </el-row>
                     </el-form>
                 </div>
                 <div class="page-body-cont btn-cont">
                     <el-form>
+                        <el-row v-if="isStatus === 'add' || isStatus === 'back'|| isReview === 'yes'">
+                            <el-form-item style="text-align: center">
+                                <el-button @click="cancel">取消</el-button>
+                                <el-button type="primary" @click="save('form')" :disabled="saveDisabled">保存</el-button>
+                            </el-form-item>
+                        </el-row>
                         <el-row v-if="isStatus === 'checked'">
                             <el-form-item style="text-align: center">
                                 <el-button  name="white-color"  @click="dialogRejectEdit = true">驳回商品</el-button>
@@ -873,5 +873,10 @@ export default {
     }
     .form-cont-col{
         margin-bottom: 20px;
+    }
+</style>
+<style>
+    .editor-wrap{
+        width: 1200px !important;
     }
 </style>
