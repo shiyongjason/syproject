@@ -99,3 +99,10 @@ export const Password = (rule, value, callback) => {
     }
     callback()
 }
+
+export const IsPositiveInteger2 = (rule, value, callback) => {
+    const Reg = /^[1-9]\d*$/
+    if (!Reg.test(value)) {
+        return callback(new Error(rule.message))
+    }
+}
