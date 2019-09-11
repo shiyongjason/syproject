@@ -177,12 +177,6 @@ export default {
                 isProvideContract: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
-                purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' }
-                ],
-                proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' }
-                ],
                 health: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
