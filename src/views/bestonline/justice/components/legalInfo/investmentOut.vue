@@ -22,6 +22,7 @@
                         v-model="item.investmentAmount"
                         placeholder="请输入投资金额"
                         maxlength="25">
+                        <template slot="suffix">万</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="投资比例：">
@@ -45,6 +46,7 @@
                         v-model="item.investmentIncome"
                         placeholder="请输入投资收益"
                         maxlength="25">
+                        <template slot="suffix">万</template>
                     </el-input>
                 </el-form-item>
             </el-form>
