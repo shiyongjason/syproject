@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { baseUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
@@ -116,7 +116,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = baseUrl + 'ims/subsection-sale/export?'
+            let url = interfaceUrl + 'ims/subsection-sale/export?'
             for (let key in this.queryParams) {
                 if (key !== 'pageSize' && key !== 'pageNumber') {
                     url += (key + '=' + this.queryParams[key] + '&')

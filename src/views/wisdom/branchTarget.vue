@@ -47,7 +47,7 @@
 <script>
 import { findBrandTargetTable, findBranchListNew } from './api/index'
 import { mapState } from 'vuex'
-import { baseUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
 export default {
     name: 'branchTarget',
@@ -66,7 +66,7 @@ export default {
             file: [],
             paginationData: {},
             tableData: [],
-            baseUrl: baseUrl
+            baseUrl: interfaceUrl
         }
     },
     computed: {
@@ -74,7 +74,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = baseUrl + 'ims/subsectiontarget/export?'
+            let url = interfaceUrl + 'ims/subsectiontarget/export?'
             for (var key in this.queryParamsTemp) {
                 if (this.queryParamsTemp[key]) {
                     url += (key + '=' + this.queryParamsTemp[key] + '&')

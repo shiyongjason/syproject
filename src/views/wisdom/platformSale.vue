@@ -88,7 +88,7 @@
     </div>
 </template>
 <script>
-import { baseUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
 import platformSaleTable from './components/platformSaleTable.vue'
@@ -190,7 +190,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = baseUrl + 'ims/platSaleAnalyzeExport?'
+            let url = interfaceUrl + 'ims/platSaleAnalyzeExport?'
             for (let key in this.queryParams) {
                 if (key !== 'pageSize' && key !== 'pageNumber') {
                     url += (key + '=' + this.queryParams[key] + '&')

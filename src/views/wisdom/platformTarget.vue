@@ -156,7 +156,7 @@ export default {
             },
             tableData: [],
             paginationData: {},
-            baseUrl: interfaceUrl,
+            interfaceUrl: interfaceUrl,
             companyList: [],
             cityList: []
         }
