@@ -107,3 +107,19 @@ export const IsPositiveInteger2 = (rule, value, callback) => {
     }
     return callback()
 }
+// 两位小数的正实数
+export const IsFixedTwoNumber = (rule, value, callback) => {
+    var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+    if (value && !Reg.test(value)) {
+        return callback(new Error('可以输入有两位小数的正实数'))
+    }
+    return callback()
+}
+// 正整数
+export const IsPositiveNumber = (rule, value, callback) => {
+    var Reg = /^\+?[1-9][0-9]*$/
+    if (value && !Reg.test(value)) {
+        return callback(new Error('只能输入正整数'))
+    }
+    return callback()
+}
