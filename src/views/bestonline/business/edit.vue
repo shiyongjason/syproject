@@ -105,7 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
-import { IsPositiveInteger2, IsFixedTwoNumber } from '@/utils/rules'
+import { IsPositiveInteger2, IsFixedTwoNumber, Money } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
@@ -178,10 +178,12 @@ export default {
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
                 purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' }
+                    { required: true, message: '请输入采购金额', trigger: 'blur' },
+                    { required: true, validator: Money }
                 ],
                 proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' }
+                    { required: true, message: '请输入占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 health: [
                     { required: true, message: '请选择', trigger: 'blur' }
