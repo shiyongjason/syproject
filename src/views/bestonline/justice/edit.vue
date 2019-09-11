@@ -193,9 +193,11 @@ export default {
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate, errors) => {
-                    let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
-                    this.activeName = this.activePlus[key]
-                    window.scrollTo(0, 0)// todo
+                    if (errors) {
+                        let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
+                        this.activeName = this.activePlus[key]
+                        window.scrollTo(0, 0)// todo
+                    }
                     if (validate) {
                         this.doSave(params, messageTip)
                     } else {
