@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">上游-供应商结构</p>
         </template>
-        <div class="supplier" v-for="(item, index) in dueBusinessSupplierCreateFormList" :key=index>
+        <div class="supplier" v-for="(item, index) in businessSupplierList" :key=index>
             <i class="el-icon-circle-plus-outline pointer" v-if="index == 0" @click="onAddSupplier"></i>
             <i class="el-icon-remove-outline pointer" @click="onRemoveSupplier(index)" v-else></i>
             <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
