@@ -443,6 +443,7 @@ export default {
 .content150 {
     margin-left: 150px;
     width: 224px;
+    word-break: break-all;
 }
 .content200 {
     margin-left: 200px;

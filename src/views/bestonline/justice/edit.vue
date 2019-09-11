@@ -1,11 +1,12 @@
 <template>
     <div class="jd-manage">
+        <div id="top"></div>
         <p v-if="justiceData.affairs.updateTime">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
                 <KPI />
                 <CoPartner />
-                <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3">
+                <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3+''">
                     <template slot="title">
                         <p class="title-p">{{ title }}</p>
                     </template>
@@ -82,18 +83,21 @@ export default {
                 ],
                 'affairs.analysisDescription': [
                     { required: true, message: '分析描述不能为空', trigger: 'blur' }
-                ],
+                ]/* ,
                 'affairs.annualReport': [
                     { required: true, message: '工商年报不能为空', trigger: 'blur' }
-                ]
+                ],
+                'affairs.businessLicense': [
+                    { required: true, message: '营业执照不能为空', trigger: 'blur' }
+                ] */
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT,
             commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT,
             /** key:activeName   value:必填项 */
             active: {
-                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList[0].state', 'assessmentList[1].state', 'assessmentList[2].state', 'assessmentList[3].state', 'assessmentList[4].state'],
-                '2': ['copartnerInfoList[0].name', 'copartnerInfoList[0].tel', 'copartnerInfoList[0].sex', 'copartnerInfoList[0].marriage', 'copartnerInfoList[0].idNumber'],
-                '6': ['branchAgencyList[0].branch', 'relatedCompanyList[0].relatedCompany']
+                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList['],
+                '2': ['copartnerInfoList['],
+                '6': ['affairs.annualReport', 'affairs.businessLicense', 'affairs.articlesOfAssociation', 'affairs.pledgeOfStockRight', 'affairs.businessQualification', 'branchAgencyList[', 'relatedCompanyList[']
             },
             /** key:必填项   value:activeName */
             activePlus: {}
@@ -193,10 +197,14 @@ export default {
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate, errors) => {
-                    if (errors) {
+                    if (errors && Object.keys(errors).length > 0) {
                         let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
-                        this.activeName = this.activePlus[key]
-                        window.scrollTo(0, 0)// todo
+                        let temp = ''
+                        for (const k in this.activePlus) {
+                            if (key.indexOf(k) > -1) temp = k
+                        }
+                        this.activeName = this.activePlus[temp]
+                        document.getElementById('top').scrollIntoView()
                     }
                     if (validate) {
                         this.doSave(params, messageTip)
