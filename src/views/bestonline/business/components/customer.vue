@@ -63,7 +63,7 @@
                     </td>
                     <td>
                         <el-form-item label-width="0">
-                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" >
+                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25">
                                 <template slot="suffix">万</template>
                             </el-input>
                         </el-form-item>
@@ -85,6 +85,7 @@
 <script>
 import { mapState } from 'vuex'
 import { MAIN_CATEGORY_OPTIONS, SELECT_OPTIONS } from '../const'
+import { IsFixedTwoNumber, Money } from '@/utils/rules'
 export default {
     data () {
         return {
@@ -102,6 +103,23 @@ export default {
                 salesProportion: ''
             },
             rules: {
+                customerName: [
+                    { required: true, message: '请输入客户名称', trigger: 'blur' }
+                ],
+                categoryId: [
+                    { required: true, message: '请选择品类', trigger: 'change' }
+                ],
+                brandName: [
+                    { required: true, message: '请输入品牌', trigger: 'blur' }
+                ],
+                salesFee: [
+                    { required: true, message: '请输入销售金额', trigger: 'blur' },
+                    { validator: Money }
+                ],
+                salesProportion: [
+                    { required: true, message: '请输入销售占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ]
             }
         }
     },

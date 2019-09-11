@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">上游-供应商结构</p>
         </template>
-        <div class="supplier" v-for="(item, index) in dueBusinessSupplierCreateFormList" :key=index>
+        <div class="supplier" v-for="(item, index) in businessSupplierList" :key=index>
             <i class="el-icon-circle-plus-outline pointer" v-if="index == 0" @click="onAddSupplier"></i>
             <i class="el-icon-remove-outline pointer" @click="onRemoveSupplier(index)" v-else></i>
             <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
@@ -43,7 +43,7 @@
                     </el-form-item>
                 </div>
                 <div class="form-cont-col">
-                    <el-form-item label="合同规模：">
+                    <el-form-item label="合同规模：" :prop="`dueBusinessSupplierCreateFormList[${index}].contractScale`" :rules="rules.contractScale">
                         <el-input v-model="item.contractScale" placeholder="请输入合同规模" maxlength="25"><template slot="suffix">万</template></el-input>
                     </el-form-item>
                 </div>
@@ -84,6 +84,9 @@ export default {
                 ],
                 proportion: [
                     { required: true, message: '请输入占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                contractScale: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }

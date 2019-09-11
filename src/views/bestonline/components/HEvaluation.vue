@@ -218,7 +218,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>净利率</td>12232
+                    <td>净利率</td>
                     <td>
                         本年度{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}
                         <br>
@@ -226,7 +226,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td rowspan="5">财务尽调</td>
+                    <td rowspan="5">法务尽调</td>
                     <td>尽调公司法律风险</td>
                     <td>{{dueLegalAffairsVo.legalRisksOfCompany | judgeThreeLevel(2)}}</td>
                 </tr>
