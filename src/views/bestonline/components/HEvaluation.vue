@@ -218,7 +218,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>净利率</td>12232
+                    <td>净利率</td>
                     <td>
                         本年度{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}
                         <br>
