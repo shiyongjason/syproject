@@ -57,7 +57,7 @@
 <script>
 import { mapState } from 'vuex'
 import echarts from 'echarts'
-import { IsPositiveNumber } from '@/utils/rules'
+import { IsFixedTwoNumber } from '@/utils/rules'
 const weightMap = new Map([
     ['年龄', 0.2],
     ['健康', 0.3],
@@ -102,7 +102,7 @@ export default {
             rules: {
                 score: [
                     { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsPositiveNumber, trigger: 'blur' }
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }
