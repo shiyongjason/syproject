@@ -134,7 +134,7 @@
                             auto-upload
                         >
                             <el-button
-                                type="primary"
+                                type="info"
                                 class="ml20"
                             >
                                 批量导入
@@ -292,8 +292,7 @@ export default {
     // },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            menuList: state => state.menuList
+            userInfo: state => state.userInfo
         })
     },
     mounted () {

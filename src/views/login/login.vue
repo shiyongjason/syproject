@@ -38,7 +38,7 @@
 import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
 import { routerMapping } from '../../router'
@@ -69,11 +69,6 @@ export default {
             iframeWin: {}
         }
     },
-    computed: {
-        ...mapState({
-            menuList: state => state.menuList
-        })
-    },
     methods: {
         sendMessage (userData) {
             // 外部vue向iframe内部传数据
@@ -100,8 +95,8 @@ export default {
                     })
                     const { data: userData } = await getUserdata({ loginName: this.loginForm.username })
                     if (userData.code != 400) {
-                        sessionStorage.setItem('user_Data', JSON.stringify(userData))
-                        this.sendMessage(userData)
+                        sessionStorage.setItem('user_Data', JSON.stringify(userData.data))
+                        this.sendMessage(userData.data)
                     }
                     // await this.findMenuList()
                     await this.next()
