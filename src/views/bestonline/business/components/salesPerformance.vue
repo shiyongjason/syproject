@@ -38,11 +38,13 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                           {{lastYearAllSales}}
+                            {{lastYearAllSales}}
                         </template>
                         <template v-else>
-                            <el-input placeholder="" maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
-                            </el-input>
+                            <el-form-item label-width="0" :prop="`dueBusinessSaleCreateFormList[${index}].lastYearSales`" :rules="rules.lastYearSales">
+                                <el-input maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
+                                </el-input>
+                            </el-form-item>
                         </template>
                     </td>
                     <td>
@@ -51,7 +53,7 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                           {{lastTwoYearAllSales}}
+                            {{lastTwoYearAllSales}}
                         </template>
                         <template v-else>
                             <el-input placeholder="" maxlength="25" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
@@ -85,7 +87,12 @@ export default {
             firstTenMonthsDownData: DOWN_OPTIONS,
             currentYearAllSales: 0, // 今年销售总额
             lastYearAllSales: 0, // 去年销售总额
-            lastTwoYearAllSales: 0 // 前年销售总额
+            lastTwoYearAllSales: 0, // 前年销售总额
+            rules: {
+                lastYearSales: [
+                    { required: true, message: '请输入上年度销售业绩', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -167,6 +174,14 @@ export default {
 .salerTable {
     td {
         width: 12%;
+    }
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
     }
 }
 </style>

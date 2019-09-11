@@ -63,7 +63,8 @@ export function plusOrMinus (values) {
     } else {
         newValue = values.replace(/[^0-9.-]/g, '')
     }
-    return newValue
+    console.log(newValue)
+    return values == '' ? '' : newValue
 }
 
 /* 小数保留2位 */

@@ -72,15 +72,6 @@ export default {
                     analysisDescription: [
                         { required: true, message: '请输入分析描述', trigger: 'blur' }
                     ],
-                    shareholdersDebt: [
-                        { required: true, message: '请输入股东借款金额', trigger: 'blur' }
-                    ],
-                    companyBorrowsShareholders: [
-                        { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
-                    ],
-                    shareholdersBorrowsCompany: [
-                        { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' }
-                    ],
                     capitalRiskAssessment: [
                         { required: true, message: '请选择资金风险评估', trigger: 'change' }
                     ]

@@ -104,21 +104,15 @@ export default {
         },
         async _saveOrUpdate () {
             this.form.applyId = this.$route.query.applyId
-            this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
-                item.yearGrowthRate = item.yearGrowthRate - 0
-                item.netProfitRate = item.netProfitRate - 0
-                return item
-            })
+            this.form.yearRateTabelContents = this.form.yearRateTabelContents
             console.log(this.userInfo)
             if (this.form.id) {
-                // this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 this.form.updateUser = this.userInfo.employeeName
                 await putCooperativetarget(this.form)
                 this.$message.success('提交成功！')
                 this.$router.go(-1)
                 this.$emit('init')
             } else {
-                // this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 this.form.createUser = this.userInfo.employeeName
                 await addCooperativetarget(this.form)
                 this.$message.success('暂存成功！')
