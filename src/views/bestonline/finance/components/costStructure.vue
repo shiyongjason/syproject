@@ -5,14 +5,14 @@
         </template>
         <div class="form-cont-row">
             <div class="form-cont-col">
-                <el-form-item label="销售费用占比：">
+                <el-form-item label="销售费用占比：" prop="dueFinanceBasic.salesExpensesRatio" :rules="rules.salesExpensesRatio">
                     <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.salesExpensesRatio">
                         <template slot="suffix">%</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item label="管理费用占比：">
+                <el-form-item label="管理费用占比：" prop="dueFinanceBasic.managementExpensesRatio" :rules="rules.managementExpensesRatio">
                     <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.managementExpensesRatio">
                         <template slot="suffix">%</template>
                     </el-input>
@@ -55,6 +55,9 @@ export default {
             costRationalityOptions: COST_RATIONALITY_OPTIONS,
             rules: {
                 salesExpensesRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                managementExpensesRatio: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
