@@ -126,14 +126,14 @@ export default {
                     { required: true, message: '请填写年度纳税营业收入', trigger: 'blur' },
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
-                annualTaxableBusinessIncomeNORequired:[
+                annualTaxableBusinessIncomeNORequired: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 taxableIncomeRatio: [
                     { required: true, message: '请填写纳税收入占比', trigger: 'blur' },
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
-                taxableIncomeRatioNORequired:[
+                taxableIncomeRatioNORequired: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 taxBearingRate: [
