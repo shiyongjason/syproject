@@ -36,9 +36,11 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome">
-                            <template slot="suffix">万</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome" :rules="rules.annualTaxableBusinessIncomeNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome">
+                                <template slot="suffix">万</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -64,9 +66,11 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio">
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio" :rules="rules.taxableIncomeRatioNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio">
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -92,9 +96,11 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxBearingRate">
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].taxBearingRate" :rules="rules.taxBearingRateNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].taxBearingRate">
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -104,6 +110,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     computed: {
@@ -116,13 +123,25 @@ export default {
             debtDialogVisible: false,
             rules: {
                 annualTaxableBusinessIncome: [
-                    { required: true, message: '请填写年度纳税营业收入', trigger: 'blur' }
+                    { required: true, message: '请填写年度纳税营业收入', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                annualTaxableBusinessIncomeNORequired:[
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 taxableIncomeRatio: [
-                    { required: true, message: '请填写纳税收入占比', trigger: 'blur' }
+                    { required: true, message: '请填写纳税收入占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                taxableIncomeRatioNORequired:[
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 taxBearingRate: [
-                    { required: true, message: '请填写税负率', trigger: 'blur' }
+                    { required: true, message: '请填写税负率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                taxBearingRateNORequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }
