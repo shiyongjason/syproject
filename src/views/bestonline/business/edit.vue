@@ -105,7 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
-import { IsPositiveInteger2 } from '@/utils/rules'
+import { IsPositiveInteger2, IsFixedTwoNumber } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
@@ -139,19 +139,37 @@ export default {
                     { required: true, message: '请选择主营业态', trigger: 'change' }
                 ],
                 businessFormatOneRatio: [
-                    { required: true, message: '请输入业态占比', trigger: 'blur' }
+                    { required: true, message: '请输入业态占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                businessFormatTwoRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                businessFormatTwoThreeRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 mainCategoryOneId: [
                     { required: true, message: '请选择主营品类', trigger: 'blur' }
                 ],
                 categoryOneSalesRatio: [
-                    { required: true, message: '请输入销售比重', trigger: 'blur' }
+                    { required: true, message: '请输入销售比重', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                categoryTwoSalesRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 mainBrandOneName: [
                     { required: true, message: '请输入主营品牌', trigger: 'blur' }
                 ],
                 brandOneSalesRatio: [
-                    { required: true, message: '请输入销售比重', trigger: 'blur' }
+                    { required: true, message: '请输入销售比重', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                brandTwoSalesRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                brandThreeSalesRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 supplierName: [
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
