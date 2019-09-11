@@ -155,19 +155,19 @@
         </el-form>
 
         <p class="small-title">诉讼、仲裁及行政处罚事件</p>
-        <div class="flex-wrap-col info-wrap">
-            <el-form label-position="right" label-width="150px" class="legal-form">
+        <div class="flex-wrap-col info-wrap" v-for="item in punishmentList" :key="item.id">
+            <el-form v-if='type' label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="事件类型：">
-                    <p>{{justiceData.punishmentList[type].punishmentType?punishmentTypeOptions[justiceData.punishmentList[type].punishmentType].label:'-'}}</p>
+                    <p>{{item.punishmentType?punishmentTypeOptions[item.punishmentType].label:'-'}}</p>
                 </el-form-item>
                 <el-form-item label="事件名称：">
-                    <p>{{justiceData.punishmentList[type].caseInfo||'-'}}</p>
+                    <p>{{item.caseInfo||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="涉及金额：">
-                    <p>{{justiceData.punishmentList[type].moneyInvolved||'-'}}</p>
+                    <p>{{item.moneyInvolved||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="严重性：">
-                    <p>{{justiceData.punishmentList[type].ponderance!==null?newOpitions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
+                    <p>{{item.ponderance!==null?newOpitions[item.ponderance].label:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
@@ -237,6 +237,13 @@ export default {
             let type = this.type === 2 ? 3 : 5
             if (this.justiceData.assureList && this.justiceData.assureList.length > 0) {
                 res = this.justiceData.assureList.filter(item => item.type === type)
+            }
+            return res
+        },
+        punishmentList () {
+            let res = []
+            if (this.justiceData.punishmentList && this.justiceData.punishmentList.length > 0) {
+                res = this.justiceData.punishmentList.filter(item => item.type === this.type)
             }
             return res
         },
