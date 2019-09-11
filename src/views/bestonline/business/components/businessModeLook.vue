@@ -4,10 +4,10 @@
             <p class="title-p">业务模式</p>
         </template>
         <div class="form-cont-row mb20">
-           
+
             <div class="form-cont-col">
                 <el-form-item label="主营业态1：" prop="mainBusinessFormatOneId">
-                  {{mainCommercialOptions[form.mainBusinessFormatOneId].value||''}}
+                    {{vaildEmpty(form.mainBusinessFormatOneId)?mainCommercialOptions[form.mainBusinessFormatOneId].value:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -19,7 +19,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态2：">
-                    {{mainCommercialOptions[form.mainBusinessFormatTwoId].value||''}}
+                    {{vaildEmpty(form.mainBusinessFormatTwoId)?mainCommercialOptions[form.mainBusinessFormatTwoId].value:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -31,7 +31,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营业态3：">
-                    {{mainCommercialOptions[form.mainBusinessFormatThreeId].value||''}}
+                    {{vaildEmpty(form.mainBusinessFormatThreeId)?mainCommercialOptions[form.mainBusinessFormatThreeId].value:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -43,7 +43,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营品类1：" prop="mainCategoryOneId">
-                    {{mainCategoryOptions[form.mainCategoryOneId].value||''}}
+                    {{vaildEmpty(form.mainCategoryOneId)?mainCategoryOptions[form.mainCategoryOneId].value:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -55,7 +55,7 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营品类2：">
-                    {{mainCategoryOptions[form.mainCategoryTwoId].value||''}}
+                    {{vaildEmpty(form.mainCategoryTwoId)?mainCategoryOptions[form.mainCategoryTwoId].value:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -118,6 +118,14 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.businessData
         })
+    },
+    methods: {
+        vaildEmpty (value) {
+            if (value !== null && value !== undefined && value !== '') {
+                return true
+            }
+            return false
+        }
     }
 }
 </script>
