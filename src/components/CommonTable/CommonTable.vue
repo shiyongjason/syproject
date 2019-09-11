@@ -12,6 +12,7 @@
                 :align="item.align?item.align:'center'"
                 :min-width="item.width?item.width:''"
                 :show-overflow-tooltip="true"
+                :render-header="renderHeader"
                 v-bind="item">
                 <template slot-scope="scope">
                     <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
@@ -159,6 +160,20 @@ export default {
         },
         formatter (data) {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
+        },
+        renderHeader (h, { column }) {
+            const result = this.tableLabel.filter(item => item.icon && item.label == column.label)
+            if (result.length > 0) {
+                return (
+                    <div>
+                        <span>{column.label}</span>
+                        <el-tooltip placement="right" content={result[0].content}>
+                            <i class={result[0].icon}></i>
+                        </el-tooltip>
+                    </div>
+                )
+            }
+            return column.label
         }
     },
     mounted () {
@@ -170,9 +185,8 @@ export default {
 <style lang="scss" scoped>
 .el-pagination {
     margin: 20px auto;
-    // float: right;
-    // text-align: center;
-        text-align: center;
+    float: right;
+    text-align: center;
 }
 /deep/ .el-pagination__editor.el-input {
     width: 50px !important;
