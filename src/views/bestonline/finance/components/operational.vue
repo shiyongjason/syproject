@@ -37,9 +37,11 @@
 
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable" placeholder="请输入内容">
-                            <template slot="suffix">天</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].daysOfReceivable" :rules="rules.daysOfReceivableNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable" placeholder="请输入内容">
+                                <template slot="suffix">天</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -67,9 +69,11 @@
 
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].daysOfInventory" placeholder="请输入内容">
-                            <template slot="suffix">天</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].daysOfInventory" :rules="rules.daysOfInventoryNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].daysOfInventory" placeholder="请输入内容">
+                                <template slot="suffix">天</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -86,7 +90,7 @@
 
                     </td>
                     <td>
-                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].totalAssetsTurnover" :rules="rules.totalAssetsTurnover">
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover" :rules="rules.totalAssetsTurnover">
                             <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover" placeholder="请输入内容">
                                 <template slot="prefix">
                                     <span class="red-word">*</span>
@@ -97,9 +101,11 @@
 
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover" placeholder="请输入内容">
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover" :rules="rules.totalAssetsTurnoverNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover" placeholder="请输入内容">
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -127,9 +133,11 @@
 
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].returnOnEquity" placeholder="请输入内容">
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].returnOnEquity" :rules="rules.returnOnEquityNORequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].returnOnEquity" placeholder="请输入内容">
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -139,6 +147,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { IsFixedTwoNumber, IsPositiveNumber } from '@/utils/rules'
 export default {
     computed: {
         ...mapState({
@@ -150,16 +159,32 @@ export default {
             debtDialogVisible: false,
             rules: {
                 daysOfReceivable: [
-                    { required: true, message: '请填写应收账款周转天数', trigger: 'blur' }
+                    { required: true, message: '请填写应收账款周转天数', trigger: 'blur' },
+                    { validator: IsPositiveNumber, trigger: 'blur' }
+                ],
+                daysOfReceivableNORequired: [
+                    { validator: IsPositiveNumber, trigger: 'blur' }
                 ],
                 daysOfInventory: [
-                    { required: true, message: '请填写库存周转天数', trigger: 'blur' }
+                    { required: true, message: '请填写库存周转天数', trigger: 'blur' },
+                    { validator: IsPositiveNumber, trigger: 'blur' }
+                ],
+                daysOfInventoryNORequired: [
+                    { validator: IsPositiveNumber, trigger: 'blur' }
                 ],
                 totalAssetsTurnover: [
-                    { required: true, message: '请填写总资产周转率', trigger: 'blur' }
+                    { required: true, message: '请填写总资产周转率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                totalAssetsTurnoverNORequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 returnOnEquity: [
-                    { required: true, message: '请填写净资产收益率', trigger: 'blur' }
+                    { required: true, message: '请填写净资产收益率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                returnOnEquityNORequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }

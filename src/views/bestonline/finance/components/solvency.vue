@@ -61,20 +61,24 @@
                 <tr>
                     <td>现金比率</td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].cashRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span></span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[0].cashRatio" :rules="rules.cashRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].cashRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span></span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                     <td>
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].cashRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span></span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[1].cashRatio" :rules="rules.cashRatio">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].cashRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span></span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -146,6 +150,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     data () {
@@ -153,13 +158,19 @@ export default {
             debtDialogVisible: false,
             rules: {
                 liquidityRatio: [
-                    { required: true, message: '请填写流动比率', trigger: 'blur' }
+                    { required: true, message: '请填写流动比率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 quickRatio: [
-                    { required: true, message: '请填写速动比率', trigger: 'blur' }
+                    { required: true, message: '请填写速动比率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 assetLiabilityRatio: [
-                    { required: true, message: '请填写资产负债率', trigger: 'blur' }
+                    { required: true, message: '请填写资产负债率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                cashRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }
