@@ -105,7 +105,9 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
+import { IsPositiveInteger2 } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
+import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
     components: {
         BusinessMode, MarketingModel, SalesPerformance, Supplier, Customer, Members, Competitor, Plan
@@ -201,6 +203,9 @@ export default {
                 ],
                 customerName: [
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
+                ],
+                selfStoresNum: [
+                    { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,
@@ -244,7 +249,8 @@ export default {
         },
         async onSubmit () {
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
-            this.$refs['form'].validate(async (valid) => {
+            this.$refs['form'].validate(async (valid, errors) => {
+                this.findValidFailIndex(errors)
                 if (valid) {
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
@@ -268,6 +274,33 @@ export default {
                     this.$router.go(-1)
                 }
             })
+        },
+        findValidFailIndex (errors) {
+            const expandKpi = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandController = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return businessModelValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
+            const expandOrganization = Object.keys(errors).filter(item => {
+                const index = item.indexOf('].') + 2
+                return UpstreamSupplierStructureValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            const expandMotivationRisk = Object.keys(errors).filter(item => {
+                const index = item.indexOf('.') + 1
+                return NewJointVenturePlanningValidProps.has(index == -1 ? item : item.substring(index))
+            }).length > 0
+            if (expandKpi) {
+                this.activeName = '1'
+            } else if (expandController) {
+                this.activeName = '2'
+            } else if (expandOrganization) {
+                this.activeName = '5'
+            } else if (expandMotivationRisk) {
+                this.activeName = '9'
+            }
         }
     },
     filters: {

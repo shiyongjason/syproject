@@ -15,7 +15,7 @@
                         <th width="180" class="is-leaf">指标</th>
                         <th width="180" class="is-leaf">指标值</th>
                         <th width="180" class="is-leaf">分数</th>
-                        <th width="200" class="is-leaf">操作</th>
+                        <th width="200" class="is-leaf" v-if="isAction">操作</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,7 +28,7 @@
                             <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">{{item.indicatorName}}</td>
                             <td>{{seconditem.indicatorType}}{{seconditem.itemName}}</td>
                             <td>{{seconditem.score}}</td>
-                            <td v-if="index == 0" :rowspan="item.dueScoreRuleVoList.length">
+                            <td v-if="index == 0 && isAction" :rowspan="item.dueScoreRuleVoList.length">
                                 <el-button class="orangeBtn" @click="onEditScore(item)" v-if="hosAuthCheck(editAuthCode)">编辑</el-button>
                                 <el-button class="orangeBtn" @click="SureToDelete(item)" v-if="hosAuthCheck(delAuthCode)">删除</el-button>
                             </td>
@@ -84,7 +84,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getScorerules, getDueconfig, addScorerules, putScorerules, deleteScorerules } from './api/index.js'
 import { mapState } from 'vuex'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
-import { AUTH_BESTONLINE_POINTS_CODE_ADD, AUTH_BESTONLINE_POINTS_CODE_EDIT, AUTH_BESTONLINE_POINTS_CODE_DEL } from '@/utils/auth_const'
+import { AUTH_BESTONLINE_POINTS_CODE_ADD, AUTH_BESTONLINE_POINTS_CODE_EDIT, AUTH_BESTONLINE_POINTS_CODE_DEL, AUTH_BESTONLINE_POINTS_CODE_OPERATE } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -166,6 +166,9 @@ export default {
         HAutocomplete
     },
     computed: {
+        isAction () {
+            return this.hosAuthCheck(AUTH_BESTONLINE_POINTS_CODE_OPERATE)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })

@@ -39,3 +39,17 @@ export const FUND_SUPERVISION = [
     { value: 0, label: '财务委派' },
     { value: 1, label: '财务外派' }
 ]
+// KPI 校验字段
+export const kpiValidProps = new Set(['assessmentList', 'dueFinanceBasic.riskDisclosure', 'dueFinanceBasic.analysisDescription'])
+// 盈利能力(必填) 校验字段
+export const profitabilityValidProps = new Set(['grossMargin', 'rate', 'profitRatio'])
+// 偿债能力(必填) 校验字段
+export const solvencyValidProps = new Set(['liquidityRatio', 'quickRatio'])
+// 营运能力(必填) 校验字段
+export const operationAbilityValidProps = new Set(['daysOfReceivable', 'daysOfInventory', 'totalAssetsTurnover', 'returnOnEquity'])
+// 资金风险评估(必填) 校验字段
+export const capitalRiskAssessmentValidProps = new Set(['shareholdersBorrowsCompany', 'companyBorrowsShareholders', 'shareholdersDebt', 'capitalRiskAssessment'])
+// 税务合规(必填) 校验字段
+export const taxComplianceValidProps = new Set(['annualTaxableBusinessIncome', 'taxableIncomeRatio', 'taxBearingRate'])
+// 资产负债表（必填一项）校验字段
+export const balanceSheetValidProps = new Set(['assetsLiabilities.assetListB'])

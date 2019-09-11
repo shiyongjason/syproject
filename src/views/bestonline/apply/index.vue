@@ -36,7 +36,7 @@
                     添加申请
                 </el-button>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="isAction" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange">
                 <template slot="approvalStatus" slot-scope="scope">
                     <span v-if="scope.data.row.approvalStatus == 0">未提交</span>
                     <span class="isOrangeColor" v-if="scope.data.row.approvalStatus == 1" @click="showProcess(scope.data.row.applyId)">审批中</span>
@@ -72,7 +72,7 @@
 import { getDueapply, getDueApproval, deleteDueapply } from '../api/index.js'
 import { mapState, mapMutations } from 'vuex'
 import { APPROVAL_STATUS_OPTIONS } from '../const'
-import { AUTH_BESTONLINE_APPLY_ADD, AUTH_BESTONLINE_APPLY_SHOW, AUTH_BESTONLINE_APPLY_EDIT, AUTH_BESTONLINE_APPLY_DEL } from '@/utils/auth_const'
+import { AUTH_BESTONLINE_APPLY_ADD, AUTH_BESTONLINE_APPLY_SHOW, AUTH_BESTONLINE_APPLY_EDIT, AUTH_BESTONLINE_APPLY_DEL, AUTH_BESTONLINE_APPLY_OPERATE } from '@/utils/auth_const'
 export default {
     name: 'application',
     data () {
@@ -114,6 +114,9 @@ export default {
         this.Permission()
     },
     computed: {
+        isAction () {
+            return this.hosAuthCheck(AUTH_BESTONLINE_APPLY_OPERATE)
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })

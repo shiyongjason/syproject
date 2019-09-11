@@ -26,3 +26,12 @@ export const SELECT_OPTIONS = [
     { value: '是', key: 0 },
     { value: '否', key: 1 }
 ]
+
+// KPI 校验字段
+export const kpiValidProps = new Set(['dueBusinessAssessmentCreateFormList', 'riskDisclosure', 'analysisDescription', 'wholesaleShare'])
+// 业务模式 校验字段
+export const businessModelValidProps = new Set(['mainBusinessFormatOneId', 'businessFormatOneRatio', 'mainCategoryOneId', 'categoryOneSalesRatio', 'mainBrandOneName', 'brandOneSalesRatio'])
+// 上游-供应商结构 校验字段
+export const UpstreamSupplierStructureValidProps = new Set(['supplierName', 'purchaseAmount', 'proportion', 'isProvideContract'])
+// 新合资公司规划 校验字段
+export const NewJointVenturePlanningValidProps = new Set(['webServiceCategory', 'webBusinessCategory', 'brandManagement', 'annualSalesScale', 'netProfitRate', 'downstreamSwitchChannelsCustomers', 'marketingChannelsPlans', 'fundingRequirements'])
