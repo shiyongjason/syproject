@@ -6,7 +6,7 @@
         <table class="item-wrapper">
             <thead>
                 <tr>
-                    <td width="180">-</td>
+                    <td width="180">指标</td>
                     <td width="180">本年度</td>
                     <td width="180">上年度</td>
                     <td width="180">上上年度</td>

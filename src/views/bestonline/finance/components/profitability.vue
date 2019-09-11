@@ -6,7 +6,7 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <td width="25%">-</td>
+                    <td width="25%">指标</td>
                     <td width="25%">本年度</td>
                     <td width="25%">上年度</td>
                     <td width="25%">上上年度</td>
