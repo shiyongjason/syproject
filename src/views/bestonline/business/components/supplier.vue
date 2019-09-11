@@ -3,7 +3,7 @@
         <template slot="title">
             <p class="title-p">上游-供应商结构</p>
         </template>
-        <div class="supplier" v-for="(item, index) in dueBusinessSupplierCreateFormList" :key=index>
+        <div class="supplier" v-for="(item, index) in businessSupplierList" :key=index>
             <i class="el-icon-circle-plus-outline pointer" v-if="index == 0" @click="onAddSupplier"></i>
             <i class="el-icon-remove-outline pointer" @click="onRemoveSupplier(index)" v-else></i>
             <el-form-item label="供应商名称：" :prop="`dueBusinessSupplierCreateFormList[${index}].supplierName`" :rules="rules.supplierName">
@@ -54,6 +54,7 @@
 
 <script>
 import { ISPROVIDE_CONTRACT } from '../../const.js'
+import { IsFixedTwoNumber, Money } from '@/utils/rules'
 import { mapState } from 'vuex'
 export default {
     name: 'business_supplier',
@@ -78,10 +79,12 @@ export default {
                     { required: true, message: '请选择', trigger: 'change' }
                 ],
                 purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' }
+                    { required: true, message: '请输入采购金额', trigger: 'blur' },
+                    { validator: Money }
                 ],
                 proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' }
+                    { required: true, message: '请输入占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }
@@ -90,7 +93,7 @@ export default {
         ...mapState({
             form: state => state.dueDiligence.businessData
         }),
-        dueBusinessSupplierCreateFormList () {
+        businessSupplierList () {
             let businessSupplierCreateFormList = this.form.dueBusinessSupplierCreateFormList
             if (!businessSupplierCreateFormList) {
                 businessSupplierCreateFormList = []
@@ -99,7 +102,8 @@ export default {
                 let defaultObj = JSON.parse(JSON.stringify(this.defaultSupplier))
                 businessSupplierCreateFormList.push(defaultObj)
             }
-            return this.form.dueBusinessSupplierCreateFormList
+            this.$set(this.form, 'dueBusinessSupplierCreateFormList', businessSupplierCreateFormList)
+            return businessSupplierCreateFormList
         }
     },
     mounted () {

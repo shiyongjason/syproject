@@ -1,19 +1,10 @@
 <template>
     <div class="page-table clearfix">
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange"  @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey"  :load="load"  :indent="4">
+        <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <el-table-column v-for="item in tableLabel"
-                :key="item.label"
-                :label="item.label"
-                :prop="item.prop"
-                :sortable="item.sortable"
-                :align="item.align?item.align:'center'"
-                :min-width="item.width?item.width:''"
-                :show-overflow-tooltip="true"
-                :render-header="renderHeader"
-                v-bind="item">
+            <el-table-column v-for="item in tableLabel" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" :render-header="renderHeader" v-bind="item">
                 <template slot-scope="scope">
                     <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                     <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>

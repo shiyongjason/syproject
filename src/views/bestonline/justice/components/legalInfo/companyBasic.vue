@@ -2,12 +2,12 @@
     <div>
         <p class="small-title">主体资格</p>
         <div class="flex-wrap-col" v-if="justiceData.affairs">
-            <el-form label-position="top" :model="justiceData">
-                <el-form-item label="工商年报：" :rules="{required: true ,message: '工商年报不能为空',trigger: 'blur'}" :prop="'affairs.annualReport'">
+            <!-- <el-form label-position="top" :model="justiceData"> -->
+                <el-form-item label="工商年报：" :rules="{required: true ,message: '工商年报不能为空',trigger: 'blur'}"  :prop="'affairs.annualReport'">
                     <el-input type="textarea" v-model="justiceData.affairs.annualReport" style="width:600px" placeholder="请输入工商年报" rows="3">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="营业执照：" :rules="{required: true ,message: '营业执照不能为空',trigger: 'blur'}" :prop="'affairs.businessLicense'">
+                <el-form-item label="营业执照：" :rules="{required: true ,message: '营业执照不能为空',trigger: 'blur'}"  :prop="'affairs.businessLicense'">
                     <el-input type="textarea" v-model="justiceData.affairs.businessLicense" style="width:600px" placeholder="请输入营业执照" rows="3">
                     </el-input>
                 </el-form-item>
@@ -19,17 +19,17 @@
                     <el-input type="textarea" v-model="justiceData.affairs.pledgeOfStockRight" style="width:600px" placeholder="请输入股权质押" rows="3">
                     </el-input>
                 </el-form-item>
-            </el-form>
+            <!-- </el-form> -->
         </div>
 
         <p class="small-title">经营资质</p>
         <div class="flex-wrap-row" v-if="justiceData.affairs">
-            <el-form label-position="top" :model="justiceData">
+            <!-- <el-form label-position="top" :model="justiceData"> -->
                 <el-form-item label="经营资质:" :rules="{required: true ,message: '经营资质不能为空',trigger: 'blur'}" :prop="'affairs.businessQualification'">
                     <el-input type="textarea" v-model="justiceData.affairs.businessQualification" style="width:600px" placeholder="请输入经营资质" rows="3">
                     </el-input>
                 </el-form-item>
-            </el-form>
+            <!-- </el-form> -->
         </div>
 
         <p class="small-title">分支机构</p>
