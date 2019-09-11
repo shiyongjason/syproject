@@ -177,14 +177,6 @@ export default {
                 isProvideContract: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
-                purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' },
-                    { required: true, validator: Money }
-                ],
-                proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
-                ],
                 health: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
