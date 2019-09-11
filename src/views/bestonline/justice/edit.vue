@@ -201,9 +201,7 @@ export default {
                         let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
                         let temp = ''
                         for (const k in this.activePlus) {
-                            if (key.indexOf(k) > -1) {
-                                temp = k
-                            }
+                            if (key.indexOf(k) > -1) temp = k
                         }
                         this.activeName = this.activePlus[temp]
                         document.getElementById('top').scrollIntoView()
