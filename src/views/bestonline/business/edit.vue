@@ -206,6 +206,12 @@ export default {
                 ],
                 selfStoresNum: [
                     { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
+                ],
+                firstTenMonthsDown: [
+                    { required: true, message: '请选择是否下滑', trigger: 'change' }
+                ],
+                lastYearSales: [
+                    { required: true, message: '请输入', trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,

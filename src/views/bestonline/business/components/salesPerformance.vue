@@ -8,7 +8,7 @@
                 <tr>
                     <td colspan="2" rowspan="2" width="16%">月份</td>
                     <td colspan="2" width="28%">本年度</td>
-                    <td colspan="2" width="28%">上年度</td>
+                    <td colspan="2" width="28%"><span class="red-word">*</span>上年度</td>
                     <td colspan="2" width="28%">上上年度</td>
                 </tr>
                 <tr>
@@ -65,7 +65,7 @@
                 </tr>
             </tbody>
         </table>
-        <el-form-item label="前10个月销售是否持续下滑：" label-width="200px" class="mt20">
+        <el-form-item label="前10个月销售是否持续下滑：" label-width="220px" class="mt20" prop="firstTenMonthsDown">
             <el-select v-model="form.firstTenMonthsDown" placeholder="请选择">
                 <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
             </el-select>
