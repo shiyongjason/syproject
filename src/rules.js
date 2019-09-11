@@ -5,6 +5,13 @@ export const PHONE = (rule, value, callback) => {
     }
     return callback()
 }
+export const Phone = (rule, value, callback) => {
+    const Reg = /^1(3|4|5|7|8)\d{9}$/
+    if (!(Reg.test(value))) {
+        return callback(new Error('手机号码格式不正确'))
+    }
+    return callback()
+}
 export const IsChinese = (rule, value, callback) => {
     const Reg = /[\u4E00-\u9FA5]/g
     if ((Reg.test(value))) {
