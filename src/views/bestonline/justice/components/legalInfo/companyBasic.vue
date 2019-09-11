@@ -4,19 +4,19 @@
         <div class="flex-wrap-col" v-if="justiceData.affairs">
             <!-- <el-form label-position="top" :model="justiceData"> -->
                 <el-form-item label="工商年报：" :rules="{required: true ,message: '工商年报不能为空',trigger: 'blur'}"  :prop="'affairs.annualReport'">
-                    <el-input type="textarea" v-model="justiceData.affairs.annualReport" style="width:600px" placeholder="请输入工商年报" rows="3">
+                    <el-input type="textarea" v-model="justiceData.affairs.annualReport" style="width:600px" placeholder="请输入工商年报" rows="3" maxlength='250'>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="营业执照：" :rules="{required: true ,message: '营业执照不能为空',trigger: 'blur'}"  :prop="'affairs.businessLicense'">
-                    <el-input type="textarea" v-model="justiceData.affairs.businessLicense" style="width:600px" placeholder="请输入营业执照" rows="3">
+                    <el-input type="textarea" v-model="justiceData.affairs.businessLicense" style="width:600px" placeholder="请输入营业执照" rows="3" maxlength='250'>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="公司章程：" :rules="{required: true ,message: '公司章程不能为空',trigger: 'blur'}" :prop="'affairs.articlesOfAssociation'">
-                    <el-input type="textarea" v-model="justiceData.affairs.articlesOfAssociation" style="width:600px" placeholder="请输入公司章程" rows="3">
+                    <el-input type="textarea" v-model="justiceData.affairs.articlesOfAssociation" style="width:600px" placeholder="请输入公司章程" rows="3" maxlength='250'>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="股权质押：" :rules="{ required: true, message: '股权质押不能为空', trigger: 'blur' }" :prop="'affairs.pledgeOfStockRight'">
-                    <el-input type="textarea" v-model="justiceData.affairs.pledgeOfStockRight" style="width:600px" placeholder="请输入股权质押" rows="3">
+                    <el-input type="textarea" v-model="justiceData.affairs.pledgeOfStockRight" style="width:600px" placeholder="请输入股权质押" rows="3" maxlength='250'>
                     </el-input>
                 </el-form-item>
             <!-- </el-form> -->
