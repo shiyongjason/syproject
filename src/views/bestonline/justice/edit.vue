@@ -1,5 +1,6 @@
 <template>
     <div class="jd-manage">
+        <div id="top"></div>
         <p v-if="justiceData.affairs.updateTime">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
@@ -196,21 +197,16 @@ export default {
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate, errors) => {
-                    console.log(errors)
                     if (errors && Object.keys(errors).length > 0) {
-                        console.log('errors', JSON.stringify(errors))
                         let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
-                        console.log(key, this.activePlus)
                         let temp = ''
                         for (const k in this.activePlus) {
                             if (key.indexOf(k) > -1) {
-                                console.log(k)
                                 temp = k
                             }
                         }
                         this.activeName = this.activePlus[temp]
-                        console.log(this.activeName)
-                        window.scrollTo(0, 0)// todo
+                        document.getElementById('top').scrollIntoView()
                     }
                     if (validate) {
                         this.doSave(params, messageTip)
