@@ -4,25 +4,25 @@
         <el-form-item v-for="(item, index) in assetList" :key="'assetList'+item.type+index">
             <el-form label-position="right" label-width="150px">
                 <el-form-item label="不动产：">
-                    <el-input type="textarea" v-model="item.realEstate" placeholder="请输入不动产" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.realEstate" placeholder="请输入不动产" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="准不动产：">
-                    <el-input type="textarea" v-model="item.chattelReal" placeholder="请输入准不动产" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.chattelReal" placeholder="请输入准不动产" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="动产：">
-                    <el-input type="textarea" v-model="item.movableProperty" placeholder="请输入动产" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.movableProperty" placeholder="请输入动产" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="无形资产：">
-                    <el-input type="textarea" v-model="item.intangibleAssets" placeholder="请输入无形资产" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.intangibleAssets" placeholder="请输入无形资产" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="专利：">
-                    <el-input type="textarea" v-model="item.patent" placeholder="专利" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.patent" placeholder="专利" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="商标：">
-                    <el-input type="textarea" v-model="item.brand" placeholder="商标" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.brand" placeholder="商标" rows="3" maxlength='250'></el-input>
                 </el-form-item>
                 <el-form-item label="其他：">
-                    <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3"></el-input>
+                    <el-input type="textarea" v-model="item.other" placeholder="其他" rows="3" maxlength='250'></el-input>
                 </el-form-item>
             </el-form>
             <div class="flex-wrap-box">
