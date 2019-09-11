@@ -68,14 +68,14 @@ export default {
                     { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
                     { validator: Money }
                 ],
-                endOrCurrentNORequired:[
+                endOrCurrentNORequired: [
                     { validator: Money }
                 ],
                 beginOrPrior: [
                     { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
                     { validator: Money }
                 ],
-                beginOrPriorNORequired:[
+                beginOrPriorNORequired: [
                     { validator: Money }
                 ]
             }
