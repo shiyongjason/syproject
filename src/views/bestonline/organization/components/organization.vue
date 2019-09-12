@@ -203,7 +203,7 @@ export default {
         },
         radarChartData () {
             let res = this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
-                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) === 0 ? 10 : Math.max.apply(null, this.radarValueOfData) }
+                return { name: item.assessmentDimension, max: 40 }
             })
             return res
         },
