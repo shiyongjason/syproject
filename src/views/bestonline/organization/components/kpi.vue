@@ -56,10 +56,10 @@
             </div>
             <div class="organization-form mt20">
                 <el-form-item label="组织综合评分：" label-width="250px">
-                    <p style="width: 224px">{{ form.organizationScore }}</p>
+                    <el-input style="width: 224px" v-model="form.organizationScore" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="实际控制人综合评分：" label-width="250px">
-                    <p style="width: 224px">{{ form.actualControllerScore }}</p>
+                    <el-input style="width: 224px" v-model="form.actualControllerScore" disabled></el-input>
                 </el-form-item>
             </div>
         </div>
