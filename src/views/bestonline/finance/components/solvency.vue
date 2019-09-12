@@ -200,7 +200,8 @@ export default {
                 }
             }
             if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
-                const result = ((totalLiabilityL + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent * 100).toFixed(2)
+                const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
+                console.log(result)
                 return result
             }
             return 0

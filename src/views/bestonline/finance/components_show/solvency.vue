@@ -6,7 +6,7 @@
         <table class="item-wrapper">
             <thead>
                 <tr>
-                    <td width="180">-</td>
+                    <td width="180">指标</td>
                     <td width="180">本年度</td>
                     <td width="180">上年度</td>
                 </tr>
@@ -33,10 +33,10 @@
                 <tr>
                     <td>现金比率</td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[0].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[0].cashRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[0].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[0].cashRatio?form.dueFinanceYearOperatingCreateForms[0].cashRatio +'%':'-'}}</span>
                     </td>
                     <td>
-                        <span :class="form.dueFinanceYearOperatingCreateForms[1].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[1].cashRatio}}%</span>
+                        <span :class="form.dueFinanceYearOperatingCreateForms[1].cashRatio > 20?'green-word':'red-word'">{{form.dueFinanceYearOperatingCreateForms[1].cashRatio?form.dueFinanceYearOperatingCreateForms[1].cashRatio +'%':'-'}}</span>
                     </td>
                 </tr>
                 <tr>

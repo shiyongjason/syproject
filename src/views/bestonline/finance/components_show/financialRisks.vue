@@ -6,12 +6,12 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="公司借款：">
-                {{form.dueFinanceBasic.companyDebt}}万
+                {{form.dueFinanceBasic.companyDebt?form.dueFinanceBasic.companyDebt +'万':'-'}}
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="股东借款：" prop="dueFinanceBasic.shareholdersDebt">
-                {{form.dueFinanceBasic.shareholdersDebt}}万
+                {{form.dueFinanceBasic.shareholdersDebt?form.dueFinanceBasic.shareholdersDebt +'万':'-'}}
             </el-form-item>
         </div>
         <div class="form-cont-col">
@@ -28,7 +28,7 @@
         </div>
         <div class="form-cont-col">
             <el-form-item label="现金流量比率：">
-                {{form.dueFinanceBasic.cashFlowRatio}}%
+                {{form.dueFinanceBasic.cashFlowRatio?form.dueFinanceBasic.cashFlowRatio +'%':'-'}}
             </el-form-item>
         </div>
         <div class="form-cont-col">
@@ -40,12 +40,12 @@
     <div class="form-cont-row">
         <div class="form-cont-col">
             <el-form-item label="实际控制人及配偶经营性借款：" label-width="220px">
-                {{form.dueFinanceBasic.actualControllerAndMateOperatingLoan}}万
+                {{form.dueFinanceBasic.actualControllerAndMateOperatingLoan?form.dueFinanceBasic.actualControllerAndMateOperatingLoan +'万':'-'}}
             </el-form-item>
         </div>
         <div class="form-cont-col">
             <el-form-item label="个人及公司担保：">
-                {{form.dueFinanceBasic.personalAndCompanyGuarantee}}万
+                {{form.dueFinanceBasic.personalAndCompanyGuarantee?form.dueFinanceBasic.personalAndCompanyGuarantee +'万':'-'}}
             </el-form-item>
         </div>
     </div>
