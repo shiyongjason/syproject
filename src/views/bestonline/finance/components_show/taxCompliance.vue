@@ -6,7 +6,7 @@
         <table class="item-wrapper">
             <thead>
                 <tr>
-                    <td width="180">-</td>
+                    <td width="180">指标</td>
                     <td width="180">本年度</td>
                     <td width="180">上年度</td>
                     <td width="180">上上年度</td>
@@ -22,7 +22,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].annualTaxableBusinessIncome}}万
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome}}万
+                        {{form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome?form.dueFinanceYearOperatingCreateForms[2].annualTaxableBusinessIncome +'万':'-'}}
                     </td>
                 </tr>
                 <tr>
@@ -34,7 +34,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].taxableIncomeRatio}}%
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio?form.dueFinanceYearOperatingCreateForms[2].taxableIncomeRatio +'%':'-'}}
                     </td>
                 </tr>
                 <tr>
@@ -46,7 +46,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].taxBearingRate}}%
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].taxBearingRate}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].taxBearingRate?form.dueFinanceYearOperatingCreateForms[2].taxBearingRate +'%':'-'}}
                     </td>
                 </tr>
             </tbody>
