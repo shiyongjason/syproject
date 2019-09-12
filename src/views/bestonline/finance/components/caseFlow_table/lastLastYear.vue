@@ -47,7 +47,6 @@ export default {
         return {
             rules: {
                 endOrCurrent: [
-                    { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
                     { validator: Money, trigger: 'blur' }
                 ],
                 beginOrPrior: [
