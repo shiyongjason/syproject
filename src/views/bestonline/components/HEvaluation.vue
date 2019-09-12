@@ -90,11 +90,11 @@
             <tbody>
                 <tr>
                     <td style="width: 150px">参考结论</td>
-                    <td style="width: 120px">{{dueItemRecommend.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{dueItemRecommend.scale | judgeTureOrFalse}}</td>
-                    <td style="width: 200px">{{dueItemRecommend.yearGrowthRate | judgeTureOrFalse}}</td>
-                    <td style="width: 120px">{{dueItemRecommend.equityRatio | judgeTureOrFalse}}</td>
-                    <td style="width: 200px">{{dueItemRecommend.netProfitRate | judgeTureOrFalse}}</td>
+                    <td style="width: 120px">{{dueItemRecommend.isCooperate | dueItemTureOrFalse}}</td>
+                    <td>{{dueItemRecommend.scale | dueItemTureOrFalse}}</td>
+                    <td style="width: 200px">{{dueItemRecommend.yearGrowthRate | dueItemTureOrFalse}}</td>
+                    <td style="width: 120px">{{dueItemRecommend.equityRatio | dueItemTureOrFalse}}</td>
+                    <td style="width: 200px">{{dueItemRecommend.netProfitRate | dueItemTureOrFalse}}</td>
                 </tr>
                 <tr>
                     <td>占比</td>
@@ -377,7 +377,11 @@ export default {
     filters: {
         judgeTureOrFalse (value) {
             if (value === null || value === '' || value === undefined) return '-'
-            return value == 0 ? '是' : value == 1 ? '否' : value == 2 ? '平' : '-'
+            return value == 0 ? '是' : value == 1 ? '否' : '-'
+        },
+        dueItemTureOrFalse (value) {
+            if (value === null || value === '' || value === undefined) return '-'
+            return value == 0 ? '是' : value == 1 ? '平' : value == 2 ? '否' : '-'
         },
         judgeThreeLevel (value, arugment) {
             if (value === null || value === '' || value === undefined) return '-'

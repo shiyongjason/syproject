@@ -158,7 +158,7 @@
         <div class="flex-wrap-col info-wrap" v-for="item in punishmentList" :key="item.id">
             <el-form label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="事件类型：">
-                    <p>{{item.punishmentType?punishmentTypePlus[item.type].label:'-'}}</p>
+                    <p>{{item.punishmentType!=null?punishmentTypePlus[item.punishmentType].label:'-'}}</p>
                 </el-form-item>
                 <el-form-item label="事件名称：">
                     <p>{{item.caseInfo||'-'}}</p>

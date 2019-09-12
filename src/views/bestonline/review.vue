@@ -34,6 +34,7 @@
                 <template slot="action" slot-scope="scope">
                     <template v-if="(scope.data.row.status ==0||scope.data.row.status ==3) && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu || isfawu)) || isfazhang)">
                         <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
+                        <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
                     </template>
                     <template v-else>
                         <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>

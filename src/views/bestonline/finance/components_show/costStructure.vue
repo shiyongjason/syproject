@@ -6,17 +6,17 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="销售费用占比：">
-                    {{form.dueFinanceBasic.salesExpensesRatio}}%
+                    {{form.dueFinanceBasic.salesExpensesRatio?form.dueFinanceBasic.salesExpensesRatio + '%':'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="管理费用占比：">
-                    {{form.dueFinanceBasic.managementExpensesRatio}}%
+                    {{form.dueFinanceBasic.managementExpensesRatio?form.dueFinanceBasic.managementExpensesRatio +'%':'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="财务费用占比：">
-                    {{form.dueFinanceBasic.financeExpensesRatio}}%
+                    {{form.dueFinanceBasic.financeExpensesRatio?form.dueFinanceBasic.financeExpensesRatio +'%':'-'}}
                 </el-form-item>
             </div>
         </div>
@@ -32,7 +32,7 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="备注：">
-                    <span class="remark">{{form.dueFinanceBasic.costRationalityRemark}}</span>
+                    <span class="remark">{{form.dueFinanceBasic.costRationalityRemark?form.dueFinanceBasic.costRationalityRemark :'无'}}</span>
                 </el-form-item>
             </div>
         </div>

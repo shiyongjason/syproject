@@ -32,7 +32,7 @@
                         <p>{{item.shareholdingRatio}}</p>
                     </el-form-item>
                     <el-form-item label="是否在外兼职：" label-width="120px">
-                        <p>{{item.partTimeJob==0?'是':item.partTimeJob=1?'否':''}}</p>
+                        <p>{{item.partTimeJob==0?'是':item.partTimeJob==1?'否':''}}</p>
                     </el-form-item>
                     <el-form-item label="行业身份：" label-width="120px">
                         <p>{{item.industryStatus}}</p>
