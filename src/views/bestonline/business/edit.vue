@@ -41,7 +41,7 @@
                     <p class="small-title ">2、KPI(必填)</p>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col proportionKPI">
-                            <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
+                            <el-form-item label="批发:零售:工程占比：" prop="share">
                                 <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
                                 <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
                                 <el-input v-model="form.projectShare"></el-input>
@@ -117,14 +117,26 @@ export default {
             activeName: '1',
             options: YES_NO_STATUS_COPY,
             rules: {
-                wholesaleShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
-                ],
-                retailShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
-                ],
-                projectShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
+                share: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                            if (this.form.wholesaleShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (this.form.retailShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (this.form.projectShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (!Reg.test(this.form.wholesaleShare) || !Reg.test(this.form.retailShare) || !Reg.test(this.form.projectShare)) {
+                                return callback(new Error('可以输入有两位小数的正实数'))
+                            }
+                            return callback()
+                        }
+                    }
                 ],
                 // salesPerformanceLastYear: [
                 //     { required: true, message: '请输入上年销售业绩', trigger: 'blur' }
