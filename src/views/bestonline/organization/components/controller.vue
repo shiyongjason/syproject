@@ -127,7 +127,7 @@ export default {
         },
         radarChartData () {
             return this.chartList.map(item => {
-                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) }
+                return { name: item.assessmentDimension, max: fullMarkMap.get(item.assessmentDimension) }
             })
         },
         ...mapState({
