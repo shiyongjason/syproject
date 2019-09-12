@@ -16,3 +16,7 @@ export const BUS_TYPE = [
         value: '工程'
     }
 ]
+// 2= 分部  1 = 大区 0 总部
+export const DEPT_TYPE = [
+    2, 1, 0
+]

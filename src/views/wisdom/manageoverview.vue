@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
 
-            <div class="query-cont-col" v-if="!userInfo.organizationType">
+            <div class="query-cont-col" v-if="!(userInfo.deptType=== deptType[1])">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
                     <el-select v-model="formData.regionCode" placeholder="选择" :clearable=true>
@@ -11,7 +11,7 @@
                     </el-select>
                 </div>
             </div>
-            <div class="query-cont-col" v-if="!(userInfo.organizationType === 1)">
+            <div class="query-cont-col" v-if="!(userInfo.deptType ===  deptType[0])">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="formData.subsectionCode" placeholder="选择" :clearable=true>
@@ -61,6 +61,7 @@ import addchild from './components/addchild'
 import salechild from './components/salechild'
 import profitchild from './components/profitchild'
 import { mapState } from 'vuex'
+import { DEPT_TYPE } from './store/const'
 export default {
     data () {
         return {
@@ -73,7 +74,8 @@ export default {
             },
             activeName: 'first',
             branchList: [],
-            regionList: []
+            regionList: [],
+            deptType: DEPT_TYPE
         }
     },
     components: {
@@ -84,7 +86,7 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userData
+            userInfo: state => state.userInfo
         }),
         pickerOptionsStart () {
             return {
@@ -110,7 +112,7 @@ export default {
     watch: {
         async 'formData.regionCode' (newV, oldV) {
             if (newV) {
-                this.formData.subsectionCode = this.userInfo.organizationType === 1 ? this.userInfo.companyCode : ''
+                this.formData.subsectionCode = this.userInfo.deptType === this.deptType[0] ? this.userInfo.oldDeptCode : ''
                 this.branchList = await this.onFindBranchList(newV)
             } else {
                 this.branchList = await this.onFindBranchList()
@@ -120,13 +122,14 @@ export default {
         }
     },
     async mounted () {
-        this.formData.companyCode = this.userInfo.companyCode
+        this.formData.companyCode = this.userInfo.oldDeptCode
+        console.log(1, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
-        if (this.userInfo.organizationType === -1) {
-            this.formData.regionCode = this.userInfo.companyCode
-        } else if (this.userInfo.organizationType === 1) {
-            this.formData.regionCode = this.userInfo.companyCode
-            this.formData.subsectionCode = this.userInfo.companyCode
+        if (this.userInfo.deptType === this.deptType[2]) {
+            this.formData.regionCode = this.userInfo.oldDeptCode
+        } else if (this.userInfo.deptType === this.deptType[0]) {
+            this.formData.regionCode = this.userInfo.oldDeptCode
+            this.formData.subsectionCode = this.userInfo.oldDeptCode
             // this.formData.subsectionCode = this.userInfo.companyCode
         }
         this.onFindRegionList()
