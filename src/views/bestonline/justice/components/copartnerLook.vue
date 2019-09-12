@@ -26,7 +26,7 @@
                         <p>{{item.idNumber}}</p>
                     </el-form-item>
                     <el-form-item label="学历：" label-width="120px">
-                        <p>{{item.education?educationOptions[item.education].label:''}}</p>
+                        <p>{{item.education!=null?educationOptions[item.education].label:''}}</p>
                     </el-form-item>
                     <el-form-item label="持股比例：" label-width="120px" v-if="item.type != 2">
                         <p>{{item.shareholdingRatio}}</p>

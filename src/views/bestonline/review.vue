@@ -179,7 +179,7 @@ export default {
             console.log(data)
             this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approveStatus == 1) {
+                if (value.approveStatus == 1 || value.approveStatus == 2) {
                     value.color = '#f88825'
                 }
                 return value

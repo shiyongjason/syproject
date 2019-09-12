@@ -31,14 +31,12 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`"
-                            :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`" :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
                             <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`"
-                            :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score">
                             <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore"></el-input>
                         </el-form-item>
                     </td>
@@ -59,6 +57,7 @@
 <script>
 import { mapState } from 'vuex'
 import echarts from 'echarts'
+import { IsFixedTwoNumber } from '@/utils/rules'
 const weightMap = new Map([
     ['年龄', 0.2],
     ['健康', 0.3],
@@ -99,7 +98,13 @@ export default {
     },
     data () {
         return {
-            chartList: []
+            chartList: [],
+            rules: {
+                score: [
+                    { required: true, message: '此项为必填项', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {

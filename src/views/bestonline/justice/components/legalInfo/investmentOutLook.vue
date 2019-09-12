@@ -7,16 +7,16 @@
                     <p>{{item.investmentCompany||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资金额：">
-                    <p>{{item.investmentAmount||'-'}}</p>
+                    <p>{{item.investmentAmount?`${item.investmentAmount}万`:'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资比例：">
-                    <p>{{item.investmentRatio||'-'}}</p>
+                    <p>{{item.investmentRatio?`${item.investmentRatio}%`:'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资性质：">
                     <p>{{item.investmentType == 0?'债务性投资':item.investmentType == 1?'权益性投资':item.investmentType == 1?'混合性投资':'-'}}</p>
                 </el-form-item>
                 <el-form-item label="投资收益：">
-                    <p>{{item.investmentIncome||'-'}}</p>
+                    <p>{{item.investmentIncome?`${item.investmentIncome}万`:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>

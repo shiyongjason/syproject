@@ -42,7 +42,7 @@
         </div>
         <div class="form-cont-row">
             <div class="form-cont-col">
-                <el-form-item label="仓库面积（㎡）：">
+                <el-form-item label="仓库面积（㎡）：" prop="dueFinanceBasic.storeSize" :rules="rules.storeSize">
                     <el-input v-model="form.dueFinanceBasic.storeSize" placeholder="请输入仓库面积（㎡）" maxlength="25">
                     </el-input>
                 </el-form-item>
@@ -74,7 +74,7 @@
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item label="具体监管时间：">
+                <el-form-item label="具体监管时间：" v-if="form.dueFinanceBasic.custodyType != 3">
                     <el-date-picker v-model="form.dueFinanceBasic.dateOfCustody" type="date" placeholder="选择日期">
                     </el-date-picker>
                 </el-form-item>
@@ -87,6 +87,7 @@
 import { mapState } from 'vuex'
 import { WAREHOUSE_ORDER_OPTIONS, WAREHOUSE_FORM, SUPERVISION_METHOD } from '../const'
 import { getAreacode } from '../../api/index.js'
+import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     data () {
@@ -94,7 +95,12 @@ export default {
             warehouseOrderOptions: WAREHOUSE_ORDER_OPTIONS,
             agreeCustodyOptions: SUPERVISION_METHOD,
             storeOptions: WAREHOUSE_FORM,
-            storeProvince: []
+            storeProvince: [],
+            rules: {
+                storeSize: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {

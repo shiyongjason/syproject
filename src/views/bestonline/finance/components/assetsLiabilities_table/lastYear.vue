@@ -29,9 +29,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`assetsLiabilities.assetListL[${index}].endOrCurrent`" :rules="rules.endOrCurrentNORequired">
+                                    <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                         <td>
@@ -43,9 +45,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`assetsLiabilities.assetListL[${index}].beginOrPrior`" :rules="rules.beginOrPriorNORequired">
+                                    <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                     </template>
@@ -76,9 +80,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`assetsLiabilities.liabilitiesListL[${index}].endOrCurrent`" :rules="rules.endOrCurrentNORequired">
+                                    <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                         <td>
@@ -90,9 +96,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`assetsLiabilities.liabilitiesListL[${index}].beginOrPrior`" :rules="rules.beginOrPriorNORequired">
+                                    <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                     </template>
@@ -114,15 +122,24 @@
 
 <script>
 import { mapState } from 'vuex'
+import { Money } from '@/utils/rules'
 export default {
     data () {
         return {
             rules: {
                 endOrCurrent: [
-                    { required: true, message: '请填写期末余额', trigger: 'blur' }
+                    { required: true, message: '请填写期末余额', trigger: 'blur' },
+                    { validator: Money }
+                ],
+                endOrCurrentNORequired: [
+                    { validator: Money }
                 ],
                 beginOrPrior: [
-                    { required: true, message: '请填写年初余额', trigger: 'blur' }
+                    { required: true, message: '请填写年初余额', trigger: 'blur' },
+                    { validator: Money }
+                ],
+                beginOrPriorNORequired: [
+                    { validator: Money }
                 ]
             }
         }
@@ -162,7 +179,7 @@ td {
     border: 1px solid #dddddd;
     text-align: center;
     line-height: 40px;
-    min-width: 100px
+    min-width: 100px;
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
@@ -177,7 +194,7 @@ table {
 }
 </style>
 <style  scoped>
-.yearTable >>> .el-input{
-    width: 100%
+.yearTable >>> .el-input {
+    width: 100%;
 }
 </style>

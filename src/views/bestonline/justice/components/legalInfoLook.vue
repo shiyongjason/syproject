@@ -155,19 +155,19 @@
         </el-form>
 
         <p class="small-title">诉讼、仲裁及行政处罚事件</p>
-        <div class="flex-wrap-col info-wrap">
+        <div class="flex-wrap-col info-wrap" v-for="item in punishmentList" :key="item.id">
             <el-form label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="事件类型：">
-                    <p>{{justiceData.punishmentList[type].punishmentType?punishmentTypeOptions[justiceData.punishmentList[type].punishmentType].label:'-'}}</p>
+                    <p>{{item.punishmentType?punishmentTypePlus[item.type].label:'-'}}</p>
                 </el-form-item>
                 <el-form-item label="事件名称：">
-                    <p>{{justiceData.punishmentList[type].caseInfo||'-'}}</p>
+                    <p>{{item.caseInfo||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="涉及金额：">
-                    <p>{{justiceData.punishmentList[type].moneyInvolved||'-'}}</p>
+                    <p>{{item.moneyInvolved||'-'}}</p>
                 </el-form-item>
                 <el-form-item label="严重性：">
-                    <p>{{justiceData.punishmentList[type].ponderance!==null?newOpitions[justiceData.punishmentList[type].ponderance].label:'-'}}</p>
+                    <p>{{item.ponderance!==null?newOpitions[item.ponderance].label:'-'}}</p>
                 </el-form-item>
             </el-form>
         </div>
@@ -201,11 +201,12 @@ export default {
             userInfo: state => state.userInfo,
             justiceData: state => state.dueDiligence.justiceData
         }),
-        newPonderOpitons () {
-            const newarr = { ...this.newPonderOpitons }
-            const arr = newarr.splice(0, 1)
-            console.log(newarr)
-            return arr
+        punishmentTypePlus () {
+            let newArr = this.punishmentTypeOptions.concat()
+            newArr.splice(0, 1)
+            console.log(newArr)
+
+            return newArr || []
         },
         /* debtTotal () {
             const debtArr = this.justiceData.debtList.map(item => item.debt)
@@ -237,6 +238,13 @@ export default {
             let type = this.type === 2 ? 3 : 5
             if (this.justiceData.assureList && this.justiceData.assureList.length > 0) {
                 res = this.justiceData.assureList.filter(item => item.type === type)
+            }
+            return res
+        },
+        punishmentList () {
+            let res = []
+            if (this.justiceData.punishmentList && this.justiceData.punishmentList.length > 0) {
+                res = this.justiceData.punishmentList.filter(item => item.type === this.type)
             }
             return res
         },
