@@ -102,7 +102,8 @@ export default {
             rules: {
                 score: [
                     { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: IsFixedTwoNumber, trigger: 'blur' },
+                    { validator: this.maximum, trigger: 'blur'}
                 ]
             }
         }
@@ -159,6 +160,12 @@ export default {
     methods: {
         onChangeScore () {
             this.drawRadar()
+        },
+        maximum (rule, value, callback) {
+            if (value>40) {
+                    return callback(new Error('满分40'))
+                }
+                return callback()
         },
         drawRadar () {
             this.radarChart = echarts.init(this.$refs.radarChart2)
