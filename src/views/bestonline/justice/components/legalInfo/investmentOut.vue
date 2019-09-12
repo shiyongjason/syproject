@@ -1,55 +1,46 @@
 <template>
     <div>
         <p class="small-title">对外投资信息</p>
-        <div class="flex-wrap-col info-wrap" v-for="(item, index) in investmentsOutList"
-            :key="'investmentsOutList'+item.type + index">
+        <div class="flex-wrap-col info-wrap" v-for="(item, index) in investmentsOutList" :key="'investmentsOutList'+item.type + index">
             <template>
-                <i class="el-icon-circle-plus-outline pointer" v-if="index == 0"
-                    @click="onAddList()"></i>
-                <i class="el-icon-remove-outline pointer" v-if="index != 0"
-                    @click="onRemoveList(item.id)"></i>
+                <i class="el-icon-circle-plus-outline pointer" v-if="index == 0" @click="onAddList()"></i>
+                <i class="el-icon-remove-outline pointer" v-if="index != 0" @click="onRemoveList(item.id)"></i>
             </template>
-            <el-form label-position="right" label-width="150px" class="legal-form">
-                <el-form-item label="投资公司：">
-                    <el-input
-                        v-model="item.investmentCompany"
-                        placeholder="投资公司"
-                        maxlength="25">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="投资金额：">
-                    <el-input
-                        v-model="item.investmentAmount"
-                        placeholder="请输入投资金额"
-                        maxlength="25">
-                        <template slot="suffix">万</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="投资比例：">
-                    <el-input
-                        v-model="item.investmentRatio"
-                        placeholder="请输入投资比例"
-                        maxlength="25">
-                        <template slot="suffix">%</template>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="投资性质：">
-                    <el-select v-model="item.investmentType" placeholder="请选择投资性质">
-                        <el-option v-for="item in investmentTypeOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="投资收益：">
-                    <el-input
-                        v-model="item.investmentIncome"
-                        placeholder="请输入投资收益"
-                        maxlength="25">
-                        <template slot="suffix">万</template>
-                    </el-input>
-                </el-form-item>
-            </el-form>
+            <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+            <div class="form-cont-row mt20">
+                <div class="form-cont-col">
+                    <el-form-item label="投资公司：" label-width="150px">
+                        <el-input v-model="item.investmentCompany" placeholder="投资公司" maxlength="25">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="投资金额：" label-width="150px" :prop="`investmentsOutList[${index}].investmentAmount`" :rules="rules.investmentAmount">
+                        <el-input v-model="item.investmentAmount" placeholder="请输入投资金额" maxlength="25">
+                            <template slot="suffix">万</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="投资比例：" label-width="150px" :prop="`investmentsOutList[${index}].investmentRatio`" :rules="rules.investmentRatio">
+                        <el-input v-model="item.investmentRatio" placeholder="请输入投资比例" maxlength="25">
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </el-form-item>
+                </div>
+            </div>
+            <div class="form-cont-row mt20">
+                <div class="form-cont-col">
+                    <el-form-item label="投资性质：" label-width="150px">
+                        <el-select v-model="item.investmentType" placeholder="请选择投资性质">
+                            <el-option v-for="item in investmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="投资收益：" label-width="150px" :prop="`investmentsOutList[${index}].investmentIncome`" :rules="rules.investmentIncome">
+                        <el-input v-model="item.investmentIncome" placeholder="请输入投资收益" maxlength="25">
+                            <template slot="suffix">万</template>
+                        </el-input>
+                    </el-form-item>
+                </div>
+            </div>
+
+            <!-- </el-form> -->
         </div>
     </div>
 </template>
@@ -57,6 +48,7 @@
 <script>
 import { mapState } from 'vuex'
 import { INVESTMENT_TYPE_OPTIONS } from '../../const'
+import { IsFixedTwoNumber } from '@/utils/rules'
 
 export default {
     name: 'investment_out',
@@ -68,7 +60,18 @@ export default {
     },
     data () {
         return {
-            investmentTypeOptions: INVESTMENT_TYPE_OPTIONS
+            investmentTypeOptions: INVESTMENT_TYPE_OPTIONS,
+            rules: {
+                investmentAmount: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                investmentRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                investmentIncome: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ]
+            },
         }
     },
     computed: {
@@ -139,7 +142,10 @@ export default {
         font-size: 25px;
     }
 }
-.small-title{
+.small-title {
     margin-bottom: 20px;
+}
+.el-form-item {
+    margin-bottom: 0;
 }
 </style>
