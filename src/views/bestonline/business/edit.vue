@@ -421,7 +421,7 @@ table {
 }
 .proportionKPI {
     .el-input {
-        width: 50px;
+        width: 60px;
     }
 }
 .KPISymbol {
