@@ -199,12 +199,19 @@ export default {
             return isNaN(total) ? '' : total
         },
         radarValueOfData () {
-            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => isNaN(item.score) ? 0 : item.score)
+            let temp = JSON.parse(JSON.stringify(this.form.dueOrganizationOrgAssessmentCreateFormList))
+            const res = temp.map(item => {
+                if (item.score != null) return item.score
+                else return 0
+            })
+            return res
+            // return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => isNaN(item.score) ? 0 : item.score)
         },
         radarChartData () {
-            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
-                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) }
+            let res = this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
+                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) === 0 ? 10 : Math.max.apply(null, this.radarValueOfData) }
             })
+            return res
         },
         ...mapState({
             form: state => state.dueDiligence.organizationData
