@@ -337,8 +337,8 @@ const routerMapping = [
                 path: 'order',
                 name: 'order',
                 meta: {
-                    title: '订单／收款纪录查询',
-                    tagName: '订单／收款纪录查询',
+                    title: '订单／收款记录查询',
+                    tagName: '订单／收款记录查询',
                     isMenu: true,
                     icon: ''
                 },
@@ -359,8 +359,8 @@ const routerMapping = [
                 path: 'member',
                 name: 'member',
                 meta: {
-                    title: '会员店审核列表',
-                    tagName: '会员店审核列表',
+                    title: '会员审核列表',
+                    tagName: '会员审核列表',
                     isMenu: true,
                     icon: ''
                 },
@@ -389,17 +389,6 @@ const routerMapping = [
                 component: () => import('./views/hmall/shopReview/activeReview.vue')
             },
             {
-                path: 'merchantReview',
-                name: 'merchantReview',
-                meta: {
-                    title: '商户审核列表',
-                    tagName: '商户审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/merchantReview.vue')
-            },
-            {
                 path: 'wallet',
                 name: 'wallet',
                 meta: {
@@ -409,6 +398,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/walletPay/walletPay.vue')
+            },
+            {
+                path: 'merchantReview',
+                name: 'merchantReview',
+                meta: {
+                    title: '商户审核列表',
+                    tagName: '商户审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/shopReview/merchantReview.vue')
             }
         ]
     },
