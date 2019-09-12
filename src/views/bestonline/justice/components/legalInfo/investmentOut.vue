@@ -71,7 +71,7 @@ export default {
                 investmentIncome: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
-            },
+            }
         }
     },
     computed: {
