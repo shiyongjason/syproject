@@ -46,7 +46,7 @@
         <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
             <div class="block">
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
+                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index"  :color="item.color">
                         {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
                         {{item.approvalOpinion}}
                     </el-timeline-item>
