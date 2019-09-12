@@ -121,14 +121,11 @@
                     <el-form-item label="发放时间：">
                         {{couponDetails.effectiveDays | formatDateDuration}}
                     </el-form-item>
-                    <el-form-item label="创建时间：">
-                        {{couponDetails.createTime | formatterTime}}
-                    </el-form-item>
                     <el-form-item label="优惠券类型：">
                         {{couponDetails.couponType === 1 ? '满减' : '无门槛'}}
                     </el-form-item>
-                    <el-form-item label="活动规则：">
-                        {{couponDetails.rule}}
+                    <el-form-item label="创建时间：">
+                        {{couponDetails.createTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="优惠券状态：">
                         <!--2.进行中 3.未审核 4.已结束 5.未通过-->
@@ -136,6 +133,12 @@
                         <span v-if="couponDetails.status === 3">未审核</span>
                         <span v-if="couponDetails.status === 4">已结束</span>
                         <span v-if="couponDetails.status === 5">未通过</span>
+                    </el-form-item>
+                    <el-form-item label="有效时间：">
+                        {{couponDetails.effectiveStartDate}} - {{ couponDetails.effectiveEndDate }}
+                    </el-form-item>
+                    <el-form-item label="活动规则：">
+                        {{couponDetails.rule}}
                     </el-form-item>
                     <el-form-item label="限领数量：">
                         {{couponDetails.receiveNumLimit === 0 ? '不限量' : couponDetails.receiveNumLimit +'张'}}
@@ -156,6 +159,9 @@
                         <span v-if="couponDetails.joinType === 1">全场参加</span>
                         <span v-if="couponDetails.joinType === 2">指定类目</span>
                         <span v-if="couponDetails.joinType === 3">指定商品</span>
+                    </el-form-item>
+                    <el-form-item label="审核备注：">
+                        {{couponDetails.auditRemark}}
                     </el-form-item>
                     <el-form-item label="类目名称：" v-if="couponDetails.joinType === 2">
                         {{couponDetails.categoryNameList ? couponDetails.categoryNameList.join(',') : '-'}}
@@ -271,6 +277,8 @@ export default {
         },
         async findCouponDetails (id) {
             const { data } = await findCouponDetails({ id: id })
+            data.effectiveStartDate = this.$root.$options.filters.formatDate(data.effectiveStartDate, 'YYYY-MM-DD HH:mm:ss')
+            data.effectiveEndDate = this.$root.$options.filters.formatDate(data.effectiveEndDate, 'YYYY-MM-DD HH:mm:ss')
             this.couponDetails = data
         },
         async createCouponReview () {
