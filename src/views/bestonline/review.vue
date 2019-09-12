@@ -198,7 +198,7 @@ export default {
                 this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
                 return false
             } else {
-                if (row.signScale < 3000) {
+                if (row.signScale < 3000 && row.signScale > 0) {
                     if (row.financalFlag == 1) {
                         this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
                         return false

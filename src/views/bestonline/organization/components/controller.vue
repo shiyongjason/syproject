@@ -102,7 +102,8 @@ export default {
             rules: {
                 score: [
                     { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: IsFixedTwoNumber, trigger: 'blur' },
+                    { validator: this.maximum, trigger: 'blur' }
                 ]
             }
         }
