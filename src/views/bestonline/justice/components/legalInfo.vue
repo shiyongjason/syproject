@@ -171,24 +171,32 @@
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('punishmentList', 'defaultPunishment')"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('punishmentList', item.id)"></i>
                     </template>
-                    <el-form label-position="right" label-width="150px" class="legal-form">
-                        <el-form-item label="事件类型：">
-                            <el-select v-model="item.punishmentType" placeholder="请选择事件类型">
-                                <el-option v-for="item in punishmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="事件名称：">
-                            <el-input v-model="item.caseInfo" placeholder="请输入事件名称" maxlength="25"></el-input>
-                        </el-form-item>
-                        <el-form-item label="涉及金额：">
-                            <el-input v-model="item.moneyInvolved" placeholder="请输入涉及金额" maxlength="25"></el-input>
-                        </el-form-item>
-                        <el-form-item label="严重性：">
-                            <el-select placeholder="请选择严重性" v-model="item.ponderance">
-                                <el-option v-for="item in ponderanceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-form>
+                    <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+                    <div class="form-cont-row">
+                        <div class="form-cont-col">
+                            <el-form-item label="事件类型：" label-width="200px">
+                                <el-select v-model="item.punishmentType" placeholder="请选择事件类型">
+                                    <el-option v-for="item in punishmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="事件名称：" label-width="200px">
+                                <el-input v-model="item.caseInfo" placeholder="请输入事件名称" maxlength="25"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <div class="form-cont-row">
+                        <div class="form-cont-col">
+                            <el-form-item label="涉及金额：" label-width="200px" :prop="`punishmentList[${index}].moneyInvolved`" :rules="rules.moneyInvolved">
+                                <el-input v-model="item.moneyInvolved" placeholder="请输入涉及金额" maxlength="25"></el-input>
+                            </el-form-item>
+                            <el-form-item label="严重性：" label-width="200px">
+                                <el-select placeholder="请选择严重性" v-model="item.ponderance">
+                                    <el-option v-for="item in ponderanceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <!-- </el-form> -->
                 </div>
             </div>
         </el-form-item>
@@ -199,6 +207,7 @@
 import { mapState } from 'vuex'
 import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
 import { fileUploadUrl } from '@/api/config'
+import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'legal_info',
     props: {
@@ -211,7 +220,12 @@ export default {
         return {
             debtPurposeOptions: DEBT_PURPOSE_OPTIONS,
             punishmentTypeOptions: PUNISHMENT_TYPE_OPTIONS,
-            ponderanceOptions: PONDERANCE_OPTIONS
+            ponderanceOptions: PONDERANCE_OPTIONS,
+            rules: {
+                moneyInvolved: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ]
+            }
         }
     },
     watch: {

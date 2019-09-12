@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+           <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -12,10 +12,10 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <td class="assessmentRow">评估项</td>
-                                <td class="assessmentRow">合作目标</td>
-                                <td class="assessmentRow"><span class="red-word">*</span>结论</td>
-                                <td class="assessmentRow">备注</td>
+                                <td width="25%">评估项</td>
+                                <td width="25%">合作目标</td>
+                                <td width="25%"><span class="red-word">*</span>结论</td>
+                                <td width="25%">备注</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                         </el-select>
                                     </el-form-item>
                                 </td>
-                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0" width="80px">
                                     <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
                                     </el-input>
                                 </td>
@@ -421,7 +421,10 @@ table {
 }
 .proportionKPI {
     .el-input {
-        width: 50px;
+        width: 60px;
+    }
+    .el-input__inner{
+        padding: 0 2px;
     }
 }
 .KPISymbol {
