@@ -122,7 +122,7 @@ export default {
         }
     },
     async mounted () {
-        this.formData.companyCode = this.userInfo.oldDeptCode
+        this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
         console.log(1, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
         if (this.userInfo.deptType === this.deptType[2]) {
