@@ -12,10 +12,10 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <td class="assessmentRow">评估项</td>
-                                <td class="assessmentRow">合作目标</td>
-                                <td class="assessmentRow"><span class="red-word">*</span>结论</td>
-                                <td class="assessmentRow">备注</td>
+                                <td width="25%">评估项</td>
+                                <td width="25%">合作目标</td>
+                                <td width="25%"><span class="red-word">*</span>结论</td>
+                                <td width="25%">备注</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                         </el-select>
                                     </el-form-item>
                                 </td>
-                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0" width="80px">
                                     <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
                                     </el-input>
                                 </td>

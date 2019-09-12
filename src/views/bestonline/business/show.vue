@@ -12,10 +12,10 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <td class="assessmentRow">评估项</td>
-                                <td class="assessmentRow">合作目标</td>
-                                <td class="assessmentRow">结论</td>
-                                <td class="assessmentRow">备注</td>
+                                <td width="25%">评估项</td>
+                                <td width="25%">合作目标</td>
+                                <td width="25%">结论</td>
+                                <td width="25%">备注</td>
                             </tr>
                         </thead>
                         <tbody>
