@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+           <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -422,6 +422,9 @@ table {
 .proportionKPI {
     .el-input {
         width: 60px;
+    }
+    .el-input__inner{
+        padding: 0 2px;
     }
 }
 .KPISymbol {
