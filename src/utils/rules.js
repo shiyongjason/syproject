@@ -113,8 +113,24 @@ export const Money = (rule, value, callback) => {
     callback()
 }
 
+export const MoneyMinus = (rule, value, callback) => {
+    var Reg = /(^-?[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^-?[0-9]\.[0-9]([0-9])?$)/
+    if (value && !(Reg.test(value))) {
+        return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
+    }
+    callback()
+}
+
 export const MoneyOrConnector = (rule, value, callback) => {
     var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)|(^(-){1}$)/
+    if (value && !(Reg.test(value))) {
+        return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
+    }
+    callback()
+}
+
+export const MoneyOrConnectorMinus = (rule, value, callback) => {
+    var Reg = /(^-?[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^-?[0-9]\.[0-9]([0-9])?$)|(^(-){1}$)/
     if (value && !(Reg.test(value))) {
         return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
     }
