@@ -105,7 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
-import { IsPositiveInteger2, IsFixedTwoNumber, Money } from '@/utils/rules'
+import { IsPositiveInteger, IsFixedTwoNumber, Money } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
@@ -231,10 +231,10 @@ export default {
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ],
                 selfStoresNum: [
-                    { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
+                    { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
                 ],
                 memberShopNum: [
-                    { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
+                    { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
                 ],
                 firstTenMonthsDown: [
                     { required: true, message: '请选择是否下滑', trigger: 'change' }

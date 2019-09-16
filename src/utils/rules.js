@@ -28,9 +28,29 @@ export const IsEnglish = (rule, value, callback) => {
     return callback()
 }
 
+/**
+ * 正整数校验规则
+ * @param {*} rule
+ * @param {*} value
+ * @param {*} callback
+ */
 export const IsPositiveInteger = (rule, value, callback) => {
     const Reg = /^[1-9]\d*$/
-    if (!Reg.test(value)) {
+    if (value && !Reg.test(value)) {
+        return callback(new Error(rule.message))
+    }
+    return callback()
+}
+
+/**
+ * 整数校验规则（包含0，可以为0）
+ * @param {*} rule
+ * @param {*} value
+ * @param {*} callback
+ */
+export const IsInteger = (rule, value, callback) => {
+    const Reg = /^[1-9]\d*$/
+    if (value && value != 0 && !Reg.test(value)) {
         return callback(new Error(rule.message))
     }
     return callback()
@@ -101,13 +121,6 @@ export const Password = (rule, value, callback) => {
     callback()
 }
 
-export const IsPositiveInteger2 = (rule, value, callback) => {
-    const Reg = /^[1-9]\d*$/
-    if (value && !Reg.test(value)) {
-        return callback(new Error(rule.message))
-    }
-    return callback()
-}
 // 两位小数的正实数
 export const IsFixedTwoNumber = (rule, value, callback) => {
     var Reg = /^[0-9]+(.[0-9]{1,2})?$/
