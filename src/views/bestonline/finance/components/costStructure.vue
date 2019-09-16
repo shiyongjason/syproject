@@ -19,7 +19,7 @@
                 </el-form-item>
             </div>
             <div class="form-cont-col">
-                <el-form-item label="财务费用占比：">
+                <el-form-item label="财务费用占比：" prop="dueFinanceBasic.financeExpensesRatio" :rules="rules.financeExpensesRatio">
                     <el-input placeholder="" maxlength="25" v-model="form.dueFinanceBasic.financeExpensesRatio">
                         <template slot="suffix">%</template>
                     </el-input>
@@ -58,6 +58,9 @@ export default {
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 managementExpensesRatio: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                financeExpensesRatio: [
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
