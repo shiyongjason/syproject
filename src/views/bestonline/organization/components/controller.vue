@@ -37,7 +37,7 @@
                     </td>
                     <td v-if="!item.isTitle">
                         <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score">
-                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore"></el-input>
+                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -162,7 +162,10 @@ export default {
             if (score > fullMarks) e.target.value = fullMarks
             // console.log(val)
         },
-        onChangeScore () {
+        onChangeScore (item, fullMarks) {
+            if (item.score > fullMarks) {
+                item.score = fullMarks
+            }
             this.drawRadar()
         },
         drawRadar () {
