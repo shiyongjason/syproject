@@ -113,8 +113,8 @@ export default {
             const params = Object.assign({}, this.queryParams)
             params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
             if (!params.subsectionCode) {
-                params.subsectionCode = this.userInfo.companyCode
-                this.queryParamsTemp.subsectionCode = this.userInfo.companyCode
+                params.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
+                this.queryParamsTemp.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
             }
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
@@ -125,7 +125,7 @@ export default {
         },
         async findBranchListNew () {
             const param = {
-                subsectionCode: this.userInfo.companyCode
+                subsectionCode: this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
             }
             const { data } = await findBranchListNew(param)
             if (data.data) {
