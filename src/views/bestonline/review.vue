@@ -47,7 +47,9 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index"  :color="item.color">
-                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
+                        {{item.userName}}/
+                        {{item.approveStatus===0?'待审核':item.approveStatus===2?'已驳回':item.approveStatus===1&&item.isCooperate==0?'可以合作':'不可以合作'}}
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
                         {{item.approvalOpinion}}
                     </el-timeline-item>
                 </el-timeline>
