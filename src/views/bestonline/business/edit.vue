@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-           <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+        <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -105,7 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
-import { IsPositiveInteger2, IsFixedTwoNumber } from '@/utils/rules'
+import { IsPositiveInteger2, IsFixedTwoNumber, Money } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
@@ -208,10 +208,12 @@ export default {
                     { required: true, message: '请输入品牌信息', trigger: 'blur' }
                 ],
                 'dueBusinessFuturePlanCreateForm.annualSalesScale': [
-                    { required: true, message: '请输入年销售规模', trigger: 'blur' }
+                    { required: true, message: '请输入年销售规模', trigger: 'blur' },
+                    { validator: Money }
                 ],
                 'dueBusinessFuturePlanCreateForm.netProfitRate': [
-                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers': [
                     { required: true, message: '请输入下游切换渠道和客户', trigger: 'blur' }
@@ -229,6 +231,9 @@ export default {
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ],
                 selfStoresNum: [
+                    { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
+                ],
+                memberShopNum: [
                     { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
                 ],
                 firstTenMonthsDown: [
@@ -423,7 +428,7 @@ table {
     .el-input {
         width: 60px;
     }
-    .el-input__inner{
+    .el-input__inner {
         padding: 0 2px;
     }
 }

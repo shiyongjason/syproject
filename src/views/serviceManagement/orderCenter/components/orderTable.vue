@@ -24,7 +24,7 @@
                     <div class="head-info">
                         <span style="padding-left:10px">订单号：{{item.orderNo}}</span>
                         <span class="more">
-                            外部订单号订单号：{{item.channelOrderNo}}
+                            外部订单号：{{item.channelOrderNo}}
                         </span>
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
                         <span class="remark">
