@@ -59,24 +59,24 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Money } from '@/utils/rules'
+import { MoneyOrConnector } from '@/utils/rules'
 export default {
     data () {
         return {
             rules: {
                 endOrCurrent: [
                     { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
-                    { validator: Money }
+                    { validator: MoneyOrConnector }
                 ],
                 endOrCurrentNORequired: [
-                    { validator: Money }
+                    { validator: MoneyOrConnector }
                 ],
                 beginOrPrior: [
                     { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
-                    { validator: Money }
+                    { validator: MoneyOrConnector }
                 ],
                 beginOrPriorNORequired: [
-                    { validator: Money }
+                    { validator: MoneyOrConnector }
                 ]
             }
         }

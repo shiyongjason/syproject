@@ -37,7 +37,7 @@
                     </td>
                     <td v-if="!item.isTitle">
                         <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score">
-                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore" @keyup.native="onScore($event,item.score,item.fullMarks)"></el-input>
+                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -102,8 +102,7 @@ export default {
             rules: {
                 score: [
                     { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' },
-                    { validator: this.maximum, trigger: 'blur' }
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }
@@ -163,14 +162,11 @@ export default {
             if (score > fullMarks) e.target.value = fullMarks
             // console.log(val)
         },
-        onChangeScore () {
-            this.drawRadar()
-        },
-        maximum (rule, value, callback) {
-            if (value > 40) {
-                return callback(new Error('满分40'))
+        onChangeScore (item, fullMarks) {
+            if (item.score > fullMarks) {
+                item.score = fullMarks
             }
-            return callback()
+            this.drawRadar()
         },
         drawRadar () {
             this.radarChart = echarts.init(this.$refs.radarChart2)

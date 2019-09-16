@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="拟签约规模：" prop="signScale">
+                <el-form-item label="拟签约规模：" :prop="formData.signScale" :rules="rules.signScale">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-input placeholder="请输入拟签约规模" maxlength="10" v-model="formData.signScale" @keyup.native="oninteger($event)">
@@ -109,7 +109,7 @@
 import { fileUploadUrl } from '@/api/config'
 import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from '../api/index'
 import { mapState } from 'vuex'
-import { plusOrMinus } from '@/utils/rules.js'
+import { plusOrMinus, IsFixedTwoNumber } from '@/utils/rules.js'
 import { BUSINESS_OPTIONS } from './const.js'
 import { AUTH_BESTONLINE_APPLY_ADD_DRAFT, AUTH_BESTONLINE_APPLY_ADD_COMMIT, AUTH_BESTONLINE_APPLY_EDIT_DRAFT, AUTH_BESTONLINE_APPLY_EDIT_COMMIT } from '@/utils/auth_const.js'
 export default {
@@ -173,7 +173,8 @@ export default {
                     { required: true, message: '请选择销售形式', trigger: 'change' }
                 ],
                 signScale: [
-                    { required: true, message: '请输入拟签约规模', trigger: 'blur' }
+                    { required: true, message: '请输入拟签约规模', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 mainSystemOther: [
                     { required: true, message: '请详细说明其他品类', trigger: 'blur' }
