@@ -201,7 +201,8 @@ export default {
             addDraftAuthCode: AUTH_BESTONLINE_APPLY_ADD_DRAFT,
             addCommitAuthCode: AUTH_BESTONLINE_APPLY_ADD_COMMIT,
             editDraftAuthCode: AUTH_BESTONLINE_APPLY_EDIT_DRAFT,
-            editCommitAuthCode: AUTH_BESTONLINE_APPLY_EDIT_COMMIT
+            editCommitAuthCode: AUTH_BESTONLINE_APPLY_EDIT_COMMIT,
+            isPending: false
         }
     },
     mounted () {
@@ -328,28 +329,40 @@ export default {
                 this.showWarnMsg('请输入尽调公司名称')
                 return false
             }
+            if (this.isPending) return
+            this.isPending = true
             if (this.applyId) {
                 this.formData.applyId = this.applyId
                 this.formData.updateUser = this.userInfo.jobNumber
-                await updateDueapply(this.formData)
-                this.$message({
-                    showClose: true,
-                    message: '暂存成功',
-                    type: 'success'
-                })
-                this.$router.go(-1)
+                try {
+                    await updateDueapply(this.formData)
+                    this.$message({
+                        showClose: true,
+                        message: '暂存成功',
+                        type: 'success'
+                    })
+                    this.$router.go(-1)
+                } catch (error) {
+                    this.isPending = false
+                }
             } else {
                 this.formData.createUser = this.userInfo.jobNumber
-                await adddueapply(this.formData)
-                this.$message({
-                    showClose: true,
-                    message: '暂存成功',
-                    type: 'success'
-                })
-                this.$router.go(-1)
+                try {
+                    await adddueapply(this.formData)
+                    this.$message({
+                        showClose: true,
+                        message: '暂存成功',
+                        type: 'success'
+                    })
+                    this.$router.go(-1)
+                } catch (error) {
+                    this.isPending = false
+                }
             }
         },
         async onSubmit () {
+            if (this.isPending) return
+            this.isPending = true
             this.$refs['attachmentsUrl'].validate(async (validate) => {
                 if (validate) {
                     this.$refs['form'].validate(async (validate) => {
@@ -361,19 +374,27 @@ export default {
                             this.formData.organizationCode = this.userInfo.deptDoc
                             if (this.applyId) {
                                 this.formData.applyId = this.applyId
-                                await appDueapply(this.formData)
-                                this.$message({
-                                    showClose: true,
-                                    message: '修改成功',
-                                    type: 'success'
-                                })
+                                try {
+                                    await appDueapply(this.formData)
+                                    this.$message({
+                                        showClose: true,
+                                        message: '修改成功',
+                                        type: 'success'
+                                    })
+                                } catch (error) {
+                                    this.isPending = false
+                                }
                             } else {
-                                await appDueapply(this.formData)
-                                this.$message({
-                                    showClose: true,
-                                    message: '提交成功',
-                                    type: 'success'
-                                })
+                                try {
+                                    await appDueapply(this.formData)
+                                    this.$message({
+                                        showClose: true,
+                                        message: '提交成功',
+                                        type: 'success'
+                                    })
+                                } catch (error) {
+                                    this.isPending = false
+                                }
                             }
                             this.$router.go(-1)
                         }
