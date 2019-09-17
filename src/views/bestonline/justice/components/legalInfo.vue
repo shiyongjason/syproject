@@ -54,7 +54,9 @@
                     </template>
                     <el-form label-position="right" label-width="150px" class="legal-form">
                         <el-form-item label="借款：">
-                            <el-input v-model="item.debt" placeholder="借款" maxlength="25"></el-input>
+                            <el-input v-model="item.debt" placeholder="借款" maxlength="25">
+                                <template slot="suffix">万</template>
+                            </el-input>
                         </el-form-item>
                         <el-form-item label="用途：">
                             <el-select v-model="item.purpose" placeholder="请选择用途">
