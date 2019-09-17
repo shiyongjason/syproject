@@ -28,7 +28,7 @@
                             <el-option v-for="item in marriageOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="身份证号：" label-width="150px" v-if="item.type ==0||item.type ==1||item.type ==5" :rules="item.type == 0 ? {required: true,message: '身份证号不能为空',trigger: 'blur'} : {}" :prop="`copartnerInfoList[${index}].idNumber`">
+                    <el-form-item label="身份证号：" label-width="150px" :rules="item.type == 0 ? {required: true,message: '身份证号不能为空',trigger: 'blur'} : {}" :prop="`copartnerInfoList[${index}].idNumber`">
                         <el-input v-model="item.idNumber" placeholder="身份证号" maxlength="25"></el-input>
                     </el-form-item>
                     <el-form-item label="学历：" label-width="150px">
