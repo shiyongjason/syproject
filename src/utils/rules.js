@@ -124,7 +124,7 @@ export const MoneyMinus = (rule, value, callback) => {
 export const MoneyOrConnector = (rule, value, callback) => {
     var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)|(^(-){1}$)/
     if (value && !(Reg.test(value))) {
-        return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
+        return callback(new Error('金额格式为正数，小数点前十三位，小数点后两位'))
     }
     callback()
 }

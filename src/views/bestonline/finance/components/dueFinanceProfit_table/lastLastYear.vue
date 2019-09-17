@@ -15,18 +15,18 @@
                     </template>
                     <template v-else>
                         <td>
-                            <span class="red-word" v-if="index === 16">*</span>
+                            <!-- <span class="red-word" v-if="index === 16">*</span> -->
                             {{item.typeName}}
                         </td>
                         <td>
-                            <template v-if="index === 16">
+                            <!-- <template v-if="index === 16">
                                 <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListB[${index}].endOrCurrent`" :rules="rules.endOrCurrent">
                                     <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </el-form-item>
-                            </template>
-                            <template v-else>
+                            </template> -->
+                            <template>
                                 <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListB[${index}].endOrCurrent`" :rules="rules.endOrCurrentNORequired">
                                     <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
                                         <template slot="suffix">万</template>
@@ -35,14 +35,14 @@
                             </template>
                         </td>
                         <td>
-                            <template v-if="index === 16">
+                            <!-- <template v-if="index === 16">
                                 <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListB[${index}].beginOrPrior`" :rules="rules.beginOrPrior">
                                     <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
                                         <template slot="suffix">万</template>
                                     </el-input>
                                 </el-form-item>
-                            </template>
-                            <template v-else>
+                            </template> -->
+                            <template>
                                 <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListB[${index}].beginOrPrior`" :rules="rules.beginOrPriorNORequired">
                                     <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
                                         <template slot="suffix">万</template>
@@ -64,17 +64,17 @@ export default {
     data () {
         return {
             rules: {
-                endOrCurrent: [
-                    { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
-                    { validator: MoneyOrConnectorMinus }
-                ],
+                // endOrCurrent: [
+                //     { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
+                //     { validator: MoneyOrConnectorMinus }
+                // ],
                 endOrCurrentNORequired: [
                     { validator: MoneyOrConnectorMinus }
                 ],
-                beginOrPrior: [
-                    { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
-                    { validator: MoneyOrConnectorMinus }
-                ],
+                // beginOrPrior: [
+                //     { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
+                //     { validator: MoneyOrConnectorMinus }
+                // ],
                 beginOrPriorNORequired: [
                     { validator: MoneyOrConnectorMinus }
                 ]

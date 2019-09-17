@@ -53,12 +53,12 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="个人经营性借款及担保总额：" label-width="250px" prop="affairs.personalOperatingloansTotalGuarantees">
-                <el-input v-model="justiceData.affairs.personalOperatingloansTotalGuarantees" placeholder="请输入借款及担保总额" @keyup.native="personalOperatingloansTotalGuarantees($event)">
+                <el-input v-model="justiceData.affairs.personalOperatingloansTotalGuarantees" placeholder="请输入借款及担保总额" >
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="公司借款及担保总额：" label-width="250px" prop="affairs.companyLoanTotalGuarantee">
-                <el-input v-model="justiceData.affairs.companyLoanTotalGuarantee" placeholder="请输入借款及担保总额" @keyup.native="companyLoanTotalGuarantee($event)">
+                <el-input v-model="justiceData.affairs.companyLoanTotalGuarantee" placeholder="请输入借款及担保总额" >
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
