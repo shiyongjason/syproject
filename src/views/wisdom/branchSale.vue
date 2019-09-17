@@ -147,12 +147,13 @@ export default {
         async getBranchSale (value) {
             const { data } = await getBranchSale(value)
             if (!this.total.type) {
-                this.total.total = data.data.content.subsectionSaleAdjectiveTotal
+                this.total.total = data.data.content.respSubsectionSaleAdjectiveTotal
             }
+            // 出参 在转移时候变动了 前缀 resp
             this.tableData = data.data.content.subsectionSaleAdjectiveBOS
             if (this.tableData.length > 0) {
                 let _this = this
-                data.data.content.subsectionSaleAdjectiveTotal.subsectionName = '合计'
+                data.data.content.respSubsectionSaleAdjectiveTotal.subsectionName = '合计'
                 this.total.totalTable.ranking = '-'
                 this.total.totalTable.regionName = '-'
                 Object.keys(this.total.total).forEach(function (key) {
@@ -181,7 +182,6 @@ export default {
                 return
             }
             const { data } = await getBranchSaleSum(params)
-            // console.log(data)
             this.total.total = data.data
             let _this = this
             Object.keys(data.data).forEach(function (key) {
@@ -246,14 +246,14 @@ export default {
         await this.onFindBranchList() // 分部
         if (this.userInfo.organizationType === -1) {
             this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.companyCode
-            this.onFindBranchList(this.userInfo.companyCode) // 查大区下的分部
+            this.queryParams.regionCode = this.userInfo.oldDeptCode
+            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
         } else if (this.userInfo.organizationType === 0) {
             // 总部可查看所有
         } else if (this.userInfo.organizationType === 1) {
             this.regionDisabled = true
             this.branchDisabled = true
-            this.queryParams.subsectionCode = this.userInfo.companyCode
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
             // this.queryParams.subsectionCode = "1aad7c94-2830-11e8-ace9-000c290bec91"
             let region = this.branchList.find((val) => {
                 return val.crmDeptCode === this.queryParams.subsectionCode

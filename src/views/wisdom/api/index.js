@@ -64,7 +64,7 @@ export const findBrandTargetTable = (params) => {
 }
 // 分部列表查询
 export const findBranchList = (params) => {
-    return axios.post(interfaceUrl + 'rms/dept/queryDeptList', params)
+    return axios.post(interfaceUrl + 'ims/dept/queryDeptList', params)
 }
 // 新增－－－－分部列表查询
 export const findBranchListNew = (params) => {
@@ -74,7 +74,7 @@ export const findBranchListNew = (params) => {
 }
 // 大区列表查询
 export const findRegionList = (params) => {
-    return axios.post(interfaceUrl + 'rms/dept/queryRegionList', params)
+    return axios.post(interfaceUrl + 'ims/dept/queryRegionList', params)
 }
 // 获取平台目标列表
 export const findTableList = (params) => {
@@ -94,7 +94,7 @@ export const getPlatformSale = (params) => {
 }
 // 获取平台销售分析列表 合计
 export const getPlatformSaleSum = (params) => {
-    return axios.get(interfaceUrl + 'rms/platSaleAnalyzeSum', {
+    return axios.get(interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeSum', {
         params
     })
 }

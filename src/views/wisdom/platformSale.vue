@@ -93,10 +93,12 @@ import { mapState } from 'vuex'
 import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
 import platformSaleTable from './components/platformSaleTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { DEPT_TYPE } from './store/const'
 export default {
     name: 'platformSale',
     data: function () {
         return {
+            deptType: DEPT_TYPE,
             checkedList: [{ value: '在线', checked: true, key: 1 }, { value: '未上线', checked: false, key: 2 }, { value: '淘汰', checked: false, key: 3 }],
             regionInput: true,
             saleTimePickerOptionsStart: {
@@ -190,7 +192,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = interfaceUrl + 'ims/platSaleAnalyzeExport?'
+            let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
             for (let key in this.queryParams) {
                 if (key !== 'pageSize' && key !== 'pageNumber') {
                     url += (key + '=' + this.queryParams[key] + '&')
@@ -261,6 +263,7 @@ export default {
             }
         },
         async getPlatformSale (value) {
+            console.log(112333)
             const { data } = await getPlatformSale(value)
             data.data.total.companyShortName = '合计'
             if (!this.total.type) {
@@ -275,6 +278,7 @@ export default {
             this.paginationData.totalElements = data.data.totalElements
         },
         async getPlatformSaleSum () {
+            console.log(1111)
             this.total.type = 1
             const params = {
                 onLineStatus: this.queryParams.onLineStatus,
@@ -298,6 +302,7 @@ export default {
                 return
             }
             const { data } = await getPlatformSaleSum(params)
+            console.log(1, data)
             data.data.companyShortName = '合计'
             Object.keys(this.total.total).forEach(key => {
                 this.total.total[key] = data.data[key]
@@ -335,11 +340,12 @@ export default {
         },
         async onQuery (event) {
             console.log(event)
-            if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) return
+            // if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) return
             // eslint-disable-next-line
             let start = /^\-?[0-9]*$/.test(this.queryParams.signScaleStart)
             // eslint-disable-next-line
             let end = /^\-?[0-9]*$/.test(this.queryParams.signScaleEnd)
+            console.log(3333)
             if (!start || !end) {
                 this.$message({
                     type: 'error',
@@ -364,6 +370,7 @@ export default {
                     arr.push(value.key)
                 }
             })
+
             this.queryParams.onLineStatus = arr.join(',')
             await this.getPlatformSale(this.queryParams)
 
@@ -373,33 +380,38 @@ export default {
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType
+        // 如果 当前人大区 -1  总部 0  分部 1 organizationType  很久的
+        // deptType 看下表示含义
         // console.log(this.userInfo.organizationType)
         await this.onFindRegionList() // 大区
         await this.onFindBranchList() // 分部
-        if (this.userInfo.organizationType === -1) {
+        if (this.userInfo.deptType === this.deptType[1]) {
+            console.log(1)
             this.regionDisabled = true
             this.queryParams.regionCode = this.userInfo.companyCode
             this.onFindBranchList(this.userInfo.companyCode) // 查大区下的分部
-        } else if (this.userInfo.organizationType === 0) {
+        } else if (this.userInfo.deptType === this.deptType[2]) {
+            console.log(2)
             this.onFindPaltList() // 平台公司
-        } else if (this.userInfo.organizationType === 1) {
+        } else if (this.userInfo.organizationType === this.deptType[0]) {
+            console.log(3)
             this.regionDisabled = true
             this.branchDisabled = true
             this.regionInput = false
-            this.queryParams.subsectionCode = this.userInfo.companyCode
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
             this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
             let region = this.branchList.find((val) => {
                 return val.crmDeptCode === this.queryParams.subsectionCode
             })
             await this.onFindRegion(region.pkFathedept) // 根据分部找大区
         }
-        if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) {
-            this.regionDisabled = true
-            this.branchDisabled = true
-            this.platDisabled = true
-            return
-        }
+        // if (this.userInfo.deptType !== this.deptType[1] && this.userInfo.deptType !== this.deptType[2] && this.userInfo.deptType !== this.deptType[0]) {
+        //     console.log(4)
+        //     this.regionDisabled = true
+        //     this.branchDisabled = true
+        //     this.platDisabled = true
+        //     return true
+        // }
         await this.onQuery()
         this.getPlatformSaleSum()
         // this.queryCompanyByParams({subsectionCodeList: []}) // 平台公司

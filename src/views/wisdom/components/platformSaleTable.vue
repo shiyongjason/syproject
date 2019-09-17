@@ -20,7 +20,7 @@
             </div>
         </el-collapse-transition>
         <el-table :data="tableData" border height="573" v-loading="loading" style="width: 100%">
-            <el-table-column prop="companyShortName" width="120" fixed label="平台公司" v-if="selectTh.indexOf('平台公司')>-1">
+            <el-table-column prop="companyShortName" width="120"  label="平台公司" v-if="selectTh.indexOf('平台公司')>-1">
             </el-table-column>
             <el-table-column prop="misCode" width="100" label="mis编码" v-if="selectTh.indexOf('mis编码')>-1">
                 <template slot-scope="scope">
@@ -48,7 +48,7 @@
             <el-table-column prop="signScale" width="100" label="签约规模" v-if="selectTh.indexOf('签约规模')>-1">
                 <template slot-scope="scope">
                     <span v-if="scope.row.signScale === null || scope.row.signScale === '-'">-</span>
-                    <span v-else>{{scope.row.signScale | thousands}}</span>
+                    <span v-else>{{scope.row.signScale | money}}</span>
                 </template>
             </el-table-column>
             <el-table-column prop="controllerName" width="100" label="总经理" v-if="selectTh.indexOf('总经理')>-1">
@@ -75,13 +75,13 @@
                 <el-table-column prop="totalOrderFee" width="150" label="实际">
                     <template slot-scope="scope">
                         <span v-if="scope.row.totalOrderFee === null">-</span>
-                        <span v-else>{{scope.row.totalOrderFee | thousands}}</span>
+                        <span v-else>{{scope.row.totalOrderFee | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="target" width="150" label="目标">
                     <template slot-scope="scope">
                         <span v-if="scope.row.target === null">-</span>
-                        <span v-else>{{scope.row.target | thousands}}</span>
+                        <span v-else>{{scope.row.target | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="achievingRate" width="100" label="达成率">
@@ -93,7 +93,7 @@
                 <el-table-column prop="gap" width="150" label="缺口">
                     <template slot-scope="scope">
                         <span v-if="scope.row.target === null">-</span>
-                        <span v-else-if="scope.row.gap > 0" style="color: red">{{scope.row.gap | thousands}}</span>
+                        <span v-else-if="scope.row.gap > 0" style="color: red">{{scope.row.gap | money}}</span>
                         <span v-else>0</span>
                     </template>
                 </el-table-column>
@@ -102,7 +102,7 @@
                 <el-table-column prop="lastMonthSale" width="150" label="上月">
                     <template slot-scope="scope">
                         <span v-if="scope.row.lastMonthSale === null">-</span>
-                        <span v-else>{{scope.row.lastMonthSale | thousands}}</span>
+                        <span v-else>{{scope.row.lastMonthSale | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="linkRelativeRatio" width="100" label="环比">
@@ -116,7 +116,7 @@
                 <el-table-column prop="yearOnYear" width="150" label="同期">
                     <template slot-scope="scope">
                         <span v-if="scope.row.yearOnYear === null">-</span>
-                        <span v-else>{{scope.row.yearOnYear | thousands}}</span>
+                        <span v-else>{{scope.row.yearOnYear | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="yearOnYearRatio" width="100" label="同比">
@@ -130,13 +130,13 @@
                 <el-table-column prop="yearSaleReal" width="150" label="实际">
                     <template slot-scope="scope">
                         <span v-if="scope.row.yearSaleReal === null">-</span>
-                        <span v-else>{{scope.row.yearSaleReal | thousands}}</span>
+                        <span v-else>{{scope.row.yearSaleReal | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="yearTarget" width="150" label="目标">
                     <template slot-scope="scope">
                         <span v-if="scope.row.yearTarget === null">-</span>
-                        <span v-else>{{scope.row.yearTarget | thousands}}</span>
+                        <span v-else>{{scope.row.yearTarget | money}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="yearAchievingRate" width="100" label="达成率">
@@ -148,7 +148,7 @@
                 <el-table-column prop="yearGap" width="150" label="缺口">
                     <template slot-scope="scope">
                         <span v-if="scope.row.yearTarget === null || scope.row.yearTarget === '-'">-</span>
-                        <span v-else-if="scope.row.yearGap > 0" style="color: red">{{scope.row.yearGap | thousands}}</span>
+                        <span v-else-if="scope.row.yearGap > 0" style="color: red">{{scope.row.yearGap | money}}</span>
                         <span v-else>0</span>
                     </template>
                 </el-table-column>
