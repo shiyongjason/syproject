@@ -109,13 +109,13 @@ export default {
             if (this.form.id) {
                 this.form.updateUser = this.userInfo.employeeName
                 await putCooperativetarget(this.form)
-                this.$message.success('提交成功！')
+                this.$message.success('暂存成功！')
                 this.$router.go(-1)
                 this.$emit('init')
             } else {
                 this.form.createUser = this.userInfo.employeeName
                 await addCooperativetarget(this.form)
-                this.$message.success('暂存成功！')
+                this.$message.success('提交成功！')
                 this.$router.go(-1)
                 this.$emit('init')
             }
