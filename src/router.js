@@ -498,6 +498,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
+            },
+            {
+                path: 'tags',
+                name: 'serviceManagementTags',
+                meta: {
+                    title: '标签管理',
+                    tagName: '标签管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
     }
