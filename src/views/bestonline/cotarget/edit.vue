@@ -157,6 +157,6 @@ export default {
     }
 }
 .custom-table {
-    width: 50%;
+    // width: 50%;
 }
 </style>
