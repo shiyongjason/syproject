@@ -287,7 +287,7 @@ export default {
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
-                    if (typeof this.form.publicityPromotionChannels == 'string') {
+                    if (this.form.publicityPromotionChannels && typeof this.form.publicityPromotionChannels == 'string') {
                         this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.split(',')
                     }
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
