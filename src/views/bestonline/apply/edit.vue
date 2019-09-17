@@ -397,10 +397,13 @@ export default {
                                 }
                             }
                             this.$router.go(-1)
+                        } else {
+                            this.isPending = false
                         }
                     })
                 } else {
                     this.$refs['form'].validate()
+                    this.isPending = false
                 }
             })
         },

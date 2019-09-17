@@ -16,7 +16,7 @@ export default {
     },
     data () {
         return {
-            canEdit: true
+            canEdit: ''
         }
     },
     computed: {
@@ -35,7 +35,11 @@ export default {
             // todo: 这里最好将连接改成两个，一个链接不好处理
             if (this.approvalStatus > 0 || !(deptType === 2 && role.indexOf('fenbufazhan') !== -1 && this.hosAuthCheck(AUTH_BESTONLINE_APPLY_EDIT))) {
                 this.canEdit = false
+            } else {
+                this.canEdit = true
             }
+        } else {
+            this.canEdit = true
         }
     }
 }
