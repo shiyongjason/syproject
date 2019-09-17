@@ -287,21 +287,24 @@ export default {
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
+                    if (typeof this.form.publicityPromotionChannels == 'string') {
+                        this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.split(',')
+                    }
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
-                            operationNode: 1,
                             createUser: createUser,
-                            ...this.form
+                            ...this.form,
+                            operationNode: 1
                         })
                     } else {
                         await addBusiness({
-                            operationNode: 1,
                             createUser: createUser,
-                            ...this.form
+                            ...this.form,
+                            operationNode: 1
                         })
                     }
                     this.$message.success('提交成功')
