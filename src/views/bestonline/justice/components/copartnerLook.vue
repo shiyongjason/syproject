@@ -10,7 +10,7 @@
                     <el-form-item label="姓名：" label-width="120px">
                         <p>{{item.name}}</p>
                     </el-form-item>
-                    <el-form-item label="联系方式：" label-width="120px">
+                    <el-form-item label="联系方式" label-width="120px">
                         <p>{{item.tel}}</p>
                     </el-form-item>
                     <el-form-item label="性别：" label-width="120px">
@@ -21,9 +21,11 @@
                         <p v-if="item.marriage == 1">未婚</p>
                         <p v-if="item.marriage == 2">离异</p>
                         <p v-if="item.marriage == 3">丧偶</p>
+                        <!-- fix 排版 add占位符 -->
+                        <p v-if="item.marriage == null"></p>
                     </el-form-item>
-                    <el-form-item label="身份证号：" label-width="120px" v-if="item.type ==0||item.type ==1||item.type ==5">
-                        <p>{{item.idNumber}}</p><!-- idNumber -->
+                    <el-form-item label="身份证号：" label-width="120px">
+                        <p>{{item.idNumber}}</p>
                     </el-form-item>
                     <el-form-item label="学历：" label-width="120px">
                         <p>{{item.education!=null?educationOptions[item.education].label:''}}</p>
