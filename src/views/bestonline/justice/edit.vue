@@ -36,6 +36,7 @@ import LegalInfo from './components/legalInfo.vue'
 import CompanyBasic from './components/legalInfo/companyBasic.vue'
 import InvestmentOut from './components/legalInfo/investmentOut.vue'
 import { AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT, AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT } from '@/utils/auth_const'
+import { IsFixedTwoNumber } from '../../../utils/rules'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
@@ -73,10 +74,12 @@ export default {
                     { required: true, message: '实际控制人配偶法律风险不能为空', trigger: 'change' }
                 ],
                 'affairs.personalOperatingloansTotalGuarantees': [
-                    { required: true, message: '请输入个人经营性借款及担保总额', trigger: 'blur' }
+                    { required: true, message: '请输入个人经营性借款及担保总额', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'affairs.companyLoanTotalGuarantee': [
-                    { required: true, message: '请输入公司借款及担保总额 ', trigger: 'blur' }
+                    { required: true, message: '请输入公司借款及担保总额 ', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'affairs.riskDisclosure': [
                     { required: true, message: '风险揭示不能为空', trigger: 'blur' }

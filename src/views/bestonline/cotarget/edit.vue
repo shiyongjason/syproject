@@ -3,8 +3,8 @@
          <p v-if="form.operationNode">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <p class="title-p">合作目标</p>
         <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-            <el-form-item label="尽调规模：" prop="scale">
-                <el-input v-model="form.scale" placeholder="请输入金额" @keyup.native="oninput('scale',$event)" maxlength="25">
+            <el-form-item label="尽调规模：" prop="scale" :rules="rules.scale">
+                <el-input v-model="form.scale" placeholder="请输入金额"  maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -21,14 +21,14 @@
                         <td>{{item.year}}</td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="10">
+                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="10">
+                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -53,7 +53,7 @@
 </template>
 <script>
 import { addCooperativetarget, putCooperativetarget } from '../api/index.js'
-import { plusOrMinus } from '@/utils/rules.js'
+import { MoneyMinus, MoneyOrConnector } from '@/utils/rules.js'
 import { mapState } from 'vuex'
 import { AUTH_BESTONLINE_REVIEW_TARGET_DRAFT, AUTH_BESTONLINE_REVIEW_TARGET_COMMIT } from '@/utils/auth_const'
 export default {
@@ -61,7 +61,8 @@ export default {
         return {
             rules: {
                 scale: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' },
+                    { validator: MoneyOrConnector, trigger: 'blur' }
                 ],
                 equityRatio: [
                     { required: true, message: '请输入股权比例', trigger: 'blur' },
@@ -76,10 +77,12 @@ export default {
                     }
                 ],
                 yearGrowthRate: [
-                    { required: true, message: '请输入年度递增率', trigger: 'blur' }
+                    { required: true, message: '请输入年度递增率', trigger: 'blur' },
+                    { validator: MoneyMinus, trigger: 'blur' }
                 ],
                 netProfitRate: [
-                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' },
+                    { validator: MoneyMinus, trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_DRAFT,

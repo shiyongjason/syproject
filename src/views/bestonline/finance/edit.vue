@@ -56,7 +56,7 @@ import Solvency from './components/solvency.vue'
 import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 import { AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT, AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT } from '@/utils/auth_const'
-import { kpiValidProps, profitabilityValidProps, solvencyValidProps, operationAbilityValidProps, capitalRiskAssessmentValidProps, taxComplianceValidProps, balanceSheetValidProps } from './const.js'
+import { kpiValidProps, profitabilityValidProps, solvencyValidProps, operationAbilityValidProps, capitalRiskAssessmentValidProps, taxComplianceValidProps, balanceSheetValidProps, profitStatementValidProps } from './const.js'
 export default {
     components: {
         BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
@@ -159,6 +159,10 @@ export default {
                 const index = item.indexOf('[')
                 return balanceSheetValidProps.has(index == -1 ? item : item.substring(0, index))
             }).length > 0
+            const expandProfitStatement = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return profitStatementValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
             if (expandKpi) {
                 this.activeName = '1'
             } else if (expandController) {
@@ -173,6 +177,8 @@ export default {
                 this.activeName = '7'
             } else if (expandBalanceSheet) {
                 this.activeName = '10'
+            } else if (expandProfitStatement) {
+                this.activeName = '11'
             }
         }
     }
