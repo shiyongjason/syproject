@@ -121,22 +121,22 @@
 
 <script>
 import { mapState } from 'vuex'
-import { Money } from '@/utils/rules'
+import { MoneyMinus } from '@/utils/rules'
 export default {
     data () {
         return {
             rules: {
                 endOrCurrent: [
-                    { validator: Money }
+                    { validator: MoneyMinus }
                 ],
                 endOrCurrentNORequired: [
-                    { validator: Money }
+                    { validator: MoneyMinus }
                 ],
                 beginOrPrior: [
-                    { validator: Money }
+                    { validator: MoneyMinus }
                 ],
                 beginOrPriorNORequired: [
-                    { validator: Money }
+                    { validator: MoneyMinus }
                 ]
             }
         }
