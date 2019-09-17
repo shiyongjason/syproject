@@ -124,10 +124,10 @@
                 </tr>
                 <tr>
                     <td>{{item.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{item.scale | judgeTureOrFalse}}</td>
-                    <td>{{item.yearGrowthRate | judgeTureOrFalse}}</td>
-                    <td>{{item.equityRatio | judgeTureOrFalse}}</td>
-                    <td>{{item.netProfitRate | judgeTureOrFalse}}</td>
+                    <td>{{cooperateTarget.scale}}<i>w</i></td>
+                    <td>{{cooperateTarget.yearGrowthRate}}</td>
+                    <td>{{cooperateTarget.equityRatio}}</td>
+                    <td>{{cooperateTarget.netProfitRate}}</td>
                 </tr>
                 <tr>
                     <td>审批意见</td>
@@ -409,6 +409,7 @@ export default {
         },
         async getDueapprovalconclusion () {
             const { data } = await getDueapprovalconclusion({ applyId: this.applyId })
+            console.log(data)
             this.cooperateTarget = data.data.cooperateTarget
             this.dueBusiness = data.data.dueBusiness
             this.dueFinancial = data.data.dueFinancial

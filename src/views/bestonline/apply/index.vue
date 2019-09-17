@@ -84,7 +84,7 @@ export default {
                 { label: '公司名称', prop: 'companyName', align: 'left' },
                 { label: '发起人', prop: 'createUserName' },
                 { label: '发起人所在机构', prop: 'applyOrganization' },
-                { label: '创建时间', prop: 'createTime', width: '160px' },
+                { label: '评审提交时间', prop: 'createTime', width: '160px' },
                 { label: '评审通过/驳回时间', prop: 'approvalTime', width: '160px' },
                 { label: '评审状态', prop: 'approvalStatus' },
                 { label: '未操作人', prop: 'noOperator' }
