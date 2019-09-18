@@ -284,6 +284,7 @@ export default {
         },
         async onSubmit () {
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
+            console.log(createUser)
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
@@ -296,17 +297,18 @@ export default {
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
-                            createUser: createUser,
-                            updateUser: createUser,
                             ...this.form,
-                            operationNode: 1
+                            operationNode: 1,
+                            createUser: createUser,
+                            updateUser: createUser
                         })
                     } else {
                         await addBusiness({
-                            createUser: createUser,
-                            updateUser: createUser,
                             ...this.form,
-                            operationNode: 1
+                            operationNode: 1,
+                            createUser: createUser,
+                            updateUser: createUser
+
                         })
                     }
                     this.$message.success('提交成功')
