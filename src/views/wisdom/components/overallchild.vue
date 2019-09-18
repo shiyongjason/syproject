@@ -186,14 +186,14 @@ export default {
         async getStatistics () {
             const { data } = await getStatistics(this.params)
             this.companyData = data.data
-            this.drawMap(data.data.provinceVos ? data.data.provinceVos : [])
+            this.drawMap(data.data.respProvinces ? data.data.respProvinces : [])
         },
         async getSales () {
             this.lineArr = []
             this.yearMonth = []
             const { data } = await getSales(this.params)
             this.saleData = data.data
-            this.pieArr = data.data.organizationRateVo
+            this.pieArr = data.data.respOrganizationRate
             data.data.yearOfSales && data.data.yearOfSales.map(value => {
                 this.lineArr.push(value.value ? parseFloat(value.value).toFixed(0) : 0)
                 this.yearMonth.push(value.date)

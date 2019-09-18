@@ -77,7 +77,7 @@
                 <el-table-column prop="ringRatio" width="100" label="环比">
                     <template slot-scope="scope">
                         <span v-if="scope.row.ringRatio === null || scope.row.ringRatio === '-'">-</span>
-                        <span v-else :class="scope.row.ringRatio>0?'colRed':'colGreen'">{{scope.row.ringRatio}}%</span>
+                        <span v-else :class="scope.row.ringRatio>0?'colGreen':'colRed'">{{scope.row.ringRatio}}%</span>
                     </template>
                 </el-table-column>
             </el-table-column>
@@ -91,7 +91,7 @@
                 <el-table-column prop="compoundYearOnYear" width="100" label="复合同比">
                     <template slot-scope="scope">
                         <span v-if="scope.row.compoundYearOnYear === null || scope.row.compoundYearOnYear === '-'">-</span>
-                        <span v-else :class="scope.row.compoundYearOnYear>0?'colRed':'colGreen'">{{scope.row.compoundYearOnYear}}%</span>
+                        <span v-else :class="scope.row.compoundYearOnYear>0?'colGreen':'colRed'">{{scope.row.compoundYearOnYear}}%</span>
                     </template>
                 </el-table-column>
             </el-table-column>
@@ -105,7 +105,7 @@
                 <el-table-column prop="comparableYearOnYear" width="100" label="可比同比">
                     <template slot-scope="scope">
                         <span v-if="scope.row.comparableYearOnYear === null || scope.row.comparableYearOnYear === '-'">-</span>
-                        <span v-else :class="scope.row.comparableYearOnYear>0?'colRed':'colGreen'">{{scope.row.comparableYearOnYear}}%</span>
+                        <span v-else :class="scope.row.comparableYearOnYear>0?'colGreen':'colRed'">{{scope.row.comparableYearOnYear}}%</span>
                     </template>
                 </el-table-column>
             </el-table-column>
