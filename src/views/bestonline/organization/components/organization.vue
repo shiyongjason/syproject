@@ -119,7 +119,7 @@
                     </td>
                     <td>
                         <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`" :rules="{ required: true, message: '请输入正整数', validator: IsPositiveInteger, trigger: 'blur' }">
-                            <el-input v-model="item.score" placeholder="满分40分" maxlength="2" @change="onChangeScore"></el-input>
+                            <el-input v-model="item.score" placeholder="满分40分" maxlength="2" @change="onChangeScore(item)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -242,7 +242,10 @@ export default {
         onRemovePerson (index) {
             this.form.dueOrganizationSeniorCreateFormList.splice(index, 1)
         },
-        onChangeScore () {
+        onChangeScore (item) {
+            if (item.score > 40) {
+                item.score = 40
+            }
             this.drawRadar()
         },
         drawRadar () {
