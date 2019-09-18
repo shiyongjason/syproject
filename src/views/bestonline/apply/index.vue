@@ -58,7 +58,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}<span> {{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
+                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approveStatus===0?'待审核':item.approveStatus===1?'同意':'不同意'}}<span> {{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
                     </el-timeline-item>
                 </el-timeline>
             </div>
