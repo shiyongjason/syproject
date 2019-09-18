@@ -24,7 +24,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比2：">
-                    {{form.businessFormatTwoRatio?form.businessFormatTwoRatio + '%':''}}
+                    {{form.businessFormatTwoRatio?form.businessFormatTwoRatio + '%':'-'}}
                 </el-form-item>
             </div>
         </div>
@@ -36,7 +36,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比3：">
-                    {{form.businessFormatTwoThreeRatio?form.businessFormatTwoThreeRatio +'%':''}}
+                    {{form.businessFormatTwoThreeRatio?form.businessFormatTwoThreeRatio +'%':'-'}}
                 </el-form-item>
             </div>
         </div>
