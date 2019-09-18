@@ -181,6 +181,8 @@
                                     <el-option v-for="item in punishmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
                             <el-form-item label="事件名称：" label-width="200px">
                                 <el-input v-model="item.caseInfo" placeholder="请输入事件名称" maxlength="25"></el-input>
                             </el-form-item>
@@ -191,6 +193,8 @@
                             <el-form-item label="涉及金额：" label-width="200px" :prop="`punishmentList[${index}].moneyInvolved`" :rules="rules.moneyInvolved">
                                 <el-input v-model="item.moneyInvolved" placeholder="请输入涉及金额" maxlength="25"></el-input>
                             </el-form-item>
+                        </div>
+                        <div class="form-cont-col">
                             <el-form-item label="严重性：" label-width="200px">
                                 <el-select placeholder="请选择严重性" v-model="item.ponderance">
                                     <el-option v-for="item in ponderanceOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
