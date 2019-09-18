@@ -161,7 +161,7 @@ export default {
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 mainCategoryOneId: [
-                    { required: true, message: '请选择主营品类', trigger: 'blur' }
+                    { required: true, message: '请选择主营品类', trigger: 'change' }
                 ],
                 categoryOneSalesRatio: [
                     { required: true, message: '请输入销售比重', trigger: 'blur' },

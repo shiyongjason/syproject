@@ -67,12 +67,12 @@
         <div class="form-cont-row mb20">
             <div class="form-cont-col">
                 <el-form-item label="主营品牌1：" prop="mainBrandOneName">
-                    {{form.mainBrandOneName}}
+                    {{form.mainBrandOneName?form.mainBrandOneName:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
                 <el-form-item label="销售比重1：" prop="brandOneSalesRatio">
-                    {{form.brandOneSalesRatio}}%
+                    {{form.brandOneSalesRatio?form.brandOneSalesRatio + '%':'-'}}
                 </el-form-item>
             </div>
         </div>

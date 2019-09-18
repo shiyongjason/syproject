@@ -45,7 +45,7 @@
         <div class="flex-wrap-col info-wrap" v-for="(item,index) in debtInformation" :key="index">
             <el-form label-position="right" label-width="150px" class="legal-form">
                 <el-form-item label="借款：">
-                    <p>{{item.debt||'-'}}万</p>
+                    <p>{{item.debt?item.debt + '万':'-'}}</p>
                 </el-form-item>
                 <el-form-item label="用途：">
                     <p>{{item.purpose?debtPurposeOptions[item.purpose].label:'-'}}</p>
