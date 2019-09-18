@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label="拟签约规模：" :prop="formData.signScale" :rules="formRules.signScale">
+                <el-form-item label="拟签约规模：" prop="signScale" :rules="formRules.signScale">
                     <div class="flex-wrap-cont">
                         <div class="flex-wrap-cont">
                             <el-input placeholder="请输入拟签约规模" maxlength="10" v-model="formData.signScale" @keyup.native="oninteger($event)">
