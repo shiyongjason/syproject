@@ -214,7 +214,7 @@ export default {
                     } else {
                         this.$message({
                             type: 'warning',
-                            message: '有必填项未填写，请重新检查！'
+                            message: '有必填项未填写，请重新检查！ '
                         })
                     }
                 })
