@@ -122,13 +122,13 @@ export default {
             }
             return list.length
         },
-        async amend() {
+        async amend () {
             console.log(this)
             let houseArchiveDataList = []
             this.childArchiveNodes.map((item) => {
                 item.childArchiveNodes.map((i) => {
                     i.childArchiveNodes.map((v) => {
-                        houseArchiveDataList.push({...v.archiveDetail, propertyId: v.propertyId})
+                        houseArchiveDataList.push({ ...v.archiveDetail, propertyId: v.propertyId })
                     })
                 })
             })
@@ -142,7 +142,7 @@ export default {
                     houseArchiveDataList
                 }
             }
-            const {data} = await updataReportDetail(params)
+            const { data } = await updataReportDetail(params)
             console.log(data)
         }
     }
@@ -171,8 +171,9 @@ export default {
             padding-left: 10px;
             border-left: 5px solid #ff7a45;
         }
-        table{
-            th,td{
+        table {
+            th,
+            td {
                 text-align: center;
             }
         }

@@ -54,7 +54,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findRecordDetail } from '../api/index'
 export default {
     name: 'customerRecordTable',
     props: {
@@ -98,15 +97,9 @@ export default {
         },
         async onShow (row) {
             this.$router.push({ path: 'customerRecordDetail', query: { id: row.id, action: 'show' } })
-            // const { data } = await findRecordDetail(row.id)
-            // // console.log(data)
-            // this.data = data.childArchiveNodes
-            // this.childArchiveNodes = data.childArchiveNodes[this.activeName - 1].childArchiveNodes
-            // console.log(this.childArchiveNodes)
         },
         async onEdit (row) {
             this.$router.push({ path: 'customerRecordDetail', query: { id: row.id, action: 'edit' } })
-            const { data } = await findRecordDetail(row.id)
         },
         handleClick () {
             this.childArchiveNodes = this.data[this.activeName - 1].childArchiveNodes
