@@ -12,7 +12,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="业态占比1：" prop="businessFormatOneRatio">
-                    {{form.businessFormatOneRatio?form.businessFormatOneRatio + '%':''}}
+                    {{form.businessFormatOneRatio?form.businessFormatOneRatio + '%':'-'}}
                 </el-form-item>
             </div>
         </div>
@@ -48,7 +48,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="销售比重1：" prop="categoryOneSalesRatio">
-                    {{form.categoryOneSalesRatio?form.categoryOneSalesRatio +'%':''}}
+                    {{form.categoryOneSalesRatio?form.categoryOneSalesRatio +'%':'-'}}
                 </el-form-item>
             </div>
         </div>
