@@ -33,7 +33,7 @@
         </div>
         <div class="form-cont-col">
             <el-form-item label="资金风险评估：" prop="dueFinanceBasic.capitalRiskAssessment">
-                {{form.dueFinanceBasic.capitalRiskAssessment == 0?'高':form.dueFinanceBasic.capitalRiskAssessment == 1?'中':'低'}}
+                {{form.dueFinanceBasic.capitalRiskAssessment == 0?'高':form.dueFinanceBasic.capitalRiskAssessment == 1?'中':form.dueFinanceBasic.capitalRiskAssessment == 2?'低':'-'}}
             </el-form-item>
         </div>
     </div>
