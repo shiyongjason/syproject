@@ -454,18 +454,28 @@ const routerMapping = [
                 },
                 component: () => import('@/views/serviceManagement/reservation/index.vue')
             },
-            // 一期不做
-            // {
-            //     path: 'customerRecord',
-            //     name: 'customerRecord',
-            //     meta: {
-            //         title: '客户档案',
-            //         tagName: '客户档案',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/serviceManagement/customerRecord/index.vue')
-            // },
+            {
+                path: 'customerRecord',
+                name: 'customerRecord',
+                meta: {
+                    title: '客户档案',
+                    tagName: '客户档案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerRecord/index.vue')
+            },
+            {
+                path: 'customerRecordDetail',
+                name: 'customerRecordDetail',
+                meta: {
+                    title: '档案详情',
+                    tagName: '档案详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerRecord/detail.vue')
+            },
             {
                 path: 'customerReport',
                 name: 'customerReport',
