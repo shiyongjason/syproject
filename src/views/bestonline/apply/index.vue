@@ -154,13 +154,14 @@ export default {
         },
         async showProcess (applyId) {
             const { data } = await getDueApproval({ applyId: applyId })
-            this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
+            this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approvalStatus === 1 || value.approvalStatus === 2) {
+                if (value.approveStatus == 1 || value.approveStatus == 2) {
                     value.color = '#f88825'
                 }
                 return value
             })
+            console.log(this.dueApproval)
             this.dialogVisible = true
         },
         async getDueapply () {
