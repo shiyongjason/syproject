@@ -97,14 +97,6 @@ export default {
         })
     },
     methods: {
-        oninput (value, e) {
-            if (value === 'equityRatio') {
-                // 股权比例
-            } else {
-                e.target.value = plusOrMinus(e.target.value.toString())
-            }
-            this.$set(this.form, value, e.target.value)
-        },
         async _saveOrUpdate () {
             this.form.applyId = this.$route.query.applyId
             this.form.yearRateTabelContents = this.form.yearRateTabelContents
