@@ -82,6 +82,8 @@ axios.interceptors.response.use(
                 case 400:
                     console.log(error.response)
                     errorMessage = error.response.data.message
+                    break
+                default:
             }
         }
         store.commit('LOAD_STATE', false)
