@@ -4,7 +4,6 @@ import { Message } from 'element-ui'
 import { interfaceUrl } from './config'
 
 const TIME_OUT = 6000 // 连接超时时间
-const token = sessionStorage.getItem('token')
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 /* const http = axios.create({
@@ -28,6 +27,7 @@ const cancelRequst = (config) => {
 const CancelToken = axios.CancelToken
 axios.interceptors.request.use(
     (config) => {
+        const token = sessionStorage.getItem('token')
         token && (config.headers['Authorization'] = `Bearer ${token}`)
         cancelRequst(config) // 在一个请求发送前执行一下取消操作
         config.cancelToken = new CancelToken(cancelMethod => {
@@ -63,15 +63,26 @@ axios.interceptors.response.use(
         return response
     },
     (error) => {
-        console.log(error)
-        if (error.message && error.message == '取消重复请求') {
+        let errorMessage = '服务器响应错误：' + error
+        if (axios.isCancel(error)) {
+            console.log('Rquest canceled：', error.message)
             return Promise.reject(error)
         }
-        let errorMessage = ''
-        if (error.response && error.response.status === 400) {
-            errorMessage = error.response.data.message
-        } else {
-            errorMessage = '服务器响应错误：' + error
+        if (error.response && error.response.status) {
+            switch (error.response.status) {
+                case 401:
+                    Message({
+                        message: '权限无效，已为你重定向到登录页',
+                        type: 'error'
+                    })
+                    setTimeout(() => {
+                        location.href = '/login'
+                    }, 1200)
+                    return Promise.reject(error)
+                case 400:
+                    console.log(error.response)
+                    errorMessage = error.response.data.message
+            }
         }
         store.commit('LOAD_STATE', false)
         Message({
