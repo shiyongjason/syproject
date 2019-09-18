@@ -67,21 +67,21 @@
                 align="center"
                 label="平衡目标/万" v-if="selectTh.indexOf('平衡目标/万')>-1">
                 <el-table-column
-                    label="整体"
+                    label="整体" align='center'
                     >
                     <template slot-scope="scope">
                     {{scope.row.overallBalanceStockTarget ? scope.row.overallBalanceStockTarget : '-'}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="增量"
+                    label="增量" align='center'
                     >
                     <template slot-scope="scope">
                     {{scope.row.balanceIncreaseTarget ? scope.row.balanceIncreaseTarget : '-'}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="存量"
+                    label="存量" align='center'
                     >
                     <template slot-scope="scope">
                     {{scope.row.balanceStockTarget ? scope.row.balanceStockTarget : '-'}}
@@ -93,19 +93,19 @@
                 align="center"
                 label="冲刺目标/万" v-if="selectTh.indexOf('冲刺目标/万')>-1">
                 <el-table-column
-                    label="整体">
+                    label="整体" align='center'>
                     <template slot-scope="scope">
                         {{scope.row.overallSprintStockTarget ? scope.row.overallSprintStockTarget : '-'}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="增量">
+                    label="增量" align='center'>
                     <template slot-scope="scope">
                     {{scope.row.sprintIncreaseTarget ? scope.row.sprintIncreaseTarget : '-'}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="存量">
+                    label="存量" align='center'>
                     <template slot-scope="scope">
                     {{scope.row.sprintStockTarget ? scope.row.sprintStockTarget : '-'}}
                     </template>

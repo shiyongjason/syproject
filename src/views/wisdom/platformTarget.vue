@@ -65,24 +65,24 @@
         <div class="page-body-cont">
             <div class="page-table">
                 <el-table :data="tableData" style="width: 100%" border :header-cell-style="{color:'#606266'}">
-                    <el-table-column prop="companyShortName" label="公司简称">
+                    <el-table-column prop="companyShortName" align="center" label="公司简称">
                     </el-table-column>
-                    <el-table-column prop="misCode" label="公司编码">
+                    <el-table-column prop="misCode" label="公司编码" align="center">
                     </el-table-column>
-                    <el-table-column prop="subsectionName" label="分部">
+                    <el-table-column prop="subsectionName" label="分部" align="center">
                     </el-table-column>
-                    <el-table-column prop="cityName" label="所在城市">
+                    <el-table-column prop="cityName" label="所在城市" align="center">
                     </el-table-column>
-                    <el-table-column prop="onlineTime" label="上线时间">
+                    <el-table-column prop="onlineTime" label="上线时间" align="center">
                     </el-table-column>
-                    <el-table-column label="增量/存量">
+                    <el-table-column label="增量/存量" align="center">
                         <template slot-scope="scope">
                             <span v-if="scope.row.onlineTime">{{scope.row.incremental == 1?'增量':'存量'}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="targetDate" label="目标年份">
+                    <el-table-column prop="targetDate" label="目标年份" align="center">
                     </el-table-column>
-                    <el-table-column prop="performanceTarget" label="履约目标/万">
+                    <el-table-column prop="performanceTarget" label="履约目标/万" align="center">
                     </el-table-column>
                     <!-- <el-table-column
                             prop="minimumTarget"
@@ -94,11 +94,11 @@
                             label="平衡目标/万"
                         >
                         </el-table-column> -->
-                    <el-table-column prop="sprintTarget" label="冲刺目标/万">
+                    <el-table-column prop="sprintTarget" label="冲刺目标/万" align="center">
                     </el-table-column>
-                    <el-table-column prop="updateUser" label="最近操作人">
+                    <el-table-column prop="updateUser" label="最近操作人" align="center">
                     </el-table-column>
-                    <el-table-column label="最近操作时间">
+                    <el-table-column label="最近操作时间" align="center">
                         <template slot-scope="scope">
                             {{scope.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                         </template>

@@ -44,6 +44,7 @@
                 prop="misCode"
                 label="编码"
                 width="60"
+                align='center'
                 v-if="selectTh.indexOf('编码')>-1"
             >
             </el-table-column>
@@ -51,6 +52,7 @@
                 prop="companyShortName"
                 label="公司简称"
                 width="120"
+                align='center'
                 v-if="selectTh.indexOf('公司简称')>-1"
             >
             </el-table-column>
@@ -58,6 +60,7 @@
                 prop="subsectionName"
                 label="分部"
                 width="120"
+                align='center'
                 v-if="selectTh.indexOf('分部')>-1"
             >
             </el-table-column>
@@ -65,6 +68,7 @@
                 prop="provinceName"
                 label="省份"
                 width="120"
+                align='center'
                 v-if="selectTh.indexOf('省份')>-1"
             >
             </el-table-column>
@@ -72,16 +76,19 @@
                 prop="cityName"
                 label="城市"
                 width="120"
+                align='center'
                 v-if="selectTh.indexOf('城市')>-1"
             >
             </el-table-column>
             <el-table-column
                 label="上线信息"
+                align='center'
                 v-if="selectTh.indexOf('上线信息')>-1"
             >
                 <el-table-column
                     label="上线时间"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.companyOrderVo.confirmDate}}
@@ -91,6 +98,7 @@
                     label="最新签约规模/万"
                     label-class-name="red"
                     width="100"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         <span
@@ -103,6 +111,7 @@
                     label="销售规模增长"
                     label-class-name="red"
                     width="100"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.salesVolume*100}}%
@@ -112,6 +121,7 @@
                     label="注册资本/万"
                     label-class-name="red"
                     width="100"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.registeredFundChangeVo.sumRegisterFund}}
@@ -121,6 +131,7 @@
                     label="我方注册资金/万"
                     width="100"
                     label-class-name="red"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.ourRegisteredFund}}
@@ -129,7 +140,7 @@
                 <el-table-column
                     label="利润增长"
                     width="120"
-
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.profitGrowth*100}}%
@@ -140,10 +151,12 @@
                 label="往期销售"
                 width="120"
                 v-if="selectTh.indexOf('往期销售')>-1"
+                align='center'
             >
                 <el-table-column
                     label="上年度实际/万"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.companyOrderVo ? scope.row.companyOrderVo.totalOrderFee : ''}}
@@ -154,16 +167,19 @@
                 label="关键人员"
                 width="120"
                 v-if="selectTh.indexOf('关键人员')>-1"
+                align='center'
             >
                 <el-table-column
                     prop="controllerName"
                     label="实际控制人"
                     width="120"
+                    align='center'
                 >
                 </el-table-column>
                 <el-table-column
                     label="新公司总经理"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.signerName}}
@@ -172,6 +188,7 @@
                 <el-table-column
                     label="自然人股东"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.signerName}}
@@ -182,16 +199,19 @@
                 prop="name"
                 label="业务形态"
                 v-if="selectTh.indexOf('业务形态')>-1"
+                align='center'
             >
                 <el-table-column
                     prop="companyType"
                     label="公司类型"
                     width="120"
+                    align='center'
                 >
                 </el-table-column>
                 <el-table-column
                     label="主要业态"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         <span v-if="scope.row.mainFormat==0">零售</span>
@@ -206,12 +226,14 @@
                     prop="mainSystem"
                     label="主营系统"
                     width="120"
+                    align='center'
                 >
                 </el-table-column>
                 <el-table-column
                     prop="mainBrand"
                     label="主设备品牌"
                     width="120"
+                    align='center'
                 >
                 </el-table-column>
             </el-table-column>
@@ -219,16 +241,19 @@
                 label="老公司"
                 width="120"
                 v-if="selectTh.indexOf('老公司')>-1"
+                align='center'
             >
                 <el-table-column
                     prop="originaCompanyName"
                     label="老公司名称"
                     width="120"
+                    align='center'
                 >
                 </el-table-column>
                 <el-table-column
                     label="老公司规模"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         {{scope.row.developSignInfoVo.oldCompanyScale}}
@@ -239,10 +264,12 @@
                 label="关联公司"
                 width="120"
                 v-if="selectTh.indexOf('关联公司')>-1"
+                align='center'
             >
                 <el-table-column
                     label="关联公司"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         <p v-if="scope.row.companyOrderVo">
@@ -257,6 +284,7 @@
                 <el-table-column
                     label="实际运作公司"
                     width="120"
+                    align='center'
                 >
                     <template slot-scope="scope">
                         <span v-if="scope.row.companyOrderVo">
@@ -270,11 +298,13 @@
                     label="分类"
                     width="120"
                      v-if="selectTh.indexOf('分类')>-1"
+                     align='center'
                 >
                 </el-table-column>
             <el-table-column
                 label="操作"
                 width="120"
+                align='center'
             >
                 <template slot-scope="scope">
                     <span
