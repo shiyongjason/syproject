@@ -75,10 +75,18 @@
                                         <td :rowspan="computedRowspan(item.childArchiveNodes, 0)" v-if="tindex == 0 && stIndex == 0">{{item.name}}{{item.childArchiveNodes.length}}</td>
                                         <td :rowspan="computedRowspan(titem.childArchiveNodes,1)" v-if="stIndex == 0">{{titem.name}}</td>
                                         <td>{{stItem.name}}</td>
-                                        <td>{{stItem.archiveDetail.brand}}</td>
-                                        <td>{{stItem.archiveDetail.mold}}</td>
-                                        <td>{{stItem.archiveDetail.model}}</td>
-                                        <td>{{stItem.archiveDetail.isOverInsured == 0?'是':'否'}}</td>
+                                        <td>
+                                            <el-input v-model="stItem.archiveDetail.brand" :disabled="edit" style="width: 100px"></el-input>
+                                        <td>
+                                            <el-input v-model="stItem.archiveDetail.mold" :disabled="edit" style="width: 100px"></el-input>
+                                        <td>
+                                            <el-input v-model="stItem.archiveDetail.model" :disabled="edit" style="width: 100px"></el-input>
+                                        <td>
+                                            <el-select v-model="stItem.archiveDetail.isOverInsured" style="width: 100px" :disabled="edit">
+                                                <el-option label="是" :value="0"></el-option>
+                                                <el-option label="否" :value="1"></el-option>
+                                            </el-select>
+                                        </td>
                                     </tr>
                                 </template>
                             </template>
@@ -93,6 +101,7 @@
 
 <script>
 import { findRecordDetail, updataReportDetail } from './api/index'
+import { Message } from 'element-ui'
 export default {
     name: '',
     data () {
@@ -142,8 +151,9 @@ export default {
                     houseArchiveDataList
                 }
             }
-            const { data } = await updataReportDetail(params)
-            console.log(data)
+            await updataReportDetail(params)
+            Message({ message: '修改成功', type: 'success' })
+            this.$router.push({ path: '/serviceManagement/customerRecord' })
         }
     }
 }
