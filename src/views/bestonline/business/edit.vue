@@ -297,12 +297,14 @@ export default {
                         await putBusiness({
                             id: this.id,
                             createUser: createUser,
+                            updateUser: createUser,
                             ...this.form,
                             operationNode: 1
                         })
                     } else {
                         await addBusiness({
                             createUser: createUser,
+                            updateUser: createUser,
                             ...this.form,
                             operationNode: 1
                         })
