@@ -196,7 +196,7 @@ export default {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
         async onCommit (row) {
-            if (row.signScale == 0) {
+            if (row.cooperativeFlag == 1) {
                 this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
                 return false
             } else {
