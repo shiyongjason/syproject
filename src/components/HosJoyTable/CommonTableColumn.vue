@@ -2,7 +2,7 @@
     <el-table-column :label="columnData.label" :prop="columnData.prop" :sortable="columnData.sortable" :align="columnData.align?columnData.align:'center'" :min-width="columnData.width?columnData.width:''" :show-overflow-tooltip="true">
         <template slot-scope="scope">
             <slot v-if="columnData.format" :name="columnData.prop" :data="scope">
-                {{vNodes.filters[column.filter](scope.row[columnData.prop])}}
+                {{vNodes.filters[columnData.format](scope.row[columnData.prop])}}
             </slot>
             <slot v-else-if="columnData.dicData&&columnData.dicData.length>0" :name="columnData.prop" :data="scope">
                 <span>{{getLabelFromDicData(scope.row[columnData.prop])}}</span>
