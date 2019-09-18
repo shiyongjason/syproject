@@ -42,9 +42,9 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col proportionKPI">
                             <el-form-item label="批发:零售:工程占比：" prop="share">
-                                <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.projectShare"></el-input>
+                                <el-input class="" v-model="form.wholesaleShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.retailShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.projectShare" maxlength="27"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
@@ -284,6 +284,7 @@ export default {
         },
         async onSubmit () {
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
+            console.log(createUser)
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
@@ -296,17 +297,18 @@ export default {
                     if (this.form.dueBusinessId) {
                         await putBusiness({
                             id: this.id,
-                            createUser: createUser,
-                            updateUser: createUser,
                             ...this.form,
-                            operationNode: 1
+                            operationNode: 1,
+                            createUser: createUser,
+                            updateUser: createUser
                         })
                     } else {
                         await addBusiness({
-                            createUser: createUser,
-                            updateUser: createUser,
                             ...this.form,
-                            operationNode: 1
+                            operationNode: 1,
+                            createUser: createUser,
+                            updateUser: createUser
+
                         })
                     }
                     this.$message.success('提交成功')
