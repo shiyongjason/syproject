@@ -42,9 +42,9 @@
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col proportionKPI">
                             <el-form-item label="批发:零售:工程占比：" prop="share">
-                                <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.projectShare"></el-input>
+                                <el-input class="" v-model="form.wholesaleShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.retailShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.projectShare" maxlength="27"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
