@@ -14,7 +14,7 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindcitycode" :placeholder="'选择公司简称'" />
+                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindmiscode" :placeholder="'选择公司简称'" />
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -229,6 +229,7 @@ export default {
             this.searchParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
+            console.log(val)
             this.searchParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
