@@ -86,14 +86,14 @@
 </template>
 
 <script>
-import { MAIN_COMMERCIAL_OPTIONS, MAIN_CATEGORY_OPTIONS } from '../const'
+import { MAIN_COMMERCIAL_OPTIONS_COPY, MAIN_CATEGORY_OPTIONS_COPY } from '../const'
 import { getAreacode } from '../../api/index'
 import { mapState } from 'vuex'
 export default {
     data () {
         return {
-            mainCommercialData: MAIN_COMMERCIAL_OPTIONS,
-            maincategory: MAIN_CATEGORY_OPTIONS,
+            mainCommercialData: MAIN_COMMERCIAL_OPTIONS_COPY,
+            maincategory: MAIN_CATEGORY_OPTIONS_COPY,
             provelist: [],
             businessProvince: '',
             businessCity: '',
