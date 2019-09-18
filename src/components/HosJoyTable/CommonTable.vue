@@ -9,7 +9,7 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <CommonTableColumn :columnData="columnData" v-for="(columnData,index) in tableLabel" :key="index" />
+            <CommonTableColumn :columnData="columnData" :dicData="columnData.dicData||[]" v-for="(columnData,index) in tableLabel" :key="index" />
             <el-table-column label="操作" align="center" v-if="tableLabel.isAction" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
