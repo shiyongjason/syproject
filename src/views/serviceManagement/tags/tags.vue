@@ -101,6 +101,7 @@ export default {
     },
     mounted () {
         this.onQuery()
+        console.log(1)
     },
     methods: {
         async onQuery () {
