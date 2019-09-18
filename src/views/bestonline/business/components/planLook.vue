@@ -83,15 +83,15 @@ export default {
         async form (form) {
             if (form.dueBusinessFuturePlanCreateForm.businessProvince) {
                 const { data } = await this.getChiness(form.dueBusinessFuturePlanCreateForm.businessProvince)
-                this.proveName = data.citys.cityName
+                this.proveName = data && data.citys.cityName
             }
             if (form.dueBusinessFuturePlanCreateForm.businessCity) {
                 const { data: dataA } = await this.getChiness(form.dueBusinessFuturePlanCreateForm.businessCity)
-                this.cityName = dataA.citys.cityName
+                this.cityName = dataA && dataA.citys.cityName
             }
             if (form.dueBusinessFuturePlanCreateForm.businessArea) {
                 const { data: dataB } = await this.getChiness(form.dueBusinessFuturePlanCreateForm.businessArea)
-                this.areaName = dataB.citys.cityName
+                this.areaName = dataB && dataB.citys.cityName
             }
 
             let serviceCategory = form.dueBusinessFuturePlanCreateForm.serviceCategory
