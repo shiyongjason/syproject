@@ -18,17 +18,17 @@
                     {{scope.row.mobile ? scope.row.mobile : '-'}}
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="地址">
+            <el-table-column prop="address" label="地址" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.address }}
                 </template>
             </el-table-column>
-            <el-table-column prop="roomType" label="房型">
+            <el-table-column prop="roomType" label="房型" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.roomType }}
                 </template>
             </el-table-column>
-            <el-table-column prop="population" label="人口">
+            <el-table-column prop="population" label="人口" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.population }}
                 </template>
@@ -38,7 +38,7 @@
                     {{ scope.row.createTime | formatterTime }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button @click="onShow(scope.row)" class="orangeBtn" v-if="hosAuthCheck(showAuthCode)">查看</el-button>
                     <el-button @click="onEdit(scope.row)" class="orangeBtn" v-if="hosAuthCheck(editAuthCode)">修改</el-button>
