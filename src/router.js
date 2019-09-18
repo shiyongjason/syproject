@@ -497,6 +497,28 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/customerReport/detail.vue')
+            },
+            {
+                path: 'orderDetails',
+                name: 'serviceManagementOrderDetails',
+                meta: {
+                    title: '订单详情',
+                    tagName: '订单详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
+            },
+            {
+                path: 'tags',
+                name: 'serviceManagementTags',
+                meta: {
+                    title: '标签管理',
+                    tagName: '标签管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
     }
@@ -516,7 +538,8 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        }
+        },
+        ...routerMapping
     ]
 })
 
