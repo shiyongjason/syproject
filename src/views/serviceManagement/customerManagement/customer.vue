@@ -51,6 +51,7 @@ export default {
             const { data } = await findUserDetailsTagList({ channelUserId: row.id })
             if (data.length > 0) {
                 const temp = data.map(value => value.id)
+                await this.$refs.addOrUpdate.findTagList()
                 this.$refs.addOrUpdate.updateTagList(temp)
             }
         },
