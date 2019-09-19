@@ -1,5 +1,5 @@
 <template>
-    <el-table-column :label="columnData.label" :prop="columnData.prop" :sortable="columnData.sortable" :align="columnData.align?columnData.align:'center'" :min-width="columnData.width?columnData.width:''" :show-overflow-tooltip="true">
+    <el-table-column :label="columnData.label" :prop="columnData.prop" :sortable="columnData.sortable" :align="columnData.align?columnData.align:'center'" :width="columnData.labelWidth ? columnData.labelWidth : ''" :min-width="columnData.width?columnData.width:''" :show-overflow-tooltip="columnData.showOverflow?columnData.showOverflow:false">
         <template slot-scope="scope">
             <slot v-if="columnData.format" :name="columnData.prop" :data="scope">
                 {{vNodes.filters[columnData.format](scope.row[columnData.prop])}}

@@ -1,7 +1,7 @@
 <template>
     <div class="page-table clearfix">
         <!-- 列表 -->
-        <el-table :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :indent="4">
+        <el-table :data="tableData" border :stripe='tableLabel.stripe' :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="tableLabel.rowKey?tableLabel.rowKey:''" :indent="4">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <el-table-column type="expand" v-if="tableLabel.expand" align="center">
@@ -9,7 +9,7 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <CommonTableColumn :columnData="columnData" :dicData="columnData.dicData||[]" v-for="(columnData,index) in tableLabel" :key="index" />
+            <CommonTableColumn :columnData="columnData" :dicData="columnData.dicData||[]" v-for="(columnData,index) in tableLabel.column" :key="index" />
             <el-table-column label="操作" align="center" v-if="tableLabel.isAction" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
@@ -17,13 +17,13 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <div class="pages">
+        <div class="pages" v-if="total">
             <el-pagination :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </div>
     </div>
 </template>
 <script>
-import CommonTableColumn from '@/components/CommonTable/CommonTableColumn'
+import CommonTableColumn from '@/components/HosJoyTable/CommonTableColumn'
 // TODO 还没封装好。
 export default {
     name: 'CommonTable',
@@ -43,12 +43,11 @@ export default {
         isShowIndex: { type: Boolean, default: false },
         isBlank: { type: Boolean, default: false, desc: '当数据为空的时候是否空白显示，false的时候默认显示为-' },
         tableData: { type: Array, default: () => [] },
-        tableLabel: { type: Array, default: () => [] },
+        tableLabel: { type: Object, default: () => {} },
         multiSelection: { type: Array, default: () => [] },
         actionMinWidth: { type: Number, default: 100 },
         selectable: { type: Function, default: () => true },
-        rowKey: { type: String, default: '' },
-        total: { required: true, type: Number },
+        total: { required: true },
         /** 页码  */
         pageNumber: { type: Number, default: 1 },
         /** 每页数量  */
