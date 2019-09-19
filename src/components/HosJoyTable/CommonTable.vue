@@ -3,7 +3,7 @@
         <!-- 列表 -->
         <el-table :data="tableData" border :stripe='tableLabel.stripe' :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="tableLabel.rowKey?tableLabel.rowKey:''" :indent="4">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
+            <el-table-column v-if="tableLabel.isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <el-table-column type="expand" v-if="tableLabel.expand" align="center">
                 <template slot-scope="scope">
                     <slot name="expand" :data="scope"></slot>
@@ -40,14 +40,13 @@ export default {
         isMultiple: { type: Boolean, default: false },
         isAction: { type: Boolean, default: false },
         isPagination: { type: Boolean, default: true },
-        isShowIndex: { type: Boolean, default: false },
         isBlank: { type: Boolean, default: false, desc: '当数据为空的时候是否空白显示，false的时候默认显示为-' },
         tableData: { type: Array, default: () => [] },
         tableLabel: { type: Object, default: () => {} },
         multiSelection: { type: Array, default: () => [] },
         actionMinWidth: { type: Number, default: 100 },
         selectable: { type: Function, default: () => true },
-        total: { required: true },
+        total: { required: true, default: 0 },
         /** 页码  */
         pageNumber: { type: Number, default: 1 },
         /** 每页数量  */
@@ -84,7 +83,7 @@ export default {
             this.$emit('onSortChange', val)
         },
         indexMethod (index) {
-            return (this.currentPage * (this.pageNum - 1) + index + 1)
+            return (this.pageNum * (this.currentPage - 1) + index + 1)
         },
         formatter (data) {
             return data || data === 0 ? data : this.isBlank ? '' : '-'

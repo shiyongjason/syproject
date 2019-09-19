@@ -110,14 +110,6 @@
                 </div>
             </div>
         </div>
-        <!-- ceshi -->
-        <!-- <div class="page-body-cont">
-            <div class="page-table">
-                <hosjoyTable :tableData='tableData' :tableLabel='tableLabel' :total='paginationData.totalElements' />
-            </div>
-        </div> -->
-
-        <!-- ceshi -->
     </div>
 </template>
 <script>
@@ -125,7 +117,6 @@ import { findSubsectionList, findTableList, getCompany, getCityList } from './ap
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import hosjoyTable from '@/components/HosJoyTable/CommonTable'
 export default {
     data () {
         return {
@@ -171,88 +162,12 @@ export default {
         }
     },
     components: {
-        HAutocomplete, hosjoyTable
+        HAutocomplete
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        }),
-        tableLabel () {
-            return {
-                stripe: false, // 斑马线
-                isAction: true,
-                column: [
-                    {
-                        label: '公司简称',
-                        prop: 'companyShortName',
-                        align: 'center' // 单元格对齐方式
-                    },
-                    {
-                        label: '测试多表头',
-                        // prop: 'companyShortName',
-                        align: 'center',
-                        children: [
-                            {
-                                label: '公司编码',
-                                prop: 'misCode',
-                                align: 'center',
-                                labelWidth: '80px' // 自定义表格宽度
-                            },
-                            {
-                                label: '分部',
-                                prop: 'subsectionName',
-                                align: 'center'
-                            },
-                            {
-                                label: '所在城市',
-                                prop: 'cityName',
-                                align: 'center'
-                            },
-                            {
-                                label: '上线时间',
-                                prop: 'onlineTime',
-                                align: 'center'
-                            },
-                            {
-                                label: '增量/存量',
-                                prop: 'incremental',
-                                align: 'center'
-                                // dicData:
-                            },
-                            {
-                                label: '目标年份',
-                                prop: 'targetDate',
-                                align: 'center'
-                            },
-                            {
-                                label: '履约目标/万',
-                                prop: 'performanceTarget',
-                                align: 'center',
-                                format: 'money'// 格式化
-                            },
-                            {
-                                label: '冲刺目标/万',
-                                prop: 'sprintTarget',
-                                align: 'center'
-                            },
-                            {
-                                label: '最近操作人',
-                                prop: 'updateUser',
-                                align: 'center'
-                            },
-                            {
-                                label: '最近操作时间',
-                                prop: 'updateTime',
-                                align: 'center',
-                                // format: 'dateTime' // dateTime(YYYY-MM-DD HH:mm)、date(YYYY-MM-DD)
-                                showOverflow: true
-                            }
-                        ]
-                    }
-
-                ]
-            }
-        }
+        })
     },
     mounted () {
         if (this.userInfo.companyCode !== 'top') {

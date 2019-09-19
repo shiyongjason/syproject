@@ -5,7 +5,7 @@
                 {{vNodes.filters[columnData.format](scope.row[columnData.prop])}}
             </slot>
             <slot v-else-if="columnData.dicData&&columnData.dicData.length>0" :name="columnData.prop" :data="scope">
-                <span>{{getLabelFromDicData(scope.row[columnData.prop])}}</span>
+                <span>{{getLabelFromDicData(scope.row[columnData.prop]).label}}</span>
             </slot>
             <slot v-else :name="columnData.prop" :data="scope">
                 {{formatter(scope.row[columnData.prop])}}
@@ -52,7 +52,6 @@ const tableColumn = {
             return data || data === 0 ? data : this.isBlank ? '' : '-'
         },
         getLabelFromDicData (key) {
-            //  dicData:[{label:'',value:''}]
             const map = this.dicData.reduce((res, item) => {
                 res[item.value] = item
                 return res
