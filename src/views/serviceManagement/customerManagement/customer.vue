@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType'/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType'/>
     </div>
 </template>
 
@@ -13,7 +13,7 @@
 import searchForm from './components/searchForm'
 import customerTable from './components/customerTable'
 import addOrUpdata from './components/addOrUpdata'
-import { findCustomerList } from './api/index'
+import { findCustomerList, findUserDetailsTagList } from './api/index'
 import { pagination } from '@/utils/mixins.js'
 
 export default {
@@ -47,8 +47,16 @@ export default {
         }
     },
     methods: {
-        onEdit (row, type) {
+        async findUserDetailsTagList (row) {
+            const { data } = await findUserDetailsTagList({ channelUserId: row.id })
+            if (data.length > 0) {
+                const temp = data.map(value => value.id)
+                this.$refs.addOrUpdate.updateTagList(temp)
+            }
+        },
+        async onEdit (row, type) {
             this.editInfo = row
+            this.findUserDetailsTagList(row)
             this.dialogCustomerEdit = true
             this.showDetail = false
             type && (this.showDetail = true)

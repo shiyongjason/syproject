@@ -13,6 +13,11 @@
                 </template>
             </el-table-column>
             <el-table-column prop="mobile" align="center" label="手机号"></el-table-column>
+            <el-table-column
+                prop="nickname"
+                align="center"
+                label="微信昵称">
+            </el-table-column>
             <el-table-column prop="wechatId" align="center" label="微信号"></el-table-column>
             <el-table-column prop="key" align="center" label="客户身份">
                 <template slot-scope="scope">
@@ -27,14 +32,32 @@
             <el-table-column prop="key" align="center" label="操作">
                 <template slot-scope="scope">
                     <el-button type='primary' @click="onEdit(scope.row)" size="mini">修改</el-button>
+                    <el-button type='primary' @click="onAddTag(scope.row)" size="mini">加标签</el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-dialog class="add-tags" title="添加标签" :visible.sync="dialog" :close-on-click-modal="false" width="800px">
+            <div class="add-tags-input">
+                <el-select v-model="tagModel.id" multiple @focus="findTagList" filterable placeholder="请输入标签" remote :remote-method="searchTagList">
+                    <el-option
+                        v-for="item in tagList"
+                        :key="item.id"
+                        :label="item.labelName"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="onTagCancel">取 消</el-button>
+                <el-button type="primary" @click="onSave">保 存</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import moment from 'moment'
+import { findTagList, createTagWidthUser } from '../api/index'
 export default {
     name: 'customerTable',
     props: {
@@ -61,9 +84,78 @@ export default {
     },
     data () {
         return {
+            dialog: false,
+            tagModel: {
+                id: [],
+                query: ''
+            },
+            tagList: [],
+            tempUserId: {},
+            lastTime: null,
+            timeout: null,
+            repeatValue: []
         }
     },
     methods: {
+        debounce (func, wait) {
+            let _this = this
+            return function () {
+                let now = new Date()
+                if (now - _this.lastTime - wait > 0) {
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                } else {
+                    if (_this.timeout) {
+                        clearTimeout(_this.timeout)
+                        _this.timeout = null
+                    }
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                }
+
+                _this.lastTime = now
+            }
+        },
+        async createTagWidthUser () {
+            const params = {
+                channelUserId: this.tempUserId.id,
+                labelIdList: this.tagModel.id
+            }
+            await createTagWidthUser(params)
+        },
+        async findTagList () {
+            const { data } = await findTagList({ keywords: this.tagModel.query })
+            // let temp = []
+            // data.forEach(value => {
+            //     temp = this.repeatValue.filter(value1 => value.labelName === value1.labelName)
+            // })
+            this.tagList = data
+        },
+        onAddTag (row) {
+            this.dialog = true
+            this.tempUserId.id = row.id
+        },
+        onTagCancel () {
+            this.tagModel = {
+                id: [],
+                query: ''
+            }
+            this.dialog = false
+        },
+        searchTagList (query) {
+            this.tagModel.query = query
+            this.debounce(this.findTagList, 500)()
+        },
+        async onSave () {
+            await this.createTagWidthUser()
+            this.dialog = false
+            this.tagModel = {
+                id: [],
+                query: ''
+            }
+        },
         getTypes (obj, key) {
             let query = key + 1
             return this[obj][query].label
@@ -81,10 +173,18 @@ export default {
             return moment(time).format(dateType)
         }
     },
-    mounted () {}
+    mounted () {
+        // this.debounce(this.findOrganizationEmployee, 500)()
+    }
 }
 </script>
 
 <style lang='scss' scoped>
 .name{ color:#0099FF; cursor: pointer;}
+    .add-tags-input{
+        padding-top: 20px;
+    }
+/deep/.el-dialog .el-input, .el-dialog .el-select{
+    width: 100%;
+}
 </style>
