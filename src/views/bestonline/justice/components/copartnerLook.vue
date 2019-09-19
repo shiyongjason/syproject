@@ -21,18 +21,20 @@
                         <p v-if="item.marriage == 1">未婚</p>
                         <p v-if="item.marriage == 2">离异</p>
                         <p v-if="item.marriage == 3">丧偶</p>
+                        <!-- fix 排版 add占位符 -->
+                        <p v-if="item.marriage == null"></p>
                     </el-form-item>
                     <el-form-item label="身份证号：" label-width="120px">
                         <p>{{item.idNumber}}</p>
                     </el-form-item>
                     <el-form-item label="学历：" label-width="120px">
-                        <p>{{item.education?educationOptions[item.education].label:''}}</p>
+                        <p>{{item.education!=null?educationOptions[item.education].label:''}}</p>
                     </el-form-item>
                     <el-form-item label="持股比例：" label-width="120px" v-if="item.type != 2">
                         <p>{{item.shareholdingRatio}}</p>
                     </el-form-item>
                     <el-form-item label="是否在外兼职：" label-width="120px">
-                        <p>{{item.partTimeJob==0?'是':item.partTimeJob=1?'否':''}}</p>
+                        <p>{{item.partTimeJob==0?'是':item.partTimeJob==1?'否':''}}</p>
                     </el-form-item>
                     <el-form-item label="行业身份：" label-width="120px">
                         <p>{{item.industryStatus}}</p>

@@ -7,11 +7,11 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <td>客户</td>
-                    <td>品类</td>
-                    <td>品牌</td>
-                    <td>销售金额（万元）</td>
-                    <td>销售占比</td>
+                    <td><span class="red-word">*</span>客户</td>
+                    <td><span class="red-word">*</span>品类</td>
+                    <td><span class="red-word">*</span>品牌</td>
+                    <td><span class="red-word">*</span>销售金额（万元）</td>
+                    <td><span class="red-word">*</span>销售占比</td>
                     <td>协议期开始(非必填)</td>
                     <td>协议期结束(非必填)</td>
                     <td width="15%">协议规模（万元）(非必填)</td>
@@ -62,8 +62,8 @@
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item label-width="0">
-                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25" >
+                        <el-form-item label-width="0" :prop="`dueBusinessCustomerCreateFormList[${index}].agreementScale`" :rules="rules.agreementScale">
+                            <el-input v-model="item.agreementScale" placeholder="规模" maxlength="25">
                                 <template slot="suffix">万</template>
                             </el-input>
                         </el-form-item>
@@ -85,6 +85,7 @@
 <script>
 import { mapState } from 'vuex'
 import { MAIN_CATEGORY_OPTIONS, SELECT_OPTIONS } from '../const'
+import { IsFixedTwoNumber, Money } from '@/utils/rules'
 export default {
     data () {
         return {
@@ -102,6 +103,26 @@ export default {
                 salesProportion: ''
             },
             rules: {
+                customerName: [
+                    { required: true, message: '请输入客户名称', trigger: 'blur' }
+                ],
+                categoryId: [
+                    { required: true, message: '请选择品类', trigger: 'change' }
+                ],
+                brandName: [
+                    { required: true, message: '请输入品牌', trigger: 'blur' }
+                ],
+                salesFee: [
+                    { required: true, message: '请输入销售金额', trigger: 'blur' },
+                    { validator: Money }
+                ],
+                salesProportion: [
+                    { required: true, message: '请输入销售占比', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                agreementScale: [
+                    { validator: Money }
+                ]
             }
         }
     },

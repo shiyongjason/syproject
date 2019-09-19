@@ -13,7 +13,7 @@
                     </div>
                     <div class="form-cont-col">
                         <el-form-item label="时间：">
-                            {{form.dueFinanceProfit.recordTime}}
+                            {{form.dueFinanceProfit.recordTime| formatDate('YYYY-MM-DD')}}
                         </el-form-item>
                     </div>
                     <div class="form-cont-col">

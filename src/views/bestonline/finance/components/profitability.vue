@@ -6,7 +6,7 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <td width="25%">-</td>
+                    <td width="25%">指标</td>
                     <td width="25%">本年度</td>
                     <td width="25%">上年度</td>
                     <td width="25%">上上年度</td>
@@ -36,12 +36,14 @@
                         </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].grossMargin" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span></span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].grossMargin" :rules="rules.grossMarginRequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].grossMargin" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span></span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -67,12 +69,14 @@
                         </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].rate" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span></span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].rate" :rules="rules.rateNoRequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].rate" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span></span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
                 <tr>
@@ -98,12 +102,14 @@
                         </el-form-item>
                     </td>
                     <td width="25%">
-                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].profitRatio" placeholder="请输入内容">
-                            <template slot="prefix">
-                                <span></span>
-                            </template>
-                            <template slot="suffix">%</template>
-                        </el-input>
+                        <el-form-item label-width="0" prop="dueFinanceYearOperatingCreateForms[2].profitRatio" :rules="rules.profitRatioRequired">
+                            <el-input v-if="form.dueFinanceYearOperatingCreateForms[2]" v-model="form.dueFinanceYearOperatingCreateForms[2].profitRatio" placeholder="请输入内容">
+                                <template slot="prefix">
+                                    <span></span>
+                                </template>
+                                <template slot="suffix">%</template>
+                            </el-input>
+                        </el-form-item>
                     </td>
                 </tr>
             </tbody>
@@ -113,6 +119,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     computed: {
@@ -124,13 +131,25 @@ export default {
         return {
             rules: {
                 grossMargin: [
-                    { required: true, message: '请填写销售毛利率', trigger: 'blur' }
+                    { required: true, message: '请填写销售毛利率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                grossMarginRequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 rate: [
-                    { required: true, message: '请填写费率', trigger: 'blur' }
+                    { required: true, message: '请填写费率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                rateNoRequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 profitRatio: [
-                    { required: true, message: '请填写净利率', trigger: 'blur' }
+                    { required: true, message: '请填写净利率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                ],
+                profitRatioRequired: [
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ]
             }
         }

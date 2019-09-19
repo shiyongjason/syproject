@@ -8,7 +8,7 @@
                 <tr>
                     <td colspan="2" rowspan="2" width="16%">月份</td>
                     <td colspan="2" width="28%">本年度</td>
-                    <td colspan="2" width="28%">上年度</td>
+                    <td colspan="2" width="28%"><span class="red-word">*</span>上年度</td>
                     <td colspan="2" width="28%">上上年度</td>
                 </tr>
                 <tr>
@@ -38,11 +38,13 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                           {{lastYearAllSales}}
+                            {{lastYearAllSales}}
                         </template>
                         <template v-else>
-                            <el-input placeholder="" maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
-                            </el-input>
+                            <el-form-item label-width="0" :prop="`dueBusinessSaleCreateFormList[${index}].lastYearSales`" :rules="rules.lastYearSales">
+                                <el-input maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
+                                </el-input>
+                            </el-form-item>
                         </template>
                     </td>
                     <td>
@@ -51,7 +53,7 @@
                     </td>
                     <td>
                         <template v-if="index === 0">
-                           {{lastTwoYearAllSales}}
+                            {{lastTwoYearAllSales}}
                         </template>
                         <template v-else>
                             <el-input placeholder="" maxlength="25" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
@@ -65,7 +67,7 @@
                 </tr>
             </tbody>
         </table>
-        <el-form-item label="前10个月销售是否持续下滑：" label-width="200px" class="mt20">
+        <el-form-item label="前10个月销售是否持续下滑：" label-width="220px" class="mt20" prop="firstTenMonthsDown">
             <el-select v-model="form.firstTenMonthsDown" placeholder="请选择">
                 <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
             </el-select>
@@ -85,7 +87,12 @@ export default {
             firstTenMonthsDownData: DOWN_OPTIONS,
             currentYearAllSales: 0, // 今年销售总额
             lastYearAllSales: 0, // 去年销售总额
-            lastTwoYearAllSales: 0 // 前年销售总额
+            lastTwoYearAllSales: 0, // 前年销售总额
+            rules: {
+                lastYearSales: [
+                    { required: true, message: '请输入上年度销售业绩', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -167,6 +174,14 @@ export default {
 .salerTable {
     td {
         width: 12%;
+    }
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
     }
 }
 </style>
