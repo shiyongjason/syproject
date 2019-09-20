@@ -29,6 +29,7 @@
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
+                            <font @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -65,7 +66,10 @@
                             <li>无需配送</li>
                             <li>{{parseToMoney(item.payAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
-                            <li><el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button></li>
+                            <li>
+                                <el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button>
+                                <el-button v-if="item.source !== 1" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                            </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
                         <div class="bzt" v-if="item.sellerRemark">卖家备注：{{item.sellerRemark}}</div>
@@ -102,6 +106,9 @@ export default {
         onLink (item) {
             this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
         },
+        onEdit (item) {
+            this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
+        },
         parseToMoney (money) {
             if (money) {
                 const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -120,6 +127,12 @@ export default {
         onShowRemark (item, index) {
             this.remark = item.remark
             this.curIndex = index
+        },
+        onShowDetail (item) {
+            console.log(item)
+            // this.$router.push({
+            //     path: '/'
+            // })
         },
         onClose () {
             this.curIndex = null

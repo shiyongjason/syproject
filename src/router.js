@@ -503,12 +503,34 @@ const routerMapping = [
                 path: 'orderDetails',
                 name: 'serviceManagementOrderDetails',
                 meta: {
-                    title: '订单详情',
-                    tagName: '订单详情',
+                    title: '有赞订单详情',
+                    tagName: '有赞订单详情',
                     isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
+            },
+            {
+                path: 'orderChannelDetails',
+                name: 'serviceManagementOrderChannelDetails',
+                meta: {
+                    title: '渠道订单详情',
+                    tagName: '渠道订单详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderChannelDetails.vue')
+            },
+            {
+                path: 'orderChannelEdit',
+                name: 'serviceManagementOrderChannelEdit',
+                meta: {
+                    title: '渠道订单详情',
+                    tagName: '渠道订单详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderChannelEdit.vue')
             },
             {
                 path: 'tags',
