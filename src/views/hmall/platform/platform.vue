@@ -106,7 +106,7 @@ export default {
     },
     data () {
         return {
-            activeName: '',
+            activeName: 'first',
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,

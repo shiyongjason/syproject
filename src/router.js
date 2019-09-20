@@ -304,8 +304,8 @@ const routerMapping = [
                 path: 'platform',
                 name: 'platform',
                 meta: {
-                    title: '平台公司功能管理',
-                    tagName: '平台公司功能管理',
+                    title: '商家功能管理',
+                    tagName: '商家功能管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -409,6 +409,39 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
+            },
+            {
+                path: 'memberManagement',
+                name: 'memberManagement',
+                meta: {
+                    title: '会员管理',
+                    tagName: '会员管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/memberManagement.vue')
+            },
+            {
+                path: 'brandAreaAudit',
+                name: 'brandAreaAudit',
+                meta: {
+                    title: '品牌区域审核列表',
+                    tagName: '品牌区域审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/brandAreaAudit.vue')
+            },
+            {
+                path: 'marketStore',
+                name: 'marketStore',
+                meta: {
+                    title: '集市商品库',
+                    tagName: '集市商品库',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/marketStore.vue')
             }
         ]
     },
@@ -515,7 +548,7 @@ async function getMenu (to, next) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
