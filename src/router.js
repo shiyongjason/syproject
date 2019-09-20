@@ -4,6 +4,7 @@ import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
+import jwtDecode from 'jwt-decode'
 Vue.use(Router)
 
 const routerMapping = [
@@ -542,8 +543,26 @@ const router = new Router({
         ...routerMapping
     ]
 })
-
-async function getMenu (to, next) {
+function makeIndex (data, next) {
+    let index = []
+    if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+            index.push(data[i].path.replace('/', ''))
+            if (data[i].children) {
+                if (data[i].children.length > 0) {
+                    index.push(data[i].children[0].path.replace('/', ''))
+                }
+            }
+            break
+        }
+        let path = index.join('/')
+        if (!path) {
+            path = '/'
+        }
+        next({ path: path })
+    }
+}
+async function getMenu (to, next, isMakeIndex) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
@@ -551,7 +570,12 @@ async function getMenu (to, next) {
     const menu = makeMenus(routerMapping, resourceList)
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
-    next({ ...to, replace: true })
+
+    if (isMakeIndex) {
+        makeIndex(menu, next)
+    } else {
+        next({ ...to, replace: true })
+    }
 }
 
 // let isFirst = true
@@ -563,12 +587,18 @@ router.beforeEach(async (to, from, next) => {
     if (!isLogin) {
         // 非登录的情况下
         if (!userInfo) {
-            return next({
-                name: 'login'
-            })
+            const query = to.query
+            if (to.path === '/redirect' && query.sale === 'hosjoy') {
+                sessionStorage.setItem('token', query.access_token)
+                sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
+                await getMenu(to, next, true)
+            } else {
+                return next({
+                    name: 'login'
+                })
+            }
         } else {
             if (isFirst) {
-                // isFirst = false
                 store.commit('IS_FIRST', false)
                 await getMenu(to, next)
             }
