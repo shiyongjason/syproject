@@ -52,6 +52,7 @@ const tableColumn = {
             return data || data === 0 ? data : this.isBlank ? '' : '-'
         },
         getLabelFromDicData (key) {
+            if (key == null) return ''
             const map = this.dicData.reduce((res, item) => {
                 res[item.value] = item
                 return res
