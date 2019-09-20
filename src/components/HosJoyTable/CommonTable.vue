@@ -1,7 +1,7 @@
 <template>
     <div class="page-table clearfix">
         <!-- 列表 -->
-        <el-table :data="tableData" border :stripe='tableLabel.stripe' :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="tableLabel.rowKey?tableLabel.rowKey:''" :indent="4">
+        <el-table :data="tableData" border :stripe='tableLabel.stripe' :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="tableLabel.rowKey?tableLabel.rowKey:''" :indent="4" :span-method="objectSpanMethod" :show-summary="tableLabel.hasShowSummary?tableLabel.hasShowSummary:false" :summary-method="tableLabel.getSummaries">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="tableLabel.isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <el-table-column type="expand" v-if="tableLabel.expand" align="center">
@@ -40,7 +40,11 @@ export default {
         isMultiple: { type: Boolean, default: false },
         isAction: { type: Boolean, default: false },
         isPagination: { type: Boolean, default: true },
-        isBlank: { type: Boolean, default: false, desc: '当数据为空的时候是否空白显示，false的时候默认显示为-' },
+        isBlank: {
+            type: Boolean,
+            default: false,
+            desc: '当数据为空的时候是否空白显示，false的时候默认显示为-'
+        },
         tableData: { type: Array, default: () => [] },
         tableLabel: { type: Object, default: () => {} },
         multiSelection: { type: Array, default: () => [] },
@@ -51,8 +55,16 @@ export default {
         pageNumber: { type: Number, default: 1 },
         /** 每页数量  */
         pageSize: { type: Number, default: 10 },
-        pageSizes: { type: Array, default () { return [10, 20, 30, 40] } },
-        layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' }
+        pageSizes: {
+            type: Array,
+            default () {
+                return [10, 20, 30, 40]
+            }
+        },
+        layout: {
+            type: String,
+            default: 'total, sizes, prev, pager, next, jumper'
+        }
     },
     computed: {
         currentPage: {
@@ -83,16 +95,36 @@ export default {
             this.$emit('onSortChange', val)
         },
         indexMethod (index) {
-            return (this.pageNum * (this.currentPage - 1) + index + 1)
+            return this.pageNum * (this.currentPage - 1) + index + 1
         },
         formatter (data) {
             return data || data === 0 ? data : this.isBlank ? '' : '-'
         },
         handleSizeChange (val) {
-            this.$emit('pagination', { pageNumber: this.currentPage, pageSize: val })
+            this.$emit('pagination', {
+                pageNumber: this.currentPage,
+                pageSize: val
+            })
         },
         handleCurrentChange (val) {
-            this.$emit('pagination', { pageNumber: val, pageSize: this.pageNum })
+            this.$emit('pagination', {
+                pageNumber: val,
+                pageSize: this.pageNum
+            })
+        },
+        /**
+         * 表格合并
+         * row 表格每一行的数据
+         * column 表格每一列的数据
+         * rowIndex 表格的行索引,不包括表头,从0开始
+         * columnIndex 表格的列索引,从0开始
+         */
+        objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
+            if (!this.tableLabel.hasMergeRowOrColumn) {
+                return false
+            } else {
+                this.$emit('onMergeRowOrColumn', { row, column, rowIndex, columnIndex })
+            }
         }
     },
     mounted () {
