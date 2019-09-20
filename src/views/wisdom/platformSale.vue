@@ -388,12 +388,12 @@ export default {
         if (this.userInfo.deptType === this.deptType[1]) {
             console.log(1)
             this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.companyCode
-            this.onFindBranchList(this.userInfo.companyCode) // 查大区下的分部
+            this.queryParams.regionCode = this.userInfo.oldDeptCode
+            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
         } else if (this.userInfo.deptType === this.deptType[2]) {
             console.log(2)
             this.onFindPaltList() // 平台公司
-        } else if (this.userInfo.organizationType === this.deptType[0]) {
+        } else if (this.userInfo.deptType === this.deptType[0]) {
             console.log(3)
             this.regionDisabled = true
             this.branchDisabled = true

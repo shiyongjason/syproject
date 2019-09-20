@@ -98,9 +98,9 @@ export default {
         this.findDepList()
         this.provinceDataList = await this.findProvinceAndCity(0)
         // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
-        if (this.userInfo.companyCode !== 'top') {
-            const code = this.userInfo.organizationCode
-            this.searchParams.subsectionCode = this.userInfo.organizationCode
+        if (this.userInfo.oldDeptCode !== 'top') {
+            const code = this.userInfo.oldDeptCode
+            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
             // this.findProvinceAndCity(0, code)
             this.platList = await this.findPaltList(code)
             this.findCompanyList()

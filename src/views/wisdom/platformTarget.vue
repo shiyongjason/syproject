@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.companyCode==='top'">
+                <div class="query-cont-col" v-if="userInfo.oldDeptCode==='top'">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
                         <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
@@ -170,12 +170,12 @@ export default {
         })
     },
     mounted () {
-        if (this.userInfo.companyCode !== 'top') {
-            this.searchParams.subsectionCode = this.userInfo.companyCode
+        if (this.userInfo.oldDeptCode !== 'top') {
+            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
         }
-        this.companyData.params.companyCode = this.userInfo.companyCode
-        this.cityData.params.companyCode = this.userInfo.companyCode
-        this.onFindBranchList(this.userInfo.companyCode)
+        this.companyData.params.companyCode = this.userInfo.oldDeptCode
+        this.cityData.params.companyCode = this.userInfo.oldDeptCode
+        this.onFindBranchList(this.userInfo.oldDeptCode)
         this.onFindTableList()
         this.getCompanyList()
         this.getCityList()
