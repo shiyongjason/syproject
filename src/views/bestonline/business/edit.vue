@@ -244,7 +244,8 @@ export default {
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT,
+            isPending: false
         }
     },
     mounted () {
@@ -267,6 +268,8 @@ export default {
             findBusinessData: 'findBusinessData'
         }),
         async onSaveBus () {
+            if (this.isPending) return
+            this.isPending = true
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             const publicityPromotionChannels = this.form.publicityPromotionChannels
             this.form.publicityPromotionChannels = publicityPromotionChannels ? (Array.isArray(publicityPromotionChannels) ? publicityPromotionChannels.join(',') : publicityPromotionChannels) : ''
@@ -275,16 +278,25 @@ export default {
             this.form.operationNode = 0
             this.form.createUser = createUser
             if (this.form.dueBusinessId) {
-                await putBusiness(this.form)
+                try {
+                    await putBusiness(this.form)
+                } catch (error) {
+                    this.isPending = false
+                }
             } else {
-                await addBusiness(this.form)
+                try {
+                    await addBusiness(this.form)
+                } catch (error) {
+                    this.isPending = false
+                }
             }
             this.$message.success('暂存成功')
             this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
+            if (this.isPending) return
+            this.isPending = true
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
-            console.log(createUser)
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
@@ -295,25 +307,36 @@ export default {
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {
-                        await putBusiness({
-                            id: this.id,
-                            ...this.form,
-                            operationNode: 1,
-                            createUser: createUser,
-                            updateUser: createUser
-                        })
+                        try {
+                            await putBusiness({
+                                id: this.id,
+                                ...this.form,
+                                operationNode: 1,
+                                createUser: createUser,
+                                updateUser: createUser
+                            })
+                            this.isPending = false
+                        } catch (error) {
+                            this.isPending = false
+                        }
                     } else {
-                        await addBusiness({
-                            ...this.form,
-                            operationNode: 1,
-                            createUser: createUser,
-                            updateUser: createUser
-
-                        })
+                        try {
+                            await addBusiness({
+                                ...this.form,
+                                operationNode: 1,
+                                createUser: createUser,
+                                updateUser: createUser
+                            })
+                            this.isPending = false
+                        } catch (error) {
+                            this.isPending = false
+                        }
                     }
                     this.$message.success('提交成功')
                     this.findBusinessData({ applyId: this.$route.query.applyId })
                     this.$router.go(-1)
+                } else {
+                    this.isPending = false
                 }
             })
         },
