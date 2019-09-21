@@ -78,7 +78,8 @@ export default {
                 }
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT,
+            isPending: false
         }
     },
     computed: {
@@ -105,13 +106,20 @@ export default {
             if (i === 1) return this.onSubmit(firstTime)
         },
         async onSaveGood (firstTime) {
+            if (this.isPending) return
+            this.isPending = true
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
             if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
             this.form.dueFinanceBasic.type = 0
-            await saveFinance({ ...this.form, type: 0 })
+            try {
+                await saveFinance({ ...this.form, type: 0 })
+                this.isPending = false
+            } catch (error) {
+                this.isPending = false
+            }
             this.$message({
                 type: 'success',
                 message: '暂存成功!'
@@ -119,14 +127,28 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (firstTime) {
+            if (this.isPending) return
+            this.isPending = true
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
-                    await saveFinance({ ...this.form, type: 1 })
-                    await this.findFinanceData({ applyId: this.$route.query.applyId })
+                    try {
+                        await saveFinance({ ...this.form, type: 1 })
+                        this.isPending = false
+                    } catch (error) {
+                        this.isPending = false
+                    }
+                    try {
+                        await this.findFinanceData({ applyId: this.$route.query.applyId })
+                        this.isPending = false
+                    } catch (error) {
+                        this.isPending = false
+                    }
                     this.$message.success('提交成功')
                     this.$router.go(-1)
+                } else {
+                    this.isPending = false
                 }
             })
         },

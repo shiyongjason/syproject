@@ -86,7 +86,8 @@ export default {
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_COMMIT,
+            isPending: false
         }
     },
     computed: {
@@ -98,21 +99,32 @@ export default {
     },
     methods: {
         async _saveOrUpdate () {
+            if (this.isPending) return
+            this.isPending = true
             this.form.applyId = this.$route.query.applyId
             this.form.yearRateTabelContents = this.form.yearRateTabelContents
-            console.log(this.userInfo)
             if (this.form.id) {
                 this.form.updateUser = this.userInfo.employeeName
-                await putCooperativetarget(this.form)
-                this.$message.success('暂存成功！')
-                this.$router.go(-1)
-                this.$emit('init')
+                try {
+                    await putCooperativetarget(this.form)
+                    this.$message.success('暂存成功！')
+                    this.isPending = false
+                    this.$router.go(-1)
+                    this.$emit('init')
+                } catch (error) {
+                    this.isPending = false
+                }
             } else {
                 this.form.createUser = this.userInfo.employeeName
-                await addCooperativetarget(this.form)
-                this.$message.success('提交成功！')
-                this.$router.go(-1)
-                this.$emit('init')
+                try {
+                    await addCooperativetarget(this.form)
+                    this.$message.success('提交成功！')
+                    this.isPending = false
+                    this.$router.go(-1)
+                    this.$emit('init')
+                } catch (error) {
+                    this.isPending = false
+                }
             }
         },
         async onSave () {
