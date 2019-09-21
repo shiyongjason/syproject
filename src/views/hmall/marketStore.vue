@@ -44,7 +44,7 @@
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                        <el-button type="primary" class="ml20">导出</el-button>
+                        <!-- <el-button type="primary" class="ml20">导出</el-button> -->
                     </div>
                 </div>
             </div>
@@ -66,9 +66,9 @@ export default {
                 { label: '商品类目', prop: 'allSubmitTime' },
                 { label: '商家名称', prop: 'handleTime' },
                 { label: '建议零售价', prop: 'finalScore' },
-                { label: '销售价格', prop: 'price' },
+                { label: '销售价格', prop: 'price', event: true },
                 { label: '佣金', prop: 'brokerage' },
-                { label: '商品库存', prop: 'inventory' }
+                { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } }
             ],
             tableData: [
                 {
@@ -80,7 +80,17 @@ export default {
                     finalScore: '1234',
                     price: '100',
                     brokerage: '2',
-                    inventory: '10'
+                    inventory: '10',
+                    shy: [
+                        {
+                            numberCase: 10,
+                            discount: '10%'
+                        },
+                        {
+                            numberCase: 10,
+                            discount: '10%'
+                        }
+                    ]
                 }, {
                     originatorName: '1000001',
                     institution: '格力',
@@ -90,7 +100,27 @@ export default {
                     finalScore: '1234',
                     price: '100',
                     brokerage: '2',
-                    inventory: '10'
+                    inventory: '10',
+                    shy: [
+                        {
+                            numberCase: 10,
+                            discount: '10%'
+                        },
+                        {
+                            numberCase: 10,
+                            discount: '10%'
+                        }
+                    ]
+                }, {
+                    originatorName: '1000001',
+                    institution: '格力',
+                    originTime: '格力',
+                    allSubmitTime: '1>2>3',
+                    handleTime: '南京万x连',
+                    finalScore: '1234',
+                    price: '100',
+                    brokerage: '2',
+                    inventory: '0'
                 }
             ],
             searchParams: {},

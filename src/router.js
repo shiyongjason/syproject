@@ -410,17 +410,18 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
             },
-            {
-                path: 'memberManagement',
-                name: 'memberManagement',
-                meta: {
-                    title: '会员管理',
-                    tagName: '会员管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/memberManagement.vue')
-            },
+            // 这期不做
+            // {
+            //     path: 'memberManagement',
+            //     name: 'memberManagement',
+            //     meta: {
+            //         title: '会员管理',
+            //         tagName: '会员管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/memberManagement.vue')
+            // },
             {
                 path: 'brandAreaAudit',
                 name: 'brandAreaAudit',
