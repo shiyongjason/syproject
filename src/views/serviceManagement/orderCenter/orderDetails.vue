@@ -4,36 +4,48 @@
             <div class="order-info">
                 <p>
                     <span>订单号：</span>
-                    E2019dajkfjkdasjkfdkhjasdjkafj
+                    {{query.orderNo ? query.orderNo : '-'}}
                 </p>
                 <p>
                     <span>外部订单号：</span>
-                    E2019dajkfjkdasjkfdkhjasdjkafj
+                    {{query.channelOrderNo ? query.channelOrderNo : '-'}}
                 </p>
                 <p>
                     <span>下单时间：</span>
-                    E2019dajkfjkdasjkfdkhjasdjkafj
+                    {{details.payTime | formatDate}}
                 </p>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="order-status">
                 <div class="left">
-                    <p class="title">商家已发货，等待</p>
-                    <p class="title">交易成功</p>
-                    <p class="tips">
-                        买家如在<span>7天内</span>没有申请退款，交易将自动完成。
-                    </p>
+                    <div class="is-status" v-if="query.status !==4 ">
+                        <p class="title">商家已发货，等待</p>
+                        <p class="title">交易成功</p>
+                        <p class="tips">
+                            买家如在<span>7天内</span>没有申请退款，交易将自动完成。
+                        </p>
+                    </div>
+                    <div class="is-status" v-else>
+                        <p class="title">交易关闭</p>
+                        <p class="tips">
+                            订单已全额退款，交易自动关闭
+                        </p>
+                        <p class="tips">
+                            订单退款金额：{{details.payTime}}元
+                        </p>
+                    </div>
                     <p class="remark">
                         <span>备注</span>
+                        <el-rate v-model="details.star"></el-rate>
                     </p>
                 </div>
                 <div class="right">
-                    <el-steps :active="2">
-                        <el-step title="买家下单" :description="new Date() | formatDate"></el-step>
-                        <el-step title="买家付款" :description="new Date() | formatDate"></el-step>
-                        <el-step title="商家发货" :description="new Date() | formatDate"></el-step>
-                        <el-step title="交易完成" :description="new Date() | formatDate"></el-step>
+                    <el-steps :active="stepNum">
+                        <el-step title="买家下单" :description="details.created | formatDate"></el-step>
+                        <el-step title="买家付款" :description="details.payTime | formatDate"></el-step>
+                        <el-step title="商家发货" :description="details.consignTime | formatDate"></el-step>
+                        <el-step title="交易完成" :description="details.successTime | formatDate"></el-step>
                     </el-steps>
                 </div>
             </div>
@@ -43,10 +55,10 @@
                         付款信息
                     </p>
                     <p class="item">
-                        实付金额： 199.00
+                        实付金额： {{details.payment}}
                     </p>
                     <p class="item">
-                        付款时间： 2019-08-29 10：11：56
+                        付款时间： {{details.payTime | formatDate}}
                     </p>
                 </div>
                 <div>
@@ -54,10 +66,10 @@
                         买家信息
                     </p>
                     <p class="item">
-                        买家： 199.00
+                        买家： {{details.buyerName}}
                     </p>
                     <p class="item">
-                        买家留言： ---
+                        买家留言： {{details.buyerRemark ? details.buyerRemark : '-'}}
                     </p>
                 </div>
                 <div>
@@ -65,13 +77,13 @@
                         收货人信息
                     </p>
                     <p class="item">
-                        收货人： 徐生亮
+                        收货人： {{details.receiverName}}
                     </p>
                     <p class="item">
-                        手机号： 13505152221
+                        手机号： {{details.receiverTel}}
                     </p>
                     <p class="item">
-                        收货地址： 南京市玄武区
+                        收货地址： {{details.deliveryAddress}}
                     </p>
                 </div>
             </div>
@@ -84,44 +96,89 @@
                         <th>小计（元）</th>
                         <th>发货状态</th>
                     </tr>
-                    <tr>
+                    <tr v-for="(item,index) in details.respOrderGoodsYouZanList" :key="item.goodsName + index">
                         <td>
                             <div class="info">
                                 <p>
-                                    <img src="../../../assets/images/home_bg@2x.png" alt="头像" width="100px">
+                                    <img :src="item.goodsImg" alt="头像" width="100px">
                                 </p>
                                 <p>
-                                    <span class="name">程工管家number-one</span>
-                                    <span class="grade">最强王者</span>
+                                    <span class="name">{{item.goodsName}}</span>
+                                    <span class="grade"> 会员： {{JSON.parse(item.skuPropertiesName).name}}</span>
                                 </p>
                             </div>
                         </td>
                         <td>
-                            199.00
+                            {{item.goodsPrice}}
                         </td>
-                        <td>1件</td>
+                        <td>{{item.goodsNum}}</td>
                         <td>
-                            199.00
+                            {{item.totalFee}}
                         </td>
-                        <td>以发货</td>
+                        <td>
+                            <template v-if="item.expressStatusList.indexOf(0)> -1">待发货</template>
+                            <template v-if="item.expressStatusList.indexOf(1)> -1">已发货</template>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="5" class="foot">
-                            订单金额： <span>199.00</span>
+                            订单金额： <span>{{details.payment}}</span>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="btn-group">
-                <el-button type="primary" @click="history.go(-1)">返回</el-button>
+                <el-button type="primary" @click="goBack">返回</el-button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { findYouZanOrderDetails } from './api/index'
+import { mapState, mapMutations } from 'vuex'
 export default {
-    name: 'orderDetails'
+    name: 'orderDetails',
+    computed: {
+        stepNum () {
+            return this.query.status - 0 + 1
+        },
+        ...mapState({
+            tagsList: state => state.layout.tagsList
+        })
+    },
+    data () {
+        return {
+            query: {},
+            details: {}
+        }
+    },
+    methods: {
+        goBack () {
+            history.go(-1)
+            this.closeTags()
+        },
+        async findYouZanOrderDetails (params) {
+            const { data } = await findYouZanOrderDetails(params)
+            this.details = data
+        },
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        }),
+        closeTags () {
+            this.tagsList.some((item, index) => {
+                if (item.path === (this.$route.fullPath).split('?')[0]) {
+                    this.tagsList.splice(index, 1)
+                    return true
+                }
+            })
+            this.tagUpdate(this.tagsList)
+        }
+    },
+    mounted () {
+        this.query = this.$route.query
+        this.findYouZanOrderDetails(this.query.channelOrderNo)
+    }
 }
 </script>
 
@@ -218,5 +275,14 @@ export default {
     .btn-group{
         max-width: 1000px;
         text-align: center;
+    }
+    .is-status {
+        padding: 12px 0;
+    }
+    /deep/.el-step__title.is-process{
+        color: #999999;
+    }
+    /deep/.el-step__description.is-process{
+        color: #999999;
     }
 </style>

@@ -29,10 +29,34 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
+                        <div class="query-col-title">渠道名称：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="searchForm.source" clearable>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="有赞商城" value="1"></el-option>
+                                <el-option label="孩子王" value="2"></el-option>
+                                <el-option label="考拉买菜" value="3"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
                         <div class="query-col-input">
                             <el-button type="primary" @click="onSearch">
                                 筛选
                             </el-button>
+                        </div>
+                        <div class="query-col-input">
+                            <el-upload
+                                class="upload-demo"
+                                :show-file-list="false"
+                                :action="interfaceUrl + 'service/api/orders/import'"
+                                :on-success="isSuccess"
+                                auto-upload
+                            >
+                                <el-button type="primary">
+                                    导入外部订单
+                                </el-button>
+                            </el-upload>
                         </div>
                     </div>
                 </el-form>
@@ -42,6 +66,7 @@
 </template>
 
 <script>
+    import {interfaceUrl} from '@/api/config'
 export default {
     name: 'searchForm',
     props: ['value'],
@@ -52,7 +77,8 @@ export default {
                 channelOrderNo: '外部订单号',
                 userName: '姓名',
                 mobile: '手机号'
-            }
+            },
+            interfaceUrl: interfaceUrl
         }
     },
     computed: {
@@ -109,6 +135,22 @@ export default {
                 if (this.searchForm.searchValue) this.searchForm.searchValue = null
             }
             this.$emit('search', this.searchForm)
+        },
+        isSuccess (response) {
+            console.log(response)
+            this.$emit('search', this.searchForm)
+            // if (response.code !== 200) {
+            //     this.$message({
+            //         message: '批量导入失败，' + response.message,
+            //         type: 'error'
+            //     })
+            // } else {
+            //     this.$message({
+            //         message: '批量导入成功！',
+            //         type: 'success'
+            //     })
+            //
+            // }
         }
     }
 }

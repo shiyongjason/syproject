@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <td>备注</td>
-                    <td>{{details.sellerRemark}}</td>
+                    <td>{{isNullAddSymbol(details.sellerRemark)}}</td>
                 </tr>
                 <tr>
                     <td>订单号</td>
@@ -65,7 +65,7 @@
                         <template v-if="details.status === 5">已下单</template>
                         <template v-if="details.status === 6">已收货</template>
                         <template v-if="details.status === 7">已预约</template>
-                        <template v-if="details.status === 7">已派工</template>
+                        <template v-if="details.status === 8">已派工</template>
                     </td>
                 </tr>
                 <tr>
@@ -80,19 +80,19 @@
                 </tr>
                 <tr>
                     <td>线下服务管家</td>
-                    <td>{{details.offlineHousekeeper}}</td>
+                    <td>{{isNullAddSymbol(details.offlineHousekeeper)}}</td>
                 </tr>
                 <tr>
                     <td>是否添加微信</td>
-                    <td>{{details.isAddWechat}}</td>
+                    <td>{{isNullAddSymbol(details.isAddWechat)}}</td>
                 </tr>
                 <tr>
                     <td>线上管家</td>
-                    <td>{{details.onlineHousekeeper}}</td>
+                    <td>{{isNullAddSymbol(details.onlineHousekeeper)}}</td>
                 </tr>
                 <tr>
                     <td>服务评价</td>
-                    <td>{{details.content}}</td>
+                    <td>{{isNullAddSymbol(details.content)}}</td>
                 </tr>
                 <tr>
                     <td>是否转化</td>
@@ -100,7 +100,7 @@
                 </tr>
                 <tr>
                     <td>转化订单号</td>
-                    <td>{{details.conversionOrderNo}}</td>
+                    <td>{{isNullAddSymbol(details.conversionOrderNo)}}</td>
                 </tr>
                 <tr>
                     <td>创建人</td>
@@ -119,16 +119,59 @@
                     <td>{{details.updateTime | formatDate}}</td>
                 </tr>
             </table>
+            <div class="btn-group">
+                <el-button type="primary" @click="goBack">返回</el-button>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import { findChannelOrderDetails } from './api/index'
+import { mapState, mapMutations } from 'vuex'
 export default {
     name: 'orderChannelDetails',
+    computed: {
+        ...mapState({
+            tagsList: state => state.layout.tagsList
+        })
+    },
     data () {
         return {
-            details: {}
+            details: {},
+            channelId: ''
+        }
+    },
+    mounted () {
+        const temp = this.$route.query.id
+        if (temp) {
+            this.channelId = temp
+        }
+        this.findChannelOrderDetails()
+    },
+    methods: {
+        goBack () {
+            history.go(-1)
+            this.closeTags()
+        },
+        async findChannelOrderDetails () {
+            const { data } = await findChannelOrderDetails(this.channelId)
+            this.details = data
+        },
+        isNullAddSymbol (val) {
+            return val || '-'
+        },
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        }),
+        closeTags () {
+            this.tagsList.some((item, index) => {
+                if (item.path === (this.$route.fullPath).split('?')[0]) {
+                    this.tagsList.splice(index, 1)
+                    return true
+                }
+            })
+            this.tagUpdate(this.tagsList)
         }
     }
 }
@@ -147,5 +190,10 @@ table{
         width: 200px;
         border: 1px solid #999999;
         padding: 8px 12px;
+    }
+    .btn-group{
+        padding: 20px 12px;
+        max-width: 800px;
+        text-align: center;
     }
 </style>

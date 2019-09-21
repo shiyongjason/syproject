@@ -172,9 +172,6 @@ export default {
             type && (dateType = type)
             return moment(time).format(dateType)
         }
-    },
-    mounted () {
-        // this.debounce(this.findOrganizationEmployee, 500)()
     }
 }
 </script>

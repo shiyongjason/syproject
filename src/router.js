@@ -607,18 +607,18 @@ router.beforeEach(async (to, from, next) => {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非/login下需要验证
     if (!isLogin) {
+        // 提供第三方凭条跳转内部系统
+        const query = to.query
+        if (to.path === '/redirect' && query.sale === 'hosjoy') {
+            sessionStorage.setItem('token', query.access_token)
+            sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
+            await getMenu(to, next, true)
+        }
         // 非登录的情况下
         if (!userInfo) {
-            const query = to.query
-            if (to.path === '/redirect' && query.sale === 'hosjoy') {
-                sessionStorage.setItem('token', query.access_token)
-                sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
-                await getMenu(to, next, true)
-            } else {
-                return next({
-                    name: 'login'
-                })
-            }
+            return next({
+                name: 'login'
+            })
         } else {
             if (isFirst) {
                 store.commit('IS_FIRST', false)
