@@ -549,7 +549,8 @@ async function getMenu (to, next) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = routerMapping
+    const menu = makeMenus(routerMapping, resourceList)
+    // const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
