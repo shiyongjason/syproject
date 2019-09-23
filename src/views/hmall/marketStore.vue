@@ -48,8 +48,10 @@
                     </div>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-            </basicTable>
+            <div class="page-body-cont">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                </basicTable>
+            </div>
         </div>
     </div>
 </template>

@@ -47,15 +47,17 @@
                     </div>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" isShowIndex :actionMinWidth='520' :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn">完善用户信息</el-button>
-                    <el-button class="orangeBtn">分配岗位</el-button>
-                    <el-button class="orangeBtn">重置密码</el-button>
-                    <el-button class="orangeBtn">删除用户</el-button>
-                    <el-button class="orangeBtn" @click="console.log(scope)">禁用</el-button>
-                </template>
-            </basicTable>
+            <div class="page-body-cont">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" isShowIndex :actionMinWidth='520' :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                    <template slot="action" slot-scope="scope">
+                        <el-button class="orangeBtn">完善用户信息</el-button>
+                        <el-button class="orangeBtn">分配岗位</el-button>
+                        <el-button class="orangeBtn">重置密码</el-button>
+                        <el-button class="orangeBtn">删除用户</el-button>
+                        <el-button class="orangeBtn" @click="console.log(scope)">禁用</el-button>
+                    </template>
+                </basicTable>
+            </div>
         </div>
     </div>
 </template>
