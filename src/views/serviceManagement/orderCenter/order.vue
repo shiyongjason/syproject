@@ -25,7 +25,8 @@ export default {
         return {
             list: [],
             searchForm: {
-                searchKey: 'orderNo'
+                searchKey: 'orderNo',
+                mobile: ''
             }
         }
     },
@@ -47,6 +48,12 @@ export default {
         }
     },
     mounted () {
+        let defaultMobile = this.$route.query.mobile
+        if (defaultMobile) {
+            console.log(1)
+            this.searchForm.searchKey = 'mobile'
+            this.searchForm.searchValue = defaultMobile
+        }
         this.getData()
     }
 }

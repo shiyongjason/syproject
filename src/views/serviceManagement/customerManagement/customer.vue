@@ -28,7 +28,8 @@ export default {
             list: [],
             searchForm: {
                 role: '',
-                channelType: ''
+                channelType: '',
+                mobile: ''
             },
             editInfo: {},
             channelType: [
@@ -84,6 +85,10 @@ export default {
         }
     },
     mounted () {
+        let defaultMobile = this.$route.query.mobile
+        if (defaultMobile) {
+            this.searchForm.mobile = defaultMobile
+        }
         this.getData()
     }
 }
