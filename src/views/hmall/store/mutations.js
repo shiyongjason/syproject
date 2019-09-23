@@ -1,4 +1,4 @@
-import { CHANGE_MANAGE_PAGE_NUMBER, CHANGE_REVIEW_LIST_PAGE_NUMBER, GET_USER_INFO_NAME_AND_CODE } from './const'
+import { CHANGE_MANAGE_PAGE_NUMBER, CHANGE_REVIEW_LIST_PAGE_NUMBER, GET_USER_INFO_NAME_AND_CODE, CATEGORY_LIST } from './const'
 
 export default {
     [CHANGE_REVIEW_LIST_PAGE_NUMBER] (state, pageNumber) {
@@ -9,5 +9,9 @@ export default {
     },
     [GET_USER_INFO_NAME_AND_CODE] (state, data) {
         state.userInfo = data
+    },
+    [CATEGORY_LIST] (state, data) {
+        console.log(data)
+        state.categoryList = data
     }
 }
