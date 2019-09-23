@@ -11,7 +11,6 @@ export default {
         state.userInfo = data
     },
     [CATEGORY_LIST] (state, data) {
-        console.log(data)
         state.categoryList = data
     }
 }

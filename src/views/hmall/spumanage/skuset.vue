@@ -18,7 +18,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">属性类型：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.type" style="width: 100%">
+                    <el-select v-model="queryParams.type">
                         <el-option v-for="item in attrTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -42,8 +42,8 @@
                 <el-button type="primary" class="ml20" @click="openMark()">
                     新增属性
                 </el-button>
-                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,1)">批量生效</el-button>
-                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(selectId,2)">批量失效</el-button>
+                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(1)">批量生效</el-button>
+                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(2)">批量失效</el-button>
             </div>
         </div>
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -63,8 +63,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findAttributeList, createAttribute, findCategoryList, updateAttribute, findAttributeDetails } from './api/index'
-
+import { findAttributeList, createAttribute, updateAttribute, findAttributeDetails } from './api/index'
+import { ATTRIBUTE_TYPE } from '../store/const'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'skuset',
@@ -112,7 +112,8 @@ export default {
             ],
             rowKey: '',
             paginationData: {},
-            multiSelection: []
+            multiSelection: [],
+            attrTypeOptions: ATTRIBUTE_TYPE
 
         }
     },
@@ -203,9 +204,6 @@ export default {
             }
             this.status = 'modify'
             this.dialogAttributeEdit = true
-            this.$nextTick(() => {
-                this.$refs.form.clearValidate()
-            })
         },
         async searchList () {
             const { ...params } = this.queryParams
@@ -234,25 +232,13 @@ export default {
                 this.$refs.form.clearValidate()
             })
         },
-        updateAttributeMultiStatus (ids, status) {
-            if (ids.length > 0) {
-                const params = {
-                    parameterIds: ids,
-                    status: status
-                }
-                this._updateAttributeStatus(params)
-            } else {
-                this.$message({
-                    showClose: true,
-                    message: '请先选择属性！',
-                    type: 'warning'
-                })
-            }
+        updateAttributeMultiStatus (status) {
+            let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
+            console.log(multiSelection)
         }
     },
     async mounted () {
         this.searchList()
-        await this.findCategoryList()
         this.tempForm = deepCopy(this.form)
     }
 }

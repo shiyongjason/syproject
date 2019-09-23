@@ -37,8 +37,6 @@ export default {
             value: '',
             label: '全部'
         })
-        console.log(1, productCategoryTemp)
-        // this.productCategoryList = productCategoryTemp
         commit('CATEGORY_LIST', productCategoryTemp)
     }
 }

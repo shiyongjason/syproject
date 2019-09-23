@@ -48,7 +48,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="queryParams.categoryId" :change-on-select="true" @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="queryParams.categoryId" :props="{ checkStrictly: true }" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -106,16 +106,18 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange"
+            :multiSelection.sync="multiSelection"  :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'上架':'下架'}}</span>
+                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onGoodsMain(scope.data.row.id,scope.data.row.checkStatus)">编辑</el-button>
-
+                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
+                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '禁用' : '启用'">
+                    </el-button>
                 </template>
             </basicTable>
         </div>
@@ -123,15 +125,12 @@
     </div>
 </template>
 <script>
-import { findProductCategory, findProducts, findProductSource } from './api/index'
+import { findProducts, findProductSource } from './api/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     data () {
         return {
-            dialogFormVisible: false,
-            innerVisible: false,
-            file: '',
-            errMsg: [],
+            productSource: [],
             queryParams: {
                 productCode: '',
                 productName: '',
@@ -146,17 +145,9 @@ export default {
             },
             tableData: [],
             paginationInfo: {},
-            productSource: [],
-            productCategoryList: [],
-            categoryFirst: [],
-            categorySecond: [],
-            categoryThird: [],
-            selectedCategoryValue: '',
-            secondCategoryId: '', // 选中二级类目id
-            importFileList: [],
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [{ label: '商品编码spu', prop: 'productCode' },
-                { label: '商品名称', prop: 'productName', width: '150' },
+                { label: '商品名称', prop: 'productName', width: '200' },
                 { label: '品牌', prop: 'brandName', width: '200' },
                 { label: '商品类目', prop: 'categoryName', width: '200' },
                 { label: '商品来源', prop: 'sourceName' },
@@ -164,7 +155,8 @@ export default {
                 { label: '维护人', prop: 'updateBy' },
                 { label: '维护时间', prop: 'updateTime', width: '200' }
             ],
-            rowKey: ''
+            rowKey: '',
+            multiSelection: []
         }
     },
     computed: {
@@ -233,36 +225,9 @@ export default {
                 total: data.total
             }
         },
-        // async findProductCategory () {
-        //     const { data } = await findProductCategory()
-        //     let productCategoryTemp = []
-        //     productCategoryTemp = data.map((value) => {
-        //         let obj = {
-        //             value: value.id,
-        //             label: value.categoryName,
-        //             children: value.categoryList ? value.categoryList.map(value1 => {
-        //                 let obj1 = {
-        //                     value: value1.id,
-        //                     label: value1.categoryName,
-        //                     children: value1.categoryList ? value1.categoryList.map(value2 => {
-        //                         let obj2 = {
-        //                             value: value2.id,
-        //                             label: value2.categoryName
-        //                         }
-        //                         return obj2
-        //                     }) : null
-        //                 }
-        //                 return obj1
-        //             }) : null
-        //         }
-        //         return obj
-        //     })
-        //     productCategoryTemp.splice(0, 0, {
-        //         value: '',
-        //         label: '全部'
-        //     })
-        //     this.productCategoryList = productCategoryTemp
-        // },
+        onChangeStatus (val) {
+            console.log(this.multiSelection)
+        },
         gotoProductAdd () {
             this.$router.push({ path: '/hmall/spudetail' })
         }

@@ -10,9 +10,9 @@
                     <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
                     <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
                     <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
-                    <!-- 
+                    <!--
                         表格内颜色等级层次
-                        colorLeave: { 
+                        colorLeave: {
                             bound: 0, // 达标界限
                             notReach: 'red', 不达标颜色
                             reach: 'green' 达标颜色
@@ -22,7 +22,7 @@
                         <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
                         <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
                     </slot>
-                    <!-- 
+                    <!--
                         点击事件
                         shy是集市商品库的价格阶梯 固定字段
                     -->
@@ -180,7 +180,6 @@ export default {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         },
         renderHeader (h, { column }) {
-            console.log(this.tableData)
             const result = this.tableLabel.filter(item => item.icon && item.label == column.label)
             if (result.length > 0) {
                 return (
