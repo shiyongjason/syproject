@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {
-    ossUrl, interfaceUrl
+    ossUrl, interfaceUrl, B2bUrl
 } from '@/api/config'
 
 // 查询平台公司信息列表
@@ -37,3 +37,5 @@ export const createOpen = (params) => {
     // return instance.post('api/organization/start-b2b', paramStr.substring(0, paramStr.length - 1))
     return axios.post(ossUrl + 'api/organization/start-b2b', params)
 }
+// 更新平台角色
+export const updatePlatformType = (params) => axios.post(B2bUrl + 'merchant/api/merchant-type', params)
