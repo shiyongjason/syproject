@@ -580,7 +580,6 @@ function makeIndex (data, next, mobile) {
         if (!path) {
             path = '/'
         }
-        console.log({ path: path, query: { mobile: mobile } })
         next({ path: path, query: { mobile: mobile }, replace: true })
     }
 }
