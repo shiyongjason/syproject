@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{form.updateUser}} </p>
+        <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-collapse-item name="1">
                 <template slot="title">
@@ -443,6 +443,7 @@ export default {
 .content150 {
     margin-left: 150px;
     width: 224px;
+    word-break: break-all;
 }
 .content200 {
     margin-left: 200px;

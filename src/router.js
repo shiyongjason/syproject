@@ -148,7 +148,7 @@ const routerMapping = [
         meta: {
             title: '尽调管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_jindiao'
         },
         // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,

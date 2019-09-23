@@ -6,21 +6,21 @@
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="仓库地址">
-                    <p>{{proveName + cityName + areaName}}</p>
+                    <p>{{proveName + cityName + areaName?proveName + cityName + areaName:'-'}}</p>
                 </el-form-item>
             </div>
         </div>
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="详细地址：">
-                    {{form.dueFinanceBasic.storeAddress}}
+                    {{form.dueFinanceBasic.storeAddress?form.dueFinanceBasic.storeAddress:'-'}}
                 </el-form-item>
             </div>
         </div>
         <div class="form-cont-row">
             <div class="form-cont-col">
                 <el-form-item label="仓库面积（㎡）：">
-                    {{form.dueFinanceBasic.storeSize}}
+                    {{form.dueFinanceBasic.storeSize?form.dueFinanceBasic.storeSize:'-'}}
                 </el-form-item>
             </div>
             <div class="form-cont-col">
@@ -42,7 +42,7 @@
             </div>
             <div class="form-cont-col">
                 <el-form-item label="具体监管时间：">
-                    {{form.dueFinanceBasic.dateOfCustody}}
+                    {{form.dueFinanceBasic.dateOfCustody?form.dueFinanceBasic.dateOfCustody:'-'}}
                 </el-form-item>
             </div>
         </div>

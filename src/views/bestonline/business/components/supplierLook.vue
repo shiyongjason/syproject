@@ -23,7 +23,7 @@
                 </div>
                 <div class="form-cont-col ">
                     <el-form-item label="是否提供合同：" :prop="`dueBusinessSupplierCreateFormList[${index}].isProvideContract`">
-                        {{item.isProvideContract==1?'否':item.isProvideContract==0?'是':''}}
+                        {{item.isProvideContract==1?'否':item.isProvideContract===0?'是':''}}
                     </el-form-item>
                 </div>
             </div>

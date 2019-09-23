@@ -1,10 +1,10 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+         <p v-if="form.operationNode">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <p class="title-p">合作目标</p>
         <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-            <el-form-item label="尽调规模：" prop="scale">
-                <el-input v-model="form.scale" placeholder="请输入金额" @keyup.native="oninput('scale',$event)" maxlength="25">
+            <el-form-item label="尽调规模：" prop="scale" :rules="rules.scale">
+                <el-input v-model="form.scale" placeholder="请输入金额"  maxlength="25">
                     <template slot="suffix">万</template>
                 </el-input>
             </el-form-item>
@@ -21,14 +21,14 @@
                         <td>{{item.year}}</td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].yearGrowthRate`" :rules="rules.yearGrowthRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" @keyup.native="oninput('yearGrowthRate',$event)" maxlength="10">
+                                <el-input placeholder="请输入内容" v-model="item.yearGrowthRate" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
                         </td>
                         <td>
                             <el-form-item :prop="`yearRateTabelContents[${index}].netProfitRate`" :rules="rules.netProfitRate" label-width="0">
-                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" @keyup.native="oninput('netProfitRate',$event)" maxlength="10">
+                                <el-input placeholder="请输入内容" v-model="item.netProfitRate" maxlength="10">
                                     <template slot="suffix">%</template>
                                 </el-input>
                             </el-form-item>
@@ -53,7 +53,7 @@
 </template>
 <script>
 import { addCooperativetarget, putCooperativetarget } from '../api/index.js'
-import { plusOrMinus } from '@/utils/rules.js'
+import { MoneyMinus, MoneyOrConnector } from '@/utils/rules.js'
 import { mapState } from 'vuex'
 import { AUTH_BESTONLINE_REVIEW_TARGET_DRAFT, AUTH_BESTONLINE_REVIEW_TARGET_COMMIT } from '@/utils/auth_const'
 export default {
@@ -61,7 +61,8 @@ export default {
         return {
             rules: {
                 scale: [
-                    { required: true, message: '请输入尽调规模', trigger: 'blur' }
+                    { required: true, message: '请输入尽调规模', trigger: 'blur' },
+                    { validator: MoneyOrConnector, trigger: 'blur' }
                 ],
                 equityRatio: [
                     { required: true, message: '请输入股权比例', trigger: 'blur' },
@@ -76,14 +77,17 @@ export default {
                     }
                 ],
                 yearGrowthRate: [
-                    { required: true, message: '请输入年度递增率', trigger: 'blur' }
+                    { required: true, message: '请输入年度递增率', trigger: 'blur' },
+                    { validator: MoneyMinus, trigger: 'blur' }
                 ],
                 netProfitRate: [
-                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' },
+                    { validator: MoneyMinus, trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_TARGET_COMMIT,
+            isPending: false
         }
     },
     computed: {
@@ -94,36 +98,33 @@ export default {
         })
     },
     methods: {
-        oninput (value, e) {
-            if (value === 'equityRatio') {
-                // 股权比例
-            } else {
-                e.target.value = plusOrMinus(e.target.value.toString())
-            }
-            this.$set(this.form, value, e.target.value)
-        },
         async _saveOrUpdate () {
+            if (this.isPending) return
+            this.isPending = true
             this.form.applyId = this.$route.query.applyId
-            this.form.yearRateTabelContents = this.form.yearRateTabelContents.map(item => {
-                item.yearGrowthRate = item.yearGrowthRate - 0
-                item.netProfitRate = item.netProfitRate - 0
-                return item
-            })
-            console.log(this.userInfo)
+            this.form.yearRateTabelContents = this.form.yearRateTabelContents
             if (this.form.id) {
-                // this.form.updateUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 this.form.updateUser = this.userInfo.employeeName
-                await putCooperativetarget(this.form)
-                this.$message.success('提交成功！')
-                this.$router.go(-1)
-                this.$emit('init')
+                try {
+                    await putCooperativetarget(this.form)
+                    this.$message.success('暂存成功！')
+                    this.isPending = false
+                    this.$router.go(-1)
+                    this.$emit('init')
+                } catch (error) {
+                    this.isPending = false
+                }
             } else {
-                // this.form.createUser = JSON.parse(sessionStorage.getItem('user_data')).name
                 this.form.createUser = this.userInfo.employeeName
-                await addCooperativetarget(this.form)
-                this.$message.success('暂存成功！')
-                this.$router.go(-1)
-                this.$emit('init')
+                try {
+                    await addCooperativetarget(this.form)
+                    this.$message.success('提交成功！')
+                    this.isPending = false
+                    this.$router.go(-1)
+                    this.$emit('init')
+                } catch (error) {
+                    this.isPending = false
+                }
             }
         },
         async onSave () {
@@ -163,6 +164,6 @@ export default {
     }
 }
 .custom-table {
-    width: 50%;
+    // width: 50%;
 }
 </style>

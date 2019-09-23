@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+        <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" :rules="rules" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -12,10 +12,10 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <td class="assessmentRow">评估项</td>
-                                <td class="assessmentRow">合作目标</td>
-                                <td class="assessmentRow"><span class="red-word">*</span>结论</td>
-                                <td class="assessmentRow">备注</td>
+                                <td width="25%">评估项</td>
+                                <td width="25%">合作目标</td>
+                                <td width="25%"><span class="red-word">*</span>结论</td>
+                                <td width="25%">备注</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                         </el-select>
                                     </el-form-item>
                                 </td>
-                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0">
+                                <td :rowspan="form.dueBusinessAssessmentCreateFormList.length" v-if="index == 0" width="80px">
                                     <el-input type="textarea" :autosize="{ minRows: 10, maxRows:10 }" placeholder="请输入备注信息" v-model="item.remark">
                                     </el-input>
                                 </td>
@@ -41,10 +41,10 @@
                     <p class="small-title ">2、KPI(必填)</p>
                     <div class="form-cont-row mb20">
                         <div class="form-cont-col proportionKPI">
-                            <el-form-item label="批发:零售:工程占比：" :prop="(form.wholesaleShare==''||form.wholesaleShare==null)?'wholesaleShare':(form.retailShare==''||form.retailShare==null)?'retailShare':'projectShare'">
-                                <el-input class="" v-model="form.wholesaleShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.retailShare"></el-input><span class="KPISymbol">:</span>
-                                <el-input v-model="form.projectShare"></el-input>
+                            <el-form-item label="批发:零售:工程占比：" prop="share">
+                                <el-input class="" v-model="form.wholesaleShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.retailShare" maxlength="27"></el-input><span class="KPISymbol">:</span>
+                                <el-input v-model="form.projectShare" maxlength="27"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-cont-col">
@@ -105,7 +105,7 @@ import Competitor from './components/competitor.vue'
 import Plan from './components/plan.vue'
 import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
-import { IsPositiveInteger2, IsFixedTwoNumber } from '@/utils/rules'
+import { IsPositiveInteger, IsFixedTwoNumber, Money } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
 import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
@@ -117,14 +117,26 @@ export default {
             activeName: '1',
             options: YES_NO_STATUS_COPY,
             rules: {
-                wholesaleShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
-                ],
-                retailShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
-                ],
-                projectShare: [
-                    { required: true, message: '请输入批发:零售:工程占比', trigger: 'blur' }
+                share: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                            if (this.form.wholesaleShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (this.form.retailShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (this.form.projectShare == '') {
+                                return callback(new Error('请输入批发:零售:工程占比'))
+                            }
+                            if (!Reg.test(this.form.wholesaleShare) || !Reg.test(this.form.retailShare) || !Reg.test(this.form.projectShare)) {
+                                return callback(new Error('可以输入有两位小数的正实数'))
+                            }
+                            return callback()
+                        }
+                    }
                 ],
                 // salesPerformanceLastYear: [
                 //     { required: true, message: '请输入上年销售业绩', trigger: 'blur' }
@@ -149,7 +161,7 @@ export default {
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 mainCategoryOneId: [
-                    { required: true, message: '请选择主营品类', trigger: 'blur' }
+                    { required: true, message: '请选择主营品类', trigger: 'change' }
                 ],
                 categoryOneSalesRatio: [
                     { required: true, message: '请输入销售比重', trigger: 'blur' },
@@ -177,12 +189,6 @@ export default {
                 isProvideContract: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
-                purchaseAmount: [
-                    { required: true, message: '请输入采购金额', trigger: 'blur' }
-                ],
-                proportion: [
-                    { required: true, message: '请输入占比', trigger: 'blur' }
-                ],
                 health: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ],
@@ -202,10 +208,12 @@ export default {
                     { required: true, message: '请输入品牌信息', trigger: 'blur' }
                 ],
                 'dueBusinessFuturePlanCreateForm.annualSalesScale': [
-                    { required: true, message: '请输入年销售规模', trigger: 'blur' }
+                    { required: true, message: '请输入年销售规模', trigger: 'blur' },
+                    { validator: Money }
                 ],
                 'dueBusinessFuturePlanCreateForm.netProfitRate': [
-                    { required: true, message: '请输入净利润率', trigger: 'blur' }
+                    { required: true, message: '请输入净利润率', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'dueBusinessFuturePlanCreateForm.downstreamSwitchChannelsCustomers': [
                     { required: true, message: '请输入下游切换渠道和客户', trigger: 'blur' }
@@ -223,11 +231,21 @@ export default {
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
                 ],
                 selfStoresNum: [
-                    { validator: IsPositiveInteger2, message: '请输入正整数', trigger: 'blur' }
+                    { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
+                ],
+                memberShopNum: [
+                    { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
+                ],
+                firstTenMonthsDown: [
+                    { required: true, message: '请选择是否下滑', trigger: 'change' }
+                ],
+                lastYearSales: [
+                    { required: true, message: '请输入', trigger: 'blur' }
                 ]
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT,
+            isPending: false
         }
     },
     mounted () {
@@ -250,6 +268,8 @@ export default {
             findBusinessData: 'findBusinessData'
         }),
         async onSaveBus () {
+            if (this.isPending) return
+            this.isPending = true
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             const publicityPromotionChannels = this.form.publicityPromotionChannels
             this.form.publicityPromotionChannels = publicityPromotionChannels ? (Array.isArray(publicityPromotionChannels) ? publicityPromotionChannels.join(',') : publicityPromotionChannels) : ''
@@ -258,38 +278,65 @@ export default {
             this.form.operationNode = 0
             this.form.createUser = createUser
             if (this.form.dueBusinessId) {
-                await putBusiness(this.form)
+                try {
+                    await putBusiness(this.form)
+                } catch (error) {
+                    this.isPending = false
+                }
             } else {
-                await addBusiness(this.form)
+                try {
+                    await addBusiness(this.form)
+                } catch (error) {
+                    this.isPending = false
+                }
             }
             this.$message.success('暂存成功')
             this.findBusinessData({ applyId: this.$route.query.applyId })
         },
         async onSubmit () {
+            if (this.isPending) return
+            this.isPending = true
             const createUser = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
+                    if (this.form.publicityPromotionChannels && typeof this.form.publicityPromotionChannels == 'string') {
+                        this.form.publicityPromotionChannels = this.form.publicityPromotionChannels.split(',')
+                    }
                     this.form.publicityPromotionChannels = this.form.publicityPromotionChannels ? this.form.publicityPromotionChannels.join(',') : ''
                     this.form.dueBusinessFuturePlanCreateForm.businessCategory = this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory && this.form.dueBusinessFuturePlanCreateForm.webBusinessCategory.join(',')
                     this.form.dueBusinessFuturePlanCreateForm.serviceCategory = this.form.dueBusinessFuturePlanCreateForm.webServiceCategory && this.form.dueBusinessFuturePlanCreateForm.webServiceCategory.join(',')
                     if (this.form.dueBusinessId) {
-                        await putBusiness({
-                            id: this.id,
-                            operationNode: 1,
-                            createUser: createUser,
-                            ...this.form
-                        })
+                        try {
+                            await putBusiness({
+                                id: this.id,
+                                ...this.form,
+                                operationNode: 1,
+                                createUser: createUser,
+                                updateUser: createUser
+                            })
+                            this.isPending = false
+                        } catch (error) {
+                            this.isPending = false
+                        }
                     } else {
-                        await addBusiness({
-                            operationNode: 1,
-                            createUser: createUser,
-                            ...this.form
-                        })
+                        try {
+                            await addBusiness({
+                                ...this.form,
+                                operationNode: 1,
+                                createUser: createUser,
+                                updateUser: createUser
+                            })
+                            this.isPending = false
+                        } catch (error) {
+                            this.isPending = false
+                        }
                     }
                     this.$message.success('提交成功')
                     this.findBusinessData({ applyId: this.$route.query.applyId })
                     this.$router.go(-1)
+                } else {
+                    this.isPending = false
                 }
             })
         },
@@ -409,7 +456,10 @@ table {
 }
 .proportionKPI {
     .el-input {
-        width: 50px;
+        width: 60px;
+    }
+    .el-input__inner {
+        padding: 0 2px;
     }
 }
 .KPISymbol {

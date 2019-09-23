@@ -6,7 +6,7 @@
         <table class="custom-table">
             <thead>
                 <tr>
-                    <td width="25%">-</td>
+                    <td width="25%">指标</td>
                     <td width="25%">本年度</td>
                     <td width="25%">上年度</td>
                     <td width="25%">上上年度</td>
@@ -16,37 +16,37 @@
                 <tr>
                     <td width="25%">销售毛利率</td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[0].grossMargin}}%
+                        {{form.dueFinanceYearOperatingCreateForms[0].grossMargin?form.dueFinanceYearOperatingCreateForms[0].grossMargin + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[1].grossMargin}}%
+                        {{form.dueFinanceYearOperatingCreateForms[1].grossMargin?form.dueFinanceYearOperatingCreateForms[1].grossMargin + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[2].grossMargin}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].grossMargin?form.dueFinanceYearOperatingCreateForms[2].grossMargin + '%':'-'}}
                     </td>
                 </tr>
                 <tr>
                     <td width="25%">费率</td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[0].rate}}%
+                        {{form.dueFinanceYearOperatingCreateForms[0].rate?form.dueFinanceYearOperatingCreateForms[0].rate + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[1].rate}}%
+                        {{form.dueFinanceYearOperatingCreateForms[1].rate?form.dueFinanceYearOperatingCreateForms[1].rate + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[2].rate}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].rate?form.dueFinanceYearOperatingCreateForms[2].rate + '%':'-'}}
                     </td>
                 </tr>
                 <tr>
                     <td width="25%">净利率</td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[0].profitRatio}}%
+                        {{form.dueFinanceYearOperatingCreateForms[0].profitRatio?form.dueFinanceYearOperatingCreateForms[0].profitRatio + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[1].profitRatio}}%
+                        {{form.dueFinanceYearOperatingCreateForms[1].profitRatio?form.dueFinanceYearOperatingCreateForms[1].profitRatio + '%':''}}
                     </td>
                     <td width="25%">
-                        {{form.dueFinanceYearOperatingCreateForms[2].profitRatio}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].profitRatio?form.dueFinanceYearOperatingCreateForms[2].profitRatio + '%':'-'}}
                     </td>
                 </tr>
             </tbody>

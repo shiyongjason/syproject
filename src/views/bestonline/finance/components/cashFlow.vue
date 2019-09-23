@@ -22,9 +22,15 @@
                         </el-form-item>
                     </div>
                 </div>
-                <el-tab-pane label="本年度" name="nowYear"><NowYear /></el-tab-pane>
-                <el-tab-pane label="上年度" name="lastYear"><LastYear /></el-tab-pane>
-                <el-tab-pane label="上上年度" name="lastLastYear"><LastLastYear /></el-tab-pane>
+                <el-tab-pane label="本年度" name="nowYear">
+                    <NowYear />
+                </el-tab-pane>
+                <el-tab-pane label="上年度" name="lastYear">
+                    <LastYear />
+                </el-tab-pane>
+                <el-tab-pane label="上上年度" name="lastLastYear">
+                    <LastLastYear />
+                </el-tab-pane>
             </el-tabs>
         </div>
     </el-collapse-item>
