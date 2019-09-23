@@ -1,6 +1,7 @@
 <template>
     <el-dialog class="customeredit" :title="getTitle" :visible.sync="dialog" :close-on-click-modal="false" :before-close="onCancel">
         <template v-if="!this.isShowDetail">
+            <div class="title">基本信息</div>
             <el-form :model="customerForm" class="customerForm" :rules="rules" ref="dialogForm" label-width="100px">
                 <el-row>
                     <el-col :span="12">
@@ -63,6 +64,17 @@
                     </el-col>
                 </el-row>
             </el-form>
+            <div class="title">标签信息</div>
+            <div class="add-tags-input">
+                <el-select v-model="tagModel.id" multiple @focus="findTagList" filterable placeholder="请输入标签" remote :remote-method="searchTagList">
+                    <el-option
+                        v-for="item in tagList"
+                        :key="item.id"
+                        :label="item.labelName"
+                        :value="item.id">
+                    </el-option>
+                </el-select>
+            </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="onCancel">取 消</el-button>
                 <el-button type="primary" @click="onSubmitForm('dialogForm')" :loading="isSaving">保 存</el-button>
@@ -95,7 +107,7 @@
 </template>
 
 <script>
-import Api from '../api/index'
+import Api, { findTagList, createTagWidthUser } from '../api/index'
 import moment from 'moment'
 
 export default {
@@ -129,7 +141,14 @@ export default {
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ]
             },
-            isSaving: false
+            isSaving: false,
+            tagList: [],
+            tagModel: {
+                id: [],
+                query: ''
+            },
+            lastTime: null,
+            timeout: null
         }
     },
     computed: {
@@ -164,6 +183,53 @@ export default {
         }
     },
     methods: {
+        updateTagList (val) {
+            this.tagModel.id = val
+        },
+        async createTagWidthUser () {
+            const params = {
+                channelUserId: this.value.id,
+                labelIdList: this.tagModel.id
+            }
+            await createTagWidthUser(params)
+            this.tagModel = {
+                id: [],
+                query: ''
+            }
+        },
+        async findTagList () {
+            const { data } = await findTagList({ keywords: this.tagModel.query })
+            // let temp = []
+            // data.forEach(value => {
+            //     temp = this.repeatValue.filter(value1 => value.labelName === value1.labelName)
+            // })
+            this.tagList = data
+        },
+        searchTagList (query) {
+            this.tagModel.query = query
+            this.debounce(this.findTagList, 500)()
+        },
+        debounce (func, wait) {
+            let _this = this
+            return function () {
+                let now = new Date()
+                if (now - _this.lastTime - wait > 0) {
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                } else {
+                    if (_this.timeout) {
+                        clearTimeout(_this.timeout)
+                        _this.timeout = null
+                    }
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                }
+
+                _this.lastTime = now
+            }
+        },
         getTypes (obj, key) {
             let query = key + 1
             return this[obj][query].label
@@ -174,8 +240,12 @@ export default {
                 if (valid) {
                     try {
                         let method = 'editCustomerInfo'
-                        if (this.isAdd) method = 'addCustomerInfo'
+                        if (this.isAdd) {
+                            method = 'addCustomerInfo'
+                            this.customerForm.labelIdList = this.tagModel.id.concat()
+                        }
                         await Api[method](this.customerForm)
+                        if (!this.isAdd) await this.createTagWidthUser()
                         this.$message.success(
                             `${this.isAdd ? '新增' : '编辑'}成功！`
                         )
@@ -195,6 +265,10 @@ export default {
             this.dialog = false
             !this.isShowDetail && (this.customerForm = {})
             !this.isShowDetail && this.$refs['dialogForm'].clearValidate()
+            this.tagModel = {
+                id: [],
+                query: ''
+            }
         },
         formatTime (time, type) {
             let dateType = 'YYYY-MM-DD HH:mm:ss'
@@ -205,11 +279,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped class="scss">
 .el-col {
     margin-bottom: 20px
 }
 .detail{ margin: 30px 0 0 0}
 .detail-name{ display: inline-block; width:80px;text-align: right;}
 .footer-close{ text-align: right}
+.title{
+    padding-top: 10px;
+}
+    .add-tags-input{
+        padding-top: 15px;
+        padding-bottom: 30px;
+    }
+    /deep/.el-dialog .el-select{
+        width: 100%;
+    }
 </style>

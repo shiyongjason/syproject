@@ -1,11 +1,12 @@
 <template>
     <div class="jd-manage">
-        <p v-if="justiceData.affairs.updateTime">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
+          <p v-if="justiceData.affairs.type==1">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
+        <div id="top"></div>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
                 <KPI />
                 <CoPartner />
-                <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3">
+                <el-collapse-item v-for="(title, index) in legalInfoTitles" :key="index" :name="index + 3+''">
                     <template slot="title">
                         <p class="title-p">{{ title }}</p>
                     </template>
@@ -35,6 +36,7 @@ import LegalInfo from './components/legalInfo.vue'
 import CompanyBasic from './components/legalInfo/companyBasic.vue'
 import InvestmentOut from './components/legalInfo/investmentOut.vue'
 import { AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT, AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT } from '@/utils/auth_const'
+import { IsFixedTwoNumber } from '../../../utils/rules'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
@@ -72,28 +74,33 @@ export default {
                     { required: true, message: '实际控制人配偶法律风险不能为空', trigger: 'change' }
                 ],
                 'affairs.personalOperatingloansTotalGuarantees': [
-                    { required: true, message: '请输入个人经营性借款及担保总额', trigger: 'blur' }
+                    { required: true, message: '请输入个人经营性借款及担保总额', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'affairs.companyLoanTotalGuarantee': [
-                    { required: true, message: '请输入公司借款及担保总额 ', trigger: 'blur' }
+                    { required: true, message: '请输入公司借款及担保总额 ', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 'affairs.riskDisclosure': [
                     { required: true, message: '风险揭示不能为空', trigger: 'blur' }
                 ],
                 'affairs.analysisDescription': [
                     { required: true, message: '分析描述不能为空', trigger: 'blur' }
-                ],
+                ]/* ,
                 'affairs.annualReport': [
                     { required: true, message: '工商年报不能为空', trigger: 'blur' }
-                ]
+                ],
+                'affairs.businessLicense': [
+                    { required: true, message: '营业执照不能为空', trigger: 'blur' }
+                ] */
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT,
             commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT,
             /** key:activeName   value:必填项 */
             active: {
-                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList[0].state', 'assessmentList[1].state', 'assessmentList[2].state', 'assessmentList[3].state', 'assessmentList[4].state'],
-                '2': ['copartnerInfoList[0].name', 'copartnerInfoList[0].tel', 'copartnerInfoList[0].sex', 'copartnerInfoList[0].marriage', 'copartnerInfoList[0].idNumber'],
-                '6': ['branchAgencyList[0].branch', 'relatedCompanyList[0].relatedCompany']
+                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList['],
+                '2': ['copartnerInfoList['],
+                '6': ['affairs.annualReport', 'affairs.businessLicense', 'affairs.articlesOfAssociation', 'affairs.pledgeOfStockRight', 'affairs.businessQualification', 'branchAgencyList[', 'relatedCompanyList[']
             },
             /** key:必填项   value:activeName */
             activePlus: {}
@@ -193,17 +200,21 @@ export default {
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate, errors) => {
-                    if (errors) {
+                    if (errors && Object.keys(errors).length > 0) {
                         let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
-                        this.activeName = this.activePlus[key]
-                        window.scrollTo(0, 0)// todo
+                        let temp = ''
+                        for (const k in this.activePlus) {
+                            if (key.indexOf(k) > -1) temp = k
+                        }
+                        this.activeName = this.activePlus[temp]
+                        document.getElementById('top').scrollIntoView()
                     }
                     if (validate) {
                         this.doSave(params, messageTip)
                     } else {
                         this.$message({
                             type: 'warning',
-                            message: '有必填项未填写，请重新检查！'
+                            message: '有必填项未填写，请重新检查！ '
                         })
                     }
                 })

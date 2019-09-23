@@ -18,14 +18,18 @@
                             {{item.typeName}}
                         </td>
                         <td>
-                            <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                <template slot="suffix">万</template>
-                            </el-input>
+                            <el-form-item label-width="0" :prop="`caseFlow.contentListT[${index}].endOrCurrent`" :rules="rules.endOrCurrent">
+                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
+                                    <template slot="suffix">万</template>
+                                </el-input>
+                            </el-form-item>
                         </td>
                         <td>
-                            <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
-                            <template slot="suffix">万</template>
-                        </el-input>
+                            <el-form-item label-width="0" :prop="`caseFlow.contentListT[${index}].beginOrPrior`" :rules="rules.beginOrPrior">
+                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
+                                    <template slot="suffix">万</template>
+                                </el-input>
+                            </el-form-item>
                         </td>
                     </template>
                 </tr>
@@ -36,9 +40,19 @@
 
 <script>
 import { mapState } from 'vuex'
+import { MoneyMinus } from '@/utils/rules'
 export default {
     data () {
-        return {}
+        return {
+            rules: {
+                endOrCurrent: [
+                    { validator: MoneyMinus, trigger: 'blur' }
+                ],
+                beginOrPrior: [
+                    { validator: MoneyMinus, trigger: 'blur' }
+                ]
+            }
+        }
     },
     computed: {
         ...mapState({
@@ -78,5 +92,13 @@ td {
 }
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
+}
+table {
+    /deep/ .el-form-item__error {
+        position: relative;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+    }
 }
 </style>

@@ -27,9 +27,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListL[${index}].endOrCurrent`" :rules="rules.endOrCurrentNORequired">
+                                    <el-input v-model="item.endOrCurrent" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                         <td>
@@ -41,9 +43,11 @@
                                 </el-form-item>
                             </template>
                             <template v-else>
-                                <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
-                                    <template slot="suffix">万</template>
-                                </el-input>
+                                <el-form-item label-width="0" :prop="`dueFinanceProfit.contentListL[${index}].beginOrPrior`" :rules="rules.beginOrPriorNORequired">
+                                    <el-input v-model="item.beginOrPrior" placeholder="请输入内容" maxlength="25">
+                                        <template slot="suffix">万</template>
+                                    </el-input>
+                                </el-form-item>
                             </template>
                         </td>
                     </template>
@@ -55,15 +59,24 @@
 
 <script>
 import { mapState } from 'vuex'
+import { MoneyOrConnectorMinus } from '@/utils/rules'
 export default {
     data () {
         return {
             rules: {
                 endOrCurrent: [
-                    { required: true, message: '请填写本年度累计金额', trigger: 'blur' }
+                    { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
+                    { validator: MoneyOrConnectorMinus }
+                ],
+                endOrCurrentNORequired: [
+                    { validator: MoneyOrConnectorMinus }
                 ],
                 beginOrPrior: [
-                    { required: true, message: '请填写上年末度累计金额', trigger: 'blur' }
+                    { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
+                    { validator: MoneyOrConnectorMinus }
+                ],
+                beginOrPriorNORequired: [
+                    { validator: MoneyOrConnectorMinus }
                 ]
             }
         }

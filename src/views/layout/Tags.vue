@@ -39,6 +39,7 @@ export default {
             return path === (this.$route.fullPath).split('?')[0]
         },
         makeIndex (data) {
+            console.log(data)
             let index = []
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
@@ -50,10 +51,11 @@ export default {
                     }
                     break
                 }
-                let path = '/' + index.join('/')
-                if (!path) {
-                    path = '/'
-                }
+                let path = '/' + index.length > 0 ? index.join('/') : ''
+                console.log(!path)
+                // if (path) {
+                //     path = '/'
+                // }
                 this.$router.push({
                     path: path
                 })

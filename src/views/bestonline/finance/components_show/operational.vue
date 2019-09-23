@@ -6,7 +6,7 @@
         <table class="item-wrapper">
             <thead>
                 <tr>
-                    <td width="180">-</td>
+                    <td width="180">指标</td>
                     <td width="180">本年度</td>
                     <td width="180">上年度</td>
                     <td width="180">上上年度</td>
@@ -22,7 +22,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfReceivable}}天
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable}}天
+                        {{form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable?form.dueFinanceYearOperatingCreateForms[2].daysOfReceivable + '天':'-'}}
                     </td>
                 </tr>
                 <tr>
@@ -34,7 +34,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].daysOfInventory}}天
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].daysOfInventory}}天
+                        {{form.dueFinanceYearOperatingCreateForms[2].daysOfInventory?form.dueFinanceYearOperatingCreateForms[2].daysOfInventory + '天':'-'}}
                     </td>
                 </tr>
                 <tr>
@@ -46,7 +46,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].totalAssetsTurnover}}%
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover?form.dueFinanceYearOperatingCreateForms[2].totalAssetsTurnover + '%':'-'}}
                     </td>
                 </tr>
                 <tr>
@@ -58,7 +58,7 @@
                         {{form.dueFinanceYearOperatingCreateForms[1].returnOnEquity}}%
                     </td>
                     <td>
-                        {{form.dueFinanceYearOperatingCreateForms[2].returnOnEquity}}%
+                        {{form.dueFinanceYearOperatingCreateForms[2].returnOnEquity?form.dueFinanceYearOperatingCreateForms[2].returnOnEquity +'%':'-'}}
                     </td>
                 </tr>
             </tbody>

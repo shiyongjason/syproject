@@ -56,7 +56,7 @@ import Solvency from './components/solvency.vue'
 import Storage from './components/storage.vue'
 import TaxCompliance from './components/taxCompliance.vue'
 import { AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT, AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT } from '@/utils/auth_const'
-import { kpiValidProps, profitabilityValidProps, solvencyValidProps, operationAbilityValidProps, capitalRiskAssessmentValidProps, taxComplianceValidProps, balanceSheetValidProps } from './const.js'
+import { kpiValidProps, profitabilityValidProps, solvencyValidProps, operationAbilityValidProps, capitalRiskAssessmentValidProps, taxComplianceValidProps, balanceSheetValidProps, profitStatementValidProps } from './const.js'
 export default {
     components: {
         BalanceSheet, CashFlow, CostStructure, FinancialAppointment, FinancialRisks, Operational, Profit, Profitability, Solvency, Storage, TaxCompliance, KPI
@@ -72,22 +72,14 @@ export default {
                     analysisDescription: [
                         { required: true, message: '请输入分析描述', trigger: 'blur' }
                     ],
-                    shareholdersDebt: [
-                        { required: true, message: '请输入股东借款金额', trigger: 'blur' }
-                    ],
-                    companyBorrowsShareholders: [
-                        { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' }
-                    ],
-                    shareholdersBorrowsCompany: [
-                        { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' }
-                    ],
                     capitalRiskAssessment: [
                         { required: true, message: '请选择资金风险评估', trigger: 'change' }
                     ]
                 }
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_FINANCE_COMMIT,
+            isPending: false
         }
     },
     computed: {
@@ -114,13 +106,20 @@ export default {
             if (i === 1) return this.onSubmit(firstTime)
         },
         async onSaveGood (firstTime) {
+            if (this.isPending) return
+            this.isPending = true
             if (this.form.dueFinanceBasic.dateOfCustody) this.form.dueFinanceBasic.dateOfCustody = this.$options.filters.formatDate(this.form.dueFinanceBasic.dateOfCustody, 'YYYY-MM-DD')
             if (this.form.dueFinanceBasic.startDateOfDelegation) this.form.dueFinanceBasic.startDateOfDelegation = this.$options.filters.formatDate(this.form.dueFinanceBasic.startDateOfDelegation, 'YYYY-MM-DD')
             if (this.form.assetsLiabilities.recordTime) this.form.assetsLiabilities.recordTime = this.$options.filters.formatDate(this.form.assetsLiabilities.recordTime, 'YYYY-MM-DD')
             if (this.form.dueFinanceProfit.recordTime) this.form.dueFinanceProfit.recordTime = this.$options.filters.formatDate(this.form.dueFinanceProfit.recordTime, 'YYYY-MM-DD')
             if (this.form.caseFlow.recordTime) this.form.caseFlow.recordTime = this.$options.filters.formatDate(this.form.caseFlow.recordTime, 'YYYY-MM-DD')
             this.form.dueFinanceBasic.type = 0
-            await saveFinance({ ...this.form, type: 0 })
+            try {
+                await saveFinance({ ...this.form, type: 0 })
+                this.isPending = false
+            } catch (error) {
+                this.isPending = false
+            }
             this.$message({
                 type: 'success',
                 message: '暂存成功!'
@@ -128,14 +127,28 @@ export default {
             this.$router.go(-1)
         },
         async onSubmit (firstTime) {
+            if (this.isPending) return
+            this.isPending = true
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
-                    await saveFinance({ ...this.form, type: 1 })
-                    await this.findFinanceData({ applyId: this.$route.query.applyId })
+                    try {
+                        await saveFinance({ ...this.form, type: 1 })
+                        this.isPending = false
+                    } catch (error) {
+                        this.isPending = false
+                    }
+                    try {
+                        await this.findFinanceData({ applyId: this.$route.query.applyId })
+                        this.isPending = false
+                    } catch (error) {
+                        this.isPending = false
+                    }
                     this.$message.success('提交成功')
                     this.$router.go(-1)
+                } else {
+                    this.isPending = false
                 }
             })
         },
@@ -168,6 +181,10 @@ export default {
                 const index = item.indexOf('[')
                 return balanceSheetValidProps.has(index == -1 ? item : item.substring(0, index))
             }).length > 0
+            const expandProfitStatement = Object.keys(errors).filter(item => {
+                const index = item.indexOf('[')
+                return profitStatementValidProps.has(index == -1 ? item : item.substring(0, index))
+            }).length > 0
             if (expandKpi) {
                 this.activeName = '1'
             } else if (expandController) {
@@ -182,6 +199,8 @@ export default {
                 this.activeName = '7'
             } else if (expandBalanceSheet) {
                 this.activeName = '10'
+            } else if (expandProfitStatement) {
+                this.activeName = '11'
             }
         }
     }

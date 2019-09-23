@@ -12,6 +12,7 @@
                 <ul>
                     <li>商品</li>
                     <li>单价(元) / 数量</li>
+                    <li>渠道名称</li>
                     <li>买家 / 收货人</li>
                     <li>配送方式</li>
                     <li>实付金额(元)</li>
@@ -24,11 +25,12 @@
                     <div class="head-info">
                         <span style="padding-left:10px">订单号：{{item.orderNo}}</span>
                         <span class="more">
-                            外部订单号订单号：{{item.channelOrderNo}}
+                            外部订单号：{{item.channelOrderNo}}
                         </span>
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
+                            <font @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -61,11 +63,19 @@
                                     </div>
                                 </div>
                             </li>
-                            <li>{{item.userName}}</li>
+                            <li>
+                                <template v-if="item.source === 1">有赞商城</template>
+                                <template v-if="item.source === 2">孩子王</template>
+                                <template v-if="item.source === 3">考拉买菜</template>
+                            </li>
+                            <li>{{item.userName ? item.userName : '-'}}<br>{{item.receiverName ? item.receiverName : '-'}}</li>
                             <li>无需配送</li>
                             <li>{{parseToMoney(item.payAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
-                            <li><el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button></li>
+                            <li>
+                                <el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button>
+                                <el-button v-if="item.source !== 1" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                            </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
                         <div class="bzt" v-if="item.sellerRemark">卖家备注：{{item.sellerRemark}}</div>
@@ -102,6 +112,9 @@ export default {
         onLink (item) {
             this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
         },
+        onEdit (item) {
+            this.$router.push({ path: '/serviceManagement/orderChannelEdit', query: { id: item.id } })
+        },
         parseToMoney (money) {
             if (money) {
                 const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -110,7 +123,36 @@ export default {
             return ''
         },
         orderStatus (val) {
-            return val === 1 ? '待发货' : val === 2 ? '已发货' : val === 3 ? '已完成' : '待评价'
+            let temp = ''
+            switch (val) {
+                case 1:
+                    temp = '待发货'
+                    break
+                case 2:
+                    temp = '已发货'
+                    break
+                case 3:
+                    temp = '已完成'
+                    break
+                case 4:
+                    temp = '已退款'
+                    break
+                case 5:
+                    temp = '已下单'
+                    break
+                case 6:
+                    temp = '已收货'
+                    break
+                case 7:
+                    temp = '已预约'
+                    break
+                case 8:
+                    temp = '已派工'
+                    break
+                default:
+            }
+            // return val === 1 ? '待发货' : val === 2 ? '已发货' : val === 3 ? '已完成' : '待评价'
+            return temp
         },
         formatTime (time, type) {
             let dateType = 'YYYY-MM-DD HH:mm:ss'
@@ -120,6 +162,23 @@ export default {
         onShowRemark (item, index) {
             this.remark = item.remark
             this.curIndex = index
+        },
+        onShowDetail (item) {
+            if (item.source === 1) {
+                this.$router.push({
+                    path: '/serviceManagement/orderDetails',
+                    query: {
+                        orderNo: item.orderNo,
+                        channelOrderNo: item.channelOrderNo,
+                        status: item.status
+                    }
+                })
+            } else {
+                this.$router.push({
+                    path: '/serviceManagement/orderChannelDetails',
+                    query: { id: item.id }
+                })
+            }
         },
         onClose () {
             this.curIndex = null

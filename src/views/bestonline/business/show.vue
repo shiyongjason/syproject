@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-        <p v-if="form.updateTime">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
+        <p v-if="form.operationNode==1">已提交 {{form.updateTime}} {{ form.updateUser}} </p>
         <el-collapse v-model="activeName" accordion>
             <el-form :model="form" ref="form" label-width="160px">
                 <el-collapse-item name="1">
@@ -12,10 +12,10 @@
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <td class="assessmentRow">评估项</td>
-                                <td class="assessmentRow">合作目标</td>
-                                <td class="assessmentRow">结论</td>
-                                <td class="assessmentRow">备注</td>
+                                <td width="25%">评估项</td>
+                                <td width="25%">合作目标</td>
+                                <td width="25%">结论</td>
+                                <td width="25%">备注</td>
                             </tr>
                         </thead>
                         <tbody>

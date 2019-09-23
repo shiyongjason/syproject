@@ -34,6 +34,7 @@
                 <template slot="action" slot-scope="scope">
                     <template v-if="(scope.data.row.status ==0||scope.data.row.status ==3) && updatebtn && ((scope.data.row.signScale && ((scope.data.row.signScale >= 3000) === iszongbu || isfawu)) || isfazhang)">
                         <el-button class="orangeBtn" v-if="hosAuthCheck(editAuthCode)" @click="onEdit(scope.data.row)">修改</el-button>
+                        <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
                     </template>
                     <template v-else>
                         <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
@@ -45,8 +46,10 @@
         <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
             <div class="block">
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}/{{item.approveStatus===0?'待审核':item.approveStatus===1?'已审核':'已驳回'}}&nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
+                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index"  :color="item.color">
+                        {{item.userName}}/
+                        {{item.approveStatus===0?'待审核':item.approveStatus===2?'已驳回':item.approveStatus===1&&item.isCooperate==0?'可以合作':'不可合作'}}
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
                         {{item.approvalOpinion}}
                     </el-timeline-item>
                 </el-timeline>
@@ -178,7 +181,7 @@ export default {
             console.log(data)
             this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approveStatus == 1) {
+                if (value.approveStatus == 1 || value.approveStatus == 2) {
                     value.color = '#f88825'
                 }
                 return value
@@ -193,11 +196,11 @@ export default {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
         async onCommit (row) {
-            if (row.signScale == 0) {
+            if (row.cooperativeFlag == 1) {
                 this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
                 return false
             } else {
-                if (row.signScale < 3000) {
+                if (row.signScale < 3000 && row.signScale > 0) {
                     if (row.financalFlag == 1) {
                         this.$message.warning({ showClose: true, message: '请先提交财务尽调信息' })
                         return false
