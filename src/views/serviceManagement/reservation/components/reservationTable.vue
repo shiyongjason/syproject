@@ -23,6 +23,8 @@
                     {{ scope.row.reservationPerson }}
                 </template>
             </el-table-column>
+            <el-table-column prop="offlineHousekeeper" label="线下管家" align="center">
+            </el-table-column>
             <el-table-column prop="phone" label="手机号" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.phone }}
