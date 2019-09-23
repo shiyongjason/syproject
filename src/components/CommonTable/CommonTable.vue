@@ -10,6 +10,34 @@
                     <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
                     <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
                     <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                    <!-- 
+                        表格内颜色等级层次
+                        colorLeave: { 
+                            bound: 0, // 达标界限
+                            notReach: 'red', 不达标颜色
+                            reach: 'green' 达标颜色
+                        }
+                    -->
+                    <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
+                        <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
+                        <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
+                    </slot>
+                    <!-- 
+                        点击事件
+                        shy是集市商品库的价格阶梯 固定字段
+                    -->
+                    <slot v-else-if="item.event" :name="item.prop" :data="scope">
+                        <el-popover placement="right" width="300" trigger="click" v-if="scope.row.shy">
+                            <el-table :data="scope.row.shy">
+                                <el-table-column width="150" property="numberCase" label="商品件数" align="center"></el-table-column>
+                                <el-table-column width="150" property="discount" label="价格折扣" align="center"></el-table-column>
+                            </el-table>
+                            <div class="isOrangeColor" slot="reference">{{scope.row.price}}</div>
+                            <!-- <el-button slot="reference">{{scope.row.price}}</el-button> -->
+                        </el-popover>
+                        <div v-else>{{scope.row.price}}</div>
+                    </slot>
+
                     <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
                 </template>
             </el-table-column>
@@ -21,8 +49,7 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
-            @size-change="handleSizeChange">
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange" @size-change="handleSizeChange">
         </el-pagination>
     </div>
 </template>
@@ -153,6 +180,7 @@ export default {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         },
         renderHeader (h, { column }) {
+            console.log(this.tableData)
             const result = this.tableLabel.filter(item => item.icon && item.label == column.label)
             if (result.length > 0) {
                 return (
