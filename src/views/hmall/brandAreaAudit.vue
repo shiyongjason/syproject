@@ -43,12 +43,14 @@
                     </div>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
-                    <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
-                </template>
-            </basicTable>
+            <div class="page-body-cont">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                    <template slot="action" slot-scope="scope">
+                        <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
+                        <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
+                    </template>
+                </basicTable>
+            </div>
             <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center :close-on-click-modal="false">
                 <el-form class="base" :inline="true">
                     <div>
