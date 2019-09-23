@@ -58,7 +58,7 @@
             <div class="block">
                 <el-timeline>
                     <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :timestamp="item.approvalOpinion" :color="item.color">
-                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approvalStatus===0?'待审核':item.approvalStatus===1?'同意':'不同意'}}<span> {{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
+                        {{item.userName}}<span v-if="item.userName">/</span>{{item.approveStatus===0?'待审核':item.approveStatus===1?'同意':'不同意'}}<span> {{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</span>
                     </el-timeline-item>
                 </el-timeline>
             </div>
@@ -84,7 +84,7 @@ export default {
                 { label: '公司名称', prop: 'companyName', align: 'left' },
                 { label: '发起人', prop: 'createUserName' },
                 { label: '发起人所在机构', prop: 'applyOrganization' },
-                { label: '创建时间', prop: 'createTime', width: '160px' },
+                { label: '评审提交时间', prop: 'createTime', width: '160px' },
                 { label: '评审通过/驳回时间', prop: 'approvalTime', width: '160px' },
                 { label: '评审状态', prop: 'approvalStatus' },
                 { label: '未操作人', prop: 'noOperator' }
@@ -154,13 +154,14 @@ export default {
         },
         async showProcess (applyId) {
             const { data } = await getDueApproval({ applyId: applyId })
-            this.dueApproval = data.data.dueFlowProcessSeveralFieldsVos
+            this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
-                if (value.approvalStatus === 1 || value.approvalStatus === 2) {
+                if (value.approveStatus == 1 || value.approveStatus == 2) {
                     value.color = '#f88825'
                 }
                 return value
             })
+            console.log(this.dueApproval)
             this.dialogVisible = true
         },
         async getDueapply () {

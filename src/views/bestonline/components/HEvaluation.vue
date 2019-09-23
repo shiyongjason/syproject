@@ -90,11 +90,11 @@
             <tbody>
                 <tr>
                     <td style="width: 150px">参考结论</td>
-                    <td style="width: 120px">{{dueItemRecommend.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{dueItemRecommend.scale | judgeTureOrFalse}}</td>
-                    <td style="width: 200px">{{dueItemRecommend.yearGrowthRate | judgeTureOrFalse}}</td>
-                    <td style="width: 120px">{{dueItemRecommend.equityRatio | judgeTureOrFalse}}</td>
-                    <td style="width: 200px">{{dueItemRecommend.netProfitRate | judgeTureOrFalse}}</td>
+                    <td style="width: 120px">{{dueItemRecommend.isCooperate | dueItemTureOrFalse}}</td>
+                    <td>{{dueItemRecommend.scale | dueItemTureOrFalse}}</td>
+                    <td style="width: 200px">{{dueItemRecommend.yearGrowthRate | dueItemTureOrFalse}}</td>
+                    <td style="width: 120px">{{dueItemRecommend.equityRatio | dueItemTureOrFalse}}</td>
+                    <td style="width: 200px">{{dueItemRecommend.netProfitRate | dueItemTureOrFalse}}</td>
                 </tr>
                 <tr>
                     <td>占比</td>
@@ -124,10 +124,10 @@
                 </tr>
                 <tr>
                     <td>{{item.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{item.scale | judgeTureOrFalse}}</td>
-                    <td>{{item.yearGrowthRate | judgeTureOrFalse}}</td>
-                    <td>{{item.equityRatio | judgeTureOrFalse}}</td>
-                    <td>{{item.netProfitRate | judgeTureOrFalse}}</td>
+                    <td>{{cooperateTarget.scale}}<i>w</i></td>
+                    <td>{{cooperateTarget.yearGrowthRate}}</td>
+                    <td>{{cooperateTarget.equityRatio}}</td>
+                    <td>{{cooperateTarget.netProfitRate}}</td>
                 </tr>
                 <tr>
                     <td>审批意见</td>
@@ -218,7 +218,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>净利率</td>12232
+                    <td>净利率</td>
                     <td>
                         本年度{{dueFinanceBasicVo.profitRatio === null?'-':dueFinanceBasicVo.profitRatio + '%'}}
                         <br>
@@ -226,7 +226,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td rowspan="5">财务尽调</td>
+                    <td rowspan="5">法务尽调</td>
                     <td>尽调公司法律风险</td>
                     <td>{{dueLegalAffairsVo.legalRisksOfCompany | judgeThreeLevel(2)}}</td>
                 </tr>
@@ -377,7 +377,11 @@ export default {
     filters: {
         judgeTureOrFalse (value) {
             if (value === null || value === '' || value === undefined) return '-'
-            return value == 0 ? '是' : value == 1 ? '否' : value == 2 ? '平' : '-'
+            return value == 0 ? '是' : value == 1 ? '否' : '-'
+        },
+        dueItemTureOrFalse (value) {
+            if (value === null || value === '' || value === undefined) return '-'
+            return value == 0 ? '是' : value == 1 ? '平' : value == 2 ? '否' : '-'
         },
         judgeThreeLevel (value, arugment) {
             if (value === null || value === '' || value === undefined) return '-'
@@ -405,6 +409,7 @@ export default {
         },
         async getDueapprovalconclusion () {
             const { data } = await getDueapprovalconclusion({ applyId: this.applyId })
+            console.log(data)
             this.cooperateTarget = data.data.cooperateTarget
             this.dueBusiness = data.data.dueBusiness
             this.dueFinancial = data.data.dueFinancial

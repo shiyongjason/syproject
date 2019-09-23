@@ -8,7 +8,7 @@
             {{form.dueFinanceBasic.isAgreeFinancialDelegation === 0?'是':form.dueFinanceBasic.isAgreeFinancialDelegation == 1?'否':'-'}}
         </el-form-item>
         <el-form-item label="开始时间：">
-            {{form.dueFinanceBasic.startDateOfDelegation}}
+            {{form.dueFinanceBasic.startDateOfDelegation?form.dueFinanceBasic.startDateOfDelegation:'-'}}
         </el-form-item>
         <el-form-item label="资金监管：">
             {{form.dueFinanceBasic.fundSupervise === 0?'财务委派':form.dueFinanceBasic.fundSupervise == 1?'财务外派':'-'}}

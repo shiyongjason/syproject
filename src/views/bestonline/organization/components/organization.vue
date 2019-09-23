@@ -43,26 +43,22 @@
             <tbody>
                 <tr v-for="(item, index) in organizationSeniorList" :key="index">
                     <td>
-                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].position`"
-                            :rules="{ required: true, message: '请输入职位', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].position`" :rules="{ required: true, message: '请输入职位', trigger: 'blur' }">
                             <el-input v-model="item.position" placeholder="请输入职位" maxlength="25"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].name`"
-                            :rules="{ required: true, message: '请输入姓名', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].name`" :rules="{ required: true, message: '请输入姓名', trigger: 'blur' }">
                             <el-input v-model="item.name" placeholder="请输入姓名" maxlength="25"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].positionDuty`"
-                            :rules="{ required: true, message: '请输入岗位职责', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].positionDuty`" :rules="{ required: true, message: '请输入岗位职责', trigger: 'blur' }">
                             <el-input v-model="item.positionDuty" placeholder="请输入岗位职责" maxlength="25"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].personnelSituation`"
-                            :rules="{ required: true, message: '请输入岗位职责', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationSeniorCreateFormList[${index}].personnelSituation`" :rules="{ required: true, message: '请输入人员情况', trigger: 'blur' }">
                             <el-input type="textarea" :rows="1" :autosize="{ minRows: 1, maxRows: 1}" placeholder="请输入人员情况" v-model="item.personnelSituation"></el-input>
                         </el-form-item>
                     </td>
@@ -89,8 +85,7 @@
                         {{item.post}}
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationPostCreateFormList[${index}].proportion`"
-                            :rules="{ required: true, message: '请输入人数', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationPostCreateFormList[${index}].proportion`" :rules="{ required: true, message: '请输入正整数', validator: IsPositiveInteger, trigger: 'blur' }">
                             <el-input placeholder maxlength="25" v-model="item.proportion" @change="onChangeProportion">
                                 <template slot="suffix">人</template>
                             </el-input>
@@ -118,15 +113,13 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].description`"
-                            :rules="{ required: true, message: '请输入描述', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].description`" :rules="{ required: true, message: '请输入描述', trigger: 'blur' }">
                             <el-input v-model="item.description" placeholder="请输入" maxlength="25"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`"
-                            :rules="{ required: true, message: '请输入分数', trigger: 'blur' }">
-                            <el-input v-model="item.score" placeholder="满分40分" maxlength="25" @change="onChangeScore"></el-input>
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`" :rules="{ required: true, message: '请输入正整数', validator: IsPositiveInteger, trigger: 'blur' }">
+                            <el-input v-model="item.score" placeholder="满分40分" maxlength="2" @change="onChangeScore(item)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -144,8 +137,10 @@
 </template>
 
 <script>
+import { IsPositiveInteger } from '@/utils/rules'
 import { YES_NO_STATUS } from '../../const'
 import { mapState } from 'vuex'
+// import { IsFixedTwoNumber } from '@/utils/rules'
 import echarts from 'echarts'
 const weightMap = new Map([
     ['社会责任', 0.5],
@@ -165,6 +160,7 @@ export default {
     },
     data () {
         return {
+            IsPositiveInteger: IsPositiveInteger,
             options: YES_NO_STATUS,
             defaultOrganizationSenior: {
                 position: '',
@@ -199,12 +195,19 @@ export default {
             return isNaN(total) ? '' : total
         },
         radarValueOfData () {
-            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => isNaN(item.score) ? 0 : item.score)
+            let temp = JSON.parse(JSON.stringify(this.form.dueOrganizationOrgAssessmentCreateFormList))
+            const res = temp.map(item => {
+                if (item.score != null) return item.score
+                else return 0
+            })
+            return res
+            // return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => isNaN(item.score) ? 0 : item.score)
         },
         radarChartData () {
-            return this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
-                return { name: item.assessmentDimension, max: Math.max.apply(null, this.radarValueOfData) }
+            let res = this.form.dueOrganizationOrgAssessmentCreateFormList.map(item => {
+                return { name: item.assessmentDimension, max: 40 }
             })
+            return res
         },
         ...mapState({
             form: state => state.dueDiligence.organizationData
@@ -239,7 +242,10 @@ export default {
         onRemovePerson (index) {
             this.form.dueOrganizationSeniorCreateFormList.splice(index, 1)
         },
-        onChangeScore () {
+        onChangeScore (item) {
+            if (item.score > 40) {
+                item.score = 40
+            }
             this.drawRadar()
         },
         drawRadar () {
