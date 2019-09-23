@@ -565,7 +565,7 @@ const router = new Router({
         ...routerMapping
     ]
 })
-function makeIndex (data, next) {
+function makeIndex (data, next, mobile) {
     let index = []
     if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
@@ -581,10 +581,11 @@ function makeIndex (data, next) {
         if (!path) {
             path = '/'
         }
-        next({ path: path })
+        console.log({ path: path, query: { mobile: mobile } })
+        next({ path: path, query: { mobile: mobile }, replace: true })
     }
 }
-async function getMenu (to, next, isMakeIndex) {
+async function getMenu (to, next, isMakeIndex, mobile) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
@@ -594,7 +595,7 @@ async function getMenu (to, next, isMakeIndex) {
     router.addRoutes(menu)
 
     if (isMakeIndex) {
-        makeIndex(menu, next)
+        makeIndex(menu, next, mobile)
     } else {
         next({ ...to, replace: true })
     }
@@ -612,17 +613,18 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === '/redirect' && query.sale === 'hosjoy') {
             sessionStorage.setItem('token', query.access_token)
             sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
-            await getMenu(to, next, true)
-        }
-        // 非登录的情况下
-        if (!userInfo) {
-            return next({
-                name: 'login'
-            })
+            await getMenu(to, next, true, query.mobile)
         } else {
-            if (isFirst) {
-                store.commit('IS_FIRST', false)
-                await getMenu(to, next)
+            // 非登录的情况下
+            if (!userInfo) {
+                return next({
+                    name: 'login'
+                })
+            } else {
+                if (isFirst) {
+                    store.commit('IS_FIRST', false)
+                    await getMenu(to, next)
+                }
             }
         }
     }
