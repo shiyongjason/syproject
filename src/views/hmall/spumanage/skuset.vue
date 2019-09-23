@@ -34,7 +34,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20">
-                        搜索
+                        查询
                     </el-button>
                 </div>
             </div>
@@ -49,27 +49,59 @@
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
             </AttributeTable> -->
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange"  :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+                :isShowIndex='true'>
+                <template slot="updateTime" slot-scope="scope">
+                    {{scope.data.row.updateTime|formatDate}}
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button @click="modify(scope.row)" class="orangeBtn">修改</el-button>
-                    <!--:class="scope.row.status === 2 ? '' : 'status-on'"-->
-                    <el-button class="orangeBtn" @click="updateAttributeStatus(scope.row.data)" v-text="scope.data.row.status === 2 ? '生效' : '失效'">
+                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">修改</el-button>
+                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '失效' : '生效'">
                     </el-button>
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="新建属性" :visible.sync="dialogAttributeEdit" :close-on-click-modal="false">
+            <div class="cate-cont">
+                <div class="cont-box">
+                    <!-- <p v-for="(item,index) in categoryFirst" :key="item.id" :class="item.isOn ? 'active' : ''" @click="onShowNext(item.isOn, 'categorySecond', item)"> -->
+                    <p v-for="(item,index) in categoryFirst" :key="item.id" :class="curIndex==index ? 'active' : ''" @click="onSelect(index,item,1)">
+                        {{ item.categoryName+'-'+index }}
+                    </p>
+                </div>
+                <div class="cont-box">
+                    <!-- <el-radio-group v-model="radio">
+                        <el-radio :label="item.id" v-for="(item,index) in categorySecond" :key=index @change="onChangeRadio">{{item.categoryName}}</el-radio>
+                    </el-radio-group> -->
+                     <p v-for="(item,index) in categorySecond" :key="item.id" :class="senIndex==index ? 'active' : ''" @click="onSelect(index,item,2)">
+                        {{ item.categoryName+'-'+index }}
+                    </p>
+                </div>
+                <div class="cont-box">
+                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                    <div style="margin: 15px 0;"></div>
+                    <el-checkbox-group v-model="checkedCates" @change="onHandleCates">
+                        <el-checkbox v-for="(item,index) in categoryThird" :label="item.categoryName" :key="index">{{item.categoryName}}</el-checkbox>
+                    </el-checkbox-group>
+                </div>
+                <div class="cont-box">
+                    123
+                </div>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { findAttributeList, createAttribute, updateAttribute, findAttributeDetails } from './api/index'
-import { ATTRIBUTE_TYPE } from '../store/const'
-import { deepCopy } from '@/utils/utils'
+import { findAttributeList, createAttribute, updateAttribute, findAttributeDetails, findCategoryByParent } from './api/index'
+import { ATTRIBUTE_SET } from '../store/const'
 export default {
     name: 'skuset',
     data () {
         return {
+            curIndex: -1,
+            senIndex: -1,
             queryParams: {
                 type: '',
                 status: ''
@@ -102,10 +134,10 @@ export default {
             },
             tableData: [],
             tableLabel: [{ label: '属性编码', prop: 'parameterCode' },
-                { label: '属性名称', prop: 'parameterName', width: '150' },
-                { label: '属性类型', prop: 'type' },
-                { label: '单位', prop: 'unit' },
-                { label: '是否必填', prop: 'isRequired' },
+                { label: '属性类别名称', prop: 'parameterName', width: '150' },
+                { label: '所属一级类目', prop: 'type' },
+                { label: '所属二级类目', prop: 'type' },
+                { label: '所属三级类目', prop: 'type' },
                 { label: '状态', prop: 'status' },
                 { label: '维护人', prop: 'updateBy' },
                 { label: '维护时间', prop: 'updateTime', width: '200' }
@@ -113,8 +145,15 @@ export default {
             rowKey: '',
             paginationData: {},
             multiSelection: [],
-            attrTypeOptions: ATTRIBUTE_TYPE
-
+            attrTypeOptions: ATTRIBUTE_SET,
+            categoryFirst: [],
+            categorySecond: [],
+            categoryThird: [],
+            copyCategoryThird: [],
+            radio: '',
+            isIndeterminate: true,
+            checkedCates: [],
+            checkAll: false
         }
     },
     computed: {
@@ -139,6 +178,33 @@ export default {
         }
     },
     methods: {
+        async onSelect (index, item, val) {
+            console.log(index)
+            const { data } = await findCategoryByParent({
+                parentId: item.id
+            })
+            if (val == 1) {
+                this.curIndex = index
+                this.senIndex = -1
+                this.categoryThird = []
+                this.categorySecond = data
+            } else {
+                this.senIndex = index
+                this.categoryThird = data
+                this.copyCategoryThird = JSON.parse(JSON.stringify(data))
+            }
+        },
+        handleCheckAllChange (val) {
+            console.log(this.copyCategoryThird)
+            let newCopyList = this.copyCategoryThird && this.copyCategoryThird.map(val => val.categoryName)
+            this.checkedCates = val ? newCopyList : []
+            this.isIndeterminate = false
+        },
+        onHandleCates (val) {
+            let checkedCount = val.length
+            this.checkAll = checkedCount === this.categoryThird.length
+            this.isIndeterminate = checkedCount > 0 && checkedCount < this.categoryThird.length
+        },
         submitForm (formName) {
             if (this.isSaving) {
                 return
@@ -224,35 +290,65 @@ export default {
             this.searchList()
         },
         openMark (status) {
-            this.isSaving = false
-            this.form = deepCopy(this.tempForm)
-            this.status = status
             this.dialogAttributeEdit = true
-            this.$nextTick(() => {
-                this.$refs.form.clearValidate()
-            })
         },
         updateAttributeMultiStatus (status) {
             let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
             console.log(multiSelection)
+        },
+        onShowNext (val, arr, item) {
+            item.isOn = !val
         }
     },
     async mounted () {
         this.searchList()
-        this.tempForm = deepCopy(this.form)
+        const { data } = await findCategoryByParent({
+            parentId: 0
+        })
+        data && data.forEach((value) => {
+            value.isOn = false
+        })
+        this.categoryFirst = data
     }
 }
 </script>
 
-<style scoped>
-.form-add-remove {
-    font-size: 22px;
-    color: #ff9c31;
-    cursor: pointer;
-    line-height: 40px;
-    vertical-align: top;
+<style lang="scss" scoped>
+.cate-cont {
+    display: flex;
+    padding: 20px 0;
+    .cont-box {
+        height: 350px;
+        overflow-y: scroll;
+        flex: 1;
+        justify-content: space-around;
+        border: 1px solid #cccccc;
+        margin: 0 2px;
+
+        p {
+            padding: 5px;
+        }
+        .active {
+            background: #ff7a45;
+        }
+        /deep/.el-radio-group {
+            display: flex;
+            flex-direction: column;
+            .el-radio {
+                padding: 5px;
+            }
+        }
+        /deep/.el-checkbox-group {
+            display: flex;
+            flex-direction: column;
+            .el-checkbox {
+                padding: 5px;
+            }
+        }
+    }
 }
-.flex-wrap-row {
-    max-width: 1350px;
+::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
     <div class="page-table clearfix">
+        <!--TODO 这里面有些过滤器考虑下封装进来-->
         <!-- 列表 -->
         <el-table v-bind="tableAttr" :data="tableData" border stripe :lazy="true" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>

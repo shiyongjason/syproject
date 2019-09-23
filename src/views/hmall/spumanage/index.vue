@@ -83,7 +83,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="searchList()">
-                            搜索
+                            查询
                         </el-button>
                     </div>
                 </div>

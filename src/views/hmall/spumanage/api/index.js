@@ -65,3 +65,5 @@ export const findAttributeDetails = (id) => {
 export const updateAttributeStatus = (params) => {
     return instance.put(B2bUrl + 'product/api/parameters/status', params)
 }
+// 根据父类目获取类目信息
+export const findCategoryByParent = (params) => instance.get(`/product/api/categories/${params.parentId}`, {})
