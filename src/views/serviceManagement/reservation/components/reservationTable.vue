@@ -201,7 +201,6 @@ export default {
             this.show = true
             this.dialogTableVisible = true
             const { data } = await findReservationsDetail(row.id)
-            console.log(data)
             this.form = data
             const time = this.form.startTime.split(' ')
             this.date = time[0]
