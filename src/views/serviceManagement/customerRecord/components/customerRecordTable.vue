@@ -40,8 +40,8 @@
             </el-table-column>
             <el-table-column label="操作" align="center" width='180'>
                 <template slot-scope="scope">
-                    <el-button @click="onShow(scope.row)" class="orangeBtn">查看</el-button>
-                    <el-button @click="onEdit(scope.row)" class="orangeBtn">修改</el-button>
+                    <el-button @click="onShow(scope.row)" class="orangeBtn" v-if="hosAuthCheck(editAuthCode)">查看</el-button>
+                    <el-button @click="onEdit(scope.row)" class="orangeBtn" v-if="hosAuthCheck(editAuthCode)">修改</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -54,6 +54,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { AUTH_SERVICE_ARCHIVES_DETAILS } from '@/utils/auth_const'
 export default {
     name: 'customerRecordTable',
     props: {
@@ -80,7 +81,8 @@ export default {
             selectId: [],
             activeName: '1',
             data: [],
-            childArchiveNodes: []
+            childArchiveNodes: [],
+            editAuthCode: AUTH_SERVICE_ARCHIVES_DETAILS
         }
     },
     computed: {

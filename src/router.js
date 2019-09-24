@@ -525,8 +525,8 @@ const routerMapping = [
                 path: 'orderChannelEdit',
                 name: 'serviceManagementOrderChannelEdit',
                 meta: {
-                    title: '渠道订单详情',
-                    tagName: '渠道订单详情',
+                    title: '渠道订单修改',
+                    tagName: '渠道订单修改',
                     isMenu: false,
                     icon: ''
                 },
