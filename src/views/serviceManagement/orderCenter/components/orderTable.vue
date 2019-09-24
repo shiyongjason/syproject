@@ -30,7 +30,7 @@
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
-                            <font @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
+                            <font v-if="hosAuthCheck(youZanDetailsAuth) || hosAuthCheck(channelDetailsAuth)" @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -74,7 +74,7 @@
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
                                 <el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button>
-                                <el-button v-if="item.source !== 1" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                <el-button v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -89,6 +89,7 @@
 
 <script>
 import moment from 'moment'
+import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
 import { updateOrderRemark } from '../api/index'
 export default {
     name: 'orderTable',
@@ -105,7 +106,10 @@ export default {
         return {
             curIndex: null,
             activeName: '0',
-            remark: ''
+            remark: '',
+            youZanDetailsAuth: AUTH_SERVICE_YOUZAN_DETAILS,
+            channelDetailsAuth: AUTH_SERVICE_CHANNEL_DETAILS,
+            channelEditAuth: AUTH_SERVICE_CHANNEL_EDIT
         }
     },
     methods: {
