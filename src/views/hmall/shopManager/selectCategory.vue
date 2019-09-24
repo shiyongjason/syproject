@@ -753,7 +753,6 @@ export default {
 </script>
 
 <style scoped>
-
     .category {
         display: flex;
         justify-content: space-between;

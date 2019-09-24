@@ -147,7 +147,7 @@ const routerMapping = [
         meta: {
             title: '尽调管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_jindiao'
         },
         // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
@@ -443,6 +443,50 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/marketStore.vue')
+            },
+            {
+                path: 'spumange',
+                name: 'spumange',
+                meta: {
+                    title: 'SPU列表',
+                    tagName: 'SPU列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/index')
+            },
+            {
+                path: 'spudetail',
+                name: 'spudetail',
+                meta: {
+                    title: 'SPU管理',
+                    tagName: 'SPU管理',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spudetail')
+            },
+            {
+                path: 'spuauditlist',
+                name: 'spuauditlist',
+                meta: {
+                    title: 'SPU审核列表',
+                    tagName: 'SPU审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spuauditlist')
+            },
+            {
+                path: 'skuset',
+                name: 'skuset',
+                meta: {
+                    title: 'SKU设置',
+                    tagName: 'SKU设置',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/skuset')
             }
         ]
     },
