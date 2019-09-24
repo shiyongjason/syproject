@@ -8,7 +8,6 @@
                         <el-input v-model="queryParams.productCode" placeholder="请输入商品编码" maxlength="50"></el-input>
                     </div>
                 </div>
-
                 <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
@@ -87,7 +86,6 @@
                         </el-button>
                     </div>
                 </div>
-
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
@@ -106,8 +104,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange"
-            :multiSelection.sync="multiSelection"  :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+                :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
                 </template>

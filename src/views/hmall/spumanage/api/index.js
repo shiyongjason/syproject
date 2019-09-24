@@ -2,7 +2,8 @@ import instance from '@/api/axios_new.js'
 import { B2bUrl, interfaceUrl } from '@/api/config'
 
 // 商品列表
-export const findProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/', { params })
+// export const findProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/', { params })
+export const findProducts = (params) => instance.get(B2bUrl + 'product/spu/boss/page', { params })
 // 商品上下架
 export const updateProductStatus = (params) => instance.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
