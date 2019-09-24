@@ -125,7 +125,7 @@
                 </tr>
                 <tr>
                     <td>{{item.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{item.scale?item.scale:'-'}}<i>w</i></td>
+                    <td>{{item.scale?item.scale+'w':'-'}}</td>
                     <td>{{item.yearGrowthRate?item.yearGrowthRate:'-'}}</td>
                     <td>{{item.equityRatio?item.equityRatio:'-'}}</td>
                     <td>{{item.netProfitRate?item.netProfitRate:'-'}}</td>
