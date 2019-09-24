@@ -64,28 +64,27 @@
         <el-dialog title="新建属性" :visible.sync="dialogAttributeEdit" :close-on-click-modal="false">
             <div class="cate-cont">
                 <div class="cont-box">
-                    <!-- <p v-for="(item,index) in categoryFirst" :key="item.id" :class="item.isOn ? 'active' : ''" @click="onShowNext(item.isOn, 'categorySecond', item)"> -->
                     <p v-for="(item,index) in categoryFirst" :key="item.id" :class="curIndex==index ? 'active' : ''" @click="onSelect(index,item,1)">
-                        {{ item.categoryName+'-'+index }}
+                        {{ item.categoryName }}
                     </p>
                 </div>
                 <div class="cont-box">
-                    <!-- <el-radio-group v-model="radio">
-                        <el-radio :label="item.id" v-for="(item,index) in categorySecond" :key=index @change="onChangeRadio">{{item.categoryName}}</el-radio>
-                    </el-radio-group> -->
                      <p v-for="(item,index) in categorySecond" :key="item.id" :class="senIndex==index ? 'active' : ''" @click="onSelect(index,item,2)">
                         {{ item.categoryName+'-'+index }}
                     </p>
                 </div>
                 <div class="cont-box">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                    <div style="margin: 15px 0;"></div>
+                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
+                        @change="handleCheckAllChange" class="check-all" v-if="categoryThird.length > 0">全选</el-checkbox>
                     <el-checkbox-group v-model="checkedCates" @change="onHandleCates">
-                        <el-checkbox v-for="(item,index) in categoryThird" :label="item.categoryName" :key="index">{{item.categoryName}}</el-checkbox>
+                        <el-checkbox v-for="(item,index) in categoryThird"
+                            :key="index" :label="`${item.id}_${item.categoryName}`">{{item.categoryName}}</el-checkbox>
                     </el-checkbox-group>
                 </div>
                 <div class="cont-box">
-                    123
+                    <div v-for="item in checkedCateObj" :key="item.id" class="selected-cate">
+                        {{item.categoryName}}<i class="el-icon-close ml5" @click="onRemoveSelectedCate(item)"></i>
+                    </div>
                 </div>
             </div>
         </el-dialog>
@@ -151,7 +150,7 @@ export default {
             categoryThird: [],
             copyCategoryThird: [],
             radio: '',
-            isIndeterminate: true,
+            isIndeterminate: false,
             checkedCates: [],
             checkAll: false
         }
@@ -168,6 +167,15 @@ export default {
         //     }
         //     return Object.assign(this.baseRules, asyncRule)
         // },
+        checkedCateObj () {
+            return this.checkedCates.map(item => {
+                const pos = item.indexOf('_')
+                return {
+                    categoryName: item.slice(pos + 1),
+                    id: item.slice(0, pos)
+                }
+            })
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -179,7 +187,6 @@ export default {
     },
     methods: {
         async onSelect (index, item, val) {
-            console.log(index)
             const { data } = await findCategoryByParent({
                 parentId: item.id
             })
@@ -194,16 +201,23 @@ export default {
                 this.copyCategoryThird = JSON.parse(JSON.stringify(data))
             }
         },
+        onRemoveSelectedCate (param) {
+            const pos = this.checkedCates.indexOf(param.id + '_' + param.categoryName)
+            this.checkedCates.splice(pos, 1)
+        },
         handleCheckAllChange (val) {
-            console.log(this.copyCategoryThird)
-            let newCopyList = this.copyCategoryThird && this.copyCategoryThird.map(val => val.categoryName)
-            this.checkedCates = val ? newCopyList : []
+            const all = this.copyCategoryThird.map(item => item.id + '_' + item.categoryName)
+            if (val) {
+                this.checkedCates = this.checkedCates.concat(all)
+            } else {
+                this.checkedCates = this.checkedCates.filter(item => !all.includes(item))
+            }
             this.isIndeterminate = false
         },
         onHandleCates (val) {
-            let checkedCount = val.length
-            this.checkAll = checkedCount === this.categoryThird.length
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.categoryThird.length
+            const notChecked = this.categoryThird.filter(item => val.filter(obj => obj.id === item.id) <= 0)
+            this.checkAll = notChecked.length == 0
+            this.isIndeterminate = notChecked.length < this.categoryThird.length && !this.checkAll
         },
         submitForm (formName) {
             if (this.isSaving) {
@@ -314,6 +328,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.check-all {
+    padding: 5px;
+}
+.selected-cate {
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #ffcab5;
+    margin: 5px;
+    background-color: #fff2ec;
+    border-radius: 3px;
+}
 .cate-cont {
     display: flex;
     padding: 20px 0;
@@ -327,9 +352,11 @@ export default {
 
         p {
             padding: 5px;
+            cursor: pointer;
         }
         .active {
             background: #ff7a45;
+            color: #fff;
         }
         /deep/.el-radio-group {
             display: flex;
