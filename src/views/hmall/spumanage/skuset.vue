@@ -210,7 +210,7 @@ export default {
         handleCheckAllChange (val) {
             const all = this.copyCategoryThird.map(item => item.id + '_' + item.categoryName)
             if (val) {
-                this.checkedCates = this.checkedCates.concat(all)
+                this.checkedCates = this.checkedCates.concat(all.filter(item => !this.checkedCates.includes(item)))
             } else {
                 this.checkedCates = this.checkedCates.filter(item => !all.includes(item))
             }
