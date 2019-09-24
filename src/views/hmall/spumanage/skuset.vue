@@ -199,6 +199,7 @@ export default {
                 this.senIndex = index
                 this.categoryThird = data
                 this.copyCategoryThird = JSON.parse(JSON.stringify(data))
+                this._handleCheckAllStatus()
             }
         },
         onRemoveSelectedCate (param) {
@@ -214,8 +215,11 @@ export default {
             }
             this.isIndeterminate = false
         },
-        onHandleCates (val) {
-            const notChecked = this.categoryThird.filter(item => val.filter(obj => obj.id === item.id) <= 0)
+        onHandleCates () {
+            this._handleCheckAllStatus()
+        },
+        _handleCheckAllStatus () {
+            const notChecked = this.categoryThird.filter(item => this.checkedCates.filter(obj => obj === item.id + '_' + item.categoryName) <= 0)
             this.checkAll = notChecked.length == 0
             this.isIndeterminate = notChecked.length < this.categoryThird.length && !this.checkAll
         },
