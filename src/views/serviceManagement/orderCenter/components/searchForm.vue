@@ -45,6 +45,11 @@
                             </el-button>
                         </div>
                         <div class="query-col-input">
+                            <el-button type="primary" @click="onClear">
+                                清空筛选条件
+                            </el-button>
+                        </div>
+                        <div class="query-col-input">
                             <el-upload
                                 class="upload-demo"
                                 :show-file-list="false"
@@ -119,6 +124,9 @@ export default {
         }
     },
     methods: {
+        onClear  () {
+            this.$emit('onClear')
+        },
         onSearch () {
             this.$emit('search')
         },
