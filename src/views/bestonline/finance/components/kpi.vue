@@ -15,6 +15,7 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in form.assessmentList" :key="index">
+
                     <td>{{ item.assessmentItem }}</td>
                     <td v-if="index === 2 || index === 4">
                         <p v-for="(v, i) in item.cooperationTarget&&item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
