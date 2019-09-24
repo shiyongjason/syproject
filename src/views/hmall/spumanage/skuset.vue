@@ -205,6 +205,7 @@ export default {
         onRemoveSelectedCate (param) {
             const pos = this.checkedCates.indexOf(param.id + '_' + param.categoryName)
             this.checkedCates.splice(pos, 1)
+            this._handleCheckAllStatus()
         },
         handleCheckAllChange (val) {
             const all = this.copyCategoryThird.map(item => item.id + '_' + item.categoryName)
