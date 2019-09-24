@@ -51,8 +51,8 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                    <template slot="status" slot-scope="scope">
-                    {{scope.data.row.status==1?'生效':'失效'}}
+                <template slot="status" slot-scope="scope">
+                  <span :class="scope.data.row.status==2?'red':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
                     {{scope.data.row.updateTime|formatDate}}
@@ -90,12 +90,12 @@
                     </div>
                 </div>
                 <el-form-item label="属性名称：" prop="parameterName">
-                    <el-input v-model="formData.parameterName"  maxlength="6"></el-input>
+                    <el-input v-model="formData.parameterName" maxlength="6"></el-input>
                 </el-form-item>
                 <el-form-item v-for="(item, index) in formData.values" :label="'属性值' + (index+1)+'：'" :key="index" :rules="{required: true, message: '属性值不能为空', trigger: 'blur'}" :prop="'values.'+index+'.value'">
-                    <el-input v-model="item.value" style="width: 200px" maxlength="25"></el-input>
+                    <el-input v-model="item.value" style="width: 200px" maxlength="25" :disabled="operate=='modify'&&index < valueLength"></el-input>
                     <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="formData.values.length > 1"></span>
-                    <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="formData.values.length < 10 && index + 1 === formData.values.length"></span>
+                    <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="index + 1 === formData.values.length"></span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -170,21 +170,12 @@ export default {
             checkedCates: [],
             checkAll: false,
             operate: '',
-            markTitle: '新增属性'
+            markTitle: '新增属性',
+            valueLength: 0,
+            modifyId: ''
         }
     },
     computed: {
-        // rules () {
-        //     let asyncRule = {}
-        //     if (this.form.type === 2) {
-        //         this.form.values.forEach((item, index) => {
-        //             asyncRule[`values[${index}].value`] = [
-        //                 { required: true, message: '此项为必填项！', trigger: 'blur' }
-        //             ]
-        //         })
-        //     }
-        //     return Object.assign(this.baseRules, asyncRule)
-        // },
         checkedCateObj () {
             return this.checkedCates.map(item => {
                 const pos = item.indexOf('_')
@@ -298,7 +289,7 @@ export default {
             })
         },
         async onEditSpu (val) {
-            console.log(val)
+            this.markTitle = '修改属性'
             const { data } = await findAttributeDetails(val.id)
             this.formData = {
                 parameterCode: data.parameterCode,
@@ -309,7 +300,11 @@ export default {
                 unit: data.unit,
                 isRequired: data.isRequired
             }
-            this.status = 'modify'
+            // TODO 禁用和三级类目
+            this.valueLength = data.values && data.values.length
+            this.checkedCates = data.categoryList && data.categoryList.map(item => item.id + '_' + item.categoryName)
+            this.operate = 'modify'
+            this.modifyId = val.id
             this.dialogAttributeEdit = true
         },
         async searchList () {
@@ -364,6 +359,20 @@ export default {
                 message: params.status === 2 ? '属性已失效！' : '属性已生效！',
                 type: 'success'
             })
+            this.searchList()
+        },
+        async onChangeSpu (val) {
+            const params = {
+                parameterIds: [val.id],
+                status: val.status === 1 ? 2 : 1,
+                updateBy: this.userInfo.employeeName
+            }
+            await updateAttributeStatus(params)
+            this.$message({
+                message: params.status === 2 ? '属性已失效！' : '属性已生效！',
+                type: 'success'
+            })
+            this.searchList()
         },
         removeformValues (index) {
             this.formData.values.splice(index, 1)
