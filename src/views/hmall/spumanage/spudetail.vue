@@ -92,7 +92,7 @@ export default {
             form: {
                 brandId: '',
                 categoryId: '',
-                categoryIdList: '',
+                // categoryIdList: '',
                 createBy: '',
                 merchantCode: 0,
                 merchantName: '',
@@ -191,6 +191,7 @@ export default {
         }),
         productCategoryChange (val) {
             console.log(val)
+            this.form.categoryId = val[2]
             this.findRelationBrand(val[1])
         },
         beforeAvatarUpload (file) {

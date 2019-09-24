@@ -54,7 +54,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="queryParams.categoryId" :props="{ checkStrictly: true }" clearable @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="queryParams.categoryId"  clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
