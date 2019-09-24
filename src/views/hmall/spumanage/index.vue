@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">SPU编码：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入商品编码" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入SPU编码" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -17,7 +17,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品完整度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.integrity" placeholder="请输入商品名称" maxlength="50"></el-input>
+                         <el-select v-model="queryParams.integrity">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option label="完整" value="1">
+                            </el-option>
+                            <el-option label="不完整" value="2">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -227,7 +234,7 @@ export default {
             console.log(this.multiSelection)
         },
         gotoProductAdd () {
-            this.$router.push({ path: '/hmall/spudetail' })
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'add' } })
         }
     }
 }

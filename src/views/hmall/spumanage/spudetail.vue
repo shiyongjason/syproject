@@ -12,7 +12,10 @@
                     <el-cascader :options="categoryList" v-model="form.categoryName" :change-on-select="true" clearable @change="productCategoryChange"></el-cascader>
                 </el-form-item>
                 <el-form-item label="商品品牌：" prop="brand">
-                    <el-input v-model="form.brand"></el-input>
+                    <el-select v-model="form.brandId" clearable placeholder="请选择" >
+                        <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="specification">
                     <el-input v-model="form.specification"></el-input>
@@ -79,18 +82,12 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-// import { findCategoryAttribute } from './api/index'
+import { findRelationBrand } from './api/index'
 
 export default {
-    name: 'modifyAdd',
+    name: 'modifyoraddoraudit',
     data () {
         return {
-            categoryFirst: [],
-            categorySecond: [],
-            categoryThird: [],
-            categoryArr: [],
-            queryParams: {},
-            relationBrand: [], // 关联品牌列表
             form: {
                 categoryName: '',
                 brand: '',
@@ -142,13 +139,7 @@ export default {
             modify: false,
             categorySelect: [],
             brandName: '',
-            isStatus: '',
-            dialogRejectEdit: false,
-            rejectContainer: '',
-            causeFailure: '',
-            isReview: false,
-            saveDisabled: false,
-            isShowSellingPrice: true
+            relationBrand: []
         }
     },
     computed: {
@@ -188,6 +179,7 @@ export default {
         }),
         productCategoryChange (val) {
             console.log(val)
+            this.findRelationBrand(val[1])
         },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
@@ -218,6 +210,28 @@ export default {
         },
         pictureSetting (i) {
             this.pictureContainer.unshift((this.pictureContainer.splice(i, 1))[0])
+        },
+        async findRelationBrand (val) {
+            const params = {
+                categoryId: val,
+                isRelation: 1 // 0：未关联 1：已关联
+            }
+            const { data } = await findRelationBrand(params)
+            this.relationBrand = data
+            let isNull = true
+            this.relationBrand.forEach(value => {
+                if (value.brandId === this.form.brandId) {
+                    isNull = false
+                    //  + value.brandNameEn bug v1.7删除
+                    this.brandName = value.brandName
+                }
+            })
+            if (isNull) {
+                this.$set(this.form, 'brandId', '')
+                this.$nextTick(() => {
+                    this.$refs['brandId'].clearValidate()
+                })
+            }
         }
     },
     async mounted () {
