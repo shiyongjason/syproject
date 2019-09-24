@@ -8,11 +8,11 @@
                 <el-form-item label="商品编码：">
                     {{form.productCode}}
                 </el-form-item>
-                <el-form-item label="商品类目：" prop="categoryName">
-                    <el-cascader :options="categoryList" v-model="form.categoryName" :change-on-select="true" clearable @change="productCategoryChange"></el-cascader>
+                <el-form-item label="商品类目：" prop="categoryId">
+                    <el-cascader :options="categoryList" v-model="form.categoryId"  clearable @change="productCategoryChange"></el-cascader>
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brand">
-                    <el-select v-model="form.brandId" clearable placeholder="请选择" >
+                <el-form-item label="商品品牌：" prop="brandId">
+                    <el-select v-model="form.brandId" clearable placeholder="请选择"  @change="brandNameChange">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
@@ -20,9 +20,9 @@
                 <el-form-item label="商品型号：" prop="specification">
                     <el-input v-model="form.specification"></el-input>
                 </el-form-item>
-                <el-form-item label="商品名称：" prop="productName">
-                    <el-input placeholder="" :maxlength="50 - length" style="width: 500px" v-model="form.productName">
-                        <template slot="prepend">{{(brandName ? brandName : '') + categorySelect[2]+ (form.specification ? form.specification : '')}}</template>
+                <el-form-item label="商品名称：" prop="spuName">
+                    <el-input placeholder=""  maxlength="15"  v-model="form.spuName">
+                        <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="reqPictures" ref="reqPictures">
@@ -65,13 +65,14 @@
                     <h3>商品详情</h3>
                 </div>
                 <el-form-item>
-                    <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" width="100%" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px"></RichEditor>
+                    <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer"
+                    :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-row>
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" @click="cancel">保存且启用</el-button>
-                        <el-button @click="save('form')" :disabled="saveDisabled">保存且禁用</el-button>
-                        <el-button @click="save('form')" :disabled="saveDisabled">保存</el-button>
+                        <el-button type="primary" >保存且启用</el-button>
+                        <el-button @click="save('form')" >保存且禁用</el-button>
+                        <el-button @click="save('form')" >保存</el-button>
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -89,10 +90,22 @@ export default {
     data () {
         return {
             form: {
-                categoryName: '',
-                brand: '',
+                brandId: '',
+                categoryId: '',
+                categoryIdList: '',
+                createBy: '',
+                merchantCode: 0,
+                merchantName: '',
                 specification: '',
-                productName: ''
+                spuCode: '',
+                spuName: '',
+                status: '',
+                updateBy: '',
+                reqDetailList: [{
+                    content: '',
+                    spuDetailTabId: '',
+                    spuCode: ''
+                }]
             },
             menus: [
                 'head', // 标题
@@ -115,24 +128,23 @@ export default {
                 'redo' // 重复
             ],
             rules: {
-                categoryName: [
-                    { required: true, whitespace: true, message: '请选择商品类目', trigger: 'blur' }
+                categoryId: [
+                    { required: true, whitespace: true, message: '请选择商品类目' }
                 ],
                 specification: [
                     { required: true, whitespace: true, message: '请填写规格/型号', trigger: 'blur' }
                 ],
                 productName: [
-                    { required: true, whitespace: true, message: '商品名称', trigger: 'blur' }
+                    { required: true, whitespace: true, message: '请填写商品名称', trigger: 'blur' }
                 ],
-                brand: [
-                    { required: true, whitespace: true, message: '商品品牌', trigger: 'blur' }
+                brandId: [
+                    { required: true, whitespace: true, message: '请选择商品品牌' }
+                ],
+                spuName: [
+                    { required: true, whitespace: true, message: '请填写商品名称' }
                 ],
                 reqPictures: [
                     { required: true, message: '请选择商品主图' }
-                ],
-                sellingPrice: [
-                    { required: true, message: '请输入销售价', trigger: 'blur' }
-
                 ]
             },
             pictureContainer: [],
@@ -227,11 +239,23 @@ export default {
                 }
             })
             if (isNull) {
-                this.$set(this.form, 'brandId', '')
-                this.$nextTick(() => {
-                    this.$refs['brandId'].clearValidate()
-                })
+                // this.$set(this.form, 'brandId', '')
+                // this.$nextTick(() => {
+                //     this.$refs['brandId'].clearValidate()
+                // })
             }
+        },
+        brandNameChange () {
+            this.brandName = ''
+            this.relationBrand.forEach(value => {
+                if (this.form.brandId === value.brandId) {
+                    // 删除 value.brandNameEn 3期迭代
+                    this.brandName = value.brandName
+                }
+            })
+        },
+        save () {
+            console.log(this.form)
         }
     },
     async mounted () {
