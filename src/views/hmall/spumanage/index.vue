@@ -5,19 +5,19 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">SPU编码：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productCode" placeholder="请输入商品编码" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入商品编码" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.brandId" placeholder="请输入商品品牌" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品完整度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productName" placeholder="请输入商品名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.integrity" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -36,7 +36,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.sourceCode">
+                        <el-select v-model="queryParams.source">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
@@ -53,29 +53,29 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productName" placeholder="请输入商品名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productName" placeholder="请输入商品型号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">维护时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">维护人：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.updateBy" placeholder="请输入维护人姓名">
+                        <el-input type="text" maxlength="50" v-model="queryParams.operator" placeholder="请输入维护人姓名">
                         </el-input>
                     </div>
                 </div>
@@ -130,28 +130,28 @@ export default {
         return {
             productSource: [],
             queryParams: {
-                productCode: '',
-                productName: '',
-                updateBy: '',
-                brandName: '',
                 pageNumber: 1,
+                pageSize: 10,
+                spuCode: '',
+                spuName: '',
+                specification: '',
+                categoryId: '',
+                brandId: '',
+                integrity: '',
                 status: '',
-                startDate: '',
-                endDate: '',
-                categoryId: [],
-                sourceCode: ''
+                source: '',
+                startTime: '',
+                endTime: '',
+                operator: ''
             },
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
-            tableLabel: [{ label: '商品编码spu', prop: 'productCode' },
-                { label: '商品名称', prop: 'productName', width: '200' },
-                { label: '品牌', prop: 'brandName', width: '200' },
-                { label: '商品类目', prop: 'categoryName', width: '200' },
-                { label: '商品来源', prop: 'sourceName' },
-                { label: '商品状态', prop: 'status' },
-                { label: '维护人', prop: 'updateBy' },
-                { label: '维护时间', prop: 'updateTime', width: '200' }
+            tableLabel: [{ label: '品牌', prop: 'brandName' },
+                { label: '商品名称', prop: 'spuName', width: '200' },
+                { label: '完整度', prop: 'integrity', width: '200' },
+                { label: '来源', prop: 'merchantName' },
+                { label: '状态', prop: 'status' }
             ],
             rowKey: '',
             multiSelection: []
@@ -161,7 +161,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -171,7 +171,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -208,11 +208,11 @@ export default {
         },
         async  searchList () {
             const { ...params } = this.queryParams
-            if (params.startDate) {
-                params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
+            if (params.startTime) {
+                params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
             }
-            if (params.endDate) {
-                params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
+            if (params.endTime) {
+                params.endTime = this.$root.$options.filters.formatterTime(params.endTime)
             }
             if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
             const { data } = await findProducts(params)
