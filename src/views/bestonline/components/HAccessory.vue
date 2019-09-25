@@ -62,7 +62,7 @@ export default {
             return {
                 action: fileUploadUrl + 'tms/files/upload',
                 data: {
-                    updateUid: this.userInfo.employeeName
+                    updateUid: this.userInfo.name
                 },
                 accept: '.jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF,.xlsx,.xls,.ppt,.doc,.docx,.rar,.zip',
                 name: 'multiFile'
