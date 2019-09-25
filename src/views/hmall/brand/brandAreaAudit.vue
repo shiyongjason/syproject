@@ -67,7 +67,13 @@
                     </div>
                     <div>
                         <el-form-item label="代理证书：">
-                            123
+                            <div class="proxyCert">
+                                <template v-for="(item, index) in dialogMsg.certificatePoList">
+                                    <a :href="item.pictureUrl" target="_blank" :key="index">
+                                        <img :src="item.pictureUrl" alt="">
+                                    </a>
+                                </template>
+                            </div>
                         </el-form-item>
                     </div>
                     <div>
@@ -129,7 +135,6 @@ export default {
                 merchantName: '',
                 brandName: '',
                 auditStatus: '',
-                reservationStatus: '',
                 minCreateTime: '',
                 maxCreateTime: ''
             },
@@ -186,7 +191,6 @@ export default {
             this.$set(this.queryParams, 'merchantName', '')
             this.$set(this.queryParams, 'brandName', '')
             this.$set(this.queryParams, 'auditStatus', '')
-            this.$set(this.queryParams, 'reservationStatus', '')
             this.$set(this.queryParams, 'minCreateTime', '')
             this.$set(this.queryParams, 'maxCreateTime', '')
             this.$set(this.paginationData, 'pageNumber', 1)
@@ -198,9 +202,9 @@ export default {
                 ...this.searchParams,
                 ...this.paginationData
             }
-            console.log(searchParams)
             if (!searchParams.minCreateTime) searchParams.minCreateTime = null
             if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
+            console.log(searchParams)
             const { data } = await findBrandAreaList({ params: searchParams })
             console.log(data)
             this.paginationData.pageNumber = data.pages
@@ -248,5 +252,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+.proxyCert{
+    display: flex;
+    img{
+        display: block;
+        width: 50px;
+        height: 50px;
+    }
+}
 </style>

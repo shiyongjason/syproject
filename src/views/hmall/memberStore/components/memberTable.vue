@@ -103,10 +103,10 @@
                         <span>企业名称：</span>
                         <el-input v-model="memberDetails.companyName" disabled></el-input>
                     </div>
-                    <div class="baseStyle">
+                    <!-- <div class="baseStyle">
                         <span>统一社会信用代码：</span>
                         <el-input v-model="memberDetails.companyName" disabled></el-input>
-                    </div>
+                    </div> -->
                     <el-divider content-position="left">审核意见</el-divider>
                     <template v-if="drawer.type === 'review'">
                         <el-form-item label="审核结果：" prop="result">
@@ -223,7 +223,6 @@ export default {
                 this.drawer.type = type
             }
             this.drawer.drawer = true
-            console.log(row)
             this.findMemberDetails(row)
         },
         close () {
@@ -237,27 +236,6 @@ export default {
             this.memberDetails = data
             this.memberDetails.placeOfOrigin = '' + data.provinceName + data.cityName + data.countryName
         },
-        // async createMemberReview () {
-        //     this.$refs['memberDetails'].validate(async (valid) => {
-        //         if (valid) {
-        //             const params = {
-        //                 ...this.openParams,
-        //                 ...this.suggest
-        //             }
-        //             if (!params.memberCode) delete params.memberCode
-        //             try {
-        //                 await createMemberReview(params)
-        //                 this.$message({
-        //                     type: 'success',
-        //                     message: '已提交审核结果'
-        //                 })
-        //                 this.dialogParams.show = false
-        //             } catch (e) {
-        //             }
-        //             this.onQuery()
-        //         }
-        //     })
-        // },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {

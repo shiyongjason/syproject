@@ -442,7 +442,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/marketStore.vue')
+                component: () => import('@/views/hmall/bazaar/marketStore.vue')
             },
             {
                 path: 'spumange',
