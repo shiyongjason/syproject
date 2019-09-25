@@ -1,12 +1,12 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" >
+            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px">
                 <div class="page-body-title">
                     <h3>商品信息（spu）</h3>
                 </div>
                 <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'">
-                    {{form.productCode}}
+                    {{form.spuCode}}
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
@@ -26,6 +26,7 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="reqPictures" ref="reqPictures">
+                    {{pictureContainer}}
                     <ul class="picture-container">
                         <template v-if="pictureContainer.length>0">
                             <li v-for="(item,index) in pictureContainer" :key="item.url">
@@ -49,17 +50,17 @@
                 <div class="page-body-title" v-if="form.reqParameterList.length>0">
                     <h3>商品参数信息</h3>
                 </div>
-                <div :key="item.parameterCode" v-for="(item,index) in form.reqParameterList"  class="el-form-item" style="width: 460px;">
-                    <el-form-item :label="item.parameterName" :prop="'reqParameterList.'+ index + '.value'"  :rules="{
+                <div :key="item.parameterCode" v-for="(item,index) in form.reqParameterList" class="el-form-item" style="width: 460px;">
+                    <el-form-item :label="item.parameterName" :prop="'reqParameterList.'+ index + '.value'" :rules="{
                                                  required: item.isRequired === 1 ? true : false ,
                                                  whitespace: true,
                                                  message: '请输入'+ item.parameterName,
                                                  trigger: item.type === 2 ? 'blur' : ''
                                              }">
-                        <el-select  v-model="item.value" v-if="item.type === 2">
+                        <el-select v-model="item.value" v-if="item.type === 2">
                             <!-- <template v-if="item.value"> -->
-                                <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.value">
-                                </el-option>
+                            <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.value">
+                            </el-option>
                             <!-- </template> -->
                         </el-select>
                         <template v-else-if="item.type === 1">
@@ -80,7 +81,7 @@
                         <el-button type="primary" @click="save(1)">保存且启用</el-button>
                         <el-button @click="save(2)" v-if="operate=='modify'">保存且禁用</el-button>
                         <el-button @click="save(2)" v-if="operate=='add'">保存</el-button>
-                         <el-button @click="onBack()">返回</el-button>
+                        <el-button @click="onBack()">返回</el-button>
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -91,7 +92,7 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand, findSpuAttr, saveSpu } from './api/index'
+import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'modifyoraddoraudit',
@@ -105,7 +106,7 @@ export default {
                 merchantCode: 0,
                 merchantName: 'BOSS',
                 specification: '',
-                spuCode: '',
+                spuCode: this.$route.query.spuCode,
                 spuName: '',
                 status: '',
                 updateBy: '',
@@ -155,7 +156,7 @@ export default {
                     { required: true, whitespace: true, message: '请填写商品名称' }
                 ],
                 reqPictures: [
-                    { required: true, message: '请选择商品主图' }
+                    { required: true, whitespace: true, message: '请选择商品主图' }
                 ]
             },
             pictureContainer: [], // 图片列表
@@ -164,6 +165,13 @@ export default {
             brandName: '',
             relationBrand: [],
             deepForm: {}
+        }
+    },
+    watch: {
+        pictureContainer (val) {
+            this.$nextTick(() => {
+                if (val.length > 0) this.$refs['reqPictures'].clearValidate()
+            })
         }
     },
     computed: {
@@ -260,8 +268,11 @@ export default {
         },
         async findSpuAttr (categoryId, spuCode) {
             const { data } = await findSpuAttr({ categoryId: categoryId, spuCode: spuCode })
+            data && data.map(val => {
+                val.parameterId = val.id
+            })
             this.form.reqParameterList = deepCopy(data)
-            console.log(data)
+            console.log(this.form.reqParameterList)
         },
         brandNameChange () {
             this.brandName = ''
@@ -277,11 +288,9 @@ export default {
                 this.form.reqPictureList.push({
                     isDefault: index === 0 ? 1 : 0,
                     pictureUrl: value.url,
-                    sort: index,
-                    spuCode: this.form.spuCode
+                    sort: index
                 })
             })
-            console.log(this.form)
             this.$refs['formmain'].validate((valid) => {
                 saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
             })
@@ -301,10 +310,31 @@ export default {
             } else {
                 this.$router.go(-1)
             }
+        },
+        async _findSpudetails () {
+            const { data } = await findSpudetails({ spuCode: this.form.spuCode })
+            // TODO 重组数据格式
+            this.form = { ...data }
+            // this.form.reqParameterList = JSON.parse(data.spuAttr)
+            // delete this.form.spuAttr
+            data.productParameters.map(value => {
+                value.model = value.value
+                this.form.attributeList.push(value)
+            })
+            this.pictureContainer = []
+            data.spuPictureList && data.spuPictureList.forEach((value, index) => {
+                this.pictureContainer.push({
+                    url: value.pictureUrl
+                })
+            })
+            console.log(this.form)
         }
     },
     async mounted () {
         this.findCategoryList()
+        if (this.form.spuCode) {
+            this._findSpudetails()
+        }
         this.deepForm = deepCopy(this.form)
     }
 }

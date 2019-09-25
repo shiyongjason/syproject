@@ -56,9 +56,11 @@ export const findAttributeDetails = (id) => { return instance.get(B2bUrl + 'prod
 export const updateAttributeStatus = (params) => { return instance.put(B2bUrl + 'product/api/parameters/status', params) }
 // 根据父类目获取类目信息
 export const findCategoryByParent = (params) => instance.get(`product/api/categories/${params.parentId}`, {})
-// 根据2级类目 差选 所有属性
-export const findSpuAttr = (params) => instance.get('product/spu/attrs/', { params })
+// 根据2级类目 查询 所有属性
+export const findSpuAttr = (params) => instance.get('product/api/spu/attrs/', { params })
 // 新建商品spu
-export const saveSpu = (params) => instance.post('product/spu', params)
+export const saveSpu = (params) => instance.post('product/api/spu', params)
 // 启用禁用spu
-export const changeSpustatus = (params) => instance.put('product/spu/boss/enable', params)
+export const changeSpustatus = (params) => instance.put('product/api/spu/boss/enable', params)
+// 启用禁用spu
+export const findSpudetails = (params) => instance.get('product/api/spu/spu-edit-info', { params })
