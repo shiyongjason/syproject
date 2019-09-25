@@ -87,9 +87,14 @@
                     </el-form-item>
                 </el-row>
                 <el-row v-if="operate=='audit'">
-                    <el-radio v-model="radio" label="1">审核通过</el-radio>
-                    <el-radio v-model="radio" label="2">审核不通过</el-radio>
-
+                    <el-form-item>
+                        <el-radio v-model="radio" label="1">审核通过</el-radio>
+                        <el-radio v-model="radio" label="2">审核不通过</el-radio>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+                        </el-input>
+                    </el-form-item>
                 </el-row>
             </el-form>
         </div>
