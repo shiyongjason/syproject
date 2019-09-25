@@ -89,6 +89,7 @@
                 <el-row v-if="operate=='audit'">
                     <el-radio v-model="radio" label="1">审核通过</el-radio>
                     <el-radio v-model="radio" label="2">审核不通过</el-radio>
+
                 </el-row>
             </el-form>
         </div>
