@@ -22,7 +22,7 @@
                             </el-option>
                             <el-option label="完整" value="1">
                             </el-option>
-                            <el-option label="不完整" value="2">
+                            <el-option label="不完整" value="0">
                             </el-option>
                         </el-select>
                     </div>
@@ -54,7 +54,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="queryParams.categoryId"  clearable @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr"  clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -135,6 +135,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
     data () {
         return {
+            categoryIdArr: [],
             productSource: [],
             queryParams: {
                 pageNumber: 1,

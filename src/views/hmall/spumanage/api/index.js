@@ -3,7 +3,7 @@ import { B2bUrl, interfaceUrl } from '@/api/config'
 
 // 商品列表
 // export const findProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/', { params })
-export const findProducts = (params) => instance.get(B2bUrl + 'product/spu/boss/page', { params })
+export const findProducts = (params) => instance.get(B2bUrl + 'product/api/spu/boss/page', { params })
 // 商品上下架
 export const updateProductStatus = (params) => instance.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
@@ -60,6 +60,8 @@ export const findCategoryByParent = (params) => instance.get(`product/api/catego
 export const findSpuAttr = (params) => instance.get('product/api/spu/attrs/', { params })
 // 新建商品spu
 export const saveSpu = (params) => instance.post('product/api/spu', params)
+// 更新商品spu
+export const putSpu = (params) => instance.put('product/api/spu', params)
 // 启用禁用spu
 export const changeSpustatus = (params) => instance.put('product/api/spu/boss/enable', params)
 // 启用禁用spu

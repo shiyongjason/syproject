@@ -8,17 +8,20 @@
                 <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'">
                     {{form.spuCode}}
                 </el-form-item>
-                <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;">
+                <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;">
-                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange">
+                  <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'">
+                    {{categoryIdName}}
+                </el-form-item>
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" >
+                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification" style="width: 460px;">
-                    <el-input v-model="form.specification"></el-input>
+                <el-form-item label="商品型号：" prop="specification" style="width: 460px;" >
+                    <el-input v-model="form.specification" :disabled="operate=='modify'"></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
                     <el-input placeholder="" maxlength="15" v-model="form.spuName">
@@ -26,10 +29,9 @@
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="reqPictures" ref="reqPictures">
-                    {{pictureContainer}}
                     <ul class="picture-container">
                         <template v-if="pictureContainer.length>0">
-                            <li v-for="(item,index) in pictureContainer" :key="item.url">
+                            <li v-for="(item,index) in pictureContainer" :key="index">
                                 <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
                                 <img :src="item.url" :alt="item.url">
                                 <span class="picture-setting" @click="pictureSetting(index)">
@@ -92,13 +94,14 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails } from './api/index'
+import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'modifyoraddoraudit',
     data () {
         return {
             form: {
+                id: '',
                 brandId: '',
                 categoryId: '',
                 // categoryIdList: '',
@@ -112,8 +115,7 @@ export default {
                 updateBy: '',
                 reqDetailList: [{
                     content: '',
-                    spuDetailTabId: 1,
-                    spuCode: ''
+                    spuDetailTabId: 1
                 }],
                 reqParameterList: [],
                 reqPictureList: []
@@ -164,7 +166,8 @@ export default {
             categorySelect: [],
             brandName: '',
             relationBrand: [],
-            deepForm: {}
+            deepForm: {},
+            categoryIdName: ''
         }
     },
     watch: {
@@ -283,7 +286,7 @@ export default {
                 }
             })
         },
-        save (val) {
+        async save (val) {
             this.pictureContainer.forEach((value, index) => {
                 this.form.reqPictureList.push({
                     isDefault: index === 0 ? 1 : 0,
@@ -292,7 +295,19 @@ export default {
                 })
             })
             this.$refs['formmain'].validate((valid) => {
-                saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
+                if (this.operate == 'add') {
+                    saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
+                    this.$message({
+                        type: 'success',
+                        message: '商品新建成功！'
+                    })
+                } else {
+                    putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
+                    this.$message({
+                        type: 'success',
+                        message: '商品更新成功！'
+                    })
+                }
             })
         },
         onBack () {
@@ -314,24 +329,37 @@ export default {
         async _findSpudetails () {
             const { data } = await findSpudetails({ spuCode: this.form.spuCode })
             // TODO 重组数据格式
-            this.form = { ...data }
+            // this.form = { ...data }
             // this.form.reqParameterList = JSON.parse(data.spuAttr)
             // delete this.form.spuAttr
-            data.productParameters.map(value => {
-                value.model = value.value
-                this.form.attributeList.push(value)
+            this.form.specification = data.specification
+            this.form.spuName = data.spuName
+            this.form.brandId = data.brandId
+            this.brandName = data.brandName
+            this.form.id = data.id
+            this.categoryIdName = data.categoryNames
+            this.form.categoryId = data.categoryId
+            const oneToThreeCategorys = data.oneToThreeCategorys.reverse()
+            oneToThreeCategorys && oneToThreeCategorys.map(val => {
+                this.categoryIdArr.push(val.id)
             })
+            this.categoryId = this.categoryIdArr[1]
+            this.findRelationBrand(this.categoryId)
+            const parameterList = data.parameterList
+            parameterList && parameterList.map(val => {
+                val.parameterId = val.id
+            })
+            this.form.reqParameterList = parameterList
             this.pictureContainer = []
             data.spuPictureList && data.spuPictureList.forEach((value, index) => {
                 this.pictureContainer.push({
                     url: value.pictureUrl
                 })
             })
-            console.log(this.form)
         }
     },
     async mounted () {
-        this.findCategoryList()
+        await this.findCategoryList()
         if (this.form.spuCode) {
             this._findSpudetails()
         }
