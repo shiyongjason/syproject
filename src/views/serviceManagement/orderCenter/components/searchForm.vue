@@ -55,6 +55,7 @@
                                 :show-file-list="false"
                                 :action="interfaceUrl + 'service/api/orders/import'"
                                 :on-success="isSuccess"
+                                :on-error="isError"
                                 auto-upload
                             >
                                 <el-button type="primary">
@@ -147,6 +148,13 @@ export default {
                     this.$emit('search', this.value)
                 })
             }
+        },
+        isError () {
+            //  订单导入字段格式错误，请您检查导入字段格式，重新上传
+            this.$message({
+                type: 'error',
+                message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
+            })
         }
     }
 }
