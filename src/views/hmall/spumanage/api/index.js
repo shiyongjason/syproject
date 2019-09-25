@@ -60,3 +60,5 @@ export const findCategoryByParent = (params) => instance.get(`product/api/catego
 export const findSpuAttr = (params) => instance.get('product/spu/attrs/', { params })
 // 新建商品spu
 export const saveSpu = (params) => instance.post('product/spu', params)
+// 启用禁用spu
+export const changeSpustatus = (params) => instance.put('product/spu/boss/enable', params)

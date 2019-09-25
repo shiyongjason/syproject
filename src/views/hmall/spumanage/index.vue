@@ -99,8 +99,8 @@
                     <el-button type="primary" class="ml20" @click="gotoProductAdd">
                         新建商品SPU
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量禁用</el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量启用</el-button>
+                    <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量禁用</el-button>
+                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量启用</el-button>
                     <el-button type="primary" class="ml20" @click="onExport()">
                         导出
                     </el-button>
@@ -130,7 +130,7 @@
     </div>
 </template>
 <script>
-import { findProducts, findProductSource } from './api/index'
+import { findProducts, findProductSource, changeSpustatus } from './api/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     data () {
@@ -154,7 +154,9 @@ export default {
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
-            tableLabel: [{ label: '品牌', prop: 'brandName' },
+            tableLabel: [
+                { label: 'SPU编码', prop: 'spuCode' },
+                { label: '品牌', prop: 'brandName' },
                 { label: '商品名称', prop: 'spuName', width: '200' },
                 { label: '完整度', prop: 'integrity', width: '200' },
                 { label: '来源', prop: 'merchantName' },
@@ -230,11 +232,43 @@ export default {
                 total: data.total
             }
         },
-        onChangeStatus (val) {
-            console.log(this.multiSelection)
+        async onChangeStatus (status) {
+            let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
+            if (multiSelection.length < 1) {
+                this.$message({
+                    message: '请先选择商品！',
+                    type: 'warning'
+                })
+                return
+            }
+            const params = {
+                spuIdList: multiSelection,
+                status: status
+            }
+            await changeSpustatus(params)
+            this.$message({
+                message: params.status === 2 ? '禁用成功！' : '启用成功！',
+                type: 'success'
+            })
+            this.searchList()
         },
         gotoProductAdd () {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'add' } })
+        },
+        onEditSpu (val) {
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuCode: val.spuCode } })
+        },
+        async  onChangeSpu (val) {
+            const params = {
+                spuIdList: [val.id],
+                status: val.status === 1 ? 2 : 1
+            }
+            await changeSpustatus(params)
+            this.$message({
+                message: params.status === 2 ? '禁用成功！' : '启用成功！',
+                type: 'success'
+            })
+            this.searchList()
         }
     }
 }
