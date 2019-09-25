@@ -103,9 +103,9 @@ export default {
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
-            if (file.size / (1024 * 1024) > 500) {
+            if (file.size / (1024 * 1024) > 10) {
                 this.$message({
-                    message: '附件要保持500M以内',
+                    message: '附件要保持10M以内',
                     type: 'warning'
                 })
                 this.type = 1
