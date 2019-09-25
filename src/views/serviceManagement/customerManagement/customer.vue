@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType' @resetRow="resetRow"/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
     </div>
 </template>
 
@@ -52,9 +52,10 @@ export default {
         async findUserDetailsTagList (row) {
             const { data } = await findUserDetailsTagList({ channelUserId: row.id })
             if (data.length > 0) {
-                const temp = data.map(value => value.id)
+                const tempId = data.map(value => value.id)
+                const tempName = data.map(value => value.labelName)
                 await this.$refs.addOrUpdate.findTagList()
-                this.$refs.addOrUpdate.updateTagList(temp)
+                this.$refs.addOrUpdate.updateTagList(tempId, tempName)
             }
         },
         async onEdit (row, type) {
@@ -91,6 +92,9 @@ export default {
             const { data } = await findCustomerList(params)
             this.list = data.records
             this.page.total = data.total
+        },
+        findDetails () {
+            this.$refs.addOrUpdate.findTagList()
         }
     },
     mounted () {

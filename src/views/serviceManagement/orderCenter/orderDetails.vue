@@ -19,14 +19,14 @@
         <div class="page-body-cont">
             <div class="order-status">
                 <div class="left">
-                    <div class="is-status" v-if="query.status == 2 ||  query.status ==5">
+                    <div class="is-status" v-if="query.status == 1 ||  query.status ==5">
                         <p class="title">买家已付款</p>
                         <p class="title">等待商家发货</p>
                         <p class="tips">
                             买家已付款，请尽快发货，否则买家有权申请退款
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status == 6">
+                    <div class="is-status" v-if="query.status == 2">
                         <p class="title">商家已发货</p>
                         <p class="title">等待交易成功</p>
                         <p class="tips">
@@ -54,7 +54,7 @@
                         <el-rate v-model="details.star" disabled="disabled"></el-rate>
                     </p>
                 </div>
-                <div class="right">
+                <div class="right" v-if="!(query.status == 4)">
                     <el-steps :active="stepNum">
                         <el-step title="买家下单" :description="details.created | formatDate"></el-step>
                         <el-step title="买家付款" :description="details.payTime | formatDate"></el-step>
