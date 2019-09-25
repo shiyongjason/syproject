@@ -1,27 +1,27 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules" label-width="110px">
+            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" >
                 <div class="page-body-title">
                     <h3>商品信息（spu）</h3>
                 </div>
-                <el-form-item label="商品编码：">
+                <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'">
                     {{form.productCode}}
                 </el-form-item>
-                <el-form-item label="商品类目：" prop="categoryId">
-                    <el-cascader :options="categoryList" v-model="form.categoryId"  clearable @change="productCategoryChange"></el-cascader>
+                <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;">
+                    <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId">
-                    <el-select v-model="form.brandId" clearable placeholder="请选择"  @change="brandNameChange">
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;">
+                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification">
+                <el-form-item label="商品型号：" prop="specification" style="width: 460px;">
                     <el-input v-model="form.specification"></el-input>
                 </el-form-item>
-                <el-form-item label="商品名称：" prop="spuName">
-                    <el-input placeholder=""  maxlength="15"  v-model="form.spuName">
+                <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
+                    <el-input placeholder="" maxlength="15" v-model="form.spuName">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
@@ -46,33 +46,41 @@
                         最多支持上传5张750*750，大小不超过2M，仅支持jpeg，jpg，png格式
                     </div>
                 </el-form-item>
-                <div class="page-body-title">
+                <div class="page-body-title" v-if="form.reqParameterList.length>0">
                     <h3>商品参数信息</h3>
                 </div>
-                <el-form-item label="参数信息1：" prop="productName">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="参数信息2：" prop="productName">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="参数信息3：" prop="productName">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="参数信息4：" prop="productName">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
+                <div :key="item.parameterCode" v-for="(item,index) in form.reqParameterList"  class="el-form-item" style="width: 460px;">
+                    <el-form-item :label="item.parameterName" :prop="'reqParameterList.'+ index + '.value'"  :rules="{
+                                                 required: item.isRequired === 1 ? true : false ,
+                                                 whitespace: true,
+                                                 message: '请输入'+ item.parameterName,
+                                                 trigger: item.type === 2 ? 'blur' : ''
+                                             }">
+                        <el-select  v-model="item.value" v-if="item.type === 2">
+                            <!-- <template v-if="item.value"> -->
+                                <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.value">
+                                </el-option>
+                            <!-- </template> -->
+                        </el-select>
+                        <template v-else-if="item.type === 1">
+                            <el-input placeholder="" maxlength="25" v-model="item.value">
+                                <template slot="append" v-if="item.unit">{{item.unit}}</template>
+                            </el-input>
+                        </template>
+                    </el-form-item>
+                </div>
                 <div class="page-body-title">
                     <h3>商品详情</h3>
                 </div>
                 <el-form-item>
-                    <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer"
-                    :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-row>
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" >保存且启用</el-button>
-                        <el-button @click="save('form')" >保存且禁用</el-button>
-                        <el-button @click="save('form')" >保存</el-button>
+                        <el-button type="primary" @click="save(1)">保存且启用</el-button>
+                        <el-button @click="save(2)" v-if="operate=='modify'">保存且禁用</el-button>
+                        <el-button @click="save(2)" v-if="operate=='add'">保存</el-button>
+                         <el-button @click="onBack()">返回</el-button>
                     </el-form-item>
                 </el-row>
             </el-form>
@@ -83,8 +91,8 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand } from './api/index'
-
+import { findRelationBrand, findSpuAttr, saveSpu } from './api/index'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'modifyoraddoraudit',
     data () {
@@ -95,7 +103,7 @@ export default {
                 // categoryIdList: '',
                 createBy: '',
                 merchantCode: 0,
-                merchantName: '',
+                merchantName: 'BOSS',
                 specification: '',
                 spuCode: '',
                 spuName: '',
@@ -103,10 +111,13 @@ export default {
                 updateBy: '',
                 reqDetailList: [{
                     content: '',
-                    spuDetailTabId: '',
+                    spuDetailTabId: 1,
                     spuCode: ''
-                }]
+                }],
+                reqParameterList: [],
+                reqPictureList: []
             },
+            categoryIdArr: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -147,11 +158,12 @@ export default {
                     { required: true, message: '请选择商品主图' }
                 ]
             },
-            pictureContainer: [],
-            modify: false,
+            pictureContainer: [], // 图片列表
+            operate: this.$route.query.type,
             categorySelect: [],
             brandName: '',
-            relationBrand: []
+            relationBrand: [],
+            deepForm: {}
         }
     },
     computed: {
@@ -190,9 +202,9 @@ export default {
             findCategoryList: 'findCategoryList'
         }),
         productCategoryChange (val) {
-            console.log(val)
             this.form.categoryId = val[2]
             this.findRelationBrand(val[1])
+            this.findSpuAttr(val[1], this.form.spuCode)
         },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
@@ -231,20 +243,25 @@ export default {
             }
             const { data } = await findRelationBrand(params)
             this.relationBrand = data
-            let isNull = true
-            this.relationBrand.forEach(value => {
-                if (value.brandId === this.form.brandId) {
-                    isNull = false
-                    //  + value.brandNameEn bug v1.7删除
-                    this.brandName = value.brandName
-                }
-            })
-            if (isNull) {
-                // this.$set(this.form, 'brandId', '')
-                // this.$nextTick(() => {
-                //     this.$refs['brandId'].clearValidate()
-                // })
-            }
+            // let isNull = true
+            // this.relationBrand.forEach(value => {
+            //     if (value.brandId === this.form.brandId) {
+            //         isNull = false
+            //         //  + value.brandNameEn bug v1.7删除
+            //         this.brandName = value.brandName
+            //     }
+            // })
+            // if (isNull) {
+            //     // this.$set(this.form, 'brandId', '')
+            //     // this.$nextTick(() => {
+            //     //     this.$refs['brandId'].clearValidate()
+            //     // })
+            // }
+        },
+        async findSpuAttr (categoryId, spuCode) {
+            const { data } = await findSpuAttr({ categoryId: categoryId, spuCode: spuCode })
+            this.form.reqParameterList = deepCopy(data)
+            console.log(data)
         },
         brandNameChange () {
             this.brandName = ''
@@ -255,12 +272,40 @@ export default {
                 }
             })
         },
-        save () {
+        save (val) {
+            this.pictureContainer.forEach((value, index) => {
+                this.form.reqPictureList.push({
+                    isDefault: index === 0 ? 1 : 0,
+                    pictureUrl: value.url,
+                    sort: index,
+                    spuCode: this.form.spuCode
+                })
+            })
             console.log(this.form)
+            this.$refs['formmain'].validate((valid) => {
+                saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
+            })
+        },
+        onBack () {
+            if (JSON.stringify(this.form) != JSON.stringify(this.deepForm)) {
+                this.$confirm('确认不保存当前操作?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    console.log(this)
+                    this.$router.go(-1)
+                }).catch(() => {
+
+                })
+            } else {
+                this.$router.go(-1)
+            }
         }
     },
     async mounted () {
         this.findCategoryList()
+        this.deepForm = deepCopy(this.form)
     }
 }
 </script>
@@ -336,5 +381,14 @@ export default {
 .upload-tips {
     font-size: 12px;
     color: #999;
+}
+/deep/.el-input {
+    width: 100%;
+}
+/deep/.el-select {
+    width: 100%;
+}
+/deep/.el-cascader {
+    width: 100%;
 }
 </style>

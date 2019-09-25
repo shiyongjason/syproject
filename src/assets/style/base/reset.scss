@@ -192,10 +192,12 @@ ul,li{
 .el-message-box__content {
     min-height: 0px;
 }
-
+.el-message-box__wrapper{
+    z-index: 10001 !important
+}
 .el-message-box__btns {
     padding: 10px 24px;
-    border-top: 1px solid #e5e5ea;
+    // border-top: 1px solid #e5e5ea;
 
     .el-button:nth-child(1) {
         background: $whiteColor;
