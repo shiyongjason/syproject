@@ -60,7 +60,7 @@ export default {
         async onEdit (row, type) {
             this.tempEditRow = { ...row }
             this.editInfo = row
-            this.findUserDetailsTagList(row)``
+            this.findUserDetailsTagList(row)
             this.dialogCustomerEdit = true
             this.showDetail = false
             type && (this.showDetail = true)
