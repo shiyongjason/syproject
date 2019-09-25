@@ -431,7 +431,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/brandAreaAudit.vue')
+                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
             },
             {
                 path: 'marketStore',

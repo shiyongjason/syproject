@@ -5,31 +5,31 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商家名称：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入商家名称">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">品牌名称：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.reservationPerson" placeholder="请输入品牌名称">
+                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">开启时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endDate" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">审核状态：</div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="queryParams.source" style="width: 100%">
+                        <el-select v-model="queryParams.auditStatus" style="width: 100%">
                             <el-option label="全部" value="0"></el-option>
                             <el-option label="是" value="1"></el-option>
                             <el-option label="否" value="2"></el-option>
@@ -46,17 +46,38 @@
             <div class="page-body-cont">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
-                        <el-button class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
+                        <el-button v-if="scope.data.row.auditStatus == 0" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
+                        <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
                     </template>
                 </basicTable>
             </div>
             <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center :close-on-click-modal="false">
                 <el-form class="base" :inline="true">
                     <div>
-                        <h2 class="sub-title">基本信息</h2>
-                        <el-form-item label="优惠券编号：">
+                        <el-form-item label="品牌名称：">
+                            {{dialogMsg.brandName}}
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="代理区域：">
+                            <div v-for="(item, index) in dialogMsg.brandAreaPoList" :key="index">
+                                {{item.areaName}}
+                            </div>
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="代理证书：">
                             123
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="审核状态：">
+                            {{dialogMsg.auditStatus == 0?'待审核':dialogMsg.auditStatus == 1?'审核通过':dialogMsg.auditStatus == 2?'审核不通过':'-'}}
+                        </el-form-item>
+                    </div>
+                    <div>
+                        <el-form-item label="审核备注：">
+                            {{dialogMsg.remark}}
                         </el-form-item>
                     </div>
                 </el-form>
@@ -91,37 +112,26 @@
 </template>
 
 <script>
+import { findBrandAreaList, addBrandArea, findBrandArea } from './api/index'
 export default {
     name: 'brandAreaAudit',
     data () {
         return {
             tableLabel: [
-                { label: '商家名称', prop: 'originatorName' },
-                { label: '品牌名称', prop: 'institution' },
-                { label: '审核状态', prop: 'originTime' },
-                { label: '申请日期', prop: 'allSubmitTime' }
+                { label: '商家名称', prop: 'merchantName' },
+                { label: '品牌名称', prop: 'brandName' },
+                { label: '审核状态', prop: 'auditStatusTransform' },
+                { label: '申请日期', prop: 'createTime' }
             ],
-            tableData: [
-                {
-                    originatorName: '五塘广场家电公司',
-                    institution: 'a',
-                    originTime: '新申请',
-                    allSubmitTime: '20190702 18:00'
-                }, {
-                    originatorName: '测试申请一个商户入驻',
-                    institution: 'b',
-                    originTime: '审核通过',
-                    allSubmitTime: '20190702 18:00'
-                }
-            ],
+            tableData: [],
             searchParams: {},
             queryParams: {
-                name: '',
-                reservationPerson: '',
-                source: '',
+                merchantName: '',
+                brandName: '',
+                auditStatus: '',
                 reservationStatus: '',
-                startDate: '',
-                endDate: ''
+                minCreateTime: '',
+                maxCreateTime: ''
             },
             paginationData: {
                 pageNumber: 1,
@@ -133,6 +143,7 @@ export default {
                 title: '',
                 type: ''
             },
+            dialogMsg: {},
             suggest: {},
             rules: {
                 auditResult: [
@@ -145,7 +156,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.maxCreateTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -155,7 +166,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.queryParams.startTime)
+                    let beginDateVal = new Date(this.queryParams.minCreateTime)
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -172,25 +183,41 @@ export default {
         },
         onReset () {
             console.log('重置')
-            this.$set(this.queryParams, 'name', '')
-            this.$set(this.queryParams, 'reservationPerson', '')
-            this.$set(this.queryParams, 'source', '')
+            this.$set(this.queryParams, 'merchantName', '')
+            this.$set(this.queryParams, 'brandName', '')
+            this.$set(this.queryParams, 'auditStatus', '')
             this.$set(this.queryParams, 'reservationStatus', '')
-            this.$set(this.queryParams, 'startDate', '')
-            this.$set(this.queryParams, 'endDate', '')
+            this.$set(this.queryParams, 'minCreateTime', '')
+            this.$set(this.queryParams, 'maxCreateTime', '')
             this.$set(this.paginationData, 'pageNumber', 1)
             this.$set(this.paginationData, 'pageSize', 10)
             this.onQuery()
         },
-        search () {
+        async search () {
             const searchParams = {
                 ...this.searchParams,
                 ...this.paginationData
             }
             console.log(searchParams)
+            if (!searchParams.minCreateTime) searchParams.minCreateTime = null
+            if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
+            const { data } = await findBrandAreaList({ params: searchParams })
+            console.log(data)
+            this.paginationData.pageNumber = data.pages
+            this.paginationData.pageSize = data.size
+            this.paginationData.total = data.total
+            data.records.map((v) => {
+                if (v.auditStatus == 0) v.auditStatusTransform = '待审核'
+                if (v.auditStatus == 1) v.auditStatusTransform = '审核通过'
+                if (v.auditStatus == 2) v.auditStatusTransform = '审核不通过'
+            })
+            this.tableData = data.records
         },
-        showDialog (scope, type) {
-            console.log(scope)
+        async showDialog (scope, type) {
+            // console.log(scope)
+            const { data } = await findBrandArea({ id: scope.id })
+            console.log(data)
+            this.dialogMsg = data
             this.suggest = {}
             if (type === 'review') {
                 this.dialogParams.title = '品牌区域审核'
