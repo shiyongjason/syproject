@@ -5,26 +5,26 @@
                 <div class="page-body-title">
                     <h3>商品信息（spu）</h3>
                 </div>
-                <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'">
+                <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{form.spuCode}}
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
                 </el-form-item>
-                  <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'">
+                  <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
                 </el-form-item>
                 <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" >
-                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'">
+                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="specification" style="width: 460px;" >
-                    <el-input v-model="form.specification" :disabled="operate=='modify'"></el-input>
+                    <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
-                    <el-input placeholder="" maxlength="15" v-model="form.spuName">
+                    <el-input placeholder="" maxlength="15" v-model="form.spuName" :disabled="operate=='audit'">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>

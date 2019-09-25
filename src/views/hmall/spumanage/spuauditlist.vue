@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">SPU编码：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productCode" placeholder="请输入商品编码" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入商品编码" maxlength="50"></el-input>
                     </div>
                 </div>
 
@@ -18,7 +18,7 @@
                        <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productName" placeholder="请输入商品型号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -37,7 +37,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.sourceCode">
+                        <el-select v-model="queryParams.source">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
@@ -48,7 +48,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="queryParams.categoryId" :change-on-select="true" @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr" :change-on-select="true" @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -79,10 +79,10 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection'
             :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
-                    {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
+                    {{scope.data.row.brandName}}
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'上架':'下架'}}</span>
+                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'通过':'下架'}}</span>
                 </template>
                  <template slot="action" slot-scope="scope">
                      <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)">审核</el-button>
@@ -100,28 +100,29 @@ export default {
         return {
             productSource: [],
             queryParams: {
-                productCode: '',
-                productName: '',
-                updateBy: '',
-                brandName: '',
                 pageNumber: 1,
+                pageSize: 10,
+                spuCode: '',
+                spuName: '',
+                specification: '',
+                categoryId: '',
+                brandId: '',
+                integrity: '',
                 status: '',
-                startDate: '',
-                endDate: '',
-                categoryId: [],
-                sourceCode: ''
+                source: ''
             },
             tableData: [],
             paginationInfo: {},
-            tableLabel: [{ label: '商品编码spu', prop: 'productCode' },
-                { label: '商品名称', prop: 'productName', width: '150' },
+            tableLabel: [{ label: '商品编码spu', prop: 'spuCode' },
+                { label: '商品名称', prop: 'spuName', width: '150' },
                 { label: '品牌', prop: 'brandName', width: '200' },
                 { label: '型号', prop: 'categoryName', width: '200' },
-                { label: '商品来源', prop: 'sourceName' },
-                { label: '商品状态', prop: 'status' }
+                { label: '来源', prop: 'merchantName' },
+                { label: '状态', prop: 'status' }
             ],
             rowKey: '',
-            multiSelection: []
+            multiSelection: [],
+            categoryIdArr: []
         }
     },
     computed: {
@@ -178,8 +179,8 @@ export default {
         onChangeStatus (val) {
             console.log(this.multiSelection)
         },
-        onAuditSpu () {
-
+        onAuditSpu (val) {
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode } })
         }
     }
 }
