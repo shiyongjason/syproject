@@ -269,6 +269,7 @@ export default {
                 id: [],
                 query: ''
             }
+            this.$emit('resetRow')
         },
         formatTime (time, type) {
             let dateType = 'YYYY-MM-DD HH:mm:ss'

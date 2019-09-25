@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType'/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType' @resetRow="resetRow"/>
     </div>
 </template>
 
@@ -38,7 +38,8 @@ export default {
             role: [
                 { value: '', label: '全部' }, { value: 0, label: '客户' }, { value: 1, label: '线下管家' }, { value: 2, label: '线上管家' }
             ],
-            showDetail: false
+            showDetail: false,
+            tempEditRow: {}
         }
     },
     provide () {
@@ -57,11 +58,19 @@ export default {
             }
         },
         async onEdit (row, type) {
+            this.tempEditRow = { ...row }
             this.editInfo = row
-            this.findUserDetailsTagList(row)
+            this.findUserDetailsTagList(row)``
             this.dialogCustomerEdit = true
             this.showDetail = false
             type && (this.showDetail = true)
+        },
+        resetRow () {
+            this.list.forEach((value, index) => {
+                if (value.id === this.tempEditRow.id) {
+                    this.$set(this.list, index + '', { ...this.tempEditRow })
+                }
+            })
         },
         onSearch () {
             this.getData()
