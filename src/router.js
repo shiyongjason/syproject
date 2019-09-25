@@ -564,7 +564,7 @@ const router = new Router({
         }
     ]
 })
-function makeIndex (data, next, mobile) {
+function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
@@ -576,14 +576,21 @@ function makeIndex (data, next, mobile) {
             }
             break
         }
-        let path = index.join('/')
+        let path = ''
+        if (query.route) {
+            path = '/' + query.route.split(',').join('/')
+            console.log(path)
+        } else {
+            path = index.join('/')
+        }
+
         if (!path) {
             path = '/'
         }
-        next({ path: path, query: { mobile: mobile }, replace: true })
+        next({ path: path, query: { mobile: query.mobile }, replace: true })
     }
 }
-async function getMenu (to, next, isMakeIndex, mobile) {
+async function getMenu (to, next, isMakeIndex, query) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
@@ -593,7 +600,7 @@ async function getMenu (to, next, isMakeIndex, mobile) {
     router.addRoutes(menu)
 
     if (isMakeIndex) {
-        makeIndex(menu, next, mobile)
+        makeIndex(menu, next, query)
     } else {
         next({ ...to, replace: true })
     }
@@ -611,7 +618,7 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === '/redirect' && query.sale === 'hosjoy') {
             sessionStorage.setItem('token', query.access_token)
             sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
-            await getMenu(to, next, true, query.mobile)
+            await getMenu(to, next, true, query)
         } else {
             // 非登录的情况下
             if (!userInfo) {

@@ -33,16 +33,16 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">户型：</div>
+                        <div class="query-col-title">房型：</div>
                         <div class="query-col-input">
-                            <el-input type="text" maxlength="50" v-model="form.roomType" placeholder="请输入户型" :disabled='edit'>
+                            <el-input type="text" maxlength="20" v-model="form.roomType" :placeholder="!edit?'请输入户型': ''" :disabled='edit'>
                             </el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">人口：</div>
                         <div class="query-col-input">
-                            <el-input type="text" maxlength="50" v-model="form.population" placeholder="请输入人口" :disabled='edit'>
+                            <el-input type="text" maxlength="10" v-model="form.population" :placeholder="!edit?'请输入人口': ''" :disabled='edit'>
                             </el-input>
                         </div>
                     </div>
@@ -92,7 +92,9 @@
                             </template>
                         </tbody>
                     </table>
-                    <el-button type="primary" @click="amend()" v-if="!edit">修 改</el-button>
+                    <div class="btn-group">
+                        <el-button type="primary" @click="amend()" v-if="!edit">保 存</el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -115,11 +117,13 @@ export default {
         const id = this.$route.query.id
         this.edit = this.$route.query.action != 'edit'
         const { data } = await findRecordDetail(id)
-        console.log(data)
         this.form = data
         this.childArchiveNodes = data.archiveNode.childArchiveNodes
     },
     methods: {
+        goBack () {
+            history.go(-1)
+        },
         // 计算table合并行数
         computedRowspan (list, level) {
             if (level == 0) {
@@ -189,4 +193,8 @@ export default {
         }
     }
 }
+    .btn-group {
+        text-align: center;
+        padding: 20px 0 30px;
+    }
 </style>

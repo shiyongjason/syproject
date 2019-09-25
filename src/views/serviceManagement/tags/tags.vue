@@ -56,7 +56,7 @@
                 </el-pagination>
             </div>
         </div>
-        <el-dialog title="新建标签" :visible.sync="dialogVisible">
+        <el-dialog title="新建标签" :visible.sync="dialogVisible" :close-on-click-modal="false">
             <div class="add-tags-dialog">
                 <div class="query-cont-col">
                     <div class="query-col-title">标签名称：</div>
