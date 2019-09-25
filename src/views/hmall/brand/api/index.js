@@ -23,3 +23,24 @@ export const updateBrandStatus = (params) => {
 export const findBrandDetails = (id) => {
     return instance.get(B2bUrl + 'product/api/brands/' + id)
 }
+
+/*
+09-24 品牌区域
+By sunhuiyong
+*/
+// 查询品牌区域列表
+export const findBrandAreaList = (params) => {
+    return instance.get(B2bUrl + 'product/api/brandarea', params)
+}
+// 新增品牌区域
+export const addBrandArea = (params) => {
+    return instance.post(B2bUrl + 'product/api/brandarea/add', params)
+}
+// 查询品牌区域
+export const findBrandArea = (params) => {
+    return instance.get(B2bUrl + 'product/api/brandarea/query', { params })
+}
+// 修改品牌区域
+export const updateBrandArea = (params) => {
+    return instance.post(B2bUrl + 'product/api/brandarea/update', params)
+}
