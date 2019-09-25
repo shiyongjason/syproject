@@ -1,6 +1,6 @@
 <template>
     <div class="order page-body">
-        <searchForm @search='onSearch' v-model="searchForm"/>
+        <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm"/>
         <order-table :tableData='list' @search-event="getData"/>
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
@@ -31,6 +31,12 @@ export default {
         }
     },
     methods: {
+        onClear () {
+            this.searchForm = {
+                searchKey: 'orderNo',
+                mobile: ''
+            }
+        },
         onSearch () {
             this.queryParams.pageNumber = 1
             this.getData()
