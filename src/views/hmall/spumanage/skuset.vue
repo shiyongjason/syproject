@@ -16,9 +16,9 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">属性类型：</div>
+                <div class="query-col-title">属性状态：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.type">
+                    <el-select v-model="queryParams.status">
                         <el-option v-for="item in attrTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
@@ -33,7 +33,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20">
+                    <el-button type="primary" class="ml20" @click="searchList()">
                         查询
                     </el-button>
                 </div>
@@ -42,8 +42,8 @@
                 <el-button type="primary" class="ml20" @click="openMark()">
                     新增属性
                 </el-button>
-                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(1)">批量生效</el-button>
-                <el-button type="primary" class="ml20" @click="updateAttributeMultiStatus(2)">批量失效</el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateAttr(1)">批量生效</el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateAttr(2)">批量失效</el-button>
             </div>
         </div>
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -51,41 +51,56 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
+                <template slot="status" slot-scope="scope">
+                  <span :class="scope.data.row.status==2?'red':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
+                </template>
                 <template slot="updateTime" slot-scope="scope">
                     {{scope.data.row.updateTime|formatDate}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">修改</el-button>
-                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '失效' : '生效'">
+                    <el-button :type="scope.data.row.status ==2?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '失效' : '生效'">
                     </el-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="新建属性" :visible.sync="dialogAttributeEdit" :close-on-click-modal="false">
-            <div class="cate-cont">
-                <div class="cont-box">
-                    <p v-for="(item,index) in categoryFirst" :key="item.id" :class="curIndex==index ? 'active' : ''" @click="onSelect(index,item,1)">
-                        {{ item.categoryName }}
-                    </p>
-                </div>
-                <div class="cont-box">
-                     <p v-for="(item,index) in categorySecond" :key="item.id" :class="senIndex==index ? 'active' : ''" @click="onSelect(index,item,2)">
-                        {{ item.categoryName+'-'+index }}
-                    </p>
-                </div>
-                <div class="cont-box">
-                    <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
-                        @change="handleCheckAllChange" class="check-all" v-if="categoryThird.length > 0">全选</el-checkbox>
-                    <el-checkbox-group v-model="checkedCates" @change="onHandleCates">
-                        <el-checkbox v-for="(item,index) in categoryThird"
-                            :key="index" :label="`${item.id}_${item.categoryName}`">{{item.categoryName}}</el-checkbox>
-                    </el-checkbox-group>
-                </div>
-                <div class="cont-box">
-                    <div v-for="item in checkedCateObj" :key="item.id" class="selected-cate">
-                        {{item.categoryName}}<i class="el-icon-close ml5" @click="onRemoveSelectedCate(item)"></i>
+        <el-dialog :title="markTitle" :visible.sync="dialogAttributeEdit" :close-on-click-modal="false">
+            <el-form :model="formData" ref="baseForm" :rules="baseRules" label-width="120px">
+                <div class="cate-cont">
+                    <div class="cont-box">
+                        <p v-for="(item,index) in categoryFirst" :key="item.id" :class="curIndex==index ? 'active' : ''" @click="onSelect(index,item,1)">
+                            {{ item.categoryName}}
+                        </p>
+                    </div>
+                    <div class="cont-box">
+                        <p v-for="(item,index) in categorySecond" :key="item.id" :class="senIndex==index ? 'active' : ''" @click="onSelect(index,item,2)">
+                            {{ item.categoryName}}
+                        </p>
+                    </div>
+                    <div class="cont-box">
+                        <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" class="check-all" v-if="categoryThird.length > 0">全选</el-checkbox>
+                        <el-checkbox-group v-model="checkedCates" @change="onHandleCates">
+                            <el-checkbox v-for="(item,index) in categoryThird" :key="index" :label="`${item.id}_${item.categoryName}`">{{item.categoryName}}</el-checkbox>
+                        </el-checkbox-group>
+                    </div>
+                    <div class="cont-box">
+                        <div v-for="item in checkedCateObj" :key="item.id" class="selected-cate">
+                            {{item.categoryName}}<i class="el-icon-close ml5" @click="onRemoveSelectedCate(item)"></i>
+                        </div>
                     </div>
                 </div>
+                <el-form-item label="属性名称：" prop="parameterName">
+                    <el-input v-model="formData.parameterName" maxlength="6"></el-input>
+                </el-form-item>
+                <el-form-item v-for="(item, index) in formData.values" :label="'属性值' + (index+1)+'：'" :key="index" :rules="{required: true, message: '属性值不能为空', trigger: 'blur'}" :prop="'values.'+index+'.value'">
+                    <el-input v-model="item.value" style="width: 200px" maxlength="25" :disabled="operate=='modify'&&index < valueLength"></el-input>
+                    <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="formData.values.length > 1"></span>
+                    <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="index + 1 === formData.values.length"></span>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogAttributeEdit = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm()" :loading="isSaving">保 存</el-button>
             </div>
         </el-dialog>
     </div>
@@ -93,30 +108,33 @@
 
 <script>
 import { mapState } from 'vuex'
-import { findAttributeList, createAttribute, updateAttribute, findAttributeDetails, findCategoryByParent } from './api/index'
+import { findAttributeList, createAttribute, updateAttribute, findAttributeDetails, findCategoryByParent, updateAttributeStatus } from './api/index'
 import { ATTRIBUTE_SET } from '../store/const'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'skuset',
     data () {
         return {
+            isSaving: false,
             curIndex: -1,
             senIndex: -1,
             queryParams: {
                 type: '',
-                status: ''
+                status: '',
+                parameterType: 1
             },
             dialogAttributeEdit: false,
-            status: 'add',
-            form: {
+            formData: {
                 parameterCode: '',
                 categoryList: [],
                 parameterName: '',
                 type: 1,
                 values: [{ value: '' }],
                 unit: '',
-                isRequired: 0 // 默认值为非必填
+                isRequired: 0, // 默认值为非必填
+                parameterType: 1 // 销售属性默认1
             },
-            tempForm: {},
+            tempObj: {},
             baseRules: {
                 categoryList: [
                     { type: 'array', required: true, trigger: 'change', message: '归属类目不能为空' }
@@ -132,11 +150,10 @@ export default {
                 ]
             },
             tableData: [],
-            tableLabel: [{ label: '属性编码', prop: 'parameterCode' },
+            tableLabel: [
+                { label: '属性编码', prop: 'parameterCode' },
                 { label: '属性类别名称', prop: 'parameterName', width: '150' },
-                { label: '所属一级类目', prop: 'type' },
-                { label: '所属二级类目', prop: 'type' },
-                { label: '所属三级类目', prop: 'type' },
+                { label: '属性值', prop: 'parameterValueStr', width: '350' },
                 { label: '状态', prop: 'status' },
                 { label: '维护人', prop: 'updateBy' },
                 { label: '维护时间', prop: 'updateTime', width: '200' }
@@ -149,24 +166,16 @@ export default {
             categorySecond: [],
             categoryThird: [],
             copyCategoryThird: [],
-            radio: '',
             isIndeterminate: false,
             checkedCates: [],
-            checkAll: false
+            checkAll: false,
+            operate: '',
+            markTitle: '新增属性',
+            valueLength: 0,
+            modifyId: ''
         }
     },
     computed: {
-        // rules () {
-        //     let asyncRule = {}
-        //     if (this.form.type === 2) {
-        //         this.form.values.forEach((item, index) => {
-        //             asyncRule[`values[${index}].value`] = [
-        //                 { required: true, message: '此项为必填项！', trigger: 'blur' }
-        //             ]
-        //         })
-        //     }
-        //     return Object.assign(this.baseRules, asyncRule)
-        // },
         checkedCateObj () {
             return this.checkedCates.map(item => {
                 const pos = item.indexOf('_')
@@ -181,9 +190,7 @@ export default {
         })
     },
     watch: {
-        'form.type' (val) {
-            val === 1 ? this.form.values = [{ value: '' }] : this.form.unit = ''
-        }
+
     },
     methods: {
         async onSelect (index, item, val) {
@@ -224,20 +231,29 @@ export default {
             this.checkAll = notChecked.length == 0
             this.isIndeterminate = notChecked.length < this.categoryThird.length && !this.checkAll
         },
-        submitForm (formName) {
+        submitForm () {
+            this.formData.categoryList = this.checkedCateObj && this.checkedCateObj.map(val => val.id)
             if (this.isSaving) {
                 return
             }
             this.isSaving = true
-            this.$refs[formName].validate(async (valid) => {
+            if (this.formData.categoryList.length < 1) {
+                this.$message({
+                    type: 'error',
+                    message: '归属类目不能为空'
+                })
+                this.isSaving = false
+                return
+            }
+            this.$refs['baseForm'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        let temp = this.form.values.map(item => item.value)
-                        let flag = [...new Set(temp)].length === this.form.values.length
+                        let temp = this.formData.values.map(item => item.value)
+                        let flag = [...new Set(temp)].length === this.formData.values.length
                         if (!flag) {
                             this.$message({
                                 type: 'error',
-                                message: '下拉选项值不能重复'
+                                message: '属性值不能重复'
                             })
                             this.isSaving = false
                             return
@@ -257,28 +273,25 @@ export default {
             })
         },
         async saveAttribute () {
-            let { ...params } = this.form
-            if (params.type === 1) {
-                delete params.values
-            } else if (params.type === 2) {
-                params.values = params.values.map(item => item.value)
-            }
+            let { ...params } = this.formData
+            params.values = params.values.map(item => item.value)
             params.operator = this.userInfo.employeeName
-            if (this.status === 'add') {
+            if (this.operate === 'add') {
                 await createAttribute(params)
-            } else if (this.status === 'modify') {
+            } else if (this.operate === 'modify') {
                 await updateAttribute(this.modifyId, params)
             }
             this.dialogAttributeEdit = false
-            this.onQuery()
+            this.searchList()
             this.$message({
                 message: this.status === 'add' ? '属性添加成功！' : '属性修改成功！',
                 type: 'success'
             })
         },
-        async findAttributeDetails () {
-            const { data } = await findAttributeDetails(this.modifyId)
-            this.form = {
+        async onEditSpu (val) {
+            this.markTitle = '修改属性'
+            const { data } = await findAttributeDetails(val.id)
+            this.formData = {
                 parameterCode: data.parameterCode,
                 parameterName: data.parameterName,
                 categoryList: data.categoryList.map(item => item.id),
@@ -287,7 +300,11 @@ export default {
                 unit: data.unit,
                 isRequired: data.isRequired
             }
-            this.status = 'modify'
+            // TODO 禁用和三级类目
+            this.valueLength = data.values && data.values.length
+            this.checkedCates = data.categoryList && data.categoryList.map(item => item.id + '_' + item.categoryName)
+            this.operate = 'modify'
+            this.modifyId = val.id
             this.dialogAttributeEdit = true
         },
         async searchList () {
@@ -308,15 +325,62 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        openMark (status) {
+        openMark () {
+            this.operate = 'add'
+            this.markTitle = '新增属性'
+            this.formData = deepCopy(this.tempObj)
+            this.senIndex = -1
+            this.curIndex = -1
+            this.isIndeterminate = false
+            this.checkedCates = []
+            this.categorySecond = []
+            this.categoryThird = []
             this.dialogAttributeEdit = true
+            this.$nextTick(() => {
+                this.$refs['baseForm'].clearValidate()
+            })
         },
-        updateAttributeMultiStatus (status) {
+        async onUpdateAttr (status) {
             let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
-            console.log(multiSelection)
+            if (multiSelection.length < 1) {
+                this.$message({
+                    message: '请先选择属性！',
+                    type: 'warning'
+                })
+                return
+            }
+            const params = {
+                parameterIds: multiSelection,
+                status: status,
+                updateBy: this.userInfo.employeeName
+            }
+            await updateAttributeStatus(params)
+            this.$message({
+                message: params.status === 2 ? '属性已失效！' : '属性已生效！',
+                type: 'success'
+            })
+            this.searchList()
         },
-        onShowNext (val, arr, item) {
-            item.isOn = !val
+        async onChangeSpu (val) {
+            const params = {
+                parameterIds: [val.id],
+                status: val.status === 1 ? 2 : 1,
+                updateBy: this.userInfo.employeeName
+            }
+            await updateAttributeStatus(params)
+            this.$message({
+                message: params.status === 2 ? '属性已失效！' : '属性已生效！',
+                type: 'success'
+            })
+            this.searchList()
+        },
+        removeformValues (index) {
+            this.formData.values.splice(index, 1)
+        },
+        addformValues () {
+            this.formData.values.push({
+                value: ''
+            })
         }
     },
     async mounted () {
@@ -324,10 +388,9 @@ export default {
         const { data } = await findCategoryByParent({
             parentId: 0
         })
-        data && data.forEach((value) => {
-            value.isOn = false
-        })
         this.categoryFirst = data
+        this.tempObj = deepCopy(this.formData)
+        console.log(this.tempObj)
     }
 }
 </script>
@@ -338,17 +401,23 @@ export default {
 }
 .selected-cate {
     display: inline-block;
-    padding: 5px;
+    padding: 3px;
     border: 1px solid #ffcab5;
     margin: 5px;
     background-color: #fff2ec;
     border-radius: 3px;
+    font-size: 12px;
+}
+/deep/.el-dialog__body {
+    padding: 10px 10px 40px 10px;
+    height: 500px;
+    overflow-y: scroll;
 }
 .cate-cont {
     display: flex;
-    padding: 20px 0;
+    padding-bottom: 10px;
     .cont-box {
-        height: 350px;
+        height: 250px;
         overflow-y: scroll;
         flex: 1;
         justify-content: space-around;

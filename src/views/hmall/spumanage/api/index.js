@@ -2,7 +2,8 @@ import instance from '@/api/axios_new.js'
 import { B2bUrl, interfaceUrl } from '@/api/config'
 
 // 商品列表
-export const findProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/', { params })
+// export const findProducts = (params) => instance.get(B2bUrl + 'product/api/boss/products/', { params })
+export const findProducts = (params) => instance.get(B2bUrl + 'product/spu/boss/page', { params })
 // 商品上下架
 export const updateProductStatus = (params) => instance.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
@@ -44,26 +45,18 @@ export const getHaveBrand = (params) => instance.get(B2bUrl + `product/api/brand
  * @param {*} params
  */
 // 属性列表
-export const findAttributeList = (params) => {
-    return instance.get(B2bUrl + 'product/api/parameters', {
-        params
-    })
-}
+export const findAttributeList = (params) => { return instance.get(B2bUrl + 'product/api/parameters', { params }) }
 // 新增属性
-export const createAttribute = (params) => {
-    return instance.post(B2bUrl + 'product/api/parameters', params)
-}
+export const createAttribute = (params) => { return instance.post(B2bUrl + 'product/api/parameters', params) }
 // 修改属性
-export const updateAttribute = (id, params) => {
-    return instance.put(B2bUrl + 'product/api/parameters/' + id, params)
-}
+export const updateAttribute = (id, params) => { return instance.put(B2bUrl + 'product/api/parameters/' + id, params) }
 // 属性详情
-export const findAttributeDetails = (id) => {
-    return instance.get(B2bUrl + 'product/api/parameters/' + id)
-}
+export const findAttributeDetails = (id) => { return instance.get(B2bUrl + 'product/api/parameters/' + id) }
 // 更新属性状态
-export const updateAttributeStatus = (params) => {
-    return instance.put(B2bUrl + 'product/api/parameters/status', params)
-}
+export const updateAttributeStatus = (params) => { return instance.put(B2bUrl + 'product/api/parameters/status', params) }
 // 根据父类目获取类目信息
-export const findCategoryByParent = (params) => instance.get(`/product/api/categories/${params.parentId}`, {})
+export const findCategoryByParent = (params) => instance.get(`product/api/categories/${params.parentId}`, {})
+// 根据2级类目 差选 所有属性
+export const findSpuAttr = (params) => instance.get('product/spu/attrs/', { params })
+// 新建商品spu
+export const saveSpu = (params) => instance.post('product/spu', params)
