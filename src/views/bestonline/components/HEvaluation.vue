@@ -114,7 +114,8 @@
                     <td colspan="6">CEO审批信息</td>
                 </tr>
             </thead>
-            <tbody v-for="(item,index) in ceoConclusionList" :key="index">
+            <template v-if="ceoConclusionList.length>0">
+            <tbody v-for="(item,index) in ceoConclusionList" :key="index" >
                 <tr v-if="index == 0">
                     <td>可否合作</td>
                     <td>尽调规模</td>
@@ -124,16 +125,18 @@
                 </tr>
                 <tr>
                     <td>{{item.isCooperate | judgeTureOrFalse}}</td>
-                    <td>{{cooperateTarget.scale}}<i>w</i></td>
-                    <td>{{cooperateTarget.yearGrowthRate}}</td>
-                    <td>{{cooperateTarget.equityRatio}}</td>
-                    <td>{{cooperateTarget.netProfitRate}}</td>
+                    <td>{{item.scale?item.scale+'w':'-'}}</td>
+                    <td>{{item.yearGrowthRate?item.yearGrowthRate:'-'}}</td>
+                    <td>{{item.equityRatio?item.equityRatio:'-'}}</td>
+                    <td>{{item.netProfitRate?item.netProfitRate:'-'}}</td>
                 </tr>
                 <tr>
                     <td>审批意见</td>
                     <td colspan="4">{{item.approvalOpinion?item.approvalOpinion:'-'}}</td>
                 </tr>
             </tbody>
+            </template>
+            <p  v-if="ceoConclusionList.length==0"> - </p>
         </table>
         <p class="small-title ">2、尽调打分</p>
         <table>
@@ -420,6 +423,7 @@ export default {
             this.caucusConclusionList = data.data.caucusConclusionList
             this.roleConclusionVoList = data.data.roleConclusionVoList
             this.ceoConclusionList = data.data.ceoConclusionList
+            console.log(this.ceoConclusionList)
             if (data.data.dueItemStatics) {
                 Object.keys(data.data.dueItemStatics).forEach(function (key) {
                     data.data.dueItemStatics[key] = (data.data.dueItemStatics[key] * 100).toFixed(2)
