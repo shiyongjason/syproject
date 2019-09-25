@@ -520,7 +520,6 @@ async function getMenu (to, next) {
     router.addRoutes(menu)
     next({ ...to, replace: true })
 }
-
 // let isFirst = true
 router.beforeEach(async (to, from, next) => {
     let isFirst = store.state.isFirst
