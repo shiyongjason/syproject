@@ -19,39 +19,39 @@
         <div class="page-body-cont">
             <div class="order-status">
                 <div class="left">
-                    <div class="is-status" v-if="query.status ===2 ||  query.status ===5">
+                    <div class="is-status" v-if="query.status == 2 ||  query.status ==5">
                         <p class="title">买家已付款</p>
                         <p class="title">等待商家发货</p>
                         <p class="tips">
                             买家已付款，请尽快发货，否则买家有权申请退款
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status === 6">
+                    <div class="is-status" v-if="query.status == 6">
                         <p class="title">商家已发货</p>
                         <p class="title">等待交易成功</p>
                         <p class="tips">
                             买家如在7天内没有申请退款，交易将自动完成
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status === 3 ">
+                    <div class="is-status" v-if="query.status == 3 ">
                         <p class="title">交易完成</p>
                         <p class="tips">
                             交易已成功，如果买家提出售后要求，请积极与买家协商，做好售后
                             服务
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status === 4">
+                    <div class="is-status" v-if="query.status == 4">
                         <p class="title">交易关闭</p>
                         <p class="tips">
                             订单已全额退款，交易自动关闭
                         </p>
                         <p class="tips">
-                            订单退款金额：{{details.payTime}}元
+                            订单退款金额：{{details.payment}}元
                         </p>
                     </div>
                     <p class="remark">
                         <span>备注</span>
-                        <el-rate v-model="details.star"></el-rate>
+                        <el-rate v-model="details.star" disabled="disabled"></el-rate>
                     </p>
                 </div>
                 <div class="right">
@@ -155,6 +155,9 @@ export default {
     name: 'orderDetails',
     computed: {
         stepNum () {
+            if (this.query.status - 0 + 1 === 4) {
+                return 0
+            }
             return this.query.status - 0 + 1
         },
         ...mapState({
