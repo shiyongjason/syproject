@@ -33,10 +33,9 @@
                                 <el-table-column width="150" property="numberCase" label="商品件数" align="center"></el-table-column>
                                 <el-table-column width="150" property="discount" label="价格折扣" align="center"></el-table-column>
                             </el-table>
-                            <div class="isOrangeColor" slot="reference">{{scope.row.price}}</div>
-                            <!-- <el-button slot="reference">{{scope.row.price}}</el-button> -->
+                            <div class="isOrangeColor" slot="reference">{{scope.row[item.prop]}}</div>
                         </el-popover>
-                        <div v-else>{{scope.row.price}}</div>
+                        <div v-else>{{scope.row[item.prop]}}</div>
                     </slot>
 
                     <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
