@@ -11,16 +11,16 @@
                 <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
                 </el-form-item>
-                  <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
+                <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" >
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;">
                     <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification" style="width: 460px;" >
+                <el-form-item label="商品型号：" prop="specification" style="width: 460px;">
                     <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
@@ -78,13 +78,17 @@
                 <el-form-item>
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
-                <el-row>
+                <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
                         <el-button type="primary" @click="save(1)">保存且启用</el-button>
                         <el-button @click="save(2)" v-if="operate=='modify'">保存且禁用</el-button>
                         <el-button @click="save(2)" v-if="operate=='add'">保存</el-button>
                         <el-button @click="onBack()">返回</el-button>
                     </el-form-item>
+                </el-row>
+                <el-row v-if="operate=='audit'">
+                    <el-radio v-model="radio" label="1">审核通过</el-radio>
+                    <el-radio v-model="radio" label="2">审核不通过</el-radio>
                 </el-row>
             </el-form>
         </div>
