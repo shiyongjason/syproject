@@ -128,6 +128,13 @@ export default {
         },
         async createTags () {
             const params = { ...this.addTags }
+            if (params.labelName.length < 1) {
+                this.$message({
+                    type: 'error',
+                    message: '标签名称不能为空'
+                })
+                return
+            }
             params.createBy = this.userInfo.employeeName
             await createTags(params)
             this.dialogVisible = false
