@@ -25,8 +25,8 @@ export const MAIN_CATEGORY = [
 
 export const YES_NO_STATUS = [
     { label: '请选择', value: '' },
-    { label: '是', value: 1 },
-    { label: '否', value: 0 }
+    { label: '是', value: 0 },
+    { label: '否', value: 1 }
 ]
 
 export const YES_NO_STATUS_COPY = [
