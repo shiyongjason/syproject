@@ -105,6 +105,7 @@ export default {
                 ...this.searchParams,
                 ...this.paginationData
             }
+            if (searchParams.pageSize == 0) searchParams.pageSize = 10
             const { data } = await findBazaarList(searchParams)
             this.paginationData.pageNumber = data.pages
             this.paginationData.pageSize = data.size
