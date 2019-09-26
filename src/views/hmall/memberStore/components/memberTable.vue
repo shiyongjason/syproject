@@ -52,7 +52,7 @@
                     </div>
                     <div class="baseStyle">
                         <span>机构类型：</span>
-                        <el-input v-model="memberDetails.source" disabled></el-input>
+                        <el-input v-model="memberDetails.sourceName" disabled></el-input>
                     </div>
                     <div class="baseStyle">
                         <span>父机构ID：</span>
@@ -235,6 +235,7 @@ export default {
             const { data } = await findMemberDetails({ id: row.id })
             this.memberDetails = data
             this.memberDetails.placeOfOrigin = '' + data.provinceName + data.cityName + data.countryName
+            this.memberDetails.sourceName = data.source == 1? '注册' : '单分享'
         },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {
