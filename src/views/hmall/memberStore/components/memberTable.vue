@@ -235,7 +235,7 @@ export default {
             const { data } = await findMemberDetails({ id: row.id })
             this.memberDetails = data
             this.memberDetails.placeOfOrigin = '' + data.provinceName + data.cityName + data.countryName
-            this.memberDetails.sourceName = data.source == 1? '注册' : '单分享'
+            this.memberDetails.sourceName = data.source == 1 ? '注册' : '单分享'
         },
         submitForm (formName) {
             this.$refs[formName].validate(async (valid) => {

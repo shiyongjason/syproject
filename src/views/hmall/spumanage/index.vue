@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.brandId" placeholder="请输入商品品牌" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -33,9 +33,9 @@
                         <el-select v-model="queryParams.status">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="上架" value="1">
+                            <el-option label="禁用" value="2">
                             </el-option>
-                            <el-option label="下架" value="2">
+                            <el-option label="启用" value="1">
                             </el-option>
                         </el-select>
                     </div>
@@ -43,7 +43,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.source">
+                        <el-select v-model="queryParams.merchantCode">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
@@ -69,7 +69,7 @@
                         <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">维护时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
@@ -78,14 +78,14 @@
                         <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
-                </div>
-                <div class="query-cont-col">
+                </div> -->
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">维护人：</div>
                     <div class="query-col-input">
                         <el-input type="text" maxlength="50" v-model="queryParams.operator" placeholder="请输入维护人姓名">
                         </el-input>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="searchList()">
@@ -130,7 +130,7 @@
     </div>
 </template>
 <script>
-import { findProducts, findProductSource, changeSpustatus } from './api/index'
+import { findProducts, findBossSource, changeSpustatus } from './api/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     data () {
@@ -147,10 +147,11 @@ export default {
                 brandId: '',
                 integrity: '',
                 status: '',
-                source: '',
+                source: 0,
                 startTime: '',
                 endTime: '',
-                operator: ''
+                operator: '',
+                merchantCode: ''
             },
             tableData: [],
             paginationInfo: {},
@@ -196,7 +197,7 @@ export default {
 
     },
     async mounted () {
-        const { data } = await findProductSource()
+        const { data } = await findBossSource()
         this.productSource = data
         this.findCategoryList()
         this.searchList()

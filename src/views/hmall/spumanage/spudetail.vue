@@ -92,7 +92,7 @@
                             <el-radio v-model="auditForm.approveStatus" label="1">审核通过</el-radio>
                             <el-radio v-model="auditForm.approveStatus" label="2">审核不通过</el-radio>
                         </el-form-item>
-                        <el-form-item style="width: 460px;" v-if="auditForm.approveStatus==2" prop="approveStatus">
+                        <el-form-item style="width: 460px;" v-if="auditForm.approveStatus==2" prop="approveDesc">
                             <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.approveDesc">
                             </el-input>
                         </el-form-item>
@@ -195,6 +195,9 @@ export default {
             auditrules: {
                 approveStatus: [
                     { required: true, whitespace: true, message: '请选择审核状态' }
+                ],
+                approveDesc: [
+                    { required: true, whitespace: true, message: '请填写理由说明' }
                 ]
             }
         }
@@ -338,6 +341,9 @@ export default {
                             message: '商品更新成功！'
                         })
                     } else {
+                        if (this.auditForm.approveStatus == 1) {
+                            this.auditForm.approveDesc = ''
+                        }
                         await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
                         auditSpu(this.auditForm)
                         this.$message({

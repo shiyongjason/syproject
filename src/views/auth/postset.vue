@@ -143,7 +143,6 @@ export default {
         async findList () {
             const { data } = await findpostList(this.positionName)
             this.postList = data
-            console.log(this.postList)
             this.postList.map(value => {
                 value.updateTime = this.datetimeFormat(value.updateTime)
             })
