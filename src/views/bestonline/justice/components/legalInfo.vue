@@ -68,19 +68,19 @@
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
                 <el-form-item label="备注：" v-if="type === 0">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.controllerDebtRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.controllerDebtRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 1">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.controllerMateDebtRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.controllerMateDebtRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 2">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.proposedPartnerDebtRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.proposedPartnerDebtRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 3">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.companyDebtRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.companyDebtRemark">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -126,19 +126,19 @@
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
                 <el-form-item label="备注：" v-if="type === 0">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.controllerAssureRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.controllerAssureRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 1">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.controllerMateAssureRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.controllerMateAssureRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 2">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.proposedPartnerAssureRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.proposedPartnerAssureRemark">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="备注：" v-if="type === 3">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.companyOperatingAssureRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.companyOperatingAssureRemark">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -161,7 +161,7 @@
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
                 <el-form-item label="备注：" v-if="type === 3">
-                    <el-input type="textarea" rows="4" maxlength="25" v-model="justiceData.dueLegalRemarkCreateForm.companyNotOperatingAssureRemark">
+                    <el-input type="textarea" rows="4" maxlength="1000" v-model="justiceData.dueLegalRemarkCreateForm.companyNotOperatingAssureRemark">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -411,9 +411,6 @@ export default {
             }
         },
         onAddList (key, defaultKey, type) {
-            console.log(this.justiceData[key])
-            console.log(this[defaultKey])
-            console.log(this.justiceData)
             const tempObj = JSON.parse(JSON.stringify(this[defaultKey]))
             tempObj.id = Date.now()
             if (type || type == 0) {

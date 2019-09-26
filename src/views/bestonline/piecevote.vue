@@ -180,7 +180,6 @@ export default {
         async getoneticketveto () {
             const { data } = await getoneticketveto({ indicatorName: this.indicatorName })
             this.testList = data.data.pageContent
-            console.log(data)
             this.tableData = data.data.pageContent
         },
         async changeTarget () {

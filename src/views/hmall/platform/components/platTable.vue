@@ -86,6 +86,28 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                label="运营型商家">
+                <template slot-scope="scope">
+                    <el-switch
+                        v-model="scope.row.operational"
+                        active-color="#13ce66"
+                        @change="onTypeChange(scope.row.organizationCode, scope.row.operational, 'operational')">
+                    </el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
+                label="商品型商家">
+                <template slot-scope="scope">
+                    <el-switch
+                        v-model="scope.row.commodity"
+                        active-color="#13ce66"
+                        @change="onTypeChange(scope.row.organizationCode, scope.row.commodity, 'commodity')">
+                    </el-switch>
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 label="操作">
                 <template slot-scope="scope">
                     <el-button class="orangeBtn" @click="open(scope.row)" v-if="scope.row.status != 1">开启</el-button>
@@ -130,7 +152,7 @@
 </template>
 
 <script>
-import { createOpen } from '../api/index'
+import { createOpen, updatePlatformType } from '../api/index'
 import { mapState } from 'vuex'
 import { PHONE } from '@/rules'
 export default {
@@ -161,6 +183,7 @@ export default {
     },
     data () {
         return {
+            organizationSource: '',
             openId: '',
             dialog: false,
             form: {
@@ -228,6 +251,13 @@ export default {
         },
         indexMethod (index) {
             return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
+        },
+        async onTypeChange (merchantCode, value, type) {
+            await updatePlatformType({
+                merchantCode,
+                [type]: value ? 1 : 0
+            })
+            this.$message({ message: '商家角色设置成功', type: 'success' })
         }
     },
     mounted () {
@@ -236,5 +266,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-button.orangeBtn {
+    padding: 5px 10px;
+}
 </style>

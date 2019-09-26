@@ -17,7 +17,7 @@
                 <tr v-for="(item, index) in form.assessmentList" :key="index">
                     <td>{{ item.assessmentItem }}</td>
                     <td v-if="index === 2 || index === 4">
-                        <p v-for="(v, i) in item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
+                        <p v-for="(v, i) in item.cooperationTarget&&item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
                     </td>
                     <td v-else>{{ item.cooperationTarget }}
                         <i v-if="index === 1">w</i>
@@ -121,7 +121,6 @@ export default {
             }
             if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
                 const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
-                console.log(result)
                 return result
             }
             return 0

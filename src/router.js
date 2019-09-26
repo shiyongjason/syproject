@@ -147,7 +147,7 @@ const routerMapping = [
         meta: {
             title: '尽调管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_jindiao'
         },
         // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
@@ -304,8 +304,8 @@ const routerMapping = [
                 path: 'platform',
                 name: 'platform',
                 meta: {
-                    title: '平台公司功能管理',
-                    tagName: '平台公司功能管理',
+                    title: '商家功能管理',
+                    tagName: '商家功能管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -409,6 +409,84 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
+            },
+            // 这期不做
+            // {
+            //     path: 'memberManagement',
+            //     name: 'memberManagement',
+            //     meta: {
+            //         title: '会员管理',
+            //         tagName: '会员管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/memberManagement.vue')
+            // },
+            {
+                path: 'brandAreaAudit',
+                name: 'brandAreaAudit',
+                meta: {
+                    title: '品牌区域审核列表',
+                    tagName: '品牌区域审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
+            },
+            {
+                path: 'marketStore',
+                name: 'marketStore',
+                meta: {
+                    title: '集市商品库',
+                    tagName: '集市商品库',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/bazaar/marketStore.vue')
+            },
+            {
+                path: 'spumange',
+                name: 'spumange',
+                meta: {
+                    title: 'SPU列表',
+                    tagName: 'SPU列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/index')
+            },
+            {
+                path: 'spudetail',
+                name: 'spudetail',
+                meta: {
+                    title: 'SPU管理',
+                    tagName: 'SPU管理',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spudetail')
+            },
+            {
+                path: 'spuauditlist',
+                name: 'spuauditlist',
+                meta: {
+                    title: 'SPU审核列表',
+                    tagName: 'SPU审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spuauditlist')
+            },
+            {
+                path: 'skuset',
+                name: 'skuset',
+                meta: {
+                    title: 'SKU设置',
+                    tagName: 'SKU设置',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/skuset')
             }
         ]
     },
@@ -516,11 +594,11 @@ async function getMenu (to, next) {
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     const menu = makeMenus(routerMapping, resourceList)
+    // const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })
 }
-
 // let isFirst = true
 router.beforeEach(async (to, from, next) => {
     let isFirst = store.state.isFirst

@@ -962,12 +962,10 @@ export default {
             }
         },
         handleCheckAllChange (val) {
-            console.log(val)
             this.form.publicityPromotionChannels = val ? this.newChannels : []
             this.isIndeterminate = false
         },
         handleCheckedWays (value) {
-            console.log(value)
             let checkedCount = value.length
             this.checkAll = checkedCount === this.newChannels.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.newChannels.length
