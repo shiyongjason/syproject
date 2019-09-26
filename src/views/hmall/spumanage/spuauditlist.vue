@@ -50,7 +50,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr"  @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable  @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -64,22 +64,25 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onRest()">
+                            重置
+                        </el-button>
                     </div>
                 </div>
 
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量审核</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport()">
+                    <!-- <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量审核</el-button> -->
+                    <!-- <el-button type="primary" class="ml20" @click="onExport()">
                         导出
-                    </el-button>
+                    </el-button> -->
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection'
-            :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}
                 </template>
@@ -97,6 +100,7 @@
 <script>
 import { findProducts } from './api/index'
 import { mapState, mapActions } from 'vuex'
+import { deepCopy } from '@/utils/utils'
 export default {
     data () {
         return {
@@ -113,6 +117,7 @@ export default {
                 auditStatus: '',
                 source: 1
             },
+            copyParams: {},
             tableData: [],
             paginationInfo: {},
             tableLabel: [{ label: '商品编码spu', prop: 'spuCode' },
@@ -140,8 +145,14 @@ export default {
         // this.productSource = data
         this.findCategoryList()
         this.searchList()
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
+        onRest () {
+            this.categoryIdArr = []
+            this.queryParams = deepCopy(this.copyParams)
+            this.searchList()
+        },
         ...mapActions({
             findCategoryList: 'findCategoryList'
         }),

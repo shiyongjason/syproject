@@ -91,6 +91,9 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
+                         <el-button type="primary" class="ml20" @click="onRest()">
+                            重置
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -101,9 +104,9 @@
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量禁用</el-button>
                     <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量启用</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport()">
+                    <!-- <el-button type="primary" class="ml20" @click="onExport()">
                         导出
-                    </el-button>
+                    </el-button> -->
                     <el-button type="primary" class="ml20" @click="dialogFormVisible = true">
                         导入
                     </el-button>
@@ -132,6 +135,7 @@
 <script>
 import { findProducts, findBossSource, changeSpustatus } from './api/index'
 import { mapState, mapActions } from 'vuex'
+import { deepCopy } from '@/utils/utils'
 export default {
     data () {
         return {
@@ -153,6 +157,7 @@ export default {
                 operator: '',
                 merchantCode: ''
             },
+            copyParams: {},
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
@@ -201,8 +206,14 @@ export default {
         this.productSource = data
         this.findCategoryList()
         this.searchList()
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
+        onRest () {
+            this.categoryIdArr = []
+            this.queryParams = deepCopy(this.copyParams)
+            this.searchList()
+        },
         ...mapActions({
             findCategoryList: 'findCategoryList'
         }),

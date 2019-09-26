@@ -44,7 +44,7 @@
                 </el-button>
                 <el-button type="primary" class="ml20" @click="onUpdateAttr(1)">批量生效</el-button>
                 <el-button type="primary" class="ml20" @click="onUpdateAttr(2)">批量失效</el-button>
-                <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
+                <!-- <el-button type="primary" class="ml20" @click="onExport()">导出</el-button> -->
             </div>
         </div>
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -291,6 +291,13 @@ export default {
         },
         async onEditSpu (val) {
             this.markTitle = '修改属性'
+            this.senIndex = -1
+            this.curIndex = -1
+            this.isIndeterminate = false
+            this.checkedCates = []
+            this.categorySecond = []
+            this.categoryThird = []
+            this.formData.values = []
             const { data } = await findAttributeDetails(val.id)
             this.formData = {
                 parameterCode: data.parameterCode,
@@ -452,5 +459,9 @@ export default {
 ::-webkit-scrollbar {
     width: 8px;
     background: transparent;
+}
+.form-add-remove{
+    color: #ff7a45;
+    font-size: 20px;
 }
 </style>
