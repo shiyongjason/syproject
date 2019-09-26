@@ -103,9 +103,9 @@ export default {
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
-            if (file.size / (1024 * 1024) > 10) {
+            if (file.size / (1024 * 1024) > 100) {
                 this.$message({
-                    message: '附件要保持10M以内',
+                    message: '附件要保持100M以内',
                     type: 'warning'
                 })
                 this.type = 1
@@ -125,7 +125,7 @@ export default {
         async onSvaeattach () {
             const formData = {
                 applyId: this.applyId,
-                createUser: this.userInfo.name,
+                createUser: this.userInfo.employeeName,
                 dueAttachCreateFormList: this.arrList
             }
             if (this.arrList.length !== 0) {
