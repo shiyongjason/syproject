@@ -20,7 +20,7 @@
                     <el-col :span="12">
                         <el-form-item prop="role" label="客户身份">
                             <el-select v-model="customerForm.role" style="width: 100%">
-                                <el-option v-for="(item,index) in getRole" :key="index" :label="item.label" :value="item.value" :disabled="index===0">
+                                <el-option v-for="(item,index) in getRole" :key="index" :label="item.label" :value="item.value" :disabled="index === 0 && isAdd">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -82,6 +82,7 @@
         </template>
         <template v-else>
             <div class="detail">
+                <div class="title">基本信息</div>
                 <el-row :gutter="10">
                     <el-col :span="11"><span class="detail-name">渠道名称：</span>{{getTypes('channelType',customerForm.channelType)}}</el-col>
                     <el-col :span="11"><span class="detail-name">客户身份：</span>{{getTypes('role',customerForm.role)}}</el-col>
@@ -98,6 +99,11 @@
                     <el-col :span="11"><span class="detail-name">成为客户：</span>{{formatTime(customerForm.createTime)}}</el-col>
                     <el-col :span="11"><span class="detail-name">地址：</span>{{customerForm.address}}</el-col>
                 </el-row>
+                <div class="title">标签信息</div>
+                <ul class="add-tags-input-details">
+                    <div v-if="tagModel.name.length < 1">空</div>
+                   <li v-for="(item,index) in tagModel.name" v-text="item" :key="item+index"></li>
+                </ul>
                 <div slot="footer" class="footer-close">
                     <el-button type="primary" @click="onCancel">关 闭</el-button>
                 </div>
@@ -145,6 +151,7 @@ export default {
             tagList: [],
             tagModel: {
                 id: [],
+                name: [],
                 query: ''
             },
             lastTime: null,
@@ -183,8 +190,9 @@ export default {
         }
     },
     methods: {
-        updateTagList (val) {
+        updateTagList (val,name) {
             this.tagModel.id = val
+            this.tagModel.name = name
         },
         async createTagWidthUser () {
             const params = {
@@ -194,6 +202,7 @@ export default {
             await createTagWidthUser(params)
             this.tagModel = {
                 id: [],
+                name: [],
                 query: ''
             }
         },
@@ -267,8 +276,10 @@ export default {
             !this.isShowDetail && this.$refs['dialogForm'].clearValidate()
             this.tagModel = {
                 id: [],
+                name: [],
                 query: ''
             }
+            this.$emit('resetRow')
         },
         formatTime (time, type) {
             let dateType = 'YYYY-MM-DD HH:mm:ss'
@@ -285,9 +296,24 @@ export default {
 }
 .detail{ margin: 30px 0 0 0}
 .detail-name{ display: inline-block; width:80px;text-align: right;}
-.footer-close{ text-align: right}
+.footer-close{ text-align: right;padding-bottom: 20px}
 .title{
     padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.add-tags-input-details{
+    overflow: hidden;
+}
+.add-tags-input-details li{
+    float: left;
+    display: inline-block;
+    padding: 5px 8px;
+    border: 1px solid #999999;
+    border-radius: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
     .add-tags-input{
         padding-top: 15px;

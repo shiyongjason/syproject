@@ -62,6 +62,10 @@
                                 <el-checkbox v-model="item.checked" :key="item.id" :disabled="disabled" border>{{item.name}}</el-checkbox>
                             </template>
                         </div>
+                        <div class="treatmentPlan">
+                            <h4>治理方案</h4>
+                            <el-input type="textarea" v-model="params.treatmentPlan" row="5" :disabled="disabled" ></el-input>
+                        </div>
                     </div>
                 </template>
                 <template v-else>
@@ -112,7 +116,7 @@
                     </div>
                 </template>
                 <div class="btn" v-if="action == 'edit'">
-                    <el-button type="primary" @click="cancle">取消</el-button>
+                    <!--<el-button type="primary" @click="cancle">取消</el-button>-->
                     <el-button type="primary" @click="updata">保存</el-button>
                 </div>
             </div>
@@ -240,5 +244,15 @@ table td {
 .btn {
     margin: 10px 0 0 20px;
     padding-bottom: 20px;
+    text-align: center;
 }
+    .treatmentPlan{
+        padding-bottom: 20px;
+        h4{
+            margin-bottom: 10px;
+        }
+        .el-textarea{
+            max-width: 1000px;
+        }
+    }
 </style>
