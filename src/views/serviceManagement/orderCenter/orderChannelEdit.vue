@@ -85,11 +85,11 @@
                 <tr>
                     <td>服务类型</td>
                     <td>
-                        <template v-if="details.status === 1">实物商品</template>
-                        <template v-if="details.status === 2">管家服务</template>
-                        <template v-if="details.status === 3">甲醛检测</template>
-                        <template v-if="details.status === 4">螨虫检测</template>
-                        <template v-if="details.status === 5">第三方服务</template>
+                        <template v-if="details.serviceType === 1">实物商品</template>
+                        <template v-if="details.serviceType === 2">管家服务</template>
+                        <template v-if="details.serviceType === 3">甲醛检测</template>
+                        <template v-if="details.serviceType === 4">螨虫检测</template>
+                        <template v-if="details.serviceType === 5">第三方服务</template>
                     </td>
                 </tr>
                 <tr>
@@ -172,7 +172,7 @@
             </table>
             <div class="btn-group">
                 <el-button type="primary" @click="updateChannelOrderDetails">保存</el-button>
-                <el-button type="primary" @click="goBack">返回</el-button>
+                <el-button type="primary" @click="goBack">取消</el-button>
             </div>
         </div>
     </div>

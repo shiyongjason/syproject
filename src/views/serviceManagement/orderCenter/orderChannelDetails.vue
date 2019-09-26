@@ -71,11 +71,11 @@
                 <tr>
                     <td>服务类型</td>
                     <td>
-                        <template v-if="details.status === 1">实物商品</template>
-                        <template v-if="details.status === 2">管家服务</template>
-                        <template v-if="details.status === 3">甲醛检测</template>
-                        <template v-if="details.status === 4">螨虫检测</template>
-                        <template v-if="details.status === 5">第三方服务</template>
+                        <template v-if="details.serviceType === 1">实物商品</template>
+                        <template v-if="details.serviceType === 2">管家服务</template>
+                        <template v-if="details.serviceType === 3">甲醛检测</template>
+                        <template v-if="details.serviceType === 4">螨虫检测</template>
+                        <template v-if="details.serviceType === 5">第三方服务</template>
                     </td>
                 </tr>
                 <tr>

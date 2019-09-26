@@ -20,7 +20,11 @@
                     <li>操作</li>
                 </ul>
             </div>
+            <div class="empty" v-if="tableData.length < 1">
+                暂无数据
+            </div>
             <div class="list-table">
+
                 <div class="content" v-for="(item,index) in tableData" :key="index">
                     <div class="head-info">
                         <span style="padding-left:10px">订单号：{{item.orderNo}}</span>
@@ -240,4 +244,8 @@ export default {
 .bzt{ background: #fffaeb;color:#FF9900; line-height: 38px; padding-left: 10px;border:1px solid #DCDFE6; border-top:none }
 .sub{ text-align: right; margin-top: 10px}
 .bhover:hover{background: none;color: #FF7A45;border:1px solid #fff}
+    .empty{
+        text-align: center;
+        padding: 12px;
+    }
 </style>
