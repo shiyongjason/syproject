@@ -54,7 +54,7 @@
                         <el-rate v-model="details.star" disabled="disabled"></el-rate>
                     </p>
                 </div>
-                <div class="right" v-if="!(query.status == 4)">
+                <div class="right" v-if="!(query.status == 4 || query.status == 3)">
                     <el-steps :active="stepNum">
                         <el-step title="买家下单" :description="details.created | formatDate"></el-step>
                         <el-step title="买家付款" :description="details.payTime | formatDate"></el-step>

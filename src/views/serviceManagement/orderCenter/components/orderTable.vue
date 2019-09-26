@@ -32,6 +32,7 @@
                             外部订单号：{{item.channelOrderNo}}
                         </span>
                         <span>下单时间：{{formatTime(item.payTime)}}</span>
+                        <span>创建时间：{{formatTime(item.createTime)}}</span>
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
                             <font v-if="hosAuthCheck(youZanDetailsAuth) || hosAuthCheck(channelDetailsAuth)" @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>

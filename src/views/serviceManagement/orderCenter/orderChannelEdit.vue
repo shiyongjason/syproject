@@ -14,7 +14,7 @@
                 <tr>
                     <td>地址</td>
                     <td>
-                        <el-input v-model="details.address" placeholder="请输入地址"></el-input>
+                        <el-input v-model="details.address" placeholder="请输入地址" maxlength="50"></el-input>
                     </td>
                 </tr>
                 <tr>
@@ -28,7 +28,7 @@
                 <tr>
                     <td>可用次数</td>
                     <td>
-                        <el-input v-model="details.goodsNum" placeholder="请输入地址"></el-input>
+                        <el-input v-model="details.availableNum" placeholder="请输入地址" maxlength="10"></el-input>
                     </td>
                 </tr>
                 <tr>
@@ -37,17 +37,17 @@
                 </tr>
                 <tr>
                     <td>订单日期</td>
-                    <td>{{details.payTime | formatDate}}</td>
+                    <td>{{details.payTime | formatDate('YYYY-MM-DD')}}</td>
                 </tr>
                 <tr>
                     <td>备注</td>
                     <td>
-                        <el-input v-model="details.sellerRemark" placeholder="请输入备注"></el-input>
+                        <el-input v-model="details.sellerRemark" placeholder="请输入备注" maxlength="100"></el-input>
                     </td>
                 </tr>
                 <tr>
                     <td>订单号</td>
-                    <td>{{details.id}}</td>
+                    <td>{{details.channelOrderNo}}</td>
                 </tr>
                 <tr>
                     <td>订单来源</td>
@@ -133,33 +133,38 @@
                 <tr>
                     <td>服务评价</td>
                     <td>
-                        <el-select v-model="details.isAddWechat" placeholder="请选择">
+                        <el-select v-model="details.content" placeholder="请选择">
                             <el-option label="空" value=""></el-option>
-                            <el-option label="是" :value="true"></el-option>
-                            <el-option label="否" :value="false"></el-option>
+                            <el-option label="满意" value="满意"></el-option>
+                            <el-option label="不满意" value="不满意"></el-option>
                         </el-select>
-                        {{details.content}}
                     </td>
                 </tr>
                 <tr>
                     <td>是否转化</td>
-                    <td>{{details.isConversion ? '是' : '否'}}</td>
+                    <td>
+                        <el-select v-model="details.isConversion" placeholder="请选择">
+                            <el-option label="空" value=""></el-option>
+                            <el-option label="是" :value="true"></el-option>
+                            <el-option label="否" :value="false"></el-option>
+                        </el-select>
+                    </td>
                 </tr>
                 <tr>
                     <td>转化订单号</td>
                     <td>
-                        <el-input v-model="details.conversionOrderNo" placeholder="请输入地址" maxlength="50"></el-input>
+                        <el-input v-model="details.conversionOrderNo" placeholder="请输入转化订单号" maxlength="50"></el-input>
                     </td>
                 </tr>
                 <tr>
                     <td>创建人</td>
                     <td>
-                        <el-input v-model="details.createBy" placeholder="请输入创建人" maxlength="50"></el-input>
+                        <el-input v-model="details.createBy" placeholder="请输入创建人" maxlength="20"></el-input>
                     </td>
                 </tr>
                 <tr>
                     <td>创建时间</td>
-                    <td>{{details.createTime | formatDate}}</td>
+                    <td>{{details.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
                 </tr>
                 <tr>
                     <td>修改人</td>
@@ -167,7 +172,7 @@
                 </tr>
                 <tr>
                     <td>修改时间</td>
-                    <td>{{details.updateTime | formatDate}}</td>
+                    <td>{{details.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
                 </tr>
             </table>
             <div class="btn-group">
@@ -208,7 +213,7 @@ export default {
             this.details = data
         },
         async updateChannelOrderDetails () {
-            // 只有一个校验 就未用el-form 校验
+            // 只有一两个校验 就未用el-form 校验
             if (this.details.address.length < 1) {
                 this.$message({
                     type: 'error',
@@ -216,9 +221,17 @@ export default {
                 })
                 return
             }
+            if (/[^\d]/g.test(this.details.availableNum)) {
+                this.$message({
+                    type: 'error',
+                    message: '可用次数自能为数字！'
+                })
+                return
+            }
             await updateChannelOrderDetails(this.channelId, this.details)
             this.$alert('更新成功，跳转到上一页', '提示', {
                 confirmButtonText: '确定',
+                showClose: false,
                 callback: action => {
                     this.closeTags()
                     this.goBack()
