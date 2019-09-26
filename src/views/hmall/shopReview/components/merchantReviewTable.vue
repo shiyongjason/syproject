@@ -190,8 +190,7 @@ export default {
             const { data } = await findMerchantDetail(merchantCode)
             // console.log(data)
             this.merchantDetail = data
-            let address = JSON.parse(this.merchantDetail.address)
-            this.address = address.province_name + address.city_name + address.area_name
+            this.address = data.provinceName + data.cityName + data.countryName
         },
         async checkMerchant () {
             this.$refs['form'].validate(async (valid) => {
@@ -201,7 +200,6 @@ export default {
                         merchantCode: this.merchantCode,
                         ...this.suggest
                     }
-                    console.log(params)
                     await checkMerchant(params)
                     this.$message({
                         type: 'success',

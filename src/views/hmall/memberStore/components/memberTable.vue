@@ -232,7 +232,7 @@ export default {
             this.dialogParams.show = false
         },
         async findMemberDetails (row) {
-            const { data } = await findMemberDetails({ id: row.id })
+            const { data } = await findMemberDetails({ id: row.memberCode })
             this.memberDetails = data
             this.memberDetails.placeOfOrigin = '' + data.provinceName + data.cityName + data.countryName
             this.memberDetails.sourceName = data.source == 1 ? '注册' : '单分享'
