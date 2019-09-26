@@ -30,9 +30,10 @@
                     <div class="flex-wrap-title">审核状态：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.auditStatus" style="width: 100%">
-                            <el-option label="全部" value="0"></el-option>
-                            <el-option label="是" value="1"></el-option>
-                            <el-option label="否" value="2"></el-option>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="待审核" value="0"></el-option>
+                            <el-option label="审核通过" value="1"></el-option>
+                            <el-option label="审核不通过" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -47,6 +48,7 @@
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
                         <el-button v-if="scope.data.row.auditStatus == 0" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
+                        <!-- <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'review')">查看</el-button> -->
                         <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
                     </template>
                 </basicTable>
@@ -87,7 +89,7 @@
                         </el-form-item>
                     </div>
                 </el-form>
-                <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
+                <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest">
                     <div v-if="dialogParams.type === 'review'">
                         <h2>审核意见</h2>
                         <div>
@@ -118,7 +120,9 @@
 </template>
 
 <script>
-import { findBrandAreaList, findBrandArea } from './api/index'
+import { findBrandAreaList, findBrandArea, updateBrandArea } from './api/index'
+import { mapState } from 'vuex'
+import moment from 'moment'
 export default {
     name: 'brandAreaAudit',
     data () {
@@ -177,17 +181,18 @@ export default {
                     }
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         onQuery () {
-            console.log('搜索')
             const { ...params } = { ...this.queryParams }
             this.searchParams = params
             this.search()
         },
         onReset () {
-            console.log('重置')
             this.$set(this.queryParams, 'merchantName', '')
             this.$set(this.queryParams, 'brandName', '')
             this.$set(this.queryParams, 'auditStatus', '')
@@ -204,9 +209,7 @@ export default {
             }
             if (!searchParams.minCreateTime) searchParams.minCreateTime = null
             if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
-            console.log(searchParams)
             const { data } = await findBrandAreaList({ params: searchParams })
-            console.log(data)
             this.paginationData.pageNumber = data.pages
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
@@ -218,9 +221,7 @@ export default {
             this.tableData = data.records
         },
         async showDialog (scope, type) {
-            // console.log(scope)
             const { data } = await findBrandArea({ id: scope.id })
-            console.log(data)
             this.dialogMsg = data
             this.suggest = {}
             if (type === 'review') {
@@ -230,8 +231,10 @@ export default {
                 this.dialogParams.title = '查看品牌区域'
                 this.dialogParams.type = type
             }
-
             this.dialogParams.show = true
+            this.$nextTick(() => {
+                this.$refs['suggest'].clearValidate()
+            })
         },
         onSizeChange (val) {
             this.paginationData.pageSize = val
@@ -243,7 +246,27 @@ export default {
             this.search()
         },
         createCouponReview () {
-            console.log('确认')
+            this.updateBrandArea()
+        },
+        async updateBrandArea () {
+            this.$refs['suggest'].validate(async (valid) => {
+                if (valid) {
+                    const form = {
+                        updateBy: this.userInfo.employeeName,
+                        updateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        auditStatus: +this.suggest.auditResult,
+                        brandId: this.dialogMsg.brandId,
+                        id: this.dialogMsg.id,
+                        remark: this.suggest.auditRemark
+                    }
+                    // console.log(form)
+                    await updateBrandArea(form)
+                    this.dialogParams.show = false
+                    this.onQuery()
+                } else {
+                    return false
+                }
+            })
         }
     },
     mounted () {
@@ -253,12 +276,15 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.proxyCert{
+.proxyCert {
     display: flex;
-    img{
+    img {
         display: block;
         width: 50px;
         height: 50px;
     }
+}
+.remark {
+    padding-top: 20px;
 }
 </style>

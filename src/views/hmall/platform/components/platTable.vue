@@ -183,6 +183,7 @@ export default {
     },
     data () {
         return {
+            organizationSource: '',
             openId: '',
             dialog: false,
             form: {
