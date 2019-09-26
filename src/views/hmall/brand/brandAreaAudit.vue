@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { findBrandAreaList, addBrandArea, findBrandArea } from './api/index'
+import { findBrandAreaList, findBrandArea } from './api/index'
 export default {
     name: 'brandAreaAudit',
     data () {
