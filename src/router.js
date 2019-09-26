@@ -605,7 +605,6 @@ async function getMenu (to, next, isMakeIndex, query) {
         next({ ...to, replace: true })
     }
 }
-
 // let isFirst = true
 router.beforeEach(async (to, from, next) => {
     let isFirst = store.state.isFirst
