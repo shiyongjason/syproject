@@ -86,13 +86,11 @@ export default {
     },
     methods: {
         onQuery () {
-            console.log('搜索')
             const { ...params } = { ...this.queryParams }
             this.searchParams = params
             this.search()
         },
         onReset () {
-            console.log('重置')
             this.$set(this.queryParams, 'merchantName', '')
             this.$set(this.queryParams, 'spuName', '')
             this.$set(this.queryParams, 'brandName', '')
@@ -107,9 +105,10 @@ export default {
                 ...this.searchParams,
                 ...this.paginationData
             }
-            console.log(searchParams)
             const { data } = await findBazaarList(searchParams)
-            console.log(data)
+            this.paginationData.pageNumber = data.pages
+            this.paginationData.pageSize = data.size
+            this.paginationData.total = data.total
             this.tableData = data.records
         },
         onSizeChange (val) {
@@ -123,7 +122,6 @@ export default {
         },
         async findCategory () {
             const { data } = await findCategory()
-            console.log(data)
             this.category = data
         }
     },
