@@ -44,6 +44,7 @@
                 </el-button>
                 <el-button type="primary" class="ml20" @click="onUpdateAttr(1)">批量生效</el-button>
                 <el-button type="primary" class="ml20" @click="onUpdateAttr(2)">批量失效</el-button>
+                <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
             </div>
         </div>
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -52,7 +53,7 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="status" slot-scope="scope">
-                  <span :class="scope.data.row.status==2?'red':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
+                    <span :class="scope.data.row.status==2?'red':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
                 </template>
                 <template slot="updateTime" slot-scope="scope">
                     {{scope.data.row.updateTime|formatDate}}

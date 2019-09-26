@@ -24,37 +24,39 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.status">
+                        <el-select v-model="queryParams.auditStatus">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="上架" value="1">
+                            <el-option label="待审核" value="0">
                             </el-option>
-                            <el-option label="下架" value="2">
+                            <el-option label="通过" value="1">
+                            </el-option>
+                             <el-option label="未通过" value="2">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.source">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
+                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" clearable v-for="item in productSource">
                             </el-option>
                         </el-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr" :change-on-select="true" @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr"  @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.productName" placeholder="请输入商品名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -85,7 +87,7 @@
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
                 </template>
                  <template slot="action" slot-scope="scope">
-                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus!=1">审核</el-button>
+                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -93,7 +95,7 @@
     </div>
 </template>
 <script>
-import { findProducts, findProductSource } from './api/index'
+import { findProducts } from './api/index'
 import { mapState, mapActions } from 'vuex'
 export default {
     data () {
@@ -108,15 +110,15 @@ export default {
                 categoryId: '',
                 brandId: '',
                 integrity: '',
-                status: '',
-                source: ''
+                auditStatus: '',
+                source: 1
             },
             tableData: [],
             paginationInfo: {},
             tableLabel: [{ label: '商品编码spu', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuName', width: '150' },
                 { label: '品牌', prop: 'brandName', width: '200' },
-                { label: '型号', prop: 'categoryName', width: '200' },
+                { label: '型号', prop: 'specification', width: '200' },
                 { label: '来源', prop: 'merchantName' },
                 { label: '状态', prop: 'status' }
             ],
@@ -134,8 +136,8 @@ export default {
 
     },
     async mounted () {
-        const { data } = await findProductSource()
-        this.productSource = data
+        // const { data } = await findProductSource()
+        // this.productSource = data
         this.findCategoryList()
         this.searchList()
     },
@@ -166,15 +168,15 @@ export default {
             }
         },
         onExport () {
-            window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
-                '&startDate=' + this.queryParams.startDate +
-                '&endDate=' + this.queryParams.endDate +
-                '&categoryId=' + this.queryParams.categoryId +
-                '&sourceCode=' + this.queryParams.sourceCode +
-                '&productName=' + this.queryParams.productName +
-                '&productCode=' + this.queryParams.productCode +
-                '&updateBy=' + this.queryParams.updateBy +
-                '&brandName=' + this.queryParams.brandName
+            // window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
+            //     '&startDate=' + this.queryParams.startDate +
+            //     '&endDate=' + this.queryParams.endDate +
+            //     '&categoryId=' + this.queryParams.categoryId +
+            //     '&sourceCode=' + this.queryParams.sourceCode +
+            //     '&productName=' + this.queryParams.productName +
+            //     '&productCode=' + this.queryParams.productCode +
+            //     '&updateBy=' + this.queryParams.updateBy +
+            //     '&brandName=' + this.queryParams.brandName
         },
         onChangeStatus (val) {
             console.log(this.multiSelection)
