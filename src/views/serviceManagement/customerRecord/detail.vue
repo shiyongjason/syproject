@@ -83,8 +83,8 @@
                                             <el-input v-model="stItem.archiveDetail.model" :disabled="edit" style="width: 100px"></el-input>
                                         <td>
                                             <el-select v-model="stItem.archiveDetail.isOverInsured" style="width: 100px" :disabled="edit">
-                                                <el-option label="是" :value="0"></el-option>
-                                                <el-option label="否" :value="1"></el-option>
+                                                <el-option label="是" :value="1"></el-option>
+                                                <el-option label="否" :value="0"></el-option>
                                             </el-select>
                                         </td>
                                     </tr>
