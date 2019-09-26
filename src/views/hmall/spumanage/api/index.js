@@ -64,5 +64,7 @@ export const saveSpu = (params) => instance.post('product/api/spu', params)
 export const putSpu = (params) => instance.put('product/api/spu', params)
 // 启用禁用spu
 export const changeSpustatus = (params) => instance.put('product/api/spu/boss/enable', params)
-// 启用禁用spu
+// 查询spu详情
 export const findSpudetails = (params) => instance.get('product/api/spu/spu-edit-info', { params })
+// 查询spu详情
+export const auditSpu = (params) => instance.put(`product/api/spu/boss/audit`, params)

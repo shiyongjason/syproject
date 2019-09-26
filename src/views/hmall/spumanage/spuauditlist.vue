@@ -82,7 +82,7 @@
                     {{scope.data.row.brandName}}
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'通过':'下架'}}</span>
+                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'colgry':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
                 </template>
                  <template slot="action" slot-scope="scope">
                      <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)">审核</el-button>
@@ -180,7 +180,7 @@ export default {
             console.log(this.multiSelection)
         },
         onAuditSpu (val) {
-            this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode } })
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
         }
     }
 }

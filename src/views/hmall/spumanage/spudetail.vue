@@ -28,7 +28,7 @@
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="reqPictures" ref="reqPictures">
+                <el-form-item label="商品主图：" prop="reqPictureList" ref="reqPictureList">
                     <ul class="picture-container">
                         <template v-if="pictureContainer.length>0">
                             <li v-for="(item,index) in pictureContainer" :key="index">
@@ -80,22 +80,29 @@
                 </el-form-item>
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" @click="save(1)">保存且启用</el-button>
-                        <el-button @click="save(2)" v-if="operate=='modify'">保存且禁用</el-button>
-                        <el-button @click="save(2)" v-if="operate=='add'">保存</el-button>
+                        <el-button type="primary" @click="onSave(1)">保存且启用</el-button>
+                        <el-button @click="onSave(2)" v-if="operate=='modify'">保存且禁用</el-button>
+                        <el-button @click="onSave(2)" v-if="operate=='add'">保存</el-button>
                         <el-button @click="onBack()">返回</el-button>
                     </el-form-item>
                 </el-row>
-                <el-row v-if="operate=='audit'">
-                    <el-form-item>
-                        <el-radio v-model="radio" label="1">审核通过</el-radio>
-                        <el-radio v-model="radio" label="2">审核不通过</el-radio>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
-                        </el-input>
-                    </el-form-item>
-                </el-row>
+                <el-form ref="auditForm" :model="auditForm" :rules="auditrules" label-width="110px">
+                    <el-row v-if="operate=='audit'">
+                        <el-form-item prop="approveStatus">
+                            <el-radio v-model="auditForm.approveStatus" label="1">审核通过</el-radio>
+                            <el-radio v-model="auditForm.approveStatus" label="2">审核不通过</el-radio>
+                        </el-form-item>
+                        <el-form-item style="width: 460px;" v-if="auditForm.approveStatus==2" prop="approveStatus">
+                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.approveDesc">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item style="text-align: center">
+                            <el-button type="primary" @click="onAudit(1)">确定</el-button>
+                            <el-button type="primary" @click="onAudit(2)">确定且下一个</el-button>
+                            <el-button @click="onBack()">返回</el-button>
+                        </el-form-item>
+                    </el-row>
+                </el-form>
             </el-form>
         </div>
     </div>
@@ -104,7 +111,7 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu } from './api/index'
+import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'modifyoraddoraudit',
@@ -167,8 +174,8 @@ export default {
                 spuName: [
                     { required: true, whitespace: true, message: '请填写商品名称' }
                 ],
-                reqPictures: [
-                    { required: true, whitespace: true, message: '请选择商品主图' }
+                reqPictureList: [
+                    { required: true, message: '请选择商品主图' }
                 ]
             },
             pictureContainer: [], // 图片列表
@@ -177,13 +184,25 @@ export default {
             brandName: '',
             relationBrand: [],
             deepForm: {},
-            categoryIdName: ''
+            categoryIdName: '',
+            auditForm: {
+                approveStatus: '',
+                approveDesc: '',
+                operator: '',
+                spuCode: this.$route.query.spuCode
+            },
+            auditStatus: this.$route.query.auditStatus,
+            auditrules: {
+                approveStatus: [
+                    { required: true, whitespace: true, message: '请选择审核状态' }
+                ]
+            }
         }
     },
     watch: {
         pictureContainer (val) {
             this.$nextTick(() => {
-                if (val.length > 0) this.$refs['reqPictures'].clearValidate()
+                if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
             })
         }
     },
@@ -285,7 +304,6 @@ export default {
                 val.parameterId = val.id
             })
             this.form.reqParameterList = deepCopy(data)
-            console.log(this.form.reqParameterList)
         },
         brandNameChange () {
             this.brandName = ''
@@ -296,7 +314,7 @@ export default {
                 }
             })
         },
-        async save (val) {
+        onSave (val) {
             this.pictureContainer.forEach((value, index) => {
                 this.form.reqPictureList.push({
                     isDefault: index === 0 ? 1 : 0,
@@ -304,19 +322,41 @@ export default {
                     sort: index
                 })
             })
-            this.$refs['formmain'].validate((valid) => {
-                if (this.operate == 'add') {
-                    saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
-                    this.$message({
-                        type: 'success',
-                        message: '商品新建成功！'
-                    })
-                } else {
-                    putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
-                    this.$message({
-                        type: 'success',
-                        message: '商品更新成功！'
-                    })
+            this.$refs['formmain'].validate(async (valid) => {
+                if (valid) {
+                    console.log(val)
+                    if (this.operate == 'add') {
+                        await saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
+                        this.$message({
+                            type: 'success',
+                            message: '商品新建成功！'
+                        })
+                    } else if (this.operate == 'modify') {
+                        await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
+                        this.$message({
+                            type: 'success',
+                            message: '商品更新成功！'
+                        })
+                    } else {
+                        await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
+                        auditSpu(this.auditForm)
+                        this.$message({
+                            type: 'success',
+                            message: '商品审核成功！'
+                        })
+                    }
+                }
+            })
+        },
+        onAudit (val) {
+            this.auditForm.operator = this.userInfo.employeeName
+            this.$refs['auditForm'].validate(async (valid) => {
+                if (valid) {
+                    if (val == 1) {
+                        await this.onSave(this.auditStatus)
+                    } else {
+
+                    }
                 }
             })
         },
@@ -349,6 +389,7 @@ export default {
             this.form.id = data.id
             this.categoryIdName = data.categoryNames
             this.form.categoryId = data.categoryId
+            this.form.reqDetailList = data.spuDetailList
             const oneToThreeCategorys = data.oneToThreeCategorys.reverse()
             oneToThreeCategorys && oneToThreeCategorys.map(val => {
                 this.categoryIdArr.push(val.id)
