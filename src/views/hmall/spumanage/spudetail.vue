@@ -345,6 +345,7 @@ export default {
                             message: '商品审核成功！'
                         })
                     }
+                    this.$router.go(-1)
                 }
             })
         },

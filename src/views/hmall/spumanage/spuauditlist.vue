@@ -82,10 +82,10 @@
                     {{scope.data.row.brandName}}
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'colgry':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
+                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
                 </template>
                  <template slot="action" slot-scope="scope">
-                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)">审核</el-button>
+                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus!=1">审核</el-button>
                 </template>
             </basicTable>
         </div>
