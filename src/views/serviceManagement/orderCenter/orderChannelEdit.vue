@@ -224,7 +224,7 @@ export default {
             if (/[^\d]/g.test(this.details.availableNum)) {
                 this.$message({
                     type: 'error',
-                    message: '可用次数自能为数字！'
+                    message: '可用次数只能为数字！'
                 })
                 return
             }
