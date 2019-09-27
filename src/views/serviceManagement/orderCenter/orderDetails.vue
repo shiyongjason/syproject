@@ -131,7 +131,8 @@
                         </td>
                         <td>
                             <template v-if="item.expressStatusList.indexOf(0)> -1">待发货</template>
-                            <template v-if="item.expressStatusList.indexOf(1)> -1">已发货</template>
+                            <template v-else-if="item.expressStatusList.indexOf(1)> -1">已发货</template>
+                            <template v-else>待发货</template>
                         </td>
                     </tr>
                     <tr>

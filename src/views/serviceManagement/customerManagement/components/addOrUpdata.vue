@@ -97,7 +97,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="11"><span class="detail-name">成为客户：</span>{{formatTime(customerForm.createTime)}}</el-col>
-                    <el-col :span="11"><span class="detail-name">地址：</span>{{customerForm.address}}</el-col>
+                    <el-col :span="11"><span class="detail-name">地址：</span><p style="float: right;width: 78%;text-align: left">{{customerForm.address}}</p></el-col>
                 </el-row>
                 <div class="title">标签信息</div>
                 <ul class="add-tags-input-details">
