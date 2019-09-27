@@ -156,10 +156,10 @@ export default {
     name: 'orderDetails',
     computed: {
         stepNum () {
-            if (this.query.status - 0 + 1 === 4) {
+            if (this.details.status - 0 + 1 === 4) {
                 return 0
             }
-            return this.query.status - 0 + 1
+            return this.details.status - 0 + 1
         },
         ...mapState({
             tagsList: state => state.layout.tagsList

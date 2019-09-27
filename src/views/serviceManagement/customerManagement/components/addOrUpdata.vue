@@ -8,7 +8,7 @@
                         <el-form-item prop="channelType" label="渠道名称">
                             <el-select v-model="customerForm.channelType" :disabled='!isAdd || !isHeadquarters' style="width:100%">
                                 <template v-if="isAdd">
-                                    <el-option label="好享家" :value="0"></el-option>
+                                    <el-option label="总部" :value="0"></el-option>
                                 </template>
                                 <template v-else>
                                     <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
