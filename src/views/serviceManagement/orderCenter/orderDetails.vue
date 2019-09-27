@@ -19,28 +19,28 @@
         <div class="page-body-cont">
             <div class="order-status">
                 <div class="left">
-                    <div class="is-status" v-if="query.status == 1 ||  query.status ==5">
+                    <div class="is-status" v-if="details.status == 1 ||  details.status ==5">
                         <p class="title">买家已付款</p>
                         <p class="title">等待商家发货</p>
                         <p class="tips">
                             买家已付款，请尽快发货，否则买家有权申请退款
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status == 2">
+                    <div class="is-status" v-if="details.status == 2">
                         <p class="title">商家已发货</p>
                         <p class="title">等待交易成功</p>
                         <p class="tips">
                             买家如在7天内没有申请退款，交易将自动完成
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status == 3 ">
+                    <div class="is-status" v-if="details.status == 3 ">
                         <p class="title">交易完成</p>
                         <p class="tips">
                             交易已成功，如果买家提出售后要求，请积极与买家协商，做好售后
                             服务
                         </p>
                     </div>
-                    <div class="is-status" v-if="query.status == 4">
+                    <div class="is-status" v-if="details.status == 4">
                         <p class="title">交易关闭</p>
                         <p class="tips">
                             订单已全额退款，交易自动关闭
@@ -54,7 +54,7 @@
                         <el-rate v-model="details.star" disabled="disabled"></el-rate>
                     </p>
                 </div>
-                <div class="right" v-if="!(query.status == 4 || query.status == 3)">
+                <div class="right" v-if="!(details.status == 4)">
                     <el-steps :active="stepNum">
                         <el-step title="买家下单" :description="details.created | formatDate"></el-step>
                         <el-step title="买家付款" :description="details.payTime | formatDate"></el-step>
@@ -114,11 +114,11 @@
                         <td>
                             <div class="info">
                                 <p>
-                                    <img :src="item.goodsImg" alt="头像" width="100px">
+                                    <img :src="item.goodsImg" alt="头像" width="100px" class="face">
                                 </p>
                                 <p>
                                     <span class="name">{{item.goodsName}}</span>
-                                    <span class="grade"> 会员： {{JSON.parse(item.skuPropertiesName).name}}</span>
+                                    <span class="grade" v-if="JSON.parse(item.skuPropertiesName).name"> 会员： {{JSON.parse(item.skuPropertiesName).name}}</span>
                                 </p>
                             </div>
                         </td>
@@ -296,10 +296,24 @@ export default {
     .is-status {
         padding: 12px 0;
     }
+    .face {
+        margin-right: 10px;
+    }
     /deep/.el-step__title.is-process{
         color: #999999;
     }
     /deep/.el-step__description.is-process{
         color: #999999;
+    }
+    /deep/.el-step__head.is-finish .el-step__icon.is-text{
+        background: #FF7A45;
+        color: #ffffff;
+    }
+    /deep/.el-step__head.is-process .el-step__icon.is-text{
+        background: #ffffff;
+        color: #FF7A45;
+    }
+    /deep/.el-step__head.is-process .el-step__icon-inner{
+        color:  #FF7A45;
     }
 </style>
