@@ -94,6 +94,7 @@
                     </table>
                     <div class="btn-group">
                         <el-button type="primary" @click="amend()" v-if="!edit">保 存</el-button>
+                        <el-button type="primary" @click="goBack">取 消</el-button>
                     </div>
                 </div>
             </div>
@@ -104,8 +105,14 @@
 <script>
 import { findRecordDetail, updataReportDetail } from './api/index'
 import { Message } from 'element-ui'
+import { mapState, mapMutations } from 'vuex'
 export default {
     name: '',
+    computed: {
+        ...mapState({
+            tagsList: state => state.layout.tagsList
+        })
+    },
     data () {
         return {
             edit: false,
@@ -123,6 +130,16 @@ export default {
     methods: {
         goBack () {
             history.go(-1)
+            this.closeTags()
+        },
+        closeTags () {
+            this.tagsList.some((item, index) => {
+                if (item.path === (this.$route.fullPath).split('?')[0]) {
+                    this.tagsList.splice(index, 1)
+                    return true
+                }
+            })
+            this.tagUpdate(this.tagsList)
         },
         // 计算table合并行数
         computedRowspan (list, level) {
@@ -136,7 +153,6 @@ export default {
             return list.length
         },
         async amend () {
-            console.log(this)
             let houseArchiveDataList = []
             this.childArchiveNodes.map((item) => {
                 item.childArchiveNodes.map((i) => {
@@ -158,7 +174,10 @@ export default {
             await updataReportDetail(params)
             Message({ message: '修改成功', type: 'success' })
             this.$router.push({ path: '/serviceManagement/customerRecord' })
-        }
+        },
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        })
     }
 }
 </script>
