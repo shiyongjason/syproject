@@ -228,6 +228,13 @@ export default {
                 })
                 return
             }
+            if (this.details.availableNum > this.details.goodsNum) {
+                this.$message({
+                    type: 'error',
+                    message: '可用次数只能小于等于数量！'
+                })
+                return
+            }
             await updateChannelOrderDetails(this.channelId, this.details)
             this.$alert('更新成功，跳转到上一页', '提示', {
                 confirmButtonText: '确定',
