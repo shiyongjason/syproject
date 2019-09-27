@@ -124,13 +124,13 @@ export default {
                 labelIdList: this.tagModel.id
             }
             await createTagWidthUser(params)
+            this.$message({
+                type: 'success',
+                message: '添加的标签成功!'
+            })
         },
         async findTagList () {
-            const { data } = await findTagList({ keywords: this.tagModel.query })
-            // let temp = []
-            // data.forEach(value => {
-            //     temp = this.repeatValue.filter(value1 => value.labelName === value1.labelName)
-            // })
+            const { data } = await findTagList({ laberName: this.tagModel.query, channelUserId: this.tempUserId.id })
             this.tagList = data
         },
         onAddTag (row) {
@@ -149,6 +149,13 @@ export default {
             this.debounce(this.findTagList, 500)()
         },
         async onSave () {
+            if (this.tagModel.id.length < 1) {
+                this.$message({
+                    type: 'error',
+                    message: '请选择要添加的标签'
+                })
+                return
+            }
             await this.createTagWidthUser()
             this.dialog = false
             this.tagModel = {

@@ -6,7 +6,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item prop="channelType" label="渠道名称">
-                            <el-select v-model="customerForm.channelType" :disabled='!isAdd' style="width:100%">
+                            <el-select v-model="customerForm.channelType" :disabled='!isAdd || !isHeadquarters' style="width:100%">
                                 <template v-if="isAdd">
                                     <el-option label="好享家" :value="0"></el-option>
                                 </template>
@@ -19,7 +19,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item prop="role" label="客户身份">
-                            <el-select v-model="customerForm.role" style="width: 100%">
+                            <el-select v-model="customerForm.role" style="width: 100%" :disabled="!isHeadquarters">
                                 <el-option v-for="(item,index) in getRole" :key="index" :label="item.label" :value="item.value" :disabled="index === 0 && isAdd">
                                 </el-option>
                             </el-select>
@@ -29,7 +29,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item prop="name" label="姓名">
-                            <el-input v-model="customerForm.name" :disabled="!isAdd" placeholder="请输入姓名" maxlength='20'></el-input>
+                            <el-input v-model="customerForm.name" :disabled="!isAdd && !isHeadquarters" placeholder="请输入姓名" maxlength='20'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -41,7 +41,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item prop="mobile" label="手机号">
-                            <el-input v-model="customerForm.mobile" :disabled="!isAdd" placeholder="请输入手机号" maxlength='11'></el-input>
+                            <el-input v-model="customerForm.mobile" :disabled="!isAdd && !isHeadquarters" placeholder="请输入手机号" maxlength='11'></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -53,7 +53,7 @@
                 <el-row>
                     <el-col :span="12" v-if="!isAdd">
                         <el-form-item prop="createTime" label="成为客户">
-                            <el-date-picker v-model="customerForm.createTime" :disabled="!isAdd" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="成为客户日期">
+                            <el-date-picker v-model="customerForm.createTime" :disabled="!isAdd && !isHeadquarters" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="成为客户日期">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -172,6 +172,9 @@ export default {
         isAdd () {
             return !this.value.id
         },
+        isHeadquarters () {
+            return this.value.channelType === 0
+        },
         customerForm: {
             get () {
                 return this.value
@@ -190,7 +193,7 @@ export default {
         }
     },
     methods: {
-        updateTagList (val,name) {
+        updateTagList (val, name) {
             this.tagModel.id = val
             this.tagModel.name = name
         },
@@ -207,11 +210,7 @@ export default {
             }
         },
         async findTagList () {
-            const { data } = await findTagList({ keywords: this.tagModel.query })
-            // let temp = []
-            // data.forEach(value => {
-            //     temp = this.repeatValue.filter(value1 => value.labelName === value1.labelName)
-            // })
+            const { data } = await findTagList({ laberName: this.tagModel.query })
             this.tagList = data
         },
         searchTagList (query) {

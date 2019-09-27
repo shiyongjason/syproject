@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td>可用次数</td>
-                    <td>{{details.goodsNum}}</td>
+                    <td>{{details.availableNum}}</td>
                 </tr>
                 <tr>
                     <td>金额</td>
@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>订单日期</td>
-                    <td>{{details.payTime | formatDate}}</td>
+                    <td>{{details.payTime | formatDate('YYYY-MM-DD')}}</td>
                 </tr>
                 <tr>
                     <td>备注</td>
@@ -41,7 +41,7 @@
                 </tr>
                 <tr>
                     <td>订单号</td>
-                    <td>{{details.id}}</td>
+                    <td>{{details.channelOrderNo}}</td>
                 </tr>
                 <tr>
                     <td>订单来源</td>
@@ -53,7 +53,7 @@
                 </tr>
                 <tr>
                     <td>复购订单</td>
-                    <td>{{details.isRepurchaseOrder ? '是' : '否'}}</td>
+                    <td>{{details.isRepurchaseOrder == null  ? '空' : details.isRepurchaseOrder ? '是' : '否'}}</td>
                 </tr>
                 <tr>
                     <td>订单状态</td>
@@ -71,11 +71,11 @@
                 <tr>
                     <td>服务类型</td>
                     <td>
-                        <template v-if="details.status === 1">实物商品</template>
-                        <template v-if="details.status === 2">管家服务</template>
-                        <template v-if="details.status === 3">甲醛检测</template>
-                        <template v-if="details.status === 4">螨虫检测</template>
-                        <template v-if="details.status === 5">第三方服务</template>
+                        <template v-if="details.serviceType === 1">实物商品</template>
+                        <template v-if="details.serviceType === 2">管家服务</template>
+                        <template v-if="details.serviceType === 3">甲醛检测</template>
+                        <template v-if="details.serviceType === 4">螨虫检测</template>
+                        <template v-if="details.serviceType === 5">第三方服务</template>
                     </td>
                 </tr>
                 <tr>
@@ -84,7 +84,7 @@
                 </tr>
                 <tr>
                     <td>是否添加微信</td>
-                    <td>{{isNullAddSymbol(details.isAddWechat)}}</td>
+                    <td>{{details.isAddWechat === null  ? '空' : details.isAddWechat ? '是' : '否'}}</td>
                 </tr>
                 <tr>
                     <td>线上管家</td>
@@ -96,7 +96,7 @@
                 </tr>
                 <tr>
                     <td>是否转化</td>
-                    <td>{{details.isConversion ? '是' : '否'}}</td>
+                    <td>{{details.isConversion == null  ? '空' : details.isConversion ? '是' : '否'}}</td>
                 </tr>
                 <tr>
                     <td>转化订单号</td>
@@ -104,11 +104,11 @@
                 </tr>
                 <tr>
                     <td>创建人</td>
-                    <td>{{details.createBy}}</td>
+                    <td>{{isNullAddSymbol(details.createBy)}}</td>
                 </tr>
                 <tr>
                     <td>创建时间</td>
-                    <td>{{details.createTime | formatDate}}</td>
+                    <td>{{details.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
                 </tr>
                 <tr>
                     <td>修改人</td>
@@ -116,7 +116,7 @@
                 </tr>
                 <tr>
                     <td>修改时间</td>
-                    <td>{{details.updateTime | formatDate}}</td>
+                    <td>{{details.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
                 </tr>
             </table>
             <div class="btn-group">

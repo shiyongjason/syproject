@@ -36,6 +36,7 @@ export default {
                 searchKey: 'orderNo',
                 mobile: ''
             }
+            this.getData()
         },
         onSearch () {
             this.queryParams.pageNumber = 1

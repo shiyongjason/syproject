@@ -17,6 +17,8 @@
                             </el-option>
                             <el-option label="孩子王成长家" value="2">
                             </el-option>
+                            <el-option label="考拉买菜" value="3">
+                            </el-option>
                         </el-select>
                     </div>
                 </div>
