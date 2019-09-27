@@ -156,9 +156,6 @@ export default {
     name: 'orderDetails',
     computed: {
         stepNum () {
-            if (this.details.status - 0 + 1 === 4) {
-                return 0
-            }
             return this.details.status - 0 + 1
         },
         ...mapState({
