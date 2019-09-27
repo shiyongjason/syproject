@@ -201,7 +201,7 @@ export default {
             this.curIndex = null
         },
         onChangeTab () {
-            this.$emit('search-event', { status: this.activeName })
+            this.$emit('search-event', { status: this.activeName < 1 ? '' : this.activeName })
         }
     },
     mounted () {}
