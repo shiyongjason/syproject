@@ -79,3 +79,11 @@ export const AUTH_BESTONLINE_PIECE_VOTE_OPERATE = 10370
 export const AUTH_BESTONLINE_POINTS_CODE_OPERATE = 10380
 // 标准分数配置列表操作列
 export const AUTH_BESTONLINE_STANDARD_OPERATE = 10390
+// 服务管理 按钮档案详情
+export const AUTH_SERVICE_ARCHIVES_DETAILS = 10400
+// 服务管理 按钮有赞订单详情
+export const AUTH_SERVICE_YOUZAN_DETAILS = 10410
+// 服务管理 按钮渠道订单详情
+export const AUTH_SERVICE_CHANNEL_DETAILS = 10420
+// 服务管理 按钮渠道订单修改
+export const AUTH_SERVICE_CHANNEL_EDIT = 10430

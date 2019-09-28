@@ -18,17 +18,19 @@
                     {{scope.row.reservationNo ? scope.row.reservationNo : '-'}}
                 </template>
             </el-table-column>
-            <el-table-column prop="reservationPerson" label="姓名">
+            <el-table-column prop="reservationPerson" label="姓名" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.reservationPerson }}
                 </template>
             </el-table-column>
-            <el-table-column prop="phone" label="手机号">
+            <el-table-column prop="offlineHousekeeper" label="线下管家" align="center">
+            </el-table-column>
+            <el-table-column prop="phone" label="手机号" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.phone }}
                 </template>
             </el-table-column>
-            <el-table-column prop="address" label="地址">
+            <el-table-column prop="address" label="地址" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.address }}
                 </template>
@@ -50,7 +52,7 @@
                     {{ scope.row.status }}
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button @click="onEdit(scope.row)" class="orangeBtn" :disabled="scope.row.status == '已完成' || scope.row.status == '取消'">修改</el-button>
                 </template>
@@ -199,7 +201,6 @@ export default {
             this.show = true
             this.dialogTableVisible = true
             const { data } = await findReservationsDetail(row.id)
-            console.log(data)
             this.form = data
             const time = this.form.startTime.split(' ')
             this.date = time[0]
