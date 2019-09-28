@@ -111,10 +111,8 @@ export default {
             this.search()
         },
         async search () {
-            console.log(this.searchParams)
             this.searchParams.pageSize = this.paginationData.pageSize
             this.searchParams.pageNumber = this.paginationData.pageNumber
-            console.log(this.searchParams)
             const { data } = await findReportList(this.searchParams)
             this.tableData = data.records
             this.paginationData = {
@@ -133,6 +131,10 @@ export default {
         }
     },
     async mounted () {
+        let defaultMobile = this.$route.query.mobile
+        if (defaultMobile) {
+            this.queryParams.mobile = defaultMobile
+        }
         this.onQuery()
     }
 }
