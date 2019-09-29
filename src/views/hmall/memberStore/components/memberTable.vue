@@ -51,12 +51,16 @@
                         <el-input v-model="memberDetails.memberName" disabled></el-input>
                     </div>
                     <div class="baseStyle">
-                        <span>机构类型：</span>
+                        <span>会员店来源：</span>
                         <el-input v-model="memberDetails.sourceName" disabled></el-input>
                     </div>
-                    <div class="baseStyle">
+                    <!-- <div class="baseStyle">
                         <span>父机构ID：</span>
                         <el-input v-model="memberDetails.merchantCode" disabled></el-input>
+                    </div> -->
+                    <div class="baseStyle">
+                        <span>父机构：</span>
+                        <el-input v-model="memberDetails.merchantName" disabled></el-input>
                     </div>
                     <div class="baseStyle">
                         <span>所属地：</span>
@@ -234,7 +238,10 @@ export default {
         async findMemberDetails (row) {
             const { data } = await findMemberDetails({ id: row.memberCode })
             this.memberDetails = data
-            this.memberDetails.placeOfOrigin = '' + data.provinceName + data.cityName + data.countryName
+            const provinceName = data.provinceName?data.provinceName:''
+            const cityName = data.cityName?data.cityName:''
+            const countryName = data.countryName?data.countryName:''
+            this.memberDetails.placeOfOrigin = provinceName + cityName + countryName
             this.memberDetails.sourceName = data.source == 1 ? '注册' : '单分享'
         },
         submitForm (formName) {
@@ -264,6 +271,10 @@ export default {
                     return false
                 }
             })
+        },
+        resetForm (formName) {
+            this.$refs[formName].clearValidate()
+            this.drawer.drawer = false
         }
     }
 }
