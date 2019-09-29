@@ -6,13 +6,13 @@
             <el-table-column
                 prop="spuCode"
                 align="center"
-                label="商品编码SPU">
+                label="商品编码">
             </el-table-column>
-            <el-table-column
+             <!--<el-table-column
                 prop="productCode"
                 align="center"
                 label="商品编码SKU">
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column
                 prop="orderNo"
                 align="center"

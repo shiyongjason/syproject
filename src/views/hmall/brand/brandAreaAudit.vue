@@ -47,7 +47,7 @@
             <div class="page-body-cont">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
-                        <el-button v-if="scope.data.row.auditStatus == 0" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
+                        <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
                         <!-- <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'review')">查看</el-button> -->
                         <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
                     </template>
@@ -63,6 +63,8 @@
                     <div>
                         <el-form-item label="代理区域：">
                             <div v-for="(item, index) in dialogMsg.brandAreaPoList" :key="index">
+                                {{item.provinceName}}
+                                {{item.cityName}}
                                 {{item.areaName}}
                             </div>
                         </el-form-item>
@@ -80,7 +82,9 @@
                     </div>
                     <div>
                         <el-form-item label="审核状态：">
-                            {{dialogMsg.auditStatus == 0?'待审核':dialogMsg.auditStatus == 1?'审核通过':dialogMsg.auditStatus == 2?'审核不通过':'-'}}
+                            <span v-if="dialogMsg.auditStatus == 0 || dialogMsg.auditStatus == 3">待审核</span>
+                            <span v-if="dialogMsg.auditStatus == 1">审核通过</span>
+                            <span v-if="dialogMsg.auditStatus == 2">审核不通过</span>
                         </el-form-item>
                     </div>
                     <div>
@@ -214,7 +218,7 @@ export default {
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
             data.records.map((v) => {
-                if (v.auditStatus == 0) v.auditStatusTransform = '待审核'
+                if (v.auditStatus == 0 || v.auditStatus == 3) v.auditStatusTransform = '待审核'
                 if (v.auditStatus == 1) v.auditStatusTransform = '审核通过'
                 if (v.auditStatus == 2) v.auditStatusTransform = '审核不通过'
             })
