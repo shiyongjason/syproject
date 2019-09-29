@@ -232,6 +232,7 @@ export default {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     try {
+                        this.form.parameterType = 2
                         let temp = this.form.values.map(item => item.value)
                         let flag = [...new Set(temp)].length === this.form.values.length
                         if (!flag) {
