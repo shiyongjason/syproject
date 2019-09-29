@@ -4,6 +4,7 @@ import Layout from '@/views/layout/Default.vue'
 import { findMenuList } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
+import jwtDecode from 'jwt-decode'
 Vue.use(Router)
 
 const routerMapping = [
@@ -532,18 +533,28 @@ const routerMapping = [
                 },
                 component: () => import('@/views/serviceManagement/reservation/index.vue')
             },
-            // 一期不做
-            // {
-            //     path: 'customerRecord',
-            //     name: 'customerRecord',
-            //     meta: {
-            //         title: '客户档案',
-            //         tagName: '客户档案',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/serviceManagement/customerRecord/index.vue')
-            // },
+            {
+                path: 'customerRecord',
+                name: 'customerRecord',
+                meta: {
+                    title: '客户档案',
+                    tagName: '客户档案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerRecord/index.vue')
+            },
+            {
+                path: 'customerRecordDetail',
+                name: 'customerRecordDetail',
+                meta: {
+                    title: '档案详情',
+                    tagName: '档案详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/customerRecord/detail.vue')
+            },
             {
                 path: 'customerReport',
                 name: 'customerReport',
@@ -565,6 +576,50 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/customerReport/detail.vue')
+            },
+            {
+                path: 'orderDetails',
+                name: 'serviceManagementOrderDetails',
+                meta: {
+                    title: '有赞订单详情',
+                    tagName: '有赞订单详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
+            },
+            {
+                path: 'orderChannelDetails',
+                name: 'serviceManagementOrderChannelDetails',
+                meta: {
+                    title: '渠道订单详情',
+                    tagName: '渠道订单详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderChannelDetails.vue')
+            },
+            {
+                path: 'orderChannelEdit',
+                name: 'serviceManagementOrderChannelEdit',
+                meta: {
+                    title: '渠道订单修改',
+                    tagName: '渠道订单修改',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderCenter/orderChannelEdit.vue')
+            },
+            {
+                path: 'tags',
+                name: 'serviceManagementTags',
+                meta: {
+                    title: '标签管理',
+                    tagName: '标签管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
     }
@@ -587,8 +642,33 @@ const router = new Router({
         }
     ]
 })
+function makeIndex (data, next, query) {
+    let index = []
+    if (data.length > 0) {
+        for (let i = 0; i < data.length; i++) {
+            index.push(data[i].path.replace('/', ''))
+            if (data[i].children) {
+                if (data[i].children.length > 0) {
+                    index.push(data[i].children[0].path.replace('/', ''))
+                }
+            }
+            break
+        }
+        let path = ''
+        if (query.route) {
+            path = '/' + query.route.split(',').join('/')
+            console.log(path)
+        } else {
+            path = index.join('/')
+        }
 
-async function getMenu (to, next) {
+        if (!path) {
+            path = '/'
+        }
+        next({ path: path, query: { mobile: query.mobile }, replace: true })
+    }
+}
+async function getMenu (to, next, isMakeIndex, query) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
@@ -597,7 +677,12 @@ async function getMenu (to, next) {
     // const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
-    next({ ...to, replace: true })
+
+    if (isMakeIndex) {
+        makeIndex(menu, next, query)
+    } else {
+        next({ ...to, replace: true })
+    }
 }
 // let isFirst = true
 router.beforeEach(async (to, from, next) => {
@@ -606,16 +691,23 @@ router.beforeEach(async (to, from, next) => {
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
     // 非/login下需要验证
     if (!isLogin) {
-        // 非登录的情况下
-        if (!userInfo) {
-            return next({
-                name: 'login'
-            })
+        // 提供第三方凭条跳转内部系统
+        const query = to.query
+        if (to.path === '/redirect' && query.sale === 'hosjoy') {
+            sessionStorage.setItem('token', query.access_token)
+            sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
+            await getMenu(to, next, true, query)
         } else {
-            if (isFirst) {
-                // isFirst = false
-                store.commit('IS_FIRST', false)
-                await getMenu(to, next)
+            // 非登录的情况下
+            if (!userInfo) {
+                return next({
+                    name: 'login'
+                })
+            } else {
+                if (isFirst) {
+                    store.commit('IS_FIRST', false)
+                    await getMenu(to, next)
+                }
             }
         }
     }

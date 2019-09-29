@@ -50,7 +50,7 @@
 import CustomerRecordTable from './components/customerRecordTable'
 import { findRecordList } from './api/index'
 import { mapState } from 'vuex'
-import { deepCopy } from '@/utils/utils'
+// import { deepCopy } from '@/utils/utils'
 export default {
     name: 'customerRecord',
     components: {

@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType'/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getData' :role='role' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
     </div>
 </template>
 
@@ -13,7 +13,7 @@
 import searchForm from './components/searchForm'
 import customerTable from './components/customerTable'
 import addOrUpdata from './components/addOrUpdata'
-import { findCustomerList } from './api/index'
+import { findCustomerList, findUserDetailsTagList } from './api/index'
 import { pagination } from '@/utils/mixins.js'
 
 export default {
@@ -28,16 +28,18 @@ export default {
             list: [],
             searchForm: {
                 role: '',
-                channelType: ''
+                channelType: '',
+                mobile: ''
             },
             editInfo: {},
             channelType: [
-                { value: '', label: '全部' }, { value: 0, label: '好享家' }, { value: 1, label: '有赞商城' }, { value: 2, label: '孩子王成长家' }
+                { value: '', label: '全部' }, { value: 0, label: '总部' }, { value: 1, label: '有赞商城' }, { value: 2, label: '孩子王' }, { value: 3, label: '考拉买菜' }
             ],
             role: [
                 { value: '', label: '全部' }, { value: 0, label: '客户' }, { value: 1, label: '线下管家' }, { value: 2, label: '线上管家' }
             ],
-            showDetail: false
+            showDetail: false,
+            tempEditRow: {}
         }
     },
     provide () {
@@ -47,11 +49,29 @@ export default {
         }
     },
     methods: {
-        onEdit (row, type) {
+        async findUserDetailsTagList (row) {
+            const { data } = await findUserDetailsTagList({ channelUserId: row.id })
+            if (data.length > 0) {
+                const tempId = data.map(value => value.id)
+                const tempName = data.map(value => value.labelName)
+                await this.$refs.addOrUpdate.findTagList()
+                this.$refs.addOrUpdate.updateTagList(tempId, tempName)
+            }
+        },
+        async onEdit (row, type) {
+            this.tempEditRow = { ...row }
             this.editInfo = row
+            this.findUserDetailsTagList(row)
             this.dialogCustomerEdit = true
             this.showDetail = false
             type && (this.showDetail = true)
+        },
+        resetRow () {
+            this.list.forEach((value, index) => {
+                if (value.id === this.tempEditRow.id) {
+                    this.$set(this.list, index + '', { ...this.tempEditRow })
+                }
+            })
         },
         onSearch () {
             this.getData()
@@ -64,7 +84,9 @@ export default {
         },
         onAddCustomer () {
             this.showDetail = false
-            this.editInfo.channelType = 0
+            this.editInfo = {
+                channelType: 0
+            }
             this.dialogCustomerEdit = true
         },
         async getData () {
@@ -72,9 +94,16 @@ export default {
             const { data } = await findCustomerList(params)
             this.list = data.records
             this.page.total = data.total
+        },
+        findDetails () {
+            this.$refs.addOrUpdate.findTagList()
         }
     },
     mounted () {
+        let defaultMobile = this.$route.query.mobile
+        if (defaultMobile) {
+            this.searchForm.mobile = defaultMobile
+        }
         this.getData()
     }
 }
