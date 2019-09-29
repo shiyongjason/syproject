@@ -481,8 +481,8 @@ const routerMapping = [
                 path: 'skuset',
                 name: 'skuset',
                 meta: {
-                    title: 'SKU设置',
-                    tagName: 'SKU设置',
+                    title: 'SKU属性管理',
+                    tagName: 'SKU属性管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -593,8 +593,8 @@ async function getMenu (to, next) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
     next({ ...to, replace: true })

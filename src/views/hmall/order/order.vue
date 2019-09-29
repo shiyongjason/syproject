@@ -209,19 +209,19 @@
                     </el-tab-pane>
                     <el-tab-pane label="商品统计" name="third">
                         <div class="page-body-cont query-cont">
-                            <div class="query-cont-col">
-                                <div class="query-col-title">商品SPU：</div>
+                          <div class="query-cont-col">
+                                <div class="query-col-title">商品编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.spuCode" maxlength="50" placeholder="请输入商品SPU"></el-input>
                                 </div>
                             </div>
-                            <div class="query-cont-col">
+                              <!-- <div class="query-cont-col">
                                 <div class="query-col-title">商品SkU：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.productCode" maxlength="50" placeholder="商品SkU">
                                     </el-input>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="query-cont-col">
                                 <div class="query-col-title">分部：</div>
                                 <div class="query-col-input">
