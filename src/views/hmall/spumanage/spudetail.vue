@@ -61,7 +61,7 @@
                                              }">
                         <el-select v-model="item.value" v-if="item.type === 2">
                             <!-- <template v-if="item.value"> -->
-                            <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.value">
+                            <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.values">
                             </el-option>
                             <!-- </template> -->
                         </el-select>
