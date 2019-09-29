@@ -51,7 +51,6 @@
                         <!-- <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'review')">查看</el-button> -->
                         <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
                     </template>
-                    
                 </basicTable>
             </div>
             <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center :close-on-click-modal="false">
