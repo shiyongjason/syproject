@@ -15,7 +15,7 @@
                 <div class="upload" v-if="roleType">
                     <el-upload class="upload-demo" v-bind="uploadInfo" :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList" :before-upload="handleUpload">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制500M以内</div>
+                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制100M以内</div>
                     </el-upload>
                 </div>
                 <!--end-->
@@ -103,9 +103,9 @@ export default {
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
-            if (file.size / (1024 * 1024) > 10) {
+            if (file.size / (1024 * 1024) > 100) {
                 this.$message({
-                    message: '附件要保持10M以内',
+                    message: '附件要保持100M以内',
                     type: 'warning'
                 })
                 this.type = 1
@@ -125,7 +125,7 @@ export default {
         async onSvaeattach () {
             const formData = {
                 applyId: this.applyId,
-                createUser: this.userInfo.name,
+                createUser: this.userInfo.employeeName,
                 dueAttachCreateFormList: this.arrList
             }
             if (this.arrList.length !== 0) {
