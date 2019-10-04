@@ -83,6 +83,9 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection'
             :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+             <template slot="spuName" slot-scope="scope">
+                    {{scope.data.row.brandName}}{{scope.data.row.spuName}}
+                </template>
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}
                 </template>

@@ -348,7 +348,7 @@ export default {
                         auditSpu(this.auditForm)
                         this.$message({
                             type: 'success',
-                            message: '商品审核成功！'
+                            message: this.auditForm.approveStatus == 1 ? '商品审核成功！' : '商品审核不成功'
                         })
                     }
                     this.$router.go(-1)
