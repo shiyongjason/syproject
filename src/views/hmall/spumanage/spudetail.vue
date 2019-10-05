@@ -14,11 +14,14 @@
                 <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;">
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;"  v-if="operate=='add'">
                     <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                    <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
+                    {{brandName}}
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="specification" style="width: 460px;">
                     <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
@@ -98,7 +101,7 @@
                         </el-form-item>
                         <el-form-item style="text-align: center">
                             <el-button type="primary" @click="onAudit(1)">确定</el-button>
-                            <el-button type="primary" @click="onAudit(2)">确定且下一个</el-button>
+                            <!-- <el-button type="primary" @click="onAudit(2)">确定且下一个</el-button> -->
                             <el-button @click="onBack()">返回</el-button>
                         </el-form-item>
                     </el-row>
@@ -280,6 +283,7 @@ export default {
             this.pictureContainer.unshift((this.pictureContainer.splice(i, 1))[0])
         },
         async findRelationBrand (val) {
+            this.form.brandId = ''
             const params = {
                 categoryId: val,
                 isRelation: 1 // 0：未关联 1：已关联
@@ -327,7 +331,6 @@ export default {
             })
             this.$refs['formmain'].validate(async (valid) => {
                 if (valid) {
-                    console.log(val)
                     if (this.operate == 'add') {
                         await saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
                         this.$message({
@@ -402,7 +405,7 @@ export default {
                 this.categoryIdArr.push(val.id)
             })
             this.categoryId = this.categoryIdArr[1]
-            this.findRelationBrand(this.categoryId)
+            // this.findRelationBrand(this.categoryId)
             const parameterList = data.parameterList
             parameterList && parameterList.map(val => {
                 val.parameterId = val.id
