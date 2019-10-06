@@ -15,7 +15,7 @@
                         <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
                     </div>
                 </div>
-                       <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
@@ -31,7 +31,7 @@
                             </el-option>
                             <el-option label="通过" value="1">
                             </el-option>
-                             <el-option label="未通过" value="2">
+                            <el-option label="未通过" value="2">
                             </el-option>
                         </el-select>
                     </div>
@@ -50,7 +50,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable  @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -81,9 +81,9 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection'
-            :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
-             <template slot="spuName" slot-scope="scope">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+                :isShowIndex='true'>
+                <template slot="spuName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.spuName}}
                 </template>
                 <template slot="brandName" slot-scope="scope">
@@ -92,8 +92,8 @@
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
                 </template>
-                 <template slot="action" slot-scope="scope">
-                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
+                <template slot="action" slot-scope="scope">
+                    <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -160,7 +160,7 @@ export default {
             findCategoryList: 'findCategoryList'
         }),
         handleSizeChange (val) {
-            this.queryParams.size = val
+            this.queryParams.pageSize = val
             this.searchList()
         },
         handleCurrentChange (val) {
