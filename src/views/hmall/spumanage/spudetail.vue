@@ -126,7 +126,7 @@ export default {
                 categoryId: '',
                 // categoryIdList: '',
                 createBy: '',
-                merchantCode: 0,
+                merchantCode: 'top',
                 merchantName: 'BOSS',
                 specification: '',
                 spuCode: this.$route.query.spuCode,
