@@ -348,7 +348,7 @@ export default {
                             this.auditForm.approveDesc = ''
                         }
                         await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
-                        auditSpu(this.auditForm)
+                        await auditSpu(this.auditForm)
                         this.$message({
                             type: 'success',
                             message: this.auditForm.approveStatus == 1 ? '商品审核成功！' : '商品审核不成功'
