@@ -173,6 +173,7 @@ export default {
             operate: '',
             markTitle: '新增属性',
             valueLength: 0,
+            valueData: '',
             modifyId: ''
         }
     },
@@ -191,7 +192,9 @@ export default {
         })
     },
     watch: {
+        valueData (val) {
 
+        }
     },
     methods: {
         async onSelect (index, item, val) {
@@ -309,6 +312,7 @@ export default {
                 isRequired: data.isRequired
             }
             // TODO 禁用和三级类目
+            this.valueData = data.values
             this.valueLength = data.values && data.values.length
             this.checkedCates = data.categoryList && data.categoryList.map(item => item.id + '_' + item.categoryName)
             this.operate = 'modify'
@@ -383,6 +387,9 @@ export default {
             this.searchList()
         },
         removeformValues (index) {
+            if (index < this.valueLength) {
+                this.valueLength = this.valueLength - 1
+            }
             this.formData.values.splice(index, 1)
         },
         addformValues () {
