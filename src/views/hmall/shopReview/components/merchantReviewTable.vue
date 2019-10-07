@@ -84,6 +84,11 @@
                             <a :href="merchantDetail.accountOpenPermitPhone" target="_blank" class="preview-container"><img :src="merchantDetail.accountOpenPermitPhone" alt="开户许可证" class="preview"></a>
                         </div>
                     </el-form-item>
+                    <el-form-item label="审核结果：" v-if="dialogParams.type === 'watch'">
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 0">新申请</span>
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 1">审核通过</span>
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 2">审核失败</span>
+                    </el-form-item>
                 </div>
             </el-form>
             <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
