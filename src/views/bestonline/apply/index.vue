@@ -153,7 +153,7 @@ export default {
             this.getDueapply()
         },
         async showProcess (applyId) {
-            const { data } = await getDueApproval({ applyId: applyId })
+            const { data } = await getDueApproval({ applyId: applyId, origin: 0 })
             this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
                 if (value.approveStatus == 1 || value.approveStatus == 2) {

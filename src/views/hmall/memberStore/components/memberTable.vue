@@ -38,7 +38,7 @@
             <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :onQuery="onQuery" :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-drawer :title="drawer.title" :visible.sync="drawer.drawer" direction="rtl" size='60%'>
+        <el-drawer :title="drawer.title" :visible.sync="drawer.drawer" direction="rtl" size='60%' :before-close="handleClose">
             <div class="drawer">
                 <el-form :model="memberDetails" :rules="rules" :inline="true" ref="memberDetails" label-width="150px">
                     <h3>一、基本信息</h3>
@@ -129,7 +129,7 @@
                                 </el-checkbox-group>
                             </el-form-item>
                             <el-form-item label="其他原因：">
-                                <el-input type="textarea" v-model="memberDetails.failureReason"></el-input>
+                                <el-input type="textarea" autosize v-model="memberDetails.failureReason" style="width: 150%" maxlength='200'></el-input>
                             </el-form-item>
                         </template>
                         <el-form-item>
@@ -149,7 +149,7 @@
                             </div>
                             <div v-if="memberDetails.status == 30">
                                 <span>不通过原因：</span>
-                                <span>{{memberDetails.failureReason}}</span>
+                                <span class="wordWrap">{{memberDetails.failureReason}}</span>
                             </div>
                         </div>
                     </template>
@@ -237,10 +237,11 @@ export default {
         },
         async findMemberDetails (row) {
             const { data } = await findMemberDetails({ id: row.memberCode })
+            if (data.status == 20) data.failureReason = ''
             this.memberDetails = data
-            const provinceName = data.provinceName?data.provinceName:''
-            const cityName = data.cityName?data.cityName:''
-            const countryName = data.countryName?data.countryName:''
+            const provinceName = data.provinceName ? data.provinceName : ''
+            const cityName = data.cityName ? data.cityName : ''
+            const countryName = data.countryName ? data.countryName : ''
             this.memberDetails.placeOfOrigin = provinceName + cityName + countryName
             this.memberDetails.sourceName = data.source == 1 ? '注册' : '单分享'
         },
@@ -275,6 +276,9 @@ export default {
         resetForm (formName) {
             this.$refs[formName].clearValidate()
             this.drawer.drawer = false
+        },
+        handleClose () {
+            this.resetForm('memberDetails')
         }
     }
 }
@@ -348,15 +352,18 @@ export default {
         }
         .IDImg {
             padding-right: 50px;
-            img{
+            img {
                 display: block;
                 width: 200px;
                 height: 200px;
             }
         }
     }
-    .failResult>div{
+    .failResult > div {
         margin: 10px;
+    }
+    .wordWrap {
+        word-wrap: break-word;
     }
 }
 </style>

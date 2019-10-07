@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="page-body-cont">
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true"  :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
                         <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
                         <!-- <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'review')">查看</el-button> -->
@@ -148,8 +148,8 @@ export default {
             },
             paginationData: {
                 pageNumber: 1,
-                pageSize: 10,
-                total: 100
+                pageSize: 10
+                // total: 100
             },
             dialogParams: {
                 show: false,
@@ -214,15 +214,18 @@ export default {
             if (!searchParams.minCreateTime) searchParams.minCreateTime = null
             if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
             const { data } = await findBrandAreaList({ params: searchParams })
-            this.paginationData.pageNumber = data.pages
-            this.paginationData.pageSize = data.size
-            this.paginationData.total = data.total
+            console.log(this.paginationData)
             data.records.map((v) => {
                 if (v.auditStatus == 0 || v.auditStatus == 3) v.auditStatusTransform = '待审核'
                 if (v.auditStatus == 1) v.auditStatusTransform = '审核通过'
                 if (v.auditStatus == 2) v.auditStatusTransform = '审核不通过'
             })
             this.tableData = data.records
+            this.paginationData = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         async showDialog (scope, type) {
             const { data } = await findBrandArea({ id: scope.id })

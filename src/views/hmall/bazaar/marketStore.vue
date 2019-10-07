@@ -78,8 +78,8 @@ export default {
             },
             paginationData: {
                 pageNumber: 1,
-                pageSize: 10,
-                total: 100
+                pageSize: 10
+                // total: 100
             },
             category: []
         }
@@ -107,7 +107,7 @@ export default {
             }
             if (searchParams.pageSize == 0) searchParams.pageSize = 10
             const { data } = await findBazaarList(searchParams)
-            this.paginationData.pageNumber = data.pages
+            this.paginationData.pageNumber = data.current
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
             this.tableData = data.records
