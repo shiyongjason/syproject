@@ -330,7 +330,7 @@ export default {
             }
         },
         handleSizeChange (val) {
-            this.queryParams.size = val
+            this.queryParams.pageSize = val
             this.searchList()
         },
         handleCurrentChange (val) {

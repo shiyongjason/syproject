@@ -134,7 +134,7 @@ export default {
                 { label: '商家名称', prop: 'merchantName' },
                 { label: '品牌名称', prop: 'brandName' },
                 { label: '审核状态', prop: 'auditStatusTransform' },
-                { label: '申请日期', prop: 'createTime' }
+                { label: '申请日期', prop: 'updateTime' }
             ],
             tableData: [],
             searchParams: {},
