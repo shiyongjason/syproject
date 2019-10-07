@@ -96,7 +96,7 @@
                 <el-form-item v-for="(item, index) in formData.values" :label="'属性值' + (index+1)+'：'" :key="index" :rules="{required: true, message: '属性值不能为空', trigger: 'blur'}" :prop="'values.'+index+'.value'">
                     <el-input v-model="item.value" style="width: 200px" maxlength="25" :disabled="operate=='modify'&&index < valueLength"></el-input>
                     <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="formData.values.length > 1"></span>
-                    <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="index + 1 === formData.values.length"></span>
+                    <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="index + 1 === formData.values.length && index < 9"></span>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">

@@ -86,7 +86,7 @@ export default {
         return {
             tableLabel: [
                 { label: '商品编码', prop: 'spuCode' },
-                { label: '商品名称', prop: 'spuName' },
+                { label: '商品名称', prop: 'spuFullName' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'categoryNames' },
                 { label: '商家名称', prop: 'merchantName' },
@@ -139,6 +139,9 @@ export default {
             this.paginationData.pageNumber = data.current
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
+            data.records.map(item => {
+                item.spuFullName = item.brandName + ' ' + item.spuName
+            })
             this.tableData = data.records
         },
         onSizeChange (val) {
