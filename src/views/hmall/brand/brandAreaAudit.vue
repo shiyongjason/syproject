@@ -48,7 +48,6 @@
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true"  :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
                         <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
-                        <!-- <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'review')">查看</el-button> -->
                         <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
                     </template>
                 </basicTable>
@@ -124,7 +123,7 @@
 </template>
 
 <script>
-import { findBrandAreaList, findBrandArea, updateBrandArea } from './api/index'
+import { findBrandAreaList, findBrandArea, auditBrandArea } from './api/index'
 import { mapState } from 'vuex'
 import moment from 'moment'
 export default {
@@ -214,7 +213,6 @@ export default {
             if (!searchParams.minCreateTime) searchParams.minCreateTime = null
             if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
             const { data } = await findBrandAreaList({ params: searchParams })
-            console.log(this.paginationData)
             data.records.map((v) => {
                 if (v.auditStatus == 0 || v.auditStatus == 3) v.auditStatusTransform = '待审核'
                 if (v.auditStatus == 1) v.auditStatusTransform = '审核通过'
@@ -253,21 +251,21 @@ export default {
             this.search()
         },
         createCouponReview () {
-            this.updateBrandArea()
+            this.auditBrandArea()
         },
-        async updateBrandArea () {
+        async auditBrandArea () {
             this.$refs['suggest'].validate(async (valid) => {
                 if (valid) {
                     const form = {
                         updateBy: this.userInfo.employeeName,
-                        updateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+                        // updateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
                         auditStatus: +this.suggest.auditResult,
-                        brandId: this.dialogMsg.brandId,
+                        // brandId: this.dialogMsg.brandId,
                         id: this.dialogMsg.id,
                         remark: this.suggest.auditRemark
                     }
-                    // console.log(form)
-                    await updateBrandArea(form)
+                    console.log(form)
+                    await auditBrandArea(form)
                     this.dialogParams.show = false
                     this.onQuery()
                 } else {

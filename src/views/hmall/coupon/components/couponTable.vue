@@ -91,6 +91,7 @@
                 @current-change="handleCurrentChange"
                 :current-page="paginationData.pageNumber"
                 :page-sizes="[10,20,30,40,50]"
+                :page-size="paginationData.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
                 :onQuery="onQuery"
                 :total="paginationData.totalElements">

@@ -44,3 +44,8 @@ export const findBrandArea = (params) => {
 export const updateBrandArea = (params) => {
     return instance.post(B2bUrl + 'product/api/brandarea/update', params)
 }
+
+// 审核品牌区域
+export const auditBrandArea = (params) => {
+    return instance.post(B2bUrl + 'product/api/brandarea/audit', params)
+}
