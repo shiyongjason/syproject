@@ -14,8 +14,8 @@
             <el-table-column align="center" label="审核状态">
                 <template slot-scope="scope">
                     <!--默认0，0：审核通过，10：待提交认证资料，20：待审核，30：审核不通过-->
-                    <span v-if="scope.row.status == 0">审核通过</span>
-                    <span v-if="scope.row.status == 10">待提交认证资料</span>
+                    <span v-if="scope.row.status == 0">已认证</span>
+                    <span v-if="scope.row.status == 10">未认证</span>
                     <span v-if="scope.row.status == 20">待审核</span>
                     <span v-if="scope.row.status == 30">审核不通过</span>
                 </template>

@@ -58,8 +58,8 @@
                         <!--0：审核通过，10：待提交认证资料，20：待审核，30：审核不通过-->
                         <el-select v-model="queryParams.status" placeholder="全部">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="审核通过" :value="0"></el-option>
-                            <el-option label="待提交认证资料" :value="10"></el-option>
+                            <el-option label="已认证" :value="0"></el-option>
+                            <el-option label="未认证" :value="10"></el-option>
                             <el-option label="待审核" :value="20"></el-option>
                             <el-option label="审核不通过" :value="30"></el-option>
                         </el-select>
@@ -156,7 +156,7 @@ export default {
             if (params.startTime) params.startTime = this.$root.$options.filters.formatDate(params.startTime, 'YYYY-MM-DD HH:mm:ss')
             if (params.endTime) params.endTime = this.$root.$options.filters.formatDate(params.endTime, 'YYYY-MM-DD HH:mm:ss')
             const { data } = await findMemberList(params)
-            console.log(data)
+            // console.log(data)
             // const { data } = await findMemberList({
             //     pageSize: 10,
             //     pageNumber: 1
