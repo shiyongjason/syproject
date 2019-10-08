@@ -125,7 +125,7 @@
 <script>
 import { findBrandAreaList, findBrandArea, auditBrandArea } from './api/index'
 import { mapState } from 'vuex'
-import moment from 'moment'
+// import moment from 'moment'
 export default {
     name: 'brandAreaAudit',
     data () {
