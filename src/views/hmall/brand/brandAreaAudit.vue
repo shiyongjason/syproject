@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="page-body-cont">
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true"  :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
                         <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
                         <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
@@ -125,6 +125,7 @@
 <script>
 import { findBrandAreaList, findBrandArea, auditBrandArea } from './api/index'
 import { mapState } from 'vuex'
+import { Message } from 'element-ui'
 // import moment from 'moment'
 export default {
     name: 'brandAreaAudit',
@@ -264,7 +265,11 @@ export default {
                         id: this.dialogMsg.id,
                         remark: this.suggest.auditRemark
                     }
-                    console.log(form)
+                    if (!this.dialogMsg.brandAreaPoList) this.dialogMsg.brandAreaPoList = []
+                    if (this.dialogMsg.brandAreaPoList.length === 0) {
+                        Message({ message: '代理区域不能为空', type: 'error' })
+                        return
+                    }
                     await auditBrandArea(form)
                     this.dialogParams.show = false
                     this.onQuery()
