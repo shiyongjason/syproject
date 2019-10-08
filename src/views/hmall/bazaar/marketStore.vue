@@ -44,6 +44,34 @@
             </div>
             <div class="page-body-cont">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                  <template slot='skuRebateBoList' slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
+                        <div slot="content">
+                            <span v-if="scope.data.row.skuRebateBoList.length>0">
+                                <p v-for="(item,index) in scope.data.row.skuRebateBoList" :key="index">
+                                    <i v-if="item.type==1" style="font-style:normal">直接返利{{item.discount}}%</i>
+                                    <i v-if="item.type==2" style="font-style:normal">满{{item.reachValue}}元返{{item.discount}}%</i>
+                                    <i v-if="item.type==3" style="font-style:normal">满{{item.reachValue}}件返{{item.discount}}%</i>
+                                </p>
+                            </span>
+                            <span v-else>-</span>
+                        </div>
+                        <span>返利详情</span>
+                    </el-tooltip>
+                </template>
+               <template slot='commission' slot-scope="scope">
+                    <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
+                        <div slot="content">
+                            <span v-if="scope.data.row.commissionBoList.length>0">
+                                <p v-for="(item,index) in scope.data.row.commissionBoList" :key="index">
+                                    <i  style="font-style:normal">{{item.skuName}}佣金{{item.commission}}%</i>
+                                </p>
+                            </span>
+                            <span v-else>-</span>
+                        </div>
+                        <span>{{scope.data.row.commission}}%</span>
+                    </el-tooltip>
+                </template>
                 </basicTable>
             </div>
         </div>
@@ -58,12 +86,13 @@ export default {
         return {
             tableLabel: [
                 { label: '商品编码', prop: 'spuCode' },
-                { label: '商品名称', prop: 'spuName' },
+                { label: '商品名称', prop: 'spuFullName' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'categoryNames' },
                 { label: '商家名称', prop: 'merchantName' },
                 { label: '建议零售价', prop: 'retailPrice' },
                 { label: '销售价格', prop: 'sellPrice', event: true },
+                { label: '返利', prop: 'skuRebateBoList' },
                 { label: '佣金', prop: 'commission' },
                 { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } }
             ],
@@ -110,6 +139,9 @@ export default {
             this.paginationData.pageNumber = data.current
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
+            data.records.map(item => {
+                item.spuFullName = item.brandName + ' ' + item.spuName
+            })
             this.tableData = data.records
         },
         onSizeChange (val) {
