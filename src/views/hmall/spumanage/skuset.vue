@@ -405,7 +405,8 @@ export default {
         },
         addformValues () {
             this.formData.values.push({
-                value: ''
+                value: '',
+                hasDelete: true
             })
         }
     },
