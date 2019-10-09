@@ -113,7 +113,8 @@ export default {
         return {
             queryParams: {
                 type: '',
-                status: ''
+                status: '',
+                parameterType: 2
             },
             dialogAttributeEdit: false,
             status: 'add',
