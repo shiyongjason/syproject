@@ -50,8 +50,7 @@
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
             </AttributeTable> -->
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
-                :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status==2?'red':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
                 </template>
@@ -94,8 +93,9 @@
                     <el-input v-model="formData.parameterName" maxlength="6"></el-input>
                 </el-form-item>
                 <el-form-item v-for="(item, index) in formData.values" :label="'属性值' + (index+1)+'：'" :key="index" :rules="{required: true, message: '属性值不能为空', trigger: 'blur'}" :prop="'values.'+index+'.value'">
-                    <el-input v-model="item.value" style="width: 200px" maxlength="25" :disabled="operate=='modify'&&index < valueLength"></el-input>
-                    <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="formData.values.length > 1"></span>
+                    <!-- <el-input v-model="item.value" style="width: 200px" maxlength="25" :disabled="operate=='modify'&&index < valueLength"></el-input> -->
+                    <el-input v-model="item.value" style="width: 200px" maxlength="25"></el-input>
+                    <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="formData.values.length > 1 && item.hasDelete"></span>
                     <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="index + 1 === formData.values.length && index < 9"></span>
                 </el-form-item>
             </el-form>
@@ -278,11 +278,13 @@ export default {
         },
         async saveAttribute () {
             let { ...params } = this.formData
-            params.values = params.values.map(item => item.value)
             params.operator = this.userInfo.employeeName
+            params.parameterValues = params.values
             if (this.operate === 'add') {
+                console.log(params)
                 await createAttribute(params)
             } else if (this.operate === 'modify') {
+                console.log(params)
                 await updateAttribute(this.modifyId, params)
             }
             this.dialogAttributeEdit = false
@@ -302,15 +304,24 @@ export default {
             this.categoryThird = []
             this.formData.values = []
             const { data } = await findAttributeDetails(val.id)
+            data.values.map(item => {
+                if (data.notDeletedValues.indexOf(item.id) !== -1) {
+                    item.hasDelete = false
+                } else {
+                    item.hasDelete = true
+                }
+            })
+            console.log(data)
             this.formData = {
                 parameterCode: data.parameterCode,
                 parameterName: data.parameterName,
                 categoryList: data.categoryList.map(item => item.id),
                 type: data.type,
-                values: data.values ? data.values.map(item => ({ value: item })) : [{ value: '' }],
+                values: data.values,
                 unit: data.unit,
                 isRequired: data.isRequired
             }
+            console.log(this.formData)
             // TODO 禁用和三级类目
             this.valueData = data.values
             this.valueLength = data.values && data.values.length
@@ -394,7 +405,8 @@ export default {
         },
         addformValues () {
             this.formData.values.push({
-                value: ''
+                value: '',
+                hasDelete: true
             })
         }
     },
@@ -467,7 +479,7 @@ export default {
     width: 8px;
     background: transparent;
 }
-.form-add-remove{
+.form-add-remove {
     color: #ff7a45;
     font-size: 20px;
 }
