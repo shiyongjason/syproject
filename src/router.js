@@ -279,17 +279,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/brand/brand.vue')
             },
-            {
-                path: 'shopManager',
-                name: 'shopManager',
-                meta: {
-                    title: '商品库管理SPU',
-                    tagName: '商品库管理SPU',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopManager/shopManager.vue')
-            },
+            // {
+            //     path: 'shopManager',
+            //     name: 'shopManager',
+            //     meta: {
+            //         title: '商品库管理SPU',
+            //         tagName: '商品库管理SPU',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopManager/shopManager.vue')
+            // },
             {
                 path: 'selectCategory',
                 name: 'selectCategory',
@@ -367,17 +367,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
             },
-            {
-                path: 'publicShop',
-                name: 'publicShop',
-                meta: {
-                    title: '共享商品管理',
-                    tagName: '共享商品管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopManager/publicShop.vue')
-            },
+            // {
+            //     path: 'publicShop',
+            //     name: 'publicShop',
+            //     meta: {
+            //         title: '共享商品管理',
+            //         tagName: '共享商品管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopManager/publicShop.vue')
+            // },
             {
                 path: 'activeReview',
                 name: 'activeReview',
