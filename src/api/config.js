@@ -30,13 +30,13 @@ switch (env) {
         break
     case 'dev':
         // TODO 2.0暂时使用
-        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        ossUrl = 'https://testroute.hosjoy.com:4832/'
-        uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
-        iframeUrl = 'https://test.hosjoy.com:4832/'
+        interfaceUrl = 'https://hbp.hosjoy.com/'
+        ossUrl = 'https://route.hosjoy.com/'
+        uploadUrl = 'https://hbp.hosjoy.com/tms'
+        iframeUrl = 'https://test.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testnewb2b-gateway.hosjoy.com:4832/'
-        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
+        fileUploadUrl = 'https://hbp.hosjoy.com/'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
