@@ -5,22 +5,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">属性编码：</div>
                     <div class="query-col-input">
-                        <el-input
-                            type="text"
-                            maxlength="50"
-                            v-model="queryParams.parameterCode"
-                            placeholder="请输入属性编码">
+                        <el-input type="text" maxlength="50" v-model="queryParams.parameterCode" placeholder="请输入属性编码">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">属性名称：</div>
                     <div class="query-col-input">
-                        <el-input
-                            type="text"
-                            maxlength="50"
-                            v-model="queryParams.parameterName"
-                            placeholder="请输入属性名称">
+                        <el-input type="text" maxlength="50" v-model="queryParams.parameterName" placeholder="请输入属性名称">
                         </el-input>
                     </div>
                 </div>
@@ -28,11 +20,7 @@
                     <div class="query-col-title">属性类型：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.type" style="width: 100%">
-                            <el-option
-                                v-for="item in attrTypeOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in attrTypeOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -41,11 +29,7 @@
                     <div class="query-col-title">属性状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.status" style="width: 100%">
-                            <el-option
-                                v-for="item in attrStatusOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in attrStatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -53,11 +37,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">维护人：</div>
                     <div class="query-col-input">
-                        <el-input
-                            type="text"
-                            maxlength="50"
-                            v-model="queryParams.updateBy"
-                            placeholder="请输入维护人姓名">
+                        <el-input type="text" maxlength="50" v-model="queryParams.updateBy" placeholder="请输入维护人姓名">
                         </el-input>
                     </div>
                 </div>
@@ -69,40 +49,23 @@
                     </div>
                 </div>
             </div>
-            <AttributeTable
-                :tableData="tableData"
-                :paginationData="paginationData"
-                @updateStatus="onQuery"
-                @updateAttribute="updateAttributeChange"
-                @openMark="openMark"
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange">
+            <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
             </AttributeTable>
         </div>
-        <el-dialog
-            title="属性编辑"
-            :visible.sync="dialogAttributeEdit"
-            :close-on-click-modal="false">
-            <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth" >
+        <el-dialog title="属性编辑" :visible.sync="dialogAttributeEdit" :close-on-click-modal="false">
+            <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
                 <el-form-item label="属性编号" v-if="this.status === 'modify'">
                     {{form.parameterCode}}
                 </el-form-item>
                 <el-form-item prop="categoryList" label="归属类目">
                     <el-checkbox-group v-model="form.categoryList">
-                        <el-checkbox
-                            v-for="item in categoryList"
-                            :key="item.id"
-                            :label="item.id">
+                        <el-checkbox v-for="item in categoryList" :key="item.id" :label="item.id">
                             {{item.categoryName}}
                         </el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="属性名称" prop="parameterName">
-                    <el-input
-                        v-model="form.parameterName"
-                        placeholder="请输入属性名称"
-                    maxlength="25"
-                        style="width: 300px"></el-input>
+                    <el-input v-model="form.parameterName" placeholder="请输入属性名称" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="type" label="属性类型">
                     <el-select v-model="form.type" style="width: 300px">
@@ -111,28 +74,14 @@
                     </el-select>
                 </el-form-item>
                 <template v-if="form.type === 2">
-                    <el-form-item
-                        v-for="(item, index) in form.values"
-                        :label="'选项' + (index+1)"
-                        :key="index"
-                        :prop="`values[${index}].value`">
+                    <el-form-item v-for="(item, index) in form.values" :label="'选项' + (index+1)" :key="index" :prop="`values[${index}].value`">
                         <el-input v-model="item.value" style="width: 200px" maxlength="25"></el-input>
-                        <span
-                            @click.prevent="removeformValues(index)"
-                            class="ml10 el-icon-remove-outline form-add-remove"
-                            v-if="form.values.length > 1"></span>
-                        <span
-                            @click.prevent="addformValues(item)"
-                            class="ml10 el-icon-circle-plus-outline form-add-remove"
-                            v-if="form.values.length < 10 && index + 1 === form.values.length"></span>
+                        <span @click.prevent="removeformValues(index)" class="ml10 el-icon-remove-outline form-add-remove" v-if="form.values.length > 1 && item.hasDelete"></span>
+                        <span @click.prevent="addformValues(item)" class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="form.values.length < 10 && index + 1 === form.values.length"></span>
                     </el-form-item>
                 </template>
                 <el-form-item label="单位" v-if="form.type ===1">
-                    <el-input
-                        v-model="form.unit"
-                        placeholder="输入参数项，例如 P、KW等"
-                        maxlength="10"
-                        style="width: 300px"></el-input>
+                    <el-input v-model="form.unit" placeholder="输入参数项，例如 P、KW等" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="isRequired" label="是否必填">
                     <el-radio-group v-model="form.isRequired">
@@ -261,10 +210,9 @@ export default {
             let { ...params } = this.form
             if (params.type === 1) {
                 delete params.values
-            } else if (params.type === 2) {
-                params.values = params.values.map(item => item.value)
-            }
+            } else if (params.type === 2) { }
             params.operator = this.userInfo.employeeName
+            params.parameterValues = params.values
             if (this.status === 'add') {
                 await createAttribute(params)
             } else if (this.status === 'modify') {
@@ -279,12 +227,19 @@ export default {
         },
         async findAttributeDetails () {
             const { data } = await findAttributeDetails(this.modifyId)
+            data.values.map(item => {
+                if (data.notDeletedValues.indexOf(item.id) !== -1) {
+                    item.hasDelete = false
+                } else {
+                    item.hasDelete = true
+                }
+            })
             this.form = {
                 parameterCode: data.parameterCode,
                 parameterName: data.parameterName,
                 categoryList: data.categoryList.map(item => item.id),
                 type: data.type,
-                values: data.values ? data.values.map(item => ({ value: item })) : [{ value: '' }],
+                values: data.values,
                 unit: data.unit,
                 isRequired: data.isRequired
             }
@@ -333,7 +288,8 @@ export default {
         },
         addformValues () {
             this.form.values.push({
-                value: ''
+                value: '',
+                hasDelete: true
             })
         },
         updateAttributeChange (col) {
@@ -351,14 +307,14 @@ export default {
 </script>
 
 <style scoped>
-.form-add-remove{
+.form-add-remove {
     font-size: 22px;
     color: #ff9c31;
     cursor: pointer;
     line-height: 40px;
     vertical-align: top;
 }
-    .flex-wrap-row{
-        max-width: 1350px;
-    }
+.flex-wrap-row {
+    max-width: 1350px;
+}
 </style>
