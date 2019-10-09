@@ -29,15 +29,14 @@ switch (env) {
         // fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'dev':
-        interfaceUrl = 'http://192.168.20.248:30000/'
-        ossUrl = 'http://192.168.20.248:8089/'
-        // interfaceUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        uploadUrl = 'http://192.168.20.248:30000/tms'
-        iframeUrl = 'http://devcrm.hosjoy.com/'
+        // TODO 2.0暂时使用
+        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
+        ossUrl = 'https://testroute.hosjoy.com:4832/'
+        uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
+        iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        ccpBaseUrl = 'http://192.168.20.248:8021/'
-        B2bUrl = 'http://192.168.20.248:40000/'
-        fileUploadUrl = 'http://192.168.20.248:30000/'
+        B2bUrl = 'https://testnewb2b-gateway.hosjoy.com:4832/'
+        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
