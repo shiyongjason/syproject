@@ -45,7 +45,7 @@ switch (env) {
         uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://testnewb2b-gateway.hosjoy.com:4832/'
+        B2bUrl = 'https://test2b-gateway.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'production':
