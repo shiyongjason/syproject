@@ -144,7 +144,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="enter('form')">确认</el-button>
+                <el-button type="primary" @click="enter('form')" :loading="isEnter">确认</el-button>
                 <el-button @click="dialog = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -194,16 +194,28 @@ export default {
                     { required: true, message: '请输入老板手机号码', trigger: 'blur' },
                     { validator: PHONE, trigger: 'blur', whitespace: true }
                 ]
-            }
+            },
+            isEnter: false
         }
     },
     methods: {
         enter (formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.createOpen()
-                }
-            })
+            if (this.isEnter) {
+                return
+            }
+            this.isEnter = true
+            try {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.createOpen()
+                        this.isEnter = false
+                    } else {
+                        this.isEnter = false
+                    }
+                })
+            } catch (error) {
+                this.isEnter = false
+            }
         },
         async createOpen () {
             const params = {

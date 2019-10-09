@@ -15,5 +15,5 @@ export function findYouZanOrderDetails (params) {
 }
 // 渠道订单修改
 export function updateChannelOrderDetails (id, params) {
-    return axios.put(`/service/api/orders/channel/${id}`, params )
+    return axios.put(`/service/api/orders/channel/${id}`, params)
 }
