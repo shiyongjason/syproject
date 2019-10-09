@@ -59,7 +59,13 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">修改</el-button>
-                    <el-button :type="scope.data.row.status ==2?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '失效' : '生效'">
+                    <el-button
+                        :type="scope.data.row.status ==2?'primary':''"
+                        size="mini"
+                        plain
+                        :disabled='!scope.data.row.canInvalid'
+                        @click="onChangeSpu(scope.data.row)"
+                        v-text="scope.data.row.status === 1 ? '失效' : '生效'">
                     </el-button>
                 </template>
             </basicTable>
