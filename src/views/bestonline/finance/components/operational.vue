@@ -147,7 +147,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { IsFixedTwoNumber, IsPositiveNumber } from '@/utils/rules'
+import { IsPositiveNumber, twoNumber } from '@/utils/rules'
 export default {
     computed: {
         ...mapState({
@@ -174,17 +174,17 @@ export default {
                 ],
                 totalAssetsTurnover: [
                     { required: true, message: '请填写总资产周转率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 totalAssetsTurnoverNORequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 returnOnEquity: [
                     { required: true, message: '请填写净资产收益率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 returnOnEquityNORequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }
