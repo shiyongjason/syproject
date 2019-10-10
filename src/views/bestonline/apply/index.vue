@@ -161,7 +161,6 @@ export default {
                 }
                 return value
             })
-            console.log(this.dueApproval)
             this.dialogVisible = true
         },
         async getDueapply () {

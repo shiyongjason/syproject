@@ -279,17 +279,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/brand/brand.vue')
             },
-            {
-                path: 'shopManager',
-                name: 'shopManager',
-                meta: {
-                    title: '商品库管理SPU',
-                    tagName: '商品库管理SPU',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopManager/shopManager.vue')
-            },
+            // {
+            //     path: 'shopManager',
+            //     name: 'shopManager',
+            //     meta: {
+            //         title: '商品库管理SPU',
+            //         tagName: '商品库管理SPU',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopManager/shopManager.vue')
+            // },
             {
                 path: 'selectCategory',
                 name: 'selectCategory',
@@ -305,8 +305,8 @@ const routerMapping = [
                 path: 'platform',
                 name: 'platform',
                 meta: {
-                    title: '平台公司功能管理',
-                    tagName: '平台公司功能管理',
+                    title: '商家功能管理',
+                    tagName: '商家功能管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -367,17 +367,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
             },
-            {
-                path: 'publicShop',
-                name: 'publicShop',
-                meta: {
-                    title: '共享商品管理',
-                    tagName: '共享商品管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopManager/publicShop.vue')
-            },
+            // {
+            //     path: 'publicShop',
+            //     name: 'publicShop',
+            //     meta: {
+            //         title: '共享商品管理',
+            //         tagName: '共享商品管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopManager/publicShop.vue')
+            // },
             {
                 path: 'activeReview',
                 name: 'activeReview',
@@ -410,6 +410,84 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/shopReview/merchantReview.vue')
+            },
+            // 这期不做
+            // {
+            //     path: 'memberManagement',
+            //     name: 'memberManagement',
+            //     meta: {
+            //         title: '会员管理',
+            //         tagName: '会员管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/memberManagement.vue')
+            // },
+            {
+                path: 'brandAreaAudit',
+                name: 'brandAreaAudit',
+                meta: {
+                    title: '品牌区域审核列表',
+                    tagName: '品牌区域审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
+            },
+            {
+                path: 'marketStore',
+                name: 'marketStore',
+                meta: {
+                    title: '集市商品库',
+                    tagName: '集市商品库',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/bazaar/marketStore.vue')
+            },
+            {
+                path: 'spumange',
+                name: 'spumange',
+                meta: {
+                    title: 'SPU列表',
+                    tagName: 'SPU列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/index')
+            },
+            {
+                path: 'spudetail',
+                name: 'spudetail',
+                meta: {
+                    title: 'SPU管理',
+                    tagName: 'SPU管理',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spudetail')
+            },
+            {
+                path: 'spuauditlist',
+                name: 'spuauditlist',
+                meta: {
+                    title: 'SPU审核列表',
+                    tagName: 'SPU审核列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spuauditlist')
+            },
+            {
+                path: 'skuset',
+                name: 'skuset',
+                meta: {
+                    title: 'SKU属性管理',
+                    tagName: 'SKU属性管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/skuset')
             }
         ]
     },
@@ -596,6 +674,7 @@ async function getMenu (to, next, isMakeIndex, query) {
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     const menu = makeMenus(routerMapping, resourceList)
+    // const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 

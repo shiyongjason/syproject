@@ -106,7 +106,7 @@ export default {
     },
     data () {
         return {
-            activeName: '',
+            activeName: 'first',
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -132,17 +132,9 @@ export default {
             this.activeName = 'second'
             this.onQueryPlat()
         }
-        // this.findProvinceAndCity(0, this.userInfo.organizationCode)
     },
     methods: {
         async reset () {
-            // this.queryParams.organizationCode = ''
-            // this.queryParams.provinceCode = null
-            // this.queryParams.cityCode = ''
-            // this.queryParams.status = ''
-            // this.queryParams.organizationName = ''
-            // this.queryParams.startDate = ''
-            // this.queryParams.endDate = ''
             this.$set(this.queryParams, 'organizationCode', '')
             this.$set(this.queryParams, 'provinceCode', null)
             this.$set(this.queryParams, 'cityCode', '')
@@ -227,8 +219,6 @@ export default {
         handleClick () {
             localStorage.setItem('ManageStatus', this.activeName)
             this.reset()
-            // this.queryParams.organizationName = ''
-            // this.$set(this.queryParams, 'organizationName', '')
             this.onQueryPlat()
         }
     }

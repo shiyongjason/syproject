@@ -411,9 +411,6 @@ export default {
             }
         },
         onAddList (key, defaultKey, type) {
-            console.log(this.justiceData[key])
-            console.log(this[defaultKey])
-            console.log(this.justiceData)
             const tempObj = JSON.parse(JSON.stringify(this[defaultKey]))
             tempObj.id = Date.now()
             if (type || type == 0) {
