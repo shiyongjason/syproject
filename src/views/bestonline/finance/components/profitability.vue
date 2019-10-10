@@ -119,7 +119,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { twoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     computed: {
@@ -132,24 +132,24 @@ export default {
             rules: {
                 grossMargin: [
                     { required: true, message: '请填写销售毛利率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 grossMarginRequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 rate: [
                     { required: true, message: '请填写费率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 rateNoRequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 profitRatio: [
                     { required: true, message: '请填写净利率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 profitRatioRequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }
