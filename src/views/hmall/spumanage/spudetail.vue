@@ -27,7 +27,7 @@
                     <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
-                    <el-input placeholder="" maxlength="15" v-model="form.spuName" :disabled="operate=='audit'">
+                    <el-input placeholder="" maxlength="50" v-model="form.spuName" :disabled="operate=='audit'">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
