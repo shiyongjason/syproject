@@ -150,7 +150,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { IsFixedTwoNumber, twoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     data () {
@@ -159,18 +159,18 @@ export default {
             rules: {
                 liquidityRatio: [
                     { required: true, message: '请填写流动比率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 quickRatio: [
                     { required: true, message: '请填写速动比率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 assetLiabilityRatio: [
                     { required: true, message: '请填写资产负债率', trigger: 'blur' },
                     { validator: IsFixedTwoNumber, trigger: 'blur' }
                 ],
                 cashRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }
