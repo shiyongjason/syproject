@@ -72,7 +72,7 @@
 <script>
 import { mapState } from 'vuex'
 import { RISK_OPTIONS } from '../const'
-import { Money, IsFixedTwoNumber } from '@/utils/rules'
+import { twoNumber } from '@/utils/rules'
 export default {
     data () {
         return {
@@ -80,18 +80,18 @@ export default {
             rules: {
                 shareholdersDebt: [
                     { required: true, message: '请输入股东借款金额', trigger: 'blur' },
-                    { validator: Money }
+                    { validator: twoNumber }
                 ],
                 companyBorrowsShareholders: [
                     { required: true, message: '请输入股东借款金额', trigger: 'blur' },
-                    { validator: Money }
+                    { validator: twoNumber }
                 ],
                 shareholdersBorrowsCompany: [
                     { required: true, message: '请输入股东向公司借款金额', trigger: 'blur' },
-                    { validator: Money }
+                    { validator: twoNumber }
                 ],
                 cashFlowRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }

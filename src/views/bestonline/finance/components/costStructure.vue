@@ -48,20 +48,20 @@
 <script>
 import { mapState } from 'vuex'
 import { COST_RATIONALITY_OPTIONS } from '../const'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { twoNumber } from '@/utils/rules'
 export default {
     data () {
         return {
             costRationalityOptions: COST_RATIONALITY_OPTIONS,
             rules: {
                 salesExpensesRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 managementExpensesRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 financeExpensesRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }
