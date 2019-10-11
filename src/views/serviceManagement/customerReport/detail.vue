@@ -37,7 +37,7 @@
                         </el-table-column>
                         <el-table-column label="标准限值" align="center">
                             <template>
-                                ≤0.1mg/m³<br>轻度污染 0.1~0.2mg/m³<br>中度污染 0.2~0.5mg/m³<br>重度污染 ＞0.5mg/m³
+                                ≤0.1mg/m³<br>轻度污染 0.1~0.2mg/m³<br>中度污染 0.2~0.3mg/m³<br>重度污染 ＞0.3mg/m³
                             </template>
                         </el-table-column>
                         <el-table-column prop="qualified" label="检测结果" align="center">
