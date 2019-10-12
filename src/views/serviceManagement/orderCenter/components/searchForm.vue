@@ -35,6 +35,7 @@
                                 <el-option label="有赞商城" value="1"></el-option>
                                 <el-option label="孩子王" value="2"></el-option>
                                 <el-option label="考拉买菜" value="3"></el-option>
+                                <el-option label="大众点评" value="4"></el-option>
                             </el-select>
                         </div>
                     </div>

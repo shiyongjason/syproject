@@ -110,7 +110,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { twoNumber } from '@/utils/rules'
 export default {
     name: 'finance_profitability',
     computed: {
@@ -124,24 +124,24 @@ export default {
             rules: {
                 annualTaxableBusinessIncome: [
                     { required: true, message: '请填写年度纳税营业收入', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 annualTaxableBusinessIncomeNORequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 taxableIncomeRatio: [
                     { required: true, message: '请填写纳税收入占比', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 taxableIncomeRatioNORequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 taxBearingRate: [
                     { required: true, message: '请填写税负率', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ],
                 taxBearingRateNORequired: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    { validator: twoNumber, trigger: 'blur' }
                 ]
             }
         }
