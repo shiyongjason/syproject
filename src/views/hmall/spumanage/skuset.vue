@@ -287,10 +287,9 @@ export default {
             params.operator = this.userInfo.employeeName
             params.parameterValues = params.values
             if (this.operate === 'add') {
-                console.log(params)
                 await createAttribute(params)
             } else if (this.operate === 'modify') {
-                console.log(params)
+                params.parameterType = 1
                 await updateAttribute(this.modifyId, params)
             }
             this.dialogAttributeEdit = false
@@ -317,7 +316,6 @@ export default {
                     item.hasDelete = true
                 }
             })
-            console.log(data)
             this.formData = {
                 parameterCode: data.parameterCode,
                 parameterName: data.parameterName,
@@ -327,7 +325,6 @@ export default {
                 unit: data.unit,
                 isRequired: data.isRequired
             }
-            console.log(this.formData)
             // TODO 禁用和三级类目
             this.valueData = data.values
             this.valueLength = data.values && data.values.length
