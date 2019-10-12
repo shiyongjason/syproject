@@ -153,6 +153,13 @@ export const IsFixedTwoNumber = (rule, value, callback) => {
     }
     return callback()
 }
+export const twoNumber = (rule, value, callback) => {
+    var Reg = /(^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$)/
+    if (value && !Reg.test(value)) {
+        return callback(new Error('可以输入有两位小数或整数'))
+    }
+    return callback()
+}
 // 正整数
 export const IsPositiveNumber = (rule, value, callback) => {
     var Reg = /^\+?[1-9][0-9]*$/
