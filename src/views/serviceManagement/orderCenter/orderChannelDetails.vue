@@ -49,6 +49,7 @@
                         <template v-if="details.source === 1">有赞</template>
                         <template v-if="details.source === 2">孩子王</template>
                         <template v-if="details.source === 3">考拉买菜</template>
+                        <template v-if="details.source === 4">大众点评</template>
                     </td>
                 </tr>
                 <tr>

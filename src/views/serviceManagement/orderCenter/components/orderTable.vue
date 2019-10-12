@@ -72,6 +72,7 @@
                                 <template v-if="item.source === 1">有赞商城</template>
                                 <template v-if="item.source === 2">孩子王</template>
                                 <template v-if="item.source === 3">考拉买菜</template>
+                                <template v-if="item.source === 4">大众点评</template>
                             </li>
                             <li>{{item.userName ? item.userName : '-'}}<br>{{item.receiverName ? item.receiverName : '-'}}</li>
                             <li>无需配送</li>
