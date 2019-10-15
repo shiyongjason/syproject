@@ -26,13 +26,14 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单状态：</div>
                                 <div class="query-col-input">
-                                    <el-select v-model="queryParams.orderStatus" placeholder="全部" :clearable=true>
-                                        <el-option label="待审核" :value="1"></el-option>
-                                        <el-option label="待付款" :value="2"></el-option>
-                                        <el-option label="待发货" :value="3"></el-option>
-                                        <el-option label="已完成" :value="4"></el-option>
-                                        <el-option label="已关闭" :value="5"></el-option>
-                                        <el-option label="待拆分" :value="6"></el-option>
+                                    <el-select v-model="queryParams.orderStatus" :clearable=true>
+                                        <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
+                                        <el-option label="全部" value=""></el-option>
+                                        <el-option label="待支付" :value="10"></el-option>
+                                        <el-option label="待发货" :value="20"></el-option>
+                                        <el-option label="待收货" :value="30"></el-option>
+                                        <el-option label="已完成" :value="40"></el-option>
+                                        <el-option label="已关闭" :value="50"></el-option>
                                     </el-select>
                                 </div>
                             </div>
@@ -239,14 +240,14 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">订单状态：</div>
                                 <div class="query-col-input">
-                                    <el-select v-model="queryParamsProductTotal.orderStatus" placeholder="全部" :clearable=true>
-                                        <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
-                                        <el-option label="待审核" :value="1"></el-option>
-                                        <el-option label="待付款" :value="2"></el-option>
-                                        <el-option label="待发货" :value="3"></el-option>
-                                        <el-option label="已完成" :value="4"></el-option>
-                                        <el-option label="已关闭" :value="5"></el-option>
-                                        <!-- <el-option label="待拆分" :value="6"></el-option> -->
+                                    <el-select v-model="queryParamsProductTotal.orderStatus" :clearable=true>
+                                        <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
+                                        <el-option label="全部" value=""></el-option>
+                                        <el-option label="待支付" :value="10"></el-option>
+                                        <el-option label="待发货" :value="20"></el-option>
+                                        <el-option label="待收货" :value="30"></el-option>
+                                        <el-option label="已完成" :value="40"></el-option>
+                                        <el-option label="已关闭" :value="50"></el-option>
                                     </el-select>
                                 </div>
                             </div>
