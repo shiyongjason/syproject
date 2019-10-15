@@ -39,11 +39,12 @@
                     <span>待拆分</span>
                 </p>
                 <p v-else>
-                    <span v-if="scope.data.row.orderStatus === 1">待审核</span>
-                    <span v-if="scope.data.row.orderStatus === 2">待付款</span>
-                    <span v-if="scope.data.row.orderStatus === 3">待发货</span>
-                    <span v-if="scope.data.row.orderStatus === 4">已完成</span>
-                    <span v-if="scope.data.row.orderStatus === 5">已关闭</span>
+                    <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
+                    <span v-if="scope.data.row.orderStatus === 10">待支付</span>
+                    <span v-if="scope.data.row.orderStatus === 20">待发货</span>
+                    <span v-if="scope.data.row.orderStatus === 30">待收货</span>
+                    <span v-if="scope.data.row.orderStatus === 40">已完成</span>
+                    <span v-if="scope.data.row.orderStatus === 50" class="graycolor">已关闭</span>
                 </p>
 
             </template>
@@ -165,4 +166,5 @@ export default {
     top: 14px;
     right: 1px;
 }
+.graycolor{ color: #afabab;}
 </style>
