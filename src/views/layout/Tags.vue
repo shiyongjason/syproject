@@ -38,11 +38,37 @@ export default {
         isActive (path) {
             return path === (this.$route.fullPath).split('?')[0]
         },
+        makeIndex (data) {
+            console.log(data)
+            let index = []
+            if (data.length > 0) {
+                for (let i = 0; i < data.length; i++) {
+                    index.push(data[i].path.replace('/', ''))
+                    if (data[i].children) {
+                        if (data[i].children.length > 0) {
+                            index.push(data[i].children[0].path.replace('/', ''))
+                        }
+                    }
+                    break
+                }
+                let path = '/' + index.length > 0 ? index.join('/') : ''
+                console.log(!path)
+                // if (path) {
+                //     path = '/'
+                // }
+                this.$router.push({
+                    path: path
+                })
+            }
+        },
         // 关闭单个标签
         closeTags (index, isSelf) {
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
-                this.$router.push('/')
+                // this.$router.push('/')
+                // TODO 不存在首页 默认跳转有权限的第一个路由
+                const menu = JSON.parse(sessionStorage.getItem('menuList'))
+                this.makeIndex(menu)
             } else if (isSelf) {
                 this.$router.push(this.tagsList[this.tagsList.length - 1].path)
             }
@@ -74,12 +100,14 @@ export default {
             this.tagUpdate(this.tagsList)
         },
         serializeLink (params) {
-            if (Object.keys(params).length < 1) return ''
-            let link = '?'
-            for (let key in params) {
-                link += (key + '=' + params[key] + '&')
+            if (params) {
+                if (Object.keys(params).length < 1) return ''
+                let link = '?'
+                for (let key in params) {
+                    link += (key + '=' + params[key] + '&')
+                }
+                return link
             }
-            return link
         }
     },
     watch: {
@@ -88,7 +116,7 @@ export default {
         }
     },
     mounted () {
-        let tags = null
+        let tags = []
         if (this.isReload) {
             tags = JSON.parse(sessionStorage.getItem('tagsList'))
             this.tagUpdate(tags || [])
@@ -105,18 +133,21 @@ export default {
     position: relative;
     overflow: hidden;
     padding-left: 10px;
-    padding-right: 120px;
+    padding-right: 10px;
 }
 
 .tags ul {
-    box-sizing: border-box;
+    // box-sizing: border-box;
     width: 100%;
     height: 100%;
-    overflow-x: inherit;
+    white-space: nowrap;
+    overflow-x: scroll;
 }
 
 .tags-li {
-    float: left;
+    white-space: nowrap;
+    display: inline-block;
+    // float: left;
     margin: 0px 2px 0px 0px;
     font-size: 12px;
     overflow: hidden;
@@ -175,5 +206,4 @@ export default {
     background-color: #ff7a45;
     border-color: #ff7a45;
 }
-
 </style>

@@ -145,7 +145,7 @@ export default {
                 pageNumber: 1,
                 signScaleStart: '', // 签约规模
                 signScaleEnd: '',
-                saleTimeStart: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
+                saleTimeStart: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
                 saleTimeEnd: new Date().toJSON().split('T')[0],
                 onlineTimeStart: '', // 上线时间
                 onlineTimeEnd: '',

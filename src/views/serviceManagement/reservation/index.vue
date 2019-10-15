@@ -15,7 +15,11 @@
                         <el-select v-model="queryParams.source" style="width: 100%">
                             <el-option label="有赞商城" value="1">
                             </el-option>
-                            <el-option label="孩子王成长家" value="2">
+                            <el-option label="孩子王" value="2">
+                            </el-option>
+                            <el-option label="考拉买菜" value="3">
+                            </el-option>
+                            <el-option label="大众点评" value="4">
                             </el-option>
                         </el-select>
                     </div>
@@ -155,9 +159,7 @@ export default {
         async search () {
             this.searchParams.pageSize = this.paginationData.pageSize
             this.searchParams.pageNumber = this.paginationData.pageNumber
-            console.log(this.searchParams)
             const { data } = await findReservations(this.searchParams)
-            console.log(data)
             this.tableData = data.records
             this.paginationData = {
                 pageNumber: data.current,
@@ -177,6 +179,10 @@ export default {
     async mounted () {
         const channelOrderNo = this.$route.query.channelOrderNo
         if (channelOrderNo) this.queryParams.channelOrderNo = channelOrderNo
+        let defaultMobile = this.$route.query.mobile
+        if (defaultMobile) {
+            this.queryParams.phone = defaultMobile
+        }
         this.onQuery()
     }
 }

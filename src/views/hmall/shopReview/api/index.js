@@ -27,3 +27,5 @@ export const findMerchantList = (params) => instance.get(`merchant/api/merchants
 export const findMerchantDetail = (params) => instance.get(`merchant/api/merchants/check/${params}`)
 // // 商户审核
 export const checkMerchant = (params) => instance.put(`merchant/api/merchants/check`, params)
+// 加入商品库
+export const addGoods = (params) => instance.post('product/api/boss/products/add-to-top', params)

@@ -73,15 +73,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData"
-                    :tableLabel="tableLabel"
-                    :pagination="paginationInfo"
-                    @onCurrentChange="onCurrentChange"
-                    @onSizeChange="onSizeChange"
-                    :isMultiple="false"
-                    :isAction="false"
-                    :actionMinWidth=250
-                    @field-change="onFieldChange">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot-scope="scope" slot="grossProfitRate">
                         {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
                     </template>

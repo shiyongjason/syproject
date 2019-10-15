@@ -21,10 +21,23 @@ Vue.filter('formatDate', (time, param) => {
     return moment(time).format('YYYY-MM-DD HH:mm')
 })
 Vue.config.productionTip = false
-
+moment.locale('zh-cn')
 Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
+
+// table公共组件
+Vue.component(
+    'basicTable', basicTable
+)
+
+Vue.filter('formatDate', (time, param) => {
+    if (!time) return '-'
+    if (param) {
+        return moment(time).format(param)
+    }
+    return moment(time).format('YYYY-MM-DD HH:mm')
+})
 
 // 过滤器
 Object.keys(filters).forEach(key => {

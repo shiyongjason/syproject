@@ -6,14 +6,14 @@
                     <div class="query-col-title">企业名称：</div>
                     <div class="query-col-input">
                         <el-input type="text"
-                                  v-model="queryParams.businessName" maxlength="50" placeholder="请输入"></el-input>
+                                  v-model="queryParams.companyName" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">申请时间：</div>
                     <div class="query-col-input">
                         <el-date-picker
-                            v-model="queryParams.beginApplyTime"
+                            v-model="queryParams.startTime"
                             type="datetime"
                             format="yyyy-MM-dd HH:mm:ss"
                             placeholder="开始日期"
@@ -22,11 +22,12 @@
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker
-                            v-model="queryParams.endApplyTime"
+                            v-model="queryParams.endTime"
                             type="datetime"
                             format="yyyy-MM-dd HH:mm:ss"
                             placeholder="结束日期"
                             :picker-options="pickerOptionsEnd"
+                            default-time="23:59:59"
                         >
                         </el-date-picker>
                     </div>
@@ -41,7 +42,7 @@
                     <div class="query-col-title">法人姓名：</div>
                     <div class="query-col-input">
                         <el-input type="text"
-                                  v-model="queryParams.legalPerson" maxlength="50" placeholder="请输入"></el-input>
+                                  v-model="queryParams.legalPersonName" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -54,12 +55,13 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">审核状态：</div>
                     <div class="query-col-input">
-                        <!--0:新申请 10:审核通过 11:审核不通过-->
+                        <!--0：审核通过，10：待提交认证资料，20：待审核，30：审核不通过-->
                         <el-select v-model="queryParams.status" placeholder="全部">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="新申请" :value="0"></el-option>
-                            <el-option label="审核通过" :value="10"></el-option>
-                            <el-option label="审核不通过" :value="11"></el-option>
+                            <el-option label="已认证" :value="0"></el-option>
+                            <el-option label="未认证" :value="10"></el-option>
+                            <el-option label="待审核" :value="20"></el-option>
+                            <el-option label="审核不通过" :value="30"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -103,7 +105,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endApplyTime
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -113,7 +115,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.beginApplyTime
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -126,10 +128,10 @@ export default {
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                beginApplyTime: '',
-                endApplyTime: '',
-                businessName: '',
-                legalPerson: '',
+                startTime: '',
+                endTime: '',
+                companyName: '',
+                legalPersonName: '',
                 legalPersonMobile: '',
                 memberName: '',
                 merchantName: '',
@@ -151,9 +153,10 @@ export default {
         },
         async findMemberList () {
             const { ...params } = this.queryParams
-            if (params.beginApplyTime) params.beginApplyTime = this.$root.$options.filters.formatDate(params.beginApplyTime)
-            if (params.endApplyTime) params.endApplyTime = this.$root.$options.filters.formatDate(params.endApplyTime)
+            if (params.startTime) params.startTime = this.$root.$options.filters.formatDate(params.startTime, 'YYYY-MM-DD HH:mm:ss')
+            if (params.endTime) params.endTime = this.$root.$options.filters.formatDate(params.endTime, 'YYYY-MM-DD HH:mm:ss')
             const { data } = await findMemberList(params)
+            // console.log(data)
             // const { data } = await findMemberList({
             //     pageSize: 10,
             //     pageNumber: 1

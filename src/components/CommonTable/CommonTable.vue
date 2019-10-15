@@ -23,6 +23,20 @@
                         <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
                         <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
                         <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                        <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
+                            <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
+                            <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
+                        </slot>
+                        <slot v-else-if="item.event" :name="item.prop" :data="scope">
+                            <el-popover placement="right" width="300" trigger="click" v-if="scope.row.shy">
+                                <el-table :data="scope.row.shy">
+                                    <el-table-column width="150" property="numberCase" label="商品件数" align="center"></el-table-column>
+                                    <el-table-column width="150" property="discount" label="价格折扣" align="center"></el-table-column>
+                                </el-table>
+                                <div class="isOrangeColor" slot="reference">{{scope.row[item.prop]}}</div>
+                            </el-popover>
+                            <div v-else>{{scope.row[item.prop]}}</div>
+                        </slot>
                         <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
                     </template>
                     <template v-if="selectTh.indexOf(item.label)>-1">
@@ -161,6 +175,7 @@ export default {
         tableLabel: {
             handler (val) {
                 this.tableLabel.map(item => {
+                    item.choosed = (item.choosed === undefined ? true : item.choosed)
                     if (item.choosed) {
                         this.selectTh.push(item.label)
                     }
@@ -198,6 +213,20 @@ export default {
         formatter (data) {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         },
+        renderHeader (h, { column }) {
+            const result = this.tableLabel.filter(item => item.icon && item.label == column.label)
+            if (result.length > 0) {
+                return (
+                    <div>
+                        <span>{column.label}</span>
+                        <el-tooltip placement="right" content={result[0].content}>
+                            <i class={result[0].icon}></i>
+                        </el-tooltip>
+                    </div>
+                )
+            }
+            return column.label
+        },
         handleCheckAllChange (val) {
             this.selectTh = val ? this.defaultTh : []
             this.isIndeterminate = false
@@ -209,6 +238,7 @@ export default {
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
             this.$emit('field-change', this.selectTh)
         }
+
     },
     mounted () {
         this.initWidth()
@@ -222,8 +252,7 @@ export default {
 }
 .el-pagination {
     margin: 20px auto;
-    // float: right;
-    // text-align: center;
+    float: right;
     text-align: center;
 }
 /deep/ .el-pagination__editor.el-input {
@@ -284,7 +313,7 @@ export default {
     text-align: center;
 }
 /deep/ .el-table__row td {
-    text-align: right;
+    // text-align: right;
 }
 /deep/ .el-table_1_column_1 {
     text-align: center !important;

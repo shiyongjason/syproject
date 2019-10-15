@@ -84,6 +84,11 @@
                             <a :href="merchantDetail.accountOpenPermitPhone" target="_blank" class="preview-container"><img :src="merchantDetail.accountOpenPermitPhone" alt="开户许可证" class="preview"></a>
                         </div>
                     </el-form-item>
+                    <el-form-item label="审核结果：" v-if="dialogParams.type === 'watch'">
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 0">新申请</span>
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 1">审核通过</span>
+                       <span v-if="merchantDetail.merchantCheck.checkStatus === 2">审核失败</span>
+                    </el-form-item>
                 </div>
             </el-form>
             <el-form ref="form" :rules="rules" :model="suggest" class="suggest">
@@ -190,8 +195,7 @@ export default {
             const { data } = await findMerchantDetail(merchantCode)
             // console.log(data)
             this.merchantDetail = data
-            let address = JSON.parse(this.merchantDetail.address)
-            this.address = address.province_name + address.city_name + address.area_name
+            this.address = data.provinceName + data.cityName + data.countryName
         },
         async checkMerchant () {
             this.$refs['form'].validate(async (valid) => {
@@ -201,7 +205,6 @@ export default {
                         merchantCode: this.merchantCode,
                         ...this.suggest
                     }
-                    console.log(params)
                     await checkMerchant(params)
                     this.$message({
                         type: 'success',

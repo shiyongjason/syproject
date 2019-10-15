@@ -91,7 +91,7 @@ export default {
                 pageNumber: 1,
                 regionCode: '', // 大区编码
                 subsectionCode: '', // 分部编码
-                startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
+                startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
                 endDate: new Date().toJSON().split('T')[0],
                 targetStatus: '3'
             },
