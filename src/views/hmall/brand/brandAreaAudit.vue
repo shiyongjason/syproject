@@ -19,10 +19,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">开启时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.maxApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -135,7 +135,7 @@ export default {
                 { label: '商家名称', prop: 'merchantName' },
                 { label: '品牌名称', prop: 'brandName' },
                 { label: '审核状态', prop: 'auditStatusTransform' },
-                { label: '申请日期', prop: 'updateTime' }
+                { label: '申请日期', prop: 'approveTime' }
             ],
             tableData: [],
             searchParams: {},
@@ -143,8 +143,8 @@ export default {
                 merchantName: '',
                 brandName: '',
                 auditStatus: '',
-                minCreateTime: '',
-                maxCreateTime: ''
+                minApproveTime: '',
+                maxApproveTime: ''
             },
             paginationData: {
                 pageNumber: 1,
@@ -169,7 +169,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxCreateTime
+                    let beginDateVal = this.queryParams.maxApproveTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -179,7 +179,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.queryParams.minCreateTime)
+                    let beginDateVal = new Date(this.queryParams.minApproveTime)
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -200,8 +200,8 @@ export default {
             this.$set(this.queryParams, 'merchantName', '')
             this.$set(this.queryParams, 'brandName', '')
             this.$set(this.queryParams, 'auditStatus', '')
-            this.$set(this.queryParams, 'minCreateTime', '')
-            this.$set(this.queryParams, 'maxCreateTime', '')
+            this.$set(this.queryParams, 'minApproveTime', '')
+            this.$set(this.queryParams, 'maxApproveTime', '')
             this.$set(this.paginationData, 'pageNumber', 1)
             this.$set(this.paginationData, 'pageSize', 10)
             this.onQuery()
@@ -211,8 +211,8 @@ export default {
                 ...this.searchParams,
                 ...this.paginationData
             }
-            if (!searchParams.minCreateTime) searchParams.minCreateTime = null
-            if (!searchParams.maxCreateTime) searchParams.maxCreateTime = null
+            if (!searchParams.minApproveTime) searchParams.minApproveTime = null
+            if (!searchParams.maxApproveTime) searchParams.maxApproveTime = null
             const { data } = await findBrandAreaList({ params: searchParams })
             data.records.map((v) => {
                 if (v.auditStatus == 0 || v.auditStatus == 3) v.auditStatusTransform = '待审核'
