@@ -100,28 +100,71 @@ export default {
             form: state => state.dueDiligence.financeData
         }),
         assetListT () {
-            let totalLiabilityT = 0
-            if (this.form.assetsLiabilities.liabilitiesListT) {
-                if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
-                    totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
-                }
+            // 老规则（防止随时换需求）
+            // let totalLiabilityT = 0
+            // if (this.form.assetsLiabilities.liabilitiesListT) {
+            //     if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
+            //         totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+            //     const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
+            //     return result
+            // }
+            // return 0
+            // 新规则（资产负债率=负债总额/资产总额×100% ）
+            let assetT = 0
+            let liabilitiesT = 0
+            if (this.form.assetsLiabilities.assetListT) {
+                this.form.assetsLiabilities.assetListT.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetT = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
-                const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
-                return result
+            if (this.form.assetsLiabilities.liabilitiesListT) {
+                this.form.assetsLiabilities.liabilitiesListT.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesT = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetT && liabilitiesT) {
+                return ((liabilitiesT / assetT) * 100).toFixed(2)
             }
             return 0
         },
         assetListL () {
-            let totalLiabilityL = 0
-            if (this.form.assetsLiabilities.liabilitiesListL) {
-                if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
-                    totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
-                }
+            // 老规则（防止随时换需求）
+            // let totalLiabilityL = 0
+            // if (this.form.assetsLiabilities.liabilitiesListL) {
+            //     if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
+            //         totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+            //     const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
+            //     return result
+            // }
+            // return 0
+            let assetL = 0
+            let liabilitiesL = 0
+            if (this.form.assetsLiabilities.assetListL) {
+                this.form.assetsLiabilities.assetListL.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetL = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
-                const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
-                return result
+            if (this.form.assetsLiabilities.liabilitiesListL) {
+                this.form.assetsLiabilities.liabilitiesListL.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesL = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetL && liabilitiesL) {
+                return ((liabilitiesL / assetL) * 100).toFixed(2)
             }
             return 0
         }
