@@ -112,7 +112,7 @@ export const getBranchSaleSum = (params) => {
 }
 // 查询平台公司基本信息
 export const findCompanyList = (params) => {
-    return axios.post(interfaceUrl + 'develop/developbasicinfo/queryPageListPlusMis', params)
+    return axios.get(interfaceUrl + 'rms/developbasicinfo/queryPageListPlusMis', { params })
 }
 
 // 机构在线的 分部查询
