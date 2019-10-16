@@ -165,15 +165,15 @@ export const updateBasicinfo = (params) => {
 }
 // 平台品类销售分析
 export const getPaltCategory = (params) => {
-    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy', { params })
+    return axios.get(interfaceUrl + 'rms/platform/category-analy', { params })
 }
 // 平台品类销售分析
-export const findPlatCategorySum = (params) => axios.get('http://192.168.27.20:33400' + '/platform/category-analy/total', { params })
+export const findPlatCategorySum = (params) => axios.get(interfaceUrl + 'rms/platform/category-analy/total', { params })
 // 平台品牌列表查询
 export const getPaltbarnd = (params) => {
-    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy/brand', { params })
+    return axios.get(interfaceUrl + 'rms/platform/category-analy/brand', { params })
 }
 // 平台品类查询
 export const getPaltSys = (params) => {
-    return axios.get('http://192.168.27.20:33400' + '/platform/category-analy/system-category', { params })
+    return axios.get(interfaceUrl + 'rms/platform/category-analy/system-category', { params })
 }

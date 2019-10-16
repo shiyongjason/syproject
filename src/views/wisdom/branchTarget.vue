@@ -119,9 +119,11 @@ export default {
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
-                pageNumber: data.data.pageNum,
-                totalElements: data.data.total
+                 total: data.data.total,
+                pageSize: data.data.pageSize,
+                pageNumber: data.data.pageNum
             }
+
         },
         async findBranchListNew () {
             const param = {
@@ -133,11 +135,12 @@ export default {
             }
         },
         onSizeChange (val) {
+            console.log(val)
             this.queryParams.pageSize = val
             this.onQuery()
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val
+            this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
         }
     },

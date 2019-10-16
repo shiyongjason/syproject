@@ -74,6 +74,12 @@
         <div class="page-body-cont">
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+                   <template slot-scope="scope" slot="saleRatio">
+                        {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':''}}
+                    </template>
+                     <template slot-scope="scope" slot="yearOnYearSale">
+                        {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':''}}
+                    </template>
                     <template slot-scope="scope" slot="grossProfitRate">
                         {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
                     </template>
@@ -132,7 +138,7 @@ export default {
                 companyCode: '',
                 misCode: '', // 大区编码
                 subsectionCode: '', // 分部编码
-                startTime: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
+                startTime: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
                 endTime: new Date().toJSON().split('T')[0],
                 businessType: '',
                 brandId: '',
@@ -179,12 +185,12 @@ export default {
             this.queryParams.onLineStatus = this.onLineStatus.join(',')
             const { data } = await getPaltCategory(this.queryParams)
             const { data: sumData } = await findPlatCategorySum(this.queryParams)
-            this.tableData = data.records
-            this.tableData.splice(0, 0, sumData)
+            this.tableData = data.data.records
+            this.tableData.splice(0, 0, sumData.data)
             this.paginationInfo = {
-                total: data.total,
-                pageSize: data.size,
-                pageNumber: data.current
+                total: data.data.total,
+                pageSize: data.data.size,
+                pageNumber: data.data.current
             }
             // this.regionList.pop()
         },
@@ -208,7 +214,7 @@ export default {
         },
         async getPaltbarnd () {
             const { data } = await getPaltbarnd()
-            this.brandList = data
+            this.brandList = data.data
             this.brandList && this.brandList.map(item => {
                 item.value = item.brandName
                 item.selectCode = item.brandId
@@ -216,7 +222,7 @@ export default {
         },
         async getPaltSys () {
             const { data } = await getPaltSys()
-            this.sysList = data
+            this.sysList = data.data
         },
         backPlat (value) {
             this.queryParams.brandId = value.value.selectCode ? value.value.selectCode : ''
