@@ -263,7 +263,6 @@ export default {
             }
         },
         async getPlatformSale (value) {
-            console.log(112333)
             const { data } = await getPlatformSale(value)
             data.data.total.companyShortName = '合计'
             if (!this.total.type) {
@@ -278,7 +277,6 @@ export default {
             this.paginationData.totalElements = data.data.totalElements
         },
         async getPlatformSaleSum () {
-            console.log(1111)
             this.total.type = 1
             const params = {
                 onLineStatus: this.queryParams.onLineStatus,
@@ -302,7 +300,6 @@ export default {
                 return
             }
             const { data } = await getPlatformSaleSum(params)
-            console.log(1, data)
             data.data.companyShortName = '合计'
             Object.keys(this.total.total).forEach(key => {
                 this.total.total[key] = data.data[key]
@@ -339,13 +336,11 @@ export default {
             this.getPlatformSaleSum()
         },
         async onQuery (event) {
-            console.log(event)
             // if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) return
             // eslint-disable-next-line
             let start = /^\-?[0-9]*$/.test(this.queryParams.signScaleStart)
             // eslint-disable-next-line
             let end = /^\-?[0-9]*$/.test(this.queryParams.signScaleEnd)
-            console.log(3333)
             if (!start || !end) {
                 this.$message({
                     type: 'error',
@@ -386,15 +381,12 @@ export default {
         await this.onFindRegionList() // 大区
         await this.onFindBranchList() // 分部
         if (this.userInfo.deptType === this.deptType[1]) {
-            console.log(1)
             this.regionDisabled = true
             this.queryParams.regionCode = this.userInfo.oldDeptCode
             this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
         } else if (this.userInfo.deptType === this.deptType[2]) {
-            console.log(2)
             this.onFindPaltList() // 平台公司
         } else if (this.userInfo.deptType === this.deptType[0]) {
-            console.log(3)
             this.regionDisabled = true
             this.branchDisabled = true
             this.regionInput = false
