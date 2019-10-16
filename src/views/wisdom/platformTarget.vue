@@ -45,7 +45,7 @@
                         <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
                         </el-date-picker>
                     </div>
-                       <el-button type="primary" @click="onFindTableList()">搜索
+                    <el-button type="primary" @click="onFindTableList()">搜索
                     </el-button>
                     <el-button type="primary" @click="onExport()">导出
                     </el-button>
@@ -64,50 +64,18 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <el-table :data="tableData" style="width: 100%" border :header-cell-style="{color:'#606266'}">
-                    <el-table-column prop="companyShortName" align="center" label="公司简称">
-                    </el-table-column>
-                    <el-table-column prop="misCode" label="公司编码" align="center">
-                    </el-table-column>
-                    <el-table-column prop="subsectionName" label="分部" align="center">
-                    </el-table-column>
-                    <el-table-column prop="cityName" label="所在城市" align="center">
-                    </el-table-column>
-                    <el-table-column prop="onlineTime" label="上线时间" align="center">
-                    </el-table-column>
-                    <el-table-column label="增量/存量" align="center">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.onlineTime">{{scope.row.incremental == 1?'增量':'存量'}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="targetDate" label="目标年份" align="center">
-                    </el-table-column>
-                    <el-table-column prop="performanceTarget" label="履约目标/万" align="center">
-                    </el-table-column>
-                    <!-- <el-table-column
-                            prop="minimumTarget"
-                            label="保底目标/万"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="balanceTarget"
-                            label="平衡目标/万"
-                        >
-                        </el-table-column> -->
-                    <el-table-column prop="sprintTarget" label="冲刺目标/万" align="center">
-                    </el-table-column>
-                    <el-table-column prop="updateUser" label="最近操作人" align="center">
-                    </el-table-column>
-                    <el-table-column label="最近操作时间" align="center">
-                        <template slot-scope="scope">
-                            {{scope.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
-                        </template>
-                    </el-table-column>
-                </el-table>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="isAction" :actionMinWidth=250 @field-change="onFieldChange">
+                    <template slot="incremental" slot-scope="scope">
+                        <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
+                    </template>
+                    <template slot="updateTime" slot-scope="scope">
+                        {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                    </template> 
+                </basicTable>
                 <div class="page clearfix" style="text-align: center">
                     <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                     </el-pagination>
-                </div>
+                </div> 
             </div>
         </div>
     </div>
@@ -120,6 +88,19 @@ import { mapState } from 'vuex'
 export default {
     data () {
         return {
+            tableLabel: [
+                { label: '公司简称', prop: 'companyShortName', choosed: true },
+                { label: '公司编码', prop: 'misCode', choosed: true },
+                { label: '分布', prop: 'subsectionName', choosed: true },
+                { label: '所在城市', prop: 'cityName', choosed: true },
+                { label: '上线时间', prop: 'onlineTime', choosed: true },
+                { label: '增量/存量', prop: 'incremental', choosed: true },
+                { label: '目标年份', prop: 'targetDate', choosed: true },
+                { label: '履约目标/万', prop: 'performanceTarget', choosed: true },
+                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true },
+                { label: '最近操作人', prop: 'updateUser', choosed: true },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true }
+            ],
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
             searchParams: {
                 subsectionCode: '',
