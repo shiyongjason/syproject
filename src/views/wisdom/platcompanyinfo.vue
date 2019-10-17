@@ -22,7 +22,7 @@
                             <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
                         </el-select>
-                       <div class="line ml5 mr5">-</div>
+                        <div class="line ml5 mr5">-</div>
                         <el-select v-model="searchParams.cityCode" placeholder="市" :clearable=true>
                             <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
                             </el-option>
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <platCompanyTable :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
+            <platCompanyTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
         </div>
     </div>
 </template>
@@ -199,11 +199,21 @@ export default {
             this.findCompanyList()
         },
         onCurrentChange (val) {
+            console.log(val)
             this.searchParams.pageNumber = val
             this.findCompanyList()
         }
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
+/deep/ .el-table {
+    thead {
+        tr:last-child {
+            :nth-child(2),:nth-child(3),:nth-child(4),:nth-child(5) {
+                color: red;
+            }
+        }
+    }
+}
 </style>
