@@ -64,7 +64,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="isAction" :actionMinWidth=250 @field-change="onFieldChange">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="incremental" slot-scope="scope">
                         <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
                     </template>
@@ -72,8 +72,8 @@
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </template>
                 </basicTable>
-                <div class="page clearfix" style="text-align: center">
-                    <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
+                <div class="page clearfix" style="text-align: right;margin-top: 20px">
+                    <el-pagination class="el-page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                     </el-pagination>
                 </div>
             </div>
@@ -220,6 +220,15 @@ export default {
         handleCurrentChange (val) {
             this.searchParams.pageNumber = val
             this.onFindTableList()
+        },
+        onCurrentChange (val) {
+            this.$emit('onCurrentChange', val)
+        },
+        onSizeChange (val) {
+            this.$emit('onSizeChange', val)
+        },
+        onFieldChange (val) {
+            this.$emit('onFieldChange', val)
         },
         onExport () {
             var url = ''
