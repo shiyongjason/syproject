@@ -70,12 +70,12 @@
                     </template>
                     <template slot="updateTime" slot-scope="scope">
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
-                    </template> 
+                    </template>
                 </basicTable>
                 <div class="page clearfix" style="text-align: center">
                     <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                     </el-pagination>
-                </div> 
+                </div>
             </div>
         </div>
     </div>

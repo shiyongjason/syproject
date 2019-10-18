@@ -119,11 +119,10 @@ export default {
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
-                 total: data.data.total,
+                total: data.data.total,
                 pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNum
             }
-
         },
         async findBranchListNew () {
             const param = {

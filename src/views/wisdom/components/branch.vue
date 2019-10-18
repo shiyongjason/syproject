@@ -61,7 +61,7 @@ export default {
                     ] },
                 { label: '毛利率目标/％', prop: 'annualGrossProfitTarget', choosed: true },
                 { label: '最近操作人', prop: 'updateUser', choosed: true },
-                { label: '最近操作时间', prop: 'updateTime', choosed: true },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true }
             ],
             selectTh: [],
             checkAll: true,
