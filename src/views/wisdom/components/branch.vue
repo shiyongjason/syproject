@@ -38,7 +38,7 @@ export default {
             tableLabel: [
                 { label: '分部编码', prop: 'subsectionCode' },
                 { label: '分部', prop: 'subsectionName', choosed: true },
-                { label: '目标年份', prop: 'data', choosed: true },
+                { label: '目标年份', prop: 'date', choosed: true },
                 { label: '新增会员店目标/家', prop: 'memberShopTarget', choosed: true },
                 { label: '保底目标/万',
                     tableLabel: [

@@ -269,6 +269,13 @@ export default {
                 this.total.total = data.data.total
             }
             this.tableData = data.data.pageContent
+            this.tableData.map((i => {
+                if (i.incremental == 1) {
+                    i.incremental = '增量'
+                } else {
+                    i.incremental = '存量'
+                }
+            }))
             if (this.tableData.length > 0) {
                 this.tableData.unshift(this.total.total)
             }

@@ -7,18 +7,6 @@
             </el-tooltip>
             单位：万
         </div>
-        <div class="collapse">
-            <img src="../../../assets/images/typeIcon.png" alt="" class="collapse" @click="collapse = !collapse">
-        </div>
-        <el-collapse-transition>
-            <div class="collapse-content" v-if="collapse">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                <div style="margin: 15px 0;"></div>
-                <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
-                    <el-checkbox v-for="item in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
-                </el-checkbox-group>
-            </div>
-        </el-collapse-transition>
         <div class="page-table">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
                 <template slot-scope="scope" slot="regionName">
@@ -187,52 +175,47 @@ export default {
         return {
             tableLabel: [
                 { label: '平台公司', prop: 'companyShortName' },
+                { label: 'mis编码', prop: 'misCode', choosed: false },
+                { label: '所属分部', prop: 'subsectionName', choosed: false },
+                { label: '城市', prop: 'cityName', choosed: false },
+                { label: '上线时间', prop: 'onlineTime', choosed: false },
+                { label: '签约规模', prop: 'signScale', choosed: false },
                 { label: '总经理', prop: 'controllerName', choosed: true },
-                { label: '达成',
+                { label: '增量/存量', prop: 'incremental', choosed: false },
+                { label: '分部排名', prop: 'subsectionRank', choosed: false },
+                { label: '全国排名', prop: 'countryRank', choosed: false },
+                {
+                    label: '达成',
                     tableLabel: [
                         { label: '实际', prop: 'totalOrderFee', choosed: true },
                         { label: '目标', prop: 'target', choosed: true },
                         { label: '达成率', prop: 'achievingRate', choosed: true },
                         { label: '缺口', prop: 'gap', choosed: true }
-                    ] },
-                { label: '环比',
+                    ]
+                },
+                {
+                    label: '环比',
                     tableLabel: [
                         { label: '上月', prop: 'lastMonthSale', choosed: true },
                         { label: '环比', prop: 'linkRelativeRatio', choosed: true }
-                    ] },
-                { label: '同比',
+                    ]
+                },
+                {
+                    label: '同比',
                     tableLabel: [
                         { label: '同期', prop: 'yearOnYear', choosed: true },
                         { label: '同比', prop: 'yearOnYearRatio', choosed: true }
-                    ] },
-                { label: '年度累计',
+                    ]
+                },
+                {
+                    label: '年度累计',
                     tableLabel: [
                         { label: '实际', prop: 'yearSaleReal', choosed: true },
                         { label: '目标', prop: 'yearTarget', choosed: true },
                         { label: '达成率', prop: 'yearAchievingRate', choosed: true }
-                    ] }
-            ],
-            defaultTh: [
-                '平台公司',
-                'mis编码',
-                '所属分部',
-                '城市',
-                '上线时间',
-                '签约规模',
-                '总经理',
-                '增量/存量',
-                '分部排名',
-                '全国排名',
-                '达成',
-                '环比',
-                '同比',
-                '年度累计'
-            ],
-            selectTh: ['平台公司', '总经理', '达成', '环比', '同比', '年度累计'], // 默认初始选中
-            checkAll: true,
-            checkedCities: [],
-            isIndeterminate: true,
-            collapse: false
+                    ]
+                }
+            ]
         }
     },
     methods: {
@@ -247,25 +230,6 @@ export default {
         },
         onSizeChange (val) {
             this.$emit('onSizeChange', val)
-        },
-        handleCheckAllChange (val) {
-            this.selectTh = val ? this.defaultTh : []
-            this.isIndeterminate = false
-        },
-        handleCheckedCitiesChange (value) {
-            let checkedCount = value.length
-            this.checkAll = checkedCount === this.selectTh.length
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
-        },
-        incremental (row, column) {
-            let incremental = '-'
-            if (row.incremental === 0) {
-                incremental = '存量'
-            }
-            if (row.incremental === 1) {
-                incremental = '增量'
-            }
-            return incremental
         }
     }
 }

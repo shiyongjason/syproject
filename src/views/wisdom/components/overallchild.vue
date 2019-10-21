@@ -163,7 +163,7 @@ export default {
     mounted () {
         this.init()
         this.nowTay = (new Date()).getFullYear() + '-' + '01'
-        this.nnowTay = (new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))
+        this.nnowTay = (new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))
         this.$nextTick(() => {
             this.getStatistics()
             this.getSales()
@@ -424,7 +424,7 @@ export default {
             })
             const option = {
                 visualMap: {
-                    min: 0,
+                    min: -1,
                     max: newData.length > 0 ? newData[0].value : '',
                     left: 'left',
                     top: 'bottom',
