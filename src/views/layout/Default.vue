@@ -4,25 +4,17 @@
             <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
         <el-container class="container clearfix">
-            <el-aside
-                class="aside"
-                :class="isCollapse?'close':'open'"
-            >
+            <el-aside class="aside" :class="isCollapse?'close':'open'">
                 <NavMenuAside @back-event="menuBack" />
             </el-aside>
             <el-main class="content">
-                <div  :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
-                      <H-tags></H-tags>
-
+                <div :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
+                    <H-tags></H-tags>
                 </div>
-
-                <div
-                    v-loading="loading"
-                    element-loading-text="处理中"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.5)"
-                >
+                <div v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
+                    <keep-alive :include="cachedInclude.join(',')" :exclude="cachedExclude.join(',')">
                         <router-view></router-view>
+                    </keep-alive>
                 </div>
             </el-main>
         </el-container>
@@ -31,55 +23,22 @@
                 <el-form-item label="登录手机号：" label-width="132px">
                     {{userInfo.user_name}}
                 </el-form-item>
-                <el-form-item
-                    prop="currentPassword"
-                    label="旧密码："
-                    label-width="132px"
-                >
-                    <el-input
-                        type="password"
-                        v-model="editPassword.currentPassword"
-                        placeholder="请输入您的旧密码"
-                        maxlength="16"
-                    ></el-input>
+                <el-form-item prop="currentPassword" label="旧密码：" label-width="132px">
+                    <el-input type="password" v-model="editPassword.currentPassword" placeholder="请输入您的旧密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item
-                    prop="newPassword"
-                    label="新密码："
-                    label-width="132px"
-                >
-                    <el-input
-                        type="password"
-                        v-model="editPassword.newPassword"
-                        placeholder="请输入8-16位密码"
-                        maxlength="16"
-                    ></el-input>
+                <el-form-item prop="newPassword" label="新密码：" label-width="132px">
+                    <el-input type="password" v-model="editPassword.newPassword" placeholder="请输入8-16位密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
-                <el-form-item
-                    prop="confirmPassword"
-                    label="确认新密码："
-                    label-width="132px"
-                >
-                    <el-input
-                        type="password"
-                        v-model="editPassword.confirmPassword"
-                        placeholder="请再次输入你的新密码"
-                        maxlength="16"
-                    ></el-input>
+                <el-form-item prop="confirmPassword" label="确认新密码：" label-width="132px">
+                    <el-input type="password" v-model="editPassword.confirmPassword" placeholder="请再次输入你的新密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
             </el-form>
-            <span
-                slot="footer"
-                class="dialog-footer"
-            >
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="closePassword">取 消</el-button>
-                <el-button
-                    type="primary"
-                    @click="onChangePassword"
-                >确 定</el-button>
+                <el-button type="primary" @click="onChangePassword">确 定</el-button>
             </span>
         </el-dialog>
     </el-container>
@@ -136,7 +95,9 @@ export default {
     computed: {
         ...mapState({
             loading: state => state.loading,
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            cachedInclude: state => state.cachedInclude,
+            cachedExclude: state => state.cachedExclude
         })
     },
     methods: {
@@ -186,8 +147,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.headdiv{
-    position: fixed;  left:0;  right: 0;z-index:99
+.headdiv {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 99;
 }
 .header {
     position: fixed;
@@ -291,5 +255,4 @@ export default {
 .el-form-item.is-success .hosjoy_right1 {
     display: inline-block;
 }
-
 </style>

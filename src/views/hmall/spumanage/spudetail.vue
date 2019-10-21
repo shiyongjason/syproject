@@ -117,7 +117,7 @@ import { mapState, mapActions } from 'vuex'
 import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
-    name: 'modifyoraddoraudit',
+    name: 'spudetail',
     data () {
         return {
             form: {
@@ -245,7 +245,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCategoryList: 'findCategoryList'
+            findCategoryList: 'findCategoryList',
+            setNewTags: 'setNewTags'
         }),
         productCategoryChange (val) {
             this.form.categoryId = val[2]
@@ -377,12 +378,13 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    console.log(this)
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.go(-1)
                 }).catch(() => {
 
                 })
             } else {
+                this.setNewTags((this.$route.fullPath).split('?')[0])
                 this.$router.go(-1)
             }
         },

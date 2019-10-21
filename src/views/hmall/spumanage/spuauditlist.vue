@@ -104,7 +104,9 @@
 import { findProducts } from './api/index'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { clearCache, newCache } from '@/utils/index'
 export default {
+    name: 'spuauditlist',
     data () {
         return {
             productSource: [],
@@ -198,6 +200,16 @@ export default {
         onAuditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('spuauditlist')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'spudetail') {
+            clearCache('spuauditlist')
+        }
+        next()
     }
 }
 </script>
