@@ -106,29 +106,71 @@ export default {
             form: state => state.dueDiligence.financeData
         }),
         assetListT () {
-            let totalLiabilityT = 0
-            if (this.form.assetsLiabilities.liabilitiesListT) {
-                if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
-                    totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
-                }
+            // let totalLiabilityT = 0
+            // if (this.form.assetsLiabilities.liabilitiesListT) {
+            //     if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
+            //         totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+            //     const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
+            //     return result
+            // }
+            // return 0
+            // 新规则
+            let assetT = 0
+            let liabilitiesT = 0
+            if (this.form.assetsLiabilities.assetListT) {
+                this.form.assetsLiabilities.assetListT.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetT = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
-                const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
-                return result
+            if (this.form.assetsLiabilities.liabilitiesListT) {
+                this.form.assetsLiabilities.liabilitiesListT.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesT = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetT && liabilitiesT) {
+                return ((liabilitiesT / assetT) * 100).toFixed(2)
             }
             return 0
         },
         assetListL () {
-            let totalLiabilityL = 0
-            if (this.form.assetsLiabilities.liabilitiesListL) {
-                if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
-                    totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
-                }
+            // let totalLiabilityL = 0
+            // if (this.form.assetsLiabilities.liabilitiesListL) {
+            //     if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
+            //         totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+            //     const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
+            //     console.log(result)
+            //     return result
+            // }
+            // return 0
+            // 新规则
+            let assetL = 0
+            let liabilitiesL = 0
+            if (this.form.assetsLiabilities.assetListL) {
+                this.form.assetsLiabilities.assetListL.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetL = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
-                const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
-                console.log(result)
-                return result
+            if (this.form.assetsLiabilities.liabilitiesListL) {
+                this.form.assetsLiabilities.liabilitiesListL.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesL = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetL && liabilitiesL) {
+                return ((liabilitiesL / assetL) * 100).toFixed(2)
             }
             return 0
         }
@@ -164,12 +206,12 @@ td {
 /deep/ .el-collapse-item__wrap {
     padding: 15px 0;
 }
-.question .el-icon-question{
+.question .el-icon-question {
     position: absolute;
     left: 656.5px;
     bottom: 850px;
 }
-.green-word{
+.green-word {
     color: green;
 }
 </style>
