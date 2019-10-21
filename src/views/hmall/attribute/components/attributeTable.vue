@@ -88,6 +88,7 @@
                         <el-button
                             class="orangeBtn"
                             @click="updateAttributeStatus(scope.row)"
+                            :disabled='!scope.row.canInvalid'
                             v-text="scope.row.status === 2 ? '生效' : '失效'">
                         </el-button>
                     </template>

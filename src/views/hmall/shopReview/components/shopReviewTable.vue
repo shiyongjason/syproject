@@ -100,7 +100,7 @@
 </template>
 
 <script>
-// import { updateProductStatus } from '../api/index.js'
+import { addGoods } from '../api/index.js'
 import { mapState } from 'vuex'
 export default {
     name: 'shopReviewTable',
@@ -125,8 +125,12 @@ export default {
     },
     data () {
         return {
-            selectIds: []
+            selectIds: [],
+            pageSize: 0
         }
+    },
+    mounted () {
+        console.log(this.userInfo)
     },
     computed: {
         ...mapState({
@@ -140,6 +144,7 @@ export default {
         },
         handleCurrentChange (val) {
             this.loading = true
+            this.pageSize = val
             this.$emit('onCurrentChange', val)
         },
         goToChecked (val) {
@@ -152,14 +157,16 @@ export default {
                 }
             })
         },
-        addShopLibrary (val) {
-            this.$router.push({
-                path: 'selectCategory',
-                query: {
-                    id: val.id,
-                    isReview: 'yes'
-                }
-            })
+        async addShopLibrary (val) {
+            await addGoods({ 'productId': val.id, 'updateBy': this.userInfo.employeeName })
+            this.$emit('onCurrentChange', this.pageSize)
+            // this.$router.push({
+            //     path: 'selectCategory',
+            //     query: {
+            //         id: val.id,
+            //         isReview: 'yes'
+            //     }
+            // })
         },
         goToDetails (val) {
             if (val.checkStatus - 0 === 1) {

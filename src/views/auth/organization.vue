@@ -30,19 +30,13 @@
 <script>
 import OrganizationTable from './components/organizationTable'
 import Pagination from '@/components/pagination/HPagination'
-import { mapState } from 'vuex'
 import { findBOSSOrganization, findOrganizationEmployee } from './api'
 
 export default {
-    name: 'index',
+    name: 'organization',
     components: {
         OrganizationTable,
         Pagination
-    },
-    computed: {
-        ...mapState({
-            menuList: state => state.menuList
-        })
     },
     data () {
         return {
@@ -138,6 +132,16 @@ export default {
         this.findOrganizationEmployee()
         // console.log(this.$route)
     }
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('couponsList')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'editCoupons') {
+    //         clearCache('couponsList')
+    //     }
+    //     next()
+    // }
 }
 </script>
 
@@ -145,14 +149,14 @@ export default {
     .index {
         overflow: hidden;
         .tree {
-            width: 316px;
+            width: 220px;
             padding-right: 24px;
             float: left;
 
         }
         .table{
             /*width: 810px;*/
-            margin-left: 340px;
+            margin-left: 244px;
             padding-left: 24px;
             box-sizing: border-box;
             border-left: 1px solid #E5E5EA;

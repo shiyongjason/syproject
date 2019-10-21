@@ -1,21 +1,18 @@
 <template>
-    <el-table-column :label="columnData.label" :prop="columnData.prop" :sortable="columnData.sortable" :align="columnData.align?columnData.align:'center'" :min-width="columnData.width?columnData.width:''" :show-overflow-tooltip="true">
+    <el-table-column :label="columnData.label" :prop="columnData.prop" :sortable="columnData.sortable" :align="columnData.align?columnData.align:'center'" :width="columnData.labelWidth ? columnData.labelWidth : ''" :min-width="columnData.width?columnData.width:''" :show-overflow-tooltip="columnData.showOverflow?columnData.showOverflow:false" >
         <template slot-scope="scope">
-            <slot v-if="columnData.formatter" :name="columnData.prop" :data="scope">{{vNodes.filters[column.filter](scope.row[columnData.prop])}}</slot>
-            <slot v-else :name="columnData.prop" :data="scope">{{formatter(scope.row[columnData.prop])}}</slot>
-            <!-- <slot v-if="columnData.formatter === 'money'" :name="columnData.prop" :data="scope">
-                {{scope.row[columnData.prop] | money}}
+            <slot v-if="columnData.format" :name="columnData.prop" :data="scope">
+                {{vNodes.filters[columnData.format](scope.row[columnData.prop])}}
             </slot>
-            <slot v-else-if="columnData.formatter === 'dateTime'" :name="columnData.prop" :data="scope">
-                {{scope.row[columnData.prop] | formatterTime}}</slot>
-            <slot v-else-if="columnData.formatter === 'dateTimes'" :name="columnData.prop" :data="scope">
-                {{scope.row[columnData.prop] | formatterTimes}}</slot>
-            <slot v-else-if="columnData.formatter === 'date'" :name="columnData.prop" :data="scope">
-                {{scope.row[columnData.prop] | formatterDate}}</slot>
-            <slot v-else :name="columnData.prop" :data="scope">{{formatter(scope.row[columnData.prop])}}</slot> -->
+            <slot v-else-if="columnData.dicData&&columnData.dicData.length>0" :name="columnData.prop" :data="scope">
+                <span>{{getLabelFromDicData(scope.row[columnData.prop]).label}}</span>
+            </slot>
+            <slot v-else :name="columnData.prop" :data="scope">
+                {{formatter(scope.row[columnData.prop])}}
+            </slot>
         </template>
         <template v-if="columnData.children">
-            <CommonTableColumn :columnData="column" v-for="(column,index) in columnData.children" :key="index" />
+            <CommonTableColumn :columnData="column" :dicData="column.dicData||[]" v-for="(column,index) in columnData.children" :key="index" />
         </template>
     </el-table-column>
 </template>
@@ -23,7 +20,7 @@
 import moment from 'moment'
 const tableColumn = {
     name: 'CommonTableColumn',
-    props: ['columnData'],
+    props: ['columnData', 'dicData'],
     filters: {
         date: time => {
             if (time) {
@@ -53,6 +50,14 @@ const tableColumn = {
     methods: {
         formatter (data) {
             return data || data === 0 ? data : this.isBlank ? '' : '-'
+        },
+        getLabelFromDicData (key) {
+            if (key == null) return ''
+            const map = this.dicData.reduce((res, item) => {
+                res[item.value] = item
+                return res
+            }, {})
+            return map[key]
         }
     }
 }

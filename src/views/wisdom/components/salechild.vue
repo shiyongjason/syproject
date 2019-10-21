@@ -75,8 +75,7 @@
             </div>
             <div class="sale-hero-title">
                 <img
-                    src="../../../assets/img/img_herolist.png"
-                    alt=""
+                    src="../../../assets/images/img_herolist.png"
                 >
                 <strong>排行榜</strong>
                 <p>全国分部销售排行榜</p>
@@ -88,7 +87,7 @@
                     :key="index"
                 >
                     <!-- <img
-                    :src="`${index==0?'../../../assets/img/img_first.png':index==1?'../../../assets/img/img_second.png':'../../../assets/img/img_first.png'}`"
+                    :src="`${index==0?'../../../assets/images/img_first.png':index==1?'../../../assets/images/img_second.png':'../../../assets/images/img_first.png'}`"
                     alt="王者"
                 > -->
                     <img
@@ -160,13 +159,15 @@ export default {
         }
     },
     mounted () {
-        this.sellStatistics()
-        this.hexoList()
-        var that = this
-        // setTimeout(() => {
-        window.addEventListener('resize', function () {
-            that.myChart.resize()
+        this.$nextTick(() => {
+            this.sellStatistics()
+            this.hexoList()
         })
+        // var that = this
+        // // setTimeout(() => {
+        // window.addEventListener('resize', function () {
+        //     // that.myChart.resize()
+        // })
     },
     methods: {
         backsale () {
@@ -207,7 +208,7 @@ export default {
             this.companySaleBOList = data.data.companySaleBOList
             this.companySaleBOList.map((value, index) => {
                 if (index < 3) {
-                    value.imgurl = require('../../../assets/img/img_' + index + '.png')
+                    value.imgurl = require('../../../assets/images/img_' + index + '.png')
                 }
                 value.sale = parseFloat(value.sale)
                 return value

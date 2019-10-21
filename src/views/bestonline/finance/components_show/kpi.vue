@@ -1,0 +1,209 @@
+<template>
+    <el-collapse-item name="1">
+        <template slot="title">
+            <p class="title-p">财务尽调评估及KPI</p>
+        </template>
+        <p class="small-title">财务尽调评估</p>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <td width="25%">评估项</td>
+                    <td width="25%">合作目标</td>
+                    <td width="25%">结论</td>
+                    <td width="25%">备注</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in form.assessmentList" :key="index">
+                    <td>{{ item.assessmentItem }}</td>
+                    <td v-if="index === 2 || index === 4">
+                        <p v-for="(v, i) in item.cooperationTarget&&item.cooperationTarget.split(';')" :key="i" style="line-height: normal;">{{v}}</p>
+                    </td>
+                    <td v-else>{{ item.cooperationTarget }}
+                        <i v-if="index === 1">w</i>
+                    </td>
+                    <td>
+                        {{item.state === 0?'是':item.state === 1?'否':''}}
+                    </td>
+                    <td :rowspan="form.assessmentList.length" v-if="index == 0">
+                        {{item.remark }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="small-title">KPI（必填）</p>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <td width="180">-</td>
+                    <td width="180">本年度</td>
+                    <td width="180">上年度</td>
+                </tr>
+            </thead>
+            <tbody v-if="form.dueFinanceYearOperatingCreateForms">
+                <tr>
+                    <td width="180">资产负债率</td>
+                    <td width="180">
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="assetListT" placeholder="自动录入" disabled>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td width="180">
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="assetListL" placeholder="自动录入" disabled>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="180">净利率</td>
+                    <td width="180">
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[0]" v-model="form.dueFinanceYearOperatingCreateForms[0].profitRatio" placeholder="自动录入" disabled>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                    <td width="180">
+                        <el-input v-if="form.dueFinanceYearOperatingCreateForms[1]" v-model="form.dueFinanceYearOperatingCreateForms[1].profitRatio" placeholder="自动录入" disabled>
+                            <template slot="suffix">%</template>
+                        </el-input>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="small-title mb15">分析报告(必填)</p>
+        <div class="item-wrappper">
+            <el-form-item label="风险揭示：" prop="dueFinanceBasic.riskDisclosure">
+                <p class="remark">{{form.dueFinanceBasic.riskDisclosure}}</p>
+            </el-form-item>
+            <el-form-item label="分析描述：" prop="dueFinanceBasic.analysisDescription">
+                <p class="remark">{{form.dueFinanceBasic.analysisDescription}}</p>
+            </el-form-item>
+        </div>
+    </el-collapse-item>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import { YES_NO_STATUS } from '../../const'
+export default {
+    data () {
+        return {
+            options: YES_NO_STATUS,
+            rules: {
+                state: [
+                    { required: true, message: '请选择结论', trigger: 'change' }
+                ]
+            }
+        }
+    },
+    computed: {
+        ...mapState({
+            form: state => state.dueDiligence.financeData
+        }),
+        assetListT () {
+            // 老规则（防止随时换需求）
+            // let totalLiabilityT = 0
+            // if (this.form.assetsLiabilities.liabilitiesListT) {
+            //     if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
+            //         totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+            //     const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
+            //     return result
+            // }
+            // return 0
+            // 新规则（资产负债率=负债总额/资产总额×100% ）
+            let assetT = 0
+            let liabilitiesT = 0
+            if (this.form.assetsLiabilities.assetListT) {
+                this.form.assetsLiabilities.assetListT.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetT = i.endOrCurrent
+                    }
+                })
+            }
+            if (this.form.assetsLiabilities.liabilitiesListT) {
+                this.form.assetsLiabilities.liabilitiesListT.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesT = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetT && liabilitiesT) {
+                return ((liabilitiesT / assetT) * 100).toFixed(2)
+            }
+            return 0
+        },
+        assetListL () {
+            // 老规则（防止随时换需求）
+            // let totalLiabilityL = 0
+            // if (this.form.assetsLiabilities.liabilitiesListL) {
+            //     if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
+            //         totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+            //     const result = (((totalLiabilityL + this.form.totalLiability) / this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent) * 100).toFixed(2)
+            //     return result
+            // }
+            // return 0
+            let assetL = 0
+            let liabilitiesL = 0
+            if (this.form.assetsLiabilities.assetListL) {
+                this.form.assetsLiabilities.assetListL.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetL = i.endOrCurrent
+                    }
+                })
+            }
+            if (this.form.assetsLiabilities.liabilitiesListL) {
+                this.form.assetsLiabilities.liabilitiesListL.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesL = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetL && liabilitiesL) {
+                return ((liabilitiesL / assetL) * 100).toFixed(2)
+            }
+            return 0
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+.title-p {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+}
+.small-title {
+    padding: 10px;
+    font-size: 17px;
+    line-height: 40px;
+    background: #fafafa;
+}
+.item-wrapper {
+    margin: 20px 0 20px;
+}
+.red-span {
+    color: red;
+}
+table {
+    border-collapse: collapse;
+}
+table,
+tr,
+td {
+    border: 1px solid #dddddd;
+    text-align: center;
+    line-height: 40px;
+}
+/deep/ .el-collapse-item__wrap {
+    padding: 15px 0;
+}
+.remark {
+    word-break: break-all;
+}
+</style>

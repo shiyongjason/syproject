@@ -54,8 +54,14 @@ export default {
         }
     },
     mounted () {
-        this.userName = this.userInfo.employeeName + '/' +
-                            this.userInfo.deptName + '/好享家'
+        this.userName = ''
+        if (this.userInfo.employeeName) {
+            this.userName += this.userInfo.employeeName + '/'
+        }
+        if (this.userInfo.deptName) {
+            this.userName += this.userInfo.deptName + '/'
+        }
+        this.userName += '好享家'
     }
 }
 </script>

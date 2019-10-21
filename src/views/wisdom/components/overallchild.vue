@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <strong>-<i></i></strong>
-                    <span>毛利</span>
+                    <span>毛利率</span>
                 </div>
                 <div>
                     <strong>-<i></i></strong>
@@ -164,34 +164,36 @@ export default {
         this.init()
         this.nowTay = (new Date()).getFullYear() + '-' + '01'
         this.nnowTay = (new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))
-        this.getStatistics()
-        this.getSales()
-        this.getSummary()
+        this.$nextTick(() => {
+            this.getStatistics()
+            this.getSales()
+            this.getSummary()
+        })
     },
     methods: {
         init () {
-            const self = this
-            setTimeout(() => {
-                window.onresize = function () {
-                    self.myChart.resize()
-                    self.mapchina.resize()
-                    // self.pie.resize()
-                    self.myBar.resize()
-                    self.hCharts.reflow()
-                }
-            }, 20)
+            // const self = this
+            // setTimeout(() => {
+            //     window.onresize = function () {
+            //         // self.myChart.resize()
+            //         // self.mapchina.resize()
+            //         // // self.pie.resize()
+            //         // self.myBar.resize()
+            //         // self.hCharts.reflow()
+            //     }
+            // }, 20)
         },
         async getStatistics () {
             const { data } = await getStatistics(this.params)
             this.companyData = data.data
-            this.drawMap(data.data.provinceVos ? data.data.provinceVos : [])
+            this.drawMap(data.data.respProvinces ? data.data.respProvinces : [])
         },
         async getSales () {
             this.lineArr = []
             this.yearMonth = []
             const { data } = await getSales(this.params)
             this.saleData = data.data
-            this.pieArr = data.data.organizationRateVo
+            this.pieArr = data.data.respOrganizationRate
             data.data.yearOfSales && data.data.yearOfSales.map(value => {
                 this.lineArr.push(value.value ? parseFloat(value.value).toFixed(0) : 0)
                 this.yearMonth.push(value.date)
@@ -668,7 +670,7 @@ export default {
                     font-size: 20px;
                     font-style: normal;
 
-                    color: #262626;
+                    color: #ef7407;
                 }
                 text-align: right;
                 height: 40px;

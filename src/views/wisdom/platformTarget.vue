@@ -1,253 +1,106 @@
 <template>
     <div class="page-body">
-        <div class="page-body-cont">
-            <div class="page-header">
-                <el-breadcrumb separator="/">
-                    <el-breadcrumb-item>好智慧-经营分析</el-breadcrumb-item>
-                    <el-breadcrumb-item>平台目标管理</el-breadcrumb-item>
-                </el-breadcrumb>
-            </div>
-            {{MODULE.indexOf(WISDOM_MODULE_BASE)> -1}}
-            <div class="page-wrap flex-wrap-col" v-if="MODULE.indexOf(WISDOM_MODULE_BASE)> -1">
-                <div class="flex-wrap-row">
-                    <div class="flex-wrap-box" v-if="userInfo.companyCode==='top'">
-                        <div class="flex-wrap-title">分部：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="searchParams.subsectionCode"
-                                placeholder="选择"
-                                :clearable=true
-                            >
-                                <el-option
-                                    v-for="item in branchList"
-                                    :key="item.subsectionCode"
-                                    :label="item.subsectionName"
-                                    :value="item.subsectionCode"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col" v-if="userInfo.oldDeptCode==='top'">
+                    <div class="query-cont-title">分部：</div>
+                    <div class="query-cont-input">
+                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
+                            <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
+                            </el-option>
+                        </el-select>
                     </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">公司简称：</div>
-                        <div class="flex-wrap-cont">
-                            <!--<HLongSearch-->
-                                <!--:maxlength="25"-->
-                                <!--:placeholder="'请输入公司简称'"-->
-                                <!--@back-event="backFindmiscode"-->
-                                <!--:searchUrl='companyData.url'-->
-                                <!--:otherKeys='companyData.otherParams'-->
-                                <!--:keyWords='companyData.params'-->
-                                <!--:axiosType="'get'"-->
-                            <!--/>-->
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">所在城市：</div>
-                        <div class="flex-wrap-cont">
-                            <!--<HLongSearch-->
-                                <!--:maxlength="25"-->
-                                <!--:placeholder="'请输入城市名称'"-->
-                                <!--@back-event="backFindcitycode"-->
-                                <!--:searchUrl='cityData.url'-->
-                                <!--:keyWords='cityData.params'-->
-                                <!--:otherKeys='cityData.otherParams'-->
-                                <!--:axiosType="'get'"-->
-                            <!--/>-->
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">上线时间：</div>
-                        <div class="flex-wrap-cont">
-                            <el-date-picker
-                                v-model="searchParams.onlineTime"
-                                :editable="false"
-                                type="date"
-                                format="yyyy-MM-dd"
-                                value-format="yyyy-MM-dd"
-                                placeholder="选择时间"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">增量/存量：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select
-                                v-model="searchParams.incremental"
-                                placeholder="请选择选择"
-                                :clearable=true
-                            >
-                                <el-option
-                                    v-for="item in incrementalList"
-                                    :key="item.key"
-                                    :label="item.value"
-                                    :value="item.key"
-                                >
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box">
-                        <div class="flex-wrap-title">目标年份：</div>
-                        <div class="flex-wrap-cont">
-                            <el-date-picker
-                                type="year"
-                                :editable=false
-                                :clearable=false
-                                placeholder="选择年份"
-                                format="yyyy"
-                                value-format="yyyy"
-                                v-model="searchParams.targetDate"
-                            >
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="flex-wrap-box pl20">
-                        {{BUTTON.indexOf(WISDOM_BUTTON_SELECT)> -1}}
-                        <el-button
-                            type="primary"
-                            @click="onFindTableList()"
-                            v-if="BUTTON.indexOf(WISDOM_BUTTON_SELECT)> -1"
-                        >搜索
-                        </el-button>
-                        {{BUTTON.indexOf(WISDOM_BUTTON_DOWNLOAD)> -1}}
-                        <el-button
-                            type="primary"
-                            @click="onExport()"
-                            v-if="BUTTON.indexOf(WISDOM_BUTTON_DOWNLOAD)> -1"
-                        >导出
-                        </el-button>
-                    </div>
-
                 </div>
-            </div>
-            <div class="page-body-cont pd-10">
-                <div class="flex-wrap-box">
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <el-upload
-                            class="upload-demo"
-                            :show-file-list="false"
-                            :action="'ims/companyTarget/import'"
-                            :data="{createUser: userInfo.name,subsectionCode: userInfo.companyCode}"
-                            :on-success="isSuccess"
-                            auto-upload
-                        >
-                            <el-button
-                                type="primary"
-                                class="ml20"
-                            >
-                                批量导入
-                            </el-button>
-                        </el-upload>
-                       <a class="ml20 blue pointer" @click="downloadXlsx">
-                            下载平台目标模板
-                        </a>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindmiscode" :placeholder="'选择公司简称'" />
                     </div>
                 </div>
-            </div>
-            <div class="page-box">
-                {{TITLE.indexOf(WISDOM_TITLE_NAME)> -1}}
-                <div class="page-table">
-                    <el-table
-                        :data="tableData"
-                        style="width: 100%"
-                        border
-                        :header-cell-style="{color:'#606266'}"
-                    >
-                        <el-table-column
-                            prop="companyShortName"
-                            label="公司简称"
-                            v-if="TITLE.indexOf(WISDOM_TITLE_NAME)> -1"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="misCode"
-                            label="公司编码"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="subsectionName"
-                            label="分部"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="cityName"
-                            label="所在城市"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="onlineTime"
-                            label="上线时间"
-                        >
-                        </el-table-column>
-                        <el-table-column label="增量/存量">
-                            <template slot-scope="scope">
-                               <span v-if="scope.row.onlineTime">{{scope.row.incremental == 1?'增量':'存量'}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                            prop="targetDate"
-                            label="目标年份"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="performanceTarget"
-                            label="履约目标/万"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="minimumTarget"
-                            label="保底目标/万"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="balanceTarget"
-                            label="平衡目标/万"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="sprintTarget"
-                            label="冲刺目标/万"
-                        >
-                        </el-table-column>
-                        <el-table-column
-                            prop="updateUser"
-                            label="最近操作人"
-                        >
-                        </el-table-column>
-                        <el-table-column label="最近操作时间">
-                            <template slot-scope="scope">
-                                {{scope.row.updateTime | formatterTime}}
-                            </template>
-
-                        </el-table-column>
-
-                    </el-table>
-                    <div  class="page clearfix"
-                          style="text-align: center">
-                        <Pagination :paginationData="paginationData" @onSizeChange="handleSizeChange" @onCurrentChange="handleCurrentChange"></Pagination>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">所在城市：</div>
+                    <div class="flex-wrap-cont">
+                        <HAutocomplete :placeholder="'选择城市'" @back-event="backFindcitycode" :selectArr="cityList" v-if="cityList" />
                     </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">上线时间：</div>
+                    <div class="flex-wrap-cont">
+                        <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择时间">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">增量/存量：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">目标年份：</div>
+                    <div class="flex-wrap-cont">
+                        <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
+                        </el-date-picker>
+                    </div>
+                    <el-button type="primary" @click="onFindTableList()">搜索
+                    </el-button>
+                    <el-button type="primary" @click="onExport()">导出
+                    </el-button>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'ims/companyTarget/import'" :data="{createUser: userInfo.name,subsectionCode: userInfo.companyCode}" :on-success="isSuccess" auto-upload>
+                    <el-button type="primary" class="ml20">
+                        批量导入
+                    </el-button>
+                </el-upload>
+                <a class="ml20 blue isLink" @click="downloadXlsx">
+                    下载平台目标模板
+                </a>
+            </div>
+        </div>
+        <div class="page-body-cont">
+            <div class="page-table">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+                    <template slot="incremental" slot-scope="scope">
+                        <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
+                    </template>
+                    <template slot="updateTime" slot-scope="scope">
+                        {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                    </template>
+                </basicTable>
+                <div class="page clearfix" style="text-align: right;margin-top: 20px">
+                    <el-pagination class="el-page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
+                    </el-pagination>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 <script>
-import { findSubsectionList, findTableList } from './api/index.js'
-import * as Auth from './authConfig/index'
-// import HLongSearch from '@/components/HLongSearch'
+import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import Pagination from '@/components/pagination/HPagination'
-import { authToggle } from '../../common/authToggle'
-
 export default {
-    components: {
-        Pagination
-    },
     data () {
         return {
+            tableLabel: [
+                { label: '公司简称', prop: 'companyShortName', choosed: true },
+                { label: '公司编码', prop: 'misCode', choosed: true },
+                { label: '分布', prop: 'subsectionName', choosed: true },
+                { label: '所在城市', prop: 'cityName', choosed: true },
+                { label: '上线时间', prop: 'onlineTime', choosed: true },
+                { label: '增量/存量', prop: 'incremental', choosed: true },
+                { label: '目标年份', prop: 'targetDate', choosed: true },
+                { label: '履约目标/万', prop: 'performanceTarget', choosed: true },
+                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true },
+                { label: '最近操作人', prop: 'updateUser', choosed: true },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true }
+            ],
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
             searchParams: {
                 subsectionCode: '',
@@ -261,7 +114,7 @@ export default {
             },
             branchList: [],
             companyData: {
-                url: 'ims/companyTarget/queryCompanyShortName',
+                url: interfaceUrl + 'ims/companyTarget/queryCompanyShortName',
                 otherParams: {
                     keys: 'companyShortName',
                     keyName: 'companyShortName',
@@ -272,7 +125,7 @@ export default {
                 }
             },
             cityData: {
-                url: 'ims/companyTarget/queryCity',
+                url: interfaceUrl + 'ims/companyTarget/queryCity',
                 otherParams: {
                     keys: 'cityName',
                     keyName: 'cityName',
@@ -284,27 +137,29 @@ export default {
             },
             tableData: [],
             paginationData: {},
-            ...Auth
+            interfaceUrl: interfaceUrl,
+            companyList: [],
+            cityList: []
         }
     },
-    // components: {
-    //     HLongSearch
-    // },
+    components: {
+        HAutocomplete
+    },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            menuList: state => state.menuList
+            userInfo: state => state.userInfo
         })
     },
     mounted () {
-        if (this.userInfo.companyCode !== 'top') {
-            this.searchParams.subsectionCode = this.userInfo.companyCode
+        if (this.userInfo.oldDeptCode !== 'top') {
+            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
         }
-        this.companyData.params.companyCode = this.userInfo.companyCode
-        this.cityData.params.companyCode = this.userInfo.companyCode
-        this.onFindBranchList(this.userInfo.companyCode)
+        this.companyData.params.companyCode = this.userInfo.oldDeptCode
+        this.cityData.params.companyCode = this.userInfo.oldDeptCode
+        this.onFindBranchList(this.userInfo.oldDeptCode)
         this.onFindTableList()
-        authToggle.bind(this)()
+        this.getCompanyList()
+        this.getCityList()
     },
     watch: {
         // 'searchParams.subsectionCode' (newV, oldV) {
@@ -355,6 +210,7 @@ export default {
             this.searchParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
+            console.log(val)
             this.searchParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
@@ -365,18 +221,42 @@ export default {
             this.searchParams.pageNumber = val
             this.onFindTableList()
         },
+        onCurrentChange (val) {
+            this.$emit('onCurrentChange', val)
+        },
+        onSizeChange (val) {
+            this.$emit('onSizeChange', val)
+        },
+        onFieldChange (val) {
+            this.$emit('onFieldChange', val)
+        },
         onExport () {
             var url = ''
             // delete this.searchParams.pageNumber
             // delete this.searchParams.pageSize
             for (var key in this.searchParams) {
-                console.log(this.searchParams[key])
                 url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
             }
-            location.href = 'ims/companyTarget/export?' + url
+            location.href = interfaceUrl + 'ims/companyTarget/export?' + url
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
+        },
+        async  getCompanyList () {
+            const { data } = await getCompany()
+            this.companyList = data.data
+            this.companyList && this.companyList.map(item => {
+                item.value = item.companyShortName
+                item.selectCode = item.misCode
+            })
+        },
+        async  getCityList () {
+            const { data } = await getCityList()
+            this.cityList = data.data
+            this.cityList && this.cityList.map(item => {
+                item.value = item.cityName
+                item.selectCode = item.cityCode
+            })
         }
     }
 }
