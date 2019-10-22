@@ -21,7 +21,7 @@
                     </el-tooltip>
                 </div>
                 <div>
-                    <strong>{{summaryData.allSales| money}}
+                    <strong>{{summaryData.allSales| money(true)}}
 
                     </strong>
                     <span>
@@ -69,8 +69,8 @@
                 <div class="overallinfo">
                     <div><i>{{companyData.provinceNum?companyData.provinceNum:0}}</i>省,<i>{{companyData.cityNum?companyData.cityNum:0}}</i>城市</div>
                     <div><i>{{companyData.companyNum?companyData.companyNum:0}}</i>平台公司,<i>{{companyData.shopNum?companyData.shopNum:0}}</i>会员店</div>
-                    <div>在线规模<i>{{companyData.onlineScale|money}}</i>万</div>
-                    <div>平均规模<i>{{companyData.avgScale|money}}</i>万</div>
+                    <div>在线规模<i>{{companyData.onlineScale|money(true)}}</i>万</div>
+                    <div>平均规模<i>{{companyData.avgScale|money(true)}}</i>万</div>
                 </div>
             </div>
         </div>

@@ -58,6 +58,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">公司上线状态：</div>
                     <div class="query-col-input">
                         <el-checkbox-group v-model="onLineStatus">
                             <el-checkbox label=1>上线</el-checkbox>

@@ -21,7 +21,7 @@ const formatterDate = function (time) {
 }
 
 // 金额格式化
-const money = function (val) {
+const money = function (val, int) {
     val = val && val.toString().replace(/\$|,/g, '')
     if (isNaN(val)) {
         val = '0'
@@ -36,7 +36,9 @@ const money = function (val) {
     for (var i = 0; i < Math.floor((val.length - (1 + i)) / 3); i++) {
         val = val.substring(0, val.length - (4 * i + 3)) + ',' + val.substring(val.length - (4 * i + 3))
     }
-
+    if (int) {
+        return ((sign) ? '' : '-') + val
+    }
     return (((sign) ? '' : '-') + val + '.' + cents)
 }
 const formatDateDuration = function (time) {
