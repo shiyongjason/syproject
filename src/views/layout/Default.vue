@@ -3,6 +3,7 @@
         <el-header class="header">
             <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
+
         <el-container class="container clearfix">
             <el-aside class="aside" :class="isCollapse?'close':'open'">
                 <NavMenuAside @back-event="menuBack" />
@@ -12,7 +13,7 @@
                     <H-tags></H-tags>
                 </div>
                 <div v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
-                    <keep-alive :include="cachedInclude.join(',')" :exclude="cachedExclude.join(',')">
+                    <keep-alive :include="['customerRecord']" :exclude="[]">
                         <router-view></router-view>
                     </keep-alive>
                 </div>

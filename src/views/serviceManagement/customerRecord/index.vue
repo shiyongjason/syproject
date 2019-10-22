@@ -51,6 +51,7 @@ import CustomerRecordTable from './components/customerRecordTable'
 import { findRecordList } from './api/index'
 import { mapState } from 'vuex'
 // import { deepCopy } from '@/utils/utils'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'customerRecord',
     components: {
@@ -134,6 +135,16 @@ export default {
     },
     async mounted () {
         this.onQuery()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('customerRecord')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'customerRecordDetail') {
+            clearCache('customerRecord')
+        }
+        next()
     }
 }
 </script>

@@ -14,17 +14,21 @@
                 <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;"  v-if="operate=='add'">
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'">
                     <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                    <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
+                <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{brandName}}
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification" style="width: 460px;">
-                    <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
+                <el-form-item label="商品型号：" prop="specification" style="width: 460px;" ref="specification">
+                    <template v-if="operate=='modify'||operate=='audit'">
+                        <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
+                    </template>
+                    <template v-else>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" /></template>
                 </el-form-item>
                 <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
                     <el-input placeholder="" maxlength="50" v-model="form.spuName" :disabled="operate=='audit'">
@@ -114,8 +118,9 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu } from './api/index'
+import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, getSpuspec } from './api/index'
 import { deepCopy } from '@/utils/utils'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'spudetail',
     data () {
@@ -202,13 +207,23 @@ export default {
                 approveDesc: [
                     { required: true, whitespace: true, message: '请填写理由说明' }
                 ]
-            }
+            },
+            specList: []
         }
+    },
+    components: {
+        HAutocomplete
     },
     watch: {
         pictureContainer (val) {
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
+            })
+        },
+        'form.specification' (val) {
+            console.log(1, val)
+            this.$nextTick(() => {
+                if (val) this.$refs['specification'].clearValidate()
             })
         }
     },
@@ -248,10 +263,22 @@ export default {
             findCategoryList: 'findCategoryList',
             setNewTags: 'setNewTags'
         }),
+        async  getSpuspec () {
+            const { data } = await getSpuspec({ categoryId: this.categoryIdArr[2], brandId: this.form.brandId })
+            const specList = []
+            data && data.map(item => {
+                specList.push({ value: item, selectCode: item })
+            })
+            this.specList = specList
+        },
+        backFindSpec (val) {
+            this.form.specification = val.value.value
+        },
         productCategoryChange (val) {
             this.form.categoryId = val[2]
             this.findRelationBrand(val[1])
             this.findSpuAttr(val[1], this.form.spuCode)
+            this.getSpuspec()
         },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
@@ -314,6 +341,7 @@ export default {
             this.form.reqParameterList = deepCopy(data)
         },
         brandNameChange () {
+            this.getSpuspec()
             this.brandName = ''
             this.relationBrand.forEach(value => {
                 if (this.form.brandId === value.brandId) {
@@ -355,7 +383,7 @@ export default {
                             message: this.auditForm.approveStatus == 1 ? '商品审核成功！' : '商品审核不成功'
                         })
                     }
-                    this.$router.go(-1)
+                    this.$router.push({ path: '/hmall/spumange' })
                 }
             })
         },
@@ -427,6 +455,7 @@ export default {
             this._findSpudetails()
         }
         this.deepForm = deepCopy(this.form)
+        this.getSpuspec()
     }
 }
 </script>
