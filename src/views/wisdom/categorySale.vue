@@ -245,32 +245,42 @@ export default {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         },
         onFieldChange (selectedTh) {
-            console.log(selectedTh)
+            // console.log(selectedTh)
 
-            this.tableLabel.map(val => {
-                console.log(selectedTh.indexOf(val.label))
-                let isFlag = selectedTh.some(item => {
-                    return val.label == item
-                })
-                val.choosed = isFlag
-                // console.log(isFlag)
-            })
-            const newTalelabel = deepCopy(this.tableLabel)
-            if (selectedTh.indexOf('平台公司') < 0) {
-                newTalelabel.map(item => {
-                    if (item.hasOwnProperty('linkAge')) {
-                        item.choosed = !item.linkAge
-                    }
-                }
-                )
-            } else if (selectedTh.indexOf('平台公司') > -1) {
-                newTalelabel.map(item => {
-                    if (item.hasOwnProperty('linkAge')) {
-                        item.choosed = true
-                    }
-                })
-            }
-            this.tableLabel = newTalelabel
+            // this.tableLabel.map(val => {
+            //     console.log(selectedTh.indexOf(val.label))
+            //     let isFlag = selectedTh.some(item => {
+            //         return val.label == item
+            //     })
+            //     val.choosed = isFlag
+            //     // console.log(isFlag)
+            // })
+            // const newTalelabel = deepCopy(this.tableLabel)
+            // // if (selectedTh.indexOf('平台公司') < 0) {
+            // //     newTalelabel.map(item => {
+            // //         if (item.hasOwnProperty('linkAge')) {
+            // //             item.choosed = !item.linkAge
+            // //         }
+            // //     }
+            // //     )
+            // // } else {
+            // //     newTalelabel.map(item => {
+            // //         if (item.hasOwnProperty('linkAge')) {
+            // //             item.choosed = true
+            // //         }
+            // //     })
+            // // }
+            // newTalelabel.map(item => {
+            //     if (item.hasOwnProperty('linkAge')) {
+            //         if (selectedTh.indexOf('平台公司') < 0) {
+            //             item.choosed = !item.linkAge
+            //         } else if (selectedTh.indexOf('平台公司') > -1 && selectedTh.indexOf('城市') > -1 && selectedTh.indexOf('mis编码') > -1 && selectedTh.indexOf('上线状态') > -1) {
+            //             item.choosed = true
+            //         }
+            //     }
+            // })
+
+            // this.tableLabel = newTalelabel
             this.getPlatCategory()
             // const queryFields = this.tableLabel.filter(item => item.queryParams)
             // let isFind = false
