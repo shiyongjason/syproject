@@ -183,7 +183,7 @@ export default {
                     label: '环比',
                     tableLabel: [
                         { label: '上月', prop: 'ringRatioUpperMoon', choosed: true },
-                        { label: '环比', prop: 'ringRatioUpperMoon', choosed: true }
+                        { label: '环比', prop: 'ringRatio', choosed: true }
                     ]
                 },
                 {
