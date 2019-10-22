@@ -17,7 +17,11 @@
                 </template>
                 <template slot-scope="scope" slot="linkRelativeRatio">
                     <span v-if="scope.data.row.linkRelativeRatio === null || scope.data.row.linkRelativeRatio === '-' || scope.data.row.linkRelativeRatio === ''">-</span>
-                    <span v-else :class="scope.data.row.linkRelativeRatio>=0?'colGreen':'colRed'">{{scope.data.row.linkRelativeRatio}}</span>
+                    <span v-else :class="scope.data.row.linkRelativeRatio>=0?'colGreen':'colRed'">{{scope.data.row.linkRelativeRatio}}%</span>
+                </template>
+                <template slot-scope="scope" slot="yearOnYearRatio">
+                    <span v-if="scope.data.row.yearOnYearRatio === null || scope.data.row.yearOnYearRatio === '-' || scope.data.row.yearOnYearRatio === ''">-</span>
+                    <span v-else :class="scope.data.row.yearOnYearRatio>=0?'colGreen':'colRed'">{{scope.data.row.yearOnYearRatio}}%</span>
                 </template>
                 <!-- % -->
                 <template slot-scope="scope" slot="achievingRate">
