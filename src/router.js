@@ -130,18 +130,6 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: 'platformTarget',
-                name: 'platformTarget',
-                meta: {
-                    title: '平台目标管理',
-                    tagName: '平台目标管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platformTarget'
-                },
-                component: () => import('./views/wisdom/platformTarget')
-            },
-            {
                 path: 'manageoverview',
                 name: 'manageoverview',
                 meta: {
@@ -152,18 +140,6 @@ const routerMapping = [
                     component: './views/wisdom/manageoverview'
                 },
                 component: () => import('./views/wisdom/manageoverview')
-            },
-            {
-                path: 'platcompanyinfo',
-                name: 'platcompanyinfo',
-                meta: {
-                    title: '平台公司基本信息',
-                    tagName: '平台公司基本信息',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platcompanyinfo'
-                },
-                component: () => import('./views/wisdom/platcompanyinfo')
             },
             {
                 path: 'branchTarget',
@@ -177,6 +153,32 @@ const routerMapping = [
                 },
                 component: () => import('./views/wisdom/branchTarget')
             },
+            {
+                path: 'platformTarget',
+                name: 'platformTarget',
+                meta: {
+                    title: '平台目标管理',
+                    tagName: '平台目标管理',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/platformTarget'
+                },
+                component: () => import('./views/wisdom/platformTarget')
+            },
+
+            {
+                path: 'platcompanyinfo',
+                name: 'platcompanyinfo',
+                meta: {
+                    title: '平台公司基本信息',
+                    tagName: '平台公司基本信息',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/platcompanyinfo'
+                },
+                component: () => import('./views/wisdom/platcompanyinfo')
+            },
+
             {
                 path: 'platformSale',
                 name: 'platformSale',
