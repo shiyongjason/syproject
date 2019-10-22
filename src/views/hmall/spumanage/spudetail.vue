@@ -221,7 +221,6 @@ export default {
             })
         },
         'form.specification' (val) {
-            console.log(1, val)
             this.$nextTick(() => {
                 if (val) this.$refs['specification'].clearValidate()
             })

@@ -13,7 +13,7 @@
                     <H-tags></H-tags>
                 </div>
                 <div v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
-                    <keep-alive :include="['customerRecord']" :exclude="[]">
+                    <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                         <router-view></router-view>
                     </keep-alive>
                 </div>

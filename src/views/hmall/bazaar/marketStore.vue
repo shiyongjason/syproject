@@ -94,7 +94,8 @@ export default {
                 { label: '销售价格', prop: 'sellPrice', event: true },
                 { label: '返利', prop: 'skuRebateBoList' },
                 { label: '佣金', prop: 'commission' },
-                { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } }
+                { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } },
+                { label: '集市状态', prop: 'commission' }
             ],
             tableData: [],
             searchParams: {},

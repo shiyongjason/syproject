@@ -195,7 +195,7 @@ export default {
             //     '&brandName=' + this.queryParams.brandName
         },
         onChangeStatus (val) {
-            console.log(this.multiSelection)
+
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
