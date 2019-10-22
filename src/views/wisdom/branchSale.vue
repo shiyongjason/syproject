@@ -87,7 +87,7 @@ export default {
                 type: 0
             },
             queryParams: {
-                pageSize: 50,
+                pageSize: 10,
                 pageNumber: 1,
                 regionCode: '', // 大区编码
                 subsectionCode: '', // 分部编码
@@ -163,6 +163,8 @@ export default {
                 this.total.shallowCopy = this.total.totalTable
                 this.tableData.unshift(this.total.shallowCopy)
             }
+            this.paginationData.pageNumber = data.data.pageNumber
+            this.paginationData.pageSize = data.data.pageSize
             this.paginationData.totalElements = data.data.totalElements
         },
         async getBranchSaleSum () {

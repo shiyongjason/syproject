@@ -39,6 +39,12 @@
                         </el-select>
                     </div>
                 </div>
+                  <div class="query-cont-col">
+                    <div class="flex-wrap-title">mis编码：</div>
+                    <div class="flex-wrap-cont">
+                      <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">目标年份：</div>
                     <div class="flex-wrap-cont">
@@ -91,7 +97,7 @@ export default {
             tableLabel: [
                 { label: '公司简称', prop: 'companyShortName', choosed: true },
                 { label: '公司编码', prop: 'misCode', choosed: true },
-                { label: '分布', prop: 'subsectionName', choosed: true },
+                { label: '分部', prop: 'subsectionName', choosed: true },
                 { label: '所在城市', prop: 'cityName', choosed: true },
                 { label: '上线时间', prop: 'onlineTime', choosed: true },
                 { label: '增量/存量', prop: 'incremental', choosed: true },

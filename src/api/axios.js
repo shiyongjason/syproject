@@ -3,7 +3,7 @@ import store from '@/store/index'
 import { Message } from 'element-ui'
 import { interfaceUrl } from './config'
 
-const TIME_OUT = 6000 // 连接超时时间
+const TIME_OUT = 60000 // 连接超时时间
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 /* const http = axios.create({
@@ -68,6 +68,7 @@ axios.interceptors.response.use(
             console.log('Rquest canceled：', error.message)
             return Promise.reject(error)
         }
+        console.log(error)
         if (error.response && error.response.status) {
             switch (error.response.status) {
                 case 401:

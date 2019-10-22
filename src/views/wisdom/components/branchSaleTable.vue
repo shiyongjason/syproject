@@ -7,31 +7,11 @@
             </el-tooltip>
             单位：万
         </div>
-        <div class="collapse">
-            <img src="../../../assets/images/typeIcon.png" alt="" class="collapse" @click="collapse = !collapse">
-        </div>
-        <el-collapse-transition>
-            <div class="collapse-content" v-if="collapse">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-                <div style="margin: 15px 0;"></div>
-                <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
-                    <el-checkbox v-for="item in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
-                </el-checkbox-group>
-            </div>
-        </el-collapse-transition>
         <div class="page-table">
             <basicTable :maxHeight="550" :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
-                <template slot-scope="scope" slot="regionName">
-                    <span v-if="scope.data.row.regionName === null || scope.data.row.regionName === '-' || scope.row.regionName === ''">-</span>
-                    <span v-else>{{scope.data.row.regionName}}</span>
-                </template>
                 <template slot-scope="scope" slot="saleRate">
                     <span v-if="scope.data.row.saleRate === null || scope.data.row.saleRate === '-'">-</span>
                     <span v-else>{{scope.data.row.saleRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="ranking">
-                    <span v-if="scope.data.row.ranking === null">-</span>
-                    <span v-else>{{scope.data.row.ranking}}</span>
                 </template>
                 <template slot-scope="scope" slot="overallActual">
                     <span v-if="scope.data.row.overallActual === null || scope.data.row.overallActual === '-'">-</span>
@@ -127,8 +107,8 @@
                     <span v-else>{{scope.data.row.annualAchievingRate}}%</span>
                 </template>
                 <template slot-scope="scope" slot="annualCumulativeGap">
-                    <span v-if="scope.row.annualCumulativeGap === null || scope.row.annualCumulativeGap === '-'">-</span>
-                    <span v-else-if="scope.row.annualCumulativeGap > 0" style="color: red">{{scope.row.annualCumulativeGap | money}}</span>
+                    <span v-if="scope.data.row.annualCumulativeGap === null || scope.data.row.annualCumulativeGap === '-'">-</span>
+                    <span v-else-if="scope.data.row.annualCumulativeGap > 0" style="color: red">{{scope.data.row.annualCumulativeGap | money}}</span>
                     <span v-else>0</span>
                 </template>
                 <template slot-scope="scope" slot="annualStockReached">
@@ -156,23 +136,11 @@
                     <span v-else>{{scope.data.row.annualIncrementalAchievementRate}}%</span>
                 </template>
             </basicTable>
-            <!-- <div class="page clearfix" style="text-align: right;margin-top: 20px">
-                <el-pagination class="el-page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30, 40, 50]" :total="paginationData.totalElements">
+            <div class="page clearfix" style="text-align: center;margin-top: 20px">
+                <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10, 20, 30, 40, 50]" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                 </el-pagination>
-            </div> -->
+            </div>
         </div>
-        <!-- <div class="page clearfix" style="text-align: center;margin-top: 20px">
-            <el-pagination
-                class="el-page"
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="paginationData.pageNumber"
-                :page-sizes="[10, 20, 30, 40, 50]"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="paginationData.totalElements">
-            </el-pagination>
-        </div> -->
     </div>
 </template>
 
@@ -199,47 +167,78 @@ export default {
         return {
             tableLabel: [
                 { label: '分部', prop: 'subsectionName' },
-                { label: '整体',
+                { label: '所属大区', prop: 'regionName' },
+                { label: '销售占比', prop: 'saleRate', choosed: false },
+                { label: '排名', prop: 'ranking', choosed: false },
+                {
+                    label: '整体',
                     tableLabel: [
                         { label: '实际', prop: 'overallActual', choosed: true },
                         { label: '目标', prop: 'overallGoal', choosed: true },
                         { label: '达成率', prop: 'overallAchievementRate', choosed: true },
                         { label: '缺口', prop: 'overallGap', choosed: true }
-                    ] },
-                { label: '环比',
+                    ]
+                },
+                {
+                    label: '环比',
                     tableLabel: [
                         { label: '上月', prop: 'ringRatioUpperMoon', choosed: true },
-                        { label: '环比', prop: 'ringRatioUpperMoon', choosed: true }
-                    ] },
-                { label: '复合同比',
+                        { label: '环比', prop: 'ringRatio', choosed: true }
+                    ]
+                },
+                {
+                    label: '复合同比',
                     tableLabel: [
                         { label: '复合同期', prop: 'compositePeriod', choosed: true },
                         { label: '复合同比', prop: 'compoundYearOnYear', choosed: true }
-                    ] },
-                { label: '可比同比',
+                    ]
+                },
+                {
+                    label: '可比同比',
                     tableLabel: [
                         { label: '可比同期', prop: 'comparablePeriod', choosed: true },
                         { label: '可比同比', prop: 'comparableYearOnYear', choosed: true }
-                    ] }
-            ],
-            defaultTh: [
-                '分部',
-                '所属大区',
-                '销售占比',
-                '排名',
-                '整体',
-                '环比',
-                '复合同比',
-                '可比同比',
-                '存量',
-                '增量',
-                '年度累计'
-            ],
-            selectTh: ['分部', '整体', '环比', '复合同比', '可比同比'], // 默认初始选中
-            checkAll: true,
-            checkedCities: [],
-            isIndeterminate: true,
-            collapse: false
+                    ]
+                },
+                {
+                    label: '存量',
+                    choosed: false,
+                    tableLabel: [
+                        { label: '实际', prop: 'stockActual', choosed: true },
+                        { label: '目标', prop: 'stockTarget', choosed: true },
+                        { label: '达成率', prop: 'stockAchievementRate', choosed: true },
+                        { label: '同期', prop: 'stockSamePeriod', choosed: true },
+                        { label: '同比', prop: 'stockYearOnYear', choosed: true },
+                        { label: '销售占比', prop: 'stockProportion', choosed: true }
+                    ]
+                },
+                {
+                    label: '增量',
+                    choosed: false,
+                    tableLabel: [
+                        { label: '实际', prop: 'incrementActual', choosed: true },
+                        { label: '目标', prop: 'incrementTarget', choosed: true },
+                        { label: '达成率', prop: 'incrementAchievingRate', choosed: true },
+                        { label: '销售占比', prop: 'incrementProportion', choosed: true }
+                    ]
+                },
+                {
+                    label: '年度累计',
+                    choosed: false,
+                    tableLabel: [
+                        { label: '实际', prop: 'annualAccumulation', choosed: true },
+                        { label: '目标', prop: 'annualTarget', choosed: true },
+                        { label: '达成率', prop: 'annualAchievingRate', choosed: true },
+                        { label: '缺口', prop: 'annualCumulativeGap', choosed: true },
+                        { label: '存量达成', prop: 'annualStockReached', choosed: true },
+                        { label: '存量目标', prop: 'annualStockTarget', choosed: true },
+                        { label: '存量达成率', prop: 'annualStockCompletionRate', choosed: true },
+                        { label: '增量达成', prop: 'annualIncrementalAchievement', choosed: true },
+                        { label: '增量目标', prop: 'annualIncrementalGoal', choosed: true },
+                        { label: '增量达成率', prop: 'annualIncrementalAchievementRate', choosed: true }
+                    ]
+                }
+            ]
         }
     },
     methods: {
@@ -254,15 +253,6 @@ export default {
         },
         onSizeChange (val) {
             this.$emit('onSizeChange', val)
-        },
-        handleCheckAllChange (val) {
-            this.selectTh = val ? this.defaultTh : []
-            this.isIndeterminate = false
-        },
-        handleCheckedCitiesChange (value) {
-            let checkedCount = value.length
-            this.checkAll = checkedCount === this.selectTh.length
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
         }
     }
 }
