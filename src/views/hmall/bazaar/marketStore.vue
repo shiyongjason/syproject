@@ -35,6 +35,14 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">集市状态：</div>
+                    <div class="query-col-input">
+                         <el-select v-model="queryParams.onMarket" style="width: 100%">
+                        <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
+                         </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
@@ -44,34 +52,37 @@
             </div>
             <div class="page-body-cont">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                  <template slot='skuRebateBoList' slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-                        <div slot="content">
-                            <span v-if="scope.data.row.skuRebateBoList.length>0">
-                                <p v-for="(item,index) in scope.data.row.skuRebateBoList" :key="index">
-                                    <i v-if="item.type==1" style="font-style:normal">直接返利{{item.discount}}%</i>
-                                    <i v-if="item.type==2" style="font-style:normal">满{{item.reachValue}}元返{{item.discount}}%</i>
-                                    <i v-if="item.type==3" style="font-style:normal">满{{item.reachValue}}件返{{item.discount}}%</i>
-                                </p>
-                            </span>
-                            <span v-else>-</span>
-                        </div>
-                        <span>返利详情</span>
-                    </el-tooltip>
-                </template>
-               <template slot='commission' slot-scope="scope">
-                    <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-                        <div slot="content">
-                            <span v-if="scope.data.row.commissionBoList.length>0">
-                                <p v-for="(item,index) in scope.data.row.commissionBoList" :key="index">
-                                    <i  style="font-style:normal">{{item.skuName}}佣金{{item.commission}}%</i>
-                                </p>
-                            </span>
-                            <span v-else>-</span>
-                        </div>
-                        <span>{{scope.data.row.commission}}%</span>
-                    </el-tooltip>
-                </template>
+                    <template slot='skuRebateBoList' slot-scope="scope">
+                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
+                            <div slot="content">
+                                <span v-if="scope.data.row.skuRebateBoList.length>0">
+                                    <p v-for="(item,index) in scope.data.row.skuRebateBoList" :key="index">
+                                        <i v-if="item.type==1" style="font-style:normal">直接返利{{item.discount}}%</i>
+                                        <i v-if="item.type==2" style="font-style:normal">满{{item.reachValue}}元返{{item.discount}}%</i>
+                                        <i v-if="item.type==3" style="font-style:normal">满{{item.reachValue}}件返{{item.discount}}%</i>
+                                    </p>
+                                </span>
+                                <span v-else>-</span>
+                            </div>
+                            <span>返利详情</span>
+                        </el-tooltip>
+                    </template>
+                    <template slot='commission' slot-scope="scope">
+                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
+                            <div slot="content">
+                                <span v-if="scope.data.row.commissionBoList.length>0">
+                                    <p v-for="(item,index) in scope.data.row.commissionBoList" :key="index">
+                                        <i style="font-style:normal">{{item.skuName}}佣金{{item.commission}}%</i>
+                                    </p>
+                                </span>
+                                <span v-else>-</span>
+                            </div>
+                            <span>{{scope.data.row.commission}}%</span>
+                        </el-tooltip>
+                    </template>
+                    <template slot='onMarket' slot-scope="scope">
+                        {{scope.data.row.onMarket==1?'上架':'下架'}}
+                    </template>
                 </basicTable>
             </div>
         </div>
@@ -84,6 +95,7 @@ export default {
     name: 'marketStore',
     data () {
         return {
+            statusArr: [{ name: '全部', value: '' }, { name: '上架', value: 1 }, { name: '下架', value: 2 }],
             tableLabel: [
                 { label: '商品编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuFullName' },
@@ -95,7 +107,7 @@ export default {
                 { label: '返利', prop: 'skuRebateBoList' },
                 { label: '佣金', prop: 'commission' },
                 { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } },
-                { label: '集市状态', prop: 'commission' }
+                { label: '集市状态', prop: 'onMarket' }
             ],
             tableData: [],
             searchParams: {},
@@ -104,7 +116,8 @@ export default {
                 spuName: '',
                 source: '',
                 brandName: '',
-                categoryId: ''
+                categoryId: '',
+                onMarket: ''
             },
             paginationData: {
                 pageNumber: 1,
