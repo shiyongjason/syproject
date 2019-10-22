@@ -36,7 +36,7 @@
                 </template>
                 <template slot-scope="scope" slot="ringRatio">
                     <span v-if="scope.data.row.ringRatio === null || scope.data.row.ringRatio === '-'">-</span>
-                    <span v-else :class="scope.data.row.ringRatio>0?'colGreen':'colRed'">{{scope.data.row.ringRatio}}%</span>
+                    <span v-else :class="scope.data.row.ringRatio>=0?'colGreen':'colRed'">{{scope.data.row.ringRatio}}%</span>
                 </template>
                 <template slot-scope="scope" slot="compositePeriod">
                     <span v-if="scope.data.row.compositePeriod === null || scope.data.row.compositePeriod === '-'">-</span>
@@ -44,7 +44,7 @@
                 </template>
                 <template slot-scope="scope" slot="compoundYearOnYear">
                     <span v-if="scope.data.row.compoundYearOnYear === null || scope.data.row.compoundYearOnYear === '-'">-</span>
-                    <span v-else :class="scope.data.row.compoundYearOnYear>0?'colGreen':'colRed'">{{scope.data.row.compoundYearOnYear}}%</span>
+                    <span v-else :class="scope.data.row.compoundYearOnYear>=0?'colGreen':'colRed'">{{scope.data.row.compoundYearOnYear}}%</span>
                 </template>
                 <template slot-scope="scope" slot="comparablePeriod">
                     <span v-if="scope.data.row.comparablePeriod === null || scope.data.row.comparablePeriod === '-'">-</span>
@@ -52,7 +52,7 @@
                 </template>
                 <template slot-scope="scope" slot="comparableYearOnYear">
                     <span v-if="scope.data.row.comparableYearOnYear === null || scope.data.row.comparableYearOnYear === '-'">-</span>
-                    <span v-else :class="scope.data.row.comparableYearOnYear>0?'colGreen':'colRed'">{{scope.data.row.comparableYearOnYear}}%</span>
+                    <span v-else :class="scope.data.row.comparableYearOnYear>=0?'colGreen':'colRed'">{{scope.data.row.comparableYearOnYear}}%</span>
                 </template>
                 <template slot-scope="scope" slot="stockActual">
                     <span v-if="scope.data.row.stockActual === null || scope.data.row.stockActual === '-'">-</span>
