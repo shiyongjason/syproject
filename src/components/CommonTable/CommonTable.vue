@@ -27,16 +27,6 @@
                             <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
                             <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
                         </slot>
-                        <slot v-else-if="item.event" :name="item.prop" :data="scope">
-                            <el-popover placement="right" width="300" trigger="click" v-if="scope.row.shy">
-                                <el-table :data="scope.row.shy">
-                                    <el-table-column width="150" property="numberCase" label="商品件数" align="center"></el-table-column>
-                                    <el-table-column width="150" property="discount" label="价格折扣" align="center"></el-table-column>
-                                </el-table>
-                                <div class="isOrangeColor" slot="reference">{{scope.row[item.prop]}}</div>
-                            </el-popover>
-                            <div v-else>{{scope.row[item.prop]}}</div>
-                        </slot>
                         <slot v-else :name="item.prop" :data="scope">{{formatter(scope.row[item.prop])}}</slot>
                     </template>
                     <template v-if="selectTh.indexOf(item.label)>-1">
@@ -59,8 +49,7 @@
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
-            @size-change="handleSizeChange">
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange" @size-change="handleSizeChange">
         </el-pagination>
     </div>
 </template>

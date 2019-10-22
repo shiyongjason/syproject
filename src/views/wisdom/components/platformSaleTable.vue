@@ -9,139 +9,45 @@
         </div>
         <div class="page-table">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
-                <template slot-scope="scope" slot="regionName">
-                    <span v-if="scope.row.regionName === null || scope.row.regionName === '-' || scope.row.regionName === ''">-</span>
-                    <span v-else>{{scope.row.regionName}}</span>
-                </template>
-                <template slot-scope="scope" slot="saleRate">
-                    <span v-if="scope.row.saleRate === null || scope.row.saleRate === '-'">-</span>
-                    <span v-else>{{scope.row.saleRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="ranking">
-                    <span v-if="scope.row.ranking === null">-</span>
-                    <span v-else>{{scope.row.ranking}}</span>
-                </template>
-                <template slot-scope="scope" slot="overallActual">
-                    <span v-if="scope.row.overallActual === null || scope.row.overallActual === '-'">-</span>
-                    <span v-else>{{scope.row.overallActual | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="overallGoal">
-                    <span v-if="scope.row.overallGoal === null || scope.row.overallGoal === '-'">-</span>
-                    <span v-else>{{scope.row.overallGoal | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="overallAchievementRate">
-                    <span v-if="scope.row.overallAchievementRate === null || scope.row.overallAchievementRate === '-'">-</span>
-                    <span v-else>{{scope.row.overallAchievementRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="overallGap">
-                    <span v-if="scope.row.overallGoal === null || scope.row.overallGoal === '-'">-</span>
-                    <span v-else-if="scope.row.overallGap > 0" style="color: red">{{scope.row.overallGap | money}}</span>
+                <!-- 颜色 -->
+                <template slot-scope="scope" slot="gap">
+                    <span v-if="scope.data.row.gap === null || scope.data.row.gap === '-' || scope.data.row.gap === ''">-</span>
+                    <span v-else-if="scope.data.row.gap > 0" style="color: red">{{scope.data.row.gap | money}}</span>
                     <span v-else>0</span>
                 </template>
-                <template slot-scope="scope" slot="ringRatioUpperMoon">
-                    <span v-if="scope.row.ringRatioUpperMoon === null || scope.row.ringRatioUpperMoon === '-'">-</span>
-                    <span v-else>{{scope.row.ringRatioUpperMoon | money}}</span>
+                <template slot-scope="scope" slot="linkRelativeRatio">
+                    <span v-if="scope.data.row.linkRelativeRatio === null || scope.data.row.linkRelativeRatio === '-' || scope.data.row.linkRelativeRatio === ''">-</span>
+                    <span v-else :class="scope.data.row.linkRelativeRatio>=0?'colGreen':'colRed'">{{scope.data.row.linkRelativeRatio}}</span>
                 </template>
-                <template slot-scope="scope" slot="ringRatio">
-                    <span v-if="scope.row.ringRatio === null || scope.row.ringRatio === '-'">-</span>
-                    <span v-else :class="scope.row.ringRatio>0?'colGreen':'colRed'">{{scope.row.ringRatio}}%</span>
+                <!-- % -->
+                <template slot-scope="scope" slot="achievingRate">
+                    <span v-if="scope.data.row.achievingRate === null || scope.data.row.achievingRate === '-'">-</span>
+                    <span v-else>{{scope.data.row.achievingRate}}%</span>
                 </template>
-                <template slot-scope="scope" slot="compositePeriod">
-                    <span v-if="scope.row.compositePeriod === null || scope.row.compositePeriod === '-'">-</span>
-                    <span v-else>{{scope.row.compositePeriod | money}}</span>
+                <template slot-scope="scope" slot="yearAchievingRate">
+                    <span v-if="scope.data.row.yearAchievingRate === null || scope.data.row.yearAchievingRate === '-'">-</span>
+                    <span v-else>{{scope.data.row.yearAchievingRate}}%</span>
                 </template>
-                <template slot-scope="scope" slot="compoundYearOnYear">
-                    <span v-if="scope.row.compoundYearOnYear === null || scope.row.compoundYearOnYear === '-'">-</span>
-                    <span v-else :class="scope.row.compoundYearOnYear>0?'colGreen':'colRed'">{{scope.row.compoundYearOnYear}}%</span>
+                <!-- 金额 -->
+                <template slot-scope="scope" slot="totalOrderFee">
+                    <span v-if="scope.data.row.totalOrderFee === null || scope.data.row.totalOrderFee === '-'">-</span>
+                    <span v-else>{{scope.data.row.totalOrderFee | money}}</span>
                 </template>
-                <template slot-scope="scope" slot="comparablePeriod">
-                    <span v-if="scope.row.comparablePeriod === null || scope.row.comparablePeriod === '-'">-</span>
-                    <span v-else>{{scope.row.comparablePeriod | money}}</span>
+                <template slot-scope="scope" slot="target">
+                    <span v-if="scope.data.row.target === null || scope.data.row.target === '-'">-</span>
+                    <span v-else>{{scope.data.row.target | money}}</span>
                 </template>
-                <template slot-scope="scope" slot="comparableYearOnYear">
-                    <span v-if="scope.row.comparableYearOnYear === null || scope.row.comparableYearOnYear === '-'">-</span>
-                    <span v-else :class="scope.row.comparableYearOnYear>0?'colGreen':'colRed'">{{scope.row.comparableYearOnYear}}%</span>
+                <template slot-scope="scope" slot="lastMonthSale">
+                    <span v-if="scope.data.row.lastMonthSale === null || scope.data.row.lastMonthSale === '-'">-</span>
+                    <span v-else>{{scope.data.row.lastMonthSale | money}}</span>
                 </template>
-                <template slot-scope="scope" slot="stockActual">
-                    <span v-if="scope.row.stockActual === null || scope.row.stockActual === '-'">-</span>
-                    <span v-else>{{scope.row.stockActual | money}}</span>
+                <template slot-scope="scope" slot="yearSaleReal">
+                    <span v-if="scope.data.row.yearSaleReal === null || scope.data.row.yearSaleReal === '-'">-</span>
+                    <span v-else>{{scope.data.row.yearSaleReal | money}}</span>
                 </template>
-                <template slot-scope="scope" slot="stockTarget">
-                    <span v-if="scope.row.stockTarget === null || scope.row.stockTarget === '-'">-</span>
-                    <span v-else>{{scope.row.stockTarget | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="stockAchievementRate">
-                    <span v-if="scope.row.stockAchievementRate === null || scope.row.stockAchievementRate === '-'">-</span>
-                    <span v-else>{{scope.row.stockAchievementRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="stockSamePeriod">
-                    <span v-if="scope.row.stockSamePeriod === null || scope.row.stockSamePeriod === '-'">-</span>
-                    <span v-else>{{scope.row.stockSamePeriod | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="stockYearOnYear">
-                    <span v-if="scope.row.stockYearOnYear === null || scope.row.stockYearOnYear === '-'">-</span>
-                    <span v-else>{{scope.row.stockYearOnYear}}%</span>
-                </template>
-                <template slot-scope="scope" slot="stockProportion">
-                    <span v-if="scope.row.stockProportion === null || scope.row.stockProportion === '-'">-</span>
-                    <span v-else>{{scope.row.stockProportion}}%</span>
-                </template>
-                <template slot-scope="scope" slot="incrementActual">
-                    <span v-if="scope.row.incrementActual === null || scope.row.incrementActual === '-'">-</span>
-                    <span v-else>{{scope.row.incrementActual | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="incrementTarget">
-                    <span v-if="scope.row.incrementTarget === null || scope.row.incrementTarget === '-'">-</span>
-                    <span v-else>{{scope.row.incrementTarget | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="incrementAchievingRate">
-                    <span v-if="scope.row.incrementAchievingRate === null || scope.row.incrementAchievingRate === '-'">-</span>
-                    <span v-else>{{scope.row.incrementAchievingRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="incrementProportion">
-                    <span v-if="scope.row.incrementProportion === null || scope.row.incrementProportion === '-'">-</span>
-                    <span v-else>{{scope.row.incrementProportion}}%</span>
-                </template>
-                <template slot-scope="scope" slot="annualAccumulation">
-                    <span v-if="scope.row.annualAccumulation === null || scope.row.annualAccumulation === '-'">-</span>
-                    <span v-else>{{scope.row.annualAccumulation | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualTarget">
-                    <span v-if="scope.row.annualTarget === null || scope.row.annualTarget === '-'">-</span>
-                    <span v-else>{{scope.row.annualTarget | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualAchievingRate">
-                    <span v-if="scope.row.annualAchievingRate === null || scope.row.annualAchievingRate === '-'">-</span>
-                    <span v-else>{{scope.row.annualAchievingRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="annualCumulativeGap">
-                    <span v-if="scope.row.annualCumulativeGap === null || scope.row.annualCumulativeGap === '-'">-</span>
-                    <span v-else-if="scope.row.annualCumulativeGap > 0" style="color: red">{{scope.row.annualCumulativeGap | money}}</span>
-                    <span v-else>0</span>
-                </template>
-                <template slot-scope="scope" slot="annualStockReached">
-                    <span v-if="scope.row.annualStockReached === null || scope.row.annualStockReached === '-'">-</span>
-                    <span v-else>{{scope.row.annualStockReached | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualStockTarget">
-                    <span v-if="scope.row.annualStockTarget === null || scope.row.annualStockTarget === '-'">-</span>
-                    <span v-else>{{scope.row.annualStockTarget | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualStockCompletionRate">
-                    <span v-if="scope.row.annualStockCompletionRate === null || scope.row.annualStockCompletionRate === '-'">-</span>
-                    <span v-else>{{scope.row.annualStockCompletionRate}}%</span>
-                </template>
-                <template slot-scope="scope" slot="annualIncrementalAchievement">
-                    <span v-if="scope.row.annualIncrementalAchievement === null || scope.row.annualIncrementalAchievement === '-'">-</span>
-                    <span v-else>{{scope.row.annualIncrementalAchievement | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualIncrementalGoal">
-                    <span v-if="scope.row.annualIncrementalGoal === null || scope.row.annualIncrementalGoal === '-'">-</span>
-                    <span v-else>{{scope.row.annualIncrementalGoal | money}}</span>
-                </template>
-                <template slot-scope="scope" slot="annualIncrementalAchievementRate">
-                    <span v-if="scope.row.annualIncrementalAchievementRate === null || scope.row.annualIncrementalAchievementRate === '-'">-</span>
-                    <span v-else>{{scope.row.annualIncrementalAchievementRate}}%</span>
+                <template slot-scope="scope" slot="yearTarget">
+                    <span v-if="scope.data.row.yearTarget === null || scope.data.row.yearTarget === '-'">-</span>
+                    <span v-else>{{scope.data.row.yearTarget | money}}</span>
                 </template>
             </basicTable>
             <div class="page clearfix" style="text-align: right;margin-top: 20px">
@@ -236,6 +142,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.colRed {
+    color: #ee4134;
+}
+.colGreen {
+    color: #1ab26f;
+}
 .wrapper {
     position: relative;
 }
