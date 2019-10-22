@@ -22,16 +22,16 @@
                     <el-button type="primary" class="ml20" @click="onQuery()">
                         搜索
                     </el-button>
-                    <a :href="exportHref" class="ml20 download">导出</a>
+                    <a :href="exportHref"  v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'ims/subsectiontarget/import'" :data="{createUser: userInfo.name ,subsectionCode: userInfo.companyCode}" :on-success="isSuccess" auto-upload>
-                            <el-button type="primary" class="ml20">
+                            <el-button  v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                                 批量导入
                             </el-button>
                         </el-upload>
-                        <a class="ml20 blue isLink" @click="downloadXlsx">
+                        <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
                             下载分部目标模板
                         </a>
                     </div>
@@ -49,10 +49,14 @@ import { findBrandTargetTable, findBranchListNew } from './api/index'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
+import { AUTH_WIXDOM_BRANCH_TARGET_EXPORT, AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT, AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     name: 'branchTarget',
     data: function () {
         return {
+            exportAuth: AUTH_WIXDOM_BRANCH_TARGET_EXPORT,
+            importAuth: AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT,
+            downTemplateAuth: AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,

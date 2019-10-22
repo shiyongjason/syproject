@@ -66,7 +66,7 @@
                     <el-button type="primary" class="ml20" @click="onQuery('btn')">
                         查询
                     </el-button>
-                    <a :href="exportHref" class="ml20 download">导出</a>
+                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
                 </div>
             </div>
             <div class="page-wrap flex-wrap-col">
@@ -94,10 +94,12 @@ import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCom
 import platformSaleTable from './components/platformSaleTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { DEPT_TYPE } from './store/const'
+import { AUTH_WIXDOM_PLATFORM_SALE_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'platformSale',
     data: function () {
         return {
+            exportAuth: AUTH_WIXDOM_PLATFORM_SALE_EXPORT,
             deptType: DEPT_TYPE,
             checkedList: [{ value: '在线', checked: true, key: 1 }, { value: '未上线', checked: false, key: 2 }, { value: '淘汰', checked: false, key: 3 }],
             regionInput: true,

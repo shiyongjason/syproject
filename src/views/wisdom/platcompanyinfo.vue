@@ -39,7 +39,7 @@
                 <div class="query-cont-col pl20">
                     <el-button type="primary" @click="findCompanyList(1)">搜索
                     </el-button>
-                    <el-button type="primary" @click="exportTable()">导出
+                    <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="exportTable()">导出
                     </el-button>
                 </div>
             </div>
@@ -55,6 +55,7 @@ import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { ossUrl } from '@/api/config'
+import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 export default {
     data () {
         return {
@@ -82,7 +83,8 @@ export default {
                     keyName: 'companyShortName',
                     keyValue: 'misCode'
                 }
-            }
+            },
+            exportAuth: AUTH_WIXDOM_BASIC_INFO_EXPORT
         }
     },
     components: {
