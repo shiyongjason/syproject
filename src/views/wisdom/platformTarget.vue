@@ -39,6 +39,12 @@
                         </el-select>
                     </div>
                 </div>
+                  <div class="query-cont-col">
+                    <div class="flex-wrap-title">mis编码：</div>
+                    <div class="flex-wrap-cont">
+                      <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">目标年份：</div>
                     <div class="flex-wrap-cont">

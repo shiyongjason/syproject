@@ -94,16 +94,17 @@ import { mapState } from 'vuex'
 import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE } from './store/const'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'brandSale',
     data: function () {
         return {
             tableLabel: [
                 { label: '所属分部', prop: 'subsectionName', choosed: true },
-                { label: '城市', prop: 'cityName', choosed: true },
-                { label: 'mis编码', prop: 'misCode', choosed: true },
-                { label: '平台公司', prop: 'companyShortName', choosed: true },
-                { label: '上线状态', prop: 'onLineStatus', choosed: true },
+                { label: '城市', prop: 'cityName', choosed: true, linkAge: true },
+                { label: 'mis编码', prop: 'misCode', choosed: true, linkAge: true },
+                { label: '平台公司', prop: 'companyShortName', choosed: true, linkAge: true },
+                { label: '上线状态', prop: 'onLineStatus', choosed: true, linkAge: true },
                 { label: '业务类型', prop: 'businessType', choosed: true, queryParams: { businessTypeStatus: 1 } },
                 { label: '品类', prop: 'systemName', choosed: true, queryParams: { systemStatus: 1 } },
                 { label: '品牌', prop: 'brandName', choosed: true, queryParams: { brandStatus: 1 } },
@@ -243,21 +244,48 @@ export default {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         },
         onFieldChange (selectedTh) {
-            const queryFields = this.tableLabel.filter(item => item.queryParams)
-            let isFind = false
-            queryFields.forEach(field => {
-                const hasField = selectedTh.filter(item => item === field.label).length > 0
-                for (let key in field.queryParams) {
-                    if (!hasField) {
-                        isFind = !isFind ? this.queryParams[key] != field.queryParams[key] : isFind
-                        this.queryParams[key] = field.queryParams[key]
-                    } else {
-                        isFind = !isFind ? (this.queryParams[key] && this.queryParams[key] != 0) : isFind
-                        this.queryParams[key] = 0
+            console.log(selectedTh)
+
+            this.tableLabel.map(val => {
+                console.log(selectedTh.indexOf(val.label))
+                let isFlag = selectedTh.some(item => {
+                    return val.label == item
+                })
+                val.choosed = isFlag
+                // console.log(isFlag)
+            })
+            const newTalelabel = deepCopy(this.tableLabel)
+            if (selectedTh.indexOf('平台公司') < 0) {
+                newTalelabel.map(item => {
+                    if (item.hasOwnProperty('linkAge')) {
+                        item.choosed = !item.linkAge
                     }
                 }
-            })
-            isFind && this.getPlatCategory()
+                )
+            } else if (selectedTh.indexOf('平台公司') > -1) {
+                newTalelabel.map(item => {
+                    if (item.hasOwnProperty('linkAge')) {
+                        item.choosed = true
+                    }
+                })
+            }
+            this.tableLabel = newTalelabel
+            this.getPlatCategory()
+            // const queryFields = this.tableLabel.filter(item => item.queryParams)
+            // let isFind = false
+            // queryFields.forEach(field => {
+            //     const hasField = selectedTh.filter(item => item === field.label).length > 0
+            //     for (let key in field.queryParams) {
+            //         if (!hasField) {
+            //             isFind = !isFind ? this.queryParams[key] != field.queryParams[key] : isFind
+            //             this.queryParams[key] = field.queryParams[key]
+            //         } else {
+            //             isFind = !isFind ? (this.queryParams[key] && this.queryParams[key] != 0) : isFind
+            //             this.queryParams[key] = 0
+            //         }
+            //     }
+            // })
+            // isFind && this.getPlatCategory()
         }
     },
     async mounted () {
