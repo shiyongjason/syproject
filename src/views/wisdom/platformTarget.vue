@@ -53,17 +53,17 @@
                     </div>
                     <el-button type="primary" @click="onFindTableList()">搜索
                     </el-button>
-                    <el-button type="primary" @click="onExport()">导出
+                    <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="onExport()">导出
                     </el-button>
                 </div>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'ims/companyTarget/import'" :data="{createUser: userInfo.name,subsectionCode: userInfo.companyCode}" :on-success="isSuccess" auto-upload>
-                    <el-button type="primary" class="ml20">
+                    <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                         批量导入
                     </el-button>
                 </el-upload>
-                <a class="ml20 blue isLink" @click="downloadXlsx">
+                <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
                     下载平台目标模板
                 </a>
             </div>
@@ -91,9 +91,13 @@ import { findSubsectionList, findTableList, getCompany, getCityList } from './ap
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     data () {
         return {
+            exportAuth: AUTH_WIXDOM_PLATFORM_TARGET_EXPORT,
+            importAuth: AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT,
+            downTemplateAuth: AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE,
             tableLabel: [
                 { label: '公司简称', prop: 'companyShortName', choosed: true },
                 { label: '公司编码', prop: 'misCode', choosed: true },

@@ -31,7 +31,7 @@
                     <el-button type="primary" class="ml20" @click="onQuery('btn')">
                         查询
                     </el-button>
-                    <a :href="exportHref" class="ml20 download">导出</a>
+                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
                 </div>
             </div>
             <div class="page-wrap flex-wrap-col">
@@ -60,10 +60,12 @@ import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
+import { AUTH_WIXDOM_BRANCH_SALE_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'brandSale',
     data: function () {
         return {
+            exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
             pickerOptionsStart: {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.endDate

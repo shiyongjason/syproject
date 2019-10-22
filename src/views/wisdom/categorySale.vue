@@ -281,21 +281,21 @@ export default {
 
             // this.tableLabel = newTalelabel
             this.getPlatCategory()
-            // const queryFields = this.tableLabel.filter(item => item.queryParams)
-            // let isFind = false
-            // queryFields.forEach(field => {
-            //     const hasField = selectedTh.filter(item => item === field.label).length > 0
-            //     for (let key in field.queryParams) {
-            //         if (!hasField) {
-            //             isFind = !isFind ? this.queryParams[key] != field.queryParams[key] : isFind
-            //             this.queryParams[key] = field.queryParams[key]
-            //         } else {
-            //             isFind = !isFind ? (this.queryParams[key] && this.queryParams[key] != 0) : isFind
-            //             this.queryParams[key] = 0
-            //         }
-            //     }
-            // })
-            // isFind && this.getPlatCategory()
+            const queryFields = this.tableLabel.filter(item => item.queryParams)
+            let isFind = false
+            queryFields.forEach(field => {
+                const hasField = selectedTh.filter(item => item === field.label).length > 0
+                for (let key in field.queryParams) {
+                    if (!hasField) {
+                        isFind = !isFind ? this.queryParams[key] != field.queryParams[key] : isFind
+                        this.queryParams[key] = field.queryParams[key]
+                    } else {
+                        isFind = !isFind ? (this.queryParams[key] && this.queryParams[key] != 0) : isFind
+                        this.queryParams[key] = 0
+                    }
+                }
+            })
+            isFind && this.getPlatCategory()
         }
     },
     async mounted () {
