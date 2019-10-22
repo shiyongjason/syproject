@@ -95,7 +95,6 @@ import { mapState } from 'vuex'
 import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE } from './store/const'
-import { deepCopy } from '@/utils/utils'
 export default {
     name: 'brandSale',
     data: function () {
