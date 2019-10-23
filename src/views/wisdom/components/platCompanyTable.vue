@@ -25,6 +25,15 @@
             <template slot="signerName" slot-scope="scope">
                 {{scope.data.row.developSignInfoVo.signerName}}
             </template>
+            <!-- 嵌套结构 -->
+            <template slot="developSignInfoVo" slot-scope="scope">
+                {{scope.data.row.developSignInfoVo.oldCompanyScale}}
+            </template>
+            <template slot="companyOrderVo" slot-scope="scope">
+                <p v-if="scope.data.row.companyOrderVo">
+                    <span v-for="(item,index) in scope.data.row.companyOrderVo.misGlgsVoList" :key="index">{{index>0?','+item.glgsGlgsmc:item.glgsGlgsmc}}</span>
+                </p>
+            </template>
         </basicTable>
 
     </div>
@@ -61,7 +70,9 @@ export default {
                 { label: '分部', prop: 'subsectionName', choosed: true },
                 { label: '省份', prop: 'provinceName', choosed: true },
                 { label: '城市', prop: 'cityName', choosed: true },
-                { label: '上线信息',
+                { label: '上线', prop: 'cityName', choosed: true },
+                {
+                    label: '上线信息',
                     tableLabel: [
                         { label: '上线时间', prop: 'confirmDate', choosed: true },
                         { label: '最新签约规模/万', prop: 'signScale', choosed: true },
@@ -69,38 +80,46 @@ export default {
                         { label: '注册资本/万', prop: 'sumRegisterFund', choosed: true },
                         { label: '我方注册资金/万', prop: 'ourRegisteredFund', choosed: true },
                         { label: '利润增长', prop: 'profitGrowth', choosed: true }
-                    ] },
-                { label: '往期销售',
+                    ]
+                },
+                {
+                    label: '往期销售',
                     tableLabel: [
                         { label: '上年度实际/万', prop: 'totalOrderFee', choosed: true }
-                    ] },
-                { label: '关键人员',
+                    ]
+                },
+                {
+                    label: '关键人员',
                     tableLabel: [
                         { label: '实际控制人', prop: 'controllerName', choosed: true },
                         { label: '新公司总经理', prop: 'signerName', choosed: true },
                         { label: '自然人股东', prop: 'signerName', choosed: true }
-                    ] }
+                    ]
+                },
+                {
+                    label: '业务形态',
+                    tableLabel: [
+                        { label: '公司类型', prop: 'companyType', choosed: true },
+                        { label: '主要业务', prop: 'mainFormatName', choosed: true },
+                        { label: '主营系统', prop: 'mainSystem', choosed: true },
+                        { label: '主设备品牌', prop: 'mainBrand', choosed: true }
+                    ]
+                },
+                {
+                    label: '老公司',
+                    tableLabel: [
+                        { label: '老公司名称', prop: 'originaCompanyName', choosed: true },
+                        { label: '老公司规模', prop: 'developSignInfoVo', choosed: true }
+                    ]
+                },
+                {
+                    label: '关联公司',
+                    tableLabel: [
+                        { label: '关联公司', prop: 'companyOrderVo', choosed: true },
+                        { label: '实际运作公司', prop: 'aoCompany', choosed: true }
+                    ]
+                }
             ],
-            defaultTh: [
-                '编码',
-                '公司简称',
-                '分部',
-                '省份',
-                '城市',
-                '上线信息',
-                '往期销售',
-                '关键人员',
-                '业务形态',
-                '老公司',
-                '关联公司',
-                '分类'
-            ],
-            selectTh: [],
-            checkAll: true,
-            checkedCities: [],
-            isIndeterminate: true,
-            collapse: false,
-            platList: [],
             companyCode: '',
             show: false,
             dialogVisible: false,
@@ -117,36 +136,10 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    mounted () {
-        const selectThObj = JSON.parse(localStorage.getItem('selectThObj'))
-        if (selectThObj && (selectThObj.uid === this.userInfo.uid)) {
-            this.selectTh = selectThObj.selectTh
-            // console.log(this.selectTh.length === this.defaultTh.length)
-            if (this.selectTh.length === this.defaultTh.length) {
-                this.checkAll = true
-                this.isIndeterminate = true
-            } else {
-                this.checkAll = false
-                this.isIndeterminate = false
-            }
-        } else {
-            this.selectTh = this.defaultTh
-            this.checkAll = true
-        }
-    },
     methods: {
         findSignscale (value) {
             this.show = true
             this.companyCode = value
-        },
-        handleCheckAllChange (val) {
-            this.selectTh = val ? this.defaultTh : []
-            const selectThObj = {
-                uid: this.userInfo.uid,
-                selectTh: this.selectTh
-            }
-            localStorage.setItem('selectThObj', JSON.stringify(selectThObj))
-            // this.isIndeterminate = false
         },
         handleSizeChange (val) {
             this.loading = true
@@ -161,19 +154,6 @@ export default {
         },
         onSizeChange (val) {
             this.$emit('onSizeChange', val)
-        },
-        handleCheckedCitiesChange (value) {
-            const selectThObj = {
-                uid: this.userInfo.uid,
-                selectTh: value
-            }
-            // this.checkAll = false
-            // this.isIndeterminate = false
-            localStorage.setItem('selectThObj', JSON.stringify(selectThObj))
-            let checkedCount = value.length
-            this.checkAll = checkedCount === this.defaultTh.length
-            // console.log(checkedCount, this.checkAll)
-            this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
         },
         editType (val) {
             this.dialogVisible = true
@@ -224,5 +204,4 @@ export default {
     float: left;
     width: 100%;
 }
-
 </style>

@@ -155,6 +155,15 @@ export default {
             }
             const { data } = await findCompanyList(this.searchParams)
             this.tableData = data.data.pageContent
+            this.tableData.map(i => {
+                if (i.mainFormat == 0) i.mainFormatName = '零售'
+                if (i.mainFormat == 1) i.mainFormatName = '批发'
+                if (i.mainFormat == 2) i.mainFormatName = '工程'
+                if (i.mainFormat == 3) i.mainFormatName = '零售>批发、工程'
+                if (i.mainFormat == 4) i.mainFormatName = '批发>零售、工程'
+                if (i.mainFormat == 5) i.mainFormatName = '工程>批发、零售'
+                i.aoCompany = i.companyOrderVo.misKjdwVo.kjdwQc
+            })
             this.paginationData = {
                 pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNumber,
