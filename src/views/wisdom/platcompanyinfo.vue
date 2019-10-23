@@ -201,7 +201,6 @@ export default {
             this.findCompanyList()
         },
         onCurrentChange (val) {
-            console.log(val)
             this.searchParams.pageNumber = val
             this.findCompanyList()
         }
