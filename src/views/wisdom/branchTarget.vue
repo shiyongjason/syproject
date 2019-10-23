@@ -22,12 +22,12 @@
                     <el-button type="primary" class="ml20" @click="onQuery()">
                         搜索
                     </el-button>
-                    <a :href="exportHref"  v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
-                            <el-button  v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
+                        <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
+                            <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                                 批量导入
                             </el-button>
                         </el-upload>
@@ -104,6 +104,12 @@ export default {
                 })
                 this.onQuery()
             }
+        },
+        isError (response) {
+            this.$message({
+                message: '批量导入失败，' + response.message,
+                type: 'error'
+            })
         },
         downloadXlsx () {
             location.href = '/excelTemplate/分部目标导入模板.xlsx'

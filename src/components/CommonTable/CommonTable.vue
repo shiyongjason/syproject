@@ -19,10 +19,10 @@
             <template v-for="item in tableLabel">
                 <el-table-column v-if="selectTh.indexOf(item.label)>-1" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
                     <template slot-scope="scope">
-                        <slot v-if="item.formatter === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
-                        <slot v-else-if="item.formatter === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
-                        <slot v-else-if="item.formatter === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
-                        <slot v-else-if="item.formatter === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
+                        <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
+                        <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
+                        <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
+                        <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
                         <slot v-else-if="item.colorLeave" :name="item.prop" :data="scope">
                             <span v-if="scope.row[item.prop] <= item.colorLeave.bound" :class="item.colorLeave.notReach">{{scope.row[item.prop]}}</span>
                             <span v-else :class="item.colorLeave.reach">{{scope.row[item.prop]}}</span>
@@ -32,10 +32,10 @@
                     <template v-if="selectTh.indexOf(item.label)>-1">
                         <el-table-column v-for="obj in item.tableLabel" :key="obj.label" :label="obj.label" :prop="obj.prop" :sortable="obj.sortable" :align="obj.align?obj.align:'center'" :min-width="obj.width?obj.width:''" :show-overflow-tooltip="true" v-bind="obj">
                             <template slot-scope="scope">
-                                <slot v-if="obj.formatter === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
-                                <slot v-else-if="obj.formatter === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
-                                <slot v-else-if="obj.formatter === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
-                                <slot v-else-if="obj.formatter === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
+                                <slot v-if="obj.formatters === 'money'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | money}}</slot>
+                                <slot v-else-if="obj.formatters === 'dateTime'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTime}}</slot>
+                                <slot v-else-if="obj.formatters === 'dateTimes'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterTimes}}</slot>
+                                <slot v-else-if="obj.formatters === 'date'" :name="obj.prop" :data="scope">{{scope.row[obj.prop] | formatterDate}}</slot>
                                 <slot v-else :name="obj.prop" :data="scope">{{formatter(scope.row[obj.prop])}}</slot>
                             </template>
                         </el-table-column>
