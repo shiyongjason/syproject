@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'ims/companyTarget/import'" :data="{createUser: userInfo.name,subsectionCode: userInfo.companyCode}" :on-success="isSuccess" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'ims/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
                     <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                         批量导入
                     </el-button>
