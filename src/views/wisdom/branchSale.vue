@@ -223,7 +223,7 @@ export default {
         },
         async onCurrentChange (val) {
             this.branchLoading = true
-            this.queryParams.pageNumber = val
+            this.queryParams.pageNumber = val.pageNumber
             await this.onQuery()
             this.branchLoading = false
         },

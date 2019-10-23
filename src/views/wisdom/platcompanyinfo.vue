@@ -156,8 +156,9 @@ export default {
             const { data } = await findCompanyList(this.searchParams)
             this.tableData = data.data.pageContent
             this.paginationData = {
+                pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNumber,
-                totalElements: data.data.totalElements
+                total: data.data.totalElements
             }
         },
         async findDepList () {
@@ -203,20 +204,11 @@ export default {
             this.findCompanyList()
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val
+            this.searchParams.pageNumber = val.pageNumber
             this.findCompanyList()
         }
     }
 }
 </script>
 <style lang="scss" scoped>
-/deep/ .el-table {
-    thead {
-        tr:last-child {
-            :nth-child(2),:nth-child(3),:nth-child(4),:nth-child(5) {
-                color: red;
-            }
-        }
-    }
-}
 </style>

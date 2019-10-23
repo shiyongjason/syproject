@@ -3,7 +3,7 @@ import store from '@/store/index'
 import { Message } from 'element-ui'
 import { interfaceUrl } from './config'
 
-const TIME_OUT = 60000 // 连接超时时间
+// const TIME_OUT = 60000 // 连接超时时间
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 /* const http = axios.create({
@@ -11,7 +11,7 @@ const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
     timeout: TIME_OUT
 }) */
 axios.defaults.baseURL = interfaceUrl
-axios.defaults.timeout = TIME_OUT
+// axios.defaults.timeout = TIME_OUT
 const requestArr = []
 /** 声明一个数组用于存储每个请求的取消函数和标识(请求如果还在pending，同个请求就被取消) */
 const cancelRequst = (config) => {
@@ -25,7 +25,7 @@ const cancelRequst = (config) => {
 }
 
 // 添加请求拦截器、取消请求
-const CancelToken = axios.CancelToken
+// const CancelToken = axios.CancelToken
 axios.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem('token')
