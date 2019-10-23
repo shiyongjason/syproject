@@ -247,7 +247,6 @@ export default {
     },
     async mounted () {
         // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        console.log(this.deptType[1])
         await this.onFindRegionList() // 大区
         await this.onFindBranchList() // 分部
         if (this.userInfo.deptType === this.deptType[1]) {
@@ -257,7 +256,6 @@ export default {
         } else if (this.userInfo.deptType === this.deptType[2]) {
             // 总部可查看所有
         } else if (this.userInfo.deptType === this.deptType[0]) {
-            console.log(1111111)
             this.regionDisabled = true
             this.branchDisabled = true
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
