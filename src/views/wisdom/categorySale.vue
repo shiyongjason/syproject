@@ -93,9 +93,9 @@
                     <template slot-scope="scope" slot="orderCost">
                         {{scope.data.row.orderCost|money}}
                     </template>
-                    <template slot-scope="scope" slot="grossProfit">
+                    <!-- <template slot-scope="scope" slot="grossProfit">
                         {{scope.data.row.grossProfit|money}}
-                    </template>
+                    </template> -->
                 </basicTable>
             </div>
         </div>
@@ -126,7 +126,7 @@ export default {
                 { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true },
                 { label: '同比（销售收入）', prop: 'yearOnYearSale', choosed: true },
                 { label: '成本', prop: 'orderCost', choosed: true },
-                { label: '毛利', prop: 'grossProfit', choosed: true },
+                { label: '毛利', prop: 'grossProfit', choosed: true, formatters: 'money' },
                 { label: '毛利率', prop: 'grossProfitRate', choosed: true }
             ],
             pickerOptionsStart: {
