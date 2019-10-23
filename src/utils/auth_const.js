@@ -90,7 +90,6 @@ export const AUTH_SERVICE_CHANNEL_EDIT = 10430
 
 // 好智慧-预实管理 平台公司基本信息 导出
 export const AUTH_WIXDOM_BASIC_INFO_EXPORT = 10440
-
 // 好智慧-预实管理 平台目标管理 导出
 export const AUTH_WIXDOM_PLATFORM_TARGET_EXPORT = 10450
 // 好智慧-预实管理 平台目标管理 批量导入
@@ -107,3 +106,11 @@ export const AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT = 10500
 export const AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE = 10510
 // 好智慧-预实管理 分部销售分析 导出
 export const AUTH_WIXDOM_BRANCH_SALE_EXPORT = 10520
+// 好智慧-预实管理 经营概览 概览
+export const AUTH_MANAGE_OVERVIEW_SURVEY = 10530
+// 好智慧-预实管理 经营概览 销售
+export const AUTH_MANAGE_OVERVIEW_MARKET = 10540
+// 好智慧-预实管理 经营概览 上线
+export const AUTH_MANAGE_OVERVIEW_ONLINE = 10550
+// 好智慧-预实管理 经营概览 利润
+export const AUTH_MANAGE_OVERVIEW_PROFIT = 10560
