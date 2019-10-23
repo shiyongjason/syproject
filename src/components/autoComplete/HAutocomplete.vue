@@ -1,18 +1,15 @@
 <template>
-    <el-autocomplete
-        v-model="selectItem.selectName"
-        :fetch-suggestions="querySearchAsync"
-        :placeholder="placeholder"
-        :validate-event="true"
-        @select="handleSelect"
-        @blur="blurInput"
-        :disabled="disabled"
-    ></el-autocomplete>
+    <el-autocomplete v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder"
+     :validate-event="true" @select="handleSelect" @blur="blurInput" :disabled="disabled"></el-autocomplete>
 </template>
 <script>
 export default {
     name: 'HAutocomplete',
     props: {
+        canDoBlurMethos: {
+            type: Boolean,
+            default: true
+        },
         selectObj: {
             type: Object,
             default: () => {
@@ -89,6 +86,12 @@ export default {
             })
         },
         blurInput (item) {
+            if (!this.canDoBlurMethos) {
+                this.$emit('back-event', {
+                    value: { value: this.selectItem.selectName }
+                })
+                return false
+            }
             const results = this.selectArray && this.selectArray.filter(item => {
                 return (item.value === this.selectItem.selectName)
             })
