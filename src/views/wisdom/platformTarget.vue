@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload  class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                         批量导入
                     </el-button>
@@ -107,8 +107,8 @@ export default {
                 { label: '上线时间', prop: 'onlineTime', choosed: true },
                 { label: '增量/存量', prop: 'incremental', choosed: true },
                 { label: '目标年份', prop: 'targetDate', choosed: true },
-                { label: '履约目标/万', prop: 'performanceTarget', choosed: true },
-                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true },
+                { label: '履约目标/万', prop: 'performanceTarget', choosed: true, formatters: 'money' },
+                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true, formatters: 'money' },
                 { label: '最近操作人', prop: 'updateUser', choosed: true },
                 { label: '最近操作时间', prop: 'updateTime', choosed: true }
             ],
