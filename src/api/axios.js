@@ -3,7 +3,7 @@ import store from '@/store/index'
 import { Message } from 'element-ui'
 import { interfaceUrl } from './config'
 
-const TIME_OUT = 60000 // 连接超时时间
+// const TIME_OUT = 60000 // 连接超时时间
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 /* const http = axios.create({
@@ -11,7 +11,7 @@ const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
     timeout: TIME_OUT
 }) */
 axios.defaults.baseURL = interfaceUrl
-axios.defaults.timeout = TIME_OUT
+// axios.defaults.timeout = TIME_OUT
 const requestArr = []
 /** 声明一个数组用于存储每个请求的取消函数和标识(请求如果还在pending，同个请求就被取消) */
 const cancelRequst = (config) => {
@@ -68,25 +68,37 @@ axios.interceptors.response.use(
             console.log('Rquest canceled：', error.message)
             return Promise.reject(error)
         }
-        console.log(error)
-        if (error.response && error.response.status) {
-            switch (error.response.status) {
-                case 401:
-                    Message({
-                        message: '权限无效，已为你重定向到登录页',
-                        type: 'error'
-                    })
-                    setTimeout(() => {
-                        location.href = '/login'
-                    }, 1200)
-                    return Promise.reject(error)
-                case 400:
-                    console.log(error.response)
-                    errorMessage = error.response.data.message
-                    break
-                default:
-            }
+        // TODO: 后面还是按照后台返回401解决 error.response.status === 401
+        if (error.config.url.indexOf('/uaa/api/auth/details') > -1 && error.config.timeout === 0) {
+            Message({
+                message: '权限无效，已为你重定向到登录页',
+                type: 'error'
+            })
+            setTimeout(function () {
+                location.href = '/login'
+            }, 1200)
+            return Promise.reject(error)
         }
+
+        // console.log(error)
+        // if (error.response && error.response.status) {
+        //     switch (error.response.status) {
+        //         case 401:
+        //             Message({
+        //                 message: '权限无效，已为你重定向到登录页',
+        //                 type: 'error'
+        //             })
+        //             setTimeout(() => {
+        //                 location.href = '/login'
+        //             }, 1200)
+        //             return Promise.reject(error)
+        //         case 400:
+        //             console.log(error.response)
+        //             errorMessage = error.response.data.message
+        //             break
+        //         default:
+        //     }
+        // }
         store.commit('LOAD_STATE', false)
         Message({
             message: errorMessage,
