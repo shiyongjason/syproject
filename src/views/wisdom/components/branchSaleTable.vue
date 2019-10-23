@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper page-table">
+    <div class="">
         <div class="table_unit">
             <el-tooltip placement="top">
                 <div slot="content">年度累计统计时间 2018-1-1～2019-1-31<br />其他指标统计时间 2018-3-1～2019-1-31<br />环比：（本月-上月）/上月<br />复合同比：（今年all平台-去年同期all平台）/去年同期all平台<br />可比同比：（今年A平台-去年同期A平台）/去年同期A平台</div>
@@ -8,7 +8,7 @@
             单位：万
         </div>
         <div class="page-table">
-            <basicTable :maxHeight="550" :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+            <basicTable :maxHeight="550" :tableData="tableData" :pagination="paginationData"  :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
                 <template slot-scope="scope" slot="saleRate">
                     <span v-if="scope.data.row.saleRate === null || scope.data.row.saleRate === '-'">-</span>
                     <span v-else>{{scope.data.row.saleRate}}%</span>
@@ -136,10 +136,10 @@
                     <span v-else>{{scope.data.row.annualIncrementalAchievementRate}}%</span>
                 </template>
             </basicTable>
-            <div class="page clearfix" style="text-align: center;margin-top: 20px">
+            <!-- <div class="page clearfix" style="text-align: center;margin-top: 20px">
                 <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10, 20, 30, 40, 50]" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
                 </el-pagination>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

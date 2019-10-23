@@ -61,6 +61,7 @@ import { mapState } from 'vuex'
 import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
 import { AUTH_WIXDOM_BRANCH_SALE_EXPORT } from '@/utils/auth_const'
+import { DEPT_TYPE } from './store/const'
 export default {
     name: 'brandSale',
     data: function () {
@@ -110,7 +111,8 @@ export default {
             regionList: [],
             branchList: [],
             regionDisabled: false,
-            branchDisabled: false
+            branchDisabled: false,
+            deptType: DEPT_TYPE
         }
     },
     computed: {
@@ -167,7 +169,7 @@ export default {
             }
             this.paginationData.pageNumber = data.data.pageNumber
             this.paginationData.pageSize = data.data.pageSize
-            this.paginationData.totalElements = data.data.totalElements
+            this.paginationData.total = data.data.totalElements
         },
         async getBranchSaleSum () {
             this.total.type = 1
@@ -245,16 +247,17 @@ export default {
     },
     async mounted () {
         // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        // console.log(this.userInfo.organizationType)
+        console.log(this.deptType[1])
         await this.onFindRegionList() // 大区
         await this.onFindBranchList() // 分部
-        if (this.userInfo.organizationType === -1) {
+        if (this.userInfo.deptType === this.deptType[1]) {
             this.regionDisabled = true
             this.queryParams.regionCode = this.userInfo.oldDeptCode
             this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.organizationType === 0) {
+        } else if (this.userInfo.deptType === this.deptType[2]) {
             // 总部可查看所有
-        } else if (this.userInfo.organizationType === 1) {
+        } else if (this.userInfo.deptType === this.deptType[0]) {
+            console.log(1111111)
             this.regionDisabled = true
             this.branchDisabled = true
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
