@@ -127,7 +127,7 @@ export default {
     },
     async mounted () {
         this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-        console.log(this.userInfo.deptType, this.deptType)
+        // console.log(this.userInfo.deptType, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
         if (this.userInfo.deptType === this.deptType[2]) {
             this.formData.regionCode = this.userInfo.oldDeptCode

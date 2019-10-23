@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.companyCode==='top'">
+                <div class="query-cont-col" v-if="userInfo.deptType===deptType[2]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="searchParams.subsectionCode" placeholder="选择分部" :clearable=true>
@@ -55,10 +55,12 @@ import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { ossUrl } from '@/api/config'
+import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 export default {
     data () {
         return {
+            deptType: DEPT_TYPE,
             depArr: [],
             provinceDataList: [],
             cityList: [],

@@ -193,7 +193,7 @@ export default {
             this.yearMonth = []
             const { data } = await getSales(this.params)
             this.saleData = data.data
-            this.pieArr = data.data.respOrganizationRate
+            this.pieArr = data.data.organizationRateVo
             data.data.yearOfSales && data.data.yearOfSales.map(value => {
                 this.lineArr.push(value.value ? parseFloat(value.value).toFixed(0) : 0)
                 this.yearMonth.push(value.date)
@@ -277,6 +277,7 @@ export default {
             this.myChart.setOption(option)
         },
         drawPieChart (data) {
+            console.log(data)
             const dataAll = []
             const yAxisData = []
             const pieAll = []
