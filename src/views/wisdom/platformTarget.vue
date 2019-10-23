@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'ims/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
                     <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                         批量导入
                     </el-button>
@@ -125,7 +125,7 @@ export default {
             },
             branchList: [],
             companyData: {
-                url: interfaceUrl + 'ims/companyTarget/queryCompanyShortName',
+                url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
                 otherParams: {
                     keys: 'companyShortName',
                     keyName: 'companyShortName',
@@ -136,7 +136,7 @@ export default {
                 }
             },
             cityData: {
-                url: interfaceUrl + 'ims/companyTarget/queryCity',
+                url: interfaceUrl + 'rms/companyTarget/queryCity',
                 otherParams: {
                     keys: 'cityName',
                     keyName: 'cityName',
@@ -249,7 +249,7 @@ export default {
             for (var key in this.searchParams) {
                 url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
             }
-            location.href = interfaceUrl + 'ims/companyTarget/export?' + url
+            location.href = interfaceUrl + 'rms/companyTarget/export?' + url
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
