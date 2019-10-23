@@ -253,7 +253,8 @@ export default {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
         },
         async  getCompanyList () {
-            const { data } = await getCompany()
+            // this.companyData.params.companyCode = this.userInfo.companyCode
+            const { data } = await getCompany({ companyCode: this.userInfo.oldDeptCode })
             this.companyList = data.data
             this.companyList && this.companyList.map(item => {
                 item.value = item.companyShortName

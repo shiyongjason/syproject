@@ -1,8 +1,8 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-
-            <div class="query-cont-col" v-if="!(userInfo.deptType=== deptType[1])">
+{{userInfo.deptType}}
+            <div class="query-cont-col" v-if="userInfo.deptType== deptType[1]">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
                     <el-select v-model="formData.regionCode" placeholder="选择" :clearable=true>
@@ -123,7 +123,7 @@ export default {
     },
     async mounted () {
         this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-        console.log(1, this.deptType)
+        console.log(this.userInfo.deptType, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
         if (this.userInfo.deptType === this.deptType[2]) {
             this.formData.regionCode = this.userInfo.oldDeptCode
