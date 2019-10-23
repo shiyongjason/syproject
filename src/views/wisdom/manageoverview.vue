@@ -36,17 +36,17 @@
         </div>
         <div class="page-box top10">
             <el-tabs v-model="activeName" type="card">
-                <el-tab-pane :lazy='true' label="概览" name="first">
+                <el-tab-pane :lazy='true' v-if="hosAuthCheck(firstAuth)" label="概览" name="first">
                     <overallchild v-if="'first' === activeName" ref="overallchild" :params="formData" />
                 </el-tab-pane>
-                <el-tab-pane :lazy='true' label="销售" name="third">
+                <el-tab-pane :lazy='true' v-if="hosAuthCheck(thirdAuth)" label="销售" name="third">
                     <salechild v-if="'third' === activeName" ref="salechild" :params="formData" />
                 </el-tab-pane>
-                <el-tab-pane :lazy='true' label="上线" name="second">
+                <el-tab-pane :lazy='true' v-if="hosAuthCheck(secondAuth)" label="上线" name="second">
                     <addchild v-if="'second' === activeName" ref="addchild" :params="formData" />
                 </el-tab-pane>
 
-                <el-tab-pane :lazy='true' label="利润" name="fourth">
+                <el-tab-pane :lazy='true' v-if="hosAuthCheck(fourthAuth)" label="利润" name="fourth">
                     <profitchild :params="formData" />
                 </el-tab-pane>
             </el-tabs>
@@ -62,9 +62,14 @@ import salechild from './components/salechild'
 import profitchild from './components/profitchild'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
+import { AUTH_MANAGE_OVERVIEW_SURVEY, AUTH_MANAGE_OVERVIEW_MARKET, AUTH_MANAGE_OVERVIEW_ONLINE, AUTH_MANAGE_OVERVIEW_PROFIT } from '@/utils/auth_const'
 export default {
     data () {
         return {
+            firstAuth: AUTH_MANAGE_OVERVIEW_SURVEY,
+            secondAuth: AUTH_MANAGE_OVERVIEW_ONLINE,
+            thirdAuth: AUTH_MANAGE_OVERVIEW_MARKET,
+            fourthAuth: AUTH_MANAGE_OVERVIEW_PROFIT,
             formData: {
                 endDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
                 startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
