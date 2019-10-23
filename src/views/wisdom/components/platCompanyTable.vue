@@ -26,10 +26,7 @@
                 {{scope.data.row.developSignInfoVo.signerName}}
             </template>
         </basicTable>
-        <div class="page clearfix" style="text-align: right;margin-top: 20px">
-                <el-pagination class="el-page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :page-sizes="[10, 20, 30, 40, 50]" :total="paginationData.totalElements">
-                </el-pagination>
-        </div>
+
     </div>
 </template>
 
