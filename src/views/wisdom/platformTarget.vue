@@ -39,10 +39,10 @@
                         </el-select>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="flex-wrap-title">mis编码：</div>
                     <div class="flex-wrap-cont">
-                      <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
+                        <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -58,7 +58,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
+                <el-upload  class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                         批量导入
                     </el-button>
@@ -192,6 +192,12 @@ export default {
                 })
                 this.onFindTableList()
             }
+        },
+        isError (response) {
+            this.$message({
+                message: '批量导入失败，' + response.message,
+                type: 'error'
+            })
         },
         changeCellStyle ({ row, rowIndex, columnIndex }) {
             // 第八列添加 red 类
