@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[2]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" :clearable=true>
@@ -75,14 +75,26 @@
         <div class="page-body-cont">
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
-                   <template slot-scope="scope" slot="saleRatio">
+                    <template slot-scope="scope" slot="saleRatio">
                         {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':''}}
                     </template>
-                     <template slot-scope="scope" slot="yearOnYearSale">
+                    <template slot-scope="scope" slot="yearOnYearSale">
                         {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':''}}
                     </template>
                     <template slot-scope="scope" slot="grossProfitRate">
                         {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
+                    </template>
+                    <template slot-scope="scope" slot="saleGross">
+                        {{scope.data.row.saleGross|money}}
+                    </template>
+                    <template slot-scope="scope" slot="yearOverYearSale">
+                        {{scope.data.row.yearOverYearSale|money}}
+                    </template>
+                    <template slot-scope="scope" slot="orderCost">
+                        {{scope.data.row.orderCost|money}}
+                    </template>
+                    <template slot-scope="scope" slot="grossProfit">
+                        {{scope.data.row.grossProfit|money}}
                     </template>
                 </basicTable>
             </div>
@@ -94,11 +106,12 @@
 import { mapState } from 'vuex'
 import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { BUS_TYPE } from './store/const'
+import { BUS_TYPE, DEPT_TYPE } from './store/const'
 export default {
     name: 'brandSale',
     data: function () {
         return {
+            deptType: DEPT_TYPE,
             tableLabel: [
                 { label: '所属分部', prop: 'subsectionName', choosed: true },
                 { label: '城市', prop: 'cityName', choosed: true, linkAge: true },
@@ -301,11 +314,15 @@ export default {
     async mounted () {
         // 如果 当前人大区 -1  总部 0  分部 1 organizationType
         // console.log(this.userInfo.organizationType)
-        this.getPlatCategory()
+
         this.findDepList()
         this.getPaltbarnd()
         this.getPaltSys()
-        this.platList = await this.findPaltList()
+        if (this.userInfo.deptType == 2) {
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
+        }
+        this.getPlatCategory()
+        this.platList = await this.findPaltList(this.queryParams.subsectionCode)
     }
 }
 </script>
