@@ -3,7 +3,7 @@ import store from '@/store/index'
 import { Message } from 'element-ui'
 import { interfaceUrl } from './config'
 
-// const TIME_OUT = 60000 // 连接超时时间
+const TIME_OUT = 60000 // 连接超时时间
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 /* const http = axios.create({
@@ -11,12 +11,13 @@ const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
     timeout: TIME_OUT
 }) */
 axios.defaults.baseURL = interfaceUrl
-// axios.defaults.timeout = TIME_OUT
+axios.defaults.timeout = TIME_OUT
 const requestArr = []
 /** 声明一个数组用于存储每个请求的取消函数和标识(请求如果还在pending，同个请求就被取消) */
 const cancelRequst = (config) => {
     for (const key in requestArr) {
         if (requestArr[key].url === `${config.url}&${config.method}`) { // 当当前请求在数组中存在时执行函数体
+            console.log(`${config.url}&${config.method}`)
             requestArr[key].cancel('取消重复请求') // 执行取消操作
             requestArr.splice(Number(key), 1) // 把这条记录从数组中移除
         }
@@ -29,11 +30,11 @@ axios.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem('token')
         token && (config.headers['Authorization'] = `Bearer ${token}`)
-        cancelRequst(config) // 在一个请求发送前执行一下取消操作
-        config.cancelToken = new CancelToken(cancelMethod => {
-            requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
-        })
-        // store.commit('LOAD_STATE', true)
+        // cancelRequst(config) // 在一个请求发送前执行一下取消操作
+        // config.cancelToken = new CancelToken(cancelMethod => {
+        //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
+        // })
+        store.commit('LOAD_STATE', true)
         return config
     },
     (error) => {

@@ -167,7 +167,6 @@ export default {
         },
         tableLabel: {
             handler (val) {
-                console.log(val)
                 this.selectTh = []
                 this.tableLabel.map(item => {
                     item.choosed = (item.choosed === undefined ? true : item.choosed)
