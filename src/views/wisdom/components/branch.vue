@@ -42,21 +42,21 @@ export default {
                 { label: '新增会员店目标/家', prop: 'memberShopTarget', choosed: true },
                 { label: '保底目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallGuaranteeStockTarget', choosed: true },
-                        { label: '增量', prop: 'guaranteeIncreaseTarget', choosed: true },
-                        { label: '存量', prop: 'guaranteeStockTarget', choosed: true }
+                        { label: '整体', prop: 'overallGuaranteeStockTarget', choosed: true, formatters: 'money' },
+                        { label: '增量', prop: 'guaranteeIncreaseTarget', choosed: true, formatters: 'money' },
+                        { label: '存量', prop: 'guaranteeStockTarget', choosed: true, formatters: 'money' }
                     ] },
                 { label: '平衡目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallBalanceStockTarget', choosed: true },
-                        { label: '增量', prop: 'balanceIncreaseTarget', choosed: true },
-                        { label: '存量', prop: 'balanceStockTarget', choosed: true }
+                        { label: '整体', prop: 'overallBalanceStockTarget', choosed: true, formatters: 'money' },
+                        { label: '增量', prop: 'balanceIncreaseTarget', choosed: true, formatters: 'money' },
+                        { label: '存量', prop: 'balanceStockTarget', choosed: true, formatters: 'money' }
                     ] },
                 { label: '冲刺目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallSprintStockTarget', choosed: true },
-                        { label: '增量', prop: 'sprintIncreaseTarget', choosed: true },
-                        { label: '存量', prop: 'sprintStockTarget', choosed: true }
+                        { label: '整体', prop: 'overallSprintStockTarget', choosed: true, formatters: 'money' },
+                        { label: '增量', prop: 'sprintIncreaseTarget', choosed: true, formatters: 'money' },
+                        { label: '存量', prop: 'sprintStockTarget', choosed: true, formatters: 'money' }
                     ] },
                 { label: '毛利率目标/％', prop: 'annualGrossProfitTarget', choosed: true },
                 { label: '最近操作人', prop: 'updateUser', choosed: true },
