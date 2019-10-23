@@ -120,7 +120,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = interfaceUrl + 'ims/subsection-sale/export?'
+            let url = interfaceUrl + 'rms/subsection-sale/export?'
             for (let key in this.queryParams) {
                 if (key !== 'pageSize' && key !== 'pageNumber') {
                     url += (key + '=' + this.queryParams[key] + '&')

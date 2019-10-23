@@ -26,7 +26,7 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'ims/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
+                        <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" auto-upload>
                             <el-button  v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
                                 批量导入
                             </el-button>
@@ -78,7 +78,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         exportHref () {
-            let url = interfaceUrl + 'ims/subsectiontarget/export?'
+            let url = interfaceUrl + 'rms/subsectiontarget/export?'
             for (var key in this.queryParamsTemp) {
                 if (this.queryParamsTemp[key]) {
                     url += (key + '=' + this.queryParamsTemp[key] + '&')
