@@ -12,6 +12,7 @@ import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
 import moment from 'moment'
+import '@/utils/validate/index.js'
 moment.locale('zh-cn')
 Vue.filter('formatDate', (time, param) => {
     if (!time) return '-'
