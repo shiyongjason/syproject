@@ -312,17 +312,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/platform/platform.vue')
             },
-            {
-                path: 'shopReviewList',
-                name: 'shopReviewList',
-                meta: {
-                    title: '平台公司商品审核列表',
-                    tagName: '平台公司商品审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/shopReviewList.vue')
-            },
+            // {
+            //     path: 'shopReviewList',
+            //     name: 'shopReviewList',
+            //     meta: {
+            //         title: '平台公司商品审核列表',
+            //         tagName: '平台公司商品审核列表',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopReview/shopReviewList.vue')
+            // },
             {
                 path: 'attribute',
                 name: 'attribute',
