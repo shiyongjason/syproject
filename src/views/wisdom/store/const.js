@@ -18,5 +18,5 @@ export const BUS_TYPE = [
 ]
 // 2= 分部  1 = 大区 0 总部
 export const DEPT_TYPE = [
-    2, 1, 0
+    0, 1, 2
 ]

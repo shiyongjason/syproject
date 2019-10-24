@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[2]">
+                <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" :clearable=true>
