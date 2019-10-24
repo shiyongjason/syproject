@@ -2,11 +2,11 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0]">
+                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0] || userInfo.deptType===deptType[1]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部" :clearable=true>
-                            <el-option v-for="item in depArr" :key="item.organizationCode" :label="item.organizationName" :value="item.organizationCode">
+                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部">
+                            <el-option v-for="item in depArr" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
                     </div>
@@ -50,7 +50,7 @@
     </div>
 </template>
 <script>
-import { findCompanyList, findDepList, findProvinceAndCity, findPaltList } from './api/index.js'
+import { findCompanyList, findProvinceAndCity, findPaltList, findBranchList } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
@@ -99,10 +99,14 @@ export default {
         })
     },
     async  mounted () {
-        this.findDepList()
+        let oldDeptCode = ''
+        if (this.userInfo.deptType == 1) {
+            oldDeptCode = this.userInfo.oldDeptCode
+        }
+        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         this.provinceDataList = await this.findProvinceAndCity(0)
         // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
-        if (this.userInfo.oldDeptCode !== 'top') {
+        if (this.userInfo.deptType == 2) {
             const code = this.userInfo.oldDeptCode
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
             // this.findProvinceAndCity(0, code)
@@ -110,7 +114,7 @@ export default {
             this.findCompanyList()
         } else {
             this.findCompanyList()
-            this.platList = await this.findPaltList()
+            // this.platList = await this.findPaltList()
         }
         this.platList.forEach((value) => {
             value.value = value.companyShortName
@@ -124,10 +128,8 @@ export default {
             this.searchParams.cityCode = ''
             this.searchParams.companyCode = ''
             this.platList = await this.findPaltList(code)
-            this.platList.forEach((value) => {
-                value.value = value.companyShortName
-            })
             if (code) {
+                // this.platList = await this.findPaltList(code)
                 // this.provinceDataList = await this.findProvinceAndCity(0, code)
             } else {
                 this.$refs.HAutocomplete.clearInput()
@@ -170,10 +172,18 @@ export default {
                 total: data.data.totalElements
             }
         },
-        async findDepList () {
-            // const { data } = await findDepList({ pcode: this.userInfo.organizationCode, organizationType: 1 })
-            const { data } = await findDepList({ organizationType: 1 })
+        async findBranchList (value) {
+            const { data } = await findBranchList({ crmDeptCode: value })
             this.depArr = data.data
+            if (this.depArr.length > 0) {
+                if (this.userInfo.deptType == 0) {
+                    this.depArr.splice(0, 0, {
+                        crmDeptCode: '',
+                        deptname: '全部'
+                    })
+                }
+                this.searchParams.subsectionCode = this.depArr[0].crmDeptCode
+            }
         },
         async findProvinceAndCity (code, subsectionCode) {
             let params = {
