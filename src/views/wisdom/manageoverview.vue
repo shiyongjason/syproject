@@ -119,9 +119,8 @@ export default {
                 this.formData.subsectionCode = this.userInfo.deptType === this.deptType[2] ? this.userInfo.oldDeptCode : ''
                 this.branchList = await this.onFindBranchList(newV)
             } else {
-                this.branchList = await this.onFindBranchList()
-
                 this.formData.subsectionCode = ''
+                this.branchList = await this.onFindBranchList()
             }
         }
     },

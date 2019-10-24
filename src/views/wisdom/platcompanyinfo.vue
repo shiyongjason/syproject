@@ -5,7 +5,7 @@
                 <div class="query-cont-col" v-if="userInfo.deptType===deptType[0] || userInfo.deptType===deptType[1]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部" >
+                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部">
                             <el-option v-for="item in depArr" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
@@ -177,6 +177,12 @@ export default {
             this.depArr = data.data
             if (this.depArr.length > 0) {
                 this.searchParams.subsectionCode = this.depArr[0].crmDeptCode
+            }
+            if (this.userInfo.deptType == 0) {
+                this.depArr.splice(0, 0, {
+                    crmDeptCode: '',
+                    deptname: '全部'
+                })
             }
         },
         async findProvinceAndCity (code, subsectionCode) {

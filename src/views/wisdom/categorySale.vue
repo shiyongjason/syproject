@@ -217,10 +217,12 @@ export default {
             if (this.branchList.length > 0) {
                 this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
             }
-            // this.branchList.splice(0, 0, {
-            //     organizationCode: '',
-            //     organizationName: '全部'
-            // })
+            if (this.userInfo.deptType == 0) {
+                this.branchList.splice(0, 0, {
+                    crmDeptCode: '',
+                    deptname: '全部'
+                })
+            }
         },
         onCurrentChange (val) {
             this.queryParams.current = val.pageNumber
