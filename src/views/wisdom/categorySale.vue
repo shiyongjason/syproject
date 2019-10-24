@@ -5,7 +5,7 @@
                 <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" >
+                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
                             <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
@@ -215,13 +215,13 @@ export default {
                 this.branchList = data.data
             }
             if (this.branchList.length > 0) {
+                if (this.userInfo.deptType == 0) {
+                    this.branchList.splice(0, 0, {
+                        crmDeptCode: '',
+                        deptname: '全部'
+                    })
+                }
                 this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
-            }
-            if (this.userInfo.deptType == 0) {
-                this.branchList.splice(0, 0, {
-                    crmDeptCode: '',
-                    deptname: '全部'
-                })
             }
         },
         onCurrentChange (val) {
@@ -324,13 +324,13 @@ export default {
         if (this.userInfo.deptType == 1) {
             oldDeptCode = this.userInfo.oldDeptCode
         }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) this.findBranchList(oldDeptCode)
-        this.getPaltbarnd()
-        this.getPaltSys()
+        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
+        await this.getPaltbarnd()
+        await this.getPaltSys()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
         }
-        this.getPlatCategory()
+        await this.getPlatCategory()
         // this.platList = await this.findPaltList(this.queryParams.subsectionCode)
     }
 }
