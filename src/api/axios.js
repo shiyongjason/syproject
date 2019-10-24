@@ -64,9 +64,8 @@ axios.interceptors.response.use(
         return response
     },
     (error) => {
-        let errorMessage = '服务器响应错误：' + error
         if (axios.isCancel(error)) {
-            console.log('Rquest canceled：', error.message)
+            console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)
         }
         // TODO: 后面还是按照后台返回401解决 error.response.status === 401
@@ -101,8 +100,13 @@ axios.interceptors.response.use(
         //     }
         // }
         store.commit('LOAD_STATE', false)
+        const data = error.response.data
+        let message = '服务器响应错误：' + error
+        if (error.response.status === 400 && data.message !== '') {
+            message = data.message
+        }
         Message({
-            message: errorMessage,
+            message: message,
             type: 'error'
         })
         return Promise.reject(error)
