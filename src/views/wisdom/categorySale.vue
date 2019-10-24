@@ -5,8 +5,8 @@
                 <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" :clearable=true>
-                            <el-option v-for="item in branchList" :key="item.organizationCode" :label="item.organizationName" :value="item.organizationCode">
+                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" >
+                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
                     </div>
@@ -104,7 +104,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getPaltCategory, findDepList, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum } from './api/index.js'
+import { getPaltCategory, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum, findBranchList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE, DEPT_TYPE } from './store/const'
 export default {
@@ -208,15 +208,19 @@ export default {
             }
             // this.regionList.pop()
         },
-        async findDepList () {
-            const { data } = await findDepList({ organizationType: 1 })
+        async findBranchList (value) {
+            // const { data } = await findDepList({ organizationType: 1 })
+            const { data } = await findBranchList({ crmDeptCode: value })
             if (data.data) {
                 this.branchList = data.data
             }
-            this.branchList.splice(0, 0, {
-                organizationCode: '',
-                organizationName: '全部'
-            })
+            if (this.branchList.length > 0) {
+                this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            }
+            // this.branchList.splice(0, 0, {
+            //     organizationCode: '',
+            //     organizationName: '全部'
+            // })
         },
         onCurrentChange (val) {
             this.queryParams.current = val.pageNumber
@@ -314,15 +318,18 @@ export default {
     async mounted () {
         // 如果 当前人大区 -1  总部 0  分部 1 organizationType
         // console.log(this.userInfo.organizationType)
-
-        this.findDepList()
+        let oldDeptCode = ''
+        if (this.userInfo.deptType == 1) {
+            oldDeptCode = this.userInfo.oldDeptCode
+        }
+        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) this.findBranchList(oldDeptCode)
         this.getPaltbarnd()
         this.getPaltSys()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
         }
         this.getPlatCategory()
-        this.platList = await this.findPaltList(this.queryParams.subsectionCode)
+        // this.platList = await this.findPaltList(this.queryParams.subsectionCode)
     }
 }
 </script>
