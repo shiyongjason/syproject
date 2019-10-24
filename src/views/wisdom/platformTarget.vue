@@ -70,7 +70,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="incremental" slot-scope="scope">
                         <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
                     </template>
@@ -78,10 +78,7 @@
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </template>
                 </basicTable>
-                <div class="page clearfix" style="text-align: right;margin-top: 20px">
-                    <el-pagination class="el-page" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
-                    </el-pagination>
-                </div>
+
             </div>
         </div>
     </div>
@@ -207,17 +204,19 @@ export default {
         },
         async onFindTableList () {
             const { data } = await findTableList(this.searchParams)
+            console.log(data)
             this.tableData = data.data.list
-            this.tableData && this.tableData.map(value => {
-                value.balanceTarget = (value.balanceTarget).toFixed(2)
-                value.minimumTarget = (value.minimumTarget).toFixed(2)
-                value.performanceTarget = (value.performanceTarget).toFixed(2)
-                value.sprintTarget = (value.sprintTarget).toFixed(2)
-                return value
-            })
+            // this.tableData && this.tableData.map(value => {
+            //     value.balanceTarget = (value.balanceTarget).toFixed(2)
+            //     value.minimumTarget = (value.minimumTarget).toFixed(2)
+            //     value.performanceTarget = (value.performanceTarget).toFixed(2)
+            //     value.sprintTarget = (value.sprintTarget).toFixed(2)
+            //     return value
+            // })
             this.paginationData = {
+                pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNum,
-                totalElements: data.data.total
+                total: data.data.total
             }
         },
         async onFindBranchList (value) {
