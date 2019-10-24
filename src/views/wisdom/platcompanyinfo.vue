@@ -103,7 +103,7 @@ export default {
         if (this.userInfo.deptType == 1) {
             oldDeptCode = this.userInfo.oldDeptCode
         }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) this.findBranchList(oldDeptCode)
+        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         this.provinceDataList = await this.findProvinceAndCity(0)
         // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
         if (this.userInfo.deptType == 2) {
@@ -176,13 +176,13 @@ export default {
             const { data } = await findBranchList({ crmDeptCode: value })
             this.depArr = data.data
             if (this.depArr.length > 0) {
+                if (this.userInfo.deptType == 0) {
+                    this.depArr.splice(0, 0, {
+                        crmDeptCode: '',
+                        deptname: '全部'
+                    })
+                }
                 this.searchParams.subsectionCode = this.depArr[0].crmDeptCode
-            }
-            if (this.userInfo.deptType == 0) {
-                this.depArr.splice(0, 0, {
-                    crmDeptCode: '',
-                    deptname: '全部'
-                })
             }
         },
         async findProvinceAndCity (code, subsectionCode) {
