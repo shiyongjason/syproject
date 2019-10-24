@@ -47,7 +47,7 @@ switch (env) {
         uploadUrl = 'https://staging-hbp.hosjoy.com/tms'
         iframeUrl = 'https://staging-boss.hosjoy.com/'
         jinyun = 'https://staging-jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://staging-gateway.hosjoy.com/'
+        B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
         break
     case 'production':
