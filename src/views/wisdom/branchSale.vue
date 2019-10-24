@@ -253,9 +253,9 @@ export default {
             this.regionDisabled = true
             this.queryParams.regionCode = this.userInfo.oldDeptCode
             this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            // 总部可查看所有
         } else if (this.userInfo.deptType === this.deptType[0]) {
+            // 总部可查看所有
+        } else if (this.userInfo.deptType === this.deptType[2]) {
             this.regionDisabled = true
             this.branchDisabled = true
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
