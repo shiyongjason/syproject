@@ -512,8 +512,8 @@ const routerMapping = [
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
-                    title: '集市商品库',
-                    tagName: '集市商品库',
+                    title: '商家商品库',
+                    tagName: '商家商品库',
                     isMenu: true,
                     icon: ''
                 },
