@@ -136,7 +136,9 @@
 import { findProducts, findBossSource, changeSpustatus } from './api/index'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { clearCache, newCache } from '@/utils/index'
 export default {
+    name: 'spumange',
     data () {
         return {
             categoryIdArr: [],
@@ -200,6 +202,16 @@ export default {
             categoryList: state => state.hmall.categoryList
         })
 
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('spumange')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'spudetail') {
+            clearCache('spumange')
+        }
+        next()
     },
     async mounted () {
         const { data } = await findBossSource()
