@@ -125,7 +125,7 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getStandardscore, getDueconfig, addStandardscore, updateStandardscore, deleteStandardscore } from './api/index.js'
 import { mapState } from 'vuex'
-import { deepCopy } from '@/utils/index'
+import { deepCopy } from '@/utils/utils'
 import { plusOrMinus, decimals } from '../../utils/rules.js'
 import { AUTH_BESTONLINE_STANDARD_ADD, AUTH_BESTONLINE_STANDARD_EDIT, AUTH_BESTONLINE_STANDARD_DEL, AUTH_BESTONLINE_STANDARD_OPERATE } from '@/utils/auth_const'
 export default {
