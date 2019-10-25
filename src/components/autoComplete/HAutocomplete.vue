@@ -1,6 +1,14 @@
 <template>
-    <el-autocomplete v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder"
-     :validate-event="true" @select="handleSelect" @blur="blurInput" :disabled="disabled"></el-autocomplete>
+    <el-autocomplete
+        v-model="selectItem.selectName"
+        :fetch-suggestions="querySearchAsync"
+        :placeholder="placeholder"
+        :validate-event="true"
+        @select="handleSelect"
+        @blur="blurInput"
+        :disabled="disabled"
+        :maxlength='maxlength'
+    ></el-autocomplete>
 </template>
 <script>
 export default {
@@ -34,6 +42,10 @@ export default {
         removeValue: { // 清空input中的数据
             type: Boolean,
             default: false
+        },
+        maxlength: {
+            type: Number,
+            default: 15
         }
     },
     data () {
