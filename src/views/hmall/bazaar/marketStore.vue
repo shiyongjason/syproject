@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { findBazaarList, findCategory } from './api/index'
+import { findBazaarLists, findCategory } from './api/index'
 export default {
     name: 'marketStore',
     data () {
@@ -149,7 +149,7 @@ export default {
                 ...this.paginationData
             }
             if (searchParams.pageSize == 0) searchParams.pageSize = 10
-            const { data } = await findBazaarList(searchParams)
+            const { data } = await findBazaarLists(searchParams)
             this.paginationData.pageNumber = data.current
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total

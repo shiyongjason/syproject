@@ -401,8 +401,8 @@ const routerMapping = [
                 path: 'attribute',
                 name: 'attribute',
                 meta: {
-                    title: '属性管理',
-                    tagName: '属性管理',
+                    title: '参数属性管理',
+                    tagName: '参数属性管理',
                     isMenu: true,
                     icon: ''
                 },
