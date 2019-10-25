@@ -34,6 +34,13 @@
                         </el-input>
                     </div>
                 </div>
+                  <div class="query-cont-col">
+                    <div class="query-col-title">商品型号：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.specification" placeholder="请输入商品型号">
+                        </el-input>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">集市状态：</div>
                     <div class="query-col-input">
@@ -100,6 +107,7 @@ export default {
                 { label: '商品编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuFullName' },
                 { label: '品牌', prop: 'brandName' },
+                { label: '型号', prop: 'specification' },
                 { label: '商品类目', prop: 'categoryNames' },
                 { label: '商家名称', prop: 'merchantName' },
                 { label: '建议零售价', prop: 'retailPrice' },
@@ -117,7 +125,8 @@ export default {
                 source: '',
                 brandName: '',
                 categoryId: '',
-                onMarket: ''
+                onMarket: '',
+                specification: ''
             },
             paginationData: {
                 pageNumber: 1,
