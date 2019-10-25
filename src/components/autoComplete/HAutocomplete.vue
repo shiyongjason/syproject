@@ -7,6 +7,7 @@
         @select="handleSelect"
         @blur="blurInput"
         :disabled="disabled"
+        :maxlength='maxlength'
     ></el-autocomplete>
 </template>
 <script>
@@ -37,6 +38,10 @@ export default {
         removeValue: { // 清空input中的数据
             type: Boolean,
             default: false
+        },
+        maxlength: {
+            type: Number,
+            default: 15
         }
     },
     data () {

@@ -33,7 +33,7 @@ import Pagination from '@/components/pagination/HPagination'
 import { findBOSSOrganization, findOrganizationEmployee } from './api'
 
 export default {
-    name: 'index',
+    name: 'organization',
     components: {
         OrganizationTable,
         Pagination
@@ -132,6 +132,16 @@ export default {
         this.findOrganizationEmployee()
         // console.log(this.$route)
     }
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('couponsList')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'editCoupons') {
+    //         clearCache('couponsList')
+    //     }
+    //     next()
+    // }
 }
 </script>
 
