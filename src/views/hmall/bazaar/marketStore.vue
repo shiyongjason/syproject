@@ -155,7 +155,7 @@ export default {
             this.paginationData.pageSize = data.size
             this.paginationData.total = data.total
             data.records.map(item => {
-                item.spuFullName = item.brandName + ' ' + item.spuName
+                item.spuFullName = item.brandName + item.spuName
             })
             this.tableData = data.records
         },
