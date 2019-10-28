@@ -214,6 +214,18 @@ const routerMapping = [
                     component: './views/wisdom/categorySale'
                 },
                 component: () => import('./views/wisdom/categorySale')
+            },
+            {
+                path: 'profitStatistics',
+                name: 'profitStatistics',
+                meta: {
+                    title: '利润统计',
+                    tagName: '利润统计',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/profitStatistics'
+                },
+                component: () => import('./views/wisdom/profitStatistics')
             }
         ]
     },
@@ -747,8 +759,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
