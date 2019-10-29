@@ -8,3 +8,5 @@ export const createMemberReview = (params) => instance.put(`/merchant/api/member
 
 // 会员店审核详情
 export const findMemberDetails = (params) => instance.get(`/merchant/api/members/${params.id}`)
+// 会员拉新
+export const getRecomendboss = (params) => instance.get(`/merchant/api/members/recommended/boss`, { params })

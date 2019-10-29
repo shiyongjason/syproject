@@ -11,13 +11,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
+                        <!-- <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input> -->
+                         <HAutocomplete :placeholder="'输入商品品牌'" @back-event="backFindbrand" :selectArr="brandList" v-if="brandList" />
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品完整度：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.integrity">
+                        <el-select v-model="queryParams.integrity">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option label="完整" value="1">
@@ -43,18 +44,19 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.merchantCode">
+                        <!-- <el-select v-model="queryParams.merchantCode">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
                             </el-option>
-                        </el-select>
+                        </el-select> -->
+                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" />
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr"  clearable @change="productCategoryChange"></el-cascader>
+                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -91,7 +93,7 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
-                         <el-button type="primary" class="ml20" @click="onRest()">
+                        <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
                     </div>
@@ -133,7 +135,8 @@
     </div>
 </template>
 <script>
-import { findProducts, findBossSource, changeSpustatus } from './api/index'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
@@ -143,11 +146,13 @@ export default {
         return {
             categoryIdArr: [],
             productSource: [],
+            brandList: [],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
                 spuCode: '',
                 spuName: '',
+                brandName: '',
                 specification: '',
                 categoryId: '',
                 brandId: '',
@@ -169,11 +174,16 @@ export default {
                 { label: '商品名称', prop: 'spuName', width: '200' },
                 { label: '完整度', prop: 'integrity', width: '200' },
                 { label: '来源', prop: 'merchantName' },
+                { label: '维护人', prop: 'merchantName' },
+                { label: '维护时间', prop: 'merchantName' },
                 { label: '状态', prop: 'status' }
             ],
             rowKey: '',
             multiSelection: []
         }
+    },
+    components: {
+        HAutocomplete
     },
     computed: {
         pickerOptionsStart () {
@@ -216,6 +226,19 @@ export default {
     async mounted () {
         const { data } = await findBossSource()
         this.productSource = data
+        // TODO 模糊搜索组件
+        this.productSource && this.productSource.map(item => {
+            item.value = item.sourceName
+            item.selectCode = item.sourceCode
+        })
+        const { data: brand } = await getBrands()
+        this.brandList = brand
+        const brandList = []
+        // TODO 模糊搜索组件
+        this.brandList && this.brandList.map((item, index) => {
+            brandList.push({ value: item, selectCode: item })
+        })
+        this.brandList = brandList
         this.findCategoryList()
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
@@ -281,7 +304,7 @@ export default {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'add' } })
         },
         onEditSpu (val) {
-            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuCode: val.spuCode } })
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuCode: val.spuCode, status: val.status } })
         },
         async  onChangeSpu (val) {
             const params = {
@@ -294,6 +317,12 @@ export default {
                 type: 'success'
             })
             this.searchList()
+        },
+        backFindcode (val) {
+            this.queryParams.merchantCode = val.value.selectCode
+        },
+        backFindbrand (val) {
+            this.queryParams.brandName = val.value.selectCode
         }
     }
 }
