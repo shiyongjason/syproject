@@ -231,18 +231,22 @@ export default {
             this.searchParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
+            console.log(val)
             this.searchParams.pageSize = val
             this.onFindTableList()
         },
         handleCurrentChange (val) {
-            this.searchParams.pageNumber = val
+            this.searchParams.pageNumber = val.pageNumber
             this.onFindTableList()
         },
         onCurrentChange (val) {
-            this.$emit('onCurrentChange', val)
+            console.log(222)
+            this.searchParams.pageNumber = val.pageNumber
+            this.onFindTableList()
         },
         onSizeChange (val) {
-            this.$emit('onSizeChange', val)
+            this.searchParams.pageSize = val
+            this.onFindTableList()
         },
         onFieldChange (val) {
             this.$emit('onFieldChange', val)
