@@ -17,8 +17,7 @@
             </span>
         </div>
         <div class="elupload" :class="haveslot?'haveslot':''">
-            <el-upload v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove" :on-success="handleSuccess"
-                :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload">
+            <el-upload v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove" :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess">
                 <!-- 默认插槽 -->
                 <slot>
                     <div class="default-upload">
@@ -31,7 +30,10 @@
                 </slot>
                 <!-- 提示说明文字 -->
                 <slot name="tip"></slot>
+                <!-- 上传进度 -->
+                <el-progress v-if="progressFlag" type="dashboard" :percentage="uploadPercent" :width='110' :stroke-width="5" color="#FF7A45" class="uploadprogress"></el-progress>
             </el-upload>
+
         </div>
         <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog">
             <span>您确定删除这一条数据吗？</span>
@@ -66,8 +68,9 @@ export default {
             isBeyond: true,
             haveslot: false,
             deleteVisible: false,
-            index: ''
-
+            index: '',
+            progressFlag: false,
+            uploadPercent: null
         }
     },
     computed: {
@@ -89,14 +92,17 @@ export default {
         }
     },
     methods: {
+        uploadProcess (event, file, fileList) {
+            this.progressFlag = true
+            this.uploadPercent = Math.floor(event.percent)
+        },
         handleSuccess (response, file, fileList) {
-            // this.fileList = [...this.fileList, response.data]
-            if (this.showAsFileName) {
-                let obj = {
-                    name: response.data.fileName,
-                    url: response.data.accessUrl
-                }
-                if (typeof obj === 'object') {
+            let obj = {
+                name: response.data.fileName,
+                url: response.data.accessUrl
+            }
+            if (typeof obj === 'object') {
+                setTimeout(() => {
                     let temp = []
                     temp.push(obj)
                     // fix add 'empty'
@@ -106,9 +112,9 @@ export default {
                     temp.map(item => {
                         this.fileNameList.push(item)
                     })
-                }
-            } else {
-                this.fileList = [...this.fileList, response.data.accessUrl]
+                    this.uploadPercent = 100
+                    this.progressFlag = false
+                }, 500)
             }
         },
         doRemove () {
@@ -154,6 +160,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+/deep/.uploadprogress{ position: absolute;top:5px;left:10px}
 /deep/.deldialog .el-dialog__body {
     min-height: 100px;
     font-size: 16px;
@@ -252,7 +259,6 @@ export default {
         i{font-size: 18px;color: #5d5d5d;cursor: pointer;}
     }
     .posrtv:hover .abs{display:block}
-
 
 }
 </style>

@@ -6,7 +6,7 @@
                 <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
             </div>
             <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
-            <el-image :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item" :preview-src-list="previewSrcList"></el-image>
+            <el-image :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.url" :preview-src-list="previewSrcList"></el-image>
         </div>
     </div>
 </template>
@@ -31,7 +31,7 @@ export default {
             tempArr.unshift(temp)
             this.previewSrcList = tempArr.map(item => {
                 // return item.accessUrl
-                return item
+                return item.url
             })
             const pre = this.$refs[`preview_${index}`]
             if (pre && pre[0]) {

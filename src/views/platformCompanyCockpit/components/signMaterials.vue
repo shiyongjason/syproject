@@ -21,7 +21,7 @@
                 <span>{{signMaterials.num}}</span>
             </el-form-item>
             <el-form-item prop="num" label="实控人身份证归档：" label-width='160px'>
-                <hosjoyUpload v-model="fileList" :action='action' :uploadParameters='uploadParameters' showFileList >
+                <hosjoyUpload v-model="signMaterials.fileList" :action='action' :uploadParameters='uploadParameters' >
                     <!-- <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
                 </hosjoyUpload>
@@ -153,7 +153,9 @@ export default {
             assureRadio: '1',
             agreementForm: JSON.parse(JSON.stringify(_agreementForm)),
             agreement: [],
-            fileList: ['https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/e340708c-d4a8-4b69-a051-6e62b78e1fd4.png', 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/a9645dda-eb30-4304-8933-a542ed9a3396.png'],
+            // fileList: [
+            //     { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/e340708c-d4a8-4b69-a051-6e62b78e1fd4.png' }, { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/a9645dda-eb30-4304-8933-a542ed9a3396.png' }
+            // ],
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '张功伟x'

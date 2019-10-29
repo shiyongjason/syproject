@@ -6,9 +6,9 @@
                 <span class="labeldiy">其他材料归档：</span>
             </template>
             <hosjoyUpload v-model="fileNameList" showAsFileName :action='action' :uploadParameters='uploadParameters'>
-                    <el-button size="small" type="primary">点击上传</el-button>
-                </hosjoyUpload>
-                <span>{{otherMaterials.num}}</span>
+                <el-button size="small" type="primary">点击上传</el-button>
+            </hosjoyUpload>
+            <span>{{otherMaterials.num}}</span>
         </el-form-item>
     </div>
 </template>

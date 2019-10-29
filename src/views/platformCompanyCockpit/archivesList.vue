@@ -13,10 +13,10 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">建档时间：</div>
                     <div class="flex-wrap-cont">
-                        <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart" v-model="searchParams.createTimeStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" v-model="searchParams.createTimeEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -24,10 +24,9 @@
                     <div class="query-col-title">归档状况：</div>
                     <div class="query-col-input">
                         <el-select v-model="searchParams.searchKey">
-                            <el-option label="订单号" value="orderNo"></el-option>
-                            <el-option label="外部订单号" value="channelOrderNo"></el-option>
-                            <el-option label="姓名" value="userName"></el-option>
-                            <el-option label="手机号" value="mobile"></el-option>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="档案齐全" value="1"></el-option>
+                            <el-option label="档案缺失" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -35,16 +34,16 @@
                     <div class="query-col-title">借阅状况：</div>
                     <div class="query-col-input">
                         <el-select v-model="searchParams.searchKey">
-                            <el-option label="订单号" value="orderNo"></el-option>
-                            <el-option label="外部订单号" value="channelOrderNo"></el-option>
-                            <el-option label="姓名" value="userName"></el-option>
-                            <el-option label="手机号" value="mobile"></el-option>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="未借出" value="1"></el-option>
+                            <el-option label="已借出" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary">搜索</el-button>
+                        <el-button type="primary" @click="onSearch">搜索</el-button>
+                        <el-button type="primary" @click="$router.push('/platformCompanyCockpit/archivesManagement')">新增档案</el-button>
                     </div>
                 </div>
             </div>
@@ -172,7 +171,7 @@ export default {
                     ]
                 },
                 { label: 'A档（尽调）', prop: 'k' },
-                { label: '建档时间', prop: 'l', displayAs: 'formatterTime' },
+                { label: '建档时间', prop: 'l', displayAs: 'YYYY-MM-DD HH:mm' },
                 {
                     label: '操作',
                     fixed: 'right',
@@ -230,6 +229,9 @@ export default {
         }
     },
     methods: {
+        onSearch () {
+            console.log(this.searchParams)
+        },
         getList () {
             console.log('getList', this.queryParams)
         },

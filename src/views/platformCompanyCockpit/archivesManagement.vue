@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="page-body">
-            <div class="page-body-cont">
+            <div class="page-body-cont postionrelative">
                 <div class="title">
                     <span class="tit-l">新增档案</span>
                     <span class="tit-r">
-                        <el-button type="primary" style="width:100px">编辑</el-button>
+                        <div class="el-icon-edit-outline poseditor" @click="isEdit = true"></div>
                         <el-button type="primary" style="width:100px" @click="dialogVisible = true">档案标注</el-button>
                     </span>
                 </div>
@@ -13,30 +13,30 @@
                     <el-tabs v-model="activeName" type="card">
                             <el-tab-pane label="基础信息" name="base">
                                 <el-form :model="form.baseInfo" ref='formBaseInfo' :rules="rules.baseInfo" label-width="140px" label-position='left'>
-                                    <baseInfo v-model="form.baseInfo" />
+                                    <baseInfo v-model="form.baseInfo" :isEdit='isEdit'/>
                                 </el-form>
                             </el-tab-pane>
                             <el-tab-pane label="A档-尽调材料" name="typea">
                                 <el-form :model="form.tuneMaterials" ref='formTuneMaterials' label-width="140px" label-position='left'>
-                                    <tuneMaterials />
+                                    <tuneMaterials :isEdit='isEdit'/>
                                 </el-form>
                             </el-tab-pane>
                             <el-tab-pane label="B档-签约材料" name="typeb">
                                 <el-form :model="form.sign" ref='formSign' label-width="140px" label-position='left'>
                                     <!-- v-if为了兼容上传图片误删-->
-                                    <signMaterials v-model="form.sign" v-if="activeName==='typeb'" />
+                                    <signMaterials v-model="form.sign" :isEdit='isEdit' v-if="activeName==='typeb'" />
                                 </el-form>
                             </el-tab-pane>
                             <el-tab-pane label="C档-工商材料" name="typec">
                                 <el-form :model="form.business" ref='formSign' label-width="140px" label-position='left'>
                                     <!-- v-if为了兼容上传图片误删-->
-                                    <businessMaterials v-model="form.business" v-if="activeName==='typec'" />
+                                    <businessMaterials v-model="form.business" :isEdit='isEdit' v-if="activeName==='typec'" />
                                 </el-form>
                             </el-tab-pane>
                             <el-tab-pane label="其余材料" name="others">
                                 <el-form :model="form.business" ref='formSign' label-width="140px" label-position='left'>
                                     <!-- v-if为了兼容上传图片误删-->
-                                    <otherMaterials v-model="form.otherMaterials" v-if="activeName==='others'" />
+                                    <otherMaterials v-model="form.otherMaterials" :isEdit='isEdit' v-if="activeName==='others'" />
                                 </el-form>
                             </el-tab-pane>
                     </el-tabs>
@@ -79,12 +79,17 @@ export default {
     components: { baseInfo, tuneMaterials, signMaterials, hosjoyButton, businessMaterials, otherMaterials },
     data () {
         return {
+            isEdit: false,
             activeName: 'base',
             dialogVisible: false,
             form: {
                 baseInfo: {},
                 tuneMaterials: {},
-                sign: {},
+                sign: {
+                    fileList: [
+                        { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/e340708c-d4a8-4b69-a051-6e62b78e1fd4.png' }, { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/a9645dda-eb30-4304-8933-a542ed9a3396.png' }
+                    ]
+                },
                 business: {},
                 otherMaterials: {}
             },
@@ -130,4 +135,6 @@ export default {
 .tit-l{ font-size: 18px; padding-left: 10px}
 .tit-r{ float: right;}
 .title{ margin-bottom: 20px}
+.postionrelative{ position: relative;}
+.poseditor{position: absolute;font-size: 42px;right: 58px;top: 124px;z-index: 999;cursor: pointer;}
 </style>
