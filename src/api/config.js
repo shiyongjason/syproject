@@ -24,14 +24,14 @@ switch (env) {
         fileUploadUrl = 'http://192.168.20.248:40000/'
         break
     case 'dev':
-        // TODO 2.0暂时使用
-        interfaceUrl = 'https://hbp.hosjoy.com/'
-        ossUrl = 'https://route.hosjoy.com/'
-        uploadUrl = 'https://hbp.hosjoy.com/tms'
-        iframeUrl = 'https://test.hosjoy.com/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
+        ossUrl = 'http://192.168.20.248:8089/'
+        uploadUrl = 'http://192.168.20.248:40000/tms'
+        iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://testnewb2b-gateway.hosjoy.com:4832/'
-        fileUploadUrl = 'https://hbp.hosjoy.com/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'http://192.168.20.248:40000/'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
