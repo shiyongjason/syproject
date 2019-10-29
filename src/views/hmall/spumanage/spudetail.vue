@@ -30,7 +30,7 @@
                     <template v-else>
                         <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" /></template>
                 </el-form-item>
-                <el-form-item label="商品名称：" prop="spuName" style="width: 460px;">
+                <el-form-item label="商品名称：" style="width: 460px;">
                     <el-input placeholder="" maxlength="50" v-model="form.spuName" :disabled="operate=='audit'">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
@@ -90,6 +90,7 @@
                         <el-button type="primary" @click="onSave(1)">保存且启用</el-button>
                         <el-button @click="onSave(2)" v-if="operate=='modify'">保存且禁用</el-button>
                         <el-button @click="onSave(2)" v-if="operate=='add'">保存</el-button>
+                         <el-button @click="onSave()" v-if="operate=='modify'">保存</el-button>
                         <el-button @click="onBack()">返回</el-button>
                     </el-form-item>
                 </el-row>
@@ -179,9 +180,9 @@ export default {
                 brandId: [
                     { required: true, whitespace: true, message: '请选择商品品牌' }
                 ],
-                spuName: [
-                    { required: true, whitespace: true, message: '请填写商品名称' }
-                ],
+                // spuName: [
+                //     { required: true, whitespace: true, message: '请填写商品名称' }
+                // ],
                 reqPictureList: [
                     { required: true, message: '请选择商品主图' }
                 ]
@@ -266,7 +267,7 @@ export default {
             const { data } = await getSpuspec({ categoryId: this.categoryIdArr[2], brandId: this.form.brandId })
             const specList = []
             data && data.map(item => {
-                specList.push({ value: item, selectCode: item })
+                specList.push({ value: item.specification, selectCode: item.specification })
             })
             this.specList = specList
         },
@@ -366,7 +367,7 @@ export default {
                             message: '商品新建成功！'
                         })
                     } else if (this.operate == 'modify') {
-                        await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
+                        await putSpu({ ...this.form, status: val || this.$route.query.status, updateUser: this.userInfo.employeeName })
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'

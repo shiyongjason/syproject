@@ -441,6 +441,17 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
             },
+            {
+                path: 'memberPull',
+                name: 'memberPull',
+                meta: {
+                    title: '会员拉新管理',
+                    tagName: '会员拉新管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/memberStore/memberPull.vue')
+            },
             // {
             //     path: 'publicShop',
             //     name: 'publicShop',
