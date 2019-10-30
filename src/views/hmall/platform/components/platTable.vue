@@ -17,11 +17,11 @@
                     <el-switch v-model="scope.data.row.commodity" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.commodity, 'commodity')">
                     </el-switch>
                 </template>
-                   <template slot-scope="scope" slot="autoDispatch">
+                   <!-- <template slot-scope="scope" slot="autoDispatch">
                     <el-switch v-if="scope.data.row.operational" v-model="scope.data.row.autoDispatch" active-color="#13ce66" @change="onAutoChange(scope.data.row.organizationCode, scope.data.row)">
                     </el-switch >
                     <span v-if="!scope.data.row.operational">/</span>
-                </template>
+                </template> -->
                 <template slot-scope="scope" slot="action">
                     <el-button class="orangeBtn" @click="open(scope.data.row)" v-if="scope.data.row.status != 1">开启</el-button>
                     <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
@@ -229,8 +229,8 @@ export default {
                 { label: '网商支付开通状态', prop: 'registerStatus' },
                 { label: '开通时间', prop: 'bankRegisterOpenTime', formatters: 'dateTime' },
                 { label: '运营型商家', prop: 'operational' },
-                { label: '商品型商家', prop: 'commodity' },
-                { label: '自动推至店铺', prop: 'autoDispatch' }
+                { label: '商品型商家', prop: 'commodity' }
+                // { label: '自动推至店铺', prop: 'autoDispatch' }
             ]
         }
     },

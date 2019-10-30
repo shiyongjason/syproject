@@ -96,7 +96,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -106,7 +106,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -134,8 +134,8 @@ export default {
             for (var key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
+            console.log(url)
             location.href = this.B2bUrl + 'merchant/api/members/recommended/boss/export?' + url + 'access_token=' + sessionStorage.getItem('token')
-            console.log(location.href)
         },
         async getRecomendboss () {
             const { data } = await getRecomendboss(this.queryParams)

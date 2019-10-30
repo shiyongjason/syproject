@@ -367,7 +367,7 @@ export default {
                             message: '商品新建成功！'
                         })
                     } else if (this.operate == 'modify') {
-                        await putSpu({ ...this.form, status: val || this.$route.query.status, updateUser: this.userInfo.employeeName })
+                        await putSpu({ ...this.form, status: val || this.$route.query.status, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'
@@ -376,7 +376,7 @@ export default {
                         if (this.auditForm.approveStatus == 1) {
                             this.auditForm.approveDesc = ''
                         }
-                        await putSpu({ ...this.form, status: val, updateUser: this.userInfo.employeeName })
+                        await putSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
                         await auditSpu(this.auditForm)
                         this.$message({
                             type: 'success',

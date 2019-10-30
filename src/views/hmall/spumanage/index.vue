@@ -12,7 +12,7 @@
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
                         <!-- <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input> -->
-                         <HAutocomplete :placeholder="'输入商品品牌'" @back-event="backFindbrand" :selectArr="brandList" v-if="brandList" />
+                         <HAutocomplete :placeholder="'输入商品品牌'" @back-event="backFindbrand" :selectArr="brandList" v-if="brandList"  :remove-value='removeValue'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -50,7 +50,7 @@
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
                             </el-option>
                         </el-select> -->
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" />
+                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -181,7 +181,8 @@ export default {
                 { label: '状态', prop: 'status' }
             ],
             rowKey: '',
-            multiSelection: []
+            multiSelection: [],
+            removeValue: false
         }
     },
     components: {
@@ -249,6 +250,7 @@ export default {
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
+            this.removeValue = true
             this.searchList()
         },
         ...mapActions({

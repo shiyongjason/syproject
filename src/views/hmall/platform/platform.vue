@@ -125,7 +125,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.bankRegisterOpenTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -135,7 +135,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.bankRegisterOpenTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
