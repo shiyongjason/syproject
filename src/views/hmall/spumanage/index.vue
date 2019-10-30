@@ -246,6 +246,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
+    activated () {
+        this.searchList()
+    },
     methods: {
         onRest () {
             this.categoryIdArr = []
