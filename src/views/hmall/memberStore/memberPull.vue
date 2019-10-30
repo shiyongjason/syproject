@@ -132,9 +132,9 @@ export default {
         onImport () {
             var url = ''
             for (var key in this.queryParams) {
-                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                url += (key + '=' + this.queryParams[key] + '&')
             }
-            console.log(url)
+            // console.log(url)
             location.href = this.B2bUrl + 'merchant/api/members/recommended/boss/export?' + url + 'access_token=' + sessionStorage.getItem('token')
         },
         async getRecomendboss () {
