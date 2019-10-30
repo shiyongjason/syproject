@@ -257,16 +257,6 @@
                                     <el-cascader v-model="queryParamsProductTotal.categoryId" :options="categoryOptions" :change-on-select="true" @change="productCategoryChange" style="width: 100%"></el-cascader>
                                 </div>
                             </div>
-                            <!-- <div class="query-cont-col">
-                                <div class="query-col-title">同步至MIS状态：</div>
-                                <div class="query-col-input">
-                                    <el-select v-model="queryParamsProductTotal.misStatus" placeholder="全部" :clearable=true>
-                                        <el-option label="未同步" :value="0"></el-option>
-                                        <el-option label="同步成功" :value="1"></el-option>
-                                        <el-option label="同步失败" :value="2"></el-option>
-                                    </el-select>
-                                </div>
-                            </div> -->
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
@@ -275,6 +265,17 @@
                                     <span class="ml10 mr10">-</span>
                                     <el-date-picker v-model="queryParamsProductTotal.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerProductTotalEnd">
                                     </el-date-picker>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">城市：</div>
+                                <div class="query-col-title">
+                                     <el-cascader
+                                        placeholder="试试搜索： 南京"
+                                        :options="options"
+                                        :props="{ multiple: true }"
+                                        filterable>
+                                    </el-cascader>
                                 </div>
                             </div>
                             <div class="query-cont-col">
@@ -307,7 +308,7 @@ import { mapState } from 'vuex'
 import {
     findBrandsList, findOrderList, findProductTotalList,
     findReceivablesList, exportTotalList, exportTabReceivables,
-    exportTabOrder
+    exportTabOrder, getChiness
 } from './api/index'
 import { findProductCategory } from '../shopManager/api/index'
 
@@ -465,6 +466,10 @@ export default {
         }
     },
     methods: {
+        async getArea () {
+            const { data } = await getChiness()
+            console.log(data)
+        },
         exportTab () {
 
         },
@@ -541,12 +546,11 @@ export default {
             this.paginationProductTotalData = {
                 pageNumber: data.current,
                 pageSize: data.size,
-                totalElements: data.total
+                total: data.total
             }
         },
         exportTabTotal () {
             const { ...params } = this.queryParamsProductTotal
-            console.log(params)
             params.access_token = '' || sessionStorage.getItem('token')
             if (params.categoryId.length > 0) {
                 params.categoryId = params.categoryId[params.categoryId.length - 1]
@@ -639,6 +643,7 @@ export default {
             label: '全部'
         })
         this.categoryOptions = productCategoryTemp
+        this.getArea()
     },
     watch: {
         activeName (val) {
