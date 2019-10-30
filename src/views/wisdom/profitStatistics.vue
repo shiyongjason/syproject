@@ -2,6 +2,18 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <div class="query-col-title">mis编码：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <!-- <HAutocomplete ref="HAutocomplete" v-if="platList" :selectArr="platList" :selectObj="targetObj" @back-event="backFindTarget" :placeholder="'选择平台公司'"></HAutocomplete> -->
+                    </div>
+                </div>
                 <!--  v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]" -->
                 <div class="query-cont-col">
                     <div class="query-col-title">分部：</div>
@@ -10,18 +22,6 @@
                             <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">平台公司：</div>
-                    <div class="query-col-input">
-                        <!-- <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlatcode" :remove-value='removeValue' :placeholder="'选择平台公司'"></HAutocomplete> -->
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">mis编码：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -35,12 +35,13 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">业务类型：</div>
+                    <div class="query-col-title">公司上线状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.businessType" clearable placeholder="全部">
-                            <el-option v-for="item in bustype" :key="item.value" :label="item.name" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-checkbox-group v-model="queryParams.checkList">
+                            <el-checkbox label="上线"></el-checkbox>
+                            <el-checkbox label="未上线"></el-checkbox>
+                            <el-checkbox label="淘汰"></el-checkbox>
+                        </el-checkbox-group>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -76,9 +77,11 @@ export default {
             pickerOptionsEnd: '',
             branchList: [],
             bustype: [],
+            platList: [],
+            targetObj: { selectName: '', selectCode: '' },
             //
-
             queryParams: {
+                checkList: [],
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -147,7 +150,7 @@ export default {
                     label: '毛利',
                     renderHeader: (h, scope) => {
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandGrossProfit, 2) }}></i></span>
+                            <span>{scope.column.label}<i class='el-icon-question pointer' onClick={() => { this.onShowMessage() }}></i><i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandGrossProfit, 2) }}></i></span>
                         )
                     },
                     children: [
@@ -275,6 +278,15 @@ export default {
         hosJoyTable
     },
     methods: {
+        onShowMessage () {
+            this.$alert('毛利栏目下的上月、环比、同期、同比均为对毛利额的计算', '毛利', {
+                confirmButtonText: '我知道了',
+                center: true,
+                callback: action => {} })
+        },
+        backFindTarget (value) {
+            //
+        },
         handleExpand (scope, expandSellrr, num) {
             this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
             if (this.column[scope.$index]._expand) {
