@@ -319,7 +319,8 @@ export default {
         async  onChangeSpu (val) {
             const params = {
                 spuIdList: [val.id],
-                status: val.status === 1 ? 2 : 1
+                status: val.status === 1 ? 2 : 1,
+                operator: this.userInfo.employeeName
             }
             await changeSpustatus(params)
             this.$message({
