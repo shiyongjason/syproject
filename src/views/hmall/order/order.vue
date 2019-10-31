@@ -211,18 +211,18 @@
                     <el-tab-pane label="商品统计" name="third">
                         <div class="page-body-cont query-cont">
                           <div class="query-cont-col">
-                                <div class="query-col-title">商品编码：</div>
+                                <div class="query-col-title">SPU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.spuCode" maxlength="50" placeholder="请输入商品SPU"></el-input>
                                 </div>
                             </div>
-                              <!-- <div class="query-cont-col">
-                                <div class="query-col-title">商品SkU：</div>
+                              <div class="query-cont-col">
+                                <div class="query-col-title">SKU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.productCode" maxlength="50" placeholder="商品SkU">
                                     </el-input>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">分部：</div>
                                 <div class="query-col-input">
@@ -257,16 +257,6 @@
                                     <el-cascader v-model="queryParamsProductTotal.categoryId" :options="categoryOptions" :change-on-select="true" @change="productCategoryChange" style="width: 100%"></el-cascader>
                                 </div>
                             </div>
-                            <!-- <div class="query-cont-col">
-                                <div class="query-col-title">同步至MIS状态：</div>
-                                <div class="query-col-input">
-                                    <el-select v-model="queryParamsProductTotal.misStatus" placeholder="全部" :clearable=true>
-                                        <el-option label="未同步" :value="0"></el-option>
-                                        <el-option label="同步成功" :value="1"></el-option>
-                                        <el-option label="同步失败" :value="2"></el-option>
-                                    </el-select>
-                                </div>
-                            </div> -->
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
@@ -276,6 +266,25 @@
                                     <el-date-picker v-model="queryParamsProductTotal.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerProductTotalEnd">
                                     </el-date-picker>
                                 </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">城市：</div>
+                                <div class="query-col-title">
+                                     <el-cascader
+                                        placeholder="试试搜索： 南京"
+                                        :options="options"
+                                        v-model="optarr"
+                                        :clearable=true
+                                        :collapse-tags = true
+                                        :show-all-levels = "true"
+                                         @change="cityChange"
+                                        :props="{ multiple: true ,value:'key',label:'value',children:'cityList'}"
+                                        filterable>
+                                    </el-cascader>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                 <el-checkbox v-model="ad">只看共享商品</el-checkbox>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
@@ -307,7 +316,7 @@ import { mapState } from 'vuex'
 import {
     findBrandsList, findOrderList, findProductTotalList,
     findReceivablesList, exportTotalList, exportTabReceivables,
-    exportTabOrder
+    exportTabOrder, getChiness
 } from './api/index'
 import { findProductCategory } from '../shopManager/api/index'
 
@@ -461,10 +470,25 @@ export default {
             paginationReceivablesData: {},
             paginationProductTotalData: {},
             brandsList: [],
-            categoryOptions: []
+            categoryOptions: [],
+            options: [],
+            optarr: ''
         }
     },
     methods: {
+        async getArea () {
+            const { data } = await getChiness()
+            this.options = data.data.dictpro
+
+            console.log(data)
+        },
+        cityChange (val) {
+            const cityarr = []
+            val && val.map(item => {
+                cityarr.push(item[1])
+            })
+            console.log(cityarr)
+        },
         exportTab () {
 
         },
@@ -541,12 +565,11 @@ export default {
             this.paginationProductTotalData = {
                 pageNumber: data.current,
                 pageSize: data.size,
-                totalElements: data.total
+                total: data.total
             }
         },
         exportTabTotal () {
             const { ...params } = this.queryParamsProductTotal
-            console.log(params)
             params.access_token = '' || sessionStorage.getItem('token')
             if (params.categoryId.length > 0) {
                 params.categoryId = params.categoryId[params.categoryId.length - 1]
@@ -639,6 +662,7 @@ export default {
             label: '全部'
         })
         this.categoryOptions = productCategoryTemp
+        this.getArea()
     },
     watch: {
         activeName (val) {

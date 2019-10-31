@@ -1,6 +1,6 @@
 <template>
     <div class="order-table">
-        <el-table :data="tableData"
+        <!-- <el-table :data="tableData"
                   border
                   style="width: 100%">
             <el-table-column
@@ -8,11 +8,11 @@
                 align="center"
                 label="商品编码">
             </el-table-column>
-             <!--<el-table-column
+           <el-table-column
                 prop="productCode"
                 align="center"
                 label="商品编码SKU">
-            </el-table-column> -->
+            </el-table-column>
             <el-table-column
                 prop="orderNo"
                 align="center"
@@ -41,14 +41,7 @@
             <el-table-column
                 align="center"
                 label="订单状态">
-                <template slot-scope="scope">
-                    <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
-                    <span v-if="scope.row.orderStatus === 10">待支付</span>
-                    <span v-if="scope.row.orderStatus === 20">待发货</span>
-                    <span v-if="scope.row.orderStatus === 30">待收货</span>
-                    <span v-if="scope.row.orderStatus === 40">已完成</span>
-                    <span v-if="scope.row.orderStatus === 50">已关闭</span>
-                </template>
+
             </el-table-column>
             <el-table-column
                 align="center"
@@ -73,37 +66,19 @@
                 align="center"
                 label="商品类目">
             </el-table-column>
-            <!-- <el-table-column
-                align="center"
-                label="同步至mis状态">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.misStatus === 0">未同步</span>
-                    <span v-if="scope.row.misStatus === 1">同步成功</span>
-                    <span v-if="scope.row.misStatus === 2">同步失败</span>
-                </template>
-            </el-table-column>
-            <el-table-column
-                align="center"
-                label="同步mis时间">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.misTime">{{scope.row.misTime | formatterTime}}</span>
-                    <span v-else v-text="'-'"></span>
-                </template>
-            </el-table-column> -->
-        </el-table>
-        <div class="page clearfix" style="text-align: center;margin-top: 20px">
-            <el-pagination
-                class="el-page"
-                background
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="paginationData.pageNumber"
-                :page-sizes="[10,20,30,40,50]"
-                layout="total, sizes, prev, pager, next, jumper"
-                :onQuery="onQuery"
-                :total="paginationData.totalElements">
-            </el-pagination>
-        </div>
+
+        </el-table> -->
+
+        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250  >
+            <template slot-scope="scope" solt="orderStatus">
+                <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
+                <span v-if="scope.data.row.orderStatus === 10">待支付</span>
+                <span v-if="scope.data.row.orderStatus === 20">待发货</span>
+                <span v-if="scope.data.row.orderStatus === 30">待收货</span>
+                <span v-if="scope.data.row.orderStatus === 40">已完成</span>
+                <span v-if="scope.data.row.orderStatus === 50">已关闭</span>
+            </template>
+        </basicTable>
     </div>
 </template>
 
@@ -123,11 +98,29 @@ export default {
             type: Object,
             default () {
                 return {
-                    totalElements: 0,
+                    total: 0,
                     pageSize: 10,
                     pageNumber: 1
                 }
             }
+        }
+    },
+    data () {
+        return {
+            tableLabel: [
+                { label: '商品编码', prop: 'spuCode' },
+                { label: '订单编号', prop: 'orderNo' },
+                { label: '分部', prop: 'branchName' },
+                { label: '平台公司', prop: 'merchantName' },
+                { label: '会员店', prop: 'memberName' },
+                { label: '金额', prop: 'totalAmount' },
+                { label: '订单状态', prop: 'orderStatus' },
+                { label: '下单时间', prop: 'orderTime' },
+                { label: '商品数量', prop: 'quantity' },
+                { label: '商品名称', prop: 'productName' },
+                { label: '商品类目', prop: 'categoryName' }
+
+            ]
         }
     },
     computed: {
@@ -145,14 +138,14 @@ export default {
         },
         handleCurrentChange (val) {
             this.loading = true
-            this.$emit('onCurrentChange', val, 'productTotal')
+            this.$emit('onCurrentChange', val.pageNumber, 'productTotal')
         }
     }
 }
 </script>
 
 <style>
-    .el-pagination__editor.el-input .el-input__inner{
-        box-shadow: none;
-    }
+.el-pagination__editor.el-input .el-input__inner {
+    box-shadow: none;
+}
 </style>
