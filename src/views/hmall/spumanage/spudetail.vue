@@ -14,13 +14,14 @@
                 <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
                 </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'">
-                    <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
+                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
+                    <!-- <el-select v-model="form.brandId" clearable placeholder="请选择" @change="brandNameChange" :disabled="operate=='modify'||operate=='audit'">
                         <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                        <HAutocomplete ref="HAutocomplete" :selectArr="relationBrand" v-if="relationBrand" @back-event="backFindBrand"  />
                 </el-form-item>
-                <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
+                <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'" ref="brandId">
                     {{brandName}}
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="specification" style="width: 460px;" ref="specification">
@@ -119,7 +120,7 @@
 <script>
 import { fileUploadUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRelationBrand, findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, getSpuspec } from './api/index'
+import { findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, getSpuspec, findBrands } from './api/index'
 import { deepCopy } from '@/utils/utils'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
@@ -225,6 +226,11 @@ export default {
             this.$nextTick(() => {
                 if (val) this.$refs['specification'].clearValidate()
             })
+        },
+        'form.brandId' (val) {
+            this.$nextTick(() => {
+                if (val) this.$refs['brandId'].clearValidate()
+            })
         }
     },
     computed: {
@@ -276,7 +282,7 @@ export default {
         },
         productCategoryChange (val) {
             this.form.categoryId = val[2]
-            this.findRelationBrand(val[1])
+            // this.findRelationBrand(val[1])
             this.findSpuAttr(val[1], this.form.spuCode)
             this.getSpuspec()
         },
@@ -312,26 +318,16 @@ export default {
         },
         async findRelationBrand (val) {
             this.form.brandId = ''
-            const params = {
-                categoryId: val,
-                isRelation: 1 // 0：未关联 1：已关联
-            }
-            const { data } = await findRelationBrand(params)
-            this.relationBrand = data
-            // let isNull = true
-            // this.relationBrand.forEach(value => {
-            //     if (value.brandId === this.form.brandId) {
-            //         isNull = false
-            //         //  + value.brandNameEn bug v1.7删除
-            //         this.brandName = value.brandName
-            //     }
-            // })
-            // if (isNull) {
-            //     // this.$set(this.form, 'brandId', '')
-            //     // this.$nextTick(() => {
-            //     //     this.$refs['brandId'].clearValidate()
-            //     // })
-            // }
+            const { data } = await findBrands({ name: '' })
+            const brandList = []
+            data && data.map(item => {
+                brandList.push({ value: item.brandName, selectCode: item.brandCode })
+            })
+            this.relationBrand = brandList
+        },
+        backFindBrand (val) {
+            this.brandName = val.value.value
+            this.form.brandId = val.value.selectCode
         },
         async findSpuAttr (categoryId, spuCode) {
             const { data } = await findSpuAttr({ categoryId: categoryId, spuCode: spuCode })
@@ -366,12 +362,14 @@ export default {
                             type: 'success',
                             message: '商品新建成功！'
                         })
+                        this.$router.push({ path: '/hmall/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpu({ ...this.form, status: val || this.$route.query.status, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'
                         })
+                        this.$router.push({ path: '/hmall/spumange' })
                     } else {
                         if (this.auditForm.approveStatus == 1) {
                             this.auditForm.approveDesc = ''
@@ -382,8 +380,8 @@ export default {
                             type: 'success',
                             message: this.auditForm.approveStatus == 1 ? '商品审核成功！' : '商品审核不成功'
                         })
+                        this.$router.go(-1)
                     }
-                    this.$router.push({ path: '/hmall/spumange' })
                 }
             })
         },
@@ -456,6 +454,7 @@ export default {
         }
         this.deepForm = deepCopy(this.form)
         this.getSpuspec()
+        this.findRelationBrand('')
     }
 }
 </script>
