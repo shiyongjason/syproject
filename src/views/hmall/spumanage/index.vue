@@ -300,7 +300,8 @@ export default {
             }
             const params = {
                 spuIdList: multiSelection,
-                status: status
+                status: status,
+                operator: this.userInfo.employeeName
             }
             await changeSpustatus(params)
             this.$message({
