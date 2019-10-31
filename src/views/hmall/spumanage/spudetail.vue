@@ -88,7 +88,7 @@
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
                         <el-button type="primary" @click="onSave(1)">保存且启用</el-button>
-                        <el-button @click="onSave(2)" v-if="operate=='modify'">保存且禁用</el-button>
+                        <el-button @click="onSave(2)" >保存且禁用</el-button>
                         <el-button @click="onSave(2)" v-if="operate=='add'">保存</el-button>
                          <el-button @click="onSave()" v-if="operate=='modify'">保存</el-button>
                         <el-button @click="onBack()">返回</el-button>
