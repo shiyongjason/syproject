@@ -1,16 +1,5 @@
 <template>
-    <el-autocomplete
-        ref="autocomplete"
-        v-model="selectItem.selectName"
-        :fetch-suggestions="querySearchAsync"
-        :placeholder="placeholder"
-        :validate-event="true"
-        @select="handleSelect"
-        @blur="blurInput"
-        @focus="focusInput"
-        :disabled="disabled"
-        :maxlength='maxlength'
-    ></el-autocomplete>
+    <el-autocomplete ref="autocomplete" v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @select="handleSelect" @blur="blurInput" @focus="focusInput" :disabled="disabled" :maxlength='maxlength'></el-autocomplete>
 </template>
 <script>
 export default {
@@ -64,8 +53,12 @@ export default {
         }
     },
     watch: {
-        removeValue () {
-            this.clearInput()
+        removeValue: {
+            handler () {
+                this.clearInput()
+            },
+            deep: true
+
         },
         selectItem: {
             handler (newName, oldName) {
