@@ -284,6 +284,9 @@
                                 </div>
                             </div>
                             <div class="query-cont-col">
+                                 <el-checkbox v-model="ad">只看共享商品</el-checkbox>
+                            </div>
+                            <div class="query-cont-col">
                                 <div class="query-col-title">
                                     <el-button type="primary" class="ml20" @click="onQueryProductTotal()">
                                         搜索
