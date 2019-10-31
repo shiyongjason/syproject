@@ -271,6 +271,7 @@ export default {
             this.queryParams.categoryId = val
         },
         async  searchList () {
+            // this.removeValue = false
             const { ...params } = this.queryParams
             if (params.startTime) {
                 params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
@@ -286,6 +287,7 @@ export default {
                 pageSize: data.size,
                 total: data.total
             }
+            this.removeValue = false
         },
         async onChangeStatus (status) {
             let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
