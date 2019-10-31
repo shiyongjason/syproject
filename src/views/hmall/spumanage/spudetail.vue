@@ -9,7 +9,7 @@
                     {{form.spuCode}}
                 </el-form-item>
                 <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
-                    <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" clearable></el-cascader>
+                    <el-cascader :options="categoryList" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
                 </el-form-item>
                 <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
                     {{categoryIdName}}
