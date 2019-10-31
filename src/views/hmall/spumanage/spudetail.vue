@@ -321,7 +321,7 @@ export default {
             const { data } = await findBrands({ name: '' })
             const brandList = []
             data && data.map(item => {
-                brandList.push({ value: item.brandName, selectCode: item.brandCode })
+                brandList.push({ value: item.brandName, selectCode: item.id })
             })
             this.relationBrand = brandList
         },
