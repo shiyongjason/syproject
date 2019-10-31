@@ -85,7 +85,6 @@ export default {
         },
         createStateFilter (queryString) {
             return (state) => {
-                console.log(state)
                 return (state.value && state.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
             }
         },
