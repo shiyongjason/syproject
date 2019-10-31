@@ -273,7 +273,7 @@
                                      <el-cascader
                                         placeholder="试试搜索： 南京"
                                         :options="options"
-                                        :props="{ multiple: true }"
+                                        :props="{ multiple: true ,value:'key',label:'value',children:'cityList'}"
                                         filterable>
                                     </el-cascader>
                                 </div>
@@ -462,12 +462,15 @@ export default {
             paginationReceivablesData: {},
             paginationProductTotalData: {},
             brandsList: [],
-            categoryOptions: []
+            categoryOptions: [],
+            options: []
         }
     },
     methods: {
         async getArea () {
             const { data } = await getChiness()
+            this.options = data.data.dictpro
+
             console.log(data)
         },
         exportTab () {
