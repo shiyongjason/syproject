@@ -211,18 +211,18 @@
                     <el-tab-pane label="商品统计" name="third">
                         <div class="page-body-cont query-cont">
                           <div class="query-cont-col">
-                                <div class="query-col-title">商品编码：</div>
+                                <div class="query-col-title">SPU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.spuCode" maxlength="50" placeholder="请输入商品SPU"></el-input>
                                 </div>
                             </div>
-                              <!-- <div class="query-cont-col">
-                                <div class="query-col-title">商品SkU：</div>
+                              <div class="query-cont-col">
+                                <div class="query-col-title">SKU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.productCode" maxlength="50" placeholder="商品SkU">
                                     </el-input>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">分部：</div>
                                 <div class="query-col-input">
@@ -273,6 +273,11 @@
                                      <el-cascader
                                         placeholder="试试搜索： 南京"
                                         :options="options"
+                                        v-model="optarr"
+                                        :clearable=true
+                                        :collapse-tags = true
+                                        :show-all-levels = "true"
+                                         @change="cityChange"
                                         :props="{ multiple: true ,value:'key',label:'value',children:'cityList'}"
                                         filterable>
                                     </el-cascader>
@@ -463,7 +468,8 @@ export default {
             paginationProductTotalData: {},
             brandsList: [],
             categoryOptions: [],
-            options: []
+            options: [],
+            optarr: ''
         }
     },
     methods: {
@@ -472,6 +478,13 @@ export default {
             this.options = data.data.dictpro
 
             console.log(data)
+        },
+        cityChange (val) {
+            const cityarr = []
+            val && val.map(item => {
+                cityarr.push(item[1])
+            })
+            console.log(cityarr)
         },
         exportTab () {
 
