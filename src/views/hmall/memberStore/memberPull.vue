@@ -142,17 +142,17 @@ export default {
             this.tableData = data.records
             this.paginationInfo = {
                 total: data.total,
-                pageNumber: data.pages,
+                pageNumber: data.current,
                 pageSize: data.size
             }
         },
         handleSizeChange (val) {
-            this.queryParams.pageSize = val
+            this.getRecomendboss.pageSize = val
             this.searchList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
+            this.getRecomendboss()
         }
     }
 }
