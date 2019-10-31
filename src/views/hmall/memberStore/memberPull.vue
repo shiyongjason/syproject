@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">申请时间：</div>
+                    <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -147,8 +147,9 @@ export default {
             }
         },
         handleSizeChange (val) {
-            this.getRecomendboss.pageSize = val
-            this.searchList()
+            console.log(val)
+            this.queryParams.pageSize = val
+            this.getRecomendboss()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
