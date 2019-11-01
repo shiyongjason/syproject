@@ -1,14 +1,5 @@
 <template>
-    <el-autocomplete
-        v-model="selectItem.selectName"
-        :fetch-suggestions="querySearchAsync"
-        :placeholder="placeholder"
-        :validate-event="true"
-        @select="handleSelect"
-        @blur="blurInput"
-        :disabled="disabled"
-        :maxlength='maxlength'
-    ></el-autocomplete>
+    <el-autocomplete ref="autocomplete" v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @select="handleSelect" @blur="blurInput" @focus="focusInput" :disabled="disabled" :maxlength='maxlength'></el-autocomplete>
 </template>
 <script>
 export default {
@@ -62,8 +53,12 @@ export default {
         }
     },
     watch: {
-        removeValue () {
-            this.clearInput()
+        removeValue: {
+            handler () {
+                this.clearInput()
+            },
+            deep: true
+
         },
         selectItem: {
             handler (newName, oldName) {
@@ -73,6 +68,9 @@ export default {
         }
     },
     methods: {
+        focusInput () {
+            this.$refs.autocomplete.suggestions = []
+        },
         clearInput () {
             this.selectObj.selectCode = ''
             this.selectObj.selectName = ''
@@ -87,7 +85,7 @@ export default {
         },
         createStateFilter (queryString) {
             return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+                return (state.value && state.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
             }
         },
         handleSelect (item) {
