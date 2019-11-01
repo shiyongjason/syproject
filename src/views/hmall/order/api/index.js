@@ -1,4 +1,4 @@
-import { B2bUrl, ossUrl } from '@/api/config'
+import { B2bUrl, ccpBaseUrl } from '@/api/config'
 import instance from '@/api/axios_new.js'
 import axios from 'axios'
 
@@ -55,7 +55,7 @@ export const findChildOrder = (params) => instance.get(B2bUrl + `order/api/order
 
 // 省市区
 export const getChiness = (params) => {
-    return axios.get(ossUrl + '/api/httpH5/3044', { params })
+    return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
 }
 
 // 新的商品统计

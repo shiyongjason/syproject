@@ -278,7 +278,7 @@
                                         :collapse-tags = true
                                         :show-all-levels = "true"
                                          @change="cityChange"
-                                        :props="{ multiple: true ,value:'key',label:'value',children:'cityList'}"
+                                        :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}"
                                         filterable>
                                     </el-cascader>
                                 </div>
@@ -393,7 +393,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -403,7 +403,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -462,7 +462,8 @@ export default {
                 productCode: '',
                 spuCode: '',
                 skuCode: '',
-                isShareGoods: false
+                isShareGoods: false,
+                areaIds: ''
             },
             orderData: [],
             receivablesData: [],
@@ -480,16 +481,14 @@ export default {
     methods: {
         async getArea () {
             const { data } = await getChiness()
-            this.options = data.data.dictpro
-
-            console.log(data)
+            this.options = data
         },
         cityChange (val) {
             const cityarr = []
             val && val.map(item => {
                 cityarr.push(item[1])
             })
-            console.log(cityarr)
+            this.queryParamsProductTotal.areaIds = cityarr.join(',')
         },
         exportTab () {
 
