@@ -71,7 +71,7 @@
                                 </span>
                                 <span v-else>-</span>
                             </div>
-                            <span>返利详情</span>
+                            <span>{{discountFunc(scope.data.row.skuRebateBoList)}}</span>
                         </el-tooltip>
                     </template>
                     <template slot='commission' slot-scope="scope">
@@ -84,7 +84,7 @@
                                 </span>
                                 <span v-else>-</span>
                             </div>
-                            <span>{{scope.data.row.commission}}%</span>
+                            <span>{{commissionFunc(scope.data.row.commissionBoList)}}</span>
                         </el-tooltip>
                     </template>
                     <template slot='onMarket' slot-scope="scope">
@@ -137,6 +137,24 @@ export default {
         }
     },
     methods: {
+        discountFunc (val) {
+            const arr = val.map(item => item.discount)
+            let result = [arr[0]]
+            for (let i = 1, len = arr.length; i < len; i++) {
+                arr[i] !== arr[i - 1] && result.push(arr[i])
+            }
+            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
+            else return result[0] + '%'
+        },
+        commissionFunc (val) {
+            const arr = val.map(item => item.commission)
+            let result = [arr[0]]
+            for (let i = 1, len = arr.length; i < len; i++) {
+                arr[i] !== arr[i - 1] && result.push(arr[i])
+            }
+            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
+            else return result[0] + '%'
+        },
         onQuery () {
             const { ...params } = { ...this.queryParams }
             this.searchParams = params

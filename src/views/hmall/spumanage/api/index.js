@@ -70,3 +70,8 @@ export const findSpudetails = (params) => instance.get('product/api/spu/spu-edit
 export const auditSpu = (params) => instance.put(`product/api/spu/boss/audit`, params)
 
 export const getSpuspec = (params) => instance.post(`product/api/spu/specifications`, params)
+// 下拉可选品牌
+export const getBrands = (params) => instance.get(`product/api/brands/select-brands`, { params })
+
+// 模糊查询品牌
+export const findBrands = (params) => instance.get('/product/api/brands/name/list', { params })
