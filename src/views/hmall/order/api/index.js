@@ -57,3 +57,6 @@ export const findChildOrder = (params) => instance.get(B2bUrl + `order/api/order
 export const getChiness = (params) => {
     return axios.get(ossUrl + '/api/httpH5/3044', { params })
 }
+
+// 新的商品统计
+export const orderPage = (params) => instance.get(B2bUrl + `order/api/boss/order-products/page`, { params })
