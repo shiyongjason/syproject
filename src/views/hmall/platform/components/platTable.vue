@@ -17,11 +17,11 @@
                     <el-switch v-model="scope.data.row.commodity" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.commodity, 'commodity')">
                     </el-switch>
                 </template>
-                   <!-- <template slot-scope="scope" slot="autoDispatch">
+                   <template slot-scope="scope" slot="autoDispatch">
                     <el-switch v-if="scope.data.row.operational" v-model="scope.data.row.autoDispatch" active-color="#13ce66" @change="onAutoChange(scope.data.row.organizationCode, scope.data.row)">
                     </el-switch >
                     <span v-if="!scope.data.row.operational">/</span>
-                </template> -->
+                </template>
                 <template slot-scope="scope" slot="action">
                     <el-button class="orangeBtn" @click="open(scope.data.row)" v-if="scope.data.row.status != 1">开启</el-button>
                     <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
