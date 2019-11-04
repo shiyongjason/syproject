@@ -10,11 +10,11 @@
                 <span v-if="scope.data.row.registerStatus === 2">未开通</span>
             </template>
             <template slot-scope="scope" slot="operational">
-                <el-switch v-model="scope.data.row.operational" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.operational, 'operational')">
+                <el-switch v-model="scope.data.row.operational" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.operational, 'operational', scope.data.row)">
                 </el-switch>
             </template>
             <template slot-scope="scope" slot="commodity">
-                <el-switch v-model="scope.data.row.commodity" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.commodity, 'commodity')">
+                <el-switch v-model="scope.data.row.commodity" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.commodity, 'commodity', scope.data.row)">
                 </el-switch>
             </template>
             <template slot-scope="scope" slot="autoDispatch">
@@ -300,7 +300,13 @@ export default {
         indexMethod (index) {
             return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
         },
-        async onTypeChange (merchantCode, value, type) {
+        async onTypeChange (merchantCode, value, type, obj) {
+            if (type == 'operational') {
+                await updatePlatformType({
+                    merchantCode: merchantCode,
+                    autoDispatch: value
+                })
+            }
             await updatePlatformType({
                 merchantCode,
                 [type]: value ? 1 : 0

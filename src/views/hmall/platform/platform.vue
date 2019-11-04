@@ -200,6 +200,7 @@ export default {
             this.onQueryPlat()
         },
         async onQueryPlat () {
+            this.queryParams.pageNumber = 1
             const { ...params } = this.queryParams
             if (params.startDate) {
                 params.startDate = this.$root.$options.filters.formatDate(params.startDate, 'YYYY-MM-DD HH:mm:ss')
