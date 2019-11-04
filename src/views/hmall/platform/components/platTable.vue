@@ -230,7 +230,7 @@ export default {
                 { label: '开通时间', prop: 'bankRegisterOpenTime', formatters: 'dateTime' },
                 { label: '运营型商家', prop: 'operational' },
                 { label: '商品型商家', prop: 'commodity' }
-                // { label: '自动推至店铺', prop: 'autoDispatch' }
+                { label: '自动推至店铺', prop: 'autoDispatch' }
             ]
         }
     },
