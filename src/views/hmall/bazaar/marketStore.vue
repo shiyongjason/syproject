@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">集市状态：</div>
+                    <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
                          <el-select v-model="queryParams.onMarket" style="width: 100%">
                         <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
@@ -115,7 +115,7 @@ export default {
                 { label: '返利', prop: 'skuRebateBoList' },
                 { label: '佣金', prop: 'commission' },
                 { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } },
-                { label: '集市状态', prop: 'onMarket' }
+                { label: '状态', prop: 'onMarket' }
             ],
             tableData: [],
             searchParams: {},
