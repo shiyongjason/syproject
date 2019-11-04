@@ -291,8 +291,9 @@ export default {
             this.$emit('onSizeChange', val)
         },
         onCurrentChange (val) {
+            console.log(val)
             this.loading = true
-            this.$emit('onCurrentChange', val)
+            this.$emit('onCurrentChange', val.pageNumber)
         },
         handleCheckAllChange (val) {
             this.selectTh = val ? this.defaultTh : []
@@ -312,6 +313,7 @@ export default {
                 [type]: value ? 1 : 0
             })
             this.$message({ message: '商家角色设置成功', type: 'success' })
+            this.onQuery()
         },
         async onAutoChange (merchantCode, obj) {
             await updatePlatformType({
@@ -319,6 +321,7 @@ export default {
                 autoDispatch: obj.autoDispatch
             })
             this.$message({ message: '自动推至店铺设置成功', type: 'success' })
+            this.onQuery()
         }
     },
     mounted () {
