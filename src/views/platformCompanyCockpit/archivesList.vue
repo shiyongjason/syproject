@@ -99,6 +99,7 @@ import dialogComponent from './components/dialogComponent.vue'
 import { pagination } from '@/utils/mixins.js'
 import { findPaltList, getList, findBranchListNew, borrow, deleteFile } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { newCache } from '@/utils/index'
 
 export default {
     name: 'archivesList',
@@ -409,6 +410,10 @@ export default {
         this.findPaltList()
         this.getList()
         this.findBranchListNew()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('archivesList')
+        next()
     }
 }
 </script>
