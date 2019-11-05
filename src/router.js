@@ -398,23 +398,23 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/platform/platform.vue')
             },
-            {
-                path: 'shopReviewList',
-                name: 'shopReviewList',
-                meta: {
-                    title: '平台公司商品审核列表',
-                    tagName: '平台公司商品审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/shopReviewList.vue')
-            },
+            // {
+            //     path: 'shopReviewList',
+            //     name: 'shopReviewList',
+            //     meta: {
+            //         title: '平台公司商品审核列表',
+            //         tagName: '平台公司商品审核列表',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopReview/shopReviewList.vue')
+            // },
             {
                 path: 'attribute',
                 name: 'attribute',
                 meta: {
-                    title: '属性管理',
-                    tagName: '属性管理',
+                    title: '参数属性管理',
+                    tagName: '参数属性管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -452,6 +452,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
+            },
+            {
+                path: 'memberPull',
+                name: 'memberPull',
+                meta: {
+                    title: '会员拉新管理',
+                    tagName: '会员拉新管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/memberStore/memberPull.vue')
             },
             // {
             //     path: 'publicShop',
@@ -524,8 +535,8 @@ const routerMapping = [
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
-                    title: '集市商品库',
-                    tagName: '集市商品库',
+                    title: '商家商品库',
+                    tagName: '商家商品库',
                     isMenu: true,
                     icon: ''
                 },
