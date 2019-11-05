@@ -82,7 +82,7 @@ import otherMaterials from './components/otherMaterials'
 import hosjoyButton from '@/components/HosJoyButton/hosJoyButton'
 import { saveInfo, getDetail, provinces, upData, remark } from './api/index.js'
 import { mapState } from 'vuex'
-import { checkIdCard } from '@/utils/rules.js'
+// import { checkIdCard } from '@/utils/rules.js'
 
 export default {
     name: 'archivesManagement',
@@ -113,9 +113,15 @@ export default {
                 // 基础信息
                 platformBasicInfoPO: {
                     archiveNo: '',
+                    companyName: '',
+                    companyStatus: '',
                     archiveStatus: '2',
                     createUser: '',
                     ddDocFlag: '0',
+                    addressOther: '',
+                    oldCompanyName: '',
+                    departmentId: '',
+
                     dd: []// A-尽调材料
                 },
                 commonDocPOs: [],
@@ -155,9 +161,9 @@ export default {
                     ]
                 },
                 archiveSignPO: {
-                    realControllerIdcard: [
+                    /* realControllerIdcard: [
                         { validator: checkIdCard, trigger: 'blur' }
-                    ]
+                    ] */
                     // shareholderIdcard: [
                     //     { validator: checkIdCard, trigger: 'blur' }
                     // ]
@@ -310,13 +316,62 @@ export default {
                 this.form.commonDocPOs.push(item)
             })
             console.log(this.form)
-            try {
+            this.$refs['formBaseInfo'].validate(async (valid, errors) => {
+                if (valid) {
+                    try {
+                        if (this.$route.query.archiveId) {
+                            // updateUser
+                            this.form.platformBasicInfoPO.updateUser = this.userInfo.employeeName
+                            await upData(this.form)
+                        } else {
+                            await saveInfo(this.form)
+                        }
+                        done()
+                        this.$message({
+                            message: '提交成功！',
+                            type: 'success'
+                        })
+                        this.isEdit = false
+                        if (!this.$route.query.archiveId) {
+                            setTimeout(() => {
+                                this.$router.go(-1)
+                            }, 500)
+                        }
+                    } catch (error) {
+                        done()
+                    }
+                } else {
+                    console.log(this.form)
+                    if (this.form.platformBasicInfoPO.archiveNo == '') {
+                        this.$message.error(`请输入档案编号`)
+                        done()
+                        return
+                    }
+                    if (this.form.platformBasicInfoPO.companyStatus == '') {
+                        this.$message.error(`请选择公司状态`)
+                        done()
+                        return
+                    }
+                    if (this.form.platformBasicInfoPO.companyName == '') {
+                        this.$message.error(`请输入平台公司名称`)
+                        done()
+                    }
+                }
+            })
+            /* try {
                 if (this.$route.query.archiveId) {
                     // updateUser
                     this.form.platformBasicInfoPO.updateUser = this.userInfo.employeeName
                     await upData(this.form)
                 } else {
-                    await saveInfo(this.form)
+                    this.$refs['formBaseInfo'].validate(async (valid, errors) => {
+                        if (valid) {
+                            console.log(valid)
+                            // await saveInfo(this.form)
+                        } else {
+                            // done()
+                        }
+                    })
                 }
                 done()
                 this.$message({
@@ -329,7 +384,7 @@ export default {
                 // }, 800)
             } catch (error) {
                 done()
-            }
+            } */
         },
         async provinces (params = { parentId: 0 }, city = 0) {
             const { data } = await provinces(params)

@@ -112,6 +112,12 @@ export default {
                     temp.push(this.formatData(item))
                 })
             }
+            if (type === 'b') {
+                let arr = ['b-realcontroller']
+                arr.map(item => {
+                    temp.push(this.formatData(item))
+                })
+            }
             return temp
         },
         formatData (title) {
@@ -188,7 +194,7 @@ export default {
                 </div>
             )
         }
-        if (this.dialog === 'A档（尽调') {
+        if (this.dialog === 'A档（尽调）') {
             let arr = this.getFile('a')
             console.log(arr)
             return (
@@ -199,6 +205,44 @@ export default {
                             return (
                                 <div>
                                     <p>{this.getName(item.title)} ：</p>
+                                    {
+                                        item.file.length === 0
+                                            ? '-'
+                                            : item.file.map((jtem, jndex) => {
+                                                return (
+                                                    <p>
+                                                        <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
+                                                        {
+                                                            jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                    this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
+                                                                }} size='mini'>下载</el-button></span>
+                                                                : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
+                                                        }
+                                                    </p>
+                                                )
+                                            })
+                                    }
+
+                                </div>
+                            )
+                        })
+                    }
+
+                </div>
+            )
+        }
+        if (this.dialog === 'B档（实控人）') {
+            let arr = this.getFile('b')
+            console.log(arr)
+            return (
+                <div class='box'>
+                    <div class='mb5'>姓名：{this.item.realControllerName}</div>
+                    <div class='mb5'>身份证归档情况：</div>
+                    {
+                        arr.map(item => {
+                            return (
+                                <div>
                                     {
                                         item.file.length === 0
                                             ? '-'
@@ -316,5 +360,5 @@ export default {
 .signfile{flex: 1;}
 .signfile .filename{display: inline-block;}
 .signfile font{display:flex;justify-content: space-between;margin-top: 4px;}
-/deep/.downloadfile{font-size: 12px;border-radius: 3px;padding: 7px 15px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block;}
+/deep/.downloadfile{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block;line-height: 1;float: right;}
 </style>

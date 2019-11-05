@@ -99,6 +99,7 @@ import dialogComponent from './components/dialogComponent.vue'
 import { pagination } from '@/utils/mixins.js'
 import { findPaltList, getList, findBranchListNew, borrow, deleteFile } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { newCache } from '@/utils/index'
 
 export default {
     name: 'archivesList',
@@ -196,7 +197,19 @@ export default {
                     } },
                 { label: 'B档（签约）',
                     children: [
-                        { label: '实控人', prop: 'realControllerName' },
+                        { label: '实控人',
+                            prop: 'realControllerName',
+                            render: (h, scope) => {
+                                if (scope.row.realControllerName == null) return (<span>-</span>)
+                                if (scope.row.realControllerName) {
+                                    return (
+                                        <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'B档（实控人）')}>
+                                            {scope.row.realControllerName}
+                                        </span>
+                                    )
+                                }
+                            }
+                        },
                         { label: '自然人股东', prop: 'shareholderName' },
                         { label: '投资协议',
                             prop: 'signBOs',
@@ -224,7 +237,7 @@ export default {
                         if (scope.row.ddDocFlag == null) return (<span><i class="el-icon-close"></i></span>)
                         if (scope.row.ddDocFlag === '1') {
                             return (
-                                <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'A档（尽调')}>
+                                <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'A档（尽调）')}>
                                     <i class="el-icon-check"></i>
                                 </span>
                             )
@@ -378,7 +391,7 @@ export default {
             this.tableData = data.records
             this.page.total = data.total
         },
-        openDialog (item, index, data, width = '600px') {
+        openDialog (item, index, data, width = '800px') {
             console.log(index)
             this.dialog = {
                 dialog: data,
@@ -409,6 +422,13 @@ export default {
         this.findPaltList()
         this.getList()
         this.findBranchListNew()
+    },
+    activated () {
+        this.getList()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('archivesList')
+        next()
     }
 }
 </script>

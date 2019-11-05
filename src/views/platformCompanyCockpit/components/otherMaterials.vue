@@ -28,6 +28,8 @@
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { fileUploadUrl } from '@/api/config'
+import { mapState } from 'vuex'
+
 export default {
     name: 'otherFiles',
     props: ['value', 'isEdit'],
@@ -36,11 +38,14 @@ export default {
         return {
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
-                updateUid: '张功伟x'
+                updateUid: ''
             }
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         otherFiles () {
             return this.value
         }
@@ -53,7 +58,7 @@ export default {
         }
     },
     mounted () {
-
+        this.uploadParameters.updateUid = this.userInfo.employeeName
     }
 }
 </script>
