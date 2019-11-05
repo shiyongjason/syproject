@@ -53,7 +53,7 @@
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                        <!-- <el-button type="primary" class="ml20">导出</el-button> -->
+                        <el-button type="primary" class="ml20" @click="onImport()">导出</el-button>
                     </div>
                 </div>
             </div>
@@ -98,6 +98,7 @@
 
 <script>
 import { findBazaarLists, findCategory } from './api/index'
+import { B2bUrl } from '@/api/config'
 export default {
     name: 'marketStore',
     data () {
@@ -198,6 +199,16 @@ export default {
         async findCategory () {
             const { data } = await findCategory()
             this.category = data
+        },
+        onImport () {
+            window.location = B2bUrl + 'product/api/spu/spu-export?merchantName=' + this.queryParams.merchantName +
+                    '&spuName=' + this.queryParams.spuName +
+                    '&source=' + this.queryParams.source +
+                    '&brandName=' + this.queryParams.brandName +
+                    '&categoryId=' + this.queryParams.categoryId +
+                    '&onMarket=' + this.queryParams.onMarket +
+                     '&specification=' + this.queryParams.specification +
+                    '&access_token=' + sessionStorage.getItem('token')
         }
     },
     mounted () {
