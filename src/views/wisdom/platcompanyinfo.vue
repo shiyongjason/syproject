@@ -112,9 +112,12 @@ export default {
             // this.findProvinceAndCity(0, code)
             this.platList = await this.findPaltList(code)
             this.findCompanyList()
+        } else if (this.userInfo.deptType == 0) {
+            const code = this.userInfo.oldDeptCode
+            this.findCompanyList()
+            this.platList = await this.findPaltList(code)
         } else {
             this.findCompanyList()
-            // this.platList = await this.findPaltList()
         }
         this.platList.forEach((value) => {
             value.value = value.companyShortName
