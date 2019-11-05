@@ -18,7 +18,7 @@
                 <span v-else>{{archiveSignPO.realControllerContactNo?archiveSignPO.realControllerContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realControllerIdcard" label="身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
                 <span v-else>{{archiveSignPO.realControllerIdcard?archiveSignPO.realControllerIdcard:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realcontrollerList" label="实控人身份证归档：" label-width='160px'>
@@ -47,8 +47,8 @@
                 <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
                 <span v-else>{{archiveSignPO.shareholderContactNo?archiveSignPO.shareholderContactNo:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="shareholderIdcard" :rules="{ validator: checkIdCard, trigger: 'blur' }" label="自然人股东身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='30'></el-input>
+            <el-form-item prop="shareholderIdcard" label="自然人股东身份证号：" label-width='160px'>
+                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
                 <span v-else>{{archiveSignPO.shareholderIdcard?archiveSignPO.shareholderIdcard:'-'}}</span>
             </el-form-item>
         </template>
@@ -98,7 +98,7 @@
                                 </span>
                             </el-form-item>
                             <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号"></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18'></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
                                 </span>
@@ -187,6 +187,8 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import picView from './picView'
 import { checkIdCard } from '@/utils/rules.js'
 import { fileUploadUrl } from '@/api/config'
+import { mapState } from 'vuex'
+
 const _signBOsForm = {
     archiveSignInvestPO: {
         investVersion: '', // 投资协议版本 1.0,2.0,3.0,4.0,5.0
@@ -217,19 +219,26 @@ export default {
             signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
-                updateUid: '张功伟x'
+                updateUid: ''
             },
             checkIdCard
 
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         archiveSignPO () {
             return this.value
         }
     },
     methods: {
         onSubAdd (index) {
+            if (this.archiveSignPO.signBOs[index].version.length === 10) {
+                this.$message.error(`投资协议归档每个版本最多只能新增到10份`)
+                return
+            }
             this.archiveSignPO.signBOs[index].version.push(JSON.parse(JSON.stringify(this.signBOsForm)))
         },
         onSuccessCb (str) {
@@ -294,7 +303,7 @@ export default {
         }
     }, */
     mounted () {
-        console.log(this.archiveSignPO)
+        this.uploadParameters.updateUid = this.userInfo.employeeName
         // this.onAdd()
         // if (!this.$route.query.archiveId) this.onAdd()
     }

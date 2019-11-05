@@ -218,6 +218,7 @@ export default {
 .default-upload-warp {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 .default-upload {
     display: flex;

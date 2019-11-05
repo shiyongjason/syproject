@@ -47,6 +47,7 @@ export default {
 <style lang='scss' scoped>
 .default-pre-view {
     display: flex;
+    flex-wrap: wrap;
     &-warp {
         margin-right: 8px;
     }

@@ -5,7 +5,7 @@
 export default {
     name: 'HAutocomplete',
     props: {
-        canDoBlurMethos: {
+        canDoBlurMethos: {// 可保留手输值
             type: Boolean,
             default: true
         },

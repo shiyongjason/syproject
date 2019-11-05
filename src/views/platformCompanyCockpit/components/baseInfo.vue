@@ -1,11 +1,10 @@
 <template>
-    <div class="platformBasicInfoPO">
-        <!-- TODO档案编号重复校验 -->
-        <el-form-item label="档案编号：" :prop="isEdit?'archiveNo':''">
+    <div class="platformBasicInfoPO" :class="!isEdit?'showlayout':''">
+        <el-form-item label="档案编号：" prop="archiveNo">
             <el-input v-if="isEdit" v-model="platformBasicInfoPO.archiveNo" placeholder="请输入档案编号" maxlength='30'></el-input>
             <span v-else>{{platformBasicInfoPO.archiveNo?platformBasicInfoPO.archiveNo:'-'}}</span>
         </el-form-item>
-        <el-form-item label="公司状态：" :prop="isEdit?'companyStatus':''">
+        <el-form-item label="公司状态：" prop="companyStatus">
             <template v-if="isEdit">
                 <el-radio v-model="platformBasicInfoPO.companyStatus" label="1">合作中</el-radio>
                 <el-radio v-model="platformBasicInfoPO.companyStatus" label="2">未合作</el-radio>
@@ -23,12 +22,12 @@
                 }}
             </span>
         </el-form-item>
-        <el-form-item label="平台公司名称：" :prop="isEdit?'companyName':''">
-            <HAutocomplete v-if="isEdit" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj"></HAutocomplete>
+        <el-form-item label="平台公司名称：" prop="companyName">
+            <HAutocomplete v-if="isEdit" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
             <span v-else>{{platformBasicInfoPO.companyName?platformBasicInfoPO.companyName:'-'}}</span>
         </el-form-item>
         <el-form-item label="老公司名称：">
-            <el-input v-if="isEdit" v-model="platformBasicInfoPO.oldCompanyName" placeholder="请输入老公司名称"></el-input>
+            <el-input v-if="isEdit" v-model="platformBasicInfoPO.oldCompanyName" placeholder="请输入老公司名称" maxlength='30'></el-input>
             <span v-else>{{platformBasicInfoPO.oldCompanyName?platformBasicInfoPO.oldCompanyName:'-'}}</span>
         </el-form-item>
         <el-form-item label="地址：">
@@ -63,7 +62,7 @@
         </el-form-item>
         <el-form-item label="区域：">
             <!-- todo  id -->
-            <el-input v-if="isEdit" v-model="platformBasicInfoPO.districtId" placeholder="请输入所属区域" ></el-input>
+            <el-input v-if="isEdit" v-model="platformBasicInfoPO.districtId" placeholder="请输入所属区域" maxlength='30'></el-input>
             <span v-else>{{platformBasicInfoPO.districtId?platformBasicInfoPO.districtId:'-'}}</span>
         </el-form-item>
         <el-form-item label="档案位置：">
@@ -215,5 +214,8 @@ export default {
     border: 1px solid #e4e7ed;
     border-top: none;
     padding: 70px;
+}
+.showlayout>>>.el-form-item__label:before{
+    content:'' !important
 }
 </style>
