@@ -1,4 +1,4 @@
-import { deepCopy } from '@/utils/index'
+import { deepCopy } from '@/utils/utils'
 
 // 根据后端返回的URI，生成router
 export const makeMenus = (Route, Data) => {
