@@ -107,7 +107,7 @@ import { findRecordDetail, updataReportDetail } from './api/index'
 import { Message } from 'element-ui'
 import { mapState, mapMutations } from 'vuex'
 export default {
-    name: '',
+    name: 'customerRecordDetail',
     computed: {
         ...mapState({
             tagsList: state => state.layout.tagsList

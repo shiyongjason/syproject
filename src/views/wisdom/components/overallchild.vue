@@ -21,7 +21,7 @@
                     </el-tooltip>
                 </div>
                 <div>
-                    <strong>{{summaryData.allSales| money}}
+                    <strong>{{summaryData.allSales| money(true)}}
 
                     </strong>
                     <span>
@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <strong>-<i></i></strong>
-                    <span>毛利</span>
+                    <span>毛利率</span>
                 </div>
                 <div>
                     <strong>-<i></i></strong>
@@ -69,8 +69,8 @@
                 <div class="overallinfo">
                     <div><i>{{companyData.provinceNum?companyData.provinceNum:0}}</i>省,<i>{{companyData.cityNum?companyData.cityNum:0}}</i>城市</div>
                     <div><i>{{companyData.companyNum?companyData.companyNum:0}}</i>平台公司,<i>{{companyData.shopNum?companyData.shopNum:0}}</i>会员店</div>
-                    <div>在线规模<i>{{companyData.onlineScale|money}}</i>万</div>
-                    <div>平均规模<i>{{companyData.avgScale|money}}</i>万</div>
+                    <div>在线规模<i>{{companyData.onlineScale|money(true)}}</i>万</div>
+                    <div>平均规模<i>{{companyData.avgScale|money(true)}}</i>万</div>
                 </div>
             </div>
         </div>
@@ -163,28 +163,30 @@ export default {
     mounted () {
         this.init()
         this.nowTay = (new Date()).getFullYear() + '-' + '01'
-        this.nnowTay = (new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 10 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))
-        this.getStatistics()
-        this.getSales()
-        this.getSummary()
+        this.nnowTay = (new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))
+        this.$nextTick(() => {
+            this.getStatistics()
+            this.getSales()
+            this.getSummary()
+        })
     },
     methods: {
         init () {
-            const self = this
-            setTimeout(() => {
-                window.onresize = function () {
-                    self.myChart.resize()
-                    self.mapchina.resize()
-                    // self.pie.resize()
-                    self.myBar.resize()
-                    self.hCharts.reflow()
-                }
-            }, 20)
+            // const self = this
+            // setTimeout(() => {
+            //     window.onresize = function () {
+            //         // self.myChart.resize()
+            //         // self.mapchina.resize()
+            //         // // self.pie.resize()
+            //         // self.myBar.resize()
+            //         // self.hCharts.reflow()
+            //     }
+            // }, 20)
         },
         async getStatistics () {
             const { data } = await getStatistics(this.params)
             this.companyData = data.data
-            this.drawMap(data.data.provinceVos ? data.data.provinceVos : [])
+            this.drawMap(data.data.respProvinces ? data.data.respProvinces : [])
         },
         async getSales () {
             this.lineArr = []
@@ -275,6 +277,7 @@ export default {
             this.myChart.setOption(option)
         },
         drawPieChart (data) {
+            console.log(data)
             const dataAll = []
             const yAxisData = []
             const pieAll = []
@@ -422,7 +425,7 @@ export default {
             })
             const option = {
                 visualMap: {
-                    min: 0,
+                    min: -1,
                     max: newData.length > 0 ? newData[0].value : '',
                     left: 'left',
                     top: 'bottom',
@@ -668,7 +671,7 @@ export default {
                     font-size: 20px;
                     font-style: normal;
 
-                    color: #262626;
+                    color: #ef7407;
                 }
                 text-align: right;
                 height: 40px;

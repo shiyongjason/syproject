@@ -26,7 +26,7 @@ export default {
             return this.tagsList.length > 0
         },
         ...mapState({
-            tagsList: state => state.layout.tagsList,
+            tagsList: state => state.tagsList, // TODO  以前是 state.layout.tagslist
             isReload: state => state.layout.isReload
         })
     },
@@ -39,7 +39,6 @@ export default {
             return path === (this.$route.fullPath).split('?')[0]
         },
         makeIndex (data) {
-            console.log(data)
             let index = []
             if (data.length > 0) {
                 for (let i = 0; i < data.length; i++) {
@@ -52,7 +51,6 @@ export default {
                     break
                 }
                 let path = '/' + index.length > 0 ? index.join('/') : ''
-                console.log(!path)
                 // if (path) {
                 //     path = '/'
                 // }
@@ -85,10 +83,12 @@ export default {
                             query[queryArr[j].split('=')[0]] = queryArr[j].split('=')[1]
                         }
                         item.query = query
+
                         flag = true
                     }
                     return flag
                 })
+
                 !isExist && this.tagsList.push({
                     title: route.meta.tagName,
                     path: (route.fullPath).split('?')[0],
@@ -96,6 +96,7 @@ export default {
                     query: route.query
                 })
             }
+
             this.editableTabsValue = route.name
             this.tagUpdate(this.tagsList)
         },
