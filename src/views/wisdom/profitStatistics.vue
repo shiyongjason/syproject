@@ -26,10 +26,10 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.startTime" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startDate" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endTime" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endDate" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
             </div>
@@ -37,15 +37,15 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">公司上线状态：</div>
                     <div class="query-col-input">
-                        <el-checkbox-group v-model="queryParams.checkList">
-                            <el-checkbox label="上线"></el-checkbox>
-                            <el-checkbox label="未上线"></el-checkbox>
-                            <el-checkbox label="淘汰"></el-checkbox>
+                        <el-checkbox-group v-model="onLineStatusTemp">
+                            <el-checkbox label="1" >上线</el-checkbox>
+                            <el-checkbox label="2" >未上线</el-checkbox>
+                            <el-checkbox label="3">淘汰</el-checkbox>
                         </el-checkbox-group>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20">
+                    <el-button type="primary" class="ml20" @click="getList">
                         查询
                     </el-button>
                 </div>
@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+import { getProfitList } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 // import { BUS_TYPE, DEPT_TYPE } from './store/const'
@@ -73,15 +75,15 @@ export default {
     name: 'profitStatistics',
     data: function () {
         return {
-            pickerOptionsStart: '',
-            pickerOptionsEnd: '',
             branchList: [],
             bustype: [],
             platList: [],
             targetObj: { selectName: '', selectCode: '' },
             //
+            onLineStatusTemp: ['1'],
             queryParams: {
-                checkList: [],
+                startDate: '',
+                endDate: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -93,56 +95,35 @@ export default {
             tableData: [],
             column: [
                 {
-                    prop: 'date',
-                    label: '日期',
+                    prop: 'misCode',
+                    label: 'MIS编码',
                     width: '100',
+                    fixed: true,
                     renderHeader: (h, scope) => {
                         return <span><i class="el-icon-time"></i>{scope.column.label}</span>
                     }
                 },
                 {
-                    prop: 'name',
-                    label: '姓名',
-                    render: (h, scope) => {
-                        return (
-                            <div>
-                                {
-                                    scope.row._edit
-                                        ? <el-input size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val }}></el-input>
-                                        : <span>{scope.row[scope.column.property]}</span>
-                                }
-                            </div>
-                        )
-                    }
+                    prop: 'companyShortName',
+                    label: '平台公司名'
                 },
                 {
-                    prop: 'num',
-                    label: '数值',
-                    displayAs: 'money'
+                    prop: 'subsectionName',
+                    label: '分部'
                 },
                 {
                     label: '销售收入与成本/万',
                     renderHeader: (h, scope) => {
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandSell, 3) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandSell, 1) }}></i></span>
                         )
                     },
                     children: [
                         {
-                            prop: 'date',
+                            prop: 'salesIncomeIncludingTax',
                             label: '销售收入（含税）/万',
-                            displayAs: 'YYYY-MM-DD HH:mm'
-                        },
-                        {
-                            prop: 'name',
-                            label: '销售成本（含税）/万',
-                            render: (h, scope) => {
-                                return <el-tag>{scope.row.name}</el-tag>
-                            }
-                        },
-                        {
-                            prop: 'address',
-                            label: '销售利润率/万'
+                            width: '150',
+                            displayAs: 'money'
                         }
                     ]
                 },
@@ -155,15 +136,15 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'date',
+                            prop: 'grossProfit',
                             label: '毛利额/万',
-                            displayAs: 'YYYY-MM-DD HH:mm'
+                            displayAs: 'money'
                         },
                         {
-                            prop: 'name',
+                            prop: 'grossProfitMargin',
                             label: '毛利率',
                             render: (h, scope) => {
-                                return <el-tag>{scope.row.name}</el-tag>
+                                return <span>{scope.row.grossProfitMargin}</span>
                             }
                         }
                     ]
@@ -207,8 +188,8 @@ export default {
             changeTable: true,
             // 销售收入与成本的展开
             expandSell: [
-                { prop: 'name', label: '销售收入（无税）/万' },
-                { prop: 'date', label: '销售成本（无税）/万', displayAs: 'YYYY年MM月DD日' }
+                { prop: 'incomeSale', label: '销售收入（无税）/万', width: '140', displayAs: 'money' },
+                { prop: 'saleCost', label: '销售成本（无税）/万', width: '140', displayAs: 'money' }
             ],
             // 毛利的展开
             expandGrossProfit: [
@@ -272,7 +253,27 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = new Date(this.queryParams.endDate)
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = new Date(this.queryParams.startDate)
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        }
     },
     components: {
         hosJoyTable
@@ -298,9 +299,15 @@ export default {
                 this.$nextTick(() => { this.changeTable = true })
             }
         },
-        getList () {
-            console.log(this.queryParams)
-            this.tableData = [
+        async getList () {
+            this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
+            let query = { ...this.queryParams }
+            const { data } = await getProfitList(query)
+            console.log(data)
+            this.tableData = data.data.list
+            console.log(this.tableData)
+            this.page.total = data.data.total
+            /* this.tableData = [
                 {
                     date: '2019-09-29T05:54:15.000+0000',
                     name: '王小虎1',
@@ -325,8 +332,7 @@ export default {
                     num: null,
                     dicData: 1
                 }
-            ]
-            this.page.total = 3
+            ] */
         },
         filterHandler (value, row, column) {
             const property = column['property']
@@ -341,6 +347,8 @@ export default {
         }
     },
     async mounted () {
+        this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
+        this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
         this.getList()
         /* // 如果 当前人大区 -1  总部 0  分部 1 organizationType
         // console.log(this.userInfo.organizationType)
