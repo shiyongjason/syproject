@@ -696,6 +696,50 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
+    },
+    {
+        path: '/jinyun',
+        meta: {
+            title: '金云系统',
+            isMenu: true,
+            icon: 'hosjoy_cloud_service'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
+                path: 'enterpriseCA',
+                name: 'enterpriseCA',
+                meta: {
+                    title: '企业CA',
+                    tagName: '企业CA',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/enterpriseCA')
+            },
+            {
+                path: 'amountImport',
+                name: 'amountImport',
+                meta: {
+                    title: '额度导入',
+                    tagName: '额度导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/amountImport')
+            }
+        ]
     }
 ]
 
