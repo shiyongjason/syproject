@@ -7,10 +7,50 @@ export default {
     },
     data () {
         return {
-            remark: ''
+            remark: '',
+            nameList: {
+                'a-dd': '竞调材料',
+                'b-realcontroller': '实控人身份证归档',
+                'b-guarantee': '担保函归档',
+                'b-other': '其余b档签约材料',
+                'c-commercial': '其余工商材料',
+                'c-capital': '增减资协议',
+                'c-stocktransfer': '股转版协议',
+                'd-other': '其他材料'
+            }
         }
     },
     methods: {
+        getUrlBase64 (url, dom, fileName, ext = '') {
+            let _this = this
+            var canvas = document.createElement('canvas') // 创建canvas DOM元素
+            var ctx = canvas.getContext('2d')
+            var img = new Image()
+            img.setAttribute('crossOrigin', 'anonymous')
+            img.src = url + '?time=' + new Date().valueOf()
+            img.onload = function () {
+                canvas.height = img.height // 指定画板的高度,自定义
+                canvas.width = img.width // 指定画板的宽度，自定义
+                ctx.drawImage(img, 0, 0) // 参数可自定义
+                var dataURL = canvas.toDataURL('image/' + ext) // 传递的自定义的参数
+                canvas = null
+                var downDom = document.createElement('a') // 创建DOM元素
+                downDom.setAttribute('href', dataURL)
+                downDom.setAttribute('id', dom)
+                downDom.setAttribute('download', fileName)
+                console.log(downDom)
+                _this.$nextTick(() => {
+                    downDom.click()
+                })
+            }
+        },
+        /* getBaseDom (fileName, fileUrl) {
+            this.urlToBase64(fileUrl).then(res => {
+                return (
+                    <a download={fileName} href={url} id="downloadImage" style="display:none">{url}</a>
+                )
+            })
+        }, */
         onSave () {
             // https://stackoverflow.com/questions/14011021/how-to-download-a-base64-encoded-image?lq=1
             let downloadImage = document.getElementById('downloadImage')
@@ -18,6 +58,70 @@ export default {
             this.$nextTick(() => {
                 downloadImage.click()
             })
+        },
+        formatSignBOs () {
+            if (this.item.itemSignBOs && this.item.itemSignBOs.length === 5) {
+                return false
+            }
+            let arr = []
+            this.$set(this.item, 'itemSignBOs', [])
+            for (let t = 0; t < 5; t++) {
+                this.item.itemSignBOs.push([])
+            }
+            for (let i = 0; i < 5; i++) {
+                let version = []
+                arr = this.item.signBOs.filter(item => {
+                    return item.archiveSignInvestPO.investVersion === `${i + 1}.0`
+                })
+                if (arr && arr.length > 0) {
+                    let idCardList = []
+                    let documentList = []
+                    arr.map((item, index) => { // 某版本
+                        idCardList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的图片文件
+                            return jtem.docType === '2'
+                        })
+                        documentList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的文档文件
+                            return jtem.docType === '1'
+                        })
+                        this.$set(item, 'idCardList', idCardList)
+                        this.$set(item, 'documentList', documentList)
+                        version.push(item)
+                        let obj = {
+                            radio: this.item[`v${i + 1}SignerFlag`] + '',
+                            version: version // n份文件
+                        }
+                        arr[index] = obj
+                    })
+                    console.log(`v${i + 1}.0`, arr[arr.length - 1])
+                    this.item.itemSignBOs.splice(i, 1, arr[arr.length - 1])
+                }
+            }
+        },
+        // 档案类型：a-dd：竞调材料； b-realcontroller:实控人身份证归档；b-guarantee:担保函归档；b-other:其余b档签约材料； c-commercial：其余工商材料；c-capital：增减资协议；c-stocktransfer：股转版协议； d-other：其他材料；
+        getFile (type) {
+            let temp = []
+            if (type === 'c') {
+                let arr = ['c-commercial', 'c-capital', 'c-stocktransfer']
+                arr.map(item => {
+                    temp.push(this.formatData(item))
+                })
+            }
+            if (type === 'a') {
+                let arr = ['a-dd']
+                arr.map(item => {
+                    temp.push(this.formatData(item))
+                })
+            }
+            return temp
+        },
+        formatData (title) {
+            const arr = this.item.commonDocPOs.filter(item => {
+                return item.docType === title
+            })
+            return { title, file: arr }
+        },
+        getName (code) {
+            return this.nameList[code] || '未知'
         }
     },
     render (h) {
@@ -25,38 +129,151 @@ export default {
         if (this.dialog === '档案编号') {
             return (
                 <div class='box'>
-                    <p><span>归档时间：</span>{this.item.t}</p>
-                    <p><span>归档人：</span>{this.item.d}</p>
-                    <p><span>档案位置：</span>{this.item.e}</p>
+                    <p><span>归档时间：</span>{this.item.createTime ? this.item.createTime : '-'}</p>
+                    <p><span>归档人：</span>{this.item.updateUser ? this.item.updateUser : '-'}</p>
+                    <p><span>档案位置：</span>{this.item.archiveLocation ? this.item.archiveLocation : '-'}</p>
                 </div>
             )
         }
         if (this.dialog === '档案归档') {
             return (
                 <div class='box'>
-                    <p><span>档案情况：</span>{this.item.b === 0 ? '档案缺失' : this.item.b === 1 ? '档案齐全' : ''}</p>
-                    <p><span>备注：</span>{this.item.d}</p>
+                    <p><span>档案情况：</span>{this.item.archiveStatus === '2' ? '档案缺失' : this.item.archiveStatus === '1' ? '档案齐全' : ''}</p>
+                    <p><span>备注：</span>{this.item.remark ? this.item.remark : '-'}</p>
                 </div>
             )
         }
         if (this.dialog === '借阅情况') {
             return (
                 <div class='box'>
-                    <p><span>借阅情况：</span>{this.item.c === 0 ? '未借出' : this.item.c === 1 ? '已借出' : ''}</p>
-                    <p><span>备注：</span>{this.item.d}</p>
+                    <p><span>借阅情况：</span>{this.item.borrowStatus === '1' ? '未借出' : this.item.borrowStatus === '2' ? '已借出' : ''}</p>
+                    <p><span>备注：</span>{this.item.remark ? this.item.remark : '-'}</p>
                 </div>
             )
         }
         if (this.dialog === 'C档（工商）') {
+            let arr = this.getFile('c')
             return (
                 <div class='box'>
-                    <div class='mb5'>工商材料归档情况</div>
-                    <p>其余工商材料：</p>
-                    <p>
-                        <span class='filename'><a href='http://www.cnr.cn/junshi/jstp/201109/W020110921415866476639.jpg' target='_blank'>律其勇身份证1.jpg</a></span>
-                        <a download="QRcode.png" href='http://www.cnr.cn/junshi/jstp/201109/W020110921415866476639.jpg' id="downloadImage" style="display:none">Export img</a>
-                        <span class='download'><el-button type="primary" on-click={this.onSave} size='mini'>下载</el-button></span>
-                    </p>
+                    <div class='mb5'>工商材料归档情况：</div>
+                    {
+                        arr.map(item => {
+                            return (
+                                <div>
+                                    <p>{this.getName(item.title)} ：</p>
+                                    {
+                                        item.file.length === 0
+                                            ? '-'
+                                            : item.file.map((jtem, jndex) => {
+                                                return (
+                                                    <p>
+                                                        <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
+                                                        {
+                                                            jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                    this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
+                                                                }} size='mini'>下载</el-button></span>
+                                                                : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
+                                                        }
+                                                    </p>
+                                                )
+                                            })
+                                    }
+
+                                </div>
+                            )
+                        })
+                    }
+
+                </div>
+            )
+        }
+        if (this.dialog === 'A档（尽调') {
+            let arr = this.getFile('a')
+            console.log(arr)
+            return (
+                <div class='box'>
+                    <div class='mb5'>工商材料归档情况：</div>
+                    {
+                        arr.map(item => {
+                            return (
+                                <div>
+                                    <p>{this.getName(item.title)} ：</p>
+                                    {
+                                        item.file.length === 0
+                                            ? '-'
+                                            : item.file.map((jtem, jndex) => {
+                                                return (
+                                                    <p>
+                                                        <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
+                                                        {
+                                                            jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                    this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
+                                                                }} size='mini'>下载</el-button></span>
+                                                                : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
+                                                        }
+                                                    </p>
+                                                )
+                                            })
+                                    }
+
+                                </div>
+                            )
+                        })
+                    }
+
+                </div>
+            )
+        }
+        if (this.dialog === '投资协议') {
+            this.formatSignBOs()
+            return (
+                <div class='sign'>
+                    {
+                        this.item.itemSignBOs.map((item, index) => {
+                            return (
+                                <div>
+                                    <p>{index + 1}.0版本：</p>
+                                    {item.version.map(jtem => {
+                                        if (jtem.signDocPOs.length === 0) {
+                                            return (<span>-</span>)
+                                        }
+                                        return (
+                                            <div class='signbos'>
+                                                <p class='signname'>
+                                                签约人：{jtem.archiveSignInvestPO.signerName ? jtem.archiveSignInvestPO.signerName : '-'}
+                                                </p>
+                                                <div class='fileslist'>
+                                                    <p class='fileslistt'>文件：</p>
+                                                    <div class='signfile'>
+                                                        {
+                                                            jtem.signDocPOs.length === 0
+                                                                ? '-'
+                                                                : jtem.signDocPOs.map((ktem, kndex) => {
+                                                                    return (
+                                                                        <font>
+                                                                            <span class='filename'><a href={ktem.fileUrl} target='_blank'>{ktem.fileName}</a></span>
+                                                                            {
+                                                                                ktem.fileName.toLowerCase().indexOf('.png') != -1 || ktem.fileName.toLowerCase().indexOf('.jpg') != -1 || ktem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                                    ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                                        this.getUrlBase64(ktem.fileUrl, `dom${kndex}`, ktem.fileName)
+                                                                                    }} size='mini'>下载</el-button></span>
+                                                                                    : <span><a class='downloadfile' href={ktem.fileUrl} target='_blank'>下载</a></span>
+                                                                            }
+                                                                        </font>
+                                                                    )
+                                                                })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             )
         }
@@ -65,7 +282,7 @@ export default {
                 <div class='box'>
                     <p><span>备注：</span></p>
                     <p style={{ marginTop: '12px' }}>
-                        <el-input value={this.remark} on-input={(val) => (this.remark = val)} type="textarea" placeholder="请输入档案借出备注" maxlength="255" show-word-limit rows="7"></el-input>
+                        <el-input value={this.item.borrowRemark} on-input={(val) => (this.item.borrowRemark = val)} type="textarea" placeholder="请输入档案借出备注" maxlength="255" show-word-limit rows="7"></el-input>
                     </p>
                 </div>
             )
@@ -75,8 +292,29 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-.box{padding:0px 10px}
-.box p{margin-bottom:6px}
-.download{ float: right}
-.filename a{ color: #FF7A45;}
+.box {
+    padding: 0px 10px;
+}
+.box p {
+    margin-bottom: 6px;
+}
+.download {
+    float: right;
+}
+.filename a {
+    color: #ff7a45;
+}
+.dialogbox p {
+    height: 34px;
+    line-height: 34px;
+}
+.signbos{display:flex}
+.signname{flex:0 0 200px}
+.signbos font{display:flex}
+.fileslist{display:flex;flex: 1;align-items: baseline;}
+/deep/.fileslistt{flex:0 0 49px}
+.signfile{flex: 1;}
+.signfile .filename{display: inline-block;}
+.signfile font{display:flex;justify-content: space-between;margin-top: 4px;}
+/deep/.downloadfile{font-size: 12px;border-radius: 3px;padding: 7px 15px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block;}
 </style>

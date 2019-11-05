@@ -12,6 +12,11 @@
                 </el-table-column>
                 <hosjoy-column v-if="!item.slot" v-bind="$attrs" :column="item" :key="index"></hosjoy-column>
             </template>
+            <el-table-column label="操作" v-if="isAction" align="center" :width="actionWidth">
+                <template slot-scope="scope">
+                    <slot class="action" name="action" :data="scope"></slot>
+                </template>
+            </el-table-column>
         </el-table>
         <div class="page">
             <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
@@ -23,6 +28,8 @@
 import hosjoyColumn from './hosjoy-column'
 export default {
     props: {
+        actionWidth: { type: String, default: '100' },
+        isAction: { type: Boolean, default: () => false },
         isShowselection: { type: Boolean, default: () => false },
         isShowIndex: { type: Boolean, default: () => false },
         column: Array,

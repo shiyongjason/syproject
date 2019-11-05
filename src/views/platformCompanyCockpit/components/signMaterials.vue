@@ -1,30 +1,30 @@
 <template>
-    <div class="signMaterials">
+    <div class="archiveSignPO">
         <el-form-item>
             <template #label>
                 <span class="labeldiy">实控人信息归档：</span>
             </template>
-            <el-radio v-model="radio" label="1">是</el-radio>
-            <el-radio v-model="radio" label="2">否</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="0">否</el-radio>
+            <span style="margin-left:18px" v-else>{{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':'-'}}</span>
         </el-form-item>
-        <template v-if="radio==='1'" >
-            <el-form-item prop="num" label="实控人姓名：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入姓名"></el-input>
-                <span>{{signMaterials.num}}</span>
+        <template v-if="archiveSignPO.rcDocFlag==='1'" >
+            <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
+                <el-input v-model="archiveSignPO.realControllerName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.realControllerName?archiveSignPO.realControllerName:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="num" label="联系方式：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入联系方式"></el-input>
-                <span>{{signMaterials.num}}</span>
+            <el-form-item prop="realControllerContactNo" label="联系方式：" label-width='160px'>
+                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.realControllerContactNo?archiveSignPO.realControllerContactNo:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="num" label="身份证号：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入身份证号"></el-input>
-                <span>{{signMaterials.num}}</span>
+            <el-form-item prop="realControllerIdcard" label="身份证号：" label-width='160px'>
+                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.realControllerIdcard?archiveSignPO.realControllerIdcard:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="num" label="实控人身份证归档：" label-width='160px'>
-                <hosjoyUpload v-model="signMaterials.fileList" :action='action' :uploadParameters='uploadParameters' >
-                    <!-- <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+            <el-form-item prop="realcontrollerList" label="实控人身份证归档：" label-width='160px'>
+                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" showProgress v-model="archiveSignPO.realcontrollerList" @successCb="onSuccessCb('b-realcontroller')" :action='action' :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
+                <picView v-else :fileList='archiveSignPO.realcontrollerList' />
             </el-form-item>
         </template>
         <!-- 自然人股东信息归档 -->
@@ -32,85 +32,124 @@
             <template #label>
                 <span class="labeldiy">自然人股东信息归档：</span>
             </template>
-            <el-radio v-model="naturalRadio" label="1">是</el-radio>
-            <el-radio v-model="naturalRadio" label="2">否</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="0">否</el-radio>
+            <span v-else>
+                {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
+            </span>
         </el-form-item>
-        <template v-if="naturalRadio==='1'" >
-            <el-form-item prop="num" label="自然人股东姓名：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入姓名"></el-input>
-                <span>{{signMaterials.num}}</span>
+        <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
+            <el-form-item prop="shareholderName" label="自然人股东姓名：" label-width='160px'>
+                <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.shareholderName?archiveSignPO.shareholderName:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="num" label="自然人股东联系方式：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入联系方式"></el-input>
-                <span>{{signMaterials.num}}</span>
+            <el-form-item prop="shareholderContactNo" label="自然人股东联系方式：" label-width='160px'>
+                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.shareholderContactNo?archiveSignPO.shareholderContactNo:'-'}}</span>
             </el-form-item>
-            <el-form-item prop="num" label="自然人股东身份证号：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入身份证号"></el-input>
-                <span>{{signMaterials.num}}</span>
+            <el-form-item prop="shareholderIdcard" :rules="{ validator: checkIdCard, trigger: 'blur' }" label="自然人股东身份证号：" label-width='160px'>
+                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.shareholderIdcard?archiveSignPO.shareholderIdcard:'-'}}</span>
             </el-form-item>
         </template>
         <!-- 投资协议归档 -->
         <span class="labeldiy">投资协议归档：</span>
         <el-form-item>
-            <div v-for="(item,index) in agreement" :key="index" style="margin-left: -140px;margin-top:10px">
+            <div v-for="(item,index) in archiveSignPO.signBOs" :key="index" style="margin-left: -140px;margin-top:10px">
                 <span>{{index+1}}.0版本归档：</span>
                 <span class="ab" style="margin-left:63px;">
-                    <el-radio v-model="item.radio" label="1">是</el-radio>
-                    <el-radio v-model="item.radio" label="2">否</el-radio>
+                    <!-- <el-radio v-if="isEdit" :value="item[`v${index+1}SignerFlag`]" @input="(val)=>{item[`v${index+1}SignerFlag`]=val;item.archiveSignInvestPO.investVersion=`${index+1}.0`}" label="1">是</el-radio> -->
+                    <el-radio v-if="isEdit" v-model="item.radio" label="1">是</el-radio>
+                    <el-radio v-if="isEdit" v-model="item.radio" label="0">否</el-radio>
+                    <span v-else>
+                        {{item.radio==='1'?'是':item.radio==='0'?'否':'-'}}
+                    </span>
                     <template v-if="item.radio==='1'" >
-                        <el-form-item prop="num"  label-width='160px'>
-                            <template #label>
-                                <span style="margin-top: 16px;display: inline-block;">文件：</span>
-                            </template>
-                            <hosjoyUpload v-model="fileNameList" showAsFileName :action='action' :uploadParameters='uploadParameters' style="margin:15px 0">
-                                <el-button size="small" type="primary">点击上传</el-button>
-                            </hosjoyUpload>
-                            <span>{{signMaterials.num}}</span>
-                        </el-form-item>
-                        <el-form-item prop="num" label="该文件签约人：" label-width='160px'>
-                            <el-input v-model="signMaterials.num" placeholder="请输入姓名"></el-input>
-                            <span>{{signMaterials.num}}</span>
-                        </el-form-item>
-                        <el-form-item prop="num" label="签约人联系方式：" label-width='160px'>
-                            <el-input v-model="signMaterials.num" placeholder="请输入联系方式"></el-input>
-                            <span>{{signMaterials.num}}</span>
-                        </el-form-item>
-                        <el-form-item prop="num" label="签约人身份证号：" label-width='160px'>
-                            <el-input v-model="signMaterials.num" placeholder="请输入身份证号"></el-input>
-                            <span>{{signMaterials.num}}</span>
-                        </el-form-item>
-                        <el-form-item prop="num" label="签约人身份证归档：" label-width='160px'>
-                            <hosjoyUpload v-model="item.sfzList" :action='action' :uploadParameters='uploadParameters' showFileList >
-                                <!-- <el-button size="small" type="primary">点击上传</el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
-                            </hosjoyUpload>
-                        </el-form-item>
+                        <div v-for="(jtem,jndex) in item.version" :key="jndex">
+                            <el-form-item prop="documentList"  label-width='160px'  >
+                                <template #label>
+                                    <span style="margin-top: 16px;display: inline-block;">第{{jndex+1}}份文件：</span>
+                                </template>
+                                <hosjoyUpload v-if="isEdit" v-model="jtem.documentList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('1')">
+                                    <el-button size="small" type="primary">点击上传</el-button>
+                                </hosjoyUpload>
+                                <div class="filename" v-else>
+                                    <span v-if="jtem.documentList.length===0">-</span>
+                                    <template v-else>
+                                        <span v-for="(item,index) in jtem.documentList" :key="index" class="posrtv">
+                                            <template v-if="item&&item.fileUrl">
+                                                <i class="el-icon-document"></i>
+                                                <a :href="item.fileUrl" target="_blank">
+                                                    <font >{{item.fileName}}</font>
+                                                </a>
+                                            </template>
+                                        </span>
+                                    </template>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="该文件签约人：" label-width='160px' >
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30'></el-input>
+                                <span v-else>{{jtem.archiveSignInvestPO.signerName?jtem.archiveSignInvestPO.signerName:'-'}}</span>
+                            </el-form-item>
+                            <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px' >
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30'></el-input>
+                                <span v-else>
+                                    {{jtem.archiveSignInvestPO.signerContactNo?jtem.archiveSignInvestPO.signerContactNo:'-'}}
+                                </span>
+                            </el-form-item>
+                            <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号"></el-input>
+                                <span v-else>
+                                    {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
+                                </span>
+                            </el-form-item>
+                            <el-form-item prop="idCardList" label="签约人身份证归档：" label-width='160px' >
+                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
+                                </hosjoyUpload>
+                                <picView v-else :fileList='jtem.idCardList' />
+                            </el-form-item>
+                        </div>
                     </template>
                 </span>
+                <div><el-button v-if="isEdit&&archiveSignPO.signBOs.length>0&&item.radio==='1'" type="primary" class="addbtn" @click="onSubAdd(index)" icon='el-icon-circle-plus-outline'>新增</el-button></div>
             </div>
-            <div><el-button v-if="agreement.length>0&&agreement[0].radio==='1'" type="primary" style="width:130px; margin-left:20px" @click="onAdd" icon='el-icon-circle-plus-outline'>新增</el-button></div>
         </el-form-item>
         <!-- 投资履约担保函归档 -->
         <el-form-item label-width='160px'>
             <template #label>
                 <span class="labeldiy">投资履约担保函归档：</span>
             </template>
-            <el-radio v-model="assureRadio" label="1">是</el-radio>
-            <el-radio v-model="assureRadio" label="2">否</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="0">否</el-radio>
+            <span v-else>
+                {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':'-'}}
+            </span>
         </el-form-item>
-        <template v-if="assureRadio==='1'" >
-            <el-form-item prop="num"  label-width='160px'>
+        <template v-if="archiveSignPO.guanranteeDocFlag==='1'" >
+            <el-form-item prop="assureFileList"  label-width='160px'>
                 <template #label>
                     <span style="margin-top: 16px;display: inline-block;">担保函归档：</span>
                 </template>
-                <hosjoyUpload v-model="fileNameList" showAsFileName :action='action' :uploadParameters='uploadParameters' style="margin:15px 0">
-                    <el-button size="small" type="primary">点击上传</el-button>
+                <hosjoyUpload v-if="isEdit" v-model="archiveSignPO.assureFileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('b-guarantee')">
+                    <el-button size="small" type="primary" >点击上传</el-button>
                 </hosjoyUpload>
-                <span>{{signMaterials.num}}</span>
+                <div class="filename" v-else>
+                    <span v-if="archiveSignPO.assureFileList.length===0">-</span>
+                    <template v-else>
+                        <span v-for="(item,index) in archiveSignPO.assureFileList" :key="index" class="posrtv">
+                            <template v-if="item&&item.fileUrl">
+                                <i class="el-icon-document"></i>
+                                <a :href="item.fileUrl" target="_blank">
+                                    <font >{{item.fileName}}</font>
+                                </a>
+                            </template>
+                        </span>
+                    </template>
+                </div>
             </el-form-item>
-            <el-form-item prop="num" label="担保函签约人：" label-width='160px'>
-                <el-input v-model="signMaterials.num" placeholder="请输入担保函签约人"></el-input>
-                <span>{{signMaterials.num}}</span>
+            <el-form-item prop="guanranteeName" label="担保函签约人：" label-width='160px'>
+                <el-input v-model="archiveSignPO.guanranteeName" placeholder="请输入担保函签约人" v-if="isEdit" maxlength='30'></el-input>
+                <span v-else>{{archiveSignPO.guanranteeName?archiveSignPO.guanranteeName:'-'}}</span>
             </el-form-item>
         </template>
         <!-- 其余B档签约材料 -->
@@ -123,86 +162,174 @@
             <template #label>
                 <span style="display: inline-block;">文件：</span>
             </template>
-            <hosjoyUpload v-model="fileNameList" showAsFileName :action='action' :uploadParameters='uploadParameters'>
+            <hosjoyUpload v-if="isEdit" v-model="archiveSignPO.otherBList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('b-other')">
                 <el-button size="small" type="primary">点击上传</el-button>
             </hosjoyUpload>
-            <span>{{signMaterials.num}}</span>
+            <div class="filename" style="margin-top:0" v-else>
+                <span style="margin-top:-18px" v-if="archiveSignPO.otherBList.length===0">-</span>
+                <template v-else>
+                    <span v-for="(item,index) in archiveSignPO.otherBList" :key="index" class="posrtv">
+                        <template v-if="item&&item.fileUrl">
+                            <i class="el-icon-document"></i>
+                            <a :href="item.fileUrl" target="_blank">
+                                <font >{{item.fileName}}</font>
+                            </a>
+                        </template>
+                    </span>
+                </template>
+            </div>
         </el-form-item>
     </div>
 </template>
 
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import picView from './picView'
+import { checkIdCard } from '@/utils/rules.js'
 import { fileUploadUrl } from '@/api/config'
-const _agreementForm = {
-    radio: '2', // 1是 2否
-    fileList: [], // 文件
-    qyr: '', // 该文件签约人
-    mobile: '', // 签约人联系方式
-    sfz: '', // 签约人身份证号
-    sfzList: []// 签约人身份证归档
+const _signBOsForm = {
+    archiveSignInvestPO: {
+        investVersion: '', // 投资协议版本 1.0,2.0,3.0,4.0,5.0
+        signInvestId: '', // id 编辑时有用
+        signerContactNo: '', // 签约人联系方式
+        signerDocFlag: '', // 签约人档案归档：1-是；0-否
+        signerIdcard: '', // 签约人身份证号码
+        signerName: '' // 签约人姓名
+    },
+    idCardList: [],
+    documentList: []
+    // v1SignerFlag
+    /* signDocPOs: [
+        {
+            docType: '', // 档案类型：1-文件；2-身份证
+            fileName: '', // 附件名称
+            fileUrl: ''// 附件地址
+        }
+    ], */
 }
 export default {
-    name: 'signMaterials',
-    props: ['value'],
-    components: { hosjoyUpload },
+    name: 'archiveSignPO',
+    props: ['value', 'commonDocPOs', 'signBOs', 'isEdit'],
+    components: { hosjoyUpload, picView },
     data () {
         return {
-            radio: '1',
-            naturalRadio: '1',
             assureRadio: '1',
-            agreementForm: JSON.parse(JSON.stringify(_agreementForm)),
-            agreement: [],
-            // fileList: [
-            //     { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/e340708c-d4a8-4b69-a051-6e62b78e1fd4.png' }, { name: 'demo1.jpg', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191017/a9645dda-eb30-4304-8933-a542ed9a3396.png' }
-            // ],
+            signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '张功伟x'
             },
-            fileNameList: [{ name: 'x.pdf', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191023/c453f100-9414-4c52-8dba-08b35ed32cdd.pdf' }, { name: 'x2.pdf', url: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20191023/c453f100-9414-4c52-8dba-08b35ed32cdd.pdf' }]
+            checkIdCard
+
         }
     },
     computed: {
-        signMaterials: {
-            get () {
-                return this.value
-            },
-            set (val) {
-                this.$emit('input', val)
-            }
+        archiveSignPO () {
+            return this.value
         }
     },
     methods: {
-        onAdd () {
-            this.agreement.push(JSON.parse(JSON.stringify(this.agreementForm)))
-        }
-    },
-    watch: {
-        fileList: {
-            handler (val) {
-                console.log(val)
-            },
-            deep: true
+        onSubAdd (index) {
+            this.archiveSignPO.signBOs[index].version.push(JSON.parse(JSON.stringify(this.signBOsForm)))
         },
-        fileNameList: {
+        onSuccessCb (str) {
+            if (str === 'b-other') {
+                this.archiveSignPO.otherBList.map(item => {
+                    this.$set(item, 'docType', str)
+                })
+            }
+            if (str === 'b-guarantee') {
+                this.archiveSignPO.assureFileList.map(item => {
+                    this.$set(item, 'docType', str)
+                })
+            }
+            if (str === 'b-realcontroller') {
+                this.archiveSignPO.realcontrollerList.map(item => {
+                    this.$set(item, 'docType', str)
+                })
+            }
+            if (str === '1') {
+                console.log(this.archiveSignPO.signBOs)
+                this.archiveSignPO.signBOs.map(item => {
+                    item.version.map(jtem => {
+                        jtem.documentList.map(jtem => {
+                            this.$set(jtem, 'docType', str)
+                        })
+                    })
+                })
+            }
+            if (str === '2') {
+                this.archiveSignPO.signBOs.map(item => {
+                    item.version.map(jtem => {
+                        jtem.idCardList.map(jtem => {
+                            this.$set(jtem, 'docType', str)
+                        })
+                    })
+                })
+            }
+        },
+        onAdd () {
+            if (this.archiveSignPO.signBOs.length === 5) {
+                return
+            }
+            for (let i = 0; i < 5; i++) {
+                let obj = {
+                    version: [JSON.parse(JSON.stringify(this.signBOsForm))]
+                }
+                this.archiveSignPO.signBOs.push(obj)
+                let len = this.archiveSignPO.signBOs.length
+                // let key = `v${len}SignerFlag`
+                this.$set(this.archiveSignPO.signBOs[len - 1], 'radio', '0')
+                this.$set(this.archiveSignPO.signBOs[0], 'radio', '1')
+            }
+            console.log(this.archiveSignPO.signBOs)
+        }
+    },
+    /* watch: {
+        signBOs: {
             handler (val) {
                 console.log(val)
             },
             deep: true
         }
-    },
+    }, */
     mounted () {
-        this.onAdd()
+        console.log(this.archiveSignPO)
+        // this.onAdd()
+        // if (!this.$route.query.archiveId) this.onAdd()
     }
 }
 </script>
 
-<style scoped>
-.signMaterials{
+<style scoped lang='scss'>
+.archiveSignPO{
     border: 1px solid #e4e7ed;
     border-top: none;
     padding: 70px;
 }
 .labeldiy{ color: #000; font-weight:bold;}
+.filename{
+    margin-top: 17px;
+    color: #6e6f73;
+    display: flex;
+    span{
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        i {
+            font-size: 21px;
+            font-weight: bold;
+        }
+        a {color: #6e6f73; margin-left: 10px}
+    }
+    .posrtv{ position: relative;}
+}
+.addbtn{
+    width: 130px;
+    margin-left: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/deep/.addbtn i{ font-size: 18px}
 </style>

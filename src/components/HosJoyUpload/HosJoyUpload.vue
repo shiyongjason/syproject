@@ -4,11 +4,11 @@
             <hosjoy-list-pre-view :fileList="fileList" v-if="fileList.length>0" @remove="remove" />
         </div>
         <div class="filename" v-if="showAsFileName">
-            <span v-for="(item,index) in fileNameList" :key="index" class="posrtv">
-                <template v-if="item&&item.url">
+            <span v-for="(item,index) in fileList" :key="index" class="posrtv">
+                <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
-                    <a :href="item.url" target="_blank">
-                        <font >{{item.name}}</font>
+                    <a :href="item.fileUrl" target="_blank">
+                        <font >{{item.fileName}}</font>
                     </a>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
@@ -16,8 +16,8 @@
                 </template>
             </span>
         </div>
-        <div class="elupload" :class="haveslot?'haveslot':''">
-            <el-upload v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove" :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess">
+        <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
+            <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove" :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError'>
                 <!-- 默认插槽 -->
                 <slot>
                     <div class="default-upload">
@@ -31,7 +31,7 @@
                 <!-- 提示说明文字 -->
                 <slot name="tip"></slot>
                 <!-- 上传进度 -->
-                <el-progress v-if="progressFlag" type="dashboard" :percentage="uploadPercent" :width='110' :stroke-width="5" color="#FF7A45" class="uploadprogress"></el-progress>
+                <!-- <el-progress v-if="progressFlag&&showProgress" type="dashboard" :percentage="uploadPercent" :width='110' :stroke-width="5" color="#FF7A45" class="uploadprogress"></el-progress> -->
             </el-upload>
 
         </div>
@@ -60,7 +60,11 @@ export default {
         showFileList: { type: Boolean, default: false }, // 是否显示已上传文件列表
         action: { type: String, default: '' }, // 上传的地址
         fileSize: { type: Number, default: 100 }, // 限制文件大小
-        showAsFileName: { type: Boolean, default: false } // 是否支持多图上传
+        showAsFileName: { type: Boolean, default: false }, // 是否支持多图上传
+        showProgress: { type: Boolean, default: false },
+        fileNum: { type: Number, default: 100 }, // 限制文件总数
+        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.word,.xsl,.xlsx,.ppt,.zip,.rar' } // 上传的类型
+
     },
     components: { hosjoyListPreView },
     data () {
@@ -70,7 +74,8 @@ export default {
             deleteVisible: false,
             index: '',
             progressFlag: false,
-            uploadPercent: null
+            uploadPercent: null,
+            loading: false
         }
     },
     computed: {
@@ -81,25 +86,25 @@ export default {
             set (val) {
                 this.$emit('input', val)
             }
-        },
-        fileNameList: {
-            get () {
-                return this.value
-            },
-            set (val) {
-                this.$emit('input', val)
-            }
         }
     },
     methods: {
+        handleError (err) {
+            // console.log(JSON.parse(err.message))
+            let errMessage = (JSON.parse(err.message)).message || ''
+            this.$message.error(`上传失败：` + errMessage)
+            this.progressFlag = false
+            this.loading = false
+        },
         uploadProcess (event, file, fileList) {
+            this.loading = true
             this.progressFlag = true
             this.uploadPercent = Math.floor(event.percent)
         },
         handleSuccess (response, file, fileList) {
             let obj = {
-                name: response.data.fileName,
-                url: response.data.accessUrl
+                fileName: response.data.fileName,
+                fileUrl: response.data.accessUrl
             }
             if (typeof obj === 'object') {
                 setTimeout(() => {
@@ -110,10 +115,16 @@ export default {
                         return (typeof item === 'object')
                     })
                     temp.map(item => {
-                        this.fileNameList.push(item)
+                        if (this.fileList.length < this.fileNum) {
+                            this.fileList.push(item)
+                        } else {
+                            this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
+                        }
                     })
                     this.uploadPercent = 100
                     this.progressFlag = false
+                    this.loading = false
+                    this.$emit('successCb')
                 }, 500)
             }
         },
@@ -133,7 +144,7 @@ export default {
             }
         },
         onExceed (files, fileList) {
-            this.$message.error('上传数量超出限制！')
+            this.$message.error(`一次性上传数量超出限制！最大允许上传个数：${this.limit}`)
         },
         handleCheckedSize (files, fileList) {
             this.isBeyond = true
@@ -146,7 +157,7 @@ export default {
         },
         beforeAvatarUpload (file) {
             if (this.isBeyond) {
-                this.$message.error(`建议不要超过${this.fileSize}M`)
+                this.$message.error(`上传错误，文件不要超过${this.fileSize}M`)
                 return false
             }
         }
@@ -160,6 +171,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+/deep/.el-loading-spinner .circular{width:33px;height:33px}
 /deep/.uploadprogress{ position: absolute;top:5px;left:10px}
 /deep/.deldialog .el-dialog__body {
     min-height: 100px;

@@ -87,3 +87,14 @@ export const AUTH_SERVICE_YOUZAN_DETAILS = 10410
 export const AUTH_SERVICE_CHANNEL_DETAILS = 10420
 // 服务管理 按钮渠道订单修改
 export const AUTH_SERVICE_CHANNEL_EDIT = 10430
+
+// 驾驶舱档案管理
+export const COCKPIT_FILE_MANAGE = 10571
+// 驾驶舱档案修改
+export const COCKPIT_FILE_EDIT = 10576
+// 驾驶舱档案删除
+export const COCKPIT_FILE_DELETE = 10573
+// 驾驶舱档案新增
+export const COCKPIT_FILE_ADD = 10570
+// 驾驶舱档案标注、借出状态管理
+export const COCKPIT_FILE_LABEL = 10572

@@ -649,7 +649,7 @@ const routerMapping = [
                 meta: {
                     title: '档案管理',
                     tagName: '档案管理',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')

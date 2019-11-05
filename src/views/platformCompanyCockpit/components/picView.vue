@@ -1,13 +1,16 @@
 <template>
     <div class="default-pre-view">
-        <div v-for="(item,index) in fileList" :key="index" class="default-pre-view-warp">
-            <div class="default-pre-view-mask">
-                <i class="el-icon-zoom-in" style="color:#fff" @click="open(index)"></i>
-                <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
+        <template v-if="fileList&&fileList.length>0">
+            <div v-for="(item,index) in fileList" :key="index" class="default-pre-view-warp">
+                <div class="default-pre-view-mask">
+                    <i class="el-icon-zoom-in" style="color:#fff" @click="open(index)"></i>
+                </div>
+                <el-image :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
             </div>
-            <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
-            <el-image :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
-        </div>
+        </template>
+        <template v-else>
+            <span>-</span>
+        </template>
     </div>
 </template>
 
