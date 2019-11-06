@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">mis编码：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15"></el-input>
+                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -26,11 +26,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.startDate" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                    </el-date-picker>
-                    <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endDate" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                    </el-date-picker>
+                    <el-date-picker v-model="queryDate" type="monthrange" range-separator="至" start-placeholder="开始月份" end-placeholder="结束月份" format="yyyy-MM" value-format="yyyy-MM" :clearable='false'></el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">公司上线状态：</div>
@@ -75,6 +71,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            queryDate: '',
             selectPlatObj: {
                 selectCode: '',
                 selectName: ''
@@ -103,12 +100,9 @@ export default {
                     prop: 'misCode',
                     label: 'MIS编码',
                     width: '100',
-                    fixed: true,
-                    renderHeader: (h, scope) => {
-                        return <span><i class="el-icon-time"></i>{scope.column.label}</span>
-                    }
+                    fixed: true
                 },
-                { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '100' },
+                { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '120' },
                 { prop: 'subsectionName', label: '分部', fixed: true },
                 {
                     label: '销售收入与成本/万',
@@ -342,6 +336,7 @@ export default {
             // 平台分部
             const { data } = await findBranchListNew()
             this.branchList = data.data
+            this.branchList.unshift({ subsectionCode: '', subsectionName: '全部', id: 0 })
         },
         toPercent (point) {
             if (!point) { return '-' }
@@ -355,25 +350,24 @@ export default {
                 center: true,
                 callback: action => {} })
         },
-        backFindTarget (value) {
-            //
-        },
         handleExpand (scope, expandSellrr, num) {
             this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
             if (this.column[scope.$index]._expand) {
                 this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr)
             } else {
                 this.column[scope.$index].children = this.column[scope.$index].children.slice(0, num)
-                // TODO
                 this.changeTable = false
                 this.$nextTick(() => { this.changeTable = true })
             }
         },
         async getList () {
+            this.queryParams.startDate = `${this.queryDate[0]}-01`
+            this.queryParams.endDate = `${this.queryDate[1]}-01`
+            // 后端只要这个格式。
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
             let query = { ...this.queryParams }
             const { data } = await getProfitList(query)
-            this.tableData = data.data.list
+            this.tableData = data.data.list || []
             this.page.total = data.data.total
         },
         filterHandler (value, row, column) {
@@ -388,8 +382,9 @@ export default {
         }
     },
     async mounted () {
-        this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
-        this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
+        let start = moment().startOf('month').format('YYYY-MM')
+        let end = moment().endOf('days').format('YYYY-MM')
+        this.queryDate = [start, end]
         this.getList()
         this.findPaltList()
         this.findBranchListNew()
