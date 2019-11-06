@@ -52,11 +52,6 @@ export default {
             return this.value
         }
     },
-    watch: {
-        'platformBasicInfoPO.dd' (val) {
-            console.log(val)
-        }
-    },
     methods: {
 
     },

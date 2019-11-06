@@ -27,10 +27,14 @@
             <span v-else>{{business.holderChange?business.holderChange:'-'}}</span>
         </el-form-item>
         <el-form-item label="工商登记注册资本：" prop="regCapital" label-width='160px' maxlength="200">
-            <el-input v-if="isEdit" v-isNum="business.regCapital" v-model="business.regCapital" placeholder="请输入注册资本">
+            <el-input v-if="isEdit" v-isNum="business.regCapital" v-model="business.regCapital" placeholder="请输入注册资本" maxlength='30'>
                 <template slot="append">万</template>
             </el-input>
             <span v-else>{{business.regCapital?business.regCapital+'万':'-'}}</span>
+        </el-form-item>
+        <el-form-item label="资本变更情况：" label-width='160px'>
+            <el-input v-if="isEdit" v-model="business.capitalChange" placeholder="资本变更情况描述" maxlength="200" show-word-limit  type='textarea' :rows="6" style="width:700px"></el-input>
+            <span v-else>{{business.capitalChange?business.capitalChange:'-'}}</span>
         </el-form-item>
         <!-- 投资履约担保函归档 -->
         <el-form-item label-width='160px'>
@@ -63,6 +67,16 @@
                     </template>
                 </div>
             </el-form-item>
+        </template>
+        <el-form-item label-width='160px'>
+            <template #label>
+                <span>增减资协议是否归档：</span>
+            </template>
+            <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="0">否</el-radio>
+            <span v-if="!isEdit">{{business.capitalDocFlag==='0'?'否':business.capitalDocFlag==='1'?'是':'-'}}</span>
+        </el-form-item>
+        <template v-if="business.capitalDocFlag==='1'" >
             <el-form-item prop="num" label-width='160px'>
                 <template #label>
                     <span style="margin-top: 16px;display: inline-block;">增减资协议：</span>
@@ -84,6 +98,16 @@
                     </template>
                 </div>
             </el-form-item>
+        </template>
+        <el-form-item label-width='160px'>
+            <template #label>
+                <span>股转版协议是否归档：</span>
+            </template>
+            <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="0">否</el-radio>
+            <span v-if="!isEdit">{{business.stocktransferDocFlag==='0'?'否':business.stocktransferDocFlag==='1'?'是':'-'}}</span>
+        </el-form-item>
+        <template v-if="business.stocktransferDocFlag==='1'" >
             <el-form-item prop="num" label-width='160px'>
                 <template #label>
                     <span style="margin-top: 16px;display: inline-block;">股转版协议：</span>
@@ -106,6 +130,7 @@
                 </div>
             </el-form-item>
         </template>
+
     </div>
 </template>
 

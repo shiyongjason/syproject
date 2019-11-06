@@ -57,7 +57,11 @@
                 </el-option>
             </el-select>
             <span v-else>
-                {{platformBasicInfoPO.departmentId?getPlatform(platformBasicInfoPO.departmentId)[0].subsectionName:'-'}}
+                {{
+                    platformBasicInfoPO.departmentId
+                    ?getPlatform(platformBasicInfoPO.departmentId).length>0&&getPlatform(platformBasicInfoPO.departmentId)[0].subsectionName
+                    :'-'
+                }}
             </span>
         </el-form-item>
         <el-form-item label="区域：">
@@ -98,27 +102,13 @@ export default {
         platformBasicInfoPO () {
             return this.value
         }
-        /* selectPlatObj () {
-            console.log(1)
-            if (this.$route.query.archiveId) {
-                return (
-                    {
-                        selectCode: this.getCodeByName(this.platformBasicInfoPO.companyName),
-                        selectName: this.platformBasicInfoPO.companyName
-                    }
-                )
-            }
-            return {
-                selectCode: '',
-                selectName: ''
-            }
-        } */
     },
     methods: {
         getPlatform (code) {
-            return this.branchList.filter(item => {
+            const arr = this.branchList.filter(item => {
                 return item.subsectionCode === code
             })
+            return arr
         },
         getCodeByName (name, code = this.branchList) {
             return code.filter(item => {
@@ -127,7 +117,7 @@ export default {
         },
         async backPlat (val) {
             // 平台公司名称点击后事件
-            if (val.value) {
+            if (val && val.value && val.value.companyShortName) {
                 this.platformBasicInfoPO.companyName = val.value.companyShortName
                 this.platformBasicInfoPO.oldCompanyName = val.value.originaCompanyName
                 this.platformBasicInfoPO.addressOther = val.value.address
@@ -140,13 +130,12 @@ export default {
                 this.$nextTick(() => {
                     this.platformBasicInfoPO.addressDistrict = val.value.areaCode || ''
                 })
-                let temp = this.getCodeByName(val.value.subsectionName)
-                this.platformBasicInfoPO.departmentId = temp[0].subsectionCode
+                let temp = val.value.subsectionName && this.getCodeByName(val.value.subsectionName)
+                this.platformBasicInfoPO.departmentId = temp && temp[0].subsectionCode
                 this.$forceUpdate()
             }
         },
         onProvince (parentId) {
-            console.log(parentId)
             this.$set(this.platformBasicInfoPO, 'addressCity', '')
             this.$set(this.platformBasicInfoPO, 'addressDistrict', '')
             this.addressCity = []
@@ -174,7 +163,6 @@ export default {
                     this.addressCity.unshift({ cityId: '', cityName: '请选择市', id: 0 })
                     break
                 case 2:
-                    console.log(this.addressDistrict)
                     this.addressDistrict = data.citys
                     this.addressDistrict.unshift({ cityId: '', cityName: '请选择区', id: 0 })
                     break
@@ -198,7 +186,6 @@ export default {
     watch: {
         'platformBasicInfoPO.companyName' (val) {
             this.selectPlatObj.selectName = val
-            console.log(val)
         }
     },
     mounted () {

@@ -138,6 +138,8 @@ export default {
                 // C
                 archiveCommercialPO: {
                     commerialDocFlag: '0',
+                    capitalDocFlag: '0',
+                    stocktransferDocFlag: '0',
                     commercial: [], // C-其余工商材料归档
                     capital: [], // C-增减资协议
                     stocktransfer: []// C-股转版协议
@@ -197,9 +199,9 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                // this.$router.go(-1)
                 this.isEdit = false
                 this.dialogIsEdit = false
+                this.$router.go(-1)
             }).catch()
         },
         getFile (type, key, ikey) {
@@ -335,13 +337,13 @@ export default {
                         if (!this.$route.query.archiveId) {
                             setTimeout(() => {
                                 this.$router.go(-1)
-                            }, 500)
+                            }, 300)
                         }
                     } catch (error) {
                         done()
                     }
                 } else {
-                    console.log(this.form)
+                    this.activeName = 'base'
                     if (this.form.platformBasicInfoPO.archiveNo == '') {
                         this.$message.error(`请输入档案编号`)
                         done()
@@ -358,33 +360,6 @@ export default {
                     }
                 }
             })
-            /* try {
-                if (this.$route.query.archiveId) {
-                    // updateUser
-                    this.form.platformBasicInfoPO.updateUser = this.userInfo.employeeName
-                    await upData(this.form)
-                } else {
-                    this.$refs['formBaseInfo'].validate(async (valid, errors) => {
-                        if (valid) {
-                            console.log(valid)
-                            // await saveInfo(this.form)
-                        } else {
-                            // done()
-                        }
-                    })
-                }
-                done()
-                this.$message({
-                    message: '提交成功！',
-                    type: 'success'
-                })
-                this.isEdit = false
-                // setTimeout(() => {
-                //     this.$router.go(-1)
-                // }, 800)
-            } catch (error) {
-                done()
-            } */
         },
         async provinces (params = { parentId: 0 }, city = 0) {
             const { data } = await provinces(params)

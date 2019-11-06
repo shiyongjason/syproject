@@ -332,7 +332,6 @@ export default {
                 borrowRemark: this.dialog.item.borrowRemark,
                 borrowStatus: val// 档案状态：1-未借出；2-已借出
             }
-            console.log(query)
             await borrow(query)
             this.getList()
             this.dialog.dialogVisible = false
@@ -391,7 +390,6 @@ export default {
             this.page.total = data.total
         },
         openDialog (item, index, data, width = '800px') {
-            console.log(index)
             this.dialog = {
                 dialog: data,
                 dialogTitle: `${item.archiveNo}-${data}`,
