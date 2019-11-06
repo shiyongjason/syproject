@@ -117,6 +117,10 @@ export default {
         },
         async backPlat (val) {
             // 平台公司名称点击后事件
+            if (val && val.value && val.value.value) {
+                this.platformBasicInfoPO.companyName = val.value.value
+                return
+            }
             if (val && val.value && val.value.companyShortName) {
                 this.platformBasicInfoPO.companyName = val.value.companyShortName
                 this.platformBasicInfoPO.oldCompanyName = val.value.originaCompanyName
