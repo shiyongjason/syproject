@@ -292,7 +292,8 @@ export default {
                 let len = this.archiveSignPO.signBOs.length
                 // let key = `v${len}SignerFlag`
                 this.$set(this.archiveSignPO.signBOs[len - 1], 'radio', '0')
-                this.$set(this.archiveSignPO.signBOs[0], 'radio', '1')
+                // this.$set(this.archiveSignPO.signBOs[0], 'radio', '1')
+                this.$set(this.archiveSignPO.signBOs[0], 'radio', '0')
             }
         }
     },
