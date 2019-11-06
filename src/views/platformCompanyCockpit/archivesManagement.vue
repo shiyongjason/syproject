@@ -3,7 +3,7 @@
         <div class="page-body">
             <div class="page-body-cont postionrelative">
                 <div class="title">
-                    <span class="tit-l" v-if="$route.query.archiveId">{{isEdit?'编辑档案':'档案详情'}}</span>
+                    <span class="tit-l" v-if="$route.query.archiveId">{{isEdit?'编辑档案':form.platformBasicInfoPO.companyName}}</span>
                     <span class="tit-l" v-else>新增档案</span>
                     <span class="tit-r">
                         <div v-if="!isEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline poseditor" @click="onIsEdit"></div>
@@ -201,7 +201,9 @@ export default {
             }).then(() => {
                 this.isEdit = false
                 this.dialogIsEdit = false
-                this.$router.go(-1)
+                if (!this.$route.query.archiveId) {
+                    this.$router.go(-1)
+                }
             }).catch()
         },
         getFile (type, key, ikey) {

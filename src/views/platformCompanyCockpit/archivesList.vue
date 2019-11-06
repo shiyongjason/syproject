@@ -404,6 +404,9 @@ export default {
                 dialogVisible: true,
                 width
             }
+            if (item.borrowStatus == '1') {
+                item.borrowRemark = ''
+            }
         },
         onSureDialog () {
             this.dialog.dialogVisible = false
