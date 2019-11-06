@@ -112,7 +112,7 @@
                         </div>
                     </template>
                 </span>
-                <div><el-button v-if="isEdit&&archiveSignPO.signBOs.length>0&&item.radio==='1'" type="primary" class="addbtn" @click="onSubAdd(index)" icon='el-icon-circle-plus-outline'>新增</el-button></div>
+                <div class="mt10"><el-button v-if="isEdit&&archiveSignPO.signBOs.length>0&&item.radio==='1'" type="primary" class="addbtn" @click="onSubAdd(index)" icon='el-icon-circle-plus-outline'>新增</el-button></div>
             </div>
         </el-form-item>
         <!-- 投资履约担保函归档 -->
