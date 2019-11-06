@@ -1,9 +1,20 @@
 <template>
     <div class="default-upload-warp">
-        <div class="default-pre-view" v-if="showPreView&&!showAsFileName">
-            <hosjoy-list-pre-view :fileList="fileList" v-if="fileList.length>0" @remove="remove" />
-        </div>
-        <div class="filename" v-if="showAsFileName">
+        <template v-if="showPreView&&!showAsFileName">
+            <template v-for="(item,index) in fileList" >
+                <div class="default-pre-view" :key="index">
+                    <div class="default-pre-view-warp" >
+                    <div class="default-pre-view-mask" >
+                        <i class="el-icon-zoom-in" style="color:#fff" @click="open(index)"></i>
+                        <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
+                    </div>
+                    </div>
+                    <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
+                    <el-image :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
+                </div>
+            </template>
+        </template>
+        <template v-if="showAsFileName">
             <span v-for="(item,index) in fileList" :key="index" class="posrtv">
                 <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
@@ -15,7 +26,7 @@
                     </div>
                 </template>
             </span>
-        </div>
+        </template>
         <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
             <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove" :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError'>
                 <!-- 默认插槽 -->
@@ -46,8 +57,6 @@
 </template>
 
 <script>
-import hosjoyListPreView from './hosjoyListPreView'
-
 export default {
     name: 'HosJoyUpload',
     props: {
@@ -66,7 +75,7 @@ export default {
         accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.word,.xsl,.xlsx,.ppt,.zip,.rar' } // 上传的类型
 
     },
-    components: { hosjoyListPreView },
+    // components: { hosjoyListPreView },
     data () {
         return {
             isBeyond: true,
@@ -75,7 +84,9 @@ export default {
             index: '',
             progressFlag: false,
             uploadPercent: null,
-            loading: false
+            loading: false,
+            activeIndex: -1,
+            previewSrcList: []
         }
     },
     computed: {
@@ -160,6 +171,20 @@ export default {
                 this.$message.error(`上传错误，文件不要超过${this.fileSize}M`)
                 return false
             }
+        },
+        open (index) {
+            let temp = this.fileList[index]
+            let tempArr = JSON.parse(JSON.stringify(this.fileList))
+            tempArr.splice(index, 1)
+            tempArr.unshift(temp)
+            this.previewSrcList = tempArr.map(item => {
+                // return item.accessUrl
+                return item.fileUrl
+            })
+            const pre = this.$refs[`preview_${index}`]
+            if (pre && pre[0]) {
+                pre[0].clickHandler()
+            }
         }
     },
     mounted () {
@@ -178,7 +203,7 @@ export default {
     font-size: 16px;
     padding-top: 20px;
 }
-.haveslot{line-height: normal !important;}
+.haveslot{line-height: normal !important;height: auto !important;margin-top:0 !important}
 /deep/.haveslot .el-upload-dragger {
     background: none !important;
     border-radius: 0 !important;
@@ -253,26 +278,48 @@ export default {
         }
     }
 }
-.filename{
-    color: #6e6f73;
-    display: flex;
-    flex-wrap: wrap;
-    span{
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
-        i {
-            font-size: 21px;
-            font-weight: bold;
-        }
-        a {color: #6e6f73; margin-left: 10px}
-    }
-    .posrtv{ position: relative;}
-    .abs{
+
+.posrtv{ position: relative;margin-right: 15px;}
+.posrtv a{ color: #6e6f73;margin-left: 10px}
+.abs{
         position: absolute; right: -11px;top:-7px;display: none;
         i{font-size: 18px;color: #5d5d5d;cursor: pointer;}
     }
-    .posrtv:hover .abs{display:block}
-
+.posrtv:hover .abs{display:block}
+.default-pre-view {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: 8px;
+    margin-top: 13px;
+    &-mask {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 200;
+        width: 120px;
+        height: 120px;
+        border-radius: 6px;
+        background-color: rgba(0,0,0,.5);
+        transition: opacity .3s;
+        i {
+            font-size: 21px;
+            padding: 9px;
+        }
+        opacity: 0;
+    }
+    &-mask:hover {
+        cursor: pointer;
+        opacity: 1;
+    }
+    &-image {
+        width: 120px;
+        height: 120px;
+        background-color: #fafafa;
+        border: 1px solid #c0ccda;
+        border-radius: 6px;
+        box-sizing: border-box;
+    }
 }
+.elupload{overflow: hidden;height: 120px;margin-top: 13px;}
 </style>
