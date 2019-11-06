@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <!-- <HAutocomplete ref="HAutocomplete" v-if="platList" :selectArr="platList" :selectObj="targetObj" @back-event="backFindTarget" :placeholder="'选择平台公司'"></HAutocomplete> -->
+                        <HAutocomplete v-if="isEdit" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
                     </div>
                 </div>
                 <!--  v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]" -->
@@ -70,11 +70,14 @@ import moment from 'moment'
 import { getProfitList } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 // import { BUS_TYPE, DEPT_TYPE } from './store/const'
 export default {
     name: 'profitStatistics',
+    components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            platComList: [], // 平台公司
             branchList: [],
             bustype: [],
             platList: [],
@@ -315,10 +318,21 @@ export default {
             }
         }
     },
-    components: {
-        hosJoyTable
-    },
     methods: {
+        async findPaltList () {
+            // 平台公司名称
+            const { data } = await findPaltList()
+            for (let i of data.data.pageContent) {
+                i.value = i.companyShortName
+                i.selectCode = i.companyCode
+            }
+            this.platComList = data.data.pageContent
+        },
+        async findBranchListNew () {
+            // 平台分部
+            const { data } = await findBranchListNew()
+            this.branchList = data.data
+        },
         toPercent (point) {
             if (!point) { return '-' }
             let str = Number(point * 100).toFixed(2)
