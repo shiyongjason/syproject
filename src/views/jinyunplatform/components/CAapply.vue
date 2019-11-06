@@ -121,15 +121,18 @@ export default {
         onSubmit (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    alert('submit!')
+                    this.onQuery()
                 } else {
-                    console.log('error submit!!');
-                    return false;
+                    console.log('error submit!!')
+                    return false
                 }
             })
         },
         createTags () { },
-        uploadSeal () { },
+        uploadSeal () {
+            this.onQuery()
+        },
         cancel () {
             this.dialogVisible = false
             this.addTags.labelName = ''
