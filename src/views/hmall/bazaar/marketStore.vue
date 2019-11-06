@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">集市状态：</div>
+                    <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
                          <el-select v-model="queryParams.onMarket" style="width: 100%">
                         <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
@@ -53,7 +53,7 @@
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                        <!-- <el-button type="primary" class="ml20">导出</el-button> -->
+                        <el-button type="primary" class="ml20" @click="onImport()">导出</el-button>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                                 </span>
                                 <span v-else>-</span>
                             </div>
-                            <span>返利详情</span>
+                            <span>{{discountFunc(scope.data.row.skuRebateBoList)}}</span>
                         </el-tooltip>
                     </template>
                     <template slot='commission' slot-scope="scope">
@@ -84,7 +84,7 @@
                                 </span>
                                 <span v-else>-</span>
                             </div>
-                            <span>{{scope.data.row.commission}}%</span>
+                            <span>{{commissionFunc(scope.data.row.commissionBoList)}}</span>
                         </el-tooltip>
                     </template>
                     <template slot='onMarket' slot-scope="scope">
@@ -98,6 +98,7 @@
 
 <script>
 import { findBazaarLists, findCategory } from './api/index'
+import { B2bUrl } from '@/api/config'
 export default {
     name: 'marketStore',
     data () {
@@ -115,7 +116,7 @@ export default {
                 { label: '返利', prop: 'skuRebateBoList' },
                 { label: '佣金', prop: 'commission' },
                 { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } },
-                { label: '集市状态', prop: 'onMarket' }
+                { label: '状态', prop: 'onMarket' }
             ],
             tableData: [],
             searchParams: {},
@@ -137,6 +138,24 @@ export default {
         }
     },
     methods: {
+        discountFunc (val) {
+            const arr = val.map(item => item.discount)
+            let result = [arr[0]]
+            for (let i = 1, len = arr.length; i < len; i++) {
+                arr[i] !== arr[i - 1] && result.push(arr[i])
+            }
+            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
+            else return result[0] + '%'
+        },
+        commissionFunc (val) {
+            const arr = val.map(item => item.commission)
+            let result = [arr[0]]
+            for (let i = 1, len = arr.length; i < len; i++) {
+                arr[i] !== arr[i - 1] && result.push(arr[i])
+            }
+            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
+            else return result[0] + '%'
+        },
         onQuery () {
             const { ...params } = { ...this.queryParams }
             this.searchParams = params
@@ -180,6 +199,16 @@ export default {
         async findCategory () {
             const { data } = await findCategory()
             this.category = data
+        },
+        onImport () {
+            window.location = B2bUrl + 'product/api/spu/spu-export?merchantName=' + this.queryParams.merchantName +
+                    '&spuName=' + this.queryParams.spuName +
+                    '&source=' + this.queryParams.source +
+                    '&brandName=' + this.queryParams.brandName +
+                    '&categoryId=' + this.queryParams.categoryId +
+                    '&onMarket=' + this.queryParams.onMarket +
+                     '&specification=' + this.queryParams.specification +
+                    '&access_token=' + sessionStorage.getItem('token')
         }
     },
     mounted () {

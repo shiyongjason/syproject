@@ -219,7 +219,7 @@
                               <div class="query-cont-col">
                                 <div class="query-col-title">SKU编码：</div>
                                 <div class="query-col-input">
-                                    <el-input type="text" v-model="queryParamsProductTotal.productCode" maxlength="50" placeholder="商品SkU">
+                                    <el-input type="text" v-model="queryParamsProductTotal.skuCode" maxlength="50" placeholder="请输入商品SkU">
                                     </el-input>
                                 </div>
                             </div>
@@ -260,10 +260,10 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">下单时间：</div>
                                 <div class="query-col-input">
-                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerProductTotalStart">
+                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerProductTotalStart">
                                     </el-date-picker>
                                     <span class="ml10 mr10">-</span>
-                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerProductTotalEnd">
+                                    <el-date-picker v-model="queryParamsProductTotal.orderTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerProductTotalEnd">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -278,13 +278,13 @@
                                         :collapse-tags = true
                                         :show-all-levels = "true"
                                          @change="cityChange"
-                                        :props="{ multiple: true ,value:'key',label:'value',children:'cityList'}"
+                                        :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}"
                                         filterable>
                                     </el-cascader>
                                 </div>
                             </div>
                             <div class="query-cont-col">
-                                 <el-checkbox v-model="ad">只看共享商品</el-checkbox>
+                                 <el-checkbox v-model="queryParamsProductTotal.isShareGoods">只看共享商品</el-checkbox>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
@@ -314,9 +314,9 @@ import productTotalTable from './components/productTotalTable'
 import { ORDER_TYPE, COUPON_TYPE } from './const.js'
 import { mapState } from 'vuex'
 import {
-    findBrandsList, findOrderList, findProductTotalList,
+    findBrandsList, findOrderList,
     findReceivablesList, exportTotalList, exportTabReceivables,
-    exportTabOrder, getChiness
+    exportTabOrder, getChiness, orderPage
 } from './api/index'
 import { findProductCategory } from '../shopManager/api/index'
 
@@ -393,7 +393,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -403,7 +403,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -448,8 +448,8 @@ export default {
                 size: 10
             },
             queryParamsProductTotal: {
-                current: 1,
-                size: 10,
+                pageNumber: 1,
+                pageSize: 10,
                 branchCode: '',
                 branchName: '',
                 categoryId: [],
@@ -460,7 +460,10 @@ export default {
                 orderTimeEnd: '',
                 orderTimeStart: '',
                 productCode: '',
-                spuCode: ''
+                spuCode: '',
+                skuCode: '',
+                isShareGoods: false,
+                areaIds: ''
             },
             orderData: [],
             receivablesData: [],
@@ -478,16 +481,14 @@ export default {
     methods: {
         async getArea () {
             const { data } = await getChiness()
-            this.options = data.data.dictpro
-
-            console.log(data)
+            this.options = data
         },
         cityChange (val) {
             const cityarr = []
             val && val.map(item => {
                 cityarr.push(item[1])
             })
-            console.log(cityarr)
+            this.queryParamsProductTotal.areaIds = cityarr.join(',')
         },
         exportTab () {
 
@@ -560,7 +561,7 @@ export default {
         async onQueryProductTotal () {
             const { ...params } = this.queryParamsProductTotal
             if (params.categoryId.length > 0) params.categoryId = params.categoryId[params.categoryId.length - 1]
-            const { data } = await findProductTotalList(params)
+            const { data } = await orderPage(params)
             this.productTotalData = data.records
             this.paginationProductTotalData = {
                 pageNumber: data.current,
@@ -605,7 +606,7 @@ export default {
                 this.queryParamsReceivables.size = val
                 this.onQueryReceivables()
             } else if (source === 'productTotal') {
-                this.queryParamsProductTotal.size = val
+                this.queryParamsProductTotal.pageSize = val
                 this.onQueryProductTotal()
             }
         },
@@ -617,7 +618,7 @@ export default {
                 this.queryParamsReceivables.current = val
                 this.onQueryReceivables()
             } else if (source === 'productTotal') {
-                this.queryParamsProductTotal.current = val
+                this.queryParamsProductTotal.pageNumber = val
                 this.onQueryProductTotal()
             }
         },

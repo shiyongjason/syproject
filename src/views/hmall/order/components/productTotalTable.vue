@@ -69,14 +69,14 @@
 
         </el-table> -->
 
-        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250  >
-            <template slot-scope="scope" solt="orderStatus">
+        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+            <template slot-scope="scope" slot="orderStatus">
                 <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
                 <span v-if="scope.data.row.orderStatus === 10">待支付</span>
                 <span v-if="scope.data.row.orderStatus === 20">待发货</span>
                 <span v-if="scope.data.row.orderStatus === 30">待收货</span>
                 <span v-if="scope.data.row.orderStatus === 40">已完成</span>
-                <span v-if="scope.data.row.orderStatus === 50">已关闭</span>
+                <span v-if="scope.data.row.orderStatus == 50">已关闭</span>
             </template>
         </basicTable>
     </div>
@@ -108,17 +108,18 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '商品编码', prop: 'spuCode' },
+                { label: 'SKU编码', prop: 'skuCode' },
+                { label: 'SPU编码', prop: 'spuCode' },
                 { label: '订单编号', prop: 'orderNo' },
                 { label: '分部', prop: 'branchName' },
                 { label: '平台公司', prop: 'merchantName' },
                 { label: '会员店', prop: 'memberName' },
                 { label: '金额', prop: 'totalAmount' },
                 { label: '订单状态', prop: 'orderStatus' },
-                { label: '下单时间', prop: 'orderTime' },
+                { label: '下单时间', prop: 'orderTime', formatters: 'dateTime' },
                 { label: '商品数量', prop: 'quantity' },
                 { label: '商品名称', prop: 'productName' },
-                { label: '商品类目', prop: 'categoryName' }
+                { label: '商品类目', prop: 'category' }
 
             ]
         }
