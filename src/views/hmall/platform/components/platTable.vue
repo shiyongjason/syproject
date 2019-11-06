@@ -229,8 +229,8 @@ export default {
                 { label: '网商支付开通状态', prop: 'registerStatus' },
                 { label: '开通时间', prop: 'bankRegisterOpenTime', formatters: 'dateTime' },
                 { label: '运营型商家', prop: 'operational' },
-                { label: '商品型商家', prop: 'commodity' },
-                { label: '自动推至店铺', prop: 'autoDispatch' }
+                { label: '商品型商家', prop: 'commodity' }
+                // { label: '自动推至店铺', prop: 'autoDispatch' }
             ]
         }
     },
@@ -302,12 +302,12 @@ export default {
             return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
         },
         async onTypeChange (merchantCode, value, type, obj) {
-            if (type == 'operational') {
-                await updatePlatformType({
-                    merchantCode: merchantCode,
-                    autoDispatch: value
-                })
-            }
+            // if (type == 'operational') {
+            //     await updatePlatformType({
+            //         merchantCode: merchantCode,
+            //         autoDispatch: value
+            //     })
+            // }
             await updatePlatformType({
                 merchantCode,
                 [type]: value ? 1 : 0
