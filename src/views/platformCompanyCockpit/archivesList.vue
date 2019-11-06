@@ -54,7 +54,8 @@
                         <el-tab-pane label="淘汰" name="3"></el-tab-pane>
                     </el-tabs>
                 </div>
-                <hosjoyTable ref="table" border stripe showPagination :isAction='isAction' :show-overflow-tooltip='true' :column="table" :data="tableData" isShowIndex :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList" :actionWidth='actionLen'>
+                <hosjoyTable ref="table" border stripe showPagination :isAction='isAction' :show-overflow-tooltip='true' :column="table" :data="tableData" isShowIndex :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList"
+                    :actionWidth='actionLen'>
                     <template slot="action" slot-scope="scope">
                         {{scope.row}}
                         <el-button type="primary" size='small' v-if="hosAuthCheck(COCKPIT_FILE_MANAGE)" @click="onGoDetail(scope.data.row)">档案管理</el-button>
@@ -69,13 +70,13 @@
         <!--  -->
         <el-dialog center :title="dialog.dialogTitle" :visible.sync="dialog.dialogVisible" :width='dialog.width' class="dialog">
             <div class="dialogbox">
-                <dialogComponent ref="dialogComponent" :item="dialog.item" :dialog='dialog.dialog' ></dialogComponent>
+                <dialogComponent ref="dialogComponent" :item="dialog.item" :dialog='dialog.dialog'></dialogComponent>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onSureDialog" v-if="dialog.dialog!=='借出档案管理'">确 认</el-button>
                 <!--  -->
                 <el-button type="primary" @click="onSureBorrow('1')" v-if="dialog.dialog=='借出档案管理'&&dialog.item.borrowStatus==='2'">确认归还</el-button>
-                <el-button type="primary" @click="onSureBorrow('2')" v-if="dialog.dialog=='借出档案管理'&&dialog.item.borrowStatus==='2'" >保 存</el-button>
+                <el-button type="primary" @click="onSureBorrow('2')" v-if="dialog.dialog=='借出档案管理'&&dialog.item.borrowStatus==='2'">保 存</el-button>
                 <el-button type="primary" @click="onSureBorrow('2')" v-if="dialog.dialog=='借出档案管理'&&(dialog.item.borrowStatus==='1'||dialog.item.borrowStatus==null)">确认借出</el-button>
                 <!--  -->
                 <el-button @click="dialog.dialogVisible = false">取 消</el-button>
@@ -85,8 +86,8 @@
         <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog">
             <span>您确定删除这一条档案数据吗？</span>
             <span slot="footer" class="dialog-footer">
-            <el-button @click="deleteVisible = false">取 消</el-button>
-            <el-button type="primary" @click="OnDelete">确 定</el-button>
+                <el-button @click="deleteVisible = false">取 消</el-button>
+                <el-button type="primary" @click="OnDelete">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -122,7 +123,8 @@ export default {
             // searchParams: { companyStatus: '1' },
             deleteVisible: false,
             table: [
-                { label: '档案编号',
+                {
+                    label: '档案编号',
                     prop: 'archiveNo',
                     render: (h, scope) => {
                         return (
@@ -130,8 +132,10 @@ export default {
                                 {scope.row.archiveNo}
                             </span>
                         )
-                    } },
-                { label: '档案归档',
+                    }
+                },
+                {
+                    label: '档案归档',
                     prop: 'archiveStatus',
                     render: (h, scope) => {
                         if (scope.row.archiveStatus === '2') {
@@ -153,7 +157,8 @@ export default {
                         }
                     }
                 },
-                { label: '借阅情况',
+                {
+                    label: '借阅情况',
                     prop: 'borrowStatus',
                     render: (h, scope) => {
                         if (scope.row.borrowStatus === '1' || scope.row.borrowStatus == null) {
@@ -170,13 +175,15 @@ export default {
                     }
                 },
                 { label: '平台公司', prop: 'companyName' },
-                { label: '分部',
+                {
+                    label: '分部',
                     prop: 'departmentId',
                     render: (h, scope) => {
                         return <span>{this.getNameByCode(scope.row.departmentId)}</span>
                     }
                 },
-                { label: 'C档（工商）',
+                {
+                    label: 'C档（工商）',
                     prop: 'commerialDocFlag',
                     render: (h, scope) => {
                         if (scope.row.commerialDocFlag == null) return (<span><i class="el-icon-close"></i></span>)
@@ -194,13 +201,17 @@ export default {
                                 </span>
                             )
                         }
-                    } },
-                { label: 'B档（签约）',
+                    }
+                },
+                {
+                    label: 'B档（签约）',
                     children: [
-                        { label: '实控人',
+                        // todo 实控人归档信息
+                        {
+                            label: '实控人',
                             prop: 'realControllerName',
                             render: (h, scope) => {
-                                if (scope.row.realControllerName == null) return (<span>-</span>)
+                                if (scope.row.realControllerName == null) return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.realControllerName) {
                                     return (
                                         <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'B档（实控人）')}>
@@ -210,11 +221,35 @@ export default {
                                 }
                             }
                         },
-                        { label: '自然人股东', prop: 'shareholderName' },
-                        { label: '投资协议',
+                        // todo 自然人股东归档信息
+                        {
+                            label: '自然人股东',
+                            prop: 'shareholderName',
+                            render: (h, scope) => {
+                                if (scope.row.shareholderName == null) return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.shareholderName) {
+                                    return (
+                                        <span>
+                                            {scope.row.shareholderName}
+                                        </span>
+                                    )
+                                }
+                            }
+                        },
+                        {
+                            label: '投资协议',
                             prop: 'signBOs',
                             render: (h, scope) => {
-                                let temp = this.getsignBOs(scope.row.signBOs)
+                                let flag = true // 都是未归档
+                                for (let i = 0; i < 5; i++) {
+                                    if (scope.row[`v${i + 1}SignerFlag`] == 1) {
+                                        flag = false
+                                    }
+                                }
+                                if (flag) {
+                                    return <span><i class="el-icon-close"></i></span>
+                                }
+                                let temp = this.getsignBOs(scope.row.signBOs, scope.row)
                                 let str = ''
                                 temp.map((item, index) => {
                                     if (item && item.num) {
@@ -224,14 +259,33 @@ export default {
                                 if (str) {
                                     return <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '投资协议')}>{str}</span>
                                 } else {
-                                    return <span>-</span>
+                                    return <span><i class="el-icon-close"></i></span>
                                 }
                             }
                         },
-                        { label: '担保函签约人', prop: 'guanranteeName' }
+                        {
+                            label: '担保函签约人',
+                            prop: 'guanranteeName',
+                            render: (h, scope) => {
+                                if (scope.row.guanranteeName == null || scope.row.guanranteeDocFlag == 0) return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.guanranteeName) {
+                                    return (
+                                        <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '担保函')}>
+                                            {scope.row.guanranteeName}
+                                        </span>
+                                    )
+                                    /* return (
+                                        <span>
+                                            {scope.row.guanranteeName}
+                                        </span>
+                                    ) */
+                                }
+                            }
+                        }
                     ]
                 },
-                { label: 'A档（尽调）',
+                {
+                    label: 'A档（尽调）',
                     prop: 'ddDocFlag',
                     render: (h, scope) => {
                         if (scope.row.ddDocFlag == null) return (<span><i class="el-icon-close"></i></span>)
@@ -336,7 +390,7 @@ export default {
             this.getList()
             this.dialog.dialogVisible = false
         },
-        getsignBOs (signBOs) {
+        getsignBOs (signBOs, data) {
             let arr = []
             let temp = []
             for (let t = 0; t < 5; t++) {
@@ -353,7 +407,8 @@ export default {
                             len = len + item.signDocPOs.length
                         }
                         let obj = {
-                            num: len
+                            num: len,
+                            flag: data[`v${i + 1}SignerFlag`] // 是否归档
                         }
                         temp[index] = obj
                     })
@@ -441,12 +496,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.tabs{background-color: #fff;}
-/deep/.colorypointer{ cursor: pointer; color: #FF7A45;}
-/deep/.colorrpointer{ cursor: pointer; color: #f00;}
-/deep/.deldialog .el-dialog__body{min-height: 100px;font-size: 16px;padding-top: 20px;}
-/deep/.el-icon-close{font-size: 16px}
-/deep/.el-icon-check{font-size: 16px}
-/deep/.dialog .el-dialog--center .el-dialog__body{max-height: 600px;overflow-y: scroll;}
-
+.tabs {
+    background-color: #fff;
+}
+/deep/.colorypointer {
+    cursor: pointer;
+    color: #ff7a45;
+}
+/deep/.colorrpointer {
+    cursor: pointer;
+    color: #f00;
+}
+/deep/.deldialog .el-dialog__body {
+    min-height: 100px;
+    font-size: 16px;
+    padding-top: 20px;
+}
+/deep/.el-icon-close {
+    font-size: 16px;
+}
+/deep/.el-icon-check {
+    font-size: 16px;
+}
+/deep/.dialog .el-dialog--center .el-dialog__body {
+    max-height: 600px;
+    overflow-y: scroll;
+}
 </style>

@@ -83,8 +83,8 @@ export default {
             font-size: 21px;
             font-weight: bold;
         }
-        a {color: #6e6f73; margin-left: 10px}
+        a {color: #FF7A45; margin-left: 10px}
     }
-    .posrtv{ position: relative;}
+    .posrtv{ position: relative;color: #FF7A45;}
 }
 </style>

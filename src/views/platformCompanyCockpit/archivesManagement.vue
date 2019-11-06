@@ -250,7 +250,7 @@ export default {
                         }
                         arr[index] = obj
                     })
-                    console.log(`v${i + 1}.0`, arr[arr.length - 1])
+                    // console.log(`v${i + 1}.0`, arr[arr.length - 1])
                     this.form.archiveSignPO.signBOs.splice(i, 1, arr[arr.length - 1])
                 }
             }
@@ -264,10 +264,10 @@ export default {
                 this.$refs['baseInfo'].addressDistrict = this.addressDistrict
                 let privince = tempPrivince.length > 0 ? tempPrivince[0].cityName : ''
                 let city = (tempCity.length > 0 && tempCity[0].cityName) || ''
-                let area = (tempArea.length > 0 && tempArea[0].cityName) || ''
+                let area = (tempArea.length > 0 && tempArea[0].cityName && tempArea[0].cityId) || ''
                 let address = `${privince} ${city} ${area} ${this.form.platformBasicInfoPO.addressOther}`
                 console.log(address)
-                this.$refs['baseInfo'].datailAddress = address.indexOf('null') > -1 ? '-' : address
+                this.$refs['baseInfo'].datailAddress = address == '   ' ? '-' : address
             })
         },
         getNameByCode (code, list) {
