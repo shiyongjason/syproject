@@ -390,9 +390,16 @@ export default {
             this.page.total = data.total
         },
         openDialog (item, index, data, width = '800px') {
+            let dialogTitle = ''
+            if (data === '借出档案管理') {
+                console.log(item)
+                dialogTitle = item.borrowStatus == '2' ? '借出档案管理' : '确认借出'
+            } else {
+                dialogTitle = `${item.archiveNo}-${data}`
+            }
             this.dialog = {
                 dialog: data,
-                dialogTitle: `${item.archiveNo}-${data}`,
+                dialogTitle,
                 item,
                 dialogVisible: true,
                 width

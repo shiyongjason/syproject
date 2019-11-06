@@ -136,7 +136,7 @@ export default {
             return (
                 <div class='box'>
                     <p><span>归档时间：</span>{this.item.createTime ? this.item.createTime : '-'}</p>
-                    <p><span>归档人：</span>{this.item.updateUser ? this.item.updateUser : '-'}</p>
+                    <p><span>归档人：</span>{this.item.createUser ? this.item.createUser : '-'}</p>
                     <p><span>档案位置：</span>{this.item.archiveLocation ? this.item.archiveLocation : '-'}</p>
                 </div>
             )
@@ -153,7 +153,7 @@ export default {
             return (
                 <div class='box'>
                     <p><span>借阅情况：</span>{this.item.borrowStatus === '1' ? '未借出' : this.item.borrowStatus === '2' ? '已借出' : ''}</p>
-                    <p><span>备注：</span>{this.item.remark ? this.item.remark : '-'}</p>
+                    <p><span>备注：</span>{this.item.borrowRemark ? this.item.borrowRemark : '-'}</p>
                 </div>
             )
         }

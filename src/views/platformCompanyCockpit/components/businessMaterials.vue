@@ -67,46 +67,45 @@
                     </template>
                 </div>
             </el-form-item>
-        </template>
-        <el-form-item label-width='160px'>
-            <template #label>
-                <span>增减资协议是否归档：</span>
-            </template>
-            <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="1">是</el-radio>
-            <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="0">否</el-radio>
-            <span v-if="!isEdit">{{business.capitalDocFlag==='0'?'否':business.capitalDocFlag==='1'?'是':'-'}}</span>
-        </el-form-item>
-        <template v-if="business.capitalDocFlag==='1'" >
-            <el-form-item prop="num" label-width='160px'>
+            <el-form-item label-width='160px'>
                 <template #label>
-                    <span style="margin-top: 16px;display: inline-block;">增减资协议：</span>
+                    <span>增减资协议是否归档：</span>
                 </template>
-                <hosjoyUpload v-if="isEdit" v-model="business.capital" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('capital','c-capital')">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                </hosjoyUpload>
-                <div class="filename" v-else>
-                    <span v-if="business.capital.length===0">-</span>
-                    <template v-else>
-                        <span v-for="(item,index) in business.capital" :key="index" class="posrtv">
-                            <template v-if="item&&item.fileUrl">
-                                <i class="el-icon-document"></i>
-                                <a :href="item.fileUrl" target="_blank">
-                                    <font >{{item.fileName}}</font>
-                                </a>
-                            </template>
-                        </span>
-                    </template>
-                </div>
+                <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="1">是</el-radio>
+                <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="0">否</el-radio>
+                <span v-if="!isEdit">{{business.capitalDocFlag==='0'?'否':business.capitalDocFlag==='1'?'是':'-'}}</span>
             </el-form-item>
-        </template>
-        <el-form-item label-width='160px'>
-            <template #label>
-                <span>股转版协议是否归档：</span>
+            <template v-if="business.capitalDocFlag==='1'" >
+                <el-form-item prop="num" label-width='160px'>
+                    <template #label>
+                        <span style="margin-top: 16px;display: inline-block;">增减资协议：</span>
+                    </template>
+                    <hosjoyUpload v-if="isEdit" v-model="business.capital" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('capital','c-capital')">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </hosjoyUpload>
+                    <div class="filename" v-else>
+                        <span v-if="business.capital.length===0">-</span>
+                        <template v-else>
+                            <span v-for="(item,index) in business.capital" :key="index" class="posrtv">
+                                <template v-if="item&&item.fileUrl">
+                                    <i class="el-icon-document"></i>
+                                    <a :href="item.fileUrl" target="_blank">
+                                        <font >{{item.fileName}}</font>
+                                    </a>
+                                </template>
+                            </span>
+                        </template>
+                    </div>
+                </el-form-item>
             </template>
-            <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="1">是</el-radio>
-            <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="0">否</el-radio>
-            <span v-if="!isEdit">{{business.stocktransferDocFlag==='0'?'否':business.stocktransferDocFlag==='1'?'是':'-'}}</span>
-        </el-form-item>
+            <el-form-item label-width='160px'>
+                <template #label>
+                    <span>股转版协议是否归档：</span>
+                </template>
+                <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="1">是</el-radio>
+                <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="0">否</el-radio>
+                <span v-if="!isEdit">{{business.stocktransferDocFlag==='0'?'否':business.stocktransferDocFlag==='1'?'是':'-'}}</span>
+            </el-form-item>
         <template v-if="business.stocktransferDocFlag==='1'" >
             <el-form-item prop="num" label-width='160px'>
                 <template #label>
@@ -130,7 +129,7 @@
                 </div>
             </el-form-item>
         </template>
-
+        </template>
     </div>
 </template>
 
