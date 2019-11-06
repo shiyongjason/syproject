@@ -103,14 +103,8 @@ export default {
                         return <span><i class="el-icon-time"></i>{scope.column.label}</span>
                     }
                 },
-                {
-                    prop: 'companyShortName',
-                    label: '平台公司名'
-                },
-                {
-                    prop: 'subsectionName',
-                    label: '分部'
-                },
+                { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '100' },
+                { prop: 'subsectionName', label: '分部', fixed: true },
                 {
                     label: '销售收入与成本/万',
                     renderHeader: (h, scope) => {
@@ -144,9 +138,24 @@ export default {
                             prop: 'grossProfitMargin',
                             label: '毛利率',
                             render: (h, scope) => {
-                                return <span>{scope.row.grossProfitMargin}</span>
+                                return <span>{scope.row.grossProfitMargin ? `${scope.row.grossProfitMargin}%` : '-'}</span>
                             }
                         }
+                    ]
+                },
+                {
+                    label: '费用及税费',
+                    children: [
+                        { prop: 'expense', label: '费用/万', displayAs: 'money' },
+                        {
+                            prop: 'expenseRate',
+                            label: '费率',
+                            render: (h, scope) => {
+                                return <span>{scope.row.expense ? `${scope.row.expense}%` : '-'}</span>
+                            }
+                        },
+                        { prop: 'incomeTax', label: '所得税/万', displayAs: 'money' }
+
                     ]
                 },
                 {
@@ -157,19 +166,14 @@ export default {
                         )
                     },
                     children: [
+                        { prop: 'totalProfit', label: '利润总额/万', displayAs: 'money' },
+                        { prop: 'netProfit', label: '净利润额/万', displayAs: 'money' },
                         {
-                            prop: 'date',
-                            label: '净利润总额/万',
-                            displayAs: 'YYYY-MM-DD HH:mm'
-                        },
-                        {
-                            prop: 'name',
-                            label: '净利润额/万',
+                            prop: 'num',
+                            label: '达成率todo',
                             render: (h, scope) => {
-                                return <el-tag>{scope.row.name}</el-tag>
-                            }
-                        },
-                        { prop: 'num', label: '达成率' }
+                                return <span>达成率todo</span>
+                            } }
                     ]
                 },
                 {
@@ -180,7 +184,13 @@ export default {
                         )
                     },
                     children: [
-                        { prop: 'num', label: '净利润率' }
+                        {
+                            prop: 'netProfitRate',
+                            label: '净利润率',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        }
                     ]
                 }
 
@@ -193,14 +203,26 @@ export default {
             ],
             // 毛利的展开
             expandGrossProfit: [
-                { prop: 'name', label: '上月/万' },
-                { prop: 'name', label: '环比' },
-                { prop: 'name', label: '同期' },
-                { prop: 'name', label: '同比' }
+                { prop: 'grossProfitLastMonth', label: '上月/万' },
+                {
+                    prop: 'grossProfitLinkRelativeRatio',
+                    label: '环比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.grossProfitLinkRelativeRatio ? `${scope.row.grossProfitLinkRelativeRatio}%` : '-'}</span>
+                    }
+                },
+                { prop: 'grossProfitLastYear', label: '同期/万' },
+                { prop: 'grossProfitYearOnYear',
+                    label: '同比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.grossProfitYearOnYear ? `${scope.row.grossProfitYearOnYear}%` : '-'}</span>
+                    }
+                }
             ],
             // 净利润的展开
             expandNetProfit: [
-                {
+                // 这期不做
+                /* {
                     prop: 'num',
                     label: '目标/万',
                     render: (h, scope) => {
@@ -217,36 +239,53 @@ export default {
                         )
                     }
 
+                }, */
+                { prop: 'num', label: '缺口/万todo' },
+                { prop: 'netProfitLastMonth', label: '上月/万', displayAs: 'money' },
+                {
+                    prop: 'netProfitLinkRelativeRatio',
+                    label: '环比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitLinkRelativeRatio ? `${scope.row.netProfitLinkRelativeRatio}%` : '-'}</span>
+                    }
                 },
-                { prop: 'num', label: '缺口/万' },
-                { prop: 'num', label: '上月/万' },
-                { prop: 'num', label: '环比' },
-                { prop: 'num', label: '同期' },
-                { prop: 'num', label: '同比' }
+                { prop: 'netProfitLastYear', label: '同期', displayAs: 'money' },
+                { prop: 'netProfitYearOnYear',
+                    label: '同比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitYearOnYear ? `${scope.row.netProfitYearOnYear}%` : '-'}</span>
+                    }
+                }
             ],
             expandNetProfitRate: [
                 {
                     prop: 'num',
-                    label: '目标/万',
+                    label: '上月',
                     render: (h, scope) => {
-                        return (
-                            scope.row.num
-                                ? scope.row._rateTarget
-                                    ? <div>
-                                        <el-input size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val }} onBlur={() => { this.handleSave(scope, '_rateTarget') }}></el-input>
-                                    </div>
-                                    : <span>{scope.row.num}<i class="el-icon-edit-outline ml10 pointer" onClick={() => { this.handleEdit(scope, '_rateTarget') }}></i></span>
-                                : scope.row._rateTarget
-                                    ? <el-input size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val }} onBlur={() => { this.handleSave(scope, '_rateTarget') }}></el-input>
-                                    : <span>-<i class="el-icon-edit-outline ml10 pointer" onClick={() => { this.handleEdit(scope, '_rateTarget') }}></i></span>
-                        )
+                        return <span>{scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
-                { prop: 'num', label: '缺口/万' },
-                { prop: 'num', label: '上月/万' },
-                { prop: 'num', label: '环比' },
-                { prop: 'num', label: '同期' },
-                { prop: 'num', label: '同比' }
+                {
+                    prop: 'netProfitRateLinkRelativeRatio',
+                    label: '环比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLinkRelativeRatio ? `${scope.row.netProfitRateLinkRelativeRatio}%` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'num',
+                    label: '同期',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastYear ? `${scope.row.netProfitRateLastYear}%` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'num',
+                    label: '同比',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateYearOnYear ? `${scope.row.netProfitRateYearOnYear}%` : '-'}</span>
+                    }
+                }
             ]
         }
     },
@@ -279,6 +318,12 @@ export default {
         hosJoyTable
     },
     methods: {
+        toPercent (point) {
+            if (!point) { return '-' }
+            let str = Number(point * 100).toFixed(2)
+            str += '%'
+            return str
+        },
         onShowMessage () {
             this.$alert('毛利栏目下的上月、环比、同期、同比均为对毛利额的计算', '毛利', {
                 confirmButtonText: '我知道了',
