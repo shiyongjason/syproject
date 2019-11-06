@@ -190,6 +190,7 @@ export default {
     margin-top: 17px;
     color: #6e6f73;
     display: flex;
+    flex-wrap: wrap;
     span{
             display: flex;
             align-items: center;
