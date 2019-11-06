@@ -362,7 +362,6 @@ export default {
                     arr.splice(i, 1, temp[temp.length - 1])
                 }
             }
-            console.log(arr)
             return arr
         },
         async findBranchListNew () {
