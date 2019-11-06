@@ -332,7 +332,6 @@ export default {
                 borrowRemark: this.dialog.item.borrowRemark,
                 borrowStatus: val// 档案状态：1-未借出；2-已借出
             }
-            console.log(query)
             await borrow(query)
             this.getList()
             this.dialog.dialogVisible = false
@@ -362,7 +361,6 @@ export default {
                     arr.splice(i, 1, temp[temp.length - 1])
                 }
             }
-            console.log(arr)
             return arr
         },
         async findBranchListNew () {
@@ -392,7 +390,6 @@ export default {
             this.page.total = data.total
         },
         openDialog (item, index, data, width = '800px') {
-            console.log(index)
             this.dialog = {
                 dialog: data,
                 dialogTitle: `${item.archiveNo}-${data}`,

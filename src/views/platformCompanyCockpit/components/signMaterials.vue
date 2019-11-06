@@ -65,11 +65,12 @@
                         {{item.radio==='1'?'是':item.radio==='0'?'否':'-'}}
                     </span>
                     <template v-if="item.radio==='1'" >
-                        <div v-for="(jtem,jndex) in item.version" :key="jndex">
+                        <div v-for="(jtem,jndex) in item.version" :key="jndex" class="filepr">
                             <el-form-item prop="documentList"  label-width='160px'  >
                                 <template #label>
                                     <span style="margin-top: 16px;display: inline-block;">第{{jndex+1}}份文件：</span>
                                 </template>
+                                <span class="delabs" v-if="(item.version.length-1===jndex)&&jndex!=0" @click="deleteVersionList(index)">删除</span>
                                 <hosjoyUpload v-if="isEdit" v-model="jtem.documentList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('1')">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                 </hosjoyUpload>
@@ -258,7 +259,6 @@ export default {
                 })
             }
             if (str === '1') {
-                console.log(this.archiveSignPO.signBOs)
                 this.archiveSignPO.signBOs.map(item => {
                     item.version.map(jtem => {
                         jtem.documentList.map(jtem => {
@@ -277,6 +277,9 @@ export default {
                 })
             }
         },
+        deleteVersionList (index) {
+            this.archiveSignPO.signBOs[index].version = this.archiveSignPO.signBOs[index].version.slice(0, -1)
+        },
         onAdd () {
             if (this.archiveSignPO.signBOs.length === 5) {
                 return
@@ -289,19 +292,11 @@ export default {
                 let len = this.archiveSignPO.signBOs.length
                 // let key = `v${len}SignerFlag`
                 this.$set(this.archiveSignPO.signBOs[len - 1], 'radio', '0')
-                this.$set(this.archiveSignPO.signBOs[0], 'radio', '1')
+                // this.$set(this.archiveSignPO.signBOs[0], 'radio', '1')
+                this.$set(this.archiveSignPO.signBOs[0], 'radio', '0')
             }
-            console.log(this.archiveSignPO.signBOs)
         }
     },
-    /* watch: {
-        signBOs: {
-            handler (val) {
-                console.log(val)
-            },
-            deep: true
-        }
-    }, */
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
         // this.onAdd()
@@ -321,6 +316,7 @@ export default {
     margin-top: 17px;
     color: #6e6f73;
     display: flex;
+    flex-wrap: wrap;
     span{
             display: flex;
             align-items: center;
@@ -341,4 +337,6 @@ export default {
     justify-content: center;
 }
 /deep/.addbtn i{ font-size: 18px}
+.filepr{ position: relative;}
+.delabs{ position: absolute;right:0;font-size: 12px;border-radius: 3px;padding: 10px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block; line-height: 1}
 </style>
