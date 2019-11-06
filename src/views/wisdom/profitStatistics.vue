@@ -169,10 +169,10 @@ export default {
                         { prop: 'totalProfit', label: '利润总额/万', displayAs: 'money' },
                         { prop: 'netProfit', label: '净利润额/万', displayAs: 'money' },
                         {
-                            prop: 'num',
-                            label: '达成率todo',
+                            prop: 'netProfitAchievementRate',
+                            label: '达成率',
                             render: (h, scope) => {
-                                return <span>达成率todo</span>
+                                return <span>{scope.row.netProfitAchievementRate ? `${scope.row.netProfitAchievementRate}%` : '-'}</span>
                             } }
                     ]
                 },
@@ -240,7 +240,8 @@ export default {
                     }
 
                 }, */
-                { prop: 'num', label: '缺口/万todo' },
+                { prop: 'netProfitTarget', label: '目标/万', displayAs: 'money' },
+                { prop: 'netProfitGap', label: '缺口/万', displayAs: 'money' },
                 { prop: 'netProfitLastMonth', label: '上月/万', displayAs: 'money' },
                 {
                     prop: 'netProfitLinkRelativeRatio',
@@ -259,7 +260,7 @@ export default {
             ],
             expandNetProfitRate: [
                 {
-                    prop: 'num',
+                    prop: 'netProfitRateLastMonth',
                     label: '上月',
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
@@ -273,14 +274,14 @@ export default {
                     }
                 },
                 {
-                    prop: 'num',
+                    prop: 'netProfitRateLastYear',
                     label: '同期',
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastYear ? `${scope.row.netProfitRateLastYear}%` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'num',
+                    prop: 'netProfitRateYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateYearOnYear ? `${scope.row.netProfitRateYearOnYear}%` : '-'}</span>
@@ -348,43 +349,14 @@ export default {
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
             let query = { ...this.queryParams }
             const { data } = await getProfitList(query)
-            console.log(data)
             this.tableData = data.data.list
-            console.log(this.tableData)
             this.page.total = data.data.total
-            /* this.tableData = [
-                {
-                    date: '2019-09-29T05:54:15.000+0000',
-                    name: '王小虎1',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    ceshi: 0,
-                    num: 1230,
-                    dicData: 0
-                },
-                {
-                    date: '2016-05-02',
-                    name: '王小虎2',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    ceshi: 1,
-                    num: 4560,
-                    dicData: '1'
-                },
-                {
-                    date: '2016-05-03',
-                    name: '王小虎3',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    ceshi: 0,
-                    num: null,
-                    dicData: 1
-                }
-            ] */
         },
         filterHandler (value, row, column) {
             const property = column['property']
             return row[property] === value
         },
         handleEdit (scope, key = '_edit') {
-            console.log(scope)
             this.$set(scope.row, key, true)
         },
         handleSave (scope, key = '_edit') {
