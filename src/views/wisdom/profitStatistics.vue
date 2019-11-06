@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete v-if="isEdit" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                        <HAutocomplete  :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
                     </div>
                 </div>
                 <!--  v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]" -->
@@ -19,7 +19,7 @@
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
+                            <el-option v-for="item in branchList" :key="item.subsectionName" :label="item.subsectionName" :value="item.subsectionCode">
                             </el-option>
                         </el-select>
                     </div>
@@ -32,8 +32,6 @@
                     <el-date-picker v-model="queryParams.endDate" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
-            </div>
-            <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-title">公司上线状态：</div>
                     <div class="query-col-input">
@@ -67,7 +65,7 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList } from './api/index.js'
+import { getProfitList, findPaltList, findBranchListNew } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -77,6 +75,10 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            selectPlatObj: {
+                selectCode: '',
+                selectName: ''
+            },
             platComList: [], // 平台公司
             branchList: [],
             bustype: [],
@@ -319,6 +321,14 @@ export default {
         }
     },
     methods: {
+        backPlat (val) {
+            // 平台公司名称点击后事件
+            if (val && val.value && val.value.companyShortName) {
+                this.queryParams.companyCode = val.value.companyCode
+            } else {
+                this.queryParams.companyCode = ''
+            }
+        },
         async findPaltList () {
             // 平台公司名称
             const { data } = await findPaltList()
@@ -381,6 +391,8 @@ export default {
         this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
         this.getList()
+        this.findPaltList()
+        this.findBranchListNew()
         /* // 如果 当前人大区 -1  总部 0  分部 1 organizationType
         // console.log(this.userInfo.organizationType)
         let oldDeptCode = ''
