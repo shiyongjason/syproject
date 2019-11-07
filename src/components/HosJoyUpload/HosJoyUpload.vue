@@ -279,8 +279,8 @@ export default {
     }
 }
 
-.posrtv{ position: relative;margin-right: 15px;}
-.posrtv a{ color: #6e6f73;margin-left: 10px}
+.posrtv{ position: relative;margin-right: 15px;color: #FF7A45;}
+.posrtv a{ color: #FF7A45;margin-left: 10px}
 .abs{
         position: absolute; right: -11px;top:-7px;display: none;
         i{font-size: 18px;color: #5d5d5d;cursor: pointer;}

@@ -9,7 +9,7 @@ export default {
         return {
             remark: '',
             nameList: {
-                'a-dd': '竞调材料',
+                'a-dd': '尽调材料归档情况',
                 'b-realcontroller': '实控人身份证归档',
                 'b-guarantee': '担保函归档',
                 'b-other': '其余b档签约材料',
@@ -43,21 +43,6 @@ export default {
                     downDom.click()
                 })
             }
-        },
-        /* getBaseDom (fileName, fileUrl) {
-            this.urlToBase64(fileUrl).then(res => {
-                return (
-                    <a download={fileName} href={url} id="downloadImage" style="display:none">{url}</a>
-                )
-            })
-        }, */
-        onSave () {
-            // https://stackoverflow.com/questions/14011021/how-to-download-a-base64-encoded-image?lq=1
-            let downloadImage = document.getElementById('downloadImage')
-            console.log(downloadImage)
-            this.$nextTick(() => {
-                downloadImage.click()
-            })
         },
         formatSignBOs () {
             if (this.item.itemSignBOs && this.item.itemSignBOs.length === 5) {
@@ -114,6 +99,12 @@ export default {
             }
             if (type === 'b') {
                 let arr = ['b-realcontroller']
+                arr.map(item => {
+                    temp.push(this.formatData(item))
+                })
+            }
+            if (type === 'b-guarantee') {
+                let arr = ['b-guarantee']
                 arr.map(item => {
                     temp.push(this.formatData(item))
                 })
@@ -194,12 +185,48 @@ export default {
                 </div>
             )
         }
+        if (this.dialog === '担保函') {
+            let arr = this.getFile('b-guarantee')
+            console.log(arr)
+            return (
+                <div class='box'>
+                    {
+                        arr.map(item => {
+                            return (
+                                <div>
+                                    <p>签约人：{this.item.guanranteeName}</p>
+                                    {
+                                        item.file.length === 0
+                                            ? '-'
+                                            : item.file.map((jtem, jndex) => {
+                                                return (
+                                                    <p>
+                                                        <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
+                                                        {
+                                                            jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                    this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
+                                                                }} size='mini'>下载</el-button></span>
+                                                                : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
+                                                        }
+                                                    </p>
+                                                )
+                                            })
+                                    }
+
+                                </div>
+                            )
+                        })
+                    }
+
+                </div>
+            )
+        }
         if (this.dialog === 'A档（尽调）') {
             let arr = this.getFile('a')
             console.log(arr)
             return (
                 <div class='box'>
-                    <div class='mb5'>工商材料归档情况：</div>
                     {
                         arr.map(item => {
                             return (
@@ -279,41 +306,45 @@ export default {
                             return (
                                 <div>
                                     <p>{index + 1}.0版本：</p>
-                                    {item.version.map(jtem => {
-                                        if (jtem.signDocPOs.length === 0) {
-                                            return (<span>-</span>)
-                                        }
-                                        return (
-                                            <div class='signbos'>
-                                                <p class='signname'>
+                                    {
+                                        this.item[`v${index + 1}SignerFlag`] === 1
+                                            ? item.version.map(jtem => {
+                                                if (jtem.signDocPOs.length === 0) {
+                                                    return (<p>-</p>)
+                                                }
+                                                return (
+                                                    <div class='signbos'>
+                                                        <p class='signname'>
                                                 签约人：{jtem.archiveSignInvestPO.signerName ? jtem.archiveSignInvestPO.signerName : '-'}
-                                                </p>
-                                                <div class='fileslist'>
-                                                    <p class='fileslistt'>文件：</p>
-                                                    <div class='signfile'>
-                                                        {
-                                                            jtem.signDocPOs.length === 0
-                                                                ? '-'
-                                                                : jtem.signDocPOs.map((ktem, kndex) => {
-                                                                    return (
-                                                                        <font>
-                                                                            <span class='filename'><a href={ktem.fileUrl} target='_blank'>{ktem.fileName}</a></span>
-                                                                            {
-                                                                                ktem.fileName.toLowerCase().indexOf('.png') != -1 || ktem.fileName.toLowerCase().indexOf('.jpg') != -1 || ktem.fileName.toLowerCase().indexOf('.jpeg') != -1
-                                                                                    ? <span class='download'><el-button type="primary" on-click={() => {
-                                                                                        this.getUrlBase64(ktem.fileUrl, `dom${kndex}`, ktem.fileName)
-                                                                                    }} size='mini'>下载</el-button></span>
-                                                                                    : <span><a class='downloadfile' href={ktem.fileUrl} target='_blank'>下载</a></span>
-                                                                            }
-                                                                        </font>
-                                                                    )
-                                                                })
-                                                        }
+                                                        </p>
+                                                        <div class='fileslist'>
+                                                            <p class='fileslistt'>文件：</p>
+                                                            <div class='signfile'>
+                                                                {
+                                                                    jtem.signDocPOs.length === 0
+                                                                        ? '-'
+                                                                        : jtem.signDocPOs.map((ktem, kndex) => {
+                                                                            return (
+                                                                                <font>
+                                                                                    <span class='filename'><a href={ktem.fileUrl} target='_blank'>{ktem.fileName}</a></span>
+                                                                                    {
+                                                                                        ktem.fileName.toLowerCase().indexOf('.png') != -1 || ktem.fileName.toLowerCase().indexOf('.jpg') != -1 || ktem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                                            ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                                                this.getUrlBase64(ktem.fileUrl, `dom${kndex}`, ktem.fileName)
+                                                                                            }} size='mini'>下载</el-button></span>
+                                                                                            : <span><a class='downloadfile' href={ktem.fileUrl} target='_blank'>下载</a></span>
+                                                                                    }
+                                                                                </font>
+                                                                            )
+                                                                        })
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
+                                                )
+                                            })
+                                            : '-'
+                                    }
                                 </div>
                             )
                         })
@@ -352,13 +383,43 @@ export default {
     height: 34px;
     line-height: 34px;
 }
-.signbos{display:flex}
-.signname{flex:0 0 200px}
-.signbos font{display:flex}
-.fileslist{display:flex;flex: 1;align-items: baseline;}
-/deep/.fileslistt{flex:0 0 49px}
-.signfile{flex: 1;}
-.signfile .filename{display: inline-block;}
-.signfile font{display:flex;justify-content: space-between;margin-top: 4px;}
-/deep/.downloadfile{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block;line-height: 1;float: right;}
+.signbos {
+    display: flex;
+}
+.signname {
+    flex: 0 0 200px;
+}
+.signbos font {
+    display: flex;
+}
+.fileslist {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+}
+/deep/.fileslistt {
+    flex: 0 0 49px;
+}
+.signfile {
+    flex: 1;
+}
+.signfile .filename {
+    display: inline-block;
+}
+.signfile font {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+/deep/.downloadfile {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #ff7a45;
+    border-color: #ff7a45;
+    display: inline-block;
+    line-height: 1;
+    float: right;
+}
 </style>
