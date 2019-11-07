@@ -68,7 +68,7 @@
             </div>
         </div>
         <!--  -->
-        <el-dialog center :title="dialog.dialogTitle" :visible.sync="dialog.dialogVisible" :width='dialog.width' class="dialog">
+        <el-dialog center :title="dialog.dialogTitle==='档案编号'?dialog.item.archiveNo:dialog.dialogTitle" :visible.sync="dialog.dialogVisible" :width='dialog.width' class="dialog">
             <div class="dialogbox">
                 <dialogComponent ref="dialogComponent" :item="dialog.item" :dialog='dialog.dialog'></dialogComponent>
             </div>
@@ -161,7 +161,7 @@ export default {
                     label: '借阅情况',
                     prop: 'borrowStatus',
                     render: (h, scope) => {
-                        if (scope.row.borrowStatus === '1' || scope.row.borrowStatus == null) {
+                        if (scope.row.borrowStatus === '1' || !scope.row.borrowStatus) {
                             return (
                                 <span>未借出</span>
                             )
@@ -186,7 +186,7 @@ export default {
                     label: 'C档（工商）',
                     prop: 'commerialDocFlag',
                     render: (h, scope) => {
-                        if (scope.row.commerialDocFlag == null || scope.row.commerialDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                        if (!scope.row.commerialDocFlag || scope.row.commerialDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                         if (scope.row.commerialDocFlag === '1') {
                             return (
                                 <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'C档（工商）')}>
@@ -203,12 +203,12 @@ export default {
                             label: '实控人',
                             prop: 'realControllerName',
                             render: (h, scope) => {
-                                if (scope.row.realControllerName == null || scope.row.rcDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (!scope.row.realControllerName || scope.row.rcDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.realControllerName) {
                                     let temp = this.getDocNum('b-realcontroller', scope.row)
                                     if (temp && temp.length > 0) {
                                         return (
-                                            <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'B档（实控人）')}>
+                                            <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '实控人')}>
                                                 {scope.row.realControllerName}
                                             </span>
                                         )
@@ -222,7 +222,7 @@ export default {
                             label: '自然人股东',
                             prop: 'shareholderName',
                             render: (h, scope) => {
-                                if (scope.row.shareholderName == null || scope.row.shareholderDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (!scope.row.shareholderName || scope.row.shareholderDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.shareholderName) {
                                     return (
                                         <span>
@@ -248,7 +248,6 @@ export default {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
                                 this.getsignBOs(scope.row.signBOs, scope.row, scope.$index)
-                                console.log(scope.row)
                                 let str = ''
                                 scope.row.itemSignBOs.map((item, index) => {
                                     if (item.flag == 1) {
@@ -260,18 +259,6 @@ export default {
                                 } else {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
-                                /* let str = ''
-                                temp.map((item, index) => {
-                                    // && item.num
-                                    if (item && item.flag) {
-                                        str = str + `${index + 1}.0*${item.num} `
-                                    }
-                                })
-                                if (str) {
-                                    return <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '投资协议')}>{str}</span>
-                                } else {
-                                    return <span><i class="el-icon-close"></i></span>
-                                } */
                             }
                         },
                         {
@@ -314,7 +301,7 @@ export default {
                         }
                     }
                 },
-                { label: '建档时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm' }
+                { label: '建档时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' }
                 /* {
                     label: '操作',
                     width: '290px',
@@ -514,10 +501,9 @@ export default {
         openDialog (item, index, data, width = '800px') {
             let dialogTitle = ''
             if (data === '借出档案管理') {
-                console.log(item)
                 dialogTitle = item.borrowStatus == '2' ? '借出档案管理' : '确认借出'
             } else {
-                dialogTitle = `${item.archiveNo}-${data}`
+                dialogTitle = `${data}`
             }
             this.dialog = {
                 dialog: data,

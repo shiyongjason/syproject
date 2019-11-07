@@ -74,17 +74,22 @@
                                 <hosjoyUpload v-if="isEdit" v-model="jtem.documentList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('1')">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                 </hosjoyUpload>
+                                <!--  -->
                                 <div class="filename" v-else>
                                     <span v-if="jtem.documentList.length===0">-</span>
                                     <template v-else>
-                                        <span v-for="(item,index) in jtem.documentList" :key="index" class="posrtv">
-                                            <template v-if="item&&item.fileUrl">
-                                                <i class="el-icon-document"></i>
-                                                <a :href="item.fileUrl" target="_blank">
-                                                    <font >{{item.fileName}}</font>
-                                                </a>
-                                            </template>
-                                        </span>
+                                        <div class="fileItem" v-for="(item,index) in jtem.documentList" :key="index" >
+                                            <span class="posrtv">
+                                                <template v-if="item&&item.fileUrl">
+                                                    <i class="el-icon-document"></i>
+                                                    <a :href="item.fileUrl" target="_blank">
+                                                        <font>{{item.fileName}}</font>
+                                                    </a>
+                                                </template>
+                                            </span>
+                                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                                            <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                                        </div>
                                     </template>
                                 </div>
                             </el-form-item>
@@ -137,19 +142,23 @@
                 <div class="filename" v-else>
                     <span v-if="archiveSignPO.assureFileList.length===0">-</span>
                     <template v-else>
-                        <span v-for="(item,index) in archiveSignPO.assureFileList" :key="index" class="posrtv">
-                            <template v-if="item&&item.fileUrl">
-                                <i class="el-icon-document"></i>
-                                <a :href="item.fileUrl" target="_blank">
-                                    <font >{{item.fileName}}</font>
-                                </a>
-                            </template>
-                        </span>
+                        <div class="fileItem" v-for="(item,index) in archiveSignPO.assureFileList" :key="index" >
+                            <span class="posrtv">
+                                <template v-if="item&&item.fileUrl">
+                                    <i class="el-icon-document"></i>
+                                    <a :href="item.fileUrl" target="_blank">
+                                        <font>{{item.fileName}}</font>
+                                    </a>
+                                </template>
+                            </span>
+                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                            <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                        </div>
                     </template>
                 </div>
             </el-form-item>
             <el-form-item prop="guanranteeName" label="担保函签约人：" label-width='160px'>
-                <el-input v-model="archiveSignPO.guanranteeName" placeholder="请输入担保函签约人" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.guanranteeName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
                 <span v-else>{{archiveSignPO.guanranteeName?archiveSignPO.guanranteeName:'-'}}</span>
             </el-form-item>
         </template>
@@ -166,17 +175,21 @@
             <hosjoyUpload v-if="isEdit" v-model="archiveSignPO.otherBList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('b-other')">
                 <el-button size="small" type="primary">点击上传</el-button>
             </hosjoyUpload>
-            <div class="filename" style="margin-top:0" v-else>
-                <span style="margin-top:-18px" v-if="archiveSignPO.otherBList.length===0">-</span>
+            <div class="filename" v-else>
+                <span v-if="archiveSignPO.otherBList.length===0">-</span>
                 <template v-else>
-                    <span v-for="(item,index) in archiveSignPO.otherBList" :key="index" class="posrtv">
-                        <template v-if="item&&item.fileUrl">
-                            <i class="el-icon-document"></i>
-                            <a :href="item.fileUrl" target="_blank">
-                                <font >{{item.fileName}}</font>
-                            </a>
-                        </template>
-                    </span>
+                    <div class="fileItem" v-for="(item,index) in archiveSignPO.otherBList" :key="index" >
+                        <span class="posrtv">
+                            <template v-if="item&&item.fileUrl">
+                                <i class="el-icon-document"></i>
+                                <a :href="item.fileUrl" target="_blank">
+                                    <font>{{item.fileName}}</font>
+                                </a>
+                            </template>
+                        </span>
+                        <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                        <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                    </div>
                 </template>
             </div>
         </el-form-item>
@@ -235,6 +248,28 @@ export default {
         }
     },
     methods: {
+        getUrlBase64 (url, fileName, ext = '') {
+            let _this = this
+            var canvas = document.createElement('canvas') // 创建canvas DOM元素
+            var ctx = canvas.getContext('2d')
+            var img = new Image()
+            img.setAttribute('crossOrigin', 'anonymous')
+            img.src = url + '?time=' + new Date().valueOf()
+            img.onload = function () {
+                canvas.height = img.height // 指定画板的高度,自定义
+                canvas.width = img.width // 指定画板的宽度，自定义
+                ctx.drawImage(img, 0, 0) // 参数可自定义
+                var dataURL = canvas.toDataURL('image/' + ext) // 传递的自定义的参数
+                canvas = null
+                var downDom = document.createElement('a') // 创建DOM元素
+                downDom.setAttribute('href', dataURL)
+                downDom.setAttribute('download', fileName)
+                console.log(downDom)
+                _this.$nextTick(() => {
+                    downDom.click()
+                })
+            }
+        },
         onSubAdd (index) {
             if (this.archiveSignPO.signBOs[index].version.length === 10) {
                 this.$message.error(`投资协议归档每个版本最多只能新增到10份`)
@@ -312,11 +347,20 @@ export default {
     padding: 70px;
 }
 .labeldiy{ color: #000; font-weight:bold;}
+
+.addbtn{
+    width: 130px;
+    margin-left: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/deep/.addbtn i{ font-size: 18px}
+.filepr{ position: relative;}
+.delabs{ position: absolute;right:0;font-size: 12px;border-radius: 3px;padding: 10px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block; line-height: 1}
 .filename{
     margin-top: 17px;
     color: #6e6f73;
-    display: flex;
-    flex-wrap: wrap;
     span{
             display: flex;
             align-items: center;
@@ -329,14 +373,6 @@ export default {
     }
     .posrtv{ position: relative;color: #FF7A45;}
 }
-.addbtn{
-    width: 130px;
-    margin-left: 160px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-/deep/.addbtn i{ font-size: 18px}
-.filepr{ position: relative;}
-.delabs{ position: absolute;right:0;font-size: 12px;border-radius: 3px;padding: 10px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block; line-height: 1}
+.fileItem{ display: flex;justify-content: space-between;align-items: center;}
+.fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
 </style>
