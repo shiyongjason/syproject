@@ -108,8 +108,8 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: 'SKU编码', prop: 'skuCode' },
                 { label: 'SPU编码', prop: 'spuCode' },
+                { label: 'SKU编码', prop: 'skuCode' },
                 { label: '订单编号', prop: 'orderNo' },
                 { label: '分部', prop: 'branchName' },
                 { label: '平台公司', prop: 'merchantName' },
@@ -120,7 +120,6 @@ export default {
                 { label: '商品数量', prop: 'quantity' },
                 { label: '商品名称', prop: 'productName' },
                 { label: '商品类目', prop: 'category' }
-
             ]
         }
     },
