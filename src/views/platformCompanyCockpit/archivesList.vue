@@ -229,6 +229,8 @@ export default {
                                             {scope.row.shareholderName}
                                         </span>
                                     )
+                                } else {
+                                    return (<span><i class="el-icon-close"></i></span>)
                                 }
                             }
                         },
@@ -245,11 +247,12 @@ export default {
                                 if (flag) {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
-                                let temp = this.getsignBOs(scope.row.signBOs, scope.row)
+                                this.getsignBOs(scope.row.signBOs, scope.row, scope.$index)
+                                console.log(scope.row)
                                 let str = ''
-                                temp.map((item, index) => {
-                                    if (item && item.num && item.flag) {
-                                        str = str + `${index + 1}.0*${item.num} `
+                                scope.row.itemSignBOs.map((item, index) => {
+                                    if (item.flag == 1) {
+                                        str = str + `${index + 1}.0*${item.version.length} `
                                     }
                                 })
                                 if (str) {
@@ -257,6 +260,18 @@ export default {
                                 } else {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
+                                /* let str = ''
+                                temp.map((item, index) => {
+                                    // && item.num
+                                    if (item && item.flag) {
+                                        str = str + `${index + 1}.0*${item.num} `
+                                    }
+                                })
+                                if (str) {
+                                    return <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '投资协议')}>{str}</span>
+                                } else {
+                                    return <span><i class="el-icon-close"></i></span>
+                                } */
                             }
                         },
                         {
@@ -265,16 +280,16 @@ export default {
                             render: (h, scope) => {
                                 if (scope.row.guanranteeName == null || scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.guanranteeName) {
-                                    return (
-                                        <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '担保函')}>
-                                            {scope.row.guanranteeName}
-                                        </span>
-                                    )
-                                    /* return (
-                                        <span>
-                                            {scope.row.guanranteeName}
-                                        </span>
-                                    ) */
+                                    let temp = this.getDocNum('b-guarantee', scope.row)
+                                    if (temp && temp.length > 0) {
+                                        return (
+                                            <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '担保函')}>
+                                                {scope.row.guanranteeName}
+                                            </span>
+                                        )
+                                    } else {
+                                        return <span>{scope.row.guanranteeName}</span>
+                                    }
                                 }
                             }
                         }
@@ -391,9 +406,48 @@ export default {
             this.getList()
             this.dialog.dialogVisible = false
         },
-        getsignBOs (signBOs, data) {
+        getsignBOs (signBOs, data, rowIndex) {
+            if (data.itemSignBOs && data.itemSignBOs.length === 5) {
+                return false
+            }
+            let arr = []
+            this.$set(data, 'itemSignBOs', [])
+            for (let t = 0; t < 5; t++) {
+                data.itemSignBOs.push([])
+            }
+            for (let i = 0; i < 5; i++) {
+                let version = []
+                arr = signBOs.filter(item => {
+                    return item.archiveSignInvestPO.investVersion === `${i + 1}.0`
+                })
+                if (arr && arr.length > 0) {
+                    let idCardList = []
+                    let documentList = []
+                    arr.map((item, index) => { // 某版本
+                        idCardList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的图片文件
+                            return jtem.docType === '2'
+                        })
+                        documentList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的文档文件
+                            return jtem.docType === '1'
+                        })
+                        this.$set(item, 'idCardList', idCardList)
+                        this.$set(item, 'documentList', documentList)
+                        version.push(item)
+                        let obj = {
+                            flag: data[`v${i + 1}SignerFlag`], // 是否归档
+                            version: version // n份文件
+                        }
+                        arr[index] = obj
+                    })
+                    // console.log(`序号${rowIndex + 1}`, `v${i + 1}.0`, arr[arr.length - 1])
+                    data.itemSignBOs.splice(i, 1, arr[arr.length - 1])
+                }
+            }
+        },
+        getsignBOs2 (signBOs, data, rowIndex) {
             let arr = []
             let temp = []
+            let version = []
             for (let t = 0; t < 5; t++) {
                 arr.push([])
             }
@@ -403,17 +457,29 @@ export default {
                 })
                 if (temp && temp.length > 0) {
                     let len = 0
+                    let idCardList = []
+                    let documentList = []
                     temp.map((item, index) => { // 某版本
+                        idCardList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的图片文件
+                            return jtem.docType === '2'
+                        })
+                        documentList = item.signDocPOs.filter(jtem => { // 筛选出每一版本的文档文件
+                            return jtem.docType === '1'
+                        })
+                        this.$set(item, 'idCardList', idCardList)
+                        this.$set(item, 'documentList', documentList)
+                        version.push(item)
                         if (item.signDocPOs.length > 0) {
                             len = len + item.signDocPOs.length
                         }
                         let obj = {
                             num: len,
+                            version: version, // n份文件
                             flag: data[`v${i + 1}SignerFlag`] // 是否归档
                         }
                         temp[index] = obj
                     })
-                    console.log(`v${i + 1}.0`, temp[temp.length - 1])
+                    console.log(rowIndex + 1, `v${i + 1}.0`, temp[temp.length - 1])
                     arr.splice(i, 1, temp[temp.length - 1])
                 }
             }

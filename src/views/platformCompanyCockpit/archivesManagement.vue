@@ -324,13 +324,19 @@ export default {
             console.log(this.form)
             this.$refs['formBaseInfo'].validate(async (valid, errors) => {
                 if (valid) {
+                    let flag = ''
                     try {
                         if (this.$route.query.archiveId) {
                             // updateUser
                             this.form.platformBasicInfoPO.updateUser = this.userInfo.employeeName
                             await upData(this.form)
                         } else {
-                            await saveInfo(this.form)
+                            flag = await saveInfo(this.form)
+                            done()
+                            if (flag.data.archiveNOFlag) {
+                                this.$message.error(`档案编号重复`)
+                                return
+                            }
                         }
                         done()
                         this.$message({
@@ -415,6 +421,7 @@ export default {
         },
         onRemarkCancel () {
             if (this.$route.query.archiveId) {
+                this.getDetailInfo(this.$route.query.archiveId)
                 this.dialogIsEdit = false
                 this.dialogVisible = false
                 return
