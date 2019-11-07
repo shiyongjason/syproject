@@ -2,7 +2,6 @@
  * 配置访问后端接口的域名端口
  */
 let interfaceUrl = ''
-let uploadUrl = ''
 let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
