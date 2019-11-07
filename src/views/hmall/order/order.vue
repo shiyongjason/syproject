@@ -482,6 +482,9 @@ export default {
         async getArea () {
             const { data } = await getChiness()
             this.options = data
+            this.options && this.options.map(val => {
+                val.cityId = val.provinceId
+            })
         },
         cityChange (val) {
             const cityarr = []
