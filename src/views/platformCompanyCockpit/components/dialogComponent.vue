@@ -298,24 +298,21 @@ export default {
             )
         }
         if (this.dialog === '投资协议') {
-            this.formatSignBOs()
+            // this.formatSignBOs()
             return (
                 <div class='sign'>
                     {
                         this.item.itemSignBOs.map((item, index) => {
                             return (
                                 <div>
-                                    <p>{index + 1}.0版本：</p>
+                                    <p style='font-weight:bold'>{index + 1}.0版本：</p>
                                     {
                                         this.item[`v${index + 1}SignerFlag`] === 1
                                             ? item.version.map(jtem => {
-                                                if (jtem.signDocPOs.length === 0) {
-                                                    return (<p>-</p>)
-                                                }
                                                 return (
                                                     <div class='signbos'>
                                                         <p class='signname'>
-                                                签约人：{jtem.archiveSignInvestPO.signerName ? jtem.archiveSignInvestPO.signerName : '-'}
+                                                            签约人：{jtem.archiveSignInvestPO.signerName ? jtem.archiveSignInvestPO.signerName : '-'}
                                                         </p>
                                                         <div class='fileslist'>
                                                             <p class='fileslistt'>文件：</p>
