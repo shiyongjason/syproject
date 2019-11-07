@@ -37,7 +37,7 @@ switch (env) {
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        ccpBaseUrl = 'https://testccp.hosjoy.com/'
+        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'preview':
