@@ -259,7 +259,7 @@ export default {
                 </div>
             )
         }
-        if (this.dialog === 'B档（实控人）') {
+        if (this.dialog === '实控人') {
             let arr = this.getFile('b')
             console.log(arr)
             return (

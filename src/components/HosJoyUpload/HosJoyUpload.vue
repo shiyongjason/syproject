@@ -69,7 +69,7 @@ export default {
         showFileList: { type: Boolean, default: false }, // 是否显示已上传文件列表
         action: { type: String, default: '' }, // 上传的地址
         fileSize: { type: Number, default: 100 }, // 限制文件大小
-        showAsFileName: { type: Boolean, default: false }, // 是否支持多图上传
+        showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
         accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.word,.xsl,.xlsx,.ppt,.zip,.rar' } // 上传的类型
@@ -167,6 +167,21 @@ export default {
             }
         },
         beforeAvatarUpload (file) {
+            let arr = this.accept.split(',')
+            if (!this.showAsFileName) {
+                let flag = false
+                arr.map(item => {
+                    console.log(file.name.toLowerCase().indexOf(item))
+                    if (file.name.toLowerCase().indexOf(item) != -1) {
+                        flag = true
+                    }
+                })
+                if (!flag) {
+                    console.log(file.name.split(',')[1])
+                    this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
+                    return false
+                }
+            }
             if (this.isBeyond) {
                 this.$message.error(`上传错误，文件不要超过${this.fileSize}M`)
                 return false
@@ -178,7 +193,6 @@ export default {
             tempArr.splice(index, 1)
             tempArr.unshift(temp)
             this.previewSrcList = tempArr.map(item => {
-                // return item.accessUrl
                 return item.fileUrl
             })
             const pre = this.$refs[`preview_${index}`]

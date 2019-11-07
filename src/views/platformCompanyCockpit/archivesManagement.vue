@@ -55,13 +55,13 @@
             <div v-if="!dialogIsEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline dialogposeditor" @click="dialogIsEdit = true"></div>
             <el-form ref='dialogForm' label-width="140px" label-position='left'>
                 <el-form-item label="归档情况：" >
-                    <el-radio v-if="dialogIsEdit" v-model="form.platformBasicInfoPO.archiveStatus" label="1">档案齐全</el-radio>
-                    <el-radio v-if="dialogIsEdit" v-model="form.platformBasicInfoPO.archiveStatus" label="2">档案缺失</el-radio>
-                    <span v-if="!dialogIsEdit">{{form.platformBasicInfoPO.archiveStatus==='1'?'档案齐全':form.platformBasicInfoPO.archiveStatus==='2'?'档案缺失':'-'}}</span>
+                    <el-radio v-if="dialogIsEdit" v-model="remarkTemp.archiveStatus" label="1">档案齐全</el-radio>
+                    <el-radio v-if="dialogIsEdit" v-model="remarkTemp.archiveStatus" label="2">档案缺失</el-radio>
+                    <span v-if="!dialogIsEdit">{{remarkTemp.archiveStatus==='1'?'档案齐全':remarkTemp.archiveStatus==='2'?'档案缺失':'-'}}</span>
                 </el-form-item>
                 <el-form-item label="档案备注：">
-                    <el-input v-if="dialogIsEdit" v-model="form.platformBasicInfoPO.remark" placeholder="此处备注档案信息" type='textarea' :rows="6" show-word-limit  maxlength="3000"></el-input>
-                    <span v-if="!dialogIsEdit">{{form.platformBasicInfoPO.remark}}</span>
+                    <el-input v-if="dialogIsEdit" v-model="remarkTemp.remark" placeholder="此处备注档案信息" type='textarea' :rows="6" show-word-limit  maxlength="3000"></el-input>
+                    <span v-if="!dialogIsEdit">{{remarkTemp.remark}}</span>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -81,7 +81,7 @@ import businessMaterials from './components/businessMaterials'
 import otherMaterials from './components/otherMaterials'
 import hosjoyButton from '@/components/HosJoyButton/hosJoyButton'
 import { saveInfo, getDetail, provinces, upData, remark } from './api/index.js'
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 // import { checkIdCard } from '@/utils/rules.js'
 
 export default {
@@ -89,6 +89,10 @@ export default {
     components: { baseInfo, tuneMaterials, signMaterials, hosjoyButton, businessMaterials, otherMaterials },
     data () {
         return {
+            remarkTemp: {
+                archiveStatus: '2',
+                remark: ''
+            },
             COCKPIT_FILE_EDIT,
             addressPrivince: [], // 省
             addressCity: [], // 市
@@ -182,12 +186,20 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
+        }),
+        ...mapState({
+            tagsList: state => state.layout.tagsList
         })
     },
     methods: {
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        }),
         onDialogBtn () {
             this.dialogVisible = true
             if (this.isEdit) this.dialogIsEdit = true
+            this.remarkTemp.archiveStatus = this.form.platformBasicInfoPO.archiveStatus || '2'
+            this.remarkTemp.remark = this.form.platformBasicInfoPO.remark
         },
         onIsEdit () {
             this.isEdit = true
@@ -227,6 +239,7 @@ export default {
             this.getFile('c-commercial', 'archiveCommercialPO', 'commercial')// 设置C-其余工商材料
             this.getFile('c-capital', 'archiveCommercialPO', 'capital')// 设置C-增减资协议
             this.getFile('c-stocktransfer', 'archiveCommercialPO', 'stocktransfer')// 设置C-股转版协议
+            this.getFile('d-other', 'otherFiles', 'fileList')// 设置C-股转版协议
             let arr = []
             for (let i = 0; i < 5; i++) {
                 let version = []
@@ -402,6 +415,9 @@ export default {
             this.formatForm()
         },
         async onRemark () {
+            // this.form.platformBasicInfoPO = { ...this.remarkTemp }
+            this.form.platformBasicInfoPO.archiveStatus = this.remarkTemp.archiveStatus
+            this.form.platformBasicInfoPO.remark = this.remarkTemp.remark
             if (!this.dialogIsEdit || !this.$route.query.archiveId || !this.hosAuthCheck(COCKPIT_FILE_EDIT)) {
                 this.dialogVisible = false
                 return
@@ -426,8 +442,8 @@ export default {
                 this.dialogVisible = false
                 return
             }
-            this.form.platformBasicInfoPO.remark = ''
-            this.form.platformBasicInfoPO.archiveStatus = ''
+            /* this.form.platformBasicInfoPO.remark = ''
+            this.form.platformBasicInfoPO.archiveStatus = '' */
             this.dialogVisible = false
         },
         formatForm () {
@@ -442,7 +458,16 @@ export default {
             }
         }
     },
+    /* beforeRouteEnter (to, from, next) {
+        next(vm => {
+            console.log(vm.tagsList)
+            if(to.query.archiveId){
+
+            }
+        })
+    }, */
     mounted () {
+        this.$forceUpdate()
         this.form.platformBasicInfoPO.createUser = this.userInfo.employeeName
         if (this.$route.query.archiveId) {
             this.getDetailInfo(this.$route.query.archiveId)
