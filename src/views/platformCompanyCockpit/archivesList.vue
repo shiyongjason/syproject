@@ -248,7 +248,6 @@ export default {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
                                 this.getsignBOs(scope.row.signBOs, scope.row, scope.$index)
-                                console.log(scope.row)
                                 let str = ''
                                 scope.row.itemSignBOs.map((item, index) => {
                                     if (item.flag == 1) {
@@ -260,18 +259,6 @@ export default {
                                 } else {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
-                                /* let str = ''
-                                temp.map((item, index) => {
-                                    // && item.num
-                                    if (item && item.flag) {
-                                        str = str + `${index + 1}.0*${item.num} `
-                                    }
-                                })
-                                if (str) {
-                                    return <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '投资协议')}>{str}</span>
-                                } else {
-                                    return <span><i class="el-icon-close"></i></span>
-                                } */
                             }
                         },
                         {
