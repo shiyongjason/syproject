@@ -203,6 +203,8 @@ export default {
                 this.dialogIsEdit = false
                 if (!this.$route.query.archiveId) {
                     this.$router.go(-1)
+                } else {
+                    this.getDetailInfo(this.$route.query.archiveId)
                 }
             }).catch()
         },

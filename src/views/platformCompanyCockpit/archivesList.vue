@@ -186,14 +186,7 @@ export default {
                     label: 'C档（工商）',
                     prop: 'commerialDocFlag',
                     render: (h, scope) => {
-                        if (scope.row.commerialDocFlag == null) return (<span><i class="el-icon-close"></i></span>)
-                        if (scope.row.commerialDocFlag === '0') {
-                            return (
-                                <span>
-                                    <i class="el-icon-close"></i>
-                                </span>
-                            )
-                        }
+                        if (scope.row.commerialDocFlag == null || scope.row.commerialDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                         if (scope.row.commerialDocFlag === '1') {
                             return (
                                 <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'C档（工商）')}>
@@ -206,27 +199,30 @@ export default {
                 {
                     label: 'B档（签约）',
                     children: [
-                        // todo 实控人归档信息
                         {
                             label: '实控人',
                             prop: 'realControllerName',
                             render: (h, scope) => {
-                                if (scope.row.realControllerName == null) return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.realControllerName == null || scope.row.rcDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.realControllerName) {
-                                    return (
-                                        <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'B档（实控人）')}>
-                                            {scope.row.realControllerName}
-                                        </span>
-                                    )
+                                    let temp = this.getDocNum('b-realcontroller', scope.row)
+                                    if (temp && temp.length > 0) {
+                                        return (
+                                            <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'B档（实控人）')}>
+                                                {scope.row.realControllerName}
+                                            </span>
+                                        )
+                                    } else {
+                                        return <span>{scope.row.realControllerName}</span>
+                                    }
                                 }
                             }
                         },
-                        // todo 自然人股东归档信息
                         {
                             label: '自然人股东',
                             prop: 'shareholderName',
                             render: (h, scope) => {
-                                if (scope.row.shareholderName == null) return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.shareholderName == null || scope.row.shareholderDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.shareholderName) {
                                     return (
                                         <span>
@@ -252,7 +248,7 @@ export default {
                                 let temp = this.getsignBOs(scope.row.signBOs, scope.row)
                                 let str = ''
                                 temp.map((item, index) => {
-                                    if (item && item.num) {
+                                    if (item && item.num && item.flag) {
                                         str = str + `${index + 1}.0*${item.num} `
                                     }
                                 })
@@ -267,7 +263,7 @@ export default {
                             label: '担保函签约人',
                             prop: 'guanranteeName',
                             render: (h, scope) => {
-                                if (scope.row.guanranteeName == null || scope.row.guanranteeDocFlag == 0) return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.guanranteeName == null || scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.guanranteeName) {
                                     return (
                                         <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, '担保函')}>
@@ -288,7 +284,7 @@ export default {
                     label: 'A档（尽调）',
                     prop: 'ddDocFlag',
                     render: (h, scope) => {
-                        if (scope.row.ddDocFlag == null) return (<span><i class="el-icon-close"></i></span>)
+                        if (scope.row.ddDocFlag == null || scope.row.ddDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
                         if (scope.row.ddDocFlag === '1') {
                             return (
                                 <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'A档（尽调）')}>
@@ -364,6 +360,11 @@ export default {
         }
     },
     methods: {
+        getDocNum (type, data) {
+            return data.commonDocPOs.filter(item => {
+                return item.docType === type
+            })
+        },
         onGoDetail (item) {
             this.$router.push({ path: '/platformCompanyCockpit/archivesManagement', query: { archiveId: item.archiveId } })
         },
@@ -412,7 +413,7 @@ export default {
                         }
                         temp[index] = obj
                     })
-                    // console.log(`v${i + 1}.0`, temp[temp.length - 1])
+                    console.log(`v${i + 1}.0`, temp[temp.length - 1])
                     arr.splice(i, 1, temp[temp.length - 1])
                 }
             }
