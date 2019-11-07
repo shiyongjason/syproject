@@ -442,8 +442,6 @@ export default {
                 this.dialogVisible = false
                 return
             }
-            /* this.form.platformBasicInfoPO.remark = ''
-            this.form.platformBasicInfoPO.archiveStatus = '' */
             this.dialogVisible = false
         },
         formatForm () {

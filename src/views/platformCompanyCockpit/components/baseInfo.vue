@@ -209,4 +209,7 @@ export default {
 .showlayout>>>.el-form-item__label:before{
     content:'' !important
 }
+.showlayout>>>.el-form-item__error{
+   display: none !important
+}
 </style>
