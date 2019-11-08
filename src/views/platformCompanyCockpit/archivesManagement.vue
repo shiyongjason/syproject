@@ -287,6 +287,8 @@ export default {
                 // 更新 upData
                 this.form.commonDocPOs = []
                 this.form.signBOs = []
+            } else {
+                this.form.platformBasicInfoPO.borrowStatus = '1'
             }
             this.form.platformBasicInfoPO.dd.map((item) => {
                 this.form.commonDocPOs.push({ docType: 'a-dd', fileName: item.fileName, fileUrl: item.fileUrl })
