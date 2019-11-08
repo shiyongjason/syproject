@@ -52,10 +52,6 @@
             <div class="page-table">
                 <!-- table -->
                 <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
-                    <template slot="ceshi" slot-scope="scope">
-                        测试slot-{{scope.data.row.ceshi}}
-                    </template>
-
                 </hosJoyTable>
             </div>
         </div>
