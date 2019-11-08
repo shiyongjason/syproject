@@ -42,11 +42,13 @@
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" @click="onSearch">搜索</el-button>
-                        <el-button type="primary" v-if="hosAuthCheck(COCKPIT_FILE_ADD)" @click="$router.push('/platformCompanyCockpit/archivesManagement')">新增档案</el-button>
                     </div>
                 </div>
             </div>
             <div class="page-body-cont">
+                <div class="addbutton">
+                    <el-button type="info" v-if="hosAuthCheck(COCKPIT_FILE_ADD)" @click="$router.push('/platformCompanyCockpit/archivesManagement')">新增档案</el-button>
+                </div>
                 <div class="tabs">
                     <el-tabs v-model="searchParams.companyStatus" @tab-click="tabsChange" type="card">
                         <el-tab-pane label="合作中" name="1"></el-tab-pane>
@@ -400,7 +402,7 @@ export default {
             let arr = []
             this.$set(data, 'itemSignBOs', [])
             for (let t = 0; t < 5; t++) {
-                data.itemSignBOs.push([])
+                data.itemSignBOs.push({ flag: '', version: [] })
             }
             for (let i = 0; i < 5; i++) {
                 let version = []
@@ -575,4 +577,5 @@ export default {
     max-height: 600px;
     overflow-y: scroll;
 }
+.addbutton{ margin-bottom: 16px; text-align: right}
 </style>

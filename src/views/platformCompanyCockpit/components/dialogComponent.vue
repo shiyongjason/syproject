@@ -298,6 +298,7 @@ export default {
             )
         }
         if (this.dialog === '投资协议') {
+            console.log(JSON.stringify(this.item.itemSignBOs))
             // this.formatSignBOs()
             return (
                 <div class='sign'>
@@ -308,38 +309,39 @@ export default {
                                     <p style='font-weight:bold'>{index + 1}.0版本：</p>
                                     {
                                         this.item[`v${index + 1}SignerFlag`] === 1
-                                            ? item.version.map(jtem => {
-                                                return (
-                                                    <div class='signbos'>
-                                                        <p class='signname'>
+                                            ? item.version.length > 0
+                                                ? item.version.map(jtem => {
+                                                    return (
+                                                        <div class='signbos'>
+                                                            <p class='signname'>
                                                             签约人：{jtem.archiveSignInvestPO.signerName ? jtem.archiveSignInvestPO.signerName : '-'}
-                                                        </p>
-                                                        <div class='fileslist'>
-                                                            <p class='fileslistt'>文件：</p>
-                                                            <div class='signfile'>
-                                                                {
-                                                                    jtem.signDocPOs.length === 0
-                                                                        ? '-'
-                                                                        : jtem.signDocPOs.map((ktem, kndex) => {
-                                                                            return (
-                                                                                <font>
-                                                                                    <span class='filename'><a href={ktem.fileUrl} target='_blank'>{ktem.fileName}</a></span>
-                                                                                    {
-                                                                                        ktem.fileName.toLowerCase().indexOf('.png') != -1 || ktem.fileName.toLowerCase().indexOf('.jpg') != -1 || ktem.fileName.toLowerCase().indexOf('.jpeg') != -1
-                                                                                            ? <span class='download'><el-button type="primary" on-click={() => {
-                                                                                                this.getUrlBase64(ktem.fileUrl, `dom${kndex}`, ktem.fileName)
-                                                                                            }} size='mini'>下载</el-button></span>
-                                                                                            : <span><a class='downloadfile' href={ktem.fileUrl} target='_blank'>下载</a></span>
-                                                                                    }
-                                                                                </font>
-                                                                            )
-                                                                        })
-                                                                }
+                                                            </p>
+                                                            <div class='fileslist'>
+                                                                <p class='fileslistt'>文件：</p>
+                                                                <div class='signfile'>
+                                                                    {
+                                                                        jtem.signDocPOs.length === 0
+                                                                            ? '-'
+                                                                            : jtem.signDocPOs.map((ktem, kndex) => {
+                                                                                return (
+                                                                                    <font>
+                                                                                        <span class='filename'><a href={ktem.fileUrl} target='_blank'>{ktem.fileName}</a></span>
+                                                                                        {
+                                                                                            ktem.fileName.toLowerCase().indexOf('.png') != -1 || ktem.fileName.toLowerCase().indexOf('.jpg') != -1 || ktem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                                                ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                                                    this.getUrlBase64(ktem.fileUrl, `dom${kndex}`, ktem.fileName)
+                                                                                                }} size='mini'>下载</el-button></span>
+                                                                                                : <span><a class='downloadfile' href={ktem.fileUrl} target='_blank'>下载</a></span>
+                                                                                        }
+                                                                                    </font>
+                                                                                )
+                                                                            })
+                                                                    }
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                )
-                                            })
+                                                    )
+                                                }) : '-'
                                             : '-'
                                     }
                                 </div>

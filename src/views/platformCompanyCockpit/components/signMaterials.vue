@@ -70,7 +70,7 @@
                                 <template #label>
                                     <span style="margin-top: 16px;display: inline-block;">第{{jndex+1}}份文件：</span>
                                 </template>
-                                <span class="delabs" v-if="(item.version.length-1===jndex)&&jndex!=0&&isEdit" @click="deleteVersionList(index)">删除</span>
+                                <span class="delabs" v-if="isEdit" @click="deleteVersionList(index)">删除</span>
                                 <hosjoyUpload v-if="isEdit" v-model="jtem.documentList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('1')">
                                     <el-button size="small" type="primary">点击上传</el-button>
                                 </hosjoyUpload>
@@ -334,6 +334,7 @@ export default {
     },
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
+        console.log(this.archiveSignPO)
         // this.onAdd()
         // if (!this.$route.query.archiveId) this.onAdd()
     }
