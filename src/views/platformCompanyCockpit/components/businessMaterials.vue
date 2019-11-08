@@ -27,7 +27,7 @@
             <span v-else>{{business.holderChange?business.holderChange:'-'}}</span>
         </el-form-item>
         <el-form-item label="工商登记注册资本：" prop="regCapital" label-width='160px' maxlength="200">
-            <el-input v-if="isEdit" v-isNum="business.regCapital" v-model="business.regCapital" placeholder="请输入注册资本" maxlength='30'>
+            <el-input v-if="isEdit" v-isNum="business.regCapital" v-model="business.regCapital" placeholder="请输入注册资本" maxlength='10'>
                 <template slot="append">万</template>
             </el-input>
             <span v-else>{{business.regCapital?business.regCapital+'万':'-'}}</span>

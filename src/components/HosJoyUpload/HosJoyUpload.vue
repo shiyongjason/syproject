@@ -166,21 +166,23 @@ export default {
                 this.isBeyond = true
             }
         },
+        getFileType (file) {
+            let startIndex = file.lastIndexOf('.')
+            if (startIndex != -1) {
+                return file.substring(startIndex + 1, file.length).toLowerCase()
+            } else {
+                return ''
+            }
+        },
         beforeAvatarUpload (file) {
             let arr = this.accept.split(',')
-            if (!this.showAsFileName) {
-                let flag = false
-                arr.map(item => {
-                    console.log(file.name.toLowerCase().indexOf(item))
-                    if (file.name.toLowerCase().indexOf(item) != -1) {
-                        flag = true
-                    }
-                })
-                if (!flag) {
-                    console.log(file.name.split(',')[1])
-                    this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
-                    return false
-                }
+            let flag = false
+            arr.map(item => {
+                if (item === this.getFileType(file.name))flag = true
+            })
+            if (!flag) {
+                this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
+                return false
             }
             if (this.isBeyond) {
                 this.$message.error(`上传错误，文件不要超过${this.fileSize}M`)
