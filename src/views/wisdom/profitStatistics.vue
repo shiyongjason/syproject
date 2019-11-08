@@ -150,7 +150,7 @@ export default {
                             prop: 'expenseRate',
                             label: '费率',
                             render: (h, scope) => {
-                                return <span>{scope.row.expense ? `${scope.row.expense}%` : '-'}</span>
+                                return <span>{scope.row.expenseRate ? `${scope.row.expenseRate}%` : '-'}</span>
                             }
                         },
                         { prop: 'incomeTax', label: '所得税/万', displayAs: 'money' }
