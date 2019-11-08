@@ -461,6 +461,7 @@ export default {
 </script>
 
 <style scoped>
+.tabs>>>.el-textarea .el-input__count{color:#c3c6cc}
 .tabs>>>.el-tabs__header{margin:0}
 .tabs>>>.el-form{padding:0}
 .btn{ margin-top: 20px}
