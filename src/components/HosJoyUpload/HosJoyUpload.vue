@@ -178,7 +178,7 @@ export default {
             let arr = this.accept.split(',')
             let flag = false
             arr.map(item => {
-                if (item === this.getFileType(file.name))flag = true
+                if (item === `.${this.getFileType(file.name)}`)flag = true
             })
             if (!flag) {
                 this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
