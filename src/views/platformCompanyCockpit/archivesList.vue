@@ -181,7 +181,11 @@ export default {
                     label: '分部',
                     prop: 'departmentId',
                     render: (h, scope) => {
-                        return <span>{this.getNameByCode(scope.row.departmentId)}</span>
+                        if (scope.row.departmentId) {
+                            return <span>{this.getNameByCode(scope.row.departmentId)}</span>
+                        } else {
+                            return <span><i class="el-icon-close"></i></span>
+                        }
                     }
                 },
                 {
