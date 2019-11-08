@@ -464,6 +464,7 @@ export default {
 </script>
 
 <style scoped>
+.el-dialog__wrapper>>>.el-textarea .el-input__count{color:#c3c6cc}
 .tabs>>>.el-textarea .el-input__count{color:#c3c6cc}
 .tabs>>>.el-tabs__header{margin:0}
 .tabs>>>.el-form{padding:0}
