@@ -47,7 +47,7 @@
                     <hosjoy-button type="primary" style="width:130px" @click="buttonClick">存 档</hosjoy-button>
                 </div>
                 <div class="btn" v-else>
-                    <el-button @click="()=>{$router.go(-1)}">取 消</el-button>
+                    <el-button @click="()=>{$router.go(-1)}">返 回</el-button>
                 </div>
             </div>
         </div>
@@ -166,14 +166,7 @@ export default {
                         { required: true, message: '请输入公司名称', trigger: 'change' }
                     ]
                 },
-                archiveSignPO: {
-                    /* realControllerIdcard: [
-                        { validator: checkIdCard, trigger: 'blur' }
-                    ] */
-                    // shareholderIdcard: [
-                    //     { validator: checkIdCard, trigger: 'blur' }
-                    // ]
-                },
+                archiveSignPO: {},
                 dialogForm: {
                     status: [
                         { required: true, message: '请输入档案编号', trigger: 'change' }
@@ -265,7 +258,7 @@ export default {
                         }
                         arr[index] = obj
                     })
-                    // console.log(`v${i + 1}.0`, arr[arr.length - 1])
+                    // console.log(`v${i + 1}.0`, arr[arr.length - 1]) 勿删
                     this.form.archiveSignPO.signBOs.splice(i, 1, arr[arr.length - 1])
                 }
             }
@@ -281,7 +274,6 @@ export default {
                 let city = (tempCity.length > 0 && tempCity[0].cityName) || ''
                 let area = (tempArea.length > 0 && tempArea[0].cityName && tempArea[0].cityId) || ''
                 let address = `${privince} ${city} ${area} ${this.form.platformBasicInfoPO.addressOther}`
-                console.log(address)
                 this.$refs['baseInfo'].datailAddress = address == '   ' ? '-' : address
             })
         },
@@ -334,7 +326,6 @@ export default {
             this.form.otherFiles.fileList.map(item => {
                 this.form.commonDocPOs.push(item)
             })
-            console.log(this.form)
             this.$refs['formBaseInfo'].validate(async (valid, errors) => {
                 if (valid) {
                     let flag = ''
@@ -415,7 +406,6 @@ export default {
             this.formatForm()
         },
         async onRemark () {
-            // this.form.platformBasicInfoPO = { ...this.remarkTemp }
             this.form.platformBasicInfoPO.archiveStatus = this.remarkTemp.archiveStatus
             this.form.platformBasicInfoPO.remark = this.remarkTemp.remark
             if (!this.dialogIsEdit || !this.$route.query.archiveId || !this.hosAuthCheck(COCKPIT_FILE_EDIT)) {
@@ -450,20 +440,12 @@ export default {
                 let obj = { version: [JSON.parse(JSON.stringify(this.signBOsForm))] }
                 this.form.archiveSignPO.signBOs.push(obj)
                 let len = this.form.archiveSignPO.signBOs.length
-                this.$set(this.form.archiveSignPO.signBOs[len - 1], 'radio', '0')
-                // this.$set(this.form.archiveSignPO.signBOs[0], 'radio', '1')
-                this.$set(this.form.archiveSignPO.signBOs[0], 'radio', '0')
+                this.$set(this.form.archiveSignPO.signBOs[len - 1], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '0')
+                // this.$set(this.form.archiveSignPO.signBOs[0], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '1')
+                this.$set(this.form.archiveSignPO.signBOs[0], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '0')
             }
         }
     },
-    /* beforeRouteEnter (to, from, next) {
-        next(vm => {
-            console.log(vm.tagsList)
-            if(to.query.archiveId){
-
-            }
-        })
-    }, */
     mounted () {
         this.$forceUpdate()
         this.form.platformBasicInfoPO.createUser = this.userInfo.employeeName

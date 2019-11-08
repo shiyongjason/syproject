@@ -98,7 +98,6 @@ export default {
 }
 .labeldiy{ color: #000; font-weight:bold;}
 .filename{
-    margin-top: 17px;
     color: #6e6f73;
     span{
             display: flex;
