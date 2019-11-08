@@ -117,6 +117,7 @@ export default {
         },
         async backPlat (val) {
             // 平台公司名称点击后事件
+            console.log(val)
             if (val && val.value && !val.value.value) {
                 this.platformBasicInfoPO.companyName = ''
             }
@@ -138,6 +139,7 @@ export default {
                 })
                 let temp = val.value.subsectionName && this.getCodeByName(val.value.subsectionName)
                 this.platformBasicInfoPO.departmentId = temp && temp[0].subsectionCode
+                this.$refs['companyName'].clearValidate()
                 this.$forceUpdate()
             }
         },
