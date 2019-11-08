@@ -442,9 +442,10 @@ export default {
                 let obj = { version: [JSON.parse(JSON.stringify(this.signBOsForm))] }
                 this.form.archiveSignPO.signBOs.push(obj)
                 let len = this.form.archiveSignPO.signBOs.length
-                this.$set(this.form.archiveSignPO.signBOs[len - 1], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '0')
-                // this.$set(this.form.archiveSignPO.signBOs[0], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '1')
-                this.$set(this.form.archiveSignPO.signBOs[0], 'radio', this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' || '0')
+                let radio = this.form.archiveSignPO[`v${i + 1}SignerFlag`] ? this.form.archiveSignPO[`v${i + 1}SignerFlag`] + '' : '0'
+                this.$set(this.form.archiveSignPO.signBOs[len - 1], 'radio', radio)
+                // this.$set(this.form.archiveSignPO.signBOs[0], 'radio', '1')
+                this.$set(this.form.archiveSignPO.signBOs[0], 'radio', radio)
             }
         }
     },
