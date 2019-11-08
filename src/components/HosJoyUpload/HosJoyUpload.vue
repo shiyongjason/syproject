@@ -72,7 +72,7 @@ export default {
         showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
-        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.word,.xsl,.xlsx,.ppt,.zip,.rar' } // 上传的类型
+        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xsl,.xlsx,.ppt,.zip,.rar' } // 上传的类型
 
     },
     // components: { hosjoyListPreView },
