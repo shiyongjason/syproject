@@ -115,4 +115,4 @@ export const AUTH_MANAGE_OVERVIEW_ONLINE = 10550
 // 好智慧-预实管理 经营概览 利润
 export const AUTH_MANAGE_OVERVIEW_PROFIT = 10560
 // 好智慧-利润统计 导出
-export const AUTH_PROFIT_STATISTICS_EXPORT = 10490
+export const AUTH_PROFIT_STATISTICS_EXPORT = 10580

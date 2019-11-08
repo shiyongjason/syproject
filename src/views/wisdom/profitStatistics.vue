@@ -42,7 +42,7 @@
                     <el-button type="primary" class="ml20" @click="getList">
                         查询
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onExport(queryParams)">
+                    <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="primary" class="ml20" @click="onExport(queryParams)">
                         导出
                     </el-button>
                 </div>
@@ -69,13 +69,13 @@ import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
-
-// import { BUS_TYPE, DEPT_TYPE } from './store/const'
+import { AUTH_PROFIT_STATISTICS_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'profitStatistics',
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            AUTH_PROFIT_STATISTICS_EXPORT,
             queryDate: '',
             selectPlatObj: {
                 selectCode: '',
