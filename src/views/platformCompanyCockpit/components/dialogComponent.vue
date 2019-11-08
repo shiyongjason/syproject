@@ -298,7 +298,6 @@ export default {
             )
         }
         if (this.dialog === '投资协议') {
-            console.log(JSON.stringify(this.item.itemSignBOs))
             // this.formatSignBOs()
             return (
                 <div class='sign'>
