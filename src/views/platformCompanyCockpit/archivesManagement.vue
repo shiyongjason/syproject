@@ -163,7 +163,7 @@ export default {
                         { required: true, message: '请选择公司状态', trigger: 'change' }
                     ],
                     companyName: [
-                        { required: true, message: '请输入公司名称', trigger: 'change' }
+                        { required: true, message: '请输入公司名称', trigger: 'blur' }
                     ]
                 },
                 archiveSignPO: {},

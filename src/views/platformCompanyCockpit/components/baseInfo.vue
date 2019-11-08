@@ -22,7 +22,7 @@
                 }}
             </span>
         </el-form-item>
-        <el-form-item label="平台公司名称：" prop="companyName">
+        <el-form-item ref="companyName" label="平台公司名称：" prop="companyName">
             <HAutocomplete v-if="isEdit" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
             <span v-else>{{platformBasicInfoPO.companyName?platformBasicInfoPO.companyName:'-'}}</span>
         </el-form-item>
@@ -117,7 +117,9 @@ export default {
         },
         async backPlat (val) {
             // 平台公司名称点击后事件
-            console.log(val)
+            if (val && val.value && !val.value.value) {
+                this.platformBasicInfoPO.companyName = ''
+            }
             if (val && val.value && val.value.value && !val.value.value.companyShortName) {
                 this.platformBasicInfoPO.companyName = val.value.value
             }
