@@ -64,7 +64,7 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchListNew, statisticsExport } from './api/index.js'
+import { getProfitList, findPaltList, findBranchListNew } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -387,8 +387,30 @@ export default {
         handleSave (scope, key = '_edit') {
             this.$set(scope.row, key, false)
         },
+        getUrlBase64 (url, fileName, ext = '') {
+            let _this = this
+            var canvas = document.createElement('canvas') // 创建canvas DOM元素
+            var ctx = canvas.getContext('2d')
+            var img = new Image()
+            img.setAttribute('crossOrigin', 'anonymous')
+            img.src = url + '?time=' + new Date().valueOf()
+            img.onload = function () {
+                canvas.height = img.height // 指定画板的高度,自定义
+                canvas.width = img.width // 指定画板的宽度，自定义
+                ctx.drawImage(img, 0, 0) // 参数可自定义
+                var dataURL = canvas.toDataURL('image/' + ext) // 传递的自定义的参数
+                canvas = null
+                var downDom = document.createElement('a') // 创建DOM元素
+                downDom.setAttribute('href', dataURL)
+                downDom.setAttribute('download', fileName)
+                console.log(downDom)
+                _this.$nextTick(() => {
+                    downDom.click()
+                })
+            }
+        },
         async onExport () {
-            window.location.href = interfaceUrl + `rms/platform/profit-statistics/?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}`
+            location.href = interfaceUrl + `rms/platform/profit-statistics/?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}`
         }
     },
     async mounted () {
