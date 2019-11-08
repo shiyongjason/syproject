@@ -42,7 +42,7 @@
                     <el-button type="primary" class="ml20" @click="getList">
                         查询
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">
+                    <el-button type="primary" class="ml20" @click="onExport(queryParams)">
                         导出
                     </el-button>
                 </div>
@@ -69,6 +69,7 @@ import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
+
 // import { BUS_TYPE, DEPT_TYPE } from './store/const'
 export default {
     name: 'profitStatistics',
@@ -409,8 +410,8 @@ export default {
                 })
             }
         },
-        async onExport () {
-            location.href = interfaceUrl + `rms/platform/profit-statistics/?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}`
+        async onExport (params) {
+            location.href = interfaceUrl + `rms/platform/profit-statistics/export?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}`
         }
     },
     async mounted () {
