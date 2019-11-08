@@ -582,4 +582,6 @@ export default {
     overflow-y: scroll;
 }
 .addbutton{ margin-bottom: 16px; text-align: right}
+/deep/.el-dialog__wrapper .el-textarea .el-input__count{color:#c3c6cc}
+
 </style>

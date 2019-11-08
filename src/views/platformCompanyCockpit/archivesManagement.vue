@@ -163,7 +163,7 @@ export default {
                         { required: true, message: '请选择公司状态', trigger: 'change' }
                     ],
                     companyName: [
-                        { required: true, message: '请输入公司名称', trigger: 'change' }
+                        { required: true, message: '请输入公司名称', trigger: 'blur' }
                     ]
                 },
                 archiveSignPO: {},
@@ -464,6 +464,7 @@ export default {
 </script>
 
 <style scoped>
+.el-dialog__wrapper>>>.el-textarea .el-input__count{color:#c3c6cc}
 .tabs>>>.el-textarea .el-input__count{color:#c3c6cc}
 .tabs>>>.el-tabs__header{margin:0}
 .tabs>>>.el-form{padding:0}
