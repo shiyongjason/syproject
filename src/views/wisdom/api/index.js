@@ -181,3 +181,7 @@ export const getPaltSys = (params) => {
 export const getProfitList = (params) => {
     return axios.get(interfaceUrl + 'rms/platform/profit-statistics', { params })
 }
+// 平台利润统计导出
+export const statisticsExport = (params) => {
+    return axios.get(interfaceUrl + 'rms/platform/profit-statistics/export', { params })
+}

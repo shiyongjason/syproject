@@ -42,6 +42,9 @@
                     <el-button type="primary" class="ml20" @click="getList">
                         查询
                     </el-button>
+                    <el-button type="primary" class="ml20" @click="onExport">
+                        导出
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -61,10 +64,11 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchListNew } from './api/index.js'
+import { getProfitList, findPaltList, findBranchListNew, statisticsExport } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { interfaceUrl } from '@/api/config'
 // import { BUS_TYPE, DEPT_TYPE } from './store/const'
 export default {
     name: 'profitStatistics',
@@ -84,6 +88,9 @@ export default {
             //
             onLineStatusTemp: ['1'],
             queryParams: {
+                companyCode: '',
+                regionCode: '',
+                subsectionCode: '',
                 startDate: '',
                 endDate: '',
                 pageNumber: 1,
@@ -379,29 +386,31 @@ export default {
         },
         handleSave (scope, key = '_edit') {
             this.$set(scope.row, key, false)
+        },
+        async onExport () {
+            window.location.href = interfaceUrl + `rms/platform/profit-statistics/?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}`
         }
     },
     async mounted () {
         let start = moment().startOf('month').format('YYYY-MM')
         let end = moment().endOf('days').format('YYYY-MM')
         this.queryDate = [start, end]
-        this.getList()
         this.findPaltList()
         this.findBranchListNew()
-        /* // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        // console.log(this.userInfo.organizationType)
-        let oldDeptCode = ''
-        if (this.userInfo.deptType == 1) {
-            oldDeptCode = this.userInfo.oldDeptCode
+        // 0总部 1大区 2分部
+        if (this.userInfo.deptType === 1) {
+            this.queryParams.regionCode = 1
         }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
-        await this.getPaltbarnd()
-        await this.getPaltSys()
-        if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
+        if (this.userInfo.deptType === 2) {
+            this.queryParams.subsectionCode = 2
         }
-        await this.getPlatCategory()
-        // this.platList = await this.findPaltList(this.queryParams.subsectionCode) */
+        if (this.userInfo.deptType === 0) {
+            this.queryParams.regionCode = ''
+            this.queryParams.subsectionCode = ''
+        }
+        // if (this.userInfo.deptType != null) {
+        this.getList()
+        // }
     }
 }
 </script>
