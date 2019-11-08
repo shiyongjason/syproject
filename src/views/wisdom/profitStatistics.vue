@@ -365,6 +365,7 @@ export default {
             }
         },
         async getList () {
+            if (this.userInfo.deptType == null) return false
             this.queryParams.startDate = `${this.queryDate[0]}-01`
             this.queryParams.endDate = `${this.queryDate[1]}-01`
             // 后端只要这个格式。
@@ -427,9 +428,7 @@ export default {
             this.queryParams.regionCode = ''
             this.queryParams.subsectionCode = ''
         }
-        if (this.userInfo.deptType != null) {
-            this.getList()
-        }
+        this.getList()
     }
 }
 </script>
