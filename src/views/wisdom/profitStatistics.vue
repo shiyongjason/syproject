@@ -427,9 +427,9 @@ export default {
             this.queryParams.regionCode = ''
             this.queryParams.subsectionCode = ''
         }
-        // if (this.userInfo.deptType != null) {
-        this.getList()
-        // }
+        if (this.userInfo.deptType != null) {
+            this.getList()
+        }
     }
 }
 </script>
