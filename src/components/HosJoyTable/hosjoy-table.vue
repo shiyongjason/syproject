@@ -182,9 +182,9 @@ export default {
 .hosjoy-table >>> .el-table .cell {
     font-size: 12px;
 }
-.hosjoy-table >>> .el-table .caret-wrapper {
+/* .hosjoy-table >>> .el-table .caret-wrapper {
     height: 20px;
-}
+} */
 .hosjoy-table >>> .el-table th {
     color: #000000;
     font-size: 12px;
