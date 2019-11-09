@@ -175,7 +175,7 @@
             <hosjoyUpload v-if="isEdit" v-model="archiveSignPO.otherBList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('b-other')">
                 <el-button size="small" type="primary">点击上传</el-button>
             </hosjoyUpload>
-            <div class="filename" v-else>
+            <div class="filename" style="margin-top:0" v-else>
                 <span v-if="archiveSignPO.otherBList.length===0">-</span>
                 <template v-else>
                     <div class="fileItem" v-for="(item,index) in archiveSignPO.otherBList" :key="index" >

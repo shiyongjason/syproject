@@ -4,7 +4,7 @@
             <el-input v-if="isEdit" v-model="platformBasicInfoPO.archiveNo" placeholder="请输入档案编号" maxlength='30'></el-input>
             <span v-else>{{platformBasicInfoPO.archiveNo?platformBasicInfoPO.archiveNo:'-'}}</span>
         </el-form-item>
-        <el-form-item label="公司状态：" prop="companyStatus">
+        <el-form-item label="公司状态：" prop="companyStatus" ref="companyStatus">
             <template v-if="isEdit">
                 <el-radio v-model="platformBasicInfoPO.companyStatus" label="1">合作中</el-radio>
                 <el-radio v-model="platformBasicInfoPO.companyStatus" label="2">未合作</el-radio>
@@ -194,6 +194,11 @@ export default {
     watch: {
         'platformBasicInfoPO.companyName' (val) {
             this.selectPlatObj.selectName = val
+        },
+        'platformBasicInfoPO.companyStatus' (val) {
+            if (val != '') {
+                this.$refs['companyStatus'].clearValidate()
+            }
         }
     },
     mounted () {
