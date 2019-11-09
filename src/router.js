@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList } from '@/views/layout/api'
+import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
@@ -710,6 +710,20 @@ router.beforeEach(async (to, from, next) => {
                 }
             }
         }
+    }
+    if (userInfo) {
+        console.log(to, userInfo)
+        tracking({
+            type: 2,
+            user_name: userInfo.employeeName,
+            login_name: userInfo.phoneNumber,
+            page_path_name: to.tagName,
+            page_name: to.meta.title,
+            parent_fullpage_name: to.fullPath,
+            from_page_path_name: from.tagName,
+            from_page_name: from.meta.title || '',
+            user_agent: navigator.userAgent
+        })
     }
     next()
 })

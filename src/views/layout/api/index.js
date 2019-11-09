@@ -5,3 +5,5 @@ export const changePassword = (params) => axios.put('/uaa/api/users/change-passw
 
 // 获取菜单列表
 export const findMenuList = (params) => axios.get('/uaa/api/auth/details', params)
+// 埋点
+export const tracking = (params) => axios.post(`/ets/api/event-tracks`, params)
