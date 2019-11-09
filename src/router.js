@@ -723,6 +723,7 @@ const routerMapping = [
                 meta: {
                     title: '平台公司档案',
                     tagName: '平台公司档案',
+                    parentName: '平台公司驾驶舱',
                     isMenu: true,
                     icon: ''
                 },
@@ -734,6 +735,7 @@ const routerMapping = [
                 meta: {
                     title: '档案管理',
                     tagName: '档案管理',
+                    parentName: '平台公司驾驶舱',
                     isMenu: false,
                     icon: ''
                 },
@@ -830,13 +832,13 @@ router.beforeEach(async (to, from, next) => {
         }
     }
     if (userInfo) {
-        console.log(to, userInfo)
         tracking({
             type: 2,
             user_name: userInfo.employeeName,
             login_name: userInfo.phoneNumber,
             page_path_name: to.tagName,
             page_name: to.meta.title,
+            parent_page_name: to.meta.parentName,
             parent_fullpage_name: to.fullPath,
             from_page_path_name: from.tagName,
             from_page_name: from.meta.title || '',
