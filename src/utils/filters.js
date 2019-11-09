@@ -21,23 +21,12 @@ const formatterDate = function (time) {
 }
 
 // 金额格式化
-const money = function (val) {
-    val = val && val.toString().replace(/\$|,/g, '')
-    if (isNaN(val)) {
-        val = '0'
+const money = function (val, int) {
+    if (val) {
+        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return res
     }
-    let sign = (val === (val = Math.abs(val))).toString()
-    val = Math.floor(val * 100 + 0.50000000001)
-    let cents = val % 100
-    val = Math.floor(val / 100).toString()
-    if (cents < 10) {
-        cents = '0' + cents
-    }
-    for (var i = 0; i < Math.floor((val.length - (1 + i)) / 3); i++) {
-        val = val.substring(0, val.length - (4 * i + 3)) + ',' + val.substring(val.length - (4 * i + 3))
-    }
-
-    return (((sign) ? '' : '-') + val + '.' + cents)
+    return '-'
 }
 const formatDateDuration = function (time) {
     if (!time) return '-'

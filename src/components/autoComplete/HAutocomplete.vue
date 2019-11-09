@@ -1,18 +1,14 @@
 <template>
-    <el-autocomplete
-        v-model="selectItem.selectName"
-        :fetch-suggestions="querySearchAsync"
-        :placeholder="placeholder"
-        :validate-event="true"
-        @select="handleSelect"
-        @blur="blurInput"
-        :disabled="disabled"
-    ></el-autocomplete>
+    <el-autocomplete ref="autocomplete" v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @select="handleSelect" @blur="blurInput" @focus="focusInput" :disabled="disabled" :maxlength='maxlength'></el-autocomplete>
 </template>
 <script>
 export default {
     name: 'HAutocomplete',
     props: {
+        canDoBlurMethos: {// 可保留手输值
+            type: Boolean,
+            default: true
+        },
         selectObj: {
             type: Object,
             default: () => {
@@ -37,6 +33,10 @@ export default {
         removeValue: { // 清空input中的数据
             type: Boolean,
             default: false
+        },
+        maxlength: {
+            type: Number,
+            default: 15
         }
     },
     data () {
@@ -53,8 +53,12 @@ export default {
         }
     },
     watch: {
-        removeValue () {
-            this.clearInput()
+        removeValue: {
+            handler () {
+                this.clearInput()
+            },
+            deep: true
+
         },
         selectItem: {
             handler (newName, oldName) {
@@ -64,6 +68,9 @@ export default {
         }
     },
     methods: {
+        focusInput () {
+            this.$refs.autocomplete.suggestions = []
+        },
         clearInput () {
             this.selectObj.selectCode = ''
             this.selectObj.selectName = ''
@@ -78,7 +85,7 @@ export default {
         },
         createStateFilter (queryString) {
             return (state) => {
-                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+                return (state.value && state.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
             }
         },
         handleSelect (item) {
@@ -89,6 +96,12 @@ export default {
             })
         },
         blurInput (item) {
+            if (!this.canDoBlurMethos) {
+                this.$emit('back-event', {
+                    value: { value: this.selectItem.selectName }
+                })
+                return false
+            }
             const results = this.selectArray && this.selectArray.filter(item => {
                 return (item.value === this.selectItem.selectName)
             })

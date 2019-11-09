@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
-import { findMenuList } from '../views/layout/api'
+import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
@@ -14,24 +14,16 @@ const store = new Vuex.Store({
     state: {
         'loading': false,
         'userInfo': userInfo ? JSON.parse(userInfo) : {},
-        // 'userdata': userdata ? JSON.parse(userdata) : {},
+        'tagsList': sessionStorage.getItem('tagsList') ? JSON.parse(sessionStorage.getItem('tagsList')) : [],
         'isSaving': false,
         'isFirst': true,
         'menuList': [],
-        'isCollapse': false
-
+        'isCollapse': false,
+        'cachedInclude': [],
+        'cachedExclude': []
     },
     mutations,
-    actions: {
-        resetVuex (context) {
-            this.state.tagsInfo = []
-            this.state.isFirst = true
-        },
-        async findMenuList ({ commit }) {
-            const { data } = await findMenuList()
-            commit('MENU_LIST', data)
-        }
-    },
+    actions: actions,
     modules: {
         // 视图的 store
         dueDiligence,

@@ -12,14 +12,8 @@ import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
 import moment from 'moment'
+import '@/utils/validate/index.js'
 moment.locale('zh-cn')
-Vue.filter('formatDate', (time, param) => {
-    if (!time) return '-'
-    if (param) {
-        return moment(time).format(param)
-    }
-    return moment(time).format('YYYY-MM-DD HH:mm')
-})
 Vue.config.productionTip = false
 moment.locale('zh-cn')
 Vue.use(ElementUI)
@@ -43,11 +37,6 @@ Vue.filter('formatDate', (time, param) => {
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })
-
-// table公共组件
-Vue.component(
-    'basicTable', basicTable
-)
 
 Vue.mixin({
     methods: {

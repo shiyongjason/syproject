@@ -168,3 +168,14 @@ export const IsPositiveNumber = (rule, value, callback) => {
     }
     return callback()
 }
+
+export const checkIdCard = (rule, value, callback) => {
+    var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+    if (!value) {
+        return callback(new Error('请输入身份证号'))
+    } else if (value && reg.test(value) === false) {
+        return callback(new Error('身份证输入不合法'))
+    } else {
+        return callback()
+    }
+}

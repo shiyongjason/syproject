@@ -109,14 +109,36 @@ export default {
         }),
         assetListT () {
             const _this = this
-            let totalLiabilityT = 0
-            if (this.form.assetsLiabilities.liabilitiesListT) {
-                if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
-                    totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
-                }
+            // let totalLiabilityT = 0
+            // if (this.form.assetsLiabilities.liabilitiesListT) {
+            //     if (this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent) {
+            //         totalLiabilityT = +this.form.assetsLiabilities.liabilitiesListT[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
+            //     const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
+            //     _this.form.dueFinanceBasic.assetLiabilityRatio = result // 本年度法务的负债金额
+            //     return result
+            // }
+            // return 0
+            let assetT = 0
+            let liabilitiesT = 0
+            if (this.form.assetsLiabilities.assetListT) {
+                this.form.assetsLiabilities.assetListT.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetT = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListT && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent != 0) {
-                const result = ((totalLiabilityT + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListT[this.form.assetsLiabilities.assetListT.length - 1].endOrCurrent * 100).toFixed(2)
+            if (this.form.assetsLiabilities.liabilitiesListT) {
+                this.form.assetsLiabilities.liabilitiesListT.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesT = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetT && liabilitiesT) {
+                const result = ((liabilitiesT / assetT) * 100).toFixed(2)
                 _this.form.dueFinanceBasic.assetLiabilityRatio = result // 本年度法务的负债金额
                 return result
             }
@@ -124,14 +146,36 @@ export default {
         },
         assetListL () {
             const _this = this
-            let totalLiabilityL = 0
-            if (this.form.assetsLiabilities.liabilitiesListL) {
-                if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
-                    totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
-                }
+            // let totalLiabilityL = 0
+            // if (this.form.assetsLiabilities.liabilitiesListL) {
+            //     if (this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent) {
+            //         totalLiabilityL = +this.form.assetsLiabilities.liabilitiesListL[23].endOrCurrent
+            //     }
+            // }
+            // if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
+            //     const result = ((totalLiabilityL + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent * 100).toFixed(2)
+            //     _this.form.dueFinanceBasic.assetLiabilityRatioL = result // 上年度法务的负债金额
+            //     return result
+            // }
+            // return 0
+            let assetL = 0
+            let liabilitiesL = 0
+            if (this.form.assetsLiabilities.assetListL) {
+                this.form.assetsLiabilities.assetListL.map(i => {
+                    if (i.typeName == '资产总计') {
+                        assetL = i.endOrCurrent
+                    }
+                })
             }
-            if (this.form.assetsLiabilities.assetListL && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent && this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent != 0) {
-                const result = ((totalLiabilityL + +this.form.totalLiability) / +this.form.assetsLiabilities.assetListL[this.form.assetsLiabilities.assetListL.length - 1].endOrCurrent * 100).toFixed(2)
+            if (this.form.assetsLiabilities.liabilitiesListL) {
+                this.form.assetsLiabilities.liabilitiesListL.map(i => {
+                    if (i.typeName == '负债合计') {
+                        liabilitiesL = i.endOrCurrent
+                    }
+                })
+            }
+            if (assetL && liabilitiesL) {
+                const result = ((liabilitiesL / assetL) * 100).toFixed(2)
                 _this.form.dueFinanceBasic.assetLiabilityRatioL = result // 上年度法务的负债金额
                 return result
             }
