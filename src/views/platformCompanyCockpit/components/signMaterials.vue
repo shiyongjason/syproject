@@ -233,7 +233,8 @@ export default {
             signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
-                updateUid: ''
+                updateUid: '',
+                reservedName: true
             },
             checkIdCard
 
