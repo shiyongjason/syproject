@@ -102,7 +102,7 @@ export default {
                 { label: '分部', prop: 'branchName' },
                 { label: '平台公司名称', prop: 'merchantName' },
                 { label: '会员店名称', prop: 'memberName' },
-                { label: '下单时间', prop: 'orderTime' },
+                { label: '下单时间', prop: 'orderTime', formatters: 'dateTime' },
                 { label: '完成时间', prop: 'completeTime' }
             ],
             rowKey: 'id'

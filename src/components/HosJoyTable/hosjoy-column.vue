@@ -59,7 +59,6 @@ function money (money) {
     }
     return '-'
 }
-
 export default {
     name: 'hosjoyColumn',
     props: {
