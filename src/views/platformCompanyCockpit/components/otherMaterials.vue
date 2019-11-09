@@ -42,7 +42,8 @@ export default {
         return {
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
-                updateUid: ''
+                updateUid: '',
+                reservedName: true
             }
         }
     },

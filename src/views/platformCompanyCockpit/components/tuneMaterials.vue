@@ -44,7 +44,8 @@ export default {
             loading: false,
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
-                updateUid: ''
+                updateUid: '',
+                reservedName: true
             }
         }
     },

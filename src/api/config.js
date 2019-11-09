@@ -22,7 +22,6 @@ switch (env) {
         fileUploadUrl = 'http://192.168.20.248:30000/'
         /* interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         ossUrl = 'https://testroute.hosjoy.com:4832/'
-        uploadUrl = 'https://testhbp.hosjoy.com:4832/tms'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
