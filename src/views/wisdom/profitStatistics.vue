@@ -149,7 +149,7 @@ export default {
                 {
                     label: '费用及税费',
                     children: [
-                        { prop: 'expense', label: '费用/万', displayAs: 'money' },
+                        { prop: 'expense', label: '费用/万' },
                         {
                             prop: 'expenseRate',
                             label: '费率',
@@ -157,7 +157,7 @@ export default {
                                 return <span>{scope.row.expenseRate ? `${scope.row.expenseRate}%` : '-'}</span>
                             }
                         },
-                        { prop: 'incomeTax', label: '所得税/万', displayAs: 'money' }
+                        { prop: 'incomeTax', label: '所得税/万' }
 
                     ]
                 },
@@ -169,8 +169,8 @@ export default {
                         )
                     },
                     children: [
-                        { prop: 'totalProfit', label: '利润总额/万', displayAs: 'money' },
-                        { prop: 'netProfit', label: '净利润额/万', displayAs: 'money' },
+                        { prop: 'totalProfit', label: '利润总额/万' },
+                        { prop: 'netProfit', label: '净利润额/万' },
                         {
                             prop: 'netProfitAchievementRate',
                             label: '达成率',
@@ -199,10 +199,10 @@ export default {
 
             ],
             changeTable: true,
-            // 销售收入与成本的展开
+            // 销售收入与成本的展开 , displayAs: 'money'
             expandSell: [
-                { prop: 'incomeSale', label: '销售收入（无税）/万', width: '140', displayAs: 'money' },
-                { prop: 'saleCost', label: '销售成本（无税）/万', width: '140', displayAs: 'money' }
+                { prop: 'incomeSale', label: '销售收入（无税）/万', width: '140' },
+                { prop: 'saleCost', label: '销售成本（无税）/万', width: '140' }
             ],
             // 毛利的展开
             expandGrossProfit: [
@@ -243,9 +243,9 @@ export default {
                     }
 
                 }, */
-                { prop: 'netProfitTarget', label: '目标/万', displayAs: 'money' },
-                { prop: 'netProfitGap', label: '缺口/万', displayAs: 'money' },
-                { prop: 'netProfitLastMonth', label: '上月/万', displayAs: 'money' },
+                { prop: 'netProfitTarget', label: '目标/万' },
+                { prop: 'netProfitGap', label: '缺口/万' },
+                { prop: 'netProfitLastMonth', label: '上月/万' },
                 {
                     prop: 'netProfitLinkRelativeRatio',
                     label: '环比',
@@ -253,7 +253,7 @@ export default {
                         return <span>{scope.row.netProfitLinkRelativeRatio ? `${scope.row.netProfitLinkRelativeRatio}%` : '-'}</span>
                     }
                 },
-                { prop: 'netProfitLastYear', label: '同期', displayAs: 'money' },
+                { prop: 'netProfitLastYear', label: '同期' },
                 { prop: 'netProfitYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
@@ -365,7 +365,7 @@ export default {
             }
         },
         async getList () {
-            if (this.userInfo.deptType == null) return false
+            // if (this.userInfo.deptType == null) return false
             this.queryParams.startDate = `${this.queryDate[0]}-01`
             this.queryParams.endDate = `${this.queryDate[1]}-01`
             // 后端只要这个格式。
