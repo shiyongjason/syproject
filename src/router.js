@@ -831,7 +831,7 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     }
-    if (userInfo) {
+    if (userInfo && !isFirst) {
         tracking({
             type: 2,
             user_name: userInfo.employeeName,
