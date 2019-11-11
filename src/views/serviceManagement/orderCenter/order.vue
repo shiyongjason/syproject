@@ -33,20 +33,20 @@ export default {
     methods: {
         onChangeStauts (value) {
             this.queryParams.status = value.status
-            this.getData()
+            this.getList()
         },
         onClear () {
             this.searchForm = {
                 searchKey: 'orderNo',
                 mobile: ''
             }
-            this.getData()
+            this.getList()
         },
         onSearch () {
             this.queryParams.pageNumber = 1
-            this.getData()
+            this.getList()
         },
-        async getData () {
+        async getList () {
             const temp = { ...this.searchForm }
             temp[temp.searchKey] = temp.searchValue
             delete temp.searchKey
@@ -63,7 +63,7 @@ export default {
             this.searchForm.searchKey = 'mobile'
             this.searchForm.searchValue = defaultMobile
         }
-        this.getData()
+        this.getList()
     }
 }
 </script>
