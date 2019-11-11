@@ -705,6 +705,28 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
+            },
+            {
+                path: 'orderMessage',
+                name: 'serviceManagementOrderMessage',
+                meta: {
+                    title: '工单信息',
+                    tagName: '工单信息',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderMessage/orderMessage.vue')
+            },
+            {
+                path: 'channelManagement',
+                name: 'serviceManagementOrderMessage',
+                meta: {
+                    title: '渠道管理',
+                    tagName: '渠道管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
             }
         ]
     }
