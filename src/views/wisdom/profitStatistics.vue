@@ -14,10 +14,10 @@
                         <HAutocomplete  :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="userInfo.deptType != 2">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
+                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>
                             <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
@@ -323,6 +323,16 @@ export default {
         }
     },
     methods: {
+        async getSubsectionCode (val) {
+            this.platComList = []
+            const { data } = await findPaltList({ subsectionCode: val }) // 根据大区获取平台公司
+            for (let i of data.data.pageContent) {
+                i.value = i.companyShortName
+                i.selectCode = i.companyCode
+            }
+            this.platComList = data.data.pageContent
+            this.platComList.unshift({ selectCode: '', value: '全部', id: 0 })
+        },
         backPlat (val) {
             // 平台公司名称点击后事件
             if (val && val.value && val.value.companyShortName) {
@@ -416,18 +426,21 @@ export default {
         this.queryParams.startDate = moment().startOf('month').format('YYYY-MM') + '-01'
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM') + '-01'
 
-        this.findPaltList()
         this.findBranchListNew()
         // 0总部 1大区 2分部
         if (this.userInfo.deptType === 1) {
             this.queryParams.regionCode = 1
         }
-        if (this.userInfo.deptType === 2) {
-            // this.queryParams.subsectionCode = 2
-        }
         if (this.userInfo.deptType === 0) {
             this.queryParams.regionCode = ''
             this.queryParams.subsectionCode = ''
+        }
+
+        if (this.userInfo.deptType === 2) {
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
+            this.getSubsectionCode(this.queryParams.subsectionCode)
+        } else {
+            this.findPaltList()
         }
         this.getList()
     }
