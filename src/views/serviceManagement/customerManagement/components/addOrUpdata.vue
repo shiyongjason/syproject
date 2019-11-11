@@ -119,7 +119,7 @@ import moment from 'moment'
 export default {
     name: 'addOrUpdata',
     props: ['visible', 'value', 'isShowDetail', 'role', 'channelType'],
-    inject: ['getData'],
+    inject: ['getList'],
     data () {
         var checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
@@ -260,7 +260,7 @@ export default {
                         this.onCancel()
                         this.isSaving = false
                         // this.$emit('getList')
-                        this.getData()
+                        this.getList()
                     } catch (e) {
                         this.isSaving = false
                     }
