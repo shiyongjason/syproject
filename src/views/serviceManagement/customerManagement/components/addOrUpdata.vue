@@ -318,7 +318,7 @@ export default {
         padding-top: 15px;
         padding-bottom: 30px;
     }
-    /deep/.el-dialog .el-select{
+    .el-dialog .el-select{
         width: 100%;
     }
 </style>
