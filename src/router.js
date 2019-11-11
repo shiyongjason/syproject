@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList } from '@/views/layout/api'
+import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
@@ -705,6 +705,63 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
+            },
+            {
+                path: 'orderMessage',
+                name: 'serviceManagementOrderMessage',
+                meta: {
+                    title: '工单信息',
+                    tagName: '工单信息',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/orderMessage/orderMessage.vue')
+            },
+            {
+                path: 'channelManagement',
+                name: 'serviceManagementOrderMessage',
+                meta: {
+                    title: '渠道管理',
+                    tagName: '渠道管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
+            }
+        ]
+    },
+    {
+        path: '/platformCompanyCockpit',
+        meta: {
+            title: '平台公司驾驶舱',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'archivesList',
+                name: 'archivesList',
+                meta: {
+                    title: '平台公司档案',
+                    tagName: '平台公司档案',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesList.vue')
+            },
+            {
+                path: 'archivesManagement',
+                name: 'archivesManagement',
+                meta: {
+                    title: '档案管理',
+                    tagName: '档案管理',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
             }
         ]
     }
@@ -795,6 +852,20 @@ router.beforeEach(async (to, from, next) => {
                 }
             }
         }
+    }
+    if (userInfo && !isFirst) {
+        tracking({
+            type: 2,
+            user_name: userInfo.employeeName,
+            login_name: userInfo.phoneNumber,
+            page_path_name: to.tagName,
+            page_name: to.meta.title,
+            parent_page_name: to.meta.parentName,
+            parent_fullpage_name: to.fullPath,
+            from_page_path_name: from.tagName,
+            from_page_name: from.meta.title || '',
+            user_agent: navigator.userAgent
+        })
     }
     next()
 })
