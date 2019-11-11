@@ -25,7 +25,11 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryDate" type="monthrange" range-separator="至" start-placeholder="开始月份" end-placeholder="结束月份" format="yyyy-MM" value-format="yyyy-MM" :clearable='false'></el-date-picker>
+                    <el-date-picker v-model="queryParams.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="开始月份">
+                    </el-date-picker>
+                    <div class="line ml5 mr5">-</div>
+                    <el-date-picker v-model="queryParams.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="结束月份">
+                    </el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">公司上线状态：</div>
@@ -366,9 +370,6 @@ export default {
         },
         async getList () {
             // if (this.userInfo.deptType == null) return false
-            this.queryParams.startDate = `${this.queryDate[0]}-01`
-            this.queryParams.endDate = `${this.queryDate[1]}-01`
-            // 后端只要这个格式。
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
             let query = { ...this.queryParams }
             const { data } = await getProfitList(query)
@@ -412,9 +413,9 @@ export default {
         }
     },
     async mounted () {
-        let start = moment().startOf('month').format('YYYY-MM')
-        let end = moment().endOf('days').format('YYYY-MM')
-        this.queryDate = [start, end]
+        this.queryParams.startDate = moment().startOf('month').format('YYYY-MM') + '-01'
+        this.queryParams.endDate = moment().endOf('days').format('YYYY-MM') + '-01'
+
         this.findPaltList()
         this.findBranchListNew()
         // 0总部 1大区 2分部
