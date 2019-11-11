@@ -14,12 +14,11 @@
                         <HAutocomplete  :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
                     </div>
                 </div>
-                <!--  v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]" -->
                 <div class="query-cont-col">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in branchList" :key="item.subsectionName" :label="item.subsectionName" :value="item.subsectionCode">
+                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
                     </div>
@@ -60,7 +59,7 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchListNew } from './api/index.js'
+import { getProfitList, findPaltList, findBranchList } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -339,9 +338,9 @@ export default {
         },
         async findBranchListNew () {
             // 平台分部
-            const { data } = await findBranchListNew()
+            const { data } = await findBranchList()
             this.branchList = data.data
-            this.branchList.unshift({ subsectionCode: '', subsectionName: '全部', id: 0 })
+            this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
         toPercent (point) {
             if (!point) { return '-' }
@@ -423,7 +422,7 @@ export default {
             this.queryParams.regionCode = 1
         }
         if (this.userInfo.deptType === 2) {
-            this.queryParams.subsectionCode = 2
+            // this.queryParams.subsectionCode = 2
         }
         if (this.userInfo.deptType === 0) {
             this.queryParams.regionCode = ''
