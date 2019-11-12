@@ -425,8 +425,7 @@ export default {
     async mounted () {
         this.queryParams.startDate = moment().startOf('month').format('YYYY-MM') + '-01'
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM') + '-01'
-
-        this.findBranchListNew()
+        if (this.userInfo.deptType !== 1) this.findBranchListNew()
         // 0总部 1大区 2分部
         if (this.userInfo.deptType === 1) {
             this.queryParams.regionCode = 1
