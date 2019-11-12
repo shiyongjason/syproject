@@ -419,7 +419,7 @@ export default {
             }
         },
         async onExport (params) {
-            location.href = interfaceUrl + `rms/platform/profit-statistics/export?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&pageNumber=${this.queryParams.pageNumber}&pageSize=${this.queryParams.pageSize}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}&misCode=${this.queryParams.misCode}`
+            location.href = interfaceUrl + `rms/platform/profit-statistics/export?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}&misCode=${this.queryParams.misCode}`
         }
     },
     async mounted () {
