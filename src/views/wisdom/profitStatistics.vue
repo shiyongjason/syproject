@@ -428,7 +428,7 @@ export default {
         if (this.userInfo.deptType !== 1) this.findBranchListNew()
         // 0总部 1大区 2分部
         if (this.userInfo.deptType === 1) {
-            this.queryParams.regionCode = 1
+            this.queryParams.regionCode = this.userInfo.oldDeptCode
         }
         if (this.userInfo.deptType === 0) {
             this.queryParams.regionCode = ''
