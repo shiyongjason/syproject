@@ -350,9 +350,9 @@ export default {
             }
             this.platComList = data.data.pageContent
         },
-        async findBranchListNew () {
+        async findBranchListNew (val = '') {
             // 平台分部
-            const { data } = await findBranchList()
+            const { data } = await findBranchList({ crmDeptCode: val })
             this.branchList = data.data
             this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
@@ -439,6 +439,8 @@ export default {
         if (this.userInfo.deptType === 2) {
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
             this.getSubsectionCode(this.queryParams.subsectionCode)
+        } else if (this.userInfo.deptType === 1) {
+            this.findBranchListNew(this.userInfo.oldDeptCode)
         } else {
             this.findPaltList()
         }
