@@ -132,7 +132,7 @@ export default {
                     label: '毛利',
                     renderHeader: (h, scope) => {
                         return (
-                            <span>{scope.column.label}<i class='el-icon-question pointer' onClick={() => { this.onShowMessage() }}></i><i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandGrossProfit, 2) }}></i></span>
+                            <span class='posr'>{scope.column.label}<i class='el-icon-question pointer' onClick={() => { this.onShowMessage() }}></i><i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandGrossProfit, 2) }}></i></span>
                         )
                     },
                     children: [
@@ -477,4 +477,8 @@ export default {
     margin-top: 5px;
     font-size: 12px;
 }
+/deep/.posr{ position: relative;}
+/deep/.posr .el-icon-question{ position: absolute;top: -3px}
+/deep/.posr .el-icon-plus{ position: absolute; left:50px;top: 2px}
+/deep/.posr .el-icon-minus{ position: absolute; left:50px;top: 2px}
 </style>
