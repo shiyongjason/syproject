@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete  :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col" v-if="userInfo.deptType != 2">
@@ -35,8 +35,8 @@
                     <div class="query-col-title">公司上线状态：</div>
                     <div class="query-col-input">
                         <el-checkbox-group v-model="onLineStatusTemp">
-                            <el-checkbox label="1" >上线</el-checkbox>
-                            <el-checkbox label="2" >未上线</el-checkbox>
+                            <el-checkbox label="1">上线</el-checkbox>
+                            <el-checkbox label="2">未上线</el-checkbox>
                             <el-checkbox label="3">淘汰</el-checkbox>
                         </el-checkbox-group>
                     </div>
@@ -180,7 +180,8 @@ export default {
                             label: '达成率',
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitAchievementRate == 0 ? 0 : scope.row.netProfitAchievementRate ? `${scope.row.netProfitAchievementRate}%` : '-'}</span>
-                            } }
+                            }
+                        }
                     ]
                 },
                 {
@@ -219,7 +220,8 @@ export default {
                     }
                 },
                 { prop: 'grossProfitLastYear', label: '同期/万' },
-                { prop: 'grossProfitYearOnYear',
+                {
+                    prop: 'grossProfitYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
                         return <span>{scope.row.grossProfitYearOnYear == 0 ? 0 : scope.row.grossProfitYearOnYear ? `${scope.row.grossProfitYearOnYear}%` : '-'}</span>
@@ -245,7 +247,6 @@ export default {
                                     : <span>-<i class="el-icon-edit-outline ml10 pointer" onClick={() => { this.handleEdit(scope, '_target') }}></i></span>
                         )
                     }
-
                 }, */
                 { prop: 'netProfitTarget', label: '目标/万' },
                 { prop: 'netProfitGap', label: '缺口/万' },
@@ -258,7 +259,8 @@ export default {
                     }
                 },
                 { prop: 'netProfitLastYear', label: '同期' },
-                { prop: 'netProfitYearOnYear',
+                {
+                    prop: 'netProfitYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitYearOnYear == 0 ? 0 : scope.row.netProfitYearOnYear ? `${scope.row.netProfitYearOnYear}%` : '-'}</span>
@@ -366,7 +368,8 @@ export default {
             this.$alert('毛利栏目下的上月、环比、同期、同比均为对毛利额的计算', '毛利', {
                 confirmButtonText: '我知道了',
                 center: true,
-                callback: action => {} })
+                callback: action => { }
+            })
         },
         handleExpand (scope, expandSellrr, num) {
             this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
@@ -449,7 +452,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/.pointer {cursor: pointer;margin-left: 10px;font-size: 14px;}
-/deep/.redcolor{color: #fff;width: 16px;height: 16px;background: #FF7A45;line-height: 16px;border-radius: 2px; margin-top:5px;font-size: 12px;}
-/deep/.redcancel{color: #fff;width: 16px;height: 16px;background: #9c9a99;line-height: 16px;border-radius: 2px;margin-top:5px;font-size: 12px;}
+/deep/.pointer {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
+}
+/deep/.redcolor {
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    background: #ff7a45;
+    line-height: 16px;
+    border-radius: 2px;
+    margin-top: 5px;
+    font-size: 12px;
+}
+/deep/.redcancel {
+    color: #fff;
+    width: 16px;
+    height: 16px;
+    background: #9c9a99;
+    line-height: 16px;
+    border-radius: 2px;
+    margin-top: 5px;
+    font-size: 12px;
+}
 </style>
