@@ -145,7 +145,7 @@ export default {
                             prop: 'grossProfitMargin',
                             label: '毛利率',
                             render: (h, scope) => {
-                                return <span>{scope.row.grossProfitMargin ? `${scope.row.grossProfitMargin}%` : '-'}</span>
+                                return <span>{scope.row.grossProfitMargin == 0 ? 0 : scope.row.grossProfitMargin ? `${scope.row.grossProfitMargin}%` : '-'}</span>
                             }
                         }
                     ]
@@ -158,7 +158,7 @@ export default {
                             prop: 'expenseRate',
                             label: '费率',
                             render: (h, scope) => {
-                                return <span>{scope.row.expenseRate ? `${scope.row.expenseRate}%` : '-'}</span>
+                                return <span>{scope.row.expenseRate == 0 ? 0 : scope.row.expenseRate ? `${scope.row.expenseRate}%` : '-'}</span>
                             }
                         },
                         { prop: 'incomeTax', label: '所得税/万' }
@@ -179,7 +179,7 @@ export default {
                             prop: 'netProfitAchievementRate',
                             label: '达成率',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitAchievementRate ? `${scope.row.netProfitAchievementRate}%` : '-'}</span>
+                                return <span>{scope.row.netProfitAchievementRate == 0 ? 0 : scope.row.netProfitAchievementRate ? `${scope.row.netProfitAchievementRate}%` : '-'}</span>
                             } }
                     ]
                 },
@@ -195,7 +195,7 @@ export default {
                             prop: 'netProfitRate',
                             label: '净利润率',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
                             }
                         }
                     ]
@@ -215,14 +215,14 @@ export default {
                     prop: 'grossProfitLinkRelativeRatio',
                     label: '环比',
                     render: (h, scope) => {
-                        return <span>{scope.row.grossProfitLinkRelativeRatio ? `${scope.row.grossProfitLinkRelativeRatio}%` : '-'}</span>
+                        return <span>{scope.row.grossProfitLinkRelativeRatio == 0 ? 0 : scope.row.grossProfitLinkRelativeRatio ? `${scope.row.grossProfitLinkRelativeRatio}%` : '-'}</span>
                     }
                 },
                 { prop: 'grossProfitLastYear', label: '同期/万' },
                 { prop: 'grossProfitYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
-                        return <span>{scope.row.grossProfitYearOnYear ? `${scope.row.grossProfitYearOnYear}%` : '-'}</span>
+                        return <span>{scope.row.grossProfitYearOnYear == 0 ? 0 : scope.row.grossProfitYearOnYear ? `${scope.row.grossProfitYearOnYear}%` : '-'}</span>
                     }
                 }
             ],
@@ -254,14 +254,14 @@ export default {
                     prop: 'netProfitLinkRelativeRatio',
                     label: '环比',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitLinkRelativeRatio ? `${scope.row.netProfitLinkRelativeRatio}%` : '-'}</span>
+                        return <span>{scope.row.netProfitLinkRelativeRatio == 0 ? 0 : scope.row.netProfitLinkRelativeRatio ? `${scope.row.netProfitLinkRelativeRatio}%` : '-'}</span>
                     }
                 },
                 { prop: 'netProfitLastYear', label: '同期' },
                 { prop: 'netProfitYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitYearOnYear ? `${scope.row.netProfitYearOnYear}%` : '-'}</span>
+                        return <span>{scope.row.netProfitYearOnYear == 0 ? 0 : scope.row.netProfitYearOnYear ? `${scope.row.netProfitYearOnYear}%` : '-'}</span>
                     }
                 }
             ],
@@ -270,28 +270,28 @@ export default {
                     prop: 'netProfitRateLastMonth',
                     label: '上月',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateLinkRelativeRatio',
                     label: '环比',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLinkRelativeRatio ? `${scope.row.netProfitRateLinkRelativeRatio}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLinkRelativeRatio == 0 ? 0 : scope.row.netProfitRateLinkRelativeRatio ? `${scope.row.netProfitRateLinkRelativeRatio}%` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateLastYear',
                     label: '同期',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastYear ? `${scope.row.netProfitRateLastYear}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastYear == 0 ? 0 : scope.row.netProfitRateLastYear ? `${scope.row.netProfitRateLastYear}%` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateYearOnYear',
                     label: '同比',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateYearOnYear ? `${scope.row.netProfitRateYearOnYear}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateYearOnYear == 0 ? 0 : scope.row.netProfitRateYearOnYear ? `${scope.row.netProfitRateYearOnYear}%` : '-'}</span>
                     }
                 }
             ]
