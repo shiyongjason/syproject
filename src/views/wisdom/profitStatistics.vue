@@ -382,7 +382,6 @@ export default {
             }
         },
         async getList () {
-            // if (this.userInfo.deptType == null) return false
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
             let query = { ...this.queryParams }
             const { data } = await getProfitList(query)
