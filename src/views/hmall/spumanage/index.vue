@@ -227,7 +227,7 @@ export default {
         next()
     },
     async mounted () {
-        const { data } = await findBossSource({ withBoss: 0 })
+        const { data } = await findBossSource({ withBoss: 1 })
         this.productSource = data
         // TODO 模糊搜索组件
         this.productSource && this.productSource.map(item => {
