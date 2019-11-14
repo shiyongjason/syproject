@@ -32,11 +32,34 @@ const routerMapping = [
         ]
     },
     {
+        path: '/routerConfig',
+        component: Layout,
+        meta: {
+            title: '路由配置',
+            isMenu: true,
+            icon: 'hosjoy_set'
+        },
+        children: [
+            {
+                path: '',
+                name: 'routerConfig',
+                meta: {
+                    title: '首页',
+                    tagName: '首页',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/index/index'
+                },
+                component: () => import('./views/routerConfig')
+            }
+        ]
+    },
+    {
         path: '/jinyunPlatform',
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [
@@ -713,7 +736,7 @@ const routerMapping = [
         meta: {
             title: '金云系统',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [

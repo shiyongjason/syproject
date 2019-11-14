@@ -8,7 +8,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">企业名称：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.keywords" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="20" v-model="queryParams.companyName" placeholder="请输入企业名称">
                     </el-input>
                 </div>
             </div>

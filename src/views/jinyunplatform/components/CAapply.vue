@@ -8,44 +8,40 @@
             <div>企业CA认证申请</div>
         </div><br>
         <el-form :model="ruleForm" :inline="true" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="操作人姓名：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="操作人姓名：" label-width='150px' prop="operatorName">
+                <el-input v-model="ruleForm.operatorName"></el-input>
             </el-form-item>
-            <el-form-item label="操作人手机号：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="操作人手机号：" label-width='150px' prop="operatorPhone">
+                <el-input v-model="ruleForm.operatorPhone"></el-input>
             </el-form-item>
-            <el-form-item label="操作人邮箱：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="操作人邮箱：" label-width='150px' prop="operatorEmail">
+                <el-input v-model="ruleForm.operatorEmail"></el-input>
             </el-form-item>
-            <el-form-item label="操作人身份证号：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="操作人身份证号：" label-width='150px' prop="operatorIdNumber">
+                <el-input v-model="ruleForm.operatorIdNumber"></el-input>
             </el-form-item>
-            <el-form-item label="企业类型：" label-width='150px' prop="region">
-                <el-select v-model="queryParams.channelType" clearable>
-                    <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
+            <el-form-item label="企业类型：" label-width='150px' prop="companyType">
+                <el-select v-model="ruleForm.companyType">
+                    <el-option v-for="(item,index) in companyType" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="企业名称：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name" disabled></el-input>
+            <el-form-item label="企业名称：" label-width='150px' prop="companyName">
+                <el-input v-model="ruleForm.companyName" disabled></el-input>
                 <el-button class="applyBtn" @click="dialogVisible = true">选择</el-button>
             </el-form-item>
-            <el-form-item label="组织机构代码：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="组织机构代码：" label-width='150px' prop="companyDocumentType">
+                <el-input v-model="ruleForm.companyDocumentType"></el-input>
             </el-form-item>
-            <el-form-item label="法人姓名：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="法人姓名：" label-width='150px' prop="legalName">
+                <el-input v-model="ruleForm.legalName"></el-input>
             </el-form-item>
-            <el-form-item label="法人手机号：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="法人手机号：" label-width='150px' prop="legalPhone">
+                <el-input v-model="ruleForm.legalPhone"></el-input>
             </el-form-item>
-            <el-form-item label="法人身份证号：" label-width='150px' prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
+            <el-form-item label="法人身份证号：" label-width='150px' prop="legalIdNumber">
+                <el-input v-model="ruleForm.legalIdNumber"></el-input>
             </el-form-item>
-            <!-- <el-form-item>
-                    <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-                    <el-button @click="resetForm('ruleForm')">上传印章图片</el-button>
-                </el-form-item> -->
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSubmit('ruleForm')">
@@ -83,7 +79,7 @@
 
 <script>
 export default {
-    name: '',
+    name: 'caApply',
     data () {
         return {
             dialogVisible: false,
@@ -92,25 +88,48 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 keywords: '',
-                channelType: ''
+                companyType: ''
             },
             ruleForm: {},
             rules: {
-                name: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                operatorName: [
+                    { required: true, message: '请输入操作人姓名', trigger: 'blur' }
                 ],
-                region: [
-                    { required: true, message: '请选择活动区域', trigger: 'change' }
+                operatorPhone: [
+                    { required: true, message: '请输入操作人手机号', trigger: 'blur' }
+                ],
+                operatorEmail: [
+                    { required: true, message: '请输入操作人邮箱', trigger: 'blur' }
+                ],
+                operatorIdNumber: [
+                    { required: true, message: '请输入操作人身份证号', trigger: 'blur' }
+                ],
+                companyType: [
+                    { required: true, message: '请选择企业类型', trigger: 'change' }
+                ],
+                companyName: [
+                    { required: true, message: '请输入企业名称', trigger: 'blur' }
+                ],
+                companyDocumentType: [
+                    { required: true, message: '请输入机构代码', trigger: 'blur' }
+                ],
+                legalName: [
+                    { required: true, message: '请输入法人姓名', trigger: 'blur' }
+                ],
+                legalPhone: [
+                    { required: true, message: '请输入法人手机号', trigger: 'blur' }
+                ],
+                legalIdNumber: [
+                    { required: true, message: '请输入法人身份证号', trigger: 'blur' }
                 ]
             },
-            channelType: [
+            companyType: [
                 { value: '', label: '全部' },
-                { value: 0, label: '借款方' },
-                { value: 1, label: '资金方' },
-                { value: 2, label: '组织方' },
+                { value: 1, label: '借款方' },
+                { value: 2, label: '资金方' },
                 { value: 3, label: '合作方' },
-                { value: 4, label: '担保方' }
+                { value: 4, label: '组织方' },
+                { value: 5, label: '担保方' }
             ]
         }
     },
