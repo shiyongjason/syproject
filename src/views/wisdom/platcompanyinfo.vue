@@ -113,9 +113,8 @@ export default {
             this.platList = await this.findPaltList(code)
             this.findCompanyList()
         } else if (this.userInfo.deptType == 0) {
-            const code = this.userInfo.oldDeptCode
             this.findCompanyList()
-            this.platList = await this.findPaltList(code)
+            this.platList = await this.findPaltList()
         } else {
             this.findCompanyList()
         }
