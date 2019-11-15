@@ -23,7 +23,11 @@
                     {{ scope.row.reservationPerson }}
                 </template>
             </el-table-column>
-            <el-table-column prop="offlineHousekeeper" label="线下管家" align="center">
+            <el-table-column label="线下管家" align="center">
+                <template slot-scope="scope">
+                    {{scope.offlineHousekeeper}}
+                    {{scope.offlineHousekeeperPhone}}
+                </template>
             </el-table-column>
             <el-table-column prop="phone" label="手机号" align="center">
                 <template slot-scope="scope">
@@ -37,12 +41,20 @@
             </el-table-column>
             <el-table-column prop="method" label="预约方式" align="center">
             </el-table-column>
-            <el-table-column prop="reservationName" label="预约内容" align="center">
+            <el-table-column prop="reservationName" label="服务项目" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.reservationName }}
                 </template>
             </el-table-column>
-            <el-table-column label="预约时间" align="center">
+            <el-table-column prop="method" label="服务商" align="center">
+            </el-table-column>
+            <el-table-column label="工程师" align="center">
+                <template slot-scope="scope">
+                    {{ scope.row.method}}
+                    {{ scope.row.method}}
+                </template>
+            </el-table-column>
+            <el-table-column label="服务时间" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.startTime + scope.row.endTime}}
                 </template>
@@ -52,9 +64,16 @@
                     {{ scope.row.status }}
                 </template>
             </el-table-column>
+            <el-table-column prop="method" label="服务数量" align="center">
+            </el-table-column>
+            <el-table-column prop="method" label="买家备注" align="center">
+            </el-table-column>
+            <el-table-column prop="method" label="卖家备注" align="center">
+            </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button @click="onEdit(scope.row)" class="orangeBtn" :disabled="scope.row.status == '已完成' || scope.row.status == '取消'">修改</el-button>
+                    <el-button @click="addOrder">新增工单</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -64,18 +83,6 @@
         </div>
         <el-dialog :title="title" :visible.sync="dialogTableVisible">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-                <el-form-item label="订单号">
-                    <el-input v-model="form.channelOrderNo" disabled maxlength="25" style="width: 300px"></el-input>
-                </el-form-item>
-                <el-form-item label="预约单号">
-                    <el-input v-model="form.reservationNo" disabled maxlength="25" style="width: 300px"></el-input>
-                </el-form-item>
-                <el-form-item label="预约内容">
-                    <el-input v-model="form.reservationName" placeholder="请输入预约内容" maxlength="25" style="width: 300px"></el-input>
-                </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="form.reservationPerson" placeholder="请输入姓名" maxlength="25" style="width: 300px"></el-input>
-                </el-form-item>
                 <el-form-item prop="type" label="渠道名称">
                     <el-input v-model="form.sourceName" disabled maxlength="25" style="width: 300px"></el-input>
                     <!-- <el-select v-model="form.type" style="width: 300px">
@@ -83,11 +90,28 @@
                         <el-option label="孩子王成长家" :value="2"></el-option>
                     </el-select> -->
                 </el-form-item>
-                <el-form-item prop="goodsName" label="商品名称">
-                    <el-input v-model="form.goodsName" disabled maxlength="25" style="width: 300px"></el-input>
+                <el-form-item label="订单号">
+                    <el-input v-model="form.channelOrderNo" disabled maxlength="25" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="工单号">
+                    <el-input v-model="form.reservationNo" disabled maxlength="25" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="form.reservationPerson" placeholder="请输入姓名" maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号">
                     <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item prop="type" label="线下管家">
+                    <el-select v-model="form.reservationMethod" disabled style="width: 300px">
+                        <el-option label="线下管家" value=""></el-option>
+                        <el-option label="线下管家" :value="1"></el-option>
+                        <el-option label="线下管家" :value="2"></el-option>
+                        <el-option label="线下管家" :value="3"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="管家电话">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
                     <el-input v-model="form.address" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
@@ -100,16 +124,19 @@
                         <el-option label="管家预约" :value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="type" label="预约状态">
-                    <el-select v-model="form.reservationStatus" style="width: 300px">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="已预约（未确认）" :value="1"></el-option>
-                        <el-option label="已预约（已确认）" :value="2"></el-option>
-                        <el-option label="已完成" :value="3"></el-option>
-                        <el-option label="取消" :value="4"></el-option>
-                    </el-select>
+                <el-form-item label="服务项目">
+                    <el-input v-model="form.address" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
-                <el-form-item label="预约时间">
+                <el-form-item label="服务商">
+                    <el-input v-model="form.address" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="预约内容">
+                    <el-input v-model="form.reservationName" placeholder="请输入预约内容" maxlength="25" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item prop="goodsName" label="商品名称">
+                    <el-input v-model="form.goodsName" disabled maxlength="25" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务时间">
                     <el-date-picker v-model="date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                     <el-time-select placeholder="起始时间" v-model="startTime" :picker-options="{
       start: '08:30',
@@ -124,6 +151,30 @@
       minTime: startTime
     }">
                     </el-time-select>
+                </el-form-item>
+                <el-form-item prop="type" label="服务状态">
+                    <el-select v-model="form.reservationStatus" style="width: 300px">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="已预约（未确认）" :value="1"></el-option>
+                        <el-option label="已预约（已确认）" :value="2"></el-option>
+                        <el-option label="已完成" :value="3"></el-option>
+                        <el-option label="取消" :value="4"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="工程师">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="工程师电话">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务数量">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="买家备注">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="卖家备注">
+                    <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer" v-show="show">
@@ -191,6 +242,9 @@ export default {
         })
     },
     methods: {
+        addOrder () {
+            console.log(1)
+        },
         selectionChange (val) {
             this.selectId = []
             val.forEach((value) => {

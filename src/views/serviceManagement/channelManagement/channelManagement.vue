@@ -15,29 +15,40 @@
                 </div>
             </div>
         </div>
-        <ChannelTable :tableData="tableData" :paginationData="paginationData" @updateStatus="search" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-        </ChannelTable>
+        <div class="page-body-cont">
+            <basicTable :tableLabel="tableLabel"  :tableData="tableData" :paginationData="paginationData" @updateStatus="search"
+                        @onSizeChange="onSizeChange" :isAction="false"
+                        @onCurrentChange="onCurrentChange" :isShowIndex='false'>
+            </basicTable>
+        </div>
     </div>
 </template>
 
 <script>
-import ChannelTable from './components/channelTable'
 export default {
     name: 'channelManagement',
-    components: {
-        ChannelTable
-    },
     data () {
         return {
             queryParams: {
                 channelName: ''
             },
-            tableData: [],
+            tableData: [
+                {
+                    sourceName: '测试'
+                }
+            ],
             paginationData: {
                 pageNumber: 1,
                 pageSize: 10,
                 totalElements: 100
-            }
+            },
+            tableLabel: [{ label: '渠道名称', prop: 'sourceName' },
+                { label: '渠道编码', prop: 'sourceName', width: '150' },
+                { label: 'MIS名称', prop: 'sourceName', width: '200' },
+                { label: '创建时间', prop: 'sourceName', width: '200' },
+                { label: '创建人', prop: 'sourceName' },
+                { label: '操作', prop: 'sourceName' }
+            ]
         }
     },
     methods: {
@@ -52,13 +63,12 @@ export default {
         async search () {
             this.searchParams.pageSize = this.paginationData.pageSize
             this.searchParams.pageNumber = this.paginationData.pageNumber
-            // const { data } = await findReservations(this.searchParams)
-            // this.tableData = data.records
-            // this.paginationData = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     totalElements: data.total
-            // }
+        },
+        onReset () {
+            console.log(1)
+        },
+        onQuery () {
+            console.log(1)
         }
     }
 }

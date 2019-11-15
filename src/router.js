@@ -611,8 +611,8 @@ const routerMapping = [
                 path: 'reservation',
                 name: 'reservation',
                 meta: {
-                    title: '预约信息',
-                    tagName: '预约信息',
+                    title: '工单信息',
+                    tagName: '工单信息',
                     isMenu: true,
                     icon: ''
                 },
@@ -705,17 +705,6 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
-            },
-            {
-                path: 'orderMessage',
-                name: 'serviceManagementOrderMessage',
-                meta: {
-                    title: '工单信息',
-                    tagName: '工单信息',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderMessage/orderMessage.vue')
             },
             {
                 path: 'channelManagement',
