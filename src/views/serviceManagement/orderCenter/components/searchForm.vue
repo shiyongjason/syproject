@@ -50,20 +50,20 @@
                                 清空筛选条件
                             </el-button>
                         </div>
-                        <div class="query-col-input">
-                            <el-upload
-                                class="upload-demo"
-                                :show-file-list="false"
-                                :action="interfaceUrl + 'service/api/orders/import'"
-                                :on-success="isSuccess"
-                                :on-error="isError"
-                                auto-upload
-                            >
-                                <el-button type="primary">
-                                    导入外部订单
-                                </el-button>
-                            </el-upload>
-                        </div>
+                        <!--<div class="query-col-input">-->
+                            <!--<el-upload-->
+                                <!--class="upload-demo"-->
+                                <!--:show-file-list="false"-->
+                                <!--:action="interfaceUrl + 'service/api/orders/import'"-->
+                                <!--:on-success="isSuccess"-->
+                                <!--:on-error="isError"-->
+                                <!--auto-upload-->
+                            <!--&gt;-->
+                                <!--<el-button type="primary">-->
+                                    <!--导入外部订单-->
+                                <!--</el-button>-->
+                            <!--</el-upload>-->
+                        <!--</div>-->
                     </div>
                 </el-form>
             </div>
