@@ -28,10 +28,10 @@
             </el-form-item>
             <el-form-item label="企业名称：" label-width='150px' prop="companyName">
                 <el-input v-model="ruleForm.companyName" disabled></el-input>
-                <el-button class="applyBtn" @click="dialogVisible = true">选择</el-button>
+                <el-button class="applyBtn" @click="onChoose">选择</el-button>
             </el-form-item>
-            <el-form-item label="组织机构代码：" label-width='150px' prop="companyDocumentType">
-                <el-input v-model="ruleForm.companyDocumentType"></el-input>
+            <el-form-item label="组织机构代码：" label-width='150px' prop="companyLicenseNumber">
+                <el-input v-model="ruleForm.companyLicenseNumber"></el-input>
             </el-form-item>
             <el-form-item label="法人姓名：" label-width='150px' prop="legalName">
                 <el-input v-model="ruleForm.legalName"></el-input>
@@ -47,12 +47,11 @@
                     <el-button type="primary" class="ml20" @click="onSubmit('ruleForm')">
                         提交
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="uploadSeal">上传印章图片</el-button>
                 </div>
             </div>
         </el-form>
-        <el-dialog title="新建标签" :visible.sync="dialogVisible" :close-on-click-modal="false">
-            <div class="add-tags-dialog">
+        <el-dialog title="选择客户" :visible.sync="dialogVisible" :close-on-click-modal="false">
+            <!-- <div class="add-tags-dialog">
                 <div class="query-cont-col">
                     <div class="query-col-title">标签名称：</div>
                     <div class="query-col-input">
@@ -60,24 +59,26 @@
                         </el-input>
                     </div>
                 </div>
-            </div>
-            <div>
+            </div> -->
+            <div class="add-tags-dialog">
                 <div class="query-cont-col">
-                    <div class="query-col-title">标签类型：</div>
+                    <div class="query-col-title">客户名称：</div>
                     <div class="query-col-input">
-                        <el-radio v-model="addTags.labelType" label="1">手动标签</el-radio>
+                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" :remove-value='removeValue' />
                     </div>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="cancel">取 消</el-button>
-                <el-button type="primary" @click="createTags">保 存</el-button>
+                <el-button type="primary" @click="onSave">保 存</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { getSignSelector, signCa, signImage } from '../api/index'
 export default {
     name: 'caApply',
     data () {
@@ -90,7 +91,9 @@ export default {
                 keywords: '',
                 companyType: ''
             },
-            ruleForm: {},
+            ruleForm: {
+                companyDocumentType: 1
+            },
             rules: {
                 operatorName: [
                     { required: true, message: '请输入操作人姓名', trigger: 'blur' }
@@ -110,7 +113,7 @@ export default {
                 companyName: [
                     { required: true, message: '请输入企业名称', trigger: 'blur' }
                 ],
-                companyDocumentType: [
+                companyLicenseNumber: [
                     { required: true, message: '请输入机构代码', trigger: 'blur' }
                 ],
                 legalName: [
@@ -130,17 +133,26 @@ export default {
                 { value: 3, label: '合作方' },
                 { value: 4, label: '组织方' },
                 { value: 5, label: '担保方' }
-            ]
+            ],
+            productSource: [],
+            removeValue: false,
+            companyName: ''
         }
+    },
+    components: {
+        HAutocomplete
     },
     methods: {
         onQuery () {
-            this.$emit('onQuery')
+            this.$emit('onSearch')
+        },
+        async signCa () {
+            await signCa(this.ruleForm)
         },
         onSubmit (formName) {
-            this.$refs[formName].validate((valid) => {
+            this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    alert('submit!')
+                    await this.signCa()
                     this.onQuery()
                 } else {
                     console.log('error submit!!')
@@ -148,22 +160,46 @@ export default {
                 }
             })
         },
-        createTags () { },
-        uploadSeal () {
-            this.onQuery()
+        onSave () {
+            this.ruleForm.companyName = this.companyName
+            this.dialogVisible = false
         },
         cancel () {
             this.dialogVisible = false
             this.addTags.labelName = ''
+        },
+        async onChoose () {
+            if (!this.ruleForm.companyType) {
+                this.$message.warning('请先选择企业类型！')
+                return
+            }
+            const params = {
+                companyType: this.ruleForm.companyType
+            }
+            const { data } = await getSignSelector(params)
+            console.log(data)
+            this.productSource = data.corporations
+            this.productSource.map(item => {
+                item.value = item.name
+                item.selectCode = item.name
+            })
+            this.dialogVisible = true
+        },
+        backFindcode (val) {
+            console.log(val.value.value)
+            this.companyName = val.value.value
         }
     }
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
 .applyBtn {
     position: absolute;
     right: 0;
     border: 1px solid #f56c6c;
+}
+/deep/ .el-dialog__body {
+    min-height: auto;
 }
 </style>

@@ -87,17 +87,17 @@
             </div>
         </div>
         <el-dialog :title="title" :visible.sync="dialogSeedVisible">
-            <el-form :model="form">
-                <el-form-item label="菜单名称" label-width="120px">
+            <el-form :model="form" :rules="formRules" ref="form">
+                <el-form-item label="菜单名称" label-width="120px" prop="authName">
                     <el-input v-model="form.authName" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="菜单路由" label-width="120px">
+                <el-form-item label="菜单路由" label-width="120px" prop="authUri">
                     <el-input v-model="form.authUri" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogSeedVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onAddMenuSure">确 定</el-button>
+                <el-button type="primary" @click="onAddMenuSure('form')">确 定</el-button>
             </div>
         </el-dialog>
         <el-dialog title="敏感配置" :visible.sync="fieldVisible" width="50%" :close-on-click-modal='false'>
@@ -168,6 +168,14 @@ export default {
                     }
                 ]
             },
+            formRules: {
+                authName: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                authUri: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ]
+            },
             dialogFirVisible: false,
             dialogSeedVisible: false,
             fieldVisible: false,
@@ -234,11 +242,15 @@ export default {
                 return item
             })
         },
-        onAddMenuSure () {
-            console.log(this.levObj)
-            if (this.levObj.lev == 1) this.addFirMenu()
-            if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
-            if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
+        onAddMenuSure (formName) {
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    console.log(this.levObj)
+                    if (this.levObj.lev == 1) this.addFirMenu()
+                    if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
+                    if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
+                }
+            })
         },
         popupMenu (lev, item, index, indexa) {
             // 初始化shy
@@ -253,8 +265,16 @@ export default {
             }
             if (lev == 1) this.title = '添加一级菜单'
             if (lev == 2) this.title = '添加二级菜单'
+            if (!this.levObj.parent.id) {
+                this.$message.warning('上级菜单不存在')
+                console.log(this.levObj)
+                return
+            }
             if (lev == 3) this.title = '添加三级菜单'
             this.dialogSeedVisible = true
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         async addFirMenu () {
             const params = {
@@ -289,6 +309,7 @@ export default {
             console.log(this.tableList[index].childAuthList[indexa])
             if (!this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
+                console.log(this.levObj)
                 return
             }
             const params = {

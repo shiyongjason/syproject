@@ -15,10 +15,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10"> --</span>
-                    <el-date-picker v-model="queryParams.createTimeEnd" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </div>
             </div>
@@ -30,12 +27,14 @@
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='300'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">查看信息</el-button>
+                    <!-- <el-button class="orangeBtn" @click="uploadSeal($event, scope.data.row)">上传印章图片</el-button> -->
+                    <input @change="uploadSeal($event, scope.data.row)" type="file" class="kyc-passin">
                 </template>
             </basicTable>
-            <CaDialog :dialog='dialog' @onCancel='dialog = false'></CaDialog>
+            <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
         </div>
     </div>
 </template>
@@ -43,6 +42,7 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/CAapply'
+import { getSignList, getSignsDetail } from './api/index'
 import CaDialog from './components/dialog'
 export default {
     name: 'enterpriseCA',
@@ -82,28 +82,27 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '企业名称', prop: 'positionName' },
-                { label: '企业类型', prop: 'positionCode' },
-                { label: '企业账号ID', prop: 'updateTime' },
-                { label: '操作人账号ID', prop: 'updateTime' },
-                { label: '操作人姓名', prop: 'updateTime' },
-                { label: '操作人手机号', prop: 'updateTime' },
-                { label: '操作人身份证', prop: 'updateTime' },
-                { label: '操作人邮箱', prop: 'updateTime' },
-                { label: '证件类型', prop: 'updateTime' },
-                { label: '组织机构代码证号', prop: 'updateTime' },
-                { label: '创建日期', prop: 'updateTime' },
-                { label: '法人姓名', prop: 'updateTime' },
-                { label: '法人手机号', prop: 'updateTime' },
-                { label: '法人身份证号', prop: 'updateTime' },
-                { label: '验证状态', prop: 'updateTime' }
+                { label: '企业名称', prop: 'companyName' },
+                { label: '企业类型', prop: 'companyType' },
+                { label: '企业账号ID', prop: 'companySignatureId' },
+                { label: '操作人账号ID', prop: 'operatorSignatureId' },
+                { label: '操作人姓名', prop: 'operatorName' },
+                { label: '操作人手机号', prop: 'operatorPhone' },
+                { label: '操作人身份证', prop: 'operatorIdNumber' },
+                { label: '操作人邮箱', prop: 'operatorEmail' },
+                { label: '证件类型', prop: 'companyDocumentType' },
+                { label: '组织机构代码证号', prop: 'companyLicenseNumber' },
+                { label: '创建日期', prop: 'createTime' },
+                { label: '法人姓名', prop: 'legalName' },
+                { label: '法人手机号', prop: 'legalPhone' },
+                { label: '法人身份证号', prop: 'legalIdNumber' },
+                { label: '验证状态', prop: 'status' }
             ],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                keywords: '',
-                createTimeStart: '',
-                createTimeEnd: ''
+                companyName: '',
+                createDate: ''
             },
             searchParams: {},
             tableData: [],
@@ -118,7 +117,8 @@ export default {
                 labelType: '1'
             },
             multipleSelection: [],
-            dialog: false
+            dialog: false,
+            customerForm: {}
         }
     },
     mounted () {
@@ -126,30 +126,34 @@ export default {
     },
     methods: {
         async onQuery () {
-            // const { data } = await findTagsList(this.queryParams)
-            // this.tableData = data.records
+            // console.log(this.searchParams)
+            const { data } = await getSignList(this.queryParams)
+            console.log(data)
+            this.tableData = data.records
+            this.tableData.map(i => {
+                if (i.companyType == 1) i.companyType = '借款方'
+                if (i.companyType == 2) i.companyType = '资金方'
+                if (i.companyType == 3) i.companyType = '合作方'
+                if (i.companyType == 4) i.companyType = '组织方'
+                if (i.companyType == 5) i.companyType = '担保方'
+                if (i.companyDocumentType == 1) i.companyDocumentType = '统一社会信用代码证'
+                if (i.status == 1) i.status = '认证成功'
+                if (i.status == 2) i.status = '认证失败'
+            })
             // 控制页数和页码
-            // this.pagination = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     total: data.total
-            // }
-            console.log(this.searchParams)
-            this.tableData = [
-                {
-                    positionName: '1',
-                    updateTime: '111'
-                }
-            ]
+            this.pagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         onSearch (val) {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'keywords', '')
-            this.$set(this.queryParams, 'createTimeStart', '')
-            this.$set(this.queryParams, 'createTimeEnd', '')
+            this.$set(this.queryParams, 'companyName', '')
+            this.$set(this.queryParams, 'createDate', '')
             this.onSearch()
         },
         async createTags () { },
@@ -162,8 +166,29 @@ export default {
             this.queryParams.pageSize = val
             this.onQuery()
         },
-        onupdate () {
+        async onupdate (i) {
+            const { data } = await getSignsDetail(i.id)
+            console.log(data)
+            this.customerForm = data
             this.dialog = true
+        },
+        uploadSeal (e, row) {
+            console.log(e, row)
+            // 利用fileReader对象获取file
+            var file = e.target.files[0];
+            var filesize = file.size;
+            var filename = file.name;
+            // 2,621,440   2M
+            if (filesize > 2101440) {
+                // 图片大于2MB
+            }
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
+                var imgcode = e.target.result;
+                console.log(imgcode);
+            }
         }
     }
 }

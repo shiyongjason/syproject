@@ -3,25 +3,26 @@
         <div class="detail">
             <div class="title">基本信息</div>
             <el-row :gutter="10">
-                <el-col :span="11"><span class="detail-name">渠道名称：</span>111</el-col>
-                <el-col :span="11"><span class="detail-name">客户身份：</span>222</el-col>
+                <el-col :span="12"><span class="detail-name">操作人姓名：</span>{{customerForm.operatorName}}</el-col>
+                <el-col :span="12"><span class="detail-name">操作人手机号：</span>{{customerForm.operatorPhone}}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="11"><span class="detail-name">姓名：</span>{{customerForm.name}}</el-col>
-                <el-col :span="11"><span class="detail-name">微信号：</span>{{customerForm.wechatId}}</el-col>
+                <el-col :span="12"><span class="detail-name">操作人邮箱：</span>{{customerForm.operatorEmail}}</el-col>
+                <el-col :span="12"><span class="detail-name">操作人身份证号：</span>{{customerForm.operatorIdNumber}}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="11"><span class="detail-name">手机号：</span>{{customerForm.mobile}}</el-col>
-                <el-col :span="11"><span class="detail-name">微信昵称：</span>{{customerForm.nickname}}</el-col>
+                <el-col :span="12"><span class="detail-name">企业类型：</span>{{customerForm.companyType}}</el-col>
+                <el-col :span="12"><span class="detail-name">企业名称：</span>{{customerForm.companyName}}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="11"><span class="detail-name">成为客户：</span>{{customerForm.createTime}}</el-col>
-                <el-col :span="11"><span class="detail-name">地址：</span>
-                    <p style="float: right;width: 78%;text-align: left">{{customerForm.address}}</p>
-                </el-col>
+                <el-col :span="12"><span class="detail-name">法人姓名：</span>{{customerForm.legalName}}</el-col>
+                <el-col :span="12"><span class="detail-name">法人身份证号：</span>{{customerForm.legalIdNumber}}</el-col>
+            </el-row>
+            <el-row :gutter="10">
+                <el-col :span="12"><span class="detail-name">组织机构代码：</span>{{customerForm.companyLicenseNumber}}</el-col>
             </el-row>
             <div class="title">印章图片展示链接:</div>
-            <span>http://open.esign.cn/docs/wk/%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97/</span>
+            <span>{{customerForm.companySealImage}}</span>
             <div slot="footer" class="footer-close">
                 <el-button type="primary" @click="onCancel">关 闭</el-button>
             </div>
@@ -37,11 +38,14 @@ export default {
             type: Boolean,
             default: false
         },
+        customerForm: {
+            type: Object,
+            default: {}
+        }
     },
     data () {
         return {
-            getTitle: '企业CA认证信息详情',
-            customerForm: {}
+            getTitle: '企业CA认证信息详情'
         }
     },
     methods: {
@@ -52,13 +56,18 @@ export default {
 }
 </script>
 
+<style>
+.el-dialog{
+    min-width: 600px;
+}
+</style>
 <style scoped lang="scss">
 .el-col {
     margin-bottom: 20px;
 }
 .detail-name {
     display: inline-block;
-    width: 80px;
+    width: 120px;
     text-align: right;
 }
 .footer-close {

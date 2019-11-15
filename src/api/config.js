@@ -6,6 +6,7 @@ let uploadUrl = ''
 let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
+let jinyunTemporary = ''
 let ccpBaseUrl = ''
 let B2bUrl = ''
 let fileUploadUrl = ''
@@ -19,6 +20,7 @@ switch (env) {
         uploadUrl = 'http://192.168.20.248:40000/tms'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        jinyunTemporary = 'http://192.168.20.248:60100/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:40000/'
@@ -68,6 +70,7 @@ export {
     ossUrl,
     iframeUrl,
     jinyun,
+    jinyunTemporary,
     ccpBaseUrl,
     B2bUrl,
     fileUploadUrl
