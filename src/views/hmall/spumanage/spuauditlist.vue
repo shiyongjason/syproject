@@ -178,6 +178,7 @@ export default {
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
+            this.removeValue = true
             this.searchList()
         },
         ...mapActions({
@@ -204,6 +205,7 @@ export default {
                 pageSize: data.size,
                 total: data.total
             }
+            this.removeValue = false
         },
         onExport () {
             // window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
