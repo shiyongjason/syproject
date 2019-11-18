@@ -719,6 +719,41 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
+    },
+    {
+        path: '/platformCompanyCockpit',
+        meta: {
+            title: '平台公司驾驶舱',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'archivesList',
+                name: 'archivesList',
+                meta: {
+                    title: '平台公司档案',
+                    tagName: '平台公司档案',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesList.vue')
+            },
+            {
+                path: 'archivesManagement',
+                name: 'archivesManagement',
+                meta: {
+                    title: '档案管理',
+                    tagName: '档案管理',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
+            }
+        ]
     }
 ]
 
