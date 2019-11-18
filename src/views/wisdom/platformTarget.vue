@@ -78,7 +78,6 @@
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </template>
                 </basicTable>
-
             </div>
         </div>
     </div>

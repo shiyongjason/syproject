@@ -30,11 +30,25 @@
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='300'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">查看信息</el-button>
-                    <!-- <el-button class="orangeBtn" @click="uploadSeal($event, scope.data.row)">上传印章图片</el-button> -->
-                    <input @change="uploadSeal($event, scope.data.row)" type="file" class="kyc-passin">
+                    <el-button class="orangeBtn" @click="uploadSeal(scope.data.row)">上传印章图片</el-button>
                 </template>
             </basicTable>
             <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
+            <el-dialog title="上传印章图片" :visible.sync="dialogPicture">
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">印章别名：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input type="text" v-model="uploadImg.alias" maxlength="50" placeholder="请输入品牌名称"></el-input>
+                    </div>
+                </div>
+                <div>
+                    <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogPicture = false">取 消</el-button>
+                    <el-button type="primary" @click="onSure">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -42,14 +56,24 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/CAapply'
-import { getSignList, getSignsDetail } from './api/index'
+import { getSignList, getSignsDetail, signImage } from './api/index'
 import CaDialog from './components/dialog'
+import { interfaceUrl } from '@/api/config'
 export default {
     name: 'enterpriseCA',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+
+                },
+                accept: 'image/jpeg, image/jpg, image/png'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -118,7 +142,12 @@ export default {
             },
             multipleSelection: [],
             dialog: false,
-            customerForm: {}
+            customerForm: {},
+            dialogPicture: false,
+            imageUrl: '',
+            uploadImg: {
+                alias: ''
+            }
         }
     },
     mounted () {
@@ -172,29 +201,30 @@ export default {
             this.customerForm = data
             this.dialog = true
         },
-        uploadSeal (e, row) {
-            console.log(e, row)
-            // 利用fileReader对象获取file
-            var file = e.target.files[0];
-            var filesize = file.size;
-            var filename = file.name;
-            // 2,621,440   2M
-            if (filesize > 2101440) {
-                // 图片大于2MB
+        uploadSeal (row) {
+            console.log(row)
+            this.uploadImg.accountId = row.companySignatureId
+            this.dialogPicture = true
+        },
+        readUrl (val) {
+            console.log(val)
+            this.uploadImg.imageUrl = val.imageUrl
+        },
+        async onSure () {
+            if (!this.uploadImg.imageUrl) {
+                this.$message.warning('请上传图片')
+                return
             }
-            var reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
-                var imgcode = e.target.result;
-                console.log(imgcode);
-            }
+            await signImage(this.uploadImg)
         }
     }
 }
 </script>
 
-<style scoped>
+<style lang='scss' scoped>
+/deep/ .el-dialog__body {
+    min-height: 256px;
+}
 .add-tags-dialog {
     padding-top: 20px;
 }

@@ -177,12 +177,21 @@ export default {
                 companyType: this.ruleForm.companyType
             }
             const { data } = await getSignSelector(params)
-            console.log(data)
-            this.productSource = data.corporations
-            this.productSource.map(item => {
-                item.value = item.name
-                item.selectCode = item.name
-            })
+            if (this.ruleForm.companyType == 1) {
+                this.productSource = data.corporations
+                this.productSource.map(item => {
+                    item.value = item.name
+                    item.selectCode = item.name
+                })
+            } else if (this.ruleForm.companyType == 2) {
+                this.productSource = data.fundProviders
+                this.productSource.map(item => {
+                    item.value = item.name
+                    item.selectCode = item.name
+                })
+            } else {
+                this.productSource = []
+            }
             this.dialogVisible = true
         },
         backFindcode (val) {
