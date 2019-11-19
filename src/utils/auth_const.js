@@ -88,6 +88,16 @@ export const AUTH_SERVICE_CHANNEL_DETAILS = 10420
 // 服务管理 按钮渠道订单修改
 export const AUTH_SERVICE_CHANNEL_EDIT = 10430
 
+// 驾驶舱档案管理
+export const COCKPIT_FILE_MANAGE = 10571
+// 驾驶舱档案修改
+export const COCKPIT_FILE_EDIT = 10576
+// 驾驶舱档案删除
+export const COCKPIT_FILE_DELETE = 10573
+// 驾驶舱档案新增
+export const COCKPIT_FILE_ADD = 10570
+// 驾驶舱档案标注、借出状态管理
+export const COCKPIT_FILE_LABEL = 10572
 // 好智慧-预实管理 平台公司基本信息 导出
 export const AUTH_WIXDOM_BASIC_INFO_EXPORT = 10440
 // 好智慧-预实管理 平台目标管理 导出
@@ -118,3 +128,5 @@ export const AUTH_MANAGE_OVERVIEW_PROFIT = 10560
 export const JINYUN_AMOUNT_IMPORT_IMPORT = 10561
 // 金云系统-额度导入-复核
 export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
+// 好智慧-利润统计 导出
+export const AUTH_PROFIT_STATISTICS_EXPORT = 10580

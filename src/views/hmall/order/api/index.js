@@ -1,5 +1,6 @@
-import { B2bUrl } from '@/api/config'
+import { B2bUrl, ccpBaseUrl } from '@/api/config'
 import instance from '@/api/axios_new.js'
+import axios from 'axios'
 
 // 订单记录
 export const findOrderList = (params) => {
@@ -51,3 +52,11 @@ export const exportTabOrder = (params) => {
 }
 // new-获取子订单列表
 export const findChildOrder = (params) => instance.get(B2bUrl + `order/api/orders/${params.orderId}/subOrder`, {})
+
+// 省市区
+export const getChiness = (params) => {
+    return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
+}
+
+// 新的商品统计
+export const orderPage = (params) => instance.get(B2bUrl + `order/api/boss/order-products/page`, { params })

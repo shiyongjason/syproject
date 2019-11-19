@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList } from '@/views/layout/api'
+import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
@@ -237,6 +237,18 @@ const routerMapping = [
                     component: './views/wisdom/categorySale'
                 },
                 component: () => import('./views/wisdom/categorySale')
+            },
+            {
+                path: 'profitStatistics',
+                name: 'profitStatistics',
+                meta: {
+                    title: '利润统计',
+                    tagName: '利润统计',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/profitStatistics'
+                },
+                component: () => import('./views/wisdom/profitStatistics')
             }
         ]
     },
@@ -732,6 +744,40 @@ const routerMapping = [
         ]
     },
     {
+        meta: {
+            title: '平台公司驾驶舱',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'archivesList',
+                name: 'archivesList',
+                meta: {
+                    title: '平台公司档案',
+                    tagName: '平台公司档案',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesList.vue')
+            },
+            {
+                path: 'archivesManagement',
+                name: 'archivesManagement',
+                meta: {
+                    title: '档案管理',
+                    tagName: '档案管理',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
+            }
+        ]
+    },
+    {
         path: '/jinyun',
         meta: {
             title: '金云系统',
@@ -797,7 +843,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0;i < data.length;i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -862,6 +908,20 @@ router.beforeEach(async (to, from, next) => {
                 }
             }
         }
+    }
+    if (userInfo && !isFirst) {
+        tracking({
+            type: 2,
+            user_name: userInfo.employeeName,
+            login_name: userInfo.phoneNumber,
+            page_path_name: to.tagName,
+            page_name: to.meta.title,
+            parent_page_name: to.meta.parentName,
+            parent_fullpage_name: to.fullPath,
+            from_page_path_name: from.tagName,
+            from_page_name: from.meta.title || '',
+            user_agent: navigator.userAgent
+        })
     }
     next()
 })

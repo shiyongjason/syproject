@@ -58,8 +58,8 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
-                    <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                    <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
                 </el-upload>
@@ -92,6 +92,7 @@ import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IM
 export default {
     data () {
         return {
+            uploadLoading: false,
             exportAuth: AUTH_WIXDOM_PLATFORM_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT,
             downTemplateAuth: AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE,
@@ -175,6 +176,9 @@ export default {
         // }
     },
     methods: {
+        uploadProcess (event, file, fileList) {
+            this.uploadLoading = true
+        },
         isSuccess (response) {
             if (response.code !== 200) {
                 this.$message({
@@ -188,12 +192,14 @@ export default {
                 })
                 this.onFindTableList()
             }
+            this.uploadLoading = false
         },
         isError (response) {
             this.$message({
                 message: '批量导入失败，' + response.message,
                 type: 'error'
             })
+            this.uploadLoading = false
         },
         changeCellStyle ({ row, rowIndex, columnIndex }) {
             // 第八列添加 red 类

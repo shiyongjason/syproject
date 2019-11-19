@@ -7,7 +7,7 @@ export const findProducts = (params) => instance.get(B2bUrl + 'product/api/spu/b
 // 商品上下架
 export const updateProductStatus = (params) => instance.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
-export const findBossSource = (params) => instance.get(B2bUrl + 'product/api/spu/source', params)
+export const findBossSource = (params) => instance.get(B2bUrl + 'product/api/spu/source', { params })
 // 商品类目
 export const findProductCategory = (params) => instance.get(B2bUrl + 'product/api/categories/all')
 // 查询类目属性

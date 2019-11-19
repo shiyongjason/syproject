@@ -78,7 +78,7 @@
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-cont">
-                            <el-button type="primary" class="ml20" @click="onQueryPlat()">搜索</el-button>
+                            <el-button type="primary" class="ml20" @click="onQueryPlat(1)">搜索</el-button>
                             <el-button type="primary" class="ml20" @click="reset()">重置</el-button>
                         </div>
                     </div>
@@ -196,10 +196,14 @@ export default {
             this.onQueryPlat()
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val
             this.onQueryPlat()
         },
-        async onQueryPlat () {
+        async onQueryPlat (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
+
             const { ...params } = this.queryParams
             if (params.startDate) {
                 params.startDate = this.$root.$options.filters.formatDate(params.startDate, 'YYYY-MM-DD HH:mm:ss')
