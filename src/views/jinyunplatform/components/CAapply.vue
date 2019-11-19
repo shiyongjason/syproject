@@ -127,7 +127,6 @@ export default {
                 ]
             },
             companyType: [
-                { value: '', label: '全部' },
                 { value: 1, label: '借款方' },
                 { value: 2, label: '资金方' },
                 { value: 3, label: '合作方' },

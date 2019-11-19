@@ -42,7 +42,7 @@
         </div>
         <div class="page-body-cont query-cont">
             <!-- 按钮权限 -->
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="hosAuthCheck(reCheckAuth)">
                 <el-button type="primary" class="ml20" @click="toDo(1)">同意</el-button>
                 <el-button type="primary" class="ml20" @click="toDo(2)">拒绝</el-button>
             </div>
@@ -73,6 +73,7 @@
 import { mapState } from 'vuex'
 import { getRateList, rateStatus } from './api/index'
 import { jinyunTemporary } from '@/api/config'
+import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'enterpriseCA',
     computed: {
@@ -102,10 +103,15 @@ export default {
                     }
                 }
             }
+        },
+        isMultiple () {
+            return true
         }
     },
     data () {
         return {
+            importAuth: JINYUN_AMOUNT_IMPORT_IMPORT,
+            reCheckAuth: JINYUN_AMOUNT_IMPORT_RE_CHECK,
             jinyunTemporary: jinyunTemporary,
             queryParams: {
                 pageNumber: 1,
@@ -145,7 +151,7 @@ export default {
             content: '',
             status: '',
             // 控制权限
-            isMultiple: true,
+            // isMultiple: true,
             multiSelect: []
         }
     },
@@ -157,18 +163,18 @@ export default {
             this.multiSelect = val
         },
         isSuccess (response) {
-            if (response.code !== 200) {
-                this.$message({
-                    message: '批量导入失败，' + response.message,
-                    type: 'error'
-                })
-            } else {
+            // if (response.code !== 200) {
+            //     this.$message({
+            //         message: '批量导入失败，' + response.message,
+            //         type: 'error'
+            //     })
+            // } else {
                 this.$message({
                     message: '批量导入成功！',
                     type: 'success'
                 })
                 this.onSearch()
-            }
+            // }
         },
         isError (response) {
             this.$message({

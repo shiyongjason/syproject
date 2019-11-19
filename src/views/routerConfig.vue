@@ -265,7 +265,7 @@ export default {
             }
             if (lev == 1) this.title = '添加一级菜单'
             if (lev == 2) this.title = '添加二级菜单'
-            if (!this.levObj.parent.id) {
+            if (this.levObj.parent && !this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
                 console.log(this.levObj)
                 return

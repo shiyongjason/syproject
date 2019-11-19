@@ -22,7 +22,10 @@
                 <el-col :span="12"><span class="detail-name">组织机构代码：</span>{{customerForm.companyLicenseNumber}}</el-col>
             </el-row>
             <div class="title">印章图片展示链接:</div>
-            <span>{{customerForm.companySealImage}}</span>
+            <!-- <span>{{customerForm.companySealImage}}</span> -->
+            <a :href="customerForm.companySealImage" target="_blank">
+                <img :src="customerForm.companySealImage" alt="印章图片" class="showPicture">
+            </a>
             <div slot="footer" class="footer-close">
                 <el-button type="primary" @click="onCancel">关 闭</el-button>
             </div>
@@ -57,7 +60,7 @@ export default {
 </script>
 
 <style>
-.el-dialog{
+.el-dialog {
     min-width: 600px;
 }
 </style>
@@ -80,5 +83,8 @@ export default {
     padding-bottom: 10px;
     font-size: 14px;
     font-weight: bold;
+}
+.showPicture {
+    width: 200px;
 }
 </style>

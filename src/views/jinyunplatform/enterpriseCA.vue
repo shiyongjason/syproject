@@ -203,6 +203,8 @@ export default {
         },
         uploadSeal (row) {
             console.log(row)
+            this.$set(this.uploadImg, 'alias', '')
+            this.$set(this.uploadImg, 'imageUrl', '')
             this.uploadImg.accountId = row.companySignatureId
             this.dialogPicture = true
         },
