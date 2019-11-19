@@ -4,6 +4,7 @@
             <el-tab-pane label="全部" name=""></el-tab-pane>
             <el-tab-pane label="待发货" name="1"></el-tab-pane>
             <el-tab-pane label="已发货" name="2"></el-tab-pane>
+            <el-tab-pane label="待预约" name="5"></el-tab-pane>
             <el-tab-pane label="已完成" name="3"></el-tab-pane>
             <el-tab-pane label="退款中" name="4"></el-tab-pane>
         </el-tabs>
@@ -24,7 +25,6 @@
                 暂无数据
             </div>
             <div class="list-table">
-
                 <div class="content" v-for="(item,index) in tableData" :key="index">
                     <div class="head-info">
                         <span style="padding-left:10px">订单号：{{item.orderNo}}</span>
@@ -81,6 +81,7 @@
                             <li>
                                 <el-button type="primary" size='mini' @click="onLink(item)">预约信息</el-button>
                                 <el-button v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                <el-button type="primary" size='mini' @click="addOrder">新增工单</el-button>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -90,6 +91,65 @@
                 </div>
             </div>
         </div>
+        <el-dialog title="新增工单" :visible.sync="dialogVisible">
+            <el-form ref="orderForm" :rules="orderFormRules" :model="orderForm">
+                <el-form-item label="渠道名称">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="订单号">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="线下管家">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="管家电话">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="预约方式">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务项目">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务商">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="工程师">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="工程师电话">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务时间">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务状态">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="服务数量">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="买家备注">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+                <el-form-item label="卖家备注">
+                    <el-input v-model="orderForm.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSaveOrder">保 存</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -115,10 +175,22 @@ export default {
             remark: '',
             youZanDetailsAuth: AUTH_SERVICE_YOUZAN_DETAILS,
             channelDetailsAuth: AUTH_SERVICE_CHANNEL_DETAILS,
-            channelEditAuth: AUTH_SERVICE_CHANNEL_EDIT
+            channelEditAuth: AUTH_SERVICE_CHANNEL_EDIT,
+            dialogVisible: false,
+            orderFormRules: {},
+            orderForm: {
+                phone: ''
+            }
         }
     },
     methods: {
+        onSaveOrder () {
+            console.log(1)
+        },
+        addOrder () {
+            this.dialogVisible = true
+            console.log(1)
+        },
         onLink (item) {
             this.$router.push({ path: '/serviceManagement/reservation', query: { channelOrderNo: item.channelOrderNo } })
         },

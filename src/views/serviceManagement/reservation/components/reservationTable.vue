@@ -72,13 +72,18 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <el-button @click="onEdit(scope.row)" class="orangeBtn" :disabled="scope.row.status == '已完成' || scope.row.status == '取消'">修改</el-button>
-                    <el-button @click="addOrder">新增工单</el-button>
+                    <el-button @click="onEdit(scope.row)" class="orangeBtn two-row"
+                               :disabled="scope.row.status == '已完成' || scope.row.status == '取消'">修改
+                    </el-button>
+                    <el-button @click="addOrder" class="orangeBtn">新增工单</el-button>
                 </template>
             </el-table-column>
         </el-table>
         <div class="page clearfix" style="text-align: center;margin-top: 20px">
-            <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :total="paginationData.totalElements">
+            <el-pagination class="el-page" background @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange" :current-page="paginationData.pageNumber"
+                           :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper"
+                           :total="paginationData.totalElements">
             </el-pagination>
         </div>
         <el-dialog :title="title" :visible.sync="dialogTableVisible">
@@ -97,7 +102,8 @@
                     <el-input v-model="form.reservationNo" disabled maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="姓名">
-                    <el-input v-model="form.reservationPerson" placeholder="请输入姓名" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.reservationPerson" placeholder="请输入姓名" maxlength="25"
+                              style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号">
                     <el-input v-model="form.phone" placeholder="请输入手机号" maxlength="10" style="width: 300px"></el-input>
@@ -131,13 +137,15 @@
                     <el-input v-model="form.address" placeholder="请输入地址" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="预约内容">
-                    <el-input v-model="form.reservationName" placeholder="请输入预约内容" maxlength="25" style="width: 300px"></el-input>
+                    <el-input v-model="form.reservationName" placeholder="请输入预约内容" maxlength="25"
+                              style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item prop="goodsName" label="商品名称">
                     <el-input v-model="form.goodsName" disabled maxlength="25" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="服务时间">
-                    <el-date-picker v-model="date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                    <el-date-picker v-model="date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                                    placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                     <el-time-select placeholder="起始时间" v-model="startTime" :picker-options="{
       start: '08:30',
       step: '00:15',
@@ -177,10 +185,12 @@
                     <el-input v-model="form.phone" placeholder="请输入管家电话" maxlength="10" style="width: 300px"></el-input>
                 </el-form-item>
             </el-form>
-            <span slot="footer" class="dialog-footer" v-show="show">
+            <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogTableVisible = false">取 消</el-button>
                 <el-button type="primary" @click="updata">修 改</el-button>
             </span>
+        </el-dialog>
+        <el-dialog title="新增工单" :visible.sync="dialogAddOrderVisible">
         </el-dialog>
     </div>
 </template>
@@ -191,6 +201,7 @@ import { findReservationsDetail, updataReservations } from '../api/index'
 import {
     Message
 } from 'element-ui'
+
 export default {
     name: 'customerRecordTable',
     props: {
@@ -233,7 +244,12 @@ export default {
                 disabledDate (time) {
                     return time.getTime() < Date.now() - 60 * 60 * 24 * 1000
                 }
-            }
+            },
+            orderForm: {
+                test: ''
+            },
+            orderFormRules: {},
+            dialogAddOrderVisible: false
         }
     },
     computed: {
@@ -242,7 +258,11 @@ export default {
         })
     },
     methods: {
+        onSaveOrder () {
+            console.log(1)
+        },
         addOrder () {
+            this.dialogAddOrderVisible = true
             console.log(1)
         },
         selectionChange (val) {
@@ -288,36 +308,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-form {
-    display: flex;
-    flex-wrap: wrap;
-}
-/deep/ .el-dialog {
-    width: 70%;
-    height: auto;
-}
-table {
-    border-collapse: collapse;
-}
-table td,
-table th {
-    text-align: center;
-}
-.header {
-    background: #f0f0f0;
-    margin: 10px 0;
-}
-.status-on {
-    color: #999999;
-}
-.parameter-link {
-    color: #409eff;
-    cursor: pointer;
-}
-.invalid-status {
-    color: #ccc;
-}
-.valid-status {
-    color: #ff7a45;
-}
+    /deep/ .el-form {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    /deep/ .el-dialog {
+        width: 70%;
+        height: auto;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    table td,
+    table th {
+        text-align: center;
+    }
+
+    .header {
+        background: #f0f0f0;
+        margin: 10px 0;
+    }
+
+    .status-on {
+        color: #999999;
+    }
+
+    .parameter-link {
+        color: #409eff;
+        cursor: pointer;
+    }
+
+    .invalid-status {
+        color: #ccc;
+    }
+
+    .valid-status {
+        color: #ff7a45;
+    }
+
+    .two-row {
+        margin-bottom: 10px;
+    }
 </style>

@@ -14,16 +14,19 @@
                             </el-select>
                         </div>
                         <div class="m-l">
-                            <el-input v-model="value.searchValue" style="width:250px" clearable :placeholder="getPlaceholderText" :maxlength="inputLength" />
+                            <el-input v-model="value.searchValue" style="width:250px" clearable
+                                      :placeholder="getPlaceholderText" :maxlength="inputLength"/>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">下单时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="value.startTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="value.startTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime"
+                                            placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10"> --</span>
-                            <el-date-picker v-model="value.endTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="value.endTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime"
+                                            placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
@@ -64,6 +67,11 @@
                                 </el-button>
                             </el-upload>
                         </div>
+                        <div class="query-col-input">
+                            <el-button type="primary" @click="downloadTemplate">
+                                下载模板
+                            </el-button>
+                        </div>
                     </div>
                 </el-form>
             </div>
@@ -73,6 +81,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
+
 export default {
     name: 'searchForm',
     props: ['value'],
@@ -126,7 +135,10 @@ export default {
         }
     },
     methods: {
-        onClear  () {
+        downloadTemplate () {
+            console.log(1)
+        },
+        onClear () {
             this.$emit('onClear')
         },
         onSearch () {
@@ -162,5 +174,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.m-l{ margin-left:5px}
+    .m-l {
+        margin-left: 5px
+    }
 </style>
