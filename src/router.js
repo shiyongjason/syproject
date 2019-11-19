@@ -32,23 +32,24 @@ const routerMapping = [
         ]
     },
     {
-        path: '/routerConfig',
-        component: Layout,
+        path: '/sysAdmin',
         meta: {
-            title: '路由配置',
+            title: '系統管理',
             isMenu: true,
-            icon: 'hosjoy_set'
+            icon: 'hosjoy_set',
+            redirect: 'noredirect'
         },
+        component: Layout,
         children: [
             {
-                path: '',
+                path: 'routerConfig',
                 name: 'routerConfig',
                 meta: {
-                    title: '首页',
-                    tagName: '首页',
-                    isMenu: false,
+                    title: '路由配置',
+                    tagName: '路由配置',
+                    isMenu: true,
                     icon: '',
-                    component: './views/index/index'
+                    component: './views/routerConfig'
                 },
                 component: () => import('./views/routerConfig')
             }
@@ -744,6 +745,7 @@ const routerMapping = [
         ]
     },
     {
+        path: '/platformCompanyCockpit',
         meta: {
             title: '平台公司驾驶舱',
             isMenu: true,

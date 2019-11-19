@@ -136,7 +136,7 @@ export default {
                 { label: '年度最高额（元）', prop: 'yearlyQuota' },
                 { label: '月度滚动额（元）', prop: 'monthlyQuota' },
                 { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota' },
-                { label: '今日用信额（元）', prop: 'dailyQuota' },
+                { label: '实时用信额（元）', prop: 'dailyQuota' },
                 { label: '本月利率(年化）', prop: 'dailyInterestRate' },
                 { label: '创建日期', prop: 'importDate' },
                 { label: '当前状态', prop: 'statusId' }
@@ -205,6 +205,12 @@ export default {
         },
         async createTags () { },
         toDo (i) {
+            if (this.multiSelect.length == 0) {
+                this.$alert('请勾选需要审批的条目！', '勾选提示', {
+                    confirmButtonText: '确定'
+                })
+                return
+            }
             if (i == 2) {
                 this.content = '是否确认拒绝本次导入操作？'
             } else {
