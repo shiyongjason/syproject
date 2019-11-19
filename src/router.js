@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList } from '@/views/layout/api'
+import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
@@ -32,11 +32,34 @@ const routerMapping = [
         ]
     },
     {
+        path: '/routerConfig',
+        component: Layout,
+        meta: {
+            title: '路由配置',
+            isMenu: true,
+            icon: 'hosjoy_set'
+        },
+        children: [
+            {
+                path: '',
+                name: 'routerConfig',
+                meta: {
+                    title: '首页',
+                    tagName: '首页',
+                    isMenu: false,
+                    icon: '',
+                    component: './views/index/index'
+                },
+                component: () => import('./views/routerConfig')
+            }
+        ]
+    },
+    {
         path: '/jinyunPlatform',
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [
@@ -214,6 +237,18 @@ const routerMapping = [
                     component: './views/wisdom/categorySale'
                 },
                 component: () => import('./views/wisdom/categorySale')
+            },
+            {
+                path: 'profitStatistics',
+                name: 'profitStatistics',
+                meta: {
+                    title: '利润统计',
+                    tagName: '利润统计',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/profitStatistics'
+                },
+                component: () => import('./views/wisdom/profitStatistics')
             }
         ]
     },
@@ -386,23 +421,23 @@ const routerMapping = [
                 },
                 component: () => import('./views/hmall/platform/platform.vue')
             },
-            {
-                path: 'shopReviewList',
-                name: 'shopReviewList',
-                meta: {
-                    title: '平台公司商品审核列表',
-                    tagName: '平台公司商品审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/shopReviewList.vue')
-            },
+            // {
+            //     path: 'shopReviewList',
+            //     name: 'shopReviewList',
+            //     meta: {
+            //         title: '平台公司商品审核列表',
+            //         tagName: '平台公司商品审核列表',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/hmall/shopReview/shopReviewList.vue')
+            // },
             {
                 path: 'attribute',
                 name: 'attribute',
                 meta: {
-                    title: '属性管理',
-                    tagName: '属性管理',
+                    title: '参数属性管理',
+                    tagName: '参数属性管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -440,6 +475,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/hmall/memberStore/member.vue')
+            },
+            {
+                path: 'memberPull',
+                name: 'memberPull',
+                meta: {
+                    title: '会员拉新管理',
+                    tagName: '会员拉新管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/hmall/memberStore/memberPull.vue')
             },
             // {
             //     path: 'publicShop',
@@ -512,8 +558,8 @@ const routerMapping = [
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
-                    title: '集市商品库',
-                    tagName: '集市商品库',
+                    title: '商家商品库',
+                    tagName: '商家商品库',
                     isMenu: true,
                     icon: ''
                 },
@@ -696,6 +742,84 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
             }
         ]
+    },
+    {
+        meta: {
+            title: '平台公司驾驶舱',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'archivesList',
+                name: 'archivesList',
+                meta: {
+                    title: '平台公司档案',
+                    tagName: '平台公司档案',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesList.vue')
+            },
+            {
+                path: 'archivesManagement',
+                name: 'archivesManagement',
+                meta: {
+                    title: '档案管理',
+                    tagName: '档案管理',
+                    parentName: '平台公司驾驶舱',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
+            }
+        ]
+    },
+    {
+        path: '/jinyun',
+        meta: {
+            title: '金云系统',
+            isMenu: true,
+            icon: 'hosjoy_stay_online'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
+                path: 'enterpriseCA',
+                name: 'enterpriseCA',
+                meta: {
+                    title: '企业CA',
+                    tagName: '企业CA',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/enterpriseCA')
+            },
+            {
+                path: 'amountImport',
+                name: 'amountImport',
+                meta: {
+                    title: '额度导入',
+                    tagName: '额度导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/amountImport')
+            }
+        ]
     }
 ]
 
@@ -719,7 +843,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0;i < data.length;i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -784,6 +908,20 @@ router.beforeEach(async (to, from, next) => {
                 }
             }
         }
+    }
+    if (userInfo && !isFirst) {
+        tracking({
+            type: 2,
+            user_name: userInfo.employeeName,
+            login_name: userInfo.phoneNumber,
+            page_path_name: to.tagName,
+            page_name: to.meta.title,
+            parent_page_name: to.meta.parentName,
+            parent_fullpage_name: to.fullPath,
+            from_page_path_name: from.tagName,
+            from_page_name: from.meta.title || '',
+            user_agent: navigator.userAgent
+        })
     }
     next()
 })

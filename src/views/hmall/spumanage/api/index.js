@@ -7,7 +7,7 @@ export const findProducts = (params) => instance.get(B2bUrl + 'product/api/spu/b
 // 商品上下架
 export const updateProductStatus = (params) => instance.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
-export const findBossSource = (params) => instance.get(B2bUrl + 'product/api/spu/source', params)
+export const findBossSource = (params) => instance.get(B2bUrl + 'product/api/spu/source', { params })
 // 商品类目
 export const findProductCategory = (params) => instance.get(B2bUrl + 'product/api/categories/all')
 // 查询类目属性
@@ -68,3 +68,10 @@ export const changeSpustatus = (params) => instance.put('product/api/spu/boss/en
 export const findSpudetails = (params) => instance.get('product/api/spu/spu-edit-info', { params })
 // 查询spu详情
 export const auditSpu = (params) => instance.put(`product/api/spu/boss/audit`, params)
+
+export const getSpuspec = (params) => instance.post(`product/api/spu/specifications`, params)
+// 下拉可选品牌
+export const getBrands = (params) => instance.get(`product/api/brands/select-brands`, { params })
+
+// 模糊查询品牌
+export const findBrands = (params) => instance.get('/product/api/brands/name/list', { params })

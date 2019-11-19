@@ -59,6 +59,18 @@
                         <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
+               <div class="query-cont-col">
+                    <div class="query-col-title">商品来源：</div>
+                    <div class="query-col-input">
+                        <!-- <el-select v-model="queryParams.merchantCode">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
+                            </el-option>
+                        </el-select> -->
+                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="searchList()">
@@ -101,10 +113,13 @@
     </div>
 </template>
 <script>
-import { findProducts } from './api/index'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { findProducts, findBossSource } from './api/index'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { clearCache, newCache } from '@/utils/index'
 export default {
+    name: 'spuauditlist',
     data () {
         return {
             productSource: [],
@@ -118,7 +133,8 @@ export default {
                 brandId: '',
                 integrity: '',
                 auditStatus: '',
-                source: 1
+                source: 1,
+                merchantCode: ''
             },
             copyParams: {},
             tableData: [],
@@ -132,7 +148,8 @@ export default {
             ],
             rowKey: '',
             multiSelection: [],
-            categoryIdArr: []
+            categoryIdArr: [],
+            removeValue: false
         }
     },
     computed: {
@@ -141,11 +158,18 @@ export default {
             userInfo2: state => state.hmall.userInfo,
             categoryList: state => state.hmall.categoryList
         })
-
+    },
+    components: {
+        HAutocomplete
     },
     async mounted () {
-        // const { data } = await findProductSource()
-        // this.productSource = data
+        const { data } = await findBossSource({ withBoss: 0 })
+        this.productSource = data
+        // TODO 模糊搜索组件
+        this.productSource && this.productSource.map(item => {
+            item.value = item.sourceName
+            item.selectCode = item.sourceCode
+        })
         this.findCategoryList()
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
@@ -154,6 +178,7 @@ export default {
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
+            this.removeValue = true
             this.searchList()
         },
         ...mapActions({
@@ -180,6 +205,7 @@ export default {
                 pageSize: data.size,
                 total: data.total
             }
+            this.removeValue = false
         },
         onExport () {
             // window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
@@ -193,11 +219,27 @@ export default {
             //     '&brandName=' + this.queryParams.brandName
         },
         onChangeStatus (val) {
-            console.log(this.multiSelection)
+
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
+        },
+        backFindcode (val) {
+            this.queryParams.merchantCode = val.value.selectCode
         }
+    },
+    activated () {
+        this.searchList()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('spuauditlist')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'spudetail') {
+            clearCache('spuauditlist')
+        }
+        next()
     }
 }
 </script>

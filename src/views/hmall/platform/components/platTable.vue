@@ -1,6 +1,33 @@
 <template>
-    <div class="page-body-cont">
-        <el-table :data="tableData"
+    <div class="page-table">
+        <basicTable :isShowIndex=true :tableData="tableData" :pagination="paginationData" :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=150>
+            <template slot-scope="scope" slot="status">
+                {{scope.data.row.status == 1 ? '开启' : '未开启' }}
+            </template>
+            <template slot-scope="scope" slot="registerStatus">
+                <span v-if="scope.data.row.registerStatus === 0">开通中</span>
+                <span v-if="scope.data.row.registerStatus === 1">已开通</span>
+                <span v-if="scope.data.row.registerStatus === 2">未开通</span>
+            </template>
+            <template slot-scope="scope" slot="operational">
+                <el-switch v-model="scope.data.row.operational" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.operational, 'operational', scope.data.row)">
+                </el-switch>
+            </template>
+            <template slot-scope="scope" slot="commodity">
+                <el-switch v-model="scope.data.row.commodity" active-color="#13ce66" @change="onTypeChange(scope.data.row.organizationCode, scope.data.row.commodity, 'commodity', scope.data.row)">
+                </el-switch>
+            </template>
+            <template slot-scope="scope" slot="autoDispatch">
+                <el-switch v-if="scope.data.row.operational" v-model="scope.data.row.autoDispatch" active-color="#13ce66" @change="onAutoChange(scope.data.row.organizationCode, scope.data.row)">
+                </el-switch>
+                <span v-if="!scope.data.row.operational">/</span>
+            </template>
+            <template slot-scope="scope" slot="action">
+                <el-button class="orangeBtn" @click="open(scope.data.row)" v-if="scope.data.row.status != 1">开启</el-button>
+                <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
+            </template>
+        </basicTable>
+        <!-- <el-table :data="tableData"
                   border
                   style="width: 100%">
             <el-table-column
@@ -126,21 +153,12 @@
                 layout="total, sizes, prev, pager, next, jumper"
                 :onQuery="onQuery"
                 :total="paginationData.totalElements">
-            </el-pagination>
-        </div>
-        <el-dialog
-            title="开启确认"
-            width="500px"
-            :visible.sync="dialog"
-            :close-on-click-modal="false">
+            </el-pagination>1
+        </div> -->
+        <el-dialog title="开启确认" width="500px" :visible.sync="dialog" :close-on-click-modal="false">
             <el-form :model="form" :rules="rules" ref="form" :label-width="'100px'">
                 <el-form-item prop="phoneNumber" label="开启手机号">
-                    <el-input
-                        type="text"
-                        maxlength="11"
-                        placeholder="请输入老板手机号码"
-                        :rules="{required: true,message: '请输入老板手机号码'}"
-                        v-model="form.phoneNumber"></el-input>
+                    <el-input type="text" maxlength="11" placeholder="请输入老板手机号码" :rules="{required: true,message: '请输入老板手机号码'}" v-model="form.phoneNumber"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -195,7 +213,25 @@ export default {
                     { validator: PHONE, trigger: 'blur', whitespace: true }
                 ]
             },
-            isEnter: false
+            isEnter: false,
+            tableLabel: [
+                { label: '公司名称', prop: 'organizationName' },
+                { label: '分部', prop: 'subsectionName' },
+                { label: '省份', prop: 'province' },
+                { label: '城市', prop: 'city' },
+                { label: '自有商品上架数', prop: 'productNum' },
+                { label: '店铺商品上架数', prop: 'shopProductNum' },
+                { label: '成交订单数', prop: 'orderNum' },
+                { label: '会员店数量', prop: 'memberShops' },
+                { label: 'B2b状态', prop: 'status' },
+                { label: '开通帐号', prop: 'account' },
+                { label: '开启时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '网商支付开通状态', prop: 'registerStatus' },
+                { label: '开通时间', prop: 'bankRegisterOpenTime', formatters: 'dateTime' },
+                { label: '运营型商家', prop: 'operational' },
+                { label: '商品型商家', prop: 'commodity' }
+                // { label: '自动推至店铺', prop: 'autoDispatch' }
+            ]
         }
     },
     methods: {
@@ -250,13 +286,14 @@ export default {
             this.form.phoneNumber = ''
             this.dialog = true
         },
-        handleSizeChange (val) {
+        onSizeChange (val) {
             this.loading = true
             this.$emit('onSizeChange', val)
         },
-        handleCurrentChange (val) {
+        onCurrentChange (val) {
+            console.log(val)
             this.loading = true
-            this.$emit('onCurrentChange', val)
+            this.$emit('onCurrentChange', val.pageNumber)
         },
         handleCheckAllChange (val) {
             this.selectTh = val ? this.defaultTh : []
@@ -264,12 +301,27 @@ export default {
         indexMethod (index) {
             return this.paginationData.pageSize * (this.paginationData.pageNumber - 1) + index + 1
         },
-        async onTypeChange (merchantCode, value, type) {
+        async onTypeChange (merchantCode, value, type, obj) {
+            // if (type == 'operational') {
+            //     await updatePlatformType({
+            //         merchantCode: merchantCode,
+            //         autoDispatch: value
+            //     })
+            // }
             await updatePlatformType({
                 merchantCode,
                 [type]: value ? 1 : 0
             })
             this.$message({ message: '商家角色设置成功', type: 'success' })
+            this.onQuery()
+        },
+        async onAutoChange (merchantCode, obj) {
+            await updatePlatformType({
+                merchantCode: merchantCode,
+                autoDispatch: obj.autoDispatch
+            })
+            this.$message({ message: '自动推至店铺设置成功', type: 'success' })
+            this.onQuery()
         }
     },
     mounted () {

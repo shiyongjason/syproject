@@ -26,3 +26,15 @@ export const updatepostList = (params) => axios.put('/uaa/position', params)
 
 // 删除岗位信息
 export const deletepostList = (params) => axios.delete(`/uaa/position/${params}`, params)
+
+/*
+    路由配置
+*/
+// 查询所有权限集合
+export const getAuth = (params) => axios.get(`/uaa/api/auth`)
+// 新增权限 一级菜单 parentCode = 0
+export const addAuth = (params) => axios.post(`/uaa/api/auth`, params)
+// 新增权限类别
+export const addAuthType = (params) => axios.post(`/uaa/api/auth/type`, params)
+// 新增权限资源
+export const addAuthResource = (params) => axios.post(`/uaa/api/auth/resource`, params)

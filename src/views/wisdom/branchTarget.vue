@@ -26,8 +26,8 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload>
-                            <el-button v-if="hosAuthCheck(importAuth)" type="primary" class="ml20">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                            <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
                                 批量导入
                             </el-button>
                         </el-upload>
@@ -54,6 +54,7 @@ export default {
     name: 'branchTarget',
     data: function () {
         return {
+            uploadLoading: false,
             exportAuth: AUTH_WIXDOM_BRANCH_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT,
             downTemplateAuth: AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE,
@@ -91,6 +92,9 @@ export default {
         branchTable
     },
     methods: {
+        uploadProcess (event, file, fileList) {
+            this.uploadLoading = true
+        },
         isSuccess (response) {
             if (response.code !== 200) {
                 this.$message({
@@ -104,12 +108,14 @@ export default {
                 })
                 this.onQuery()
             }
+            this.uploadLoading = false
         },
         isError (response) {
             this.$message({
                 message: '批量导入失败，' + response.message,
                 type: 'error'
             })
+            this.uploadLoading = false
         },
         downloadXlsx () {
             location.href = '/excelTemplate/分部目标导入模板.xlsx'

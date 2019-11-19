@@ -31,12 +31,22 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="flex-wrap-title">状态：</div>
+                        <div class="flex-wrap-title">B2b状态：</div>
                         <div class="flex-wrap-cont">
                             <el-select v-model="queryParams.status" clearable placeholder="全部">
                                 <el-option label="全部" value=""></el-option>
                                 <el-option label="未开启" value="0"></el-option>
                                 <el-option label="开启" value="1"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">网商开通状态：</div>
+                        <div class="flex-wrap-cont">
+                            <el-select v-model="queryParams.registerStatus" clearable placeholder="全部">
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="已开通" value=1></el-option>
+                                <el-option label="未开通" value=2></el-option>
                             </el-select>
                         </div>
                     </div>
@@ -47,7 +57,7 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">开启时间：</div>
+                        <div class="query-col-title">B2b开启时间：</div>
                         <div class="query-col-input">
                             <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
@@ -57,8 +67,18 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
+                        <div class="query-col-title">网商开通时间：</div>
+                        <div class="query-col-input">
+                            <el-date-picker v-model="queryParams.bankRegisterOpenTimeStart" type="datetime"  value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStarts">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker v-model="queryParams.bankRegisterOpenTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnds">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
                         <div class="flex-wrap-cont">
-                            <el-button type="primary" class="ml20" @click="onQueryPlat()">搜索</el-button>
+                            <el-button type="primary" class="ml20" @click="onQueryPlat(1)">搜索</el-button>
                             <el-button type="primary" class="ml20" @click="reset()">重置</el-button>
                         </div>
                     </div>
@@ -100,6 +120,26 @@ export default {
                 }
             }
         },
+        pickerOptionsStarts () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.bankRegisterOpenTimeEnd
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnds () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.bankRegisterOpenTimeStart
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
         ...mapState({
             userInfo: state => state.userInfo
         })
@@ -111,7 +151,8 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 organizationCode: '',
-                status: ''
+                status: '',
+                registerStatus: ''
             },
             tableData: [],
             paginationData: {},
@@ -119,6 +160,7 @@ export default {
             cityList: [],
             platList: [],
             depArr: []
+
         }
     },
     async mounted () {
@@ -142,8 +184,12 @@ export default {
             this.$set(this.queryParams, 'organizationName', '')
             this.$set(this.queryParams, 'startDate', '')
             this.$set(this.queryParams, 'endDate', '')
+            this.$set(this.queryParams, 'bankRegisterOpenTimeStart', '')
+            this.$set(this.queryParams, 'bankRegisterOpenTimeEnd', '')
+            this.$set(this.queryParams, 'registerStatus', '')
             this.provinceDataList = await this.findProvinceAndCity(0)
             this.cityList = []
+            this.onQueryPlat()
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
@@ -153,7 +199,11 @@ export default {
             this.queryParams.pageNumber = val
             this.onQueryPlat()
         },
-        async onQueryPlat () {
+        async onQueryPlat (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
+
             const { ...params } = this.queryParams
             if (params.startDate) {
                 params.startDate = this.$root.$options.filters.formatDate(params.startDate, 'YYYY-MM-DD HH:mm:ss')
@@ -171,7 +221,7 @@ export default {
             this.paginationData = {
                 pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
-                totalElements: data.data.totalElements
+                total: data.data.totalElements
             }
         },
         async findDepList () {
