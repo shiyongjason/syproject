@@ -46,7 +46,7 @@
                 <el-button type="primary" class="ml20" @click="toDo(1)">同意</el-button>
                 <el-button type="primary" class="ml20" @click="toDo(2)">拒绝</el-button>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="hosAuthCheck(importAuth)">
                 <el-upload class="upload-demo" :show-file-list="false" :action="jinyunTemporary + '/amount/rate/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button type="primary" class="ml20">
                         导入
@@ -105,7 +105,7 @@ export default {
             }
         },
         isMultiple () {
-            return true
+            return this.hosAuthCheck(this.reCheckAuth)
         }
     },
     data () {
