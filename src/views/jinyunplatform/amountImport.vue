@@ -163,18 +163,11 @@ export default {
             this.multiSelect = val
         },
         isSuccess (response) {
-            // if (response.code !== 200) {
-            //     this.$message({
-            //         message: '批量导入失败，' + response.message,
-            //         type: 'error'
-            //     })
-            // } else {
-                this.$message({
-                    message: '批量导入成功！',
-                    type: 'success'
-                })
-                this.onSearch()
-            // }
+            this.$message({
+                message: '批量导入成功！',
+                type: 'success'
+            })
+            this.onSearch()
         },
         isError (response) {
             this.$message({
