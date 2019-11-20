@@ -12,7 +12,8 @@
                             <tr>
                                 <td width="">一级菜单</td>
                                 <td width="">二级菜单</td>
-                                <td width="" colspan=3>权限</td>
+                                <td width="">三级页面</td>
+                                <td width="" colspan=2>权限</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -20,19 +21,19 @@
                                 <template v-for="(itema, indexa) in item.childAuthList">
                                     <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
                                         <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
-                                            <div>{{item.authName}}</div>
+                                            <div @click="onEdit(1, item)">{{item.authName}}</div>
                                         </td>
                                         <td :rowspan="computedRowspan(itema.childAuthList, 1)" v-if="indexb==0">
                                             <div>
                                                 <!-- {{item.childAuthList.length}}{{indexa}} -->
-                                                <div>{{itema.authName}}</div>
+                                                <div @click="onEdit(2, item, index, indexa)">{{itema.authName}}</div>
                                                 <button v-show="item.childAuthList.length == indexa + 1" @click="popupMenu(2, item, index)">+</button>
                                             </div>
                                         </td>
                                         <td>
                                             <div>
                                                 <!-- {{indexb}}{{itema.childAuthList.length}} -->
-                                                <div>{{itemb.authName}}</div>
+                                                <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
                                                 <button v-show="itema.childAuthList.length == indexb + 1" @click="popupMenu(3, itema, index, indexa)">+</button>
                                             </div>
                                         </td>
@@ -94,6 +95,9 @@
                 <el-form-item label="菜单路由" label-width="120px" prop="authUri">
                     <el-input v-model="form.authUri" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="排序" label-width="120px">
+                    <el-input v-model="form.sort" autocomplete="off" type='number'></el-input>
+                </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogSeedVisible = false">取 消</el-button>
@@ -144,7 +148,7 @@
 </template>
 
 <script>
-import { getAuth, addAuth, addAuthType, addAuthResource } from './auth/api'
+import { getAuth, addAuth, addAuthType, addAuthResource, editAuth } from './auth/api'
 export default {
     data () {
         return {
@@ -156,6 +160,7 @@ export default {
             form: {
                 authName: '',
                 authUri: '',
+                sort: '',
                 childAuthList: [
                     {
                         authName: ' ',
@@ -252,10 +257,52 @@ export default {
                 }
             })
         },
+        onEdit (lev, it, index, indexa, indexb) {
+            if (lev == 1) {
+                this.title = '编辑一级菜单'
+                this.form.authName = it.authName
+                this.form.authUri = it.authUri
+                this.form.sort = it.sort
+                this.levObj = {
+                    lev,
+                    authCode: it.authCode
+                }
+            }
+            if (lev == 2) {
+                console.log(lev, it, index, indexa)
+                this.form.authName = it.childAuthList[indexa].authName
+                this.form.authUri = it.childAuthList[indexa].authUri
+                this.form.sort = it.childAuthList[indexa].sort
+                this.levObj = {
+                    lev,
+                    authCode: it.childAuthList[indexa].authCode,
+                    parent: it,
+                    index
+                }
+                console.log(this.levObj)
+                this.title = '编辑二级菜单'
+            }
+            if (lev == 3) {
+                this.form.authName = it.childAuthList[indexb].authName
+                this.form.authUri = it.childAuthList[indexb].authUri
+                this.form.sort = it.childAuthList[indexb].sort
+                this.levObj = {
+                    lev,
+                    authCode: it.childAuthList[indexb].authCode,
+                    parent: it,
+                    index,
+                    indexa
+                }
+                console.log(lev, it, index, indexa, indexb)
+                this.title = '编辑三级菜单'
+            }
+            this.dialogSeedVisible = true
+        },
         popupMenu (lev, item, index, indexa) {
             // 初始化shy
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
+            this.$set(this.form, 'sort', '')
             console.log(lev, item, index, indexa)
             this.levObj = {
                 lev,
@@ -282,10 +329,15 @@ export default {
                 authUri: this.form.authUri,
                 parentCode: 0,
                 remark: '一级菜单',
-                sort: this.tableList.length
+                sort: this.form.sort ? this.form.sort : this.tableList.length
             }
-            const { data } = await addAuth(params)
-            console.log(data)
+            if (this.levObj.authCode) {
+                params.authCode = this.levObj.authCode
+                await editAuth(params)
+            } else {
+                await addAuth(params)
+            }
+            console.log(params)
             this.dialogSeedVisible = false
             this.init()
         },
@@ -297,10 +349,15 @@ export default {
                 authName: this.form.authName,
                 authUri: this.form.authUri,
                 parentCode: this.levObj.parent.authCode,
-                remark: '二级菜单'
+                remark: '二级菜单',
+                sort: this.form.sort
             }
-            const { data } = await addAuth(params)
-            console.log(data)
+            if (this.levObj.authCode) {
+                params.authCode = this.levObj.authCode
+                await editAuth(params)
+            } else {
+                await addAuth(params)
+            }
             this.dialogSeedVisible = false
             this.init()
         },
@@ -316,9 +373,15 @@ export default {
                 authName: this.form.authName,
                 authUri: this.form.authUri,
                 parentCode: this.levObj.parent.authCode,
-                remark: '三级页面'
+                remark: '三级页面',
+                sort: this.form.sort
             }
-            await addAuth(params)
+            if (this.levObj.authCode) {
+                params.authCode = this.levObj.authCode
+                await editAuth(params)
+            } else {
+                await addAuth(params)
+            }
             this.dialogSeedVisible = false
             this.init()
         },
