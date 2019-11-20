@@ -597,6 +597,17 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
             },
             {
+                path: 'houseKeeperManagement',
+                name: 'houseKeeperManagement',
+                meta: {
+                    title: '管家管理',
+                    tagName: '管家管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/houseKeeperManagement/houseKeeperManagement.vue')
+            },
+            {
                 path: 'orderCenter',
                 name: 'orderCenter',
                 meta: {

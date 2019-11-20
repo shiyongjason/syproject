@@ -10,10 +10,10 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">渠道名称：</div>
+                        <div class="query-col-title">身份：</div>
                         <div class="query-col-input">
-                            <el-select v-model="searchForm.channelType" clearable style="width: 100%">
-                                <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
+                            <el-select v-model="searchForm.role" clearable style="width: 100%">
+                                <el-option v-for="(item,index) in role" :key="index" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </div>
@@ -39,7 +39,7 @@
                             搜索
                         </el-button>
                         <el-button type="primary" @click="$emit('add')">
-                            新增客户
+                            新增管家
                         </el-button>
                     </div>
                 </el-form>
@@ -51,7 +51,7 @@
 <script>
 export default {
     name: 'searchForm',
-    props: ['value', 'channelType'],
+    props: ['value', 'role'],
     data () {
         return {}
     },

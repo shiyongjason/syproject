@@ -73,16 +73,26 @@
                 </el-form>
             </div>
         </div>
+        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1100px">
+            <importOrderError></importOrderError>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="onCancel">放弃错误重新导入</el-button>
+                <el-button type="primary" @click="onSave">重新导入</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { interfaceUrl } from '@/api/config'
 import { findChannelDict } from '../../common/dictApi'
-
+import importOrderError from './importOrderError'
 export default {
     name: 'searchForm',
     props: ['value'],
+    components: {
+        importOrderError
+    },
     data () {
         return {
             type: {
@@ -92,7 +102,8 @@ export default {
                 mobile: '手机号'
             },
             interfaceUrl: interfaceUrl,
-            channelType: []
+            channelType: [],
+            dialog: false
         }
     },
     computed: {
@@ -166,11 +177,18 @@ export default {
             }
         },
         isError () {
+            this.dialog = true
             //  订单导入字段格式错误，请您检查导入字段格式，重新上传
-            this.$message({
-                type: 'error',
-                message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
-            })
+            // this.$message({
+            //     type: 'error',
+            //     message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
+            // })
+        },
+        onCancel () {
+            console.log(1)
+        },
+        onSave () {
+            console.log(1)
         }
     },
     mounted () {
