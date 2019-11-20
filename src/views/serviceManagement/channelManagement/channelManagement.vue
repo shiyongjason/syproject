@@ -11,7 +11,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="findChannelManagementList">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="isAdd = dialog= true">新建渠道</el-button>
+                    <el-button type="primary" class="ml20" @click="addChannel">新建渠道</el-button>
                 </div>
             </div>
         </div>
@@ -30,21 +30,22 @@
                     <el-input v-model="form.name" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="渠道编码">
-                    <el-input v-model="form.channelCode" disabled maxlength="20" style="width: 300px"></el-input>
+                    <el-input v-model="form.id" disabled maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="创建人" v-if="!isAdd">
-                    <el-input disabled v-model="form.reservationName" placeholder="请输入创建人" maxlength="20" style="width: 300px"></el-input>
+                    <el-input disabled v-model="form.createBy" placeholder="请输入创建人" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="MIS编码">
                     <el-input v-model="form.misCode" placeholder="请输入MIS编码" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" v-if="!isAdd">
-                    <el-date-picker disabled v-model="date" type="datetime" format="yyyy-MM-dd  HH:ss" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker disabled v-model="form.createTime" type="datetime" format="yyyy-MM-dd  HH:ss" placeholder="选择日期"></el-date-picker>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="isAdd = dialog= false">取 消</el-button>
-                <el-button type="primary" @click="update">修 改</el-button>
+                <el-button type="primary" @click="update" :loading="isSaving" v-if="!isAdd">修 改</el-button>
+                <el-button type="primary" @click="save" :loading="isSaving" v-if="isAdd">保 存</el-button>
             </span>
         </el-dialog>
     </div>
@@ -52,6 +53,7 @@
 
 <script>
 import { findChannelManagementList, findChannelDetails, updateChannel, createChannel } from './api/index'
+import { mapState } from 'vuex'
 export default {
     name: 'channelManagement',
     data () {
@@ -61,10 +63,10 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            tableData: [ { sourceName: 'dd' } ],
+            tableData: [],
             paginationData: {
                 pageNumber: 1,
-                pageSize: 10,
+                pageSize: 20,
                 total: 10
             },
             tableLabel: [{ label: '渠道名称', prop: 'name' },
@@ -81,64 +83,111 @@ export default {
                 misCode: ''
             },
             rules: {
-                type: [
-                    { required: true, message: '属性类型不能为空', trigger: 'change' }
+                name: [
+                    { required: true, message: '渠道名称不能为空', trigger: 'blur' }
+                ],
+                misCode: [
+                    { required: true, message: 'MIS编码不能为空', trigger: 'blur' }
                 ]
             },
-            date: ''
+            date: '',
+            isSaving: false
         }
     },
     computed: {
         title () {
             return this.isAdd ? '新建标签' : '编辑标签'
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         onSizeChange (val) {
-            this.paginationData.pageSize = val
-            this.search()
+            this.queryParams.pageSize = val
+            this.findChannelManagementList()
         },
         onCurrentChange (val) {
-            this.paginationData.pageNumber = val
-            this.search()
+            this.queryParams.pageNumber = val.pageNumber
+            this.findChannelManagementList()
         },
-        async search () {
-            this.searchParams.pageSize = this.paginationData.pageSize
-            this.searchParams.pageNumber = this.paginationData.pageNumber
+        addChannel () {
+            this.isAdd = this.dialog = true
+            this.form = {
+                name: '',
+                channelCode: '',
+                misCode: ''
+            }
         },
-        onReset () {
-            console.log(1)
-        },
-        onEdit () {
+        onEdit (params) {
             this.dialog = true
             this.isAdd = false
-            console.log(1)
-        },
-        onAddChannel () {
-            console.log(1)
+            this.findChannelDetails(params.id)
         },
         update () {
-            console.log(1)
+            const id = this.form.id
+            const params = { ...this.form }
+            delete params.id
+            this.updateChannel(id, params)
+        },
+        save () {
+            this.isSaving = true
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await this.createChannel()
+                        this.$message({
+                            message: '新增渠道成功！',
+                            type: 'success'
+                        })
+                        await this.findChannelManagementList()
+                        this.dialog = this.isSaving = false
+                    } catch (e) {
+                        this.isSaving = false
+                    }
+                } else {
+                    this.isSaving = false
+                    this.$message({
+                        message: '新增渠道失败！',
+                        type: 'error'
+                    })
+                }
+            })
         },
         async findChannelManagementList () {
-            console.log(this.queryParams)
             const { data } = await findChannelManagementList(this.queryParams)
-            console.log(data)
             this.tableData = data.records
             this.paginationData = {
                 pageNumber: data.current,
                 pageSize: data.size,
-                totalElements: data.total
+                total: data.total
             }
         },
-        async findChannelDetails () {
-            const { data } = await findChannelDetails({})
+        async findChannelDetails (id) {
+            const { data } = await findChannelDetails(id)
+            this.form = data
         },
-        async updateChannel () {
-            const { data } = await updateChannel({})
+        async updateChannel (id, params) {
+            this.isSaving = true
+            try {
+                await updateChannel(id, params)
+                this.$message({
+                    message: '更新渠道成功！',
+                    type: 'success'
+                })
+                await this.findChannelManagementList()
+                this.dialog = this.isSaving = false
+            } catch (e) {
+                this.$message({
+                    message: '更新渠道失败！',
+                    type: 'error'
+                })
+                this.isSaving = false
+            }
         },
         async createChannel () {
-            const { data } = await updateChannel({})
+            this.form.createBy = this.userInfo.employeeName
+            await createChannel(this.form)
         }
     },
     mounted () {
