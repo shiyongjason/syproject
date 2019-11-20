@@ -13,14 +13,8 @@
                     <div class="flex-wrap-title">渠道名称：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.source" style="width: 100%">
-                            <el-option label="有赞商城" value="1">
-                            </el-option>
-                            <el-option label="孩子王" value="2">
-                            </el-option>
-                            <el-option label="考拉买菜" value="3">
-                            </el-option>
-                            <el-option label="大众点评" value="4">
-                            </el-option>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -88,6 +82,7 @@
 import ReservationTable from './components/reservationTable'
 import { findReservations } from './api/index'
 import { mapState } from 'vuex'
+import { findChannelDict } from '../common/dictApi'
 export default {
     name: 'reservation',
     components: {
@@ -111,7 +106,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 totalElements: 100
-            }
+            },
+            channelType: []
         }
     },
     computed: {
@@ -174,6 +170,10 @@ export default {
         onCurrentChange (val) {
             this.paginationData.pageNumber = val
             this.search()
+        },
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
         }
     },
     async mounted () {
@@ -183,6 +183,7 @@ export default {
         if (defaultMobile) {
             this.queryParams.phone = defaultMobile
         }
+        this.findChannelDict()
         this.onQuery()
     }
 }

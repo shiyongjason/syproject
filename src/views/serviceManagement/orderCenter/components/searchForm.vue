@@ -35,10 +35,7 @@
                         <div class="query-col-input">
                             <el-select v-model="value.source" clearable>
                                 <el-option label="全部" value=""></el-option>
-                                <el-option label="有赞商城" value="1"></el-option>
-                                <el-option label="孩子王" value="2"></el-option>
-                                <el-option label="考拉买菜" value="3"></el-option>
-                                <el-option label="大众点评" value="4"></el-option>
+                                <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                             </el-select>
                         </div>
                     </div>
@@ -81,6 +78,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
+import { findChannelDict } from '../../common/dictApi'
 
 export default {
     name: 'searchForm',
@@ -93,7 +91,8 @@ export default {
                 userName: '姓名',
                 mobile: '手机号'
             },
-            interfaceUrl: interfaceUrl
+            interfaceUrl: interfaceUrl,
+            channelType: []
         }
     },
     computed: {
@@ -135,6 +134,10 @@ export default {
         }
     },
     methods: {
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
+        },
         downloadTemplate () {
             console.log(1)
         },
@@ -169,6 +172,9 @@ export default {
                 message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
             })
         }
+    },
+    mounted () {
+        this.findChannelDict()
     }
 }
 </script>
