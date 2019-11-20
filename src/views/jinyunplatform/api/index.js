@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { jinyunTemporary } from '@/api/config'
-const temporary = 'http://192.168.20.249:9633'
 // 企业CA认证申请
 export const signCa = (params) => axios.post(jinyunTemporary + `/signs`, params)
 // 查询企业CA认证详情
