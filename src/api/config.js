@@ -5,7 +5,6 @@ let interfaceUrl = ''
 let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
-let jinyunTemporary = ''
 let ccpBaseUrl = ''
 let B2bUrl = ''
 let fileUploadUrl = ''
@@ -18,7 +17,6 @@ switch (env) {
         ossUrl = 'http://192.168.20.248:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        jinyunTemporary = 'http://192.168.20.248:60100/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
@@ -44,7 +42,6 @@ switch (env) {
         ossUrl = 'https://testroute.hosjoy.com:4832/'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        jinyunTemporary = 'https://testhbp.hosjoy.com:4832/backend'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -54,7 +51,6 @@ switch (env) {
         ossUrl = 'https://staging-route.hosjoy.com/'
         iframeUrl = 'https://staging-boss.hosjoy.com/'
         jinyun = 'https://staging-jinyun.hosjoy.cn/wfsf/'
-        jinyunTemporary = 'https://staging-hbp.hosjoy.com/backend'
         B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
@@ -65,7 +61,6 @@ switch (env) {
         ossUrl = 'https://route.hosjoy.com/'
         iframeUrl = 'https://boss.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        jinyunTemporary = 'https://hbp.hosjoy.com/backend'
         B2bUrl = 'https://b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://ccp.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
@@ -76,7 +71,6 @@ export {
     ossUrl,
     iframeUrl,
     jinyun,
-    jinyunTemporary,
     ccpBaseUrl,
     B2bUrl,
     fileUploadUrl
