@@ -47,7 +47,7 @@
                 <el-button type="primary" class="ml20" @click="toDo(2)">拒绝</el-button>
             </div>
             <div class="query-cont-col" v-if="hosAuthCheck(importAuth)">
-                <el-upload class="upload-demo" :show-file-list="false" :action="jinyunTemporary + '/amount/rate/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/amount/rate/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button type="primary" class="ml20">
                         导入
                     </el-button>
@@ -77,7 +77,7 @@
 <script>
 import { mapState } from 'vuex'
 import { getRateList, rateStatus } from './api/index'
-import { jinyunTemporary } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'enterpriseCA',
@@ -127,7 +127,7 @@ export default {
             activeName: '001',
             importAuth: JINYUN_AMOUNT_IMPORT_IMPORT,
             reCheckAuth: JINYUN_AMOUNT_IMPORT_RE_CHECK,
-            jinyunTemporary: jinyunTemporary,
+            interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -195,9 +195,9 @@ export default {
             })
         },
         async onQuery () {
-            console.log(this.queryParams)
+            // console.log(this.queryParams)
             const { data } = await getRateList(this.queryParams)
-            console.log(data)
+            // console.log(data)
             this.tableData = data.records
             this.pagination = {
                 pageNumber: data.current,
