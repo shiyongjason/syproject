@@ -12,13 +12,13 @@
                 <el-input v-model="ruleForm.operatorName"></el-input>
             </el-form-item>
             <el-form-item label="操作人手机号：" label-width='150px' prop="operatorPhone">
-                <el-input v-model="ruleForm.operatorPhone"></el-input>
+                <el-input v-model="ruleForm.operatorPhone" :maxlength='11'></el-input>
             </el-form-item>
             <el-form-item label="操作人邮箱：" label-width='150px' prop="operatorEmail">
                 <el-input v-model="ruleForm.operatorEmail"></el-input>
             </el-form-item>
             <el-form-item label="操作人身份证号：" label-width='150px' prop="operatorIdNumber">
-                <el-input v-model="ruleForm.operatorIdNumber"></el-input>
+                <el-input v-model="ruleForm.operatorIdNumber" :maxlength='18'></el-input>
             </el-form-item>
             <el-form-item label="企业类型：" label-width='150px' prop="companyType">
                 <el-select v-model="ruleForm.companyType">
@@ -37,10 +37,10 @@
                 <el-input v-model="ruleForm.legalName"></el-input>
             </el-form-item>
             <el-form-item label="法人手机号：" label-width='150px' prop="legalPhone">
-                <el-input v-model="ruleForm.legalPhone"></el-input>
+                <el-input v-model="ruleForm.legalPhone" :maxlength='11'></el-input>
             </el-form-item>
             <el-form-item label="法人身份证号：" label-width='150px' prop="legalIdNumber">
-                <el-input v-model="ruleForm.legalIdNumber"></el-input>
+                <el-input v-model="ruleForm.legalIdNumber" :maxlength='18'></el-input>
             </el-form-item>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
@@ -79,6 +79,7 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getSignSelector, signCa, signImage } from '../api/index'
+import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     name: 'caApply',
     data () {
@@ -99,13 +100,15 @@ export default {
                     { required: true, message: '请输入操作人姓名', trigger: 'blur' }
                 ],
                 operatorPhone: [
-                    { required: true, message: '请输入操作人手机号', trigger: 'blur' }
+                    { required: true, message: '请输入操作人手机号', trigger: 'blur' },
+                    { validator: PHONE, trigger: 'blur' }
                 ],
                 operatorEmail: [
                     { required: true, message: '请输入操作人邮箱', trigger: 'blur' }
                 ],
                 operatorIdNumber: [
-                    { required: true, message: '请输入操作人身份证号', trigger: 'blur' }
+                    { required: true, message: '请输入操作人身份证号', trigger: 'blur' },
+                    { validator: checkIdCard, trigger: 'blur' }
                 ],
                 companyType: [
                     { required: true, message: '请选择企业类型', trigger: 'change' }
@@ -120,10 +123,12 @@ export default {
                     { required: true, message: '请输入法人姓名', trigger: 'blur' }
                 ],
                 legalPhone: [
-                    { required: true, message: '请输入法人手机号', trigger: 'blur' }
+                    { required: true, message: '请输入法人手机号', trigger: 'blur' },
+                    { validator: PHONE, trigger: 'blur' }
                 ],
                 legalIdNumber: [
-                    { required: true, message: '请输入法人身份证号', trigger: 'blur' }
+                    { required: true, message: '请输入法人身份证号', trigger: 'blur' },
+                    { validator: checkIdCard, trigger: 'blur' }
                 ]
             },
             companyType: [

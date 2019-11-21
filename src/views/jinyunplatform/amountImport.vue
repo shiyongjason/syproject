@@ -8,7 +8,7 @@
                     </el-input>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <!-- <div class="query-cont-col">
                 <div class="query-col-title">当前状态：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.statusId" clearable>
@@ -16,7 +16,7 @@
                         </el-option>
                     </el-select>
                 </div>
-            </div>
+            </div> -->
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>
                 <div class="query-col-input">
@@ -27,7 +27,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </div>
             </div>
@@ -55,8 +55,13 @@
             </div>
         </div>
         <div class="page-body-cont">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                <el-tab-pane label="待生效" name="001"></el-tab-pane>
+                <el-tab-pane label="生效" name="000"></el-tab-pane>
+                <el-tab-pane label="失效" name="002"></el-tab-pane>
+            </el-tabs>
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isMultiple='isMultiple' @update:multiSelection='multiSelection'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isMultiple='isMultiple && isTab' @update:multiSelection='multiSelection'>
             </basicTable>
         </div>
         <el-dialog title="提示" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
@@ -108,15 +113,25 @@ export default {
             return this.hosAuthCheck(this.reCheckAuth)
         }
     },
+    watch: {
+        activeName (val) {
+            if (val == '001') {
+                this.isTab = true
+            } else {
+                this.isTab = false
+            }
+        }
+    },
     data () {
         return {
+            activeName: '001',
             importAuth: JINYUN_AMOUNT_IMPORT_IMPORT,
             reCheckAuth: JINYUN_AMOUNT_IMPORT_RE_CHECK,
             jinyunTemporary: jinyunTemporary,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                statusId: ''
+                statusId: '001'
             },
             searchParams: {},
             tableData: [],
@@ -133,10 +148,10 @@ export default {
             tableLabel: [
                 { label: '客户名称', prop: 'customerName' },
                 { label: 'MIS编码', prop: 'misCode' },
-                { label: '年度最高额（元）', prop: 'yearlyQuota' },
-                { label: '月度滚动额（元）', prop: 'monthlyQuota' },
-                { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota' },
-                { label: '实时用信额（元）', prop: 'dailyQuota' },
+                { label: '年度最高额（元）', prop: 'yearlyQuota', formatters: 'money' },
+                { label: '月度滚动额（元）', prop: 'monthlyQuota', formatters: 'money' },
+                { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota', formatters: 'money' },
+                { label: '实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
                 { label: '本月利率(年化）', prop: 'dailyInterestRate' },
                 { label: '创建日期', prop: 'importDate' },
                 { label: '当前状态', prop: 'statusId' }
@@ -144,14 +159,14 @@ export default {
             statusIdType: [
                 { value: '', label: '请选择' },
                 { value: '001', label: '待生效' },
-                { value: '000', label: '正常' },
+                { value: '000', label: '生效' },
                 { value: '002', label: '失效' }
             ],
             resultDialogVisible: false,
             content: '',
             status: '',
             // 控制权限
-            // isMultiple: true,
+            isTab: true,
             multiSelect: []
         }
     },
@@ -159,6 +174,10 @@ export default {
         this.onSearch()
     },
     methods: {
+        handleClick () {
+            this.queryParams.statusId = this.activeName
+            this.onSearch()
+        },
         multiSelection (val) {
             this.multiSelect = val
         },
@@ -186,9 +205,10 @@ export default {
                 total: data.total
             }
             this.tableData.map(i => {
-                if (i.statusId == '000') i.statusId = '正常'
+                if (i.statusId == '000') i.statusId = '生效'
                 if (i.statusId == '001') i.statusId = '待生效'
                 if (i.statusId == '002') i.statusId = '失效'
+                i.dailyInterestRate = (i.dailyInterestRate * 100).toFixed(2) + '%'
             })
             // console.log(this.searchParams)
         },
@@ -199,7 +219,6 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'statusId', '')
             this.$set(this.queryParams, 'createTime', '')
             this.onSearch()
         },
