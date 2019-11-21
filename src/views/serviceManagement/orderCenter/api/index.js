@@ -17,3 +17,8 @@ export function findYouZanOrderDetails (params) {
 export function updateChannelOrderDetails (id, params) {
     return axios.put(`/service/api/orders/channel/${id}`, params)
 }
+
+// 导入订单错误重新编辑保存
+export function createChannelOrderList (params) {
+    return axios.post(`/service/api/orders/reimport`, params)
+}

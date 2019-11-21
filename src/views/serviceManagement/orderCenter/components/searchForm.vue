@@ -73,8 +73,8 @@
                 </el-form>
             </div>
         </div>
-        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1100px">
-            <importOrderError></importOrderError>
+        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1300px">
+            <importOrderError :errorData="errorData" ref="submitData"></importOrderError>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="onCancel">放弃错误重新导入</el-button>
                 <el-button type="primary" @click="onSave">重新导入</el-button>
@@ -103,7 +103,8 @@ export default {
             },
             interfaceUrl: interfaceUrl,
             channelType: [],
-            dialog: false
+            dialog: false,
+            errorData: []
         }
     },
     computed: {
@@ -160,35 +161,27 @@ export default {
         },
         isSuccess (response) {
             if (response) {
-                this.$alert(`<span style="color: red">警告</span>：</br>${response.split(',').join('</br>')}`, '导入状态', {
-                    confirmButtonText: '确定',
-                    dangerouslyUseHTMLString: true,
-                    showClose: false
-                }).then(async () => {
-                    this.$emit('search', this.value)
-                })
+                this.dialog = true
+                this.errorData = response
             } else {
-                this.$alert('导入成功', '导入状态', {
-                    confirmButtonText: '确定',
-                    showClose: false
-                }).then(async () => {
-                    this.$emit('search', this.value)
+                this.$message({
+                    type: 'success',
+                    message: '导入成功'
                 })
             }
         },
         isError () {
-            this.dialog = true
-            //  订单导入字段格式错误，请您检查导入字段格式，重新上传
-            // this.$message({
-            //     type: 'error',
-            //     message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
-            // })
+            this.$message({
+                type: 'error',
+                message: '订单导入模板错误，请先下载模板'
+            })
         },
         onCancel () {
-            console.log(1)
+            this.dialog = false
+            this.errorData = []
         },
         onSave () {
-            console.log(1)
+            this.$refs.submitData.createChannelOrderList()
         }
     },
     mounted () {
