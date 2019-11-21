@@ -15,7 +15,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="请选择时间" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </div>
             </div>
@@ -116,7 +116,7 @@ export default {
                 { label: '操作人邮箱', prop: 'operatorEmail' },
                 { label: '证件类型', prop: 'companyDocumentType' },
                 { label: '组织机构代码证号', prop: 'companyLicenseNumber' },
-                { label: '创建日期', prop: 'createTime' },
+                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' },
                 { label: '法人姓名', prop: 'legalName' },
                 { label: '法人手机号', prop: 'legalPhone' },
                 { label: '法人身份证号', prop: 'legalIdNumber' },
@@ -218,6 +218,7 @@ export default {
                 return
             }
             await signImage(this.uploadImg)
+            this.dialogPicture = false
         }
     }
 }
