@@ -36,16 +36,16 @@
             <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
             <el-dialog title="上传印章图片" :visible.sync="dialogPicture">
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">印章别名：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="flex-wrap-title">印章：</div>
+                    <!-- <div class="flex-wrap-cont">
                         <el-input type="text" v-model="uploadImg.alias" maxlength="50" placeholder="请输入品牌名称"></el-input>
-                    </div>
+                    </div> -->
                 </div>
                 <div>
                     <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialogPicture = false">取 消</el-button>
+                    <el-button @click="onCancle">取 消</el-button>
                     <el-button type="primary" @click="onSure">确 定</el-button>
                 </span>
             </el-dialog>
@@ -201,12 +201,14 @@ export default {
             this.customerForm = data
             this.dialog = true
         },
-        uploadSeal (row) {
-            console.log(row)
-            this.$set(this.uploadImg, 'alias', '')
-            this.$set(this.uploadImg, 'imageUrl', '')
+        async uploadSeal (row) {
+            this.$set(this, 'imageUrl', '')
+            this.$set(this.uploadImg, 'imageUrl', row.companySealImage)
             this.uploadImg.accountId = row.companySignatureId
-            this.dialogPicture = true
+            setTimeout(() => {
+                this.$set(this, 'imageUrl', row.companySealImage)
+                this.dialogPicture = true
+            },0)
         },
         readUrl (val) {
             console.log(val)
@@ -218,6 +220,10 @@ export default {
                 return
             }
             await signImage(this.uploadImg)
+            this.dialogPicture = false
+        },
+        onCancle () {
+            // this.uploadImg.imageUrl = this.imageUrl
             this.dialogPicture = false
         }
     }
