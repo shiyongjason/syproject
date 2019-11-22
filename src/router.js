@@ -619,15 +619,15 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/orderCenter/order.vue')
             },
             {
-                path: 'reservation',
-                name: 'reservation',
+                path: 'workOrder',
+                name: 'workOrder',
                 meta: {
                     title: '工单信息',
                     tagName: '工单信息',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/serviceManagement/reservation/index.vue')
+                component: () => import('@/views/serviceManagement/workOrder/index.vue')
             },
             {
                 path: 'customerRecord',
