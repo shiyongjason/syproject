@@ -9,38 +9,38 @@
         </div><br>
         <el-form :model="ruleForm" :inline="true" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
             <el-form-item label="操作人姓名：" label-width='150px' prop="operatorName">
-                <el-input v-model="ruleForm.operatorName"></el-input>
+                <el-input v-model="ruleForm.operatorName" placeholder='请输入操作人姓名'></el-input>
             </el-form-item>
             <el-form-item label="操作人手机号：" label-width='150px' prop="operatorPhone">
-                <el-input v-model="ruleForm.operatorPhone" :maxlength='11'></el-input>
+                <el-input v-model="ruleForm.operatorPhone" placeholder='请输入操作人手机号' :maxlength='11'></el-input>
             </el-form-item>
             <el-form-item label="操作人邮箱：" label-width='150px' prop="operatorEmail">
-                <el-input v-model="ruleForm.operatorEmail"></el-input>
+                <el-input v-model="ruleForm.operatorEmail" placeholder='请输入操作人邮箱'></el-input>
             </el-form-item>
             <el-form-item label="操作人身份证号：" label-width='150px' prop="operatorIdNumber">
-                <el-input v-model="ruleForm.operatorIdNumber" :maxlength='18'></el-input>
+                <el-input v-model="ruleForm.operatorIdNumber" placeholder='请输入操作人身份证号' :maxlength='18'></el-input>
             </el-form-item>
             <el-form-item label="企业类型：" label-width='150px' prop="companyType">
-                <el-select v-model="ruleForm.companyType">
+                <el-select v-model="ruleForm.companyType" placeholder='请选择企业类型'>
                     <el-option v-for="(item,index) in companyType" :key="index" :label="item.label" :value="item.value">
                     </el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="企业名称：" label-width='150px' prop="companyName">
-                <el-input v-model="ruleForm.companyName" disabled></el-input>
+                <el-input v-model="ruleForm.companyName" placeholder='请选择企业名称' disabled></el-input>
                 <el-button class="applyBtn" @click="onChoose">选择</el-button>
             </el-form-item>
             <el-form-item label="组织机构代码：" label-width='150px' prop="companyLicenseNumber">
-                <el-input v-model="ruleForm.companyLicenseNumber"></el-input>
+                <el-input v-model="ruleForm.companyLicenseNumber" placeholder='请输入操作人组织代码'></el-input>
             </el-form-item>
             <el-form-item label="法人姓名：" label-width='150px' prop="legalName">
-                <el-input v-model="ruleForm.legalName"></el-input>
+                <el-input v-model="ruleForm.legalName" placeholder='请输入法人姓名'></el-input>
             </el-form-item>
             <el-form-item label="法人手机号：" label-width='150px' prop="legalPhone">
-                <el-input v-model="ruleForm.legalPhone" :maxlength='11'></el-input>
+                <el-input v-model="ruleForm.legalPhone" placeholder='请输入法人手机号' :maxlength='11'></el-input>
             </el-form-item>
             <el-form-item label="法人身份证号：" label-width='150px' prop="legalIdNumber">
-                <el-input v-model="ruleForm.legalIdNumber" :maxlength='18'></el-input>
+                <el-input v-model="ruleForm.legalIdNumber" placeholder='请输入法人身份证号' :maxlength='18'></el-input>
             </el-form-item>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">

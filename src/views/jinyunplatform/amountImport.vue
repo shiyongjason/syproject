@@ -20,7 +20,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.misCode" placeholder="请输入客户名称">
+                    <el-input type="text" maxlength="20" v-model="queryParams.misCode" placeholder="请输入MIS编码">
                     </el-input>
                 </div>
             </div>
@@ -195,9 +195,7 @@ export default {
             })
         },
         async onQuery () {
-            // console.log(this.queryParams)
             const { data } = await getRateList(this.queryParams)
-            // console.log(data)
             this.tableData = data.records
             this.pagination = {
                 pageNumber: data.current,
@@ -209,10 +207,9 @@ export default {
                 if (i.statusId == '001') i.statusId = '待生效'
                 if (i.statusId == '002') i.statusId = '失效'
                 if (i.dailyInterestRate != null) {
-                    i.dailyInterestRate = i.dailyInterestRate + '%'
+                    i.dailyInterestRate = i.dailyInterestRate.toFixed(4) + '%'
                 }
             })
-            // console.log(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
