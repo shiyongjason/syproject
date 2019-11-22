@@ -190,7 +190,7 @@ export default {
         },
         isError (response) {
             this.$message({
-                message: '批量导入失败，' + response.message,
+                message: '批量导入失败，' + JSON.parse(response.message).message,
                 type: 'error'
             })
         },
@@ -208,7 +208,9 @@ export default {
                 if (i.statusId == '000') i.statusId = '生效'
                 if (i.statusId == '001') i.statusId = '待生效'
                 if (i.statusId == '002') i.statusId = '失效'
-                i.dailyInterestRate = (i.dailyInterestRate * 100).toFixed(2) + '%'
+                if (i.dailyInterestRate != null) {
+                    i.dailyInterestRate = i.dailyInterestRate + '%'
+                }
             })
             // console.log(this.searchParams)
         },
