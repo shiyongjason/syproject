@@ -754,6 +754,29 @@ const routerMapping = [
                 component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
             }
         ]
+    },
+    {
+        path: '/appUpdate',
+        meta: {
+            title: 'App管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'archivesList',
+                name: 'archivesList',
+                meta: {
+                    title: '版本更新',
+                    tagName: '版本更新',
+                    parentName: 'App管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/appUpdate/index.vue')
+            }
+        ]
     }
 ]
 
@@ -777,7 +800,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0;i < data.length;i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -805,8 +828,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
