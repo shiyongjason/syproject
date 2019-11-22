@@ -31,7 +31,7 @@
                 <el-button class="applyBtn" @click="onChoose">选择</el-button>
             </el-form-item>
             <el-form-item label="组织机构代码：" label-width='150px' prop="companyLicenseNumber">
-                <el-input v-model="ruleForm.companyLicenseNumber" placeholder='请输入操作人组织代码'></el-input>
+                <el-input v-model="ruleForm.companyLicenseNumber" placeholder='请输入组织机构代码'></el-input>
             </el-form-item>
             <el-form-item label="法人姓名：" label-width='150px' prop="legalName">
                 <el-input v-model="ruleForm.legalName" placeholder='请输入法人姓名'></el-input>
@@ -114,10 +114,10 @@ export default {
                     { required: true, message: '请选择企业类型', trigger: 'change' }
                 ],
                 companyName: [
-                    { required: true, message: '请输入企业名称', trigger: 'blur' }
+                    { required: true, message: '请选择企业名称', trigger: 'blur' }
                 ],
                 companyLicenseNumber: [
-                    { required: true, message: '请输入机构代码', trigger: 'blur' }
+                    { required: true, message: '请输入组织机构代码', trigger: 'blur' }
                 ],
                 legalName: [
                     { required: true, message: '请输入法人姓名', trigger: 'blur' }
