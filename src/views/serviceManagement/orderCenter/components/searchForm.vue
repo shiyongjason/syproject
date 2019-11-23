@@ -85,11 +85,10 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { findChannelDict } from '../../common/dictApi'
 import importOrderError from './importOrderError'
 export default {
     name: 'searchForm',
-    props: ['value'],
+    props: ['value', 'channelType'],
     components: {
         importOrderError
     },
@@ -102,7 +101,6 @@ export default {
                 mobile: '手机号'
             },
             interfaceUrl: interfaceUrl,
-            channelType: [],
             dialog: false,
             errorData: []
         }
@@ -146,10 +144,6 @@ export default {
         }
     },
     methods: {
-        async findChannelDict () {
-            const { data } = await findChannelDict()
-            this.channelType = data
-        },
         downloadTemplate () {
             console.log(1)
         },
@@ -183,9 +177,6 @@ export default {
         onSave () {
             this.$refs.submitData.createChannelOrderList()
         }
-    },
-    mounted () {
-        this.findChannelDict()
     }
 }
 </script>

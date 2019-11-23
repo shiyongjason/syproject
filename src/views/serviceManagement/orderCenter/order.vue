@@ -1,7 +1,7 @@
 <template>
     <div class="order page-body">
-        <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm"/>
-        <order-table :tableData='list' @search-event="onChangeStauts"/>
+        <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm" :channelType="channelType"/>
+        <order-table :tableData='list' @search-event="onChangeStauts" :channelType="channelType"/>
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
@@ -13,6 +13,7 @@ import searchForm from './components/searchForm'
 import orderTable from './components/orderTable'
 import { pagination } from '@/utils/mixins.js'
 import { findOrderList } from './api/index'
+import { findChannelDict } from '../common/dictApi'
 
 export default {
     name: 'order',
@@ -27,7 +28,8 @@ export default {
             searchForm: {
                 searchKey: 'orderNo',
                 mobile: ''
-            }
+            },
+            channelType: []
         }
     },
     methods: {
@@ -55,6 +57,10 @@ export default {
             const { data } = await findOrderList(params)
             this.list = data.records
             this.page.total = data.total
+        },
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
         }
     },
     mounted () {
@@ -64,6 +70,7 @@ export default {
             this.searchForm.searchValue = defaultMobile
         }
         this.getList()
+        this.findChannelDict()
     }
 }
 </script>

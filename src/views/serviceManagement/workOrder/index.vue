@@ -108,7 +108,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="订单号">
-                        <el-input v-model="form.orderNo" disabled maxlength="25"></el-input>
+                        <el-input v-model="form.orderId" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="工单号">
                         <el-input v-model="form.workOrderNo" disabled maxlength="25"></el-input>
@@ -117,32 +117,31 @@
                         <el-input v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
                     </el-form-item>
                     <el-form-item prop="customerMobile" label="手机号">
-                        <el-input v-model="form.customerMobile" placeholder="请输入手机号" maxlength="10"></el-input>
+                        <el-input v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
                     </el-form-item>
                     <el-form-item prop="houseKeeper" label="线下管家">
                         <el-select v-model="form.houseKeeper" >
-                            <el-option :label="item.name" :value="item.name" v-for="item in houseKeeperData" :key="item.id"></el-option>
+                            <el-option :label="item.name" :value="item.id" v-for="item in houseKeeperData" :key="item.code"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="houseKeeperMobile"  label="管家电话">
-                        <el-input v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="10" ></el-input>
+                        <el-input v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11" ></el-input>
                     </el-form-item>
-                    <el-form-item label="地址">
-                        <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="10" ></el-input>
+                    <el-form-item prop="customerAddress" label="地址">
+                        <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50" ></el-input>
                     </el-form-item>
-                    <el-form-item prop="type" label="预约方式">
+                    <el-form-item prop="reserveMode" label="预约方式">
                         <el-select v-model="form.reserveMode" disabled  >
-                            <el-option label="全部" value=""></el-option>
                             <el-option label="公众号预约" :value="1"></el-option>
                             <el-option label="电话预约" :value="2"></el-option>
                             <el-option label="管家预约" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="服务项目">
-                        <el-input v-model="form.goodsName" placeholder="请输入地址" maxlength="10"  ></el-input>
+                    <el-form-item prop="goodsName" label="服务项目">
+                        <el-input v-model="form.goodsName" placeholder="请输入服务项目" maxlength="20"  ></el-input>
                     </el-form-item>
                     <el-form-item label="服务商">
-                        <el-input v-model="form.serviceProvider" placeholder="请输入地址" maxlength="10"  ></el-input>
+                        <el-input v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"  ></el-input>
                     </el-form-item>
                     <el-form-item prop="type" label="服务状态">
                         <el-select v-model="form.status"  >
@@ -153,34 +152,34 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="工程师">
-                        <el-input v-model="form.engineer" placeholder="请输入管家电话" maxlength="10"  ></el-input>
+                        <el-input v-model="form.engineer" placeholder="请输入工程师" maxlength="10"  ></el-input>
                     </el-form-item>
                     <el-form-item label="工程师电话">
-                        <el-input v-model="form.engineerMobile" placeholder="请输入管家电话" maxlength="10"  ></el-input>
+                        <el-input v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"  ></el-input>
                     </el-form-item>
-                    <el-form-item label="服务数量">
-                        <el-input v-model="form.serviceNum" placeholder="请输入管家电话" maxlength="10" ></el-input>
+                    <el-form-item prop="serviceNum" label="服务数量">
+                        <el-input v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5" ></el-input>
                     </el-form-item>
                     <el-form-item label="买家备注">
-                        <el-input v-model="form.buyerRemark" placeholder="请输入管家电话" maxlength="10"  ></el-input>
+                        <el-input disabled v-model="form.buyerRemark" placeholder="" ></el-input>
                     </el-form-item>
                     <el-form-item label="卖家备注">
-                        <el-input v-model="form.sellerRemark" placeholder="请输入管家电话" maxlength="10" ></el-input>
+                        <el-input disabled v-model="form.sellerRemark" placeholder=""  ></el-input>
                     </el-form-item>
                     <el-form-item label="服务时间" style="width: 100%">
-                        <el-date-picker v-model="form.date" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                        <el-date-picker v-model="AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
                                         placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
-                        <el-time-select placeholder="起始时间" v-model="form.reserveBeginTime" :picker-options="{
+                        <el-time-select placeholder="起始时间" v-model="AloneDataTimeStart" :picker-options="{
                                       start: '08:30',
                                       step: '00:15',
                                       end: '18:30'
                                     }">
                         </el-time-select>
-                        <el-time-select placeholder="结束时间" v-model="form.reserveEndTime" :picker-options="{
+                        <el-time-select placeholder="结束时间" v-model="AloneDataTimeEnd" :picker-options="{
                                   start: '08:30',
                                   step: '00:15',
                                   end: '18:30',
-                                  minTime: form.startTime
+                                  minTime: AloneDataTimeStart
                                 }">
                         </el-time-select>
                     </el-form-item>
@@ -201,6 +200,28 @@ import { findChannelDict } from '../common/dictApi'
 export default {
     name: 'reservation',
     data () {
+        const checkMobile = (rule, value, callback) => {
+            const Reg = /^1\d{10}$/
+            if (!value) {
+                callback(new Error('请输入手机号码'))
+            } else if (Reg.test(value) === false) {
+                callback(new Error('手机号码格式不正确'))
+            } else {
+                callback()
+            }
+        }
+        const validServiceNum = (rule, value, callback) => {
+            const Reg = /\d{5}/
+            if (!value) {
+                callback(new Error('服务数量不能为空'))
+            } else if (Reg.test(value) === false) {
+                callback(new Error('服务数量格式不正确'))
+            } else if (value < 0) {
+                callback(new Error('服务数量必须大于等于0'))
+            } else {
+                callback()
+            }
+        }
         return {
             queryParams: {
                 channelType: '',
@@ -243,7 +264,32 @@ export default {
                 reserveBeginTime: '',
                 reserveEndTime: ''
             },
-            rules: {},
+            rules: {
+                customerName: [
+                    { required: true, message: '姓名不能为空', trigger: 'blur' }
+                ],
+                customerMobile: [
+                    { required: true, validator: checkMobile, trigger: 'blur' }
+                ],
+                houseKeeper: [
+                    { required: true, message: '管家不能为空', trigger: 'blur' }
+                ],
+                houseKeeperMobile: [
+                    { required: true, validator: checkMobile, trigger: 'blur' }
+                ],
+                customerAddress: [
+                    { required: true, message: '姓名不能为空', trigger: 'blur' }
+                ],
+                reserveMode: [
+                    { required: true, message: '预约方式不能为空', trigger: 'blur' }
+                ],
+                goodsName: [
+                    { required: true, message: '服务项目不能为空', trigger: 'blur' }
+                ],
+                serviceNum: [
+                    { required: true, message: validServiceNum, trigger: 'blur' }
+                ]
+            },
             pickerOptions: {
                 disabledDate (time) {
                     return time.getTime() < Date.now() - 60 * 60 * 24 * 1000
@@ -251,7 +297,22 @@ export default {
             },
             houseKeeperData: [],
             editId: '',
-            isSaving: false
+            isSaving: false,
+            AloneData: '',
+            AloneDataTimeStart: '',
+            AloneDataTimeEnd: ''
+        }
+    },
+    watch: {
+        'form.houseKeeper' (val) {
+            let mobile = ''
+            this.houseKeeperData.map(value => {
+                if (value.id === val) {
+                    mobile = value.mobile
+                    this.$set(this.form, 'houseKeeperMobile', mobile)
+                    return false
+                }
+            })
         }
     },
     computed: {
@@ -283,6 +344,12 @@ export default {
         async findWorkOrderDetail (id) {
             const { data } = await findWorkOrderDetail(id)
             this.form = data
+            try { // 新增非必填
+                this.AloneData = this.form.reserveBeginTime.split(' ')[0]
+                this.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
+                this.AloneDataTimeEnd = this.form.reserveEndTime.split(' ')[1]
+            } catch (e) {
+            }
         },
         async findServiceManagementList () {
             const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1 }) // 管家人少，查出所有管家
@@ -299,6 +366,8 @@ export default {
                     try {
                         this.isSaving = true
                         this.form.updateBy = this.userInfo.employeeName
+                        this.form.reserveBeginTime = this.AloneData + ' ' + this.AloneDataTimeStart
+                        this.form.reserveEndTime = this.AloneData + ' ' + this.AloneDataTimeEnd
                         await updateWorkOrder(this.editId, this.form)
                         this.isSaving = false
                         this.dialog = false
