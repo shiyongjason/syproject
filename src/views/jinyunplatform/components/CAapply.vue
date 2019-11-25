@@ -117,7 +117,8 @@ export default {
                     { required: true, message: '请选择企业名称', trigger: 'blur' }
                 ],
                 companyLicenseNumber: [
-                    { required: true, message: '请输入组织机构代码', trigger: 'blur' }
+                    { required: true, message: '请输入组织机构代码', trigger: 'blur' },
+                    { validator: this.checkOIBCode, trigger: 'blur' }
                 ],
                 legalName: [
                     { required: true, message: '请输入法人姓名', trigger: 'blur' }
@@ -147,6 +148,17 @@ export default {
         HAutocomplete
     },
     methods: {
+        // 组织机构代码检验正则
+        checkOIBCode (rule, value, callback) {
+            var reg = /^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/g
+            if (!value) {
+                return callback(new Error('请输入组织机构代码'))
+            } else if (value && reg.test(value) === false) {
+                return callback(new Error('组织机构代码输入不合法'))
+            } else {
+                return callback()
+            }
+        },
         onQuery () {
             this.$emit('onSearch')
         },
