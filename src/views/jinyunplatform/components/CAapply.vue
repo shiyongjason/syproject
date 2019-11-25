@@ -78,7 +78,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getSignSelector, signCa, signImage } from '../api/index'
+import { getSignSelector, signCa } from '../api/index'
 import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     name: 'caApply',

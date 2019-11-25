@@ -42,8 +42,8 @@ export default {
             default: false
         },
         customerForm: {
-            type: Object,
-            default: {}
+            type: Object
+            // default: {}
         }
     },
     data () {

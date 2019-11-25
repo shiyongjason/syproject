@@ -208,7 +208,7 @@ export default {
             setTimeout(() => {
                 this.$set(this, 'imageUrl', row.companySealImage)
                 this.dialogPicture = true
-            },0)
+            }, 0)
         },
         readUrl (val) {
             console.log(val)
