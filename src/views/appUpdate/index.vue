@@ -51,6 +51,23 @@
             </basicTable>
         </div>
         <el-dialog title="新建版本" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
+            <el-form ref="dueform" :model="dueForm" label-width="80px">
+                <el-form-item label="产品：" label-width='100px'>
+                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                </el-form-item>
+                <el-form-item label="平台:" label-width='100px'>
+                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                </el-form-item>
+                <el-form-item label="版本号:" label-width='100px'>
+                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                </el-form-item>
+                <el-form-item label="是否强制更新:" label-width='100px'>
+                    <el-switch v-model="dueForm.delivery"></el-switch>
+                </el-form-item>
+                <el-form-item label="版本更新描述:" label-width='100px'>
+                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                </el-form-item>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="resultDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onSure">确 定</el-button>
@@ -128,7 +145,8 @@ export default {
                 { value: 'dfx', label: '单分享' },
                 { value: 'iot', label: 'IOT' }
             ],
-            resultDialogVisible: true
+            resultDialogVisible: true,
+            dueForm: {}
         }
     },
     mounted () {
