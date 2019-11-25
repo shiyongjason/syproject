@@ -4,6 +4,7 @@
             <div class="box">
                 <div class="h-page-title">
                     <div>路由配置</div>
+                    <!-- <el-button @click="clearCache">清缓存</el-button> -->
                     <el-button @click="popupMenu(1)">添加一级菜单</el-button>
                 </div>
                 <div class="h-roletable">
@@ -148,7 +149,7 @@
 </template>
 
 <script>
-import { getAuth, addAuth, addAuthType, addAuthResource, editAuth } from './auth/api'
+import { getAuth, addAuth, addAuthType, addAuthResource, editAuth, clearCache } from './auth/api'
 export default {
     data () {
         return {
@@ -436,6 +437,9 @@ export default {
             const { data } = await addAuthType(params)
             console.log(data)
             this.init()
+        },
+        clearCache () {
+            clearCache()
         }
     }
 }

@@ -50,7 +50,7 @@
                 </div>
             </div>
         </el-form>
-        <el-dialog title="选择客户" :visible.sync="dialogVisible" :close-on-click-modal="false">
+        <el-dialog title="选择客户" :visible.sync="dialogVisible" :close-on-click-modal="false" width='25%'>
             <!-- <div class="add-tags-dialog">
                 <div class="query-cont-col">
                     <div class="query-col-title">标签名称：</div>
@@ -60,11 +60,11 @@
                     </div>
                 </div>
             </div> -->
-            <div class="add-tags-dialog">
+            <div class="dialogContent">
                 <div class="query-cont-col">
                     <div class="query-col-title">客户名称：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" :remove-value='removeValue' />
+                        <HAutocomplete :placeholder="'输入客户名称'" @back-event="backFindcode" :selectArr="productSource" :remove-value='removeValue' />
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getSignSelector, signCa, signImage } from '../api/index'
+import { getSignSelector, signCa } from '../api/index'
 import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     name: 'caApply',
@@ -226,5 +226,8 @@ export default {
 }
 /deep/ .el-dialog__body {
     min-height: auto;
+}
+.dialogContent {
+    padding-top: 30px;
 }
 </style>
