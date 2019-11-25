@@ -40,3 +40,5 @@ export const addAuthType = (params) => axios.post(`/uaa/api/auth/type`, params)
 export const addAuthResource = (params) => axios.post(`/uaa/api/auth/resource`, params)
 // 修改权限
 export const editAuth = (params) => axios.put(`/uaa/api/auth`, params)
+// 清空缓存
+export const clearCache = (params) => axios.get(`/api/auth/refresh`)

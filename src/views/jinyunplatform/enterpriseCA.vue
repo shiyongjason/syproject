@@ -34,7 +34,7 @@
                 </template>
             </basicTable>
             <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
-            <el-dialog title="上传印章图片" :visible.sync="dialogPicture">
+            <el-dialog title="上传印章图片" :visible.sync="dialogPicture" width='25%'>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">印章：</div>
                     <!-- <div class="flex-wrap-cont">
@@ -231,6 +231,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+/deep/ .el-dialog{
+    min-width: 350px;
+}
 /deep/ .el-dialog__body {
     min-height: 256px;
 }
