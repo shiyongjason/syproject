@@ -1,5 +1,6 @@
 <template>
     <el-table-column
+        v-if="column"
         v-bind="$attrs"
         v-on="$listeners"
         :prop="column.prop"
@@ -80,12 +81,12 @@ export default {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         },
         setColumn () {
-            if (this.column.formatter) {
+            if (this.column && this.column.formatter) {
                 this.column.render = (h, scope) => {
                     return <span>{ scope.column.formatter(scope.row, scope.column, scope.row, scope.$index) }</span>
                 }
             }
-            if (!this.column.render) {
+            if (this.column && !this.column.render) {
                 this.column.render = (h, scope) => {
                     // 添加字典
                     if (this.column.dicData) {
@@ -103,7 +104,7 @@ export default {
                         )
                     }
                     return (
-                        <span>{ scope.row[scope.column.property] || scope.row[scope.column.property] == 0 ? scope.row[scope.column.property] : '-' }</span>
+                        <span>{ scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? scope.row[scope.column.property] : '-' }</span>
                     )
                 }
             }
@@ -126,8 +127,8 @@ export default {
     },
     watch: {
         column: {
-            handler () {
-                this.setColumn()
+            handler (val, oldval) {
+                val && this.setColumn()
             },
             immediate: true
         }

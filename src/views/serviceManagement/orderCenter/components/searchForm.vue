@@ -14,16 +14,19 @@
                             </el-select>
                         </div>
                         <div class="m-l">
-                            <el-input v-model="value.searchValue" style="width:250px" clearable :placeholder="getPlaceholderText" :maxlength="inputLength" />
+                            <el-input v-model="value.searchValue" style="width:250px" clearable
+                                      :placeholder="getPlaceholderText" :maxlength="inputLength"/>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">下单时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="value.startTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="value.startTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime"
+                                            placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10"> --</span>
-                            <el-date-picker v-model="value.endTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="value.endTime" value-format='yyyy-MM-dd HH:mm:ss' type="datetime"
+                                            placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
@@ -32,10 +35,7 @@
                         <div class="query-col-input">
                             <el-select v-model="value.source" clearable>
                                 <el-option label="全部" value=""></el-option>
-                                <el-option label="有赞商城" value="1"></el-option>
-                                <el-option label="孩子王" value="2"></el-option>
-                                <el-option label="考拉买菜" value="3"></el-option>
-                                <el-option label="大众点评" value="4"></el-option>
+                                <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                             </el-select>
                         </div>
                     </div>
@@ -64,18 +64,34 @@
                                 </el-button>
                             </el-upload>
                         </div>
+                        <div class="query-col-input">
+                            <el-button type="primary" @click="downloadTemplate">
+                                下载模板
+                            </el-button>
+                        </div>
                     </div>
                 </el-form>
             </div>
         </div>
+        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1300px">
+            <importOrderError :errorData="errorData" ref="submitData" @saveBackReportEdit="saveBackReportEdit"></importOrderError>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="onCancel">放弃错误重新导入</el-button>
+                <el-button type="primary" @click="onSave">重新导入</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { interfaceUrl } from '@/api/config'
+import importOrderError from './importOrderError'
 export default {
     name: 'searchForm',
-    props: ['value'],
+    props: ['value', 'channelType'],
+    components: {
+        importOrderError
+    },
     data () {
         return {
             type: {
@@ -84,7 +100,9 @@ export default {
                 userName: '姓名',
                 mobile: '手机号'
             },
-            interfaceUrl: interfaceUrl
+            interfaceUrl: interfaceUrl,
+            dialog: false,
+            errorData: []
         }
     },
     computed: {
@@ -126,7 +144,10 @@ export default {
         }
     },
     methods: {
-        onClear  () {
+        downloadTemplate () {
+            location.href = interfaceUrl + 'service/api/orders/template/export'
+        },
+        onClear () {
             this.$emit('onClear')
         },
         onSearch () {
@@ -134,33 +155,40 @@ export default {
         },
         isSuccess (response) {
             if (response) {
-                this.$alert(`<span style="color: red">警告</span>：</br>${response.split(',').join('</br>')}`, '导入状态', {
-                    confirmButtonText: '确定',
-                    dangerouslyUseHTMLString: true,
-                    showClose: false
-                }).then(async () => {
-                    this.$emit('search', this.value)
-                })
+                this.dialog = true
+                this.errorData = response
             } else {
-                this.$alert('导入成功', '导入状态', {
-                    confirmButtonText: '确定',
-                    showClose: false
-                }).then(async () => {
-                    this.$emit('search', this.value)
+                this.$message({
+                    type: 'success',
+                    message: '导入成功'
                 })
             }
         },
         isError () {
-            //  订单导入字段格式错误，请您检查导入字段格式，重新上传
             this.$message({
                 type: 'error',
-                message: '订单导入字段格式错误，请您检查导入字段格式，重新上传'
+                message: '订单导入模板错误，请先下载模板'
             })
+        },
+        onCancel () {
+            this.dialog = false
+            this.errorData = []
+        },
+        onSave () {
+            this.$refs.submitData.createChannelOrderList()
+            this.dialog = false
+            this.errorData = []
+        },
+        saveBackReportEdit (reponse) {
+            this.dialog = true
+            this.errorData = reponse
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.m-l{ margin-left:5px}
+    .m-l {
+        margin-left: 5px
+    }
 </style>
