@@ -209,6 +209,18 @@ export default {
                 if (i.dailyInterestRate != null) {
                     i.dailyInterestRate = i.dailyInterestRate.toFixed(4) + '%'
                 }
+                if (i.accountReceivableQuota != null) {
+                    i.accountReceivableQuota = i.accountReceivableQuota.toFixed(2)
+                }
+                if (i.dailyQuota != null) {
+                    i.dailyQuota = i.dailyQuota.toFixed(2)
+                }
+                if (i.monthlyQuota != null) {
+                    i.monthlyQuota = i.monthlyQuota.toFixed(2)
+                }
+                if (i.yearlyQuota != null) {
+                    i.yearlyQuota = i.yearlyQuota.toFixed(2)
+                }
             })
         },
         onSearch () {
