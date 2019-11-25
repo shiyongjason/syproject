@@ -1,24 +1,29 @@
 <template>
     <div class="hosjoy-table">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :span-method="this.merge ? this.mergeMethod : this.spanMethod" >
+        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :span-method="this.merge ? this.mergeMethod : this.spanMethod">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
+            </el-table-column>
+            <el-table-column type="expand" v-if="expand" align="center">
+                <template slot-scope="scope">
+                    <slot name="expand" :data="scope"></slot>
+                </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" align="center" :prop="item.prop" :key="index" v-if="item.slot">
+                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column v-if="!item.slot" v-bind="$attrs" :column="item" :key="index"></hosjoy-column>
+                <hosjoy-column v-if="!item.slot" v-bind="$attrs" :column="item" :key='index'></hosjoy-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center" :width="actionWidth">
+            <el-table-column label="操作" v-if="isAction" align="center">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
         </el-table>
-        <div class="page">
+        <div class="pages">
             <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </div>
     </div>
@@ -28,10 +33,10 @@
 import hosjoyColumn from './hosjoy-column'
 export default {
     props: {
-        actionWidth: { type: String, default: '100' },
-        isAction: { type: Boolean, default: () => false },
         isShowselection: { type: Boolean, default: () => false },
+        isAction: { type: Boolean, default: () => false },
         isShowIndex: { type: Boolean, default: () => false },
+        expand: { type: Boolean, default: () => false },
         column: Array,
         data: Array,
         spanMethod: Function,
@@ -174,8 +179,22 @@ export default {
 
 </script>
 <style scoped>
-.hosjoy-table >>> .el-table .cell {font-size: 12px;}
-.hosjoy-table >>> .el-table .caret-wrapper {height: 20px;}
-.hosjoy-table >>> .el-table th {color: #000000;font-size: 12px;font-weight: 400;}
-.page{ text-align: right;margin-top:20px}
+.hosjoy-table >>> .el-table .cell {
+    font-size: 12px;
+}
+/* .hosjoy-table >>> .el-table .caret-wrapper {
+    height: 20px;
+} */
+.hosjoy-table >>> .el-table th {
+    color: #000000;
+    font-size: 12px;
+    font-weight: 400;
+}
+.pages {
+    text-align: right;
+    margin-top: 20px;
+}
+.pages .el-pagination {
+    text-align: right;
+}
 </style>

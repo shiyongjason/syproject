@@ -214,6 +214,18 @@ const routerMapping = [
                     component: './views/wisdom/categorySale'
                 },
                 component: () => import('./views/wisdom/categorySale')
+            },
+            {
+                path: 'profitStatistics',
+                name: 'profitStatistics',
+                meta: {
+                    title: '利润统计',
+                    tagName: '利润统计',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/wisdom/profitStatistics'
+                },
+                component: () => import('./views/wisdom/profitStatistics')
             }
         ]
     },

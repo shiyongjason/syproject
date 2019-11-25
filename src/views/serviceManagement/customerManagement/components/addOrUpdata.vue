@@ -109,8 +109,8 @@ import moment from 'moment'
 
 export default {
     name: 'addOrUpdata',
-    props: ['visible', 'value', 'isShowDetail', 'channelType'],
-    inject: ['getData'],
+    props: ['visible', 'value', 'isShowDetail', 'role', 'channelType'],
+    inject: ['getList'],
     data () {
         var checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
@@ -238,7 +238,7 @@ export default {
                         this.onCancel()
                         this.isSaving = false
                         // this.$emit('getList')
-                        this.getData()
+                        this.getList()
                     } catch (e) {
                         this.isSaving = false
                     }
@@ -296,7 +296,7 @@ export default {
         padding-top: 15px;
         padding-bottom: 30px;
     }
-    /deep/.el-dialog .el-select{
+    .el-dialog .el-select{
         width: 100%;
     }
 </style>

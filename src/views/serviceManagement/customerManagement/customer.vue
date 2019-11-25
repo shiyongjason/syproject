@@ -5,7 +5,7 @@
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getList' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getList' :role='role' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
     </div>
 </template>
 
@@ -52,7 +52,7 @@ export default {
     provide () {
         return {
             getTypes: this.getTypes,
-            getData: this.getList
+            getList: this.getList
         }
     },
     methods: {
