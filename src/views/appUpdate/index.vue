@@ -50,8 +50,7 @@
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
             </basicTable>
         </div>
-        <el-dialog title="提示" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
-            <span>{{content}}</span>
+        <el-dialog title="新建版本" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="resultDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onSure">确 定</el-button>
@@ -62,8 +61,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { interfaceUrl } from '@/api/config'
-import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'enterpriseCA',
     computed: {
@@ -97,9 +94,6 @@ export default {
     },
     data () {
         return {
-            importAuth: JINYUN_AMOUNT_IMPORT_IMPORT,
-            reCheckAuth: JINYUN_AMOUNT_IMPORT_RE_CHECK,
-            interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -112,11 +106,6 @@ export default {
                 pageSize: 10,
                 total: 100
             },
-            addTags: {
-                labelName: '',
-                labelType: '1'
-            },
-            multipleSelection: [],
             tableLabel: [
                 { label: '产品', prop: 'customerName' },
                 { label: '平台', prop: 'customerName' },
@@ -139,9 +128,7 @@ export default {
                 { value: 'dfx', label: '单分享' },
                 { value: 'iot', label: 'IOT' }
             ],
-            resultDialogVisible: false,
-            content: '新建版本',
-            status: '',
+            resultDialogVisible: true
         }
     },
     mounted () {
@@ -175,14 +162,12 @@ export default {
             this.$set(this.queryParams, 'createTime', '')
             this.onSearch()
         },
-        onNewVersion (i) {
-            this.status = i
+        onNewVersion () {
             this.resultDialogVisible = true
         },
         async onSure () {
             // const params = {
-            //     reqCustomerDailyImports: this.multiSelect,
-            //     status: this.status
+            //     reqCustomerDailyImports: this.multiSelect
             // }
             // await rateStatus(params)
             // this.resultDialogVisible = false
