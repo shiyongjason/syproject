@@ -96,7 +96,7 @@
                         <span v-if="scope.data.row.status === 4">取消</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">修改</el-button>
+                        <el-button :disabled="scope.data.row.status > 2" class="orangeBtn" @click="onEdit(scope.data.row)">修改</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -211,13 +211,10 @@ export default {
             }
         }
         const validServiceNum = (rule, value, callback) => {
-            const Reg = /\d{5}/
-            if (!value) {
-                callback(new Error('服务数量不能为空'))
-            } else if (Reg.test(value) === false) {
+            // const Reg = /\d{5}/
+            const N = /^\+?[0-9]\d*$/
+            if (!N.test(value)) {
                 callback(new Error('服务数量格式不正确'))
-            } else if (value < 0) {
-                callback(new Error('服务数量必须大于等于0'))
             } else {
                 callback()
             }
@@ -287,7 +284,7 @@ export default {
                     { required: true, message: '服务项目不能为空', trigger: 'blur' }
                 ],
                 serviceNum: [
-                    { required: true, message: validServiceNum, trigger: 'blur' }
+                    { required: true, validator: validServiceNum, trigger: 'blur' }
                 ]
             },
             pickerOptions: {

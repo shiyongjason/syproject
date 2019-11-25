@@ -81,8 +81,10 @@ export default {
     },
     methods: {
         async createChannelOrderList () {
-            console.log(this.editData)
-            await createChannelOrderList(this.editData)
+            const { data } = await createChannelOrderList(this.editData)
+            if (data.length > 0) {
+                this.$emit('saveBackReportEdit', data)
+            }
         }
     }
 }

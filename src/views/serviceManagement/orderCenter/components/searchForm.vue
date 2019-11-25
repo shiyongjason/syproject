@@ -74,7 +74,7 @@
             </div>
         </div>
         <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1300px">
-            <importOrderError :errorData="errorData" ref="submitData"></importOrderError>
+            <importOrderError :errorData="errorData" ref="submitData" @saveBackReportEdit="saveBackReportEdit"></importOrderError>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="onCancel">放弃错误重新导入</el-button>
                 <el-button type="primary" @click="onSave">重新导入</el-button>
@@ -145,7 +145,7 @@ export default {
     },
     methods: {
         downloadTemplate () {
-            console.log(1)
+            location.href = interfaceUrl + 'service/api/orders/template/export'
         },
         onClear () {
             this.$emit('onClear')
@@ -176,6 +176,12 @@ export default {
         },
         onSave () {
             this.$refs.submitData.createChannelOrderList()
+            this.dialog = false
+            this.errorData = []
+        },
+        saveBackReportEdit (reponse) {
+            this.dialog = true
+            this.errorData = reponse
         }
     }
 }
