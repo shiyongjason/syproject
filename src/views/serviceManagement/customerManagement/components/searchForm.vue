@@ -38,9 +38,9 @@
                         <el-button type="primary" @click="search('form')">
                             搜索
                         </el-button>
-                        <el-button type="primary" @click="$emit('add')">
-                            新增客户
-                        </el-button>
+                        <!--<el-button type="primary" @click="$emit('add')">-->
+                            <!--新增客户-->
+                        <!--</el-button>-->
                     </div>
                 </el-form>
             </div>

@@ -109,7 +109,7 @@ import moment from 'moment'
 
 export default {
     name: 'addOrUpdata',
-    props: ['visible', 'value', 'isShowDetail', 'role', 'channelType'],
+    props: ['visible', 'value', 'isShowDetail', 'channelType'],
     inject: ['getList'],
     data () {
         var checkMobile = (rule, value, callback) => {
