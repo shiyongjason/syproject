@@ -151,7 +151,8 @@ export default {
                 { label: '年度最高额（元）', prop: 'yearlyQuota', formatters: 'money' },
                 { label: '月度滚动额（元）', prop: 'monthlyQuota', formatters: 'money' },
                 { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota', formatters: 'money' },
-                { label: '实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
+                { label: '初始实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
+                { label: '实际实时用信额（元）', prop: 'realDailyQuota', formatters: 'money' },
                 { label: '本月利率(年化）', prop: 'dailyInterestRate' },
                 { label: '创建日期', prop: 'importDate' },
                 { label: '当前状态', prop: 'statusId' }
@@ -214,6 +215,9 @@ export default {
                 }
                 if (i.dailyQuota != null) {
                     i.dailyQuota = i.dailyQuota.toFixed(2)
+                }
+                if (i.realDailyQuota != null) {
+                    i.realDailyQuota = i.realDailyQuota.toFixed(2)
                 }
                 if (i.monthlyQuota != null) {
                     i.monthlyQuota = i.monthlyQuota.toFixed(2)
