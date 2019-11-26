@@ -53,10 +53,8 @@
         <el-dialog title="新建版本" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
             <el-form ref="dueform" :model="dueForm" label-width="80px">
                 <el-form-item label="上传apk：" label-width='100px'>
-                    <div class="uploadAPK">
-                        <!-- <input type="file" name="file" id="file" @change="fileSelect" accept=".apk">
-                        <el-button type="primary">选择文件</el-button> -->
-                        <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-remove="handleRemove" :limit="1" :on-exceed="handleExceed" :file-list="fileList">
+                    <div>
+                        <el-upload class="upload-demo" v-bind="uploadInfo" :on-remove="handleRemove" :before-upload='befUpload' :on-exceed='onExceed'>
                             <el-button size="small" type="primary">点击上传</el-button>
                         </el-upload>
                     </div>
@@ -77,7 +75,6 @@
                     <el-switch v-model="dueForm.delivery"></el-switch>
                 </el-form-item>
                 <el-form-item label="版本更新描述:" label-width='100px'>
-                    <!-- <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input> -->
                     <el-input type="textarea" placeholder="请输入内容" v-model="dueForm.textarea" maxlength="50">
                     </el-input>
                 </el-form-item>
@@ -92,6 +89,7 @@
 
 <script>
 const AppInfoParser = require('app-info-parser')
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 export default {
     name: 'enterpriseCA',
@@ -122,6 +120,17 @@ export default {
                     }
                 }
             }
+        },
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    reservedName: true
+                },
+                accept: '.apk',
+                name: 'multiFile',
+                limit: 1
+            }
         }
     },
     data () {
@@ -136,7 +145,7 @@ export default {
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
-                total: 100
+                total: 0
             },
             tableLabel: [
                 { label: '产品', prop: 'customerName' },
@@ -160,7 +169,7 @@ export default {
                 { value: 'dfx', label: '单分享' },
                 { value: 'iot', label: 'IOT' }
             ],
-            resultDialogVisible: true,
+            resultDialogVisible: false,
             dueForm: {
                 statusId: ''
             }
@@ -170,20 +179,9 @@ export default {
         this.onSearch()
     },
     methods: {
-        fileSelect () {
-            const files = document.getElementById('file').files[0]
-            console.log(files)
-            const parser = new AppInfoParser(files)
-            parser.parse().then(async result => {
-                console.log('app info ----> ', result)
-                this.$set(this.dueForm, 'produce', result.application.label[0])
-                this.$set(this.dueForm, 'versionName', result.versionName)
-            }).catch(err => {
-                console.log('err ----> ', err)
-            })
-        },
         async onQuery () {
-            // const { data } = await getRateList(this.queryParams)
+            console.log(this.searchParams)
+            // const { data } = await getRateList(this.searchParams)
             // this.tableData = data.records
             // this.pagination = {
             //     pageNumber: data.current,
@@ -204,9 +202,10 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'customerName', '')
-            this.$set(this.queryParams, 'misCode', '')
+            this.$set(this.queryParams, 'produet', '')
+            this.$set(this.queryParams, 'statusId', '')
             this.$set(this.queryParams, 'createTime', '')
+            this.$set(this.queryParams, 'endTime', '')
             this.onSearch()
         },
         onNewVersion () {
@@ -221,12 +220,29 @@ export default {
             // this.onSearch()
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
+            this.searchParams.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
+            this.searchParams.pageSize = val
             this.onQuery()
+        },
+        handleRemove () {
+            console.log(1)
+        },
+        onExceed () {
+            this.$message.error(`请删除apk后重新上传`)
+        },
+        befUpload (file) {
+            console.log(file)
+            const parser = new AppInfoParser(file)
+            parser.parse().then(async result => {
+                console.log('app info ----> ', result)
+                this.$set(this.dueForm, 'produce', result.application.label[0])
+                this.$set(this.dueForm, 'versionName', result.versionName)
+            }).catch(err => {
+                console.log('err ----> ', err)
+            })
         }
     }
 }
@@ -238,15 +254,6 @@ export default {
 }
 /deep/ .el-dialog__body {
     min-height: 0 !important;
-}
-.uploadAPK {
-    position: relative;
-    #file {
-        position: absolute;
-        width: 100px;
-        height: 40px;
-        opacity: 0;
-    }
 }
 /deep/ .el-textarea__inner {
     height: 100px;
