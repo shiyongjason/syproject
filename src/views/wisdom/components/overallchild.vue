@@ -575,7 +575,7 @@ export default {
                 position: absolute;
                 top: 10px;
                 right: 10px;
-                font-size: 30px;
+                font-size: 23px;
                 color: #b6b7bb;
             }
             div {
@@ -634,7 +634,7 @@ export default {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 30px;
+            font-size: 23px;
             color: #b6b7bb;
         }
         .sale-title {

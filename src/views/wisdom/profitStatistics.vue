@@ -25,10 +25,10 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="开始月份">
+                    <el-date-picker v-model="queryParams.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="month" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始月份">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="结束月份">
+                    <el-date-picker v-model="queryParams.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="month" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束月份">
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -53,8 +53,8 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <!-- table -->
-                <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <!-- table show-summary :summary-method="getSummaries"-->
+                <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList" >
                 </hosJoyTable>
             </div>
         </div>
@@ -63,7 +63,7 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchList } from './api/index.js'
+import { getProfitList, findPaltList, findBranchList, total } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -102,6 +102,7 @@ export default {
                 total: 0
             },
             multipleSelection: [],
+            total: {},
             tableData: [],
             column: [
                 {
@@ -169,7 +170,7 @@ export default {
                     label: '净利润',
                     renderHeader: (h, scope) => {
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandNetProfit, 3) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandNetProfit, 4) }}></i></span>
                         )
                     },
                     children: [
@@ -180,6 +181,13 @@ export default {
                             label: '达成率',
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitAchievementRate == 0 ? 0 : scope.row.netProfitAchievementRate ? `${scope.row.netProfitAchievementRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'returnOnSales',
+                            label: '销售利润率/万',
+                            render: (h, scope) => {
+                                return <span>{scope.row.returnOnSales == 0 ? 0 : scope.row.returnOnSales ? `${scope.row.returnOnSales}%` : '-'}</span>
                             }
                         }
                     ]
@@ -381,12 +389,23 @@ export default {
                 this.$nextTick(() => { this.changeTable = true })
             }
         },
-        async getList () {
-            this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
-            let query = { ...this.queryParams }
+        async onGetList (query) {
             const { data } = await getProfitList(query)
             this.tableData = data.data.list || []
             this.page.total = data.data.total
+        },
+        async onGetTotal (query) {
+            const totalData = await total(query)
+            this.total = totalData.data.data
+        },
+        async getList () {
+            this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
+            let query = { ...this.queryParams }
+            let { pageNumber, pageSize, ...rest } = query
+            await Promise.all([this.onGetList(query), this.onGetTotal(rest)])
+            // 合计
+            let obj = Object.assign({}, this.total, { misCode: '合计' })
+            this.tableData.unshift(obj)
         },
         filterHandler (value, row, column) {
             const property = column['property']
@@ -425,8 +444,8 @@ export default {
         }
     },
     async mounted () {
-        this.queryParams.startDate = moment().startOf('month').format('YYYY-MM') + '-01'
-        this.queryParams.endDate = moment().endOf('days').format('YYYY-MM') + '-01'
+        this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
+        this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
         if (this.userInfo.deptType !== 1) this.findBranchListNew()
         // 0总部 1大区 2分部
         if (this.userInfo.deptType === 1) {
