@@ -154,7 +154,7 @@ export default {
             this.$emit('search')
         },
         isSuccess (response) {
-            if (response) {
+            if (response.length > 0) {
                 this.dialog = true
                 this.errorData = response
             } else {

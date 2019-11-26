@@ -349,7 +349,7 @@ export default {
             }
         },
         async findServiceManagementList () {
-            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1 }) // 管家人少，查出所有管家
+            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 2 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
         },
         onEdit (row) {
@@ -418,10 +418,10 @@ export default {
     },
     async mounted () {
         const channelOrderNo = this.$route.query.channelOrderNo
-        if (channelOrderNo) this.queryParams.channelOrderNo = channelOrderNo
+        if (channelOrderNo) this.queryParams.orderNo = channelOrderNo
         let defaultMobile = this.$route.query.mobile
         if (defaultMobile) {
-            this.queryParams.phone = defaultMobile
+            this.queryParams.customerMobile = defaultMobile
         }
         this.findServiceManagementList()
         this.findChannelDict()

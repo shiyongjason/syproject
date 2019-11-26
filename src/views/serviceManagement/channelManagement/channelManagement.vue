@@ -24,9 +24,9 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="title" :visible.sync="dialog">
+        <el-dialog :title="title" :visible.sync="dialog" :close-on-click-modal="false">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
-                <el-form-item label="渠道名称">
+                <el-form-item prop="name" label="渠道名称">
                     <el-input v-model="form.name" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="渠道编码">
@@ -35,7 +35,7 @@
                 <el-form-item label="创建人" v-if="!isAdd">
                     <el-input disabled v-model="form.createBy" placeholder="请输入创建人" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
-                <el-form-item label="MIS编码">
+                <el-form-item prop="misCode" label="MIS编码">
                     <el-input v-model="form.misCode" placeholder="请输入MIS编码" maxlength="20" style="width: 300px"></el-input>
                 </el-form-item>
                 <el-form-item label="创建时间" v-if="!isAdd">
@@ -84,10 +84,10 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: '渠道名称不能为空', trigger: 'blur' }
+                    { required: true, whitespace: true, message: '渠道名称不能为空', trigger: 'blur' }
                 ],
                 misCode: [
-                    { required: true, message: 'MIS编码不能为空', trigger: 'blur' }
+                    { required: true, whitespace: true, message: 'MIS编码不能为空', trigger: 'blur' }
                 ]
             },
             date: '',
@@ -113,6 +113,9 @@ export default {
         },
         addChannel () {
             this.isAdd = this.dialog = true
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
             this.form = {
                 name: '',
                 channelCode: '',
@@ -122,13 +125,20 @@ export default {
         onEdit (params) {
             this.dialog = true
             this.isAdd = false
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
             this.findChannelDetails(params.id)
         },
         update () {
             const id = this.form.id
             const params = { ...this.form }
             delete params.id
-            this.updateChannel(id, params)
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    this.updateChannel(id, params)
+                }
+            })
         },
         save () {
             this.isSaving = true
@@ -147,10 +157,6 @@ export default {
                     }
                 } else {
                     this.isSaving = false
-                    this.$message({
-                        message: '新增渠道失败！',
-                        type: 'error'
-                    })
                 }
             })
         },
@@ -178,10 +184,6 @@ export default {
                 await this.findChannelManagementList()
                 this.dialog = this.isSaving = false
             } catch (e) {
-                this.$message({
-                    message: '更新渠道失败！',
-                    type: 'error'
-                })
                 this.isSaving = false
             }
         },
