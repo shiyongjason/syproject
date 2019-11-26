@@ -52,20 +52,34 @@
         </div>
         <el-dialog title="新建版本" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
             <el-form ref="dueform" :model="dueForm" label-width="80px">
-                <el-form-item label="产品：" label-width='100px'>
-                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                <el-form-item label="上传apk：" label-width='100px'>
+                    <div class="uploadAPK">
+                        <!-- <input type="file" name="file" id="file" @change="fileSelect" accept=".apk">
+                        <el-button type="primary">选择文件</el-button> -->
+                        <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-remove="handleRemove" :limit="1" :on-exceed="handleExceed" :file-list="fileList">
+                            <el-button size="small" type="primary">点击上传</el-button>
+                        </el-upload>
+                    </div>
                 </el-form-item>
-                <el-form-item label="平台:" label-width='100px'>
-                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                <el-form-item label="产品：" label-width='100px'>
+                    <el-input v-model="dueForm.produce" placeholder="请上传apk" maxlength="25" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="版本号:" label-width='100px'>
-                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                    <el-input v-model="dueForm.versionName" placeholder="请上传apk" maxlength="25" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="平台:" label-width='100px'>
+                    <el-select v-model="dueForm.statusId" clearable>
+                        <el-option v-for="(item,index) in statusIdType" :key="index" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="是否强制更新:" label-width='100px'>
                     <el-switch v-model="dueForm.delivery"></el-switch>
                 </el-form-item>
                 <el-form-item label="版本更新描述:" label-width='100px'>
-                    <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input>
+                    <!-- <el-input v-model="dueForm.proposedPlan" placeholder="请输入内容" maxlength="25"></el-input> -->
+                    <el-input type="textarea" placeholder="请输入内容" v-model="dueForm.textarea" maxlength="50">
+                    </el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -77,6 +91,7 @@
 </template>
 
 <script>
+const AppInfoParser = require('app-info-parser')
 import { mapState } from 'vuex'
 export default {
     name: 'enterpriseCA',
@@ -146,13 +161,27 @@ export default {
                 { value: 'iot', label: 'IOT' }
             ],
             resultDialogVisible: true,
-            dueForm: {}
+            dueForm: {
+                statusId: ''
+            }
         }
     },
     mounted () {
         this.onSearch()
     },
     methods: {
+        fileSelect () {
+            const files = document.getElementById('file').files[0]
+            console.log(files)
+            const parser = new AppInfoParser(files)
+            parser.parse().then(async result => {
+                console.log('app info ----> ', result)
+                this.$set(this.dueForm, 'produce', result.application.label[0])
+                this.$set(this.dueForm, 'versionName', result.versionName)
+            }).catch(err => {
+                console.log('err ----> ', err)
+            })
+        },
         async onQuery () {
             // const { data } = await getRateList(this.queryParams)
             // this.tableData = data.records
@@ -188,7 +217,7 @@ export default {
             //     reqCustomerDailyImports: this.multiSelect
             // }
             // await rateStatus(params)
-            // this.resultDialogVisible = false
+            this.resultDialogVisible = false
             // this.onSearch()
         },
         onCurrentChange (val) {
@@ -209,5 +238,17 @@ export default {
 }
 /deep/ .el-dialog__body {
     min-height: 0 !important;
+}
+.uploadAPK {
+    position: relative;
+    #file {
+        position: absolute;
+        width: 100px;
+        height: 40px;
+        opacity: 0;
+    }
+}
+/deep/ .el-textarea__inner {
+    height: 100px;
 }
 </style>
