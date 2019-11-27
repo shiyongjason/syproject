@@ -21,11 +21,14 @@
             <el-row :gutter="10">
                 <el-col :span="12"><span class="detail-name">组织机构代码：</span>{{customerForm.companyLicenseNumber}}</el-col>
             </el-row>
-            <div class="title">印章图片展示链接:</div>
+            <div class="title">印章图片:</div>
             <!-- <span>{{customerForm.companySealImage}}</span> -->
-            <a :href="customerForm.companySealImage" target="_blank">
-                <img :src="customerForm.companySealImage" alt="印章图片" class="showPicture">
-            </a>
+            <div v-if="customerForm.companySealImage" class="showPicture">
+                <a :href="customerForm.companySealImage" target="_blank">
+                    <img :src="customerForm.companySealImage" alt="印章图片">
+                </a>
+            </div>
+            <span v-else>无</span>
             <div slot="footer" class="footer-close">
                 <el-button type="primary" @click="onCancel">关 闭</el-button>
             </div>
@@ -86,5 +89,10 @@ export default {
 }
 .showPicture {
     width: 200px;
+    height: 200px;
+    img {
+        width: 100%;
+        height: 100%;
+    }
 }
 </style>

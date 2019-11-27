@@ -140,7 +140,7 @@
                 </table>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="fieldVisible = false">关 闭</el-button>
+                <el-button @click="onClose">关 闭</el-button>
                 <!-- <el-button @click="fieldVisible = false">取 消</el-button>
                 <el-button type="primary" @click="fieldVisible = false">保 存</el-button> -->
             </span>
@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { getAuth, addAuth, addAuthType, addAuthResource, editAuth, clearCache } from './auth/api'
+import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache } from './auth/api'
 export default {
     data () {
         return {
@@ -196,7 +196,7 @@ export default {
     methods: {
         async init () {
             const { data } = await getAuth()
-            console.log(data)
+            // console.log(data)
             this.tableList = this.handlerTableList(data, 0)
         },
         // 计算table合并行数
@@ -251,7 +251,7 @@ export default {
         onAddMenuSure (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    console.log(this.levObj)
+                    // console.log(this.levObj)
                     if (this.levObj.lev == 1) this.addFirMenu()
                     if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
                     if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
@@ -270,7 +270,7 @@ export default {
                 }
             }
             if (lev == 2) {
-                console.log(lev, it, index, indexa)
+                // console.log(lev, it, index, indexa)
                 this.form.authName = it.childAuthList[indexa].authName
                 this.form.authUri = it.childAuthList[indexa].authUri
                 this.form.sort = it.childAuthList[indexa].sort
@@ -280,7 +280,7 @@ export default {
                     parent: it,
                     index
                 }
-                console.log(this.levObj)
+                // console.log(this.levObj)
                 this.title = '编辑二级菜单'
             }
             if (lev == 3) {
@@ -294,7 +294,7 @@ export default {
                     index,
                     indexa
                 }
-                console.log(lev, it, index, indexa, indexb)
+                // console.log(lev, it, index, indexa, indexb)
                 this.title = '编辑三级菜单'
             }
             this.dialogSeedVisible = true
@@ -304,7 +304,7 @@ export default {
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
-            console.log(lev, item, index, indexa)
+            // console.log(lev, item, index, indexa)
             this.levObj = {
                 lev,
                 parent: item,
@@ -315,7 +315,7 @@ export default {
             if (lev == 2) this.title = '添加二级菜单'
             if (this.levObj.parent && !this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
-                console.log(this.levObj)
+                // console.log(this.levObj)
                 return
             }
             if (lev == 3) this.title = '添加三级菜单'
@@ -338,14 +338,14 @@ export default {
             } else {
                 await addAuth(params)
             }
-            console.log(params)
+            // console.log(params)
             this.dialogSeedVisible = false
             this.init()
         },
         async addSecMenu (index) {
-            console.log(index)
-            console.log(this.tableList[index].childAuthList)
-            console.log(this.levObj.parent.authCode)
+            // console.log(index)
+            // console.log(this.tableList[index].childAuthList)
+            // console.log(this.levObj.parent.authCode)
             const params = {
                 authName: this.form.authName,
                 authUri: this.form.authUri,
@@ -363,11 +363,11 @@ export default {
             this.init()
         },
         async addTirMenu (index, indexa) {
-            console.log(index, indexa)
-            console.log(this.tableList[index].childAuthList[indexa])
+            // console.log(index, indexa)
+            // console.log(this.tableList[index].childAuthList[indexa])
             if (!this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
-                console.log(this.levObj)
+                // console.log(this.levObj)
                 return
             }
             const params = {
@@ -391,8 +391,8 @@ export default {
             this.dialogFirVisible = false
         },
         async onResourceSure (i) {
-            console.log(this.configObj)
-            console.log(this.list[i])
+            // console.log(this.configObj)
+            // console.log(this.list[i])
             const params = {
                 authCode: this.configObj.authCode,
                 authTypeId: this.configObj.id,
@@ -402,15 +402,17 @@ export default {
             }
             if (this.list[i].id) {
                 params.id = this.list[i].id
+                await editAuthResource(params)
+            } else {
+                await addAuthResource(params)
             }
-            console.log(params)
-            await addAuthResource(params)
+            this.$message.success(`保存成功`)
             this.init()
         },
         onShowFieldConfig (index, item) {
             // 初始化
             this.list = [{}]
-            console.log(index, item)
+            // console.log(index, item)
             if (item.authResourceList.length > 0) {
                 this.list = item.authResourceList
             }
@@ -421,7 +423,7 @@ export default {
             this.list.push({})
         },
         async addSensitive (index, indexa, obj, type) {
-            console.log(index, indexa, obj, type)
+            // console.log(index, indexa, obj, type)
             // console.log(this.tableList[index].childAuthList[indexa].childAuthList)
             if (!obj.authCode) {
                 this.$message.warning('权限配置菜单不存在')
@@ -432,14 +434,17 @@ export default {
                 authCode,
                 authType: type
             }
-            console.log(111)
-            console.log(params)
+            // console.log(params)
             const { data } = await addAuthType(params)
-            console.log(data)
+            // console.log(data)
             this.init()
         },
         clearCache () {
             clearCache()
+        },
+        onClose () {
+            this.fieldVisible = false
+            this.init()
         }
     }
 }
