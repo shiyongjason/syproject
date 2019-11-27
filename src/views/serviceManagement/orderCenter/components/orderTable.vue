@@ -91,8 +91,8 @@
                 </div>
             </div>
         </div>
-        <el-dialog title="新增工单" :visible.sync="dialog" class="edit-work-order" width="1000px">
-            <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
+        <el-dialog title="新增工单" :visible.sync="dialog" class="edit-work-order" width="1100px">
+            <el-form :inline="true" :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
                 <el-form-item label="渠道名称">
                     <el-select disabled v-model="form.channelType">
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
@@ -109,7 +109,7 @@
                 </el-form-item>
                 <el-form-item prop="houseKeeperId" label="线下管家">
                     <el-select v-model="form.houseKeeperId" >
-                        <el-option :label="item.name" :value="item.id" v-for="item in houseKeeperData" :key="item.code"></el-option>
+                        <el-option :label="item.name" :value="item.userId" v-for="item in houseKeeperData" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="houseKeeperMobile"  label="管家电话">
@@ -154,23 +154,29 @@
                 <el-form-item label="卖家备注">
                     <el-input type="text" disabled v-model="form.sellerRemark" placeholder=""></el-input>
                 </el-form-item>
-                <el-form-item label="服务时间" style="width: 100%">
-                    <el-date-picker v-model="AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
-                                    placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
-                    <el-time-select placeholder="起始时间" v-model="AloneDataTimeStart" :picker-options="{
+                <div>
+                    <el-form-item prop="AloneData" label="服务时间">
+                        <el-date-picker v-model="form.AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
+                                        placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item prop="AloneDataTimeStart" class="alone-select">
+                        <el-time-select placeholder="起始时间" v-model="form.AloneDataTimeStart" :picker-options="{
                                       start: '08:30',
                                       step: '00:15',
                                       end: '18:30'
                                     }">
-                    </el-time-select>
-                    <el-time-select placeholder="结束时间" v-model="AloneDataTimeEnd" :picker-options="{
+                        </el-time-select>
+                    </el-form-item>
+                    <el-form-item prop="AloneDataTimeEnd" class="alone-select">
+                        <el-time-select placeholder="结束时间" v-model="form.AloneDataTimeEnd" :picker-options="{
                                   start: '08:30',
                                   step: '00:15',
                                   end: '18:30',
-                                  minTime: AloneDataTimeStart
+                                  minTime: form.AloneDataTimeStart
                                 }">
-                    </el-time-select>
-                </el-form-item>
+                        </el-time-select>
+                    </el-form-item>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialog = false">取 消</el-button>
@@ -212,7 +218,7 @@ export default {
         'form.houseKeeperId' (val) {
             let mobile = ''
             this.houseKeeperData.map(value => {
-                if (value.id === val) {
+                if (value.userId === val) {
                     mobile = value.mobile
                     this.$set(this.form, 'houseKeeperMobile', mobile)
                     return false
@@ -256,7 +262,10 @@ export default {
             },
             form: {
                 reserveBeginTime: '',
-                reserveEndTime: ''
+                reserveEndTime: '',
+                AloneData: '',
+                AloneDataTimeStart: '',
+                AloneDataTimeEnd: ''
             },
             rules: {
                 customerName: [
@@ -282,6 +291,15 @@ export default {
                 ],
                 serviceNum: [
                     { required: true, validator: validServiceNum, trigger: 'blur' }
+                ],
+                AloneData: [
+                    { required: true, message: '服务日期不能为空', trigger: 'blur' }
+                ],
+                AloneDataTimeStart: [
+                    { required: true, message: '开始时间不能为空', trigger: 'blur' }
+                ],
+                AloneDataTimeEnd: [
+                    { required: true, message: '结束时间不能为空', trigger: 'blur' }
                 ]
             },
             pickerOptions: {
@@ -290,9 +308,6 @@ export default {
                 }
             },
             isSaving: false,
-            AloneData: '',
-            AloneDataTimeStart: '',
-            AloneDataTimeEnd: '',
             houseKeeperData: []
         }
     },
@@ -307,6 +322,8 @@ export default {
                     try {
                         this.isSaving = true
                         this.form.createBy = this.userInfo.employeeName
+                        this.form.reserveBeginTime = this.form.AloneData + ' ' + this.form.AloneDataTimeStart
+                        this.form.reserveEndTime = this.form.AloneData + ' ' + this.form.AloneDataTimeEnd
                         this.houseKeeperData.forEach(value => {
                             if (value.id === this.form.houseKeeperId) {
                                 this.form.houseKeeper = value.name
@@ -334,7 +351,10 @@ export default {
                 customerAddress: row.receiverAddress,
                 status: 2,
                 buyerRemark: row.buyerRemark,
-                sellerRemark: row.buyerRemark
+                sellerRemark: row.buyerRemark,
+                AloneData: '',
+                AloneDataTimeStart: '',
+                AloneDataTimeEnd: ''
             }
             this.dialog = true
             this.$nextTick(() => {
@@ -342,7 +362,7 @@ export default {
             })
         },
         onLink (item) {
-            this.$router.push({ path: '/serviceManagement/workOrder', query: { channelOrderNo: item.channelOrderNo } })
+            this.$router.push({ path: '/serviceManagement/workOrder', query: { orderNo: item.orderNo } })
         },
         onEdit (item) {
             this.$router.push({ path: '/serviceManagement/orderChannelEdit', query: { id: item.id } })
@@ -473,16 +493,6 @@ export default {
         padding: 12px;
     }
 .edit-work-order {
-    /deep/.el-form-item{
-        width: 300px;
-        float: left;
-    }
-    .edit-work-order-form {
-        overflow: hidden;
-        padding-bottom: 20px;
-    }
-    /deep/.el-dialog .el-input {
-        width: 190px;
-    }
+    overflow: hidden;
 }
 </style>

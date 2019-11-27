@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">渠道名称：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入姓名">
+                    <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入渠道名称">
                     </el-input>
                 </div>
             </div>
@@ -70,9 +70,9 @@ export default {
                 total: 10
             },
             tableLabel: [{ label: '渠道名称', prop: 'name' },
-                { label: '渠道编码', prop: 'id', width: '150' },
-                { label: 'MIS编码', prop: 'misCode', width: '200' },
-                { label: '创建时间', prop: 'createTime', width: '200', formatters: 'dateTime' },
+                { label: '渠道编码', prop: 'id' },
+                { label: 'MIS编码', prop: 'misCode' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '创建人', prop: 'createBy' }
             ],
             dialog: false,

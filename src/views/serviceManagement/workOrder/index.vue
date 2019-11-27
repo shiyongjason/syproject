@@ -120,8 +120,8 @@
                         <el-input v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
                     </el-form-item>
                     <el-form-item prop="houseKeeper" label="线下管家">
-                        <el-select v-model="form.houseKeeper" >
-                            <el-option :label="item.name" :value="item.id" v-for="item in houseKeeperData" :key="item.code"></el-option>
+                        <el-select v-model="form.houseKeeperId" >
+                            <el-option :label="item.name" :value="item.userId" v-for="item in houseKeeperData" :key="item.code"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="houseKeeperMobile"  label="管家电话">
@@ -268,7 +268,7 @@ export default {
                 customerMobile: [
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
-                houseKeeper: [
+                houseKeeperId: [
                     { required: true, message: '管家不能为空', trigger: 'blur' }
                 ],
                 houseKeeperMobile: [
@@ -363,8 +363,22 @@ export default {
                     try {
                         this.isSaving = true
                         this.form.updateBy = this.userInfo.employeeName
-                        this.form.reserveBeginTime = this.AloneData + ' ' + this.AloneDataTimeStart
-                        this.form.reserveEndTime = this.AloneData + ' ' + this.AloneDataTimeEnd
+                        if (this.AloneData) {
+                            this.form.reserveBeginTime = this.form.reserveEndTime = ''
+                            this.form.reserveBeginTime += this.AloneData
+                            this.form.reserveEndTime += this.AloneData
+                        }
+                        if (this.AloneDataTimeStart) {
+                            this.form.reserveBeginTime += ' ' + this.AloneDataTimeStart
+                        }
+                        if (this.AloneDataTimeEnd) {
+                            this.form.reserveEndTime += ' ' + this.AloneDataTimeEnd
+                        }
+                        this.houseKeeperData.forEach(value => {
+                            if (value.id === this.form.houseKeeperId) {
+                                this.form.houseKeeper = value.name
+                            }
+                        })
                         await updateWorkOrder(this.editId, this.form)
                         this.isSaving = false
                         this.dialog = false
@@ -417,8 +431,8 @@ export default {
         }
     },
     async mounted () {
-        const channelOrderNo = this.$route.query.channelOrderNo
-        if (channelOrderNo) this.queryParams.orderNo = channelOrderNo
+        const orderNo = this.$route.query.orderNo
+        if (orderNo) this.queryParams.orderNo = orderNo
         let defaultMobile = this.$route.query.mobile
         if (defaultMobile) {
             this.queryParams.customerMobile = defaultMobile
