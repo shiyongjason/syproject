@@ -107,8 +107,8 @@
                 <el-form-item prop="customerMobile" label="手机号">
                     <el-input type="text" v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
                 </el-form-item>
-                <el-form-item prop="houseKeeper" label="线下管家">
-                    <el-select v-model="form.houseKeeper" >
+                <el-form-item prop="houseKeeperId" label="线下管家">
+                    <el-select v-model="form.houseKeeperId" >
                         <el-option :label="item.name" :value="item.id" v-for="item in houseKeeperData" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
@@ -209,7 +209,7 @@ export default {
         })
     },
     watch: {
-        'form.houseKeeper' (val) {
+        'form.houseKeeperId' (val) {
             let mobile = ''
             this.houseKeeperData.map(value => {
                 if (value.id === val) {
@@ -265,7 +265,7 @@ export default {
                 customerMobile: [
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
-                houseKeeper: [
+                houseKeeperId: [
                     { required: true, message: '管家不能为空', trigger: 'blur' }
                 ],
                 houseKeeperMobile: [
@@ -307,6 +307,11 @@ export default {
                     try {
                         this.isSaving = true
                         this.form.createBy = this.userInfo.employeeName
+                        this.houseKeeperData.forEach(value => {
+                            if (value.id === this.form.houseKeeperId) {
+                                this.form.houseKeeper = value.name
+                            }
+                        })
                         await createWorkOrder(this.form)
                         this.isSaving = false
                         this.dialog = false
