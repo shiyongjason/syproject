@@ -349,7 +349,7 @@ export default {
             }
         },
         async findServiceManagementList () {
-            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 2 }) // 管家人少，查出所有管家
+            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
         },
         onEdit (row) {
