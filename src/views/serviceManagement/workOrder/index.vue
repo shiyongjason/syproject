@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">维护时间：</div>
+                    <div class="flex-wrap-title">预约时间：</div>
                     <div class="flex-wrap-cont">
                         <el-date-picker v-model="queryParams.reserveBeginTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -83,6 +83,11 @@
                     <template slot="engineer" slot-scope="scope">
                         <span>{{scope.data.row.engineer}}</span>
                         <span>{{scope.data.row.engineerMobile}}</span>
+                    </template>
+                    <template slot="reserveMode" slot-scope="scope">
+                        <span v-if="scope.data.row.reserveMode === 1">公众号预约</span>
+                        <span v-if="scope.data.row.reserveMode === 2">电话预约</span>
+                        <span v-if="scope.data.row.reserveMode === 3">管家预约</span>
                     </template>
                     <template slot="reserveBeginTime" slot-scope="scope">
                         <span>{{scope.data.row.reserveBeginTime | formatDate}}</span> -
@@ -221,15 +226,8 @@ export default {
         }
         return {
             queryParams: {
-                channelType: '',
-                customerMobile: '',
-                customerName: '',
-                pageNumber: '',
-                pageSize: '',
-                reserveBeginTime: '',
-                reserveEndTime: '',
-                reserveMode: '',
-                status: ''
+                pageNumber: 1,
+                pageSize: 10
             },
             searchParams: {},
             tableData: [],
@@ -301,10 +299,10 @@ export default {
         }
     },
     watch: {
-        'form.houseKeeper' (val) {
+        'form.houseKeeperId' (val) {
             let mobile = ''
             this.houseKeeperData.map(value => {
-                if (value.id === val) {
+                if (value.userId === val) {
                     mobile = value.mobile
                     this.$set(this.form, 'houseKeeperMobile', mobile)
                     return false
@@ -355,6 +353,9 @@ export default {
         onEdit (row) {
             this.dialog = true
             this.editId = row.id
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
             this.findWorkOrderDetail(this.editId)
         },
         async update () {
@@ -380,6 +381,7 @@ export default {
                             }
                         })
                         await updateWorkOrder(this.editId, this.form)
+                        this.onQuery()
                         this.isSaving = false
                         this.dialog = false
                     } catch (e) {
@@ -396,14 +398,10 @@ export default {
             this.search()
         },
         onReset () {
-            this.$set(this.queryParams, 'reservationPerson', '')
-            this.$set(this.queryParams, 'source', '')
-            this.$set(this.queryParams, 'phone', '')
-            this.$set(this.queryParams, 'reservationStatus', '')
-            this.$set(this.queryParams, 'reservationMethod', '')
-            this.$set(this.queryParams, 'channelOrderNo', '')
-            this.$set(this.queryParams, 'startTime', '')
-            this.$set(this.queryParams, 'endTime', '')
+            this.queryParams = {
+                pageNumber: 1,
+                pageSize: 10
+            }
             this.onQuery()
         },
         async search () {
@@ -431,11 +429,13 @@ export default {
         }
     },
     async mounted () {
-        const orderNo = this.$route.query.orderNo
-        if (orderNo) this.queryParams.orderNo = orderNo
+        let orderNo = this.$route.query.orderNo
+        if (orderNo) {
+            this.$set(this.queryParams, 'orderNo', orderNo)
+        }
         let defaultMobile = this.$route.query.mobile
         if (defaultMobile) {
-            this.queryParams.customerMobile = defaultMobile
+            this.$set(this.queryParams, 'customerMobile', defaultMobile)
         }
         this.findServiceManagementList()
         this.findChannelDict()
