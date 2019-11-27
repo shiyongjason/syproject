@@ -164,7 +164,8 @@ export default {
                 })
             }
         },
-        isError () {
+        isError (e) {
+            console.log(e)
             this.$message({
                 type: 'error',
                 message: '订单导入模板错误，请先下载模板'
@@ -190,5 +191,22 @@ export default {
 <style lang="scss" scoped>
     .m-l {
         margin-left: 5px
+    }
+    /deep/.el-button--primary:focus{
+        background: #FF7A45;
+        border-color: #FF7A45;
+    }
+    /deep/.el-button--primary:hover{
+        background: #FF7A45;
+        border-color: #FF7A45;
+        cursor: pointer;
+    }
+    /deep/.el-button--primary:visited{
+        background: #FF7A45;
+        border-color: #FF7A45;
+    }
+    /deep/.el-button--primary:active{
+        background: #FF7A45;
+        border-color: #FF7A45;
     }
 </style>
