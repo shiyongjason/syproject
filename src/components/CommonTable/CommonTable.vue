@@ -183,6 +183,7 @@ export default {
     methods: {
         initWidth () {
             if (this.actionMinWidth) {
+                // console
                 this.minWidth = this.actionMinWidth
             }
         },

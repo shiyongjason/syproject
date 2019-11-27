@@ -4,8 +4,8 @@
             <div class="query-cont-col">
                 <div class="query-col-title">产品：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.produet" clearable>
-                        <el-option v-for="(item,index) in produetType" :key="index" :label="item.label" :value="item.value">
+                    <el-select v-model="queryParams.product" clearable>
+                        <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
@@ -13,8 +13,8 @@
             <div class="query-cont-col">
                 <div class="query-col-title">平台：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.statusId" clearable>
-                        <el-option v-for="(item,index) in statusIdType" :key="index" :label="item.label" :value="item.value">
+                    <el-select v-model="queryParams.platformType" clearable>
+                        <el-option v-for="(item,index) in platType" :key="index" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
                 </div>
@@ -22,10 +22,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.beginDate" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -47,12 +47,22 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :actionMinWidth='200'>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
+                    <el-button class="orangeBtn" @click="showQR(scope.data.row)">二维码</el-button>
+                </template>
             </basicTable>
         </div>
         <el-dialog title="新建版本" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
             <el-form ref="dueform" :model="dueForm" label-width="80px">
-                <el-form-item label="上传apk：" label-width='100px'>
+                <el-form-item label="平台:" label-width='100px'>
+                    <el-select v-model="dueForm.platformType" clearable>
+                        <el-option v-for="(item,index) in platType" :key="index" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item v-show='uploadAPK' label="上传apk：" label-width='100px'>
                     <div>
                         <el-upload class="upload-demo" v-bind="uploadInfo" :on-remove="handleRemove" :before-upload='befUpload' :on-exceed='onExceed'>
                             <el-button size="small" type="primary">点击上传</el-button>
@@ -60,16 +70,13 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="产品：" label-width='100px'>
-                    <el-input v-model="dueForm.produce" placeholder="请上传apk" maxlength="25" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="版本号:" label-width='100px'>
-                    <el-input v-model="dueForm.versionName" placeholder="请上传apk" maxlength="25" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="平台:" label-width='100px'>
-                    <el-select v-model="dueForm.statusId" clearable>
-                        <el-option v-for="(item,index) in statusIdType" :key="index" :label="item.label" :value="item.value">
+                    <el-select v-model="dueForm.product" clearable>
+                        <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
                         </el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="版本号:" label-width='100px'>
+                    <el-input v-model="dueForm.versionName" :placeholder="placeholder" maxlength="25" :disabled='disabled'></el-input>
                 </el-form-item>
                 <el-form-item label="是否强制更新:" label-width='100px'>
                     <el-switch v-model="dueForm.delivery"></el-switch>
@@ -91,6 +98,7 @@
 const AppInfoParser = require('app-info-parser')
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import { getAppVersionList } from './api/index'
 export default {
     name: 'enterpriseCA',
     computed: {
@@ -100,7 +108,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.endDate
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -112,7 +120,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTime
+                    let beginDateVal = this.queryParams.beginDate
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime() - 3600 * 1000 * 24
@@ -138,7 +146,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                statusId: ''
+                platformType: ''
             },
             searchParams: {},
             tableData: [],
@@ -148,30 +156,46 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '产品', prop: 'customerName' },
-                { label: '平台', prop: 'customerName' },
-                { label: '版本号', prop: 'customerName' },
-                { label: '版本状态', prop: 'customerName' },
-                { label: '强制更新', prop: 'customerName' },
-                { label: '更新描述', prop: 'customerName' },
-                { label: '下载地址', prop: 'customerName' },
-                { label: '创建者', prop: 'customerName' },
-                { label: '更新时间', prop: 'customerName' },
-                { label: '操作', prop: 'customerName' }
+                { label: '产品', prop: 'product' },
+                { label: '平台', prop: 'platformType' },
+                { label: '版本号', prop: 'versionCode' },
+                { label: '版本状态', prop: 'status' },
+                { label: '强制更新', prop: 'forced' },
+                { label: '更新描述', prop: 'remark' },
+                { label: '下载地址', prop: 'versionAddress' },
+                { label: '创建者', prop: 'createUid' },
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTime' },
+                { label: '操作', prop: 'action' }
             ],
-            statusIdType: [
+            platType: [
                 { value: '', label: '全部' },
-                { value: 'ios', label: '苹果' },
-                { value: 'android', label: '安卓' }
+                { value: '1', label: '苹果' },
+                { value: '2', label: '安卓' }
             ],
-            produetType: [
+            productType: [
                 { value: '', label: '全部' },
-                { value: 'dfx', label: '单分享' },
-                { value: 'iot', label: 'IOT' }
+                { value: '1', label: '单分享' },
+                { value: '2', label: 'IOT' }
             ],
             resultDialogVisible: false,
             dueForm: {
-                statusId: ''
+                platformType: ''
+            },
+            disabled: true,
+            placeholder: '请上传apk',
+            uploadAPK: true
+        }
+    },
+    watch: {
+        'dueForm.platformType': function (val) {
+            if (val == '2') {
+                this.disabled = false
+                this.placeholder = '请输入版本号'
+                this.uploadAPK = false
+            } else {
+                this.disabled = true
+                this.placeholder = '请上传apk'
+                this.uploadAPK = true
             }
         }
     },
@@ -181,17 +205,18 @@ export default {
     methods: {
         async onQuery () {
             console.log(this.searchParams)
-            // const { data } = await getRateList(this.searchParams)
-            // this.tableData = data.records
+            const { data } = await getAppVersionList(this.searchParams)
+            console.log(data)
+            this.tableData = data.data.records
+            // this.tableData = [{
+            //     customerName: '1'
+            // }]
             // this.pagination = {
             //     pageNumber: data.current,
             //     pageSize: data.size,
             //     total: data.total
             // }
             // this.tableData.map(i => {
-            //     if (i.statusId == '000') i.statusId = '生效'
-            //     if (i.statusId == '001') i.statusId = '待生效'
-            //     if (i.statusId == '002') i.statusId = '失效'
             //     if (i.dailyInterestRate != null) {
             //         i.dailyInterestRate = i.dailyInterestRate.toFixed(4) + '%'
             //     }
@@ -202,10 +227,10 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'produet', '')
-            this.$set(this.queryParams, 'statusId', '')
-            this.$set(this.queryParams, 'createTime', '')
-            this.$set(this.queryParams, 'endTime', '')
+            this.$set(this.queryParams, 'product', '')
+            this.$set(this.queryParams, 'platformType', '')
+            this.$set(this.queryParams, 'beginDate', '')
+            this.$set(this.queryParams, 'endDate', '')
             this.onSearch()
         },
         onNewVersion () {
@@ -243,6 +268,12 @@ export default {
             }).catch(err => {
                 console.log('err ----> ', err)
             })
+        },
+        onEdit () {
+
+        },
+        showQR () {
+            
         }
     }
 }
