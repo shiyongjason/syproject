@@ -155,8 +155,7 @@ export default {
             }
         },
         getTypes (obj, key) {
-            let query = key + 1
-            return this[obj][query].label
+            return this[obj][key].label
         },
         indexMethod (index) {
             return this.pageSize * (this.pageNumber - 1) + index + 1

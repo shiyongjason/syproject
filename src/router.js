@@ -731,7 +731,7 @@ const routerMapping = [
             },
             {
                 path: 'channelManagement',
-                name: 'serviceManagementOrderMessage',
+                name: 'channelManagement',
                 meta: {
                     title: '渠道管理',
                     tagName: '渠道管理',

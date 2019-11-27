@@ -79,9 +79,9 @@
                             <li>{{parseToMoney(item.payAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
-                                <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
+                                <el-button v-if="item.status !== 4" type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
                                 <el-button v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
-                                <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
+                                <el-button v-if="item.status !== 4" type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -99,7 +99,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="订单号">
-                    <el-input type="text" v-model="form.orderId" disabled maxlength="25"></el-input>
+                    <el-input type="text" v-model="form.orderNo" disabled maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
@@ -107,8 +107,8 @@
                 <el-form-item prop="customerMobile" label="手机号">
                     <el-input type="text" v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
                 </el-form-item>
-                <el-form-item prop="houseKeeper" label="线下管家">
-                    <el-select v-model="form.houseKeeper" >
+                <el-form-item prop="houseKeeperId" label="线下管家">
+                    <el-select v-model="form.houseKeeperId" >
                         <el-option :label="item.name" :value="item.id" v-for="item in houseKeeperData" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
@@ -209,7 +209,7 @@ export default {
         })
     },
     watch: {
-        'form.houseKeeper' (val) {
+        'form.houseKeeperId' (val) {
             let mobile = ''
             this.houseKeeperData.map(value => {
                 if (value.id === val) {
@@ -224,7 +224,7 @@ export default {
         const checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
             if (!value) {
-                callback(new Error('请输入手机号码'))
+                callback(new Error('请输入管家电话'))
             } else if (Reg.test(value) === false) {
                 callback(new Error('手机号码格式不正确'))
             } else {
@@ -234,7 +234,9 @@ export default {
         const validServiceNum = (rule, value, callback) => {
             // const Reg = /\d{5}/
             const N = /^\+?[0-9]\d*$/
-            if (!N.test(value)) {
+            if (!value) {
+                callback(new Error('请填写服务数量'))
+            } else if (!N.test(value)) {
                 callback(new Error('服务数量格式不正确'))
             } else {
                 callback()
@@ -263,7 +265,7 @@ export default {
                 customerMobile: [
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
-                houseKeeper: [
+                houseKeeperId: [
                     { required: true, message: '管家不能为空', trigger: 'blur' }
                 ],
                 houseKeeperMobile: [
@@ -296,7 +298,7 @@ export default {
     },
     methods: {
         async findServiceManagementList () {
-            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1 }) // 管家人少，查出所有管家
+            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 2 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
         },
         onSaveOrder () {
@@ -305,6 +307,11 @@ export default {
                     try {
                         this.isSaving = true
                         this.form.createBy = this.userInfo.employeeName
+                        this.houseKeeperData.forEach(value => {
+                            if (value.id === this.form.houseKeeperId) {
+                                this.form.houseKeeper = value.name
+                            }
+                        })
                         await createWorkOrder(this.form)
                         this.isSaving = false
                         this.dialog = false
@@ -321,14 +328,18 @@ export default {
             this.form = {
                 channelType: row.source,
                 orderId: row.id,
-                customerName: row.customerName,
-                customerMobile: row.customerMobile,
-                customerAddress: row.customerAddress,
+                orderNo: row.orderNo,
+                customerName: row.receiverName,
+                customerMobile: row.receiverMobile,
+                customerAddress: row.receiverAddress,
                 status: 2,
                 buyerRemark: row.buyerRemark,
                 sellerRemark: row.buyerRemark
             }
             this.dialog = true
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         onLink (item) {
             this.$router.push({ path: '/serviceManagement/workOrder', query: { channelOrderNo: item.channelOrderNo } })
