@@ -587,6 +587,27 @@ const routerMapping = [
                 component: () => import('@/views/hmall/spumanage/skuset')
             },
             {
+                path: 'eventMange',
+                name: 'eventMange',
+                meta: {
+                    title: '活动管理',
+                    tagName: '活动管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/eventManage')
+            },
+            {
+                path: 'eventStatistics',
+                name: 'eventStatistics',
+                meta: {
+                    title: '数据监测',
+                    tagName: '数据监测',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/eventStatistics')
+            },
+            {
                 path: 'createEditEvent',
                 name: 'createEditEvent',
                 meta: {
@@ -816,8 +837,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
