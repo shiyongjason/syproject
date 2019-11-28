@@ -57,7 +57,7 @@
             </div>
             <div class="page-table">
                 <!-- table -->
-                <hosJoyTable ref="hosjoyTable" border stripe :column="column" :data="tableData" align="center">
+                <hosJoyTable ref="hosjoyTable" isShowIndex border stripe :column="column" :data="tableData" align="center">
                 </hosJoyTable>
             </div>
         </div>
@@ -79,7 +79,28 @@ export default {
                 radio2: '1'
             },
             tableData: [],
-            column: []
+            column: [
+                { label: '商品', prop: 'name', minWidth: '300' },
+                { label: '商建议零售价', prop: 'suggestedRetailPrice', displayAs: 'money', formatter: this.formatterMoney },
+                { label: '销售价格', prop: 'sellingPrice' },
+                { label: '库存', prop: 'inStock' },
+                {
+                    label: '限购数量',
+                    prop: 'limitNum',
+                    minWidth: '200'
+                    /* renderHeader: (h, scope) => {
+                        console.log(scope)
+                        return (
+                            <span>
+                                {scope.column.label}
+                                <el-input size='mini' ></el-input>
+                            </span>
+                        )
+                    } */
+                },
+                { label: '优惠设置', prop: 'discount', minWidth: '200' },
+                { label: '促销价', prop: 'salePrice' }
+            ]
         }
     },
     computed: {
@@ -107,9 +128,21 @@ export default {
     methods: {
         getList () {
             //
+        },
+        formatterMoney (row, column) {
+            if (row[column.property] == null) return '-'
+            let res = row[column.property].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            return res == 0 ? 0 : `¥${res}`
         }
     },
-    mounted () {}
+    mounted () {
+        this.tableData = [
+            { name: '测试商品名称', suggestedRetailPrice: 88888 },
+            { name: '测试商品名称2', suggestedRetailPrice: 88888 },
+            { name: '测试商品名称2', suggestedRetailPrice: 0 },
+            { name: '测试商品名称2', suggestedRetailPrice: null }
+        ]
+    }
 }
 </script>
 
