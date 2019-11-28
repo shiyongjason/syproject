@@ -222,7 +222,9 @@ export default {
         const validServiceNum = (rule, value, callback) => {
             // const Reg = /\d{5}/
             const N = /^\+?[0-9]\d*$/
-            if (!N.test(value)) {
+            if (!value) {
+                callback(new Error('请输入服务数量'))
+            } else if (!N.test(value)) {
                 callback(new Error('服务数量格式不正确'))
             } else {
                 callback()
@@ -349,9 +351,6 @@ export default {
                 workOrderNo: data.workOrderNo,
                 customerName: data.customerName,
                 customerMobile: data.customerMobile,
-                houseKeeper: data.houseKeeper,
-                houseKeeperId: data.houseKeeperId,
-                houseKeeperMobile: data.houseKeeperMobile,
                 customerAddress: data.customerAddress,
                 reserveMode: data.reserveMode,
                 goodsName: data.goodsName,
