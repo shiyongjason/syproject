@@ -349,6 +349,7 @@ export default {
                 workOrderNo: data.workOrderNo,
                 customerName: data.customerName,
                 customerMobile: data.customerMobile,
+                houseKeeper: data.houseKeeper,
                 houseKeeperId: data.houseKeeperId,
                 houseKeeperMobile: data.houseKeeperMobile,
                 customerAddress: data.customerAddress,
@@ -376,6 +377,7 @@ export default {
             this.houseKeeperData = data.records
         },
         onEdit (row) {
+            this.form = {}
             this.dialog = true
             this.editId = row.id
             this.$nextTick(() => {
