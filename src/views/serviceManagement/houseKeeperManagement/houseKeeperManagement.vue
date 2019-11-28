@@ -130,9 +130,9 @@ export default {
                 total: 10
             },
             tableLabel: [{ label: '姓名', prop: 'name' },
-                { label: '手机号', prop: 'mobile', width: '150' },
-                { label: '微信昵称', prop: 'nickname', width: '200' },
-                { label: '微信号', prop: 'wechatId', width: '200', formatters: 'dateTime' },
+                { label: '手机号', prop: 'mobile' },
+                { label: '微信昵称', prop: 'nickname' },
+                { label: '微信号', prop: 'wechatId' },
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '身份', prop: 'role' }
             ],

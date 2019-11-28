@@ -105,7 +105,7 @@
                     </template>
                 </basicTable>
             </div>
-            <el-dialog title="修改工单" :visible.sync="dialog" class="edit-work-order" width="1000px">
+            <el-dialog title="修改工单" :visible.sync="dialog" class="edit-work-order" width="1000px" :close-on-click-modal="false">
                 <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
                     <el-form-item label="渠道名称">
                         <el-select disabled v-model="form.channelType">
@@ -136,7 +136,7 @@
                         <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50" ></el-input>
                     </el-form-item>
                     <el-form-item prop="reserveMode" label="预约方式">
-                        <el-select v-model="form.reserveMode" disabled  >
+                        <el-select v-model="form.reserveMode">
                             <el-option label="公众号预约" :value="1"></el-option>
                             <el-option label="电话预约" :value="2"></el-option>
                             <el-option label="管家预约" :value="3"></el-option>
@@ -208,7 +208,11 @@ export default {
         const checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
             if (!value) {
-                callback(new Error('请输入手机号码'))
+                if (rule.field === 'customerMobile') {
+                    callback(new Error('请输入手机号码'))
+                } else {
+                    callback(new Error('请输入管家电话'))
+                }
             } else if (Reg.test(value) === false) {
                 callback(new Error('手机号码格式不正确'))
             } else {
@@ -273,7 +277,7 @@ export default {
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
                 customerAddress: [
-                    { required: true, message: '姓名不能为空', trigger: 'blur' }
+                    { required: true, message: '地址不能为空', trigger: 'blur' }
                 ],
                 reserveMode: [
                     { required: true, message: '预约方式不能为空', trigger: 'blur' }
@@ -305,6 +309,7 @@ export default {
                 if (value.userId === val) {
                     mobile = value.mobile
                     this.$set(this.form, 'houseKeeperMobile', mobile)
+                    this.$set(this.form, 'houseKeeper', value.name)
                     return false
                 }
             })
@@ -338,7 +343,27 @@ export default {
     methods: {
         async findWorkOrderDetail (id) {
             const { data } = await findWorkOrderDetail(id)
-            this.form = data
+            this.form = {
+                channelType: data.channelType,
+                orderId: data.orderId,
+                workOrderNo: data.workOrderNo,
+                customerName: data.customerName,
+                customerMobile: data.customerMobile,
+                houseKeeperId: data.houseKeeperId,
+                houseKeeperMobile: data.houseKeeperMobile,
+                customerAddress: data.customerAddress,
+                reserveMode: data.reserveMode,
+                goodsName: data.goodsName,
+                serviceProvider: data.serviceProvider,
+                status: data.status,
+                engineer: data.engineer,
+                engineerMobile: data.engineerMobile,
+                serviceNum: data.serviceNum,
+                buyerRemark: data.buyerRemark,
+                sellerRemark: data.sellerRemark,
+                reserveBeginTime: data.reserveBeginTime,
+                reserveEndTime: data.reserveEndTime
+            }
             try { // 新增非必填
                 this.AloneData = this.form.reserveBeginTime.split(' ')[0]
                 this.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
@@ -368,6 +393,8 @@ export default {
                             this.form.reserveBeginTime = this.form.reserveEndTime = ''
                             this.form.reserveBeginTime += this.AloneData
                             this.form.reserveEndTime += this.AloneData
+                        } else {
+                            this.form.reserveBeginTime = this.form.reserveEndTime = ''
                         }
                         if (this.AloneDataTimeStart) {
                             this.form.reserveBeginTime += ' ' + this.AloneDataTimeStart

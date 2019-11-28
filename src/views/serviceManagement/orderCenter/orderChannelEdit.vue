@@ -31,7 +31,7 @@
             </div>
             <br/>
             <div class="query-cont-col">
-                <div class="query-col-title">备注（卖家）</div>
+                <div class="query-col-title">备注（卖家）：</div>
                 <div class="query-col-input">
                     {{details.sellerRemark}}
                 </div>
@@ -113,7 +113,7 @@ export default {
                 if (this.details.orderGoodsList[i].goodsCode.length < 1) {
                     this.$message({
                         type: 'error',
-                        message: '表格第' + i + '行MDM编码不能为空！'
+                        message: '表格第' + (i + 1) + '行MDM编码不能为空！'
                     })
                     return
                 }
@@ -159,6 +159,9 @@ export default {
     }
     .query-cont-col {
         width: 220px;
+    }
+    .flex-wrap-title{
+        white-space:nowrap;
     }
     table {
         border-collapse: collapse;

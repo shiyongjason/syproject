@@ -221,6 +221,7 @@ export default {
                 if (value.userId === val) {
                     mobile = value.mobile
                     this.$set(this.form, 'houseKeeperMobile', mobile)
+                    this.$set(this.form, 'houseKeeper', value.name)
                     return false
                 }
             })
@@ -229,7 +230,6 @@ export default {
     data () {
         const checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
-            console.log(rule)
             if (!value) {
                 if (rule.field === 'customerMobile') {
                     callback(new Error('请输入手机号码'))
