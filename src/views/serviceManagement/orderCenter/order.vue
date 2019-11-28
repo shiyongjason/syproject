@@ -34,7 +34,13 @@ export default {
     },
     methods: {
         onChangeStauts (value) {
-            this.queryParams.status = value.status
+            if (value.status - 0 === 5) {
+                this.queryParams.noWorkOrder = true
+                this.queryParams.status = ''
+            } else {
+                this.queryParams.noWorkOrder = false
+                this.queryParams.status = value.status
+            }
             this.getList()
         },
         onClear () {
