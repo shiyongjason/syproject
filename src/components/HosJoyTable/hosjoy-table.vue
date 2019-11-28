@@ -10,7 +10,7 @@
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot">
+                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>

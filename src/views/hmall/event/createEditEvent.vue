@@ -50,7 +50,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">活动商品：</div>
                         <div class="query-col-input">
-                            <el-button type="primary">添加商品</el-button>
+                            <el-button type="primary" size='small'>添加商品</el-button>
                         </div>
                     </div>
                 </div>
@@ -58,6 +58,13 @@
             <div class="page-table">
                 <!-- table -->
                 <hosJoyTable ref="hosjoyTable" isShowIndex border stripe :column="column" :data="tableData" align="center">
+                    <template slot="name" slot-scope="scope">
+                        <div class="goods">
+                            <img src="@/assets/images/img_herolist.png">
+                            {{scope.data.row.name}}
+                        </div>
+
+                    </template>
                 </hosJoyTable>
             </div>
         </div>
@@ -78,27 +85,54 @@ export default {
                 radio: '1',
                 radio2: '1'
             },
+            limitNum: '',
+            discount: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'name', minWidth: '300' },
+                { label: '商品', prop: 'name', slot: 'name', minWidth: '200' },
                 { label: '商建议零售价', prop: 'suggestedRetailPrice', displayAs: 'money', formatter: this.formatterMoney },
                 { label: '销售价格', prop: 'sellingPrice' },
                 { label: '库存', prop: 'inStock' },
                 {
                     label: '限购数量',
                     prop: 'limitNum',
-                    minWidth: '200'
-                    /* renderHeader: (h, scope) => {
+                    width: '210',
+                    renderHeader: (h, scope) => {
                         console.log(scope)
                         return (
-                            <span>
-                                {scope.column.label}
-                                <el-input size='mini' ></el-input>
+                            <span class='flxinput'>
+                                <font>{scope.column.label}</font>
+                                <el-input size='mini' value={this.limitNum} onInput={(val) => { this.setCol('limitNum', val) }} ></el-input>
+                                <i class='el-icon-caret-bottom'></i>
                             </span>
                         )
-                    } */
+                    },
+                    render: (h, scope) => {
+                        return (
+                            <el-input style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val.replace(/[^\d]/g, '') }}></el-input>
+                        )
+                    }
                 },
-                { label: '优惠设置', prop: 'discount', minWidth: '200' },
+                {
+                    label: '优惠设置',
+                    prop: 'discount',
+                    width: '210',
+                    renderHeader: (h, scope) => {
+                        console.log(scope)
+                        return (
+                            <span class='flxinput'>
+                                <font>{scope.column.label}</font>
+                                <el-input size='mini' value={this.discount} onInput={(val) => { this.setCol('discount', val) }} ></el-input>
+                                <i class='el-icon-caret-bottom'></i>
+                            </span>
+                        )
+                    },
+                    render: (h, scope) => {
+                        return (
+                            <el-input style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val.replace(/[^\d]/g, '') }}></el-input>
+                        )
+                    }
+                },
                 { label: '促销价', prop: 'salePrice' }
             ]
         }
@@ -133,19 +167,30 @@ export default {
             if (row[column.property] == null) return '-'
             let res = row[column.property].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             return res == 0 ? 0 : `¥${res}`
+        },
+        setCol (key, val) {
+            console.log(key)
+            this[key] = val.replace(/[^\d]/g, '')
+            this.tableData.map((item) => {
+                item[key] = this[key]
+            })
         }
     },
     mounted () {
         this.tableData = [
-            { name: '测试商品名称', suggestedRetailPrice: 88888 },
-            { name: '测试商品名称2', suggestedRetailPrice: 88888 },
-            { name: '测试商品名称2', suggestedRetailPrice: 0 },
-            { name: '测试商品名称2', suggestedRetailPrice: null }
+            { name: '测试商品名称', suggestedRetailPrice: 88888, limitNum: 8, inStock: 30, discount: 1 },
+            { name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, discount: 2 },
+            { name: '测试商品名称2', suggestedRetailPrice: 0, limitNum: 1, discount: 3 },
+            { name: '测试商品名称2', suggestedRetailPrice: null, limitNum: 2, discount: 4 }
         ]
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .forminfo h2{font-size: 20px; margin:20px 0 15px;}
+/deep/.flxinput{ display: flex;align-items: center;}
+/deep/.flxinput font{ width: 80px}
+.goods{ display: flex}
+.goods img{width: 70px; margin-right: 15px}
 </style>
