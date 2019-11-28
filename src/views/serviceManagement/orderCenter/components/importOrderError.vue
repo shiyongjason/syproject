@@ -108,6 +108,9 @@ export default {
 <style scoped>
     .error-table {
         padding: 12px 0;
+        max-height: 550px;
+        overflow: hidden;
+        overflow-y: scroll;
     }
     .order-type {
         width: 100px;
