@@ -585,6 +585,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/spumanage/skuset')
+            },
+            {
+                path: 'createEditEvent',
+                name: 'createEditEvent',
+                meta: {
+                    title: '创建/编辑活动',
+                    tagName: '创建/编辑活动',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/createEditEvent')
             }
         ]
     },
