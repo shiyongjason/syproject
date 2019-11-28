@@ -96,7 +96,7 @@ export default {
     },
     computed: {
         title () {
-            return this.isAdd ? '新建标签' : '编辑标签'
+            return this.isAdd ? '新建渠道' : '编辑渠道'
         },
         ...mapState({
             userInfo: state => state.userInfo
