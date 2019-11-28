@@ -1,7 +1,7 @@
 <template>
     <div class="order page-body">
         <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm" :channelType="channelType"/>
-        <order-table :tableData='list' @search-event="onChangeStauts" :channelType="channelType"/>
+        <order-table @search='noParamsSearch' :tableData='list' @search-event="onChangeStauts" :channelType="channelType"/>
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
@@ -41,6 +41,9 @@ export default {
                 this.queryParams.noWorkOrder = false
                 this.queryParams.status = value.status
             }
+            this.getList()
+        },
+        noParamsSearch () {
             this.getList()
         },
         onClear () {
