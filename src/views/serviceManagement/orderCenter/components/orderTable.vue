@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog title="新增工单" :visible.sync="dialog" class="edit-work-order" width="1100px">
+        <el-dialog title="新增工单" :visible.sync="dialog" class="edit-work-order" width="1100px" :close-on-click-modal="false">
             <el-form :inline="true" :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
                 <el-form-item label="渠道名称">
                     <el-select disabled v-model="form.channelType">
@@ -113,7 +113,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="houseKeeperMobile"  label="管家电话">
-                    <el-input type="text" v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11" ></el-input>
+                    <el-input type="text" v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11"></el-input>
                 </el-form-item>
                 <el-form-item prop="customerAddress" label="地址">
                     <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50" ></el-input>
@@ -229,8 +229,13 @@ export default {
     data () {
         const checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
+            console.log(rule)
             if (!value) {
-                callback(new Error('请输入管家电话'))
+                if (rule.field === 'customerMobile') {
+                    callback(new Error('请输入手机号码'))
+                } else {
+                    callback(new Error('请输入管家电话'))
+                }
             } else if (Reg.test(value) === false) {
                 callback(new Error('手机号码格式不正确'))
             } else {
@@ -275,10 +280,10 @@ export default {
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
                 houseKeeperId: [
-                    { required: true, message: '管家不能为空', trigger: 'blur' }
+                    { required: true, message: '管家不能为空', trigger: 'change' }
                 ],
                 houseKeeperMobile: [
-                    { required: true, validator: checkMobile, trigger: 'blur' }
+                    { required: true, validator: checkMobile, trigger: 'change' }
                 ],
                 customerAddress: [
                     { required: true, message: '地址不能为空', trigger: 'blur' }
@@ -351,10 +356,11 @@ export default {
                 customerAddress: row.receiverAddress,
                 status: 2,
                 buyerRemark: row.buyerRemark,
-                sellerRemark: row.buyerRemark,
+                sellerRemark: row.sellerRemark,
                 AloneData: '',
                 AloneDataTimeStart: '',
-                AloneDataTimeEnd: ''
+                AloneDataTimeEnd: '',
+                reserveMode: 2
             }
             this.dialog = true
             this.$nextTick(() => {

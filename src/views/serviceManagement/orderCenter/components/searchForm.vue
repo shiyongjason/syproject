@@ -73,7 +73,7 @@
                 </el-form>
             </div>
         </div>
-        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1300px">
+        <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1320px">
             <importOrderError :errorData="errorData" ref="submitData" @saveBackReportEdit="saveBackReportEdit"></importOrderError>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="onCancel">放弃错误重新导入</el-button>
