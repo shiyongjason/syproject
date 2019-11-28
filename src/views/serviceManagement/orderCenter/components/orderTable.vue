@@ -335,6 +335,7 @@ export default {
                             }
                         })
                         await createWorkOrder(this.form)
+                        this.$emit('search')
                         this.isSaving = false
                         this.dialog = false
                     } catch (e) {

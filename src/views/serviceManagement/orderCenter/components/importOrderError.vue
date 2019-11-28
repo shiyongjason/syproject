@@ -8,7 +8,7 @@
                 <th rowspan="2" class="phone-type">客户电话 <span class="red">*</span></th>
                 <th rowspan="2" class="address-type">地址 <span class="red">*</span></th>
                 <th rowspan="2" class="money-type">订单商品金额 <span class="red">*</span></th>
-                <th rowspan="2" class="address-type">订单日期金额 <span class="red">*</span></th>
+                <th rowspan="2" class="address-type">订单日期 <span class="red">*</span></th>
                 <th rowspan="2" class="remark-type">备注(买家)</th>
                 <th rowspan="2" class="remark-type">备注(卖家)</th>
                 <th colspan="4" class="product-type">订单商品信息</th>
