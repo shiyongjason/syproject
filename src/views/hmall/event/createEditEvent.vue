@@ -57,7 +57,7 @@
             </div>
             <div class="page-table">
                 <!-- table -->
-                <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" :row-class-name="tableRowClassName">
+                <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" >
                     <template slot="name" slot-scope="scope">
                         <div class="goods">
                             <img src="@/assets/images/img_herolist.png">
@@ -81,12 +81,13 @@
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
-
+import Sortable from 'sortablejs'
 export default {
     name: 'createEditEvent',
     components: { hosJoyTable },
     data () {
         return {
+            sortable: null,
             form: {
                 name: '',
                 startDate: '',
@@ -139,6 +140,7 @@ export default {
                             this.form.radio === '2'
                                 ? <span>
                                     直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }} onBlur={() => { this.onBlur(scope) }}></el-input>元
+                                    {scope.row._error ? <div class='errormsg'>优惠最高金额不可超过销售价格</div> : ''}
                                 </span>
                                 : <span>
                                     <el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>折
@@ -208,11 +210,21 @@ export default {
                         message: '优惠最高金额不可超过销售价格',
                         type: 'error'
                     })
-                    // this.tableRowClassName(scope, scope.$index)
-                    console.log(this.$refs['hosjoyTable'].$refs['hosjoyTable'].rowClassName(scope, scope.$index))
+                    scope.row._error = true
+                } else {
+                    scope.row._error = false
                 }
             } else {
                 scope.row[scope.column.property] = isNum(val, 1)
+                if (scope.row.discount < 1) {
+                    this.$message({
+                        message: '优惠最高折扣不可低于1折',
+                        type: 'error'
+                    })
+                    scope.row._error = true
+                } else {
+                    scope.row._error = false
+                }
             }
         },
         onBlur (scope) {
@@ -227,23 +239,39 @@ export default {
         onOrder (val) {
             //
         },
-        tableRowClassName (scope, index) {
-            console.log(scope)
-            if (scope == index) {
-                return 'warning-row'
-            }
-            return ''
+        setSort () {
+            const el = this.$refs.hosjoyTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+            this.sortable = Sortable.create(el, {
+                ghostClass: 'movedom',
+                setData: dataTransfer => {
+                    dataTransfer.setData('Text', '')
+                },
+                onEnd: evt => {
+                    let targetRow = this.tableData[evt.oldIndex]
+                    this.tableData.splice(evt.oldIndex, 1)
+                    // this.tableData.push(targetRow)
+                    this.tableData.splice(evt.newIndex, 0, targetRow)
+                    console.log(this.tableData)
+                    this.tableData.map((item, index) => {
+                        this.$set(item, 'sort', 1)
+                    })
+                }
+            })
         }
+
     },
     mounted () {
         this.tableData = [
-            { name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, discount: 7.5, sellingPrice: 10000.23 },
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, discount: 7.5, sellingPrice: 10000.23 },
             {
-                name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, discount: 2, sellingPrice: 20000, order: 2
+                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, discount: 2, sellingPrice: 20000, order: 2
             },
-            { name: '测试商品名称2', suggestedRetailPrice: 0, limitNum: 1, discount: 3, sellingPrice: 30000 },
-            { name: '测试商品名称2', suggestedRetailPrice: null, limitNum: 2, discount: 4, sellingPrice: 40000 }
+            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 0, limitNum: 1, discount: 3, sellingPrice: 30000 },
+            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, discount: 4, sellingPrice: 40000 }
         ]
+        this.$nextTick(() => {
+            this.setSort()
+        })
     }
 }
 </script>
@@ -258,4 +286,6 @@ export default {
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
+/deep/.errormsg{color:#f56c6c;font-size: 12px}
+/deep/.movedom{opacity: .8;color: #fff!important;background: #42b983!important;}
 </style>
