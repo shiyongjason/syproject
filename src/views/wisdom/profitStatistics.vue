@@ -42,7 +42,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="getList">
+                    <el-button type="primary" class="ml20" @click="getList(1)">
                         查询
                     </el-button>
                     <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="primary" class="ml20" @click="onExport(queryParams)">
@@ -398,9 +398,15 @@ export default {
             const totalData = await total(query)
             this.total = totalData.data.data
         },
-        async getList () {
+        async getList (val) {
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
+
+
+            if (val == 1) {
+                this.queryParams.pageNumber = 1
+            }
             let query = { ...this.queryParams }
+            console.log(val, query)
             let { pageNumber, pageSize, ...rest } = query
             await Promise.all([this.onGetList(query), this.onGetTotal(rest)])
             // 合计
