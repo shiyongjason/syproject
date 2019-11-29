@@ -74,9 +74,9 @@
             </div>
         </div>
         <el-dialog title="导入错误订单列表" :visible.sync="dialog" :close-on-click-modal="false" :show-close="false" width="1320px">
-            <importOrderError :errorData="errorData" ref="submitData" @saveBackReportEdit="saveBackReportEdit"></importOrderError>
+            <importOrderError :errorData="errorData" ref="submitData" @saveBackReportEdit="saveBackReportEdit" @search="onSearch"></importOrderError>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="onCancel">放弃错误重新导入</el-button>
+                <el-button @click="onCancel">取消</el-button>
                 <el-button type="primary" @click="onSave">重新导入</el-button>
             </div>
         </el-dialog>

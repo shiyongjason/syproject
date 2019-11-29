@@ -56,7 +56,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog class="house-keeper-edit" title="新增管家信息" :visible.sync="dialog" :close-on-click-modal="false">
+        <el-dialog class="house-keeper-edit" title="新增管家信息" :visible.sync="dialog" :close-on-click-modal="false" width="800px">
             <el-form :model="houseKeeperForm" class="houseKeeperForm" :rules="rules" ref="houseKeeperForm" label-width="100px">
                 <el-row>
                     <el-col :span="12">

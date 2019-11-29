@@ -24,7 +24,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="title" :visible.sync="dialog" :close-on-click-modal="false">
+        <el-dialog :title="title" :visible.sync="dialog" :close-on-click-modal="false" width="500px">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="name" label="渠道名称">
                     <el-input v-model="form.name" maxlength="20" style="width: 300px"></el-input>
