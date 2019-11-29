@@ -185,3 +185,7 @@ export const getProfitList = (params) => {
 export const statisticsExport = (params) => {
     return axios.get(interfaceUrl + 'rms/platform/profit-statistics/export', { params })
 }
+// 平台利润统计合计
+export const total = (params) => {
+    return axios.get(interfaceUrl + 'rms/platform/profit-statistics/total', { params })
+}
