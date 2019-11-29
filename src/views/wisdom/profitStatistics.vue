@@ -400,13 +400,10 @@ export default {
         },
         async getList (val) {
             this.$set(this.queryParams, 'onLineStatus', this.onLineStatusTemp.join(','))
-
-
             if (val == 1) {
                 this.queryParams.pageNumber = 1
             }
             let query = { ...this.queryParams }
-            console.log(val, query)
             let { pageNumber, pageSize, ...rest } = query
             await Promise.all([this.onGetList(query), this.onGetTotal(rest)])
             // 合计
