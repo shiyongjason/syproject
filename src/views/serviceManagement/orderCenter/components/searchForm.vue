@@ -165,7 +165,6 @@ export default {
             }
         },
         isError (e) {
-            console.log(e)
             this.$message({
                 type: 'error',
                 message: '订单导入模板错误，请先下载模板'
@@ -176,6 +175,33 @@ export default {
             this.errorData = []
         },
         onSave () {
+            const tempArr = this.errorData
+            for (let i = 0; i < tempArr.length; i++) {
+                for (let key in tempArr[i]) {
+                    if (key !== 'buyerRemark' && key !== 'sellerRemark' && key !== 'orderId') {
+                        if (!tempArr[i][key]) {
+                            this.$message({
+                                type: 'error',
+                                message: '第' + (i + 1) + '行有必填项未填写！'
+                            })
+                            return
+                        }
+                        for (let j = 0; j < tempArr[i].orderGoodsList.length; j++) {
+                            for (let subKey in tempArr[i].orderGoodsList[j]) {
+                                if (subKey !== 'orderGoodsId') {
+                                    if (!tempArr[i].orderGoodsList[j]) {
+                                        this.$message({
+                                            type: 'error',
+                                            message: '第' + (i + 1) + '行有必填项未填写！'
+                                        })
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             this.$refs.submitData.createChannelOrderList()
             this.dialog = false
             this.errorData = []

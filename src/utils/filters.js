@@ -26,6 +26,9 @@ const money = function (val, int) {
         const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         return res
     }
+    if (val == 0) {
+        return 0
+    }
     return '-'
 }
 const formatDateDuration = function (time) {
