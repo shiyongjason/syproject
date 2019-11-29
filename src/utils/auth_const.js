@@ -124,5 +124,9 @@ export const AUTH_MANAGE_OVERVIEW_MARKET = 10540
 export const AUTH_MANAGE_OVERVIEW_ONLINE = 10550
 // 好智慧-预实管理 经营概览 利润
 export const AUTH_MANAGE_OVERVIEW_PROFIT = 10560
+// 金云系统-额度导入-导入
+export const JINYUN_AMOUNT_IMPORT_IMPORT = 10561
+// 金云系统-额度导入-复核
+export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
 // 好智慧-利润统计 导出
 export const AUTH_PROFIT_STATISTICS_EXPORT = 10580
