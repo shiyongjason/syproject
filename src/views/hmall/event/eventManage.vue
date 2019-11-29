@@ -75,7 +75,7 @@
     </div>
 </template>
 <script>
-import { EVENT_LIST } from './const'
+import { EVENT_LIST } from '../store/const'
 export default {
     name: 'eventmanage',
     data () {

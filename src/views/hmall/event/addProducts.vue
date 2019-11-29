@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                     <div class="query-col-input">
+                    <div class="query-col-input">
                         <el-input v-model="queryParams" placeholder="输入对应的商品编号" maxlength="50"></el-input>
                     </div>
                 </div>
@@ -28,10 +28,16 @@
                     </div>
                 </div>
             </div>
+              <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="onAddevent">
+                        添加(20个)
+                    </el-button>
+                </div>
+            </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange"
-            :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250  :isShowIndex='false'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250 :isShowIndex='false'>
                 <template slot="product" slot-scope="scope">
                     <div class="proImg">
                         <img src="../../../assets/images/img_1.png" alt="">
@@ -40,11 +46,9 @@
                 </template>
             </basicTable>
         </div>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
 <script>
-import { EVENT_LIST } from './const'
 export default {
     name: 'eventmanage',
     data () {
@@ -61,8 +65,7 @@ export default {
                 { label: '销售价', prop: 'price' },
                 { label: '库存', prop: 'price' }
             ],
-            paginationInfo: {},
-            eventsState: EVENT_LIST
+            paginationInfo: {}
         }
     },
     computed: {
@@ -110,7 +113,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.proImg{
+.proImg {
     display: flex;
     justify-content: flex-start;
     align-items: center;
