@@ -32,11 +32,35 @@ const routerMapping = [
         ]
     },
     {
+        path: '/sysAdmin',
+        meta: {
+            title: '系統管理',
+            isMenu: true,
+            icon: 'hosjoy_set',
+            redirect: 'noredirect'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'routerConfig',
+                name: 'routerConfig',
+                meta: {
+                    title: '路由配置',
+                    tagName: '路由配置',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/routerConfig'
+                },
+                component: () => import('./views/routerConfig')
+            }
+        ]
+    },
+    {
         path: '/jinyunPlatform',
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [
@@ -756,6 +780,50 @@ const routerMapping = [
         ]
     },
     {
+        path: '/jinyun',
+        meta: {
+            title: '金云系统',
+            isMenu: true,
+            icon: 'hosjoy_stay_online'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
+                path: 'enterpriseCA',
+                name: 'enterpriseCA',
+                meta: {
+                    title: '企业CA',
+                    tagName: '企业CA',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/enterpriseCA')
+            },
+            {
+                path: 'amountImport',
+                name: 'amountImport',
+                meta: {
+                    title: '额度导入',
+                    tagName: '额度导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/amountImport')
+            }
+        ]
+    },
+    {
         path: '/appUpdate',
         meta: {
             title: 'App管理',
@@ -778,6 +846,7 @@ const routerMapping = [
             }
         ]
     }
+
 ]
 
 const router = new Router({
@@ -828,8 +897,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    // const menu = makeMenus(routerMapping, resourceList)
-    const menu = routerMapping
+    const menu = makeMenus(routerMapping, resourceList)
+    // const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
