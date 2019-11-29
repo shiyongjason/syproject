@@ -608,6 +608,16 @@ const routerMapping = [
                 component: () => import('@/views/hmall/event/eventStatistics')
             },
             {
+                path: 'addProducts',
+                name: 'addProducts',
+                meta: {
+                    title: '添加商品',
+                    tagName: '添加商品',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/addProducts')
+            },
+            {
                 path: 'createEditEvent',
                 name: 'createEditEvent',
                 meta: {

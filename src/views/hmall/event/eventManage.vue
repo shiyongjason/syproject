@@ -19,7 +19,6 @@
                             </el-option>
                         </el-select>
                     </div>
-
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
@@ -34,11 +33,7 @@
                     <div class="query-col-title">活动状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.status">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="禁用" value="2">
-                            </el-option>
-                            <el-option label="启用" value="1">
+                            <el-option v-for="item in eventsState" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -56,7 +51,7 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20">
+                    <el-button type="primary" class="ml20" @click="onAddevent">
                         新建活动
                     </el-button>
                 </div>
@@ -65,7 +60,7 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain>编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEdit()">编辑</el-button>
                     <el-button type="primary" size="mini" plain>复制</el-button>
                     <el-button type="warning" size="mini" plain>发布</el-button>
                     <el-button type="danger" size="mini" plain>终止</el-button>
@@ -80,6 +75,7 @@
     </div>
 </template>
 <script>
+import { EVENT_LIST } from './const'
 export default {
     name: 'eventmanage',
     data () {
@@ -92,7 +88,8 @@ export default {
                 { label: '活动时间', prop: 'spuCode' },
                 { label: '活动状态', prop: 'spuCode' }
             ],
-            paginationInfo: {}
+            paginationInfo: {},
+            eventsState: EVENT_LIST
         }
     },
     computed: {
@@ -118,6 +115,7 @@ export default {
         }
     },
     mounted () {
+        console.log(EVENT_LIST)
         this.tableData = [{ spuCode: '23' }]
     },
     methods: {
@@ -131,6 +129,9 @@ export default {
         },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })
+        },
+        onAddevent () {
+            this.$router.push({ path: '/hmall/addProducts', query: {} })
         }
     }
 }
