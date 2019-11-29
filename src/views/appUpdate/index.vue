@@ -108,11 +108,11 @@
 </template>
 
 <script>
-const AppInfoParser = require('app-info-parser')
 import QRCode from 'qrcode'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { getAppVersionList, addAppVersion, updateAppVersionState, getAppVersionDetail, editAppVersionDetail, deleteAppVersion } from './api/index'
+const AppInfoParser = require('app-info-parser')
 export default {
     name: 'enterpriseCA',
     computed: {
