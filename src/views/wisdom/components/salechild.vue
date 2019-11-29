@@ -411,7 +411,7 @@ export default {
     .tooltip {
         top: 10px;
         right: 10px;
-        font-size: 30px;
+        font-size: 23px;
         color: #b6b7bb;
         position: absolute;
     }
