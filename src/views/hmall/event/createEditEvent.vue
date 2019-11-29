@@ -322,13 +322,13 @@ export default {
     },
     mounted () {
         this.tableData = [
-            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, sellingPrice: 12000, salePrice: 9000 },
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, sellingPrice: 12000, salePrice: 9000, discount: '' },
             {
-                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, sellingPrice: 20000, order: 2
+                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, sellingPrice: 20000, order: 2, discount: ''
             },
-            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, inStock: 30, sellingPrice: 10000, salePrice: 9000 },
-            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000 },
-            { id: 5, name: '测试商品名称5', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000 }
+            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, inStock: 30, sellingPrice: 10000, salePrice: 9000, discount: '' },
+            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' },
+            { id: 5, name: '测试商品名称5', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' }
         ]
         this.onInitDiscount()
         this.$nextTick(() => {
