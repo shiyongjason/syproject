@@ -8,16 +8,16 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
+            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth">
+                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth" :class-name="item.className">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column v-if="!item.slot" v-bind="$attrs" :column="item" :key='index'></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item" :key='index'></hosjoy-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center">
+            <el-table-column label="操作" v-if="isAction" align="center" :width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
@@ -51,7 +51,8 @@ export default {
         /** 每页数量 */
         pageSize: { type: Number, default: 10 },
         pageSizes: { type: Array, default () { return [10, 20, 50, 100] } },
-        layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' }
+        layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
+        actionWidth: { type: String, default: '' }
     },
     components: {
         hosjoyColumn

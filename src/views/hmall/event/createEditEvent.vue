@@ -28,8 +28,8 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">优惠方式：</div>
                         <div class="query-col-input">
-                            <el-radio v-model="form.radio" label="1">折扣</el-radio>
-                            <el-radio v-model="form.radio" label="2">直降（平台补贴）</el-radio>
+                            <el-radio v-model="form.radio" label="1" @change='radioChange'>折扣</el-radio>
+                            <el-radio v-model="form.radio" label="2" @change='radioChange'>直降（平台补贴）</el-radio>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
             </div>
             <div class="page-table">
                 <!-- table -->
-                <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" >
+                <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" actionWidth='180px' >
                     <template slot="name" slot-scope="scope">
                         <div class="goods">
                             <img src="@/assets/images/img_herolist.png">
@@ -72,7 +72,7 @@
             </div>
         </div>
         <div class="subfixed">
-            <el-button type="primary">保存</el-button>
+            <el-button type="primary" @click='onSave'>保存</el-button>
             <el-button type="primary">活动发布</el-button>
         </div>
     </div>
@@ -88,21 +88,22 @@ export default {
     data () {
         return {
             sortable: null,
+            errorMsg: '',
             form: {
                 name: '',
                 startDate: '',
                 endDate: '',
-                radio: '2',
+                radio: '1',
                 radio2: '1'
             },
             limitNum: '',
             discount: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'name', slot: 'name', minWidth: '160' },
-                { label: '商建议零售价', prop: 'suggestedRetailPrice', formatter: this.formatterMoney },
-                { label: '销售价格', prop: 'sellingPrice', displayAs: 'money' },
-                { label: '库存', prop: 'inStock' },
+                { label: '商品', prop: 'name', slot: 'name', minWidth: '160', className: 'allowDrag' },
+                { label: '商建议零售价', prop: 'suggestedRetailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
+                { label: '销售价格', prop: 'sellingPrice', displayAs: 'money', className: 'allowDrag' },
+                { label: '库存', prop: 'inStock', className: 'allowDrag' },
                 {
                     label: '限购数量',
                     prop: 'limitNum',
@@ -112,7 +113,6 @@ export default {
                             <span class='flxinput'>
                                 <font>{scope.column.label}</font>
                                 <el-input size='mini' value={this.limitNum} onInput={(val) => { this.setAllCol('limitNum', val) }} ></el-input>
-                                <i class='el-icon-caret-bottom'></i>
                             </span>
                         )
                     },
@@ -130,8 +130,7 @@ export default {
                         return (
                             <span class='flxinput'>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discount} onInput={(val) => { this.setAllCol('discount', val) }} maxLength = {this.form.radio === '1' ? '2' : ''}></el-input>
-                                <i class='el-icon-caret-bottom'></i>
+                                <el-input size='mini' value={this.discount} onInput={(val) => { this.setAllCol('discount', val) }}></el-input>
                             </span>
                         )
                     },
@@ -139,25 +138,36 @@ export default {
                         return (
                             this.form.radio === '2'
                                 ? <span>
-                                    直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }} onBlur={() => { this.onBlur(scope) }}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>优惠最高金额不可超过销售价格</div> : ''}
+                                    直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>元
+                                    {scope.row._error ? <div class='errormsg'>{this.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
                                     <el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>折
+                                    {scope.row._error ? <div class='errormsg'>{this.errorMsg}</div> : ''}
+
                                 </span>
                         )
                     }
                 },
                 {
                     label: '促销价',
+                    className: 'allowDrag',
+                    prop: 'salePrice',
+                    formatter: this.formatterMoney
+                }
+                /* {
+                    label: '促销价',
+                    className: 'allowDrag',
                     render: (h, scope) => {
                         return (
-                            this.form.radio === '1'
-                                ? <span>¥{(scope.row.sellingPrice * (scope.row.discount / 10)).toFixed(2)}</span>
-                                : <span>¥{(scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)}</span>
+                            <span>{scope.row.salePrice}</span>
+                            // this.form.radio === '1'
+                            //     ? <span>¥{(scope.row.sellingPrice * ((scope.row.discount ? scope.row.discount : 0) / 10)).toFixed(2)}</span>
+                            //     : <span>¥{(scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)}</span>
                         )
                     }
-                }
+                } */
+
             ]
         }
     },
@@ -184,77 +194,113 @@ export default {
         }
     },
     methods: {
-        getList () {
-            //
+        radioChange (val) {
+            this.tableData.map((item) => {
+                item._error = false
+                item.discount = ''
+            })
+            this.onInitDiscount()
         },
         formatterMoney (row, column) {
             if (row[column.property] == null) return '-'
             let res = row[column.property].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             return res == 0 ? 0 : `¥${res}`
         },
+        /** 设置某行优惠 */
+        setOneCol (val, scope) {
+            scope.row[scope.column.property] = isNum(val, this.form.radio === '1' ? 1 : 2)
+            this.validate(scope.row)
+            if (!scope.row._error && val) {
+                this.form.radio === '1'
+                    ? scope.row.salePrice = (scope.row.sellingPrice * (scope.row.discount / 10)).toFixed(2)
+                    : scope.row.salePrice = (scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
+            }
+        },
+        /** 设置所有优惠 */
         setAllCol (key, val) {
             if (this.form.radio === '2') {
                 this[key] = isNum(val, 2)
-            } else {
+            }
+            if (this.form.radio === '1') {
+                this[key] = isNum(val, 1)
+            }
+            if (key === 'limitNum') {
                 this[key] = val.replace(/[^\d]/g, '')
             }
             this.tableData.map((item) => {
                 item[key] = this[key]
+                this.validate(item)
+                if (!item._error && val) {
+                    this.form.radio === '1'
+                        ? item.salePrice = (item.sellingPrice * (item.discount / 10)).toFixed(2)
+                        : item.salePrice = (item.sellingPrice - (item.discount ? item.discount : 0)).toFixed(2)
+                }
             })
         },
-        setOneCol (val, scope) {
+        /** 校验 */
+        validate (item) {
             if (this.form.radio === '2') {
-                scope.row[scope.column.property] = isNum(val, 2)
-                if (scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0) <= 0) {
-                    this.$message({
-                        message: '优惠最高金额不可超过销售价格',
-                        type: 'error'
-                    })
-                    scope.row._error = true
+                if (item.sellingPrice - (item.discount ? item.discount : 0) <= 0) {
+                    this.errorMsg = '优惠最高金额不可超过销售价格'
+                    item._error = true
                 } else {
-                    scope.row._error = false
+                    item._error = false
                 }
             } else {
-                scope.row[scope.column.property] = isNum(val, 1)
-                if (scope.row.discount < 1) {
-                    this.$message({
-                        message: '优惠最高折扣不可低于1折',
-                        type: 'error'
-                    })
-                    scope.row._error = true
-                } else {
-                    scope.row._error = false
+                if (item.discount && Number(item.discount) > 10) {
+                    this.errorMsg = '最大折扣不能大于10'
+                    this.$set(item, '_error', true)
+                    return
                 }
+                if (item.discount && Number(item.discount) < 1) {
+                    this.errorMsg = '优惠最高折扣不可低于1折'
+                    item._error = true
+                    return
+                }
+                item._error = false
             }
-        },
-        onBlur (scope) {
-
         },
         log () {
             console.log(this.tableData)
         },
+        /** 移除 */
         onRemove (val) {
             //
         },
+        /** 刷单 */
         onOrder (val) {
             //
         },
+        /** 初始化拖拽 */
         setSort () {
             const el = this.$refs.hosjoyTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
             this.sortable = Sortable.create(el, {
                 ghostClass: 'movedom',
+                handle: '.allowDrag',
                 setData: dataTransfer => {
                     dataTransfer.setData('Text', '')
                 },
                 onEnd: evt => {
-                    let targetRow = this.tableData[evt.oldIndex]
-                    this.tableData.splice(evt.oldIndex, 1)
-                    // this.tableData.push(targetRow)
-                    this.tableData.splice(evt.newIndex, 0, targetRow)
-                    console.log(this.tableData)
-                    this.tableData.map((item, index) => {
-                        this.$set(item, 'sort', 1)
+                    this.tableData.splice(evt.newIndex, 0, this.tableData.splice(evt.oldIndex, 1)[0])
+                    var newArray = this.tableData.slice()
+                    this.tableData = []
+                    this.$nextTick(function () {
+                        this.tableData = newArray
                     })
+                }
+            })
+        },
+        /** 保存 */
+        onSave () {
+            console.log(this.tableData)
+        },
+        /** 初始化优惠设置 */
+        onInitDiscount () {
+            this.tableData.map((item) => {
+                if (item.salePrice) {
+                    this.form.radio === '1'
+                        ? item.discount = (item.salePrice / item.sellingPrice) * 10
+                        : item.discount = item.sellingPrice - item.salePrice
                 }
             })
         }
@@ -262,13 +308,14 @@ export default {
     },
     mounted () {
         this.tableData = [
-            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, discount: 7.5, sellingPrice: 10000.23 },
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, discount: 7.5, sellingPrice: 10000, salePrice: 9000 },
             {
                 id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, discount: 2, sellingPrice: 20000, order: 2
             },
-            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 0, limitNum: 1, discount: 3, sellingPrice: 30000 },
+            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, discount: 3, sellingPrice: 10000, salePrice: 9000 },
             { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, discount: 4, sellingPrice: 40000 }
         ]
+        this.onInitDiscount()
         this.$nextTick(() => {
             this.setSort()
         })
