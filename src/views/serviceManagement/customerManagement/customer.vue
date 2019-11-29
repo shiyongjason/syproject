@@ -1,11 +1,11 @@
 <template>
     <div class="customerManagement page-body">
-        <search-form @search='onSearch' @add="onAddCustomer" v-model="searchForm" :role='role' :channelType='channelType' />
-        <customer-table :tableData='list' @edit="onEdit" :pageSize='queryParams.pageSize' :pageNumber='queryParams.pageNumber' :role='role' :channelType='channelType' />
+        <search-form @search='onSearch' @add="onAddCustomer" v-model="searchForm" :channelType='channelType' />
+        <customer-table :tableData='list' @edit="onEdit" :pageSize='queryParams.pageSize' :pageNumber='queryParams.pageNumber'  :channelType='channelType' />
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
         </div>
-        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getList' :role='role' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
+        <add-or-updata ref="addOrUpdate" :visible.sync="dialogCustomerEdit" :isShowDetail='showDetail' v-model="editInfo" @getList='getList' :channelType='channelType' @resetRow="resetRow" @findDetails="findDetails"/>
     </div>
 </template>
 
@@ -15,6 +15,7 @@ import customerTable from './components/customerTable'
 import addOrUpdata from './components/addOrUpdata'
 import { findCustomerList, findUserDetailsTagList } from './api/index'
 import { pagination } from '@/utils/mixins.js'
+import { findChannelDict } from '../common/dictApi'
 
 export default {
     name: 'customer',
@@ -27,20 +28,24 @@ export default {
             dialogCustomerEdit: false,
             list: [],
             searchForm: {
-                role: '',
                 channelType: '',
                 mobile: ''
             },
             editInfo: {},
-            channelType: [
-                { value: '', label: '全部' }, { value: 0, label: '总部' }, { value: 1, label: '有赞商城' }, { value: 2, label: '孩子王' }, { value: 3, label: '考拉买菜' },
-                { value: 4, label: '大众点评' }
-            ],
-            role: [
-                { value: '', label: '全部' }, { value: 0, label: '客户' }, { value: 1, label: '线下管家' }, { value: 2, label: '线上管家' }
-            ],
             showDetail: false,
-            tempEditRow: {}
+            tempEditRow: {},
+            channelData: []
+        }
+    },
+    computed: {
+        channelType () {
+            const arr = this.channelData.map(value => {
+                value.value = value.code
+                value.label = value.name
+                return value
+            })
+            arr.unshift({ value: '', label: '全部' })
+            return arr
         }
     },
     provide () {
@@ -50,6 +55,10 @@ export default {
         }
     },
     methods: {
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelData = data
+        },
         async findUserDetailsTagList (row) {
             const { data } = await findUserDetailsTagList({ channelUserId: row.id })
             if (data.length > 0) {
@@ -105,6 +114,7 @@ export default {
         if (defaultMobile) {
             this.searchForm.mobile = defaultMobile
         }
+        this.findChannelDict()
         this.getList()
     }
 }
