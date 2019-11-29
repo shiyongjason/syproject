@@ -7,17 +7,17 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">活动名称：</div>
                         <div class="query-col-input">
-                            <el-input v-model="form.name" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
+                            <el-input style="width:458px" v-model="form.name" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
                         </div>
                     </div>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <div class="query-col-title">活动时间：</div>
-                        <el-date-picker v-model="form.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="开始时间">
+                        <el-date-picker v-model="form.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="开始时间">
                         </el-date-picker>
                         <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="form.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="month" format="yyyy-MM" value-format="yyyy-MM-dd" placeholder="结束时间">
+                        <el-date-picker v-model="form.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="结束时间">
                         </el-date-picker>
                     </div>
                 </div>
@@ -88,7 +88,6 @@ export default {
     data () {
         return {
             sortable: null,
-            errorMsg: '',
             form: {
                 name: '',
                 startDate: '',
@@ -118,7 +117,10 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-input style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { scope.row[scope.column.property] = val.replace(/[^\d]/g, '') }}></el-input>
+                            <span>
+                                <el-input style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>
+                                {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
+                            </span>
                         )
                     }
                 },
@@ -136,15 +138,14 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            this.form.radio === '2'
+                            this.form.radio === '1'
                                 ? <span>
-                                    直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{this.errorMsg}</div> : ''}
+                                    <el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>折
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    <el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>折
-                                    {scope.row._error ? <div class='errormsg'>{this.errorMsg}</div> : ''}
-
+                                    直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>元
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -155,19 +156,6 @@ export default {
                     prop: 'salePrice',
                     formatter: this.formatterMoney
                 }
-                /* {
-                    label: '促销价',
-                    className: 'allowDrag',
-                    render: (h, scope) => {
-                        return (
-                            <span>{scope.row.salePrice}</span>
-                            // this.form.radio === '1'
-                            //     ? <span>¥{(scope.row.sellingPrice * ((scope.row.discount ? scope.row.discount : 0) / 10)).toFixed(2)}</span>
-                            //     : <span>¥{(scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)}</span>
-                        )
-                    }
-                } */
-
             ]
         }
     },
@@ -196,8 +184,12 @@ export default {
     methods: {
         radioChange (val) {
             this.tableData.map((item) => {
-                item._error = false
                 item.discount = ''
+                item._error = false
+                item._numError = false
+                item.numErrorMsg = ''
+                item.errorMsg = ''
+                this.validate(item)
             })
             this.onInitDiscount()
         },
@@ -206,7 +198,7 @@ export default {
             let res = row[column.property].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
             return res == 0 ? 0 : `¥${res}`
         },
-        /** 设置某行优惠 */
+        /** 设置某行 */
         setOneCol (val, scope) {
             scope.row[scope.column.property] = isNum(val, this.form.radio === '1' ? 1 : 2)
             this.validate(scope.row)
@@ -216,7 +208,7 @@ export default {
                     : scope.row.salePrice = (scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
             }
         },
-        /** 设置所有优惠 */
+        /** 设置所有 */
         setAllCol (key, val) {
             if (this.form.radio === '2') {
                 this[key] = isNum(val, 2)
@@ -224,6 +216,7 @@ export default {
             if (this.form.radio === '1') {
                 this[key] = isNum(val, 1)
             }
+            // 限购数量
             if (key === 'limitNum') {
                 this[key] = val.replace(/[^\d]/g, '')
             }
@@ -239,25 +232,34 @@ export default {
         },
         /** 校验 */
         validate (item) {
+            if (item.limitNum > item.inStock) {
+                item.numErrorMsg = '限购数量不可超过库存数量'
+                item._numError = true
+            } else {
+                item._numError = false
+                item.numErrorMsg = ''
+            }
             if (this.form.radio === '2') {
                 if (item.sellingPrice - (item.discount ? item.discount : 0) <= 0) {
-                    this.errorMsg = '优惠最高金额不可超过销售价格'
+                    item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
                 } else {
                     item._error = false
+                    item.errorMsg = ''
                 }
             } else {
                 if (item.discount && Number(item.discount) > 10) {
-                    this.errorMsg = '最大折扣不能大于10'
+                    item.errorMsg = '最大折扣不能大于10'
                     this.$set(item, '_error', true)
                     return
                 }
                 if (item.discount && Number(item.discount) < 1) {
-                    this.errorMsg = '优惠最高折扣不可低于1折'
+                    item.errorMsg = '优惠最高折扣不可低于1折'
                     item._error = true
                     return
                 }
                 item._error = false
+                item.errorMsg = ''
             }
         },
         log () {
@@ -293,27 +295,40 @@ export default {
         /** 保存 */
         onSave () {
             console.log(this.tableData)
+            this.tableData.some((item) => {
+                this.validate(item)
+                if (item._error || item._numError) {
+                    let msg = item.numErrorMsg ? `${item.name}，${item.numErrorMsg}` : `${item.name}，${item.errorMsg}`
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
+                    return true// 当内部return true时跳出整个循环
+                }
+            })
         },
         /** 初始化优惠设置 */
         onInitDiscount () {
             this.tableData.map((item) => {
                 if (item.salePrice) {
                     this.form.radio === '1'
-                        ? item.discount = (item.salePrice / item.sellingPrice) * 10
-                        : item.discount = item.sellingPrice - item.salePrice
+                        ? this.$set(item, 'discount', (item.salePrice / item.sellingPrice) * 10)
+                        : this.$set(item, 'discount', item.sellingPrice - item.salePrice)
                 }
             })
+            console.log(this.tableData)
         }
 
     },
     mounted () {
         this.tableData = [
-            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, discount: 7.5, sellingPrice: 10000, salePrice: 9000 },
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, sellingPrice: 12000, salePrice: 9000, discount: '' },
             {
-                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, discount: 2, sellingPrice: 20000, order: 2
+                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, sellingPrice: 20000, order: 2, discount: ''
             },
-            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, discount: 3, sellingPrice: 10000, salePrice: 9000 },
-            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, discount: 4, sellingPrice: 40000 }
+            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, inStock: 30, sellingPrice: 10000, salePrice: 9000, discount: '' },
+            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' },
+            { id: 5, name: '测试商品名称5', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' }
         ]
         this.onInitDiscount()
         this.$nextTick(() => {
@@ -321,6 +336,7 @@ export default {
         })
     }
 }
+
 </script>
 
 <style scoped lang="scss">
@@ -333,6 +349,6 @@ export default {
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
-/deep/.errormsg{color:#f56c6c;font-size: 12px}
+/deep/.errormsg{color:#f56c6c;font-size: 12px;margin-top: 2px}
 /deep/.movedom{opacity: .8;color: #fff!important;background: #42b983!important;}
 </style>
