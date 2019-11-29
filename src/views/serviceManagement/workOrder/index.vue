@@ -77,11 +77,11 @@
                             @onSizeChange="onSizeChange"
                             @onCurrentChange="onCurrentChange">
                     <template slot="houseKeeper" slot-scope="scope">
-                        <span>{{scope.data.row.houseKeeper}}</span>
+                        <span>{{scope.data.row.houseKeeper}}</span><br/>
                         <span>{{scope.data.row.houseKeeperMobile}}</span>
                     </template>
                     <template slot="engineer" slot-scope="scope">
-                        <span>{{scope.data.row.engineer}}</span>
+                        <span>{{scope.data.row.engineer}}</span><br/>
                         <span>{{scope.data.row.engineerMobile}}</span>
                     </template>
                     <template slot="reserveMode" slot-scope="scope">
