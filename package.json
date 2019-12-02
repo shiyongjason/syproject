@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "echarts": "^4.2.1",
-    "highcharts": "^7.2.0",
+    "highcharts": "^7.2.1",
     "hosjoy-ui": "^1.1.2",
     "jwt-decode": "^2.2.0",
     "moment": "^2.24.0",
