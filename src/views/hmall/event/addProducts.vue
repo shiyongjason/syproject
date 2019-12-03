@@ -14,7 +14,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-input v-model="queryParams" placeholder="输入对应的商品编号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.skuCode" placeholder="输入对应的商品编号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -25,23 +25,27 @@
                         <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onBack">
+                            返回
+                        </el-button>
                     </div>
                 </div>
             </div>
-              <div class="query-cont-row">
+            <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onAddevent">
-                        添加(20个)
+                    <el-button type="primary" class="ml20" @click="onAddproduct">
+                        添加({{multiSelection.length}}个)
                     </el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250 :isShowIndex='false'>
-                <template slot="product" slot-scope="scope">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :selectable="selectable" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250
+              :row-class-name="tableRowClassName"  :isShowIndex='false'>
+                <template slot="skuName" slot-scope="scope">
                     <div class="proImg">
-                        <img src="../../../assets/images/img_1.png" alt="">
-                        {{scope.data.row.product}}
+                        <img :src="scope.data.row.pictureUrl" alt="">
+                        {{scope.data.row.skuName}}
                     </div>
                 </template>
             </basicTable>
@@ -49,26 +53,36 @@
     </div>
 </template>
 <script>
+import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
     name: 'eventmanage',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                skuCode: '',
+                pageSize: 10,
+                pageNumber: 1
+            },
             tableData: [],
             tableLabel: [
-                { label: '商品', prop: 'product', width: '250' },
+                { label: '商品', prop: 'skuName', width: '250' },
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
-                { label: '品牌', prop: 'brand' },
-                { label: '所属商家', prop: 'member' },
-                { label: '建议零售价', prop: 'price' },
-                { label: '销售价', prop: 'price' },
-                { label: '库存', prop: 'price' }
+                { label: '品牌', prop: 'brandName' },
+                { label: '所属商家', prop: 'merchantName' },
+                { label: '建议零售价', prop: 'retailPrice' },
+                { label: '销售价', prop: 'sellPrice' },
+                { label: '库存', prop: 'inventory' }
             ],
-            paginationInfo: {}
+            paginationInfo: {},
+            multiSelection: []
         }
     },
     computed: {
+        ...mapState({
+            skuData: state => state.eventManage.skuData,
+            eventProducts: state => state.eventManage.eventProducts
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -90,33 +104,78 @@ export default {
             }
         }
     },
-    mounted () {
-        console.log(EVENT_LIST)
-        this.tableData = [{ product: '23', spuCode: '123123', skuCode: '2222', brand: '大金', member: '勇哥' }, { spuCode: '123123' }, { skuCode: '2222' }]
+    async mounted () {
+        this.onFindSkuList()
     },
     methods: {
+        ...mapMutations({ addProducts: 'ADD_EVENT_PRODUCTS' }),
+        ...mapActions({ setNewTags: 'setNewTags', findListSku: 'findListSku' }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.searchList()
+            this.onFindSkuList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
+            this.onFindSkuList()
         },
-        multiSelection () {
-
+        onAddproduct () {
+            this.addProducts(this.multiSelection)
+            this.findChecked()
+            this.setNewTags((this.$route.fullPath).split('?')[0])
         },
-        onClickStatics () {
-            this.$router.push({ path: '/hmall/eventStatistics', query: {} })
+        onBack () {
+            this.$router.go(-1)
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+        },
+        selectable (row) {
+            return !row.isChecked
+        },
+        async  onFindSkuList () {
+            await this.findListSku(this.queryParams)
+            this.tableData = this.skuData.records
+            this.findChecked()
+            this.paginationInfo = {
+                total: this.skuData.total,
+                pageNumber: this.skuData.current,
+                pageSize: this.skuData.size
+            }
+        },
+        findChecked () {
+            console.log(this.eventProducts)
+            this.eventProducts.map(item => {
+                this.tableData.map(val => {
+                    if (val.id === item.id) {
+                        val.isChecked = true
+                    }
+                })
+            })
+        },
+        // 设置表格已经加入我的商品的背景
+        tableRowClassName ({ row, rowIndex }) {
+            if (row.isChecked) return 'pulled'
         }
     }
 }
 </script>
 <style lang="scss" scoped>
 .proImg {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    // display: flex;
+    // justify-content: flex-start;
+    // align-items: center;
     text-align: left;
+    img {
+        display: block;
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        float: left;
+    }
+}
+/deep/ .pulled {
+    background: #000000;
+    opacity: 0.5;
+}
+.pulled h1 {
+    color: #504b4b;
 }
 </style>

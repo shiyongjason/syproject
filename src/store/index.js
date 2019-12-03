@@ -5,7 +5,7 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-import createEditEvent from './modules/createEditEvent'
+import eventManage from './modules/eventManage'
 
 Vue.use(Vuex)
 
@@ -30,7 +30,7 @@ const store = new Vuex.Store({
         dueDiligence,
         hmall,
         layout,
-        createEditEvent
+        eventManage
     }
 })
 

@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">活动名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams" placeholder="请输入活动名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.active" placeholder="请输入活动名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -80,7 +80,7 @@ export default {
     name: 'eventmanage',
     data () {
         return {
-            queryParams: {},
+            queryParams: { active: '' },
             tableData: [],
             tableLabel: [
                 { label: '活动名称', prop: 'spuCode' },
@@ -115,7 +115,6 @@ export default {
         }
     },
     mounted () {
-        console.log(EVENT_LIST)
         this.tableData = [{ spuCode: '23' }]
     },
     methods: {
