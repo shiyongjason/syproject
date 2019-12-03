@@ -50,7 +50,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">活动商品：</div>
                         <div class="query-col-input">
-                            <el-button type="primary" size='small' @click='log'>添加商品</el-button>
+                            <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}">添加商品</el-button>
                         </div>
                     </div>
                 </div>
@@ -58,10 +58,10 @@
             <div class="page-table">
                 <!-- table -->
                 <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" actionWidth='180px' >
-                    <template slot="name" slot-scope="scope">
+                    <template slot="skuName" slot-scope="scope">
                         <div class="goods">
-                            <img src="@/assets/images/img_herolist.png">
-                            <span class="goods-name">{{scope.data.row.name}}</span>
+                            <img :src="scope.data.row.pictureUrl">
+                            <span class="goods-name">{{scope.data.row.skuName}}</span>
                         </div>
                     </template>
                     <template slot="action" slot-scope="scope">
@@ -82,6 +82,8 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
 import Sortable from 'sortablejs'
+import { mapState, mapMutations, mapActions } from 'vuex'
+
 export default {
     name: 'createEditEvent',
     components: { hosJoyTable },
@@ -99,10 +101,10 @@ export default {
             discount: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'name', slot: 'name', minWidth: '160', className: 'allowDrag' },
-                { label: '商建议零售价', prop: 'suggestedRetailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
-                { label: '销售价格', prop: 'sellingPrice', formatter: this.formatterMoney, className: 'allowDrag' },
-                { label: '库存', prop: 'inStock', className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
+                { label: '商建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
+                { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
+                { label: '库存', prop: 'inventoryNum', className: 'allowDrag' },
                 {
                     label: '限购数量',
                     prop: 'limitNum',
@@ -160,6 +162,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            eventProducts: state => state.eventManage.eventProducts
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -204,8 +209,8 @@ export default {
             this.validate(scope.row)
             if (!scope.row._error && val) {
                 this.form.radio === '1'
-                    ? scope.row.salePrice = (scope.row.sellingPrice * (scope.row.discount / 10)).toFixed(2)
-                    : scope.row.salePrice = (scope.row.sellingPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
+                    ? scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
+                    : scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
             }
         },
         /** 设置所有 */
@@ -225,14 +230,14 @@ export default {
                 this.validate(item)
                 if (!item._error && val) {
                     this.form.radio === '1'
-                        ? item.salePrice = (item.sellingPrice * (item.discount / 10)).toFixed(2)
-                        : item.salePrice = (item.sellingPrice - (item.discount ? item.discount : 0)).toFixed(2)
+                        ? item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
+                        : item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0)).toFixed(2)
                 }
             })
         },
         /** 校验 */
         validate (item) {
-            if (item.limitNum > item.inStock) {
+            if (item.limitNum > item.inventoryNum) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else {
@@ -240,7 +245,7 @@ export default {
                 item.numErrorMsg = ''
             }
             if (this.form.radio === '2') {
-                if (item.sellingPrice - (item.discount ? item.discount : 0) <= 0) {
+                if (item.sellPrice - (item.discount ? item.discount : 0) <= 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
                 } else {
@@ -308,7 +313,7 @@ export default {
             this.tableData.some((item) => {
                 this.validate(item)
                 if (item._error || item._numError) {
-                    let msg = item.numErrorMsg ? `${item.name}，${item.numErrorMsg}` : `${item.name}，${item.errorMsg}`
+                    let msg = item.numErrorMsg ? `${item.skuName}，${item.numErrorMsg}` : `${item.skuName}，${item.errorMsg}`
                     this.$message({
                         message: msg,
                         type: 'error'
@@ -322,27 +327,46 @@ export default {
             this.tableData.map((item) => {
                 if (item.salePrice) {
                     this.form.radio === '1'
-                        ? this.$set(item, 'discount', (item.salePrice / item.sellingPrice) * 10)
-                        : this.$set(item, 'discount', item.sellingPrice - item.salePrice)
+                        ? this.$set(item, 'discount', (item.salePrice / item.sellPrice) * 10)
+                        : this.$set(item, 'discount', item.sellPrice - item.salePrice)
                 }
             })
             console.log(this.tableData)
+        },
+        setTableData (data) {
+            console.log(data)
+            this.tableData = data
+            this.tableData.forEach(item => {
+                this.$set(item, 'limitNum', '')
+            })
+            this.onInitDiscount()
+            this.$nextTick(() => {
+                this.setSort()
+            })
+            console.log('this.tableData', this.tableData)
         }
 
     },
     mounted () {
-        this.tableData = [
-            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', suggestedRetailPrice: 23154234, limitNum: 8, inStock: 30, sellingPrice: 12000, salePrice: 9000, discount: '' },
+        /* this.tableData = [
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', retailPrice: 23154234, limitNum: 8, inventoryNum: 30, sellPrice: 12000, salePrice: 9000, discount: '' },
             {
-                id: 2, name: '测试商品名称2', suggestedRetailPrice: 88888, limitNum: 0, inStock: 10, sellingPrice: 20000, order: 2, discount: ''
+                id: 2, name: '测试商品名称2', retailPrice: 88888, limitNum: 0, inventoryNum: 10, sellPrice: 20000, order: 2, discount: ''
             },
-            { id: 3, name: '测试商品名称3', suggestedRetailPrice: 20000, limitNum: 1, inStock: 30, sellingPrice: 10000, salePrice: 9000, discount: '' },
-            { id: 4, name: '测试商品名称4', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' },
-            { id: 5, name: '测试商品名称5', suggestedRetailPrice: null, limitNum: 2, inStock: 30, sellingPrice: 40000, discount: '' }
+            { id: 3, name: '测试商品名称3', retailPrice: 20000, limitNum: 1, inventoryNum: 30, sellPrice: 10000, salePrice: 9000, discount: '' },
+            { id: 4, name: '测试商品名称4', retailPrice: null, limitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' },
+            { id: 5, name: '测试商品名称5', retailPrice: null, limitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' }
         ]
         this.onInitDiscount()
         this.$nextTick(() => {
             this.setSort()
+        }) */
+    },
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            if (from.path === '/hmall/addProducts') {
+                vm.setTableData(vm.eventProducts)
+            }
         })
     }
 }

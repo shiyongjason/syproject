@@ -122,6 +122,7 @@ export default {
             this.addProducts(this.multiSelection)
             this.findChecked()
             this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/hmall/createEditEvent')
         },
         onBack () {
             this.$router.go(-1)
