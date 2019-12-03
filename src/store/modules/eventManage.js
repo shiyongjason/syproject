@@ -12,13 +12,18 @@ const getters = {
 const mutations = {
     [types.ADD_EVENT_PRODUCTS] (state, payload) {
         const productArr = state.eventProducts
-
         payload && payload.map(item => {
             productArr.push(item)
         })
         state.eventProducts = productArr
         sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
         // state.eventProducts = payload
+    },
+    [types.REMOVE_EVENT_PRODUCTS] (state, payload) {
+        console.log(payload)
+        const productArr = JSON.parse(sessionStorage.getItem('eventProducts')) || []
+        state.eventProducts = productArr && productArr.filter(item => item.id != payload.id)
+        sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
     },
     [types.SKU_DATA] (state, payload) {
         state.skuData = payload

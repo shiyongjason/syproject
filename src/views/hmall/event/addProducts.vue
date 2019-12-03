@@ -34,7 +34,7 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddproduct">
-                        添加({{multiSelection.length}}个)
+                        添加({{eventProducts.length}}个)
                     </el-button>
                 </div>
             </div>
@@ -173,7 +173,7 @@ export default {
     }
 }
 /deep/ .pulled {
-    background: #000000;
+    background: #eeeeee;
     opacity: 0.5;
 }
 .pulled h1 {

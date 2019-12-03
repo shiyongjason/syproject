@@ -147,7 +147,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -187,6 +187,9 @@ export default {
         }
     },
     methods: {
+        ...mapMutations({
+            removeProduct: 'REMOVE_EVENT_PRODUCTS'
+        }),
         radioChange (val) {
             this.tableData.map((item) => {
                 item.discount = ''
@@ -273,6 +276,7 @@ export default {
         /** 移除 */
         onRemove (val) {
             //
+            this.removeProduct(val)
         },
         /** 刷单 */
         onOrder (val) {
