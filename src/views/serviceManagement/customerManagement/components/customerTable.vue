@@ -19,11 +19,6 @@
                 label="微信昵称">
             </el-table-column>
             <el-table-column prop="wechatId" align="center" label="微信号"></el-table-column>
-            <el-table-column prop="key" align="center" label="客户身份">
-                <template slot-scope="scope">
-                    <span>{{getTypes('role',scope.row.role)}}</span>
-                </template>
-            </el-table-column>
             <el-table-column prop="createTime" align="center" property="date" label="创建时间">
                 <template slot-scope="scope">
                     {{ formatTime(scope.row.createTime) }}
@@ -76,11 +71,7 @@ export default {
         },
         channelType: {
             type: Array
-        },
-        role: {
-            type: Array
         }
-
     },
     data () {
         return {
@@ -164,8 +155,7 @@ export default {
             }
         },
         getTypes (obj, key) {
-            let query = key + 1
-            return this[obj][query].label
+            return this[obj][key].label
         },
         indexMethod (index) {
             return this.pageSize * (this.pageNumber - 1) + index + 1
