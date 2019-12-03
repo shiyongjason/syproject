@@ -386,7 +386,7 @@ export default {
 /deep/.flxinput{ display: flex;align-items: center;}
 /deep/.flxinput font{ width: 80px}
 .goods{ display: flex}
-.goods img{width: 70px; margin-right: 15px}
+.goods img{width: 70px; height: 70px; margin-right: 15px}
 .subfixed{ position: fixed; bottom: 3px;width: 100%;text-align: center;margin-left: -100px;z-index: 999}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
