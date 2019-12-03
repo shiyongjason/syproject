@@ -1,7 +1,7 @@
 import * as types from '../mutation-types'
 import instance from '@/api/axios_new'
 const state = {
-    eventProducts: [],
+    eventProducts: JSON.parse(sessionStorage.getItem('eventProducts')) || [],
     skuData: []
 }
 
@@ -11,10 +11,13 @@ const getters = {
 
 const mutations = {
     [types.ADD_EVENT_PRODUCTS] (state, payload) {
-        console.log(payload)
-        payload && payload.map(item=>{
-            state.eventProducts.push(item)
+        const productArr = state.eventProducts
+
+        payload && payload.map(item => {
+            productArr.push(item)
         })
+        state.eventProducts = productArr
+        sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
         // state.eventProducts = payload
     },
     [types.SKU_DATA] (state, payload) {
