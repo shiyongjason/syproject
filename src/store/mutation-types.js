@@ -5,3 +5,5 @@ export const ADD_EVENT_PRODUCTS = 'ADD_EVENT_PRODUCTS'
 export const REMOVE_EVENT_PRODUCTS = 'REMOVE_EVENT_PRODUCTS'
 // skuList
 export const SKU_DATA = 'SKU_DATA'
+// spike 活动页面
+export const SPIKE_DATA = 'SPIKE_DATA'

@@ -5,27 +5,27 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">活动名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.active" placeholder="请输入活动名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spikeName" placeholder="请输入活动名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-select v-model="queryParams">
-                            <el-option label="活动预热时间" value="">
+                        <el-select v-model="queryParams.spikeTimeType">
+                            <el-option label="活动预热时间" :value=1>
                             </el-option>
-                            <el-option label="活动开始时间" value="1">
+                            <el-option label="活动开始时间" :value=2>
                             </el-option>
-                            <el-option label="活动结束时间" value="0">
+                            <el-option label="活动结束时间" :value=3>
                             </el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.orderTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -59,6 +59,12 @@
         </div>
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                <template slot="eventTime" slot-scope="scope">
+                    {{scope.data.row.startTime|formatterTime}}~ {{scope.data.row.endTime|formatterTime}}
+                </template>
+                <template slot="status" slot-scope="scope">
+
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEdit()">编辑</el-button>
                     <el-button type="primary" size="mini" plain>复制</el-button>
@@ -76,29 +82,42 @@
 </template>
 <script>
 import { EVENT_LIST } from '../store/const'
+import { mapActions, mapState } from 'vuex'
 export default {
     name: 'eventmanage',
     data () {
         return {
-            queryParams: { active: '' },
+            queryParams: {
+                beginTime: '',
+                endTime: '',
+                pageNumber: 1,
+                pageSize: 10,
+                spikeName: '',
+                spikeTimeType: 1,
+                status: ''
+            },
+            copuParams: {},
             tableData: [],
             tableLabel: [
-                { label: '活动名称', prop: 'spuCode' },
-                { label: '创建时间', prop: 'spuCode' },
-                { label: '活动时间', prop: 'spuCode' },
-                { label: '活动状态', prop: 'spuCode' }
+                { label: '活动名称', prop: 'spikeName' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '活动时间', prop: 'eventTime', width: 400 },
+                { label: '活动状态', prop: 'status' }
             ],
             paginationInfo: {},
             eventsState: EVENT_LIST
         }
     },
     computed: {
+        ...mapState({
+            spikeData: state => state.eventManage.spikeData
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal)
                     }
                 }
             }
@@ -106,18 +125,30 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.beginTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal)
                     }
                 }
             }
         }
     },
     mounted () {
-        this.tableData = [{ spuCode: '23' }]
+        this.onFindeSpike()
+        this.copyParams = { ...this.queryParams }
     },
     methods: {
+        ...mapActions({
+            findSpike: 'findSpike'
+        }),
+        searchList () {
+            this.queryParams.pageNumber = 1
+            this.onFindeSpike()
+        },
+        onRest () {
+            this.queryParams = { ...this.copyParams }
+            this.searchList()
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.searchList()
@@ -126,11 +157,20 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
+        async onFindeSpike () {
+            await this.findSpike(this.queryParams)
+            this.tableData = this.spikeData.records
+            this.paginationInfo = {
+                total: this.spikeData.total,
+                pageNumber: this.spikeData.current,
+                pageSize: this.spikeData.size
+            }
+        },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })
         },
         onAddevent () {
-            this.$router.push({ path: '/hmall/addProducts', query: {} })
+            this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         }
     }
 }

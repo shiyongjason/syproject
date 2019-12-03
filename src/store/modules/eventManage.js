@@ -2,7 +2,8 @@ import * as types from '../mutation-types'
 import instance from '@/api/axios_new'
 const state = {
     eventProducts: JSON.parse(sessionStorage.getItem('eventProducts')) || [],
-    skuData: []
+    skuData: [],
+    spikeData: []
 }
 
 const getters = {
@@ -27,6 +28,9 @@ const mutations = {
     },
     [types.SKU_DATA] (state, payload) {
         state.skuData = payload
+    },
+    [types.SPIKE_DATA] (state, payload) {
+        state.spikeData = payload
     }
 }
 
@@ -34,6 +38,10 @@ const actions = {
     async findListSku ({ commit }, params) {
         const { data } = await instance.get('/product/api/sku', { params })
         commit(types.SKU_DATA, data)
+    },
+    async findSpike ({ commit }, params) {
+        const { data } = await instance.get('/ops/api/spike', { params })
+        commit(types.SPIKE_DATA, data)
     }
 
 }
