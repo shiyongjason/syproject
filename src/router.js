@@ -633,6 +633,17 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
             },
             {
+                path: 'houseKeeperManagement',
+                name: 'houseKeeperManagement',
+                meta: {
+                    title: '管家管理',
+                    tagName: '管家管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/houseKeeperManagement/houseKeeperManagement.vue')
+            },
+            {
                 path: 'orderCenter',
                 name: 'orderCenter',
                 meta: {
@@ -644,15 +655,15 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/orderCenter/order.vue')
             },
             {
-                path: 'reservation',
-                name: 'reservation',
+                path: 'workOrder',
+                name: 'workOrder',
                 meta: {
-                    title: '预约信息',
-                    tagName: '预约信息',
+                    title: '工单信息',
+                    tagName: '工单信息',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/serviceManagement/reservation/index.vue')
+                component: () => import('@/views/serviceManagement/workOrder/index.vue')
             },
             {
                 path: 'customerRecord',
@@ -741,6 +752,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
+            },
+            {
+                path: 'channelManagement',
+                name: 'channelManagement',
+                meta: {
+                    title: '渠道管理',
+                    tagName: '渠道管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
             }
         ]
     },
@@ -863,7 +885,8 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        }
+        },
+        ...routerMapping
     ]
 })
 function makeIndex (data, next, query) {
