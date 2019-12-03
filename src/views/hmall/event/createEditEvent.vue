@@ -101,7 +101,7 @@ export default {
             column: [
                 { label: '商品', prop: 'name', slot: 'name', minWidth: '160', className: 'allowDrag' },
                 { label: '商建议零售价', prop: 'suggestedRetailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
-                { label: '销售价格', prop: 'sellingPrice', displayAs: 'money', className: 'allowDrag' },
+                { label: '销售价格', prop: 'sellingPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '库存', prop: 'inStock', className: 'allowDrag' },
                 {
                     label: '限购数量',
@@ -271,7 +271,16 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
-            //
+            // 刷单前置条件：活动已经开启，库存不为零。
+            this.$confirm('确认是否刷单一次?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                //
+            }).catch(() => {
+                //
+            })
         },
         /** 初始化拖拽 */
         setSort () {
@@ -284,7 +293,8 @@ export default {
                 },
                 onEnd: evt => {
                     this.tableData.splice(evt.newIndex, 0, this.tableData.splice(evt.oldIndex, 1)[0])
-                    var newArray = this.tableData.slice()
+                    // let newArray = this.tableData.slice()
+                    let newArray = JSON.parse(JSON.stringify(this.tableData))
                     this.tableData = []
                     this.$nextTick(function () {
                         this.tableData = newArray
