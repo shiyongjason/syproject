@@ -325,19 +325,22 @@ export default {
         /** 初始化优惠设置 */
         onInitDiscount () {
             this.tableData.map((item) => {
-                if (item.salePrice) {
-                    this.form.radio === '1'
-                        ? this.$set(item, 'discount', (item.salePrice / item.sellPrice) * 10)
-                        : this.$set(item, 'discount', item.sellPrice - item.salePrice)
-                }
+                // if (item.salePrice) {
+                let temp = ''
+                this.form.radio === '1'
+                    ? temp = item.salePrice ? ((item.salePrice / item.sellPrice) * 10) : ''
+                    : temp = item.salePrice ? (item.sellPrice - item.salePrice) : ''
+                this.$set(item, 'discount', temp)
+                // }
             })
             console.log(this.tableData)
         },
         setTableData (data) {
-            console.log(data)
             this.tableData = data
             this.tableData.forEach(item => {
                 this.$set(item, 'limitNum', '')
+                this.$set(item, 'salePrice', '')
+                // this.$set(item, 'discount', '')
             })
             this.onInitDiscount()
             this.$nextTick(() => {
@@ -348,6 +351,7 @@ export default {
 
     },
     mounted () {
+        this.setTableData(this.eventProducts)
         /* this.tableData = [
             { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', retailPrice: 23154234, limitNum: 8, inventoryNum: 30, sellPrice: 12000, salePrice: 9000, discount: '' },
             {
@@ -361,14 +365,14 @@ export default {
         this.$nextTick(() => {
             this.setSort()
         }) */
-    },
-    beforeRouteEnter (to, from, next) {
+    }
+    /* beforeRouteEnter (to, from, next) {
         next(vm => {
             if (from.path === '/hmall/addProducts') {
                 vm.setTableData(vm.eventProducts)
             }
         })
-    }
+    } */
 }
 
 </script>
