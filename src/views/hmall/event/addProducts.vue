@@ -34,7 +34,7 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddproduct">
-                        添加({{eventProducts.length}}个)
+                        添加({{'已添加'+eventProducts.length}}个)
                     </el-button>
                 </div>
             </div>
@@ -122,10 +122,10 @@ export default {
             this.addProducts(this.multiSelection)
             this.findChecked()
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/hmall/createEditEvent')
         },
         onBack () {
-            this.$router.go(-1)
+            // this.$router.go(-1)
+            this.$router.push('/hmall/createEditEvent')
             this.setNewTags((this.$route.fullPath).split('?')[0])
         },
         selectable (row) {
@@ -142,7 +142,6 @@ export default {
             }
         },
         findChecked () {
-            console.log(this.eventProducts)
             this.eventProducts.map(item => {
                 this.tableData.map(val => {
                     if (val.id === item.id) {
