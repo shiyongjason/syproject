@@ -176,7 +176,7 @@ export default {
         findChecked () {
             this.eventProducts.map(item => {
                 this.tableData.map(val => {
-                    if (val.id === item.id) {
+                    if (val.skuCode === item.skuCode) {
                         val.isChecked = true
                     }
                 })

@@ -26,9 +26,8 @@ const mutations = {
         // state.eventProducts = payload
     },
     [types.REMOVE_EVENT_PRODUCTS] (state, payload) {
-        console.log(payload)
         const productArr = JSON.parse(sessionStorage.getItem('eventProducts')) || []
-        state.eventProducts = productArr && productArr.filter(item => item.id != payload.id)
+        state.eventProducts = productArr && productArr.filter(item => item.skuCode != payload.skuCode)
         sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
     },
     [types.EMPTY_EVENT_PRODUCTS] (state, payload) {
