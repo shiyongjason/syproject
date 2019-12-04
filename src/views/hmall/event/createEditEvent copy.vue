@@ -23,7 +23,7 @@
                                 <div class="line ml5 mr5">-</div>
                                 <el-form-item prop="endTime" style="margin-bottom:0">
                                     <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间">
-                                    </el-date-picker>
+                                </el-date-picker>
                                 </el-form-item>
                             </div>
                     </div>
@@ -34,8 +34,8 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">优惠方式：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.discountType" :label=1 @change='radioChange'>折扣</el-radio>
-                                <el-radio v-model="form.discountType" :label=2 @change='radioChange'>直降（平台补贴）</el-radio>
+                                <el-radio v-model="form.discountType" label="1" @change='radioChange'>折扣</el-radio>
+                                <el-radio v-model="form.discountType" label="2" @change='radioChange'>直降（平台补贴）</el-radio>
                             </div>
                         </div>
                     </div>
@@ -43,9 +43,9 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">会员限制：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.memberScope" :label=1>所有会员</el-radio>
-                                <el-radio v-model="form.memberScope" :label=2>首单会员（第一次购买）</el-radio>
-                                <el-radio v-model="form.memberScope" :label=3>新注册会员</el-radio>
+                                <el-radio v-model="form.memberScope" label="1">所有会员</el-radio>
+                                <el-radio v-model="form.memberScope" label="2">首单会员（第一次购买）</el-radio>
+                                <el-radio v-model="form.memberScope" label="3">新注册会员</el-radio>
                             </div>
                         </div>
                     </div>
@@ -90,9 +90,8 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
 import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
-import { saveEvent, editEvent, clickFarming } from './api/index'
+import { saveOrEditEvent, clickFarming } from './api/index'
 import { clearCache, newCache } from '@/utils/index'
-import moment from 'moment'
 
 export default {
     name: 'createEditEvent',
@@ -105,8 +104,8 @@ export default {
                 spikeName: '',
                 startTime: '',
                 endTime: '',
-                discountType: 1, // 优惠方式 1：折扣 2：直降
-                memberScope: 1, // 会员限制 1：所有会员 2：首单会员 3：新注册会员
+                discountType: '1', // 优惠方式 1：折扣 2：直降
+                memberScope: '1', // 会员限制 1：所有会员 2：首单会员 3：新注册会员
                 spikeSku: [],
                 status: ''// 状态 1：待发布 2：已发布 3：已取消
             },
@@ -191,7 +190,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            this.form.discountType === 1
+                            this.form.discountType === '1'
                                 ? <span>
                                     <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discount') }}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
@@ -240,7 +239,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS' ]),
+        ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS' ]),
         ...mapActions(['eventInfo']),
         radioChange (val) {
             this.discount = ''
@@ -262,21 +261,20 @@ export default {
         },
         /** 设置某行 */
         setOneCol (val, scope, key = '') {
-            if (key != 'sellingPoint') scope.row[scope.column.property] = isNum(val, this.form.discountType === 1 ? 1 : 2)
-            else scope.row[scope.column.property] = val
+            scope.row[scope.column.property] = isNum(val, this.form.discountType === '1' ? 1 : 2)
             this.validate(scope.row, key)
             if (!scope.row._error && val && key === 'discount') {
-                this.form.discountType === 1
+                this.form.discountType === '1'
                     ? scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
                     : scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
             }
         },
         /** 设置所有 */
         setAllCol (key, val) {
-            if (this.form.discountType === 2) {
+            if (this.form.discountType === '2') {
                 this[key] = isNum(val, 2)
             }
-            if (this.form.discountType === 1) {
+            if (this.form.discountType === '1') {
                 this[key] = isNum(val, 1)
             }
             // 限购数量
@@ -287,7 +285,7 @@ export default {
                 item[key] = this[key]
                 this.validate(item, key)
                 if (!item._error && val && key === 'discount') {
-                    this.form.discountType === 1
+                    this.form.discountType === '1'
                         ? item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
                         : item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0)).toFixed(2)
                 }
@@ -315,12 +313,14 @@ export default {
                 this.$set(item, '_inventoryNumError', false)
             }
             if ((action === 'submit') && (!item.purchaseLimitNum || item.purchaseLimitNum == 0)) {
+                console.log('限购数量不能小于0')
                 item.numErrorMsg = '限购数量不能小于0'
                 this.$set(item, '_numError', true)
                 // return
             }
             if (action === 'submit') {
                 if (!item.discount) {
+                    console.log('优惠折扣不可低于1折')
                     item.errorMsg = '优惠折扣不可低于1折'
                     this.$set(item, '_error', true)
                     return
@@ -329,14 +329,14 @@ export default {
                     item.errorMsg = ''
                 }
             }
-            if (Number(item.purchaseLimitNum) > Number(item.inventoryNum)) {
+            if (item.purchaseLimitNum > item.inventoryNum) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else if (item.purchaseLimitNum) {
                 item._numError = false
                 item.numErrorMsg = ''
             }
-            if (this.form.discountType === 2) {
+            if (this.form.discountType === '2') {
                 if (item.sellPrice - (item.discount ? item.discount : 0) <= 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
@@ -379,9 +379,9 @@ export default {
                 if (this.isPending) return
                 this.isPending = true
                 try {
-                    await clickFarming({ sid: val.id, updateBy: this.userInfo.employeeName })
+                    const { data } = await clickFarming({ id: val.id, updateBy: this.userInfo.employeeName })
                     this.isPending = false
-                    this.getEventInfo()
+                    console.log(data)
                 } catch (error) {
                     this.isPending = false
                 }
@@ -400,13 +400,14 @@ export default {
                 },
                 onEnd: evt => {
                     this.form.spikeSku.splice(evt.newIndex, 0, this.form.spikeSku.splice(evt.oldIndex, 1)[0])
+                    // let newArray = this.form.spikeSku.slice()
                     let newArray = JSON.parse(JSON.stringify(this.form.spikeSku))
                     this.form.spikeSku = []
                     this.$nextTick(function () {
                         this.form.spikeSku = newArray
                     })
-                    this.EMPTY_EVENT_PRODUCTS()
-                    this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
+                    this.ADD_EVENT_PRODUCTS([])
+                    this.ADD_EVENT_PRODUCTS(this.form.spikeSku)
                 }
             })
         },
@@ -429,11 +430,14 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum && item.inventoryOriginNum != 0) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum && item.inventoryRemainNum != 0) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
-                if (item._error || item._numError || item._inventoryNumError || item._sellingPointError) {
+                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                if (item._error || item._numError) {
                     /* let msg = item.numErrorMsg ? `${item.skuName}，${item.numErrorMsg}` : `${item.skuName}，${item.errorMsg}`
-                    this.$message({ message: msg,type: 'error' })
+                    this.$message({
+                        message: msg,
+                        type: 'error'
+                    })
                     flag = false
                     return true// 当内部return true时跳出整个循环 */
                     flag = false
@@ -444,16 +448,11 @@ export default {
                 this.isPending = true
                 try {
                     this.form.status = status
-
-                    if (this.$route.query.eventId) {
-                        this.form.updateBy = this.userInfo.employeeName
-                        await editEvent(this.form)
-                    } else {
-                        this.form.createBy = this.userInfo.employeeName
-                        await saveEvent(this.form)
-                    }
+                    this.form.createBy = this.userInfo.employeeName
+                    await saveOrEditEvent(this.form)
                     this.isPending = false
                     this.$message.success(`提交成功！`)
+                    this.ADD_EVENT_PRODUCTS([])
                     this.$router.push('/hmall/eventMange')
                 } catch (error) {
                     this.isPending = false
@@ -476,24 +475,17 @@ export default {
         onInitDiscount () {
             this.form.spikeSku.map((item) => {
                 let temp = ''
-                this.form.discountType === 1
+                this.form.discountType === '1'
                     ? temp = item.salePrice ? ((item.salePrice / item.sellPrice) * 10) : ''
                     : temp = item.salePrice ? (item.sellPrice - item.salePrice) : ''
                 if (item.sellPrice == item.salePrice) this.$set(item, 'discount', '')
-                else {
-                    if ((temp + '').indexOf('.') != -1) this.$set(item, 'discount', temp.toFixed(2))
-                    else this.$set(item, 'discount', temp)
-                }
+                else this.$set(item, 'discount', temp.toFixed(2))
             })
-            this.EMPTY_EVENT_PRODUCTS()
-            this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
         },
         setTableData (data) {
-            console.log('setTableData', data)
             this.form.spikeSku = data
             this.form.spikeSku.forEach(item => {
-                if (!item.salePrice) this.$set(item, 'salePrice', item.sellPrice)
-                if (!item.purchaseLimitNum) this.$set(item, 'purchaseLimitNum', '')// 限购
+                this.$set(item, 'salePrice', item.sellPrice)
                 this.$set(item, 'sort', '')
                 this.$set(item, '_numError', false)
                 this.$set(item, '_error', false)
@@ -504,32 +496,27 @@ export default {
                 this.$set(item, 'sellingPointErrorMsg', '')
                 this.$set(item, 'inventoryNumErrorMsg', '')
                 this.$set(item, 'sellingPoint', '')
-                // if (!item.inventoryNum) {
-                this.$set(item, 'inventoryNum', item.inventoryRemainNum)
-                // }
+                /* if (!item.inventoryNum) {
+                    item.inventoryNum = item.inventoryRemainNum
+                } */
                 // sid
             })
             this.onInitDiscount()
-
             this.$nextTick(() => {
                 this.setSort()
             })
-        },
-        async getEventInfo () {
-            await this.eventInfo(this.$route.query.eventId)
-            console.log('this.eventInfos', this.eventInfos)
-            this.form = this.eventInfos
-            // console.log(this.form)
-            /* const { spikeSku } = this.eventInfos
-            console.log('spikeSku', spikeSku)
-            this.setTableData(spikeSku)
-            console.log(this.form) */
+            console.log('this.form.spikeSku', this.form.spikeSku)
         }
-
     },
     async activated () {
         if (this.$route.query.eventId) {
-            this.getEventInfo()
+            await this.eventInfo(this.$route.query.eventId)
+            this.form = this.eventInfos
+            const { spikeSku } = this.eventInfos
+            this.setTableData(spikeSku)
+            console.log(this.form)
+
+        //    this.setTableData(this.eventProducts)
         } else {
             this.setTableData(this.eventProducts)
         }
@@ -541,7 +528,6 @@ export default {
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
             clearCache('createEditEvent')
-            this.EMPTY_EVENT_PRODUCTS()
         }
         next()
     }
