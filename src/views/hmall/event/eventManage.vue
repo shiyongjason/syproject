@@ -61,7 +61,7 @@
                     {{scope.data.row.startTime|formatterTime}}~ {{scope.data.row.endTime|formatterTime}}
                 </template>
                 <template slot="status" slot-scope="scope">
-
+ {{IsEventName(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
@@ -103,7 +103,8 @@ export default {
                 { label: '活动状态', prop: 'status' }
             ],
             paginationInfo: {},
-            eventsState: EVENT_LIST
+            eventsState: EVENT_LIST,
+            eventName: ['待发布', '预热中', '进行中', '已结束', '已取消']
         }
     },
     computed: {
@@ -163,6 +164,9 @@ export default {
                 pageNumber: this.spikeData.current,
                 pageSize: this.spikeData.size
             }
+        },
+        IsEventName (val) {
+            return this.eventName[val]
         },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })
