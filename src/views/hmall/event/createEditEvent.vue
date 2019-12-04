@@ -1,79 +1,86 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont pb20">
-            <div class="forminfo">
-                <h2>1.设置活动基本信息</h2>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-title">活动名称：</div>
-                        <div class="query-col-input">
-                            <el-input style="width:458px" v-model="form.name" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
+            <el-form :model="form" ref='form' :rules="rules.event" label-position='left' >
+                <div class="forminfo">
+                    <h2>1.设置活动基本信息</h2>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-input">
+                                <el-form-item prop="spikeName" label="活动名称：" style="display: flex;">
+                                    <el-input style="width:466px" v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
+                                </el-form-item>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="query-cont-row">
+                            <!-- <div class="query-col-title">活动时间：</div> -->
+                            <div class="query-cont-col">
+                                <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
+                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间">
+                                </el-date-picker>
+                                </el-form-item>
+                                <div class="line ml5 mr5">-</div>
+                                <el-form-item prop="endTime" style="margin-bottom:0">
+                                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间">
+                                </el-date-picker>
+                                </el-form-item>
+                            </div>
+                    </div>
+                </div>
+                <div class="forminfo">
+                    <h2>2.设置规则和优惠</h2>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-title">优惠方式：</div>
+                            <div class="query-col-input">
+                                <el-radio v-model="form.discountType" label="1" @change='radioChange'>折扣</el-radio>
+                                <el-radio v-model="form.discountType" label="2" @change='radioChange'>直降（平台补贴）</el-radio>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-title">会员限制：</div>
+                            <div class="query-col-input">
+                                <el-radio v-model="form.memberScope" label="1">所有会员</el-radio>
+                                <el-radio v-model="form.memberScope" label="2">首单会员（第一次购买）</el-radio>
+                                <el-radio v-model="form.memberScope" label="3">新注册会员</el-radio>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-title">活动时间：</div>
-                        <el-date-picker v-model="form.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="开始时间">
-                        </el-date-picker>
-                        <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="form.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm" value-format="yyyy-MM-dd HH:mm" placeholder="结束时间">
-                        </el-date-picker>
-                    </div>
-                </div>
-            </div>
-            <div class="forminfo">
-                <h2>2.设置规则和优惠</h2>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-title">优惠方式：</div>
-                        <div class="query-col-input">
-                            <el-radio v-model="form.radio" label="1" @change='radioChange'>折扣</el-radio>
-                            <el-radio v-model="form.radio" label="2" @change='radioChange'>直降（平台补贴）</el-radio>
+                <div class="forminfo">
+                    <h2>3.选择活动商品</h2>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-title">活动商品：</div>
+                            <div class="query-col-input">
+                                <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}">添加商品</el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-title">会员限制：</div>
-                        <div class="query-col-input">
-                            <el-radio v-model="form.radio2" label="1">所有会员</el-radio>
-                            <el-radio v-model="form.radio2" label="2">首单会员（第一次购买）</el-radio>
-                            <el-radio v-model="form.radio2" label="3">新注册会员</el-radio>
-                        </div>
-                    </div>
+                <div class="page-table">
+                    <!-- table -->
+                    <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="form.spikeSku" align="center" actionWidth='180px' >
+                        <template slot="skuName" slot-scope="scope">
+                            <div class="goods">
+                                <img :src="scope.data.row.pictureUrl">
+                                <span class="goods-name">{{scope.data.row.skuName}}</span>
+                            </div>
+                        </template>
+                        <template slot="action" slot-scope="scope">
+                            <el-button type="primary" size='small' @click="onRemove(scope.data.row)">移除</el-button>
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">刷单（{{scope.data.row.order?scope.data.row.order:0}}）</el-button>
+                        </template>
+                    </hosJoyTable>
                 </div>
-            </div>
-            <div class="forminfo">
-                <h2>3.选择活动商品</h2>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-title">活动商品：</div>
-                        <div class="query-col-input">
-                            <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}">添加商品</el-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="page-table">
-                <!-- table -->
-                <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="tableData" align="center" actionWidth='180px' >
-                    <template slot="skuName" slot-scope="scope">
-                        <div class="goods">
-                            <img :src="scope.data.row.pictureUrl">
-                            <span class="goods-name">{{scope.data.row.skuName}}</span>
-                        </div>
-                    </template>
-                    <template slot="action" slot-scope="scope">
-                        <el-button type="primary" size='small' @click="onRemove(scope.data.row)">移除</el-button>
-                        <el-button type="primary" size='small' @click="onOrder(scope.data.row)">刷单（{{scope.data.row.order?scope.data.row.order:0}}）</el-button>
-                    </template>
-                </hosJoyTable>
-            </div>
+            </el-form>
         </div>
         <div class="subfixed">
-            <el-button type="primary" @click='onSave'>保存</el-button>
-            <el-button type="primary">活动发布</el-button>
+            <el-button type="primary" @click='onSave(1)'>保存</el-button>
+            <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
     </div>
 </template>
@@ -83,44 +90,87 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
 import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { saveOrEditEvent, clickFarming } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 
 export default {
     name: 'createEditEvent',
     components: { hosJoyTable },
     data () {
         return {
+            isPending: false,
             sortable: null,
             form: {
-                name: '',
-                startDate: '',
-                endDate: '',
-                radio: '1',
-                radio2: '1'
+                spikeName: '',
+                startTime: '',
+                endTime: '',
+                discountType: '1', // 优惠方式 1：折扣 2：直降
+                memberScope: '1', // 会员限制 1：所有会员 2：首单会员 3：新注册会员
+                spikeSku: [],
+                status: ''// 状态 1：待发布 2：已发布 3：已取消
             },
-            limitNum: '',
+            rules: {
+                event: {
+                    spikeName: [
+                        { required: true, validator: this.validateSpikeName, trigger: 'blur' }
+                    ],
+                    startTime: [
+                        { required: true, message: '请选择活动开始时间', trigger: 'change' }
+                    ],
+                    endTime: [
+                        { required: true, message: '请选择活动结束时间', trigger: 'change' }
+                    ]
+                }
+            },
+            purchaseLimitNum: '',
             discount: '',
             tableData: [],
             column: [
                 { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
                 { label: '商建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
-                { label: '库存', prop: 'inventoryNum', className: 'allowDrag' },
+                {
+                    label: '卖点',
+                    prop: 'sellingPoint',
+                    minWidth: '130',
+                    render: (h, scope) => {
+                        return (
+                            <span>
+                                <el-input class={scope.row._sellingPointError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12'></el-input>
+                                {scope.row._sellingPointError ? <div class='errormsg'>{scope.row.sellingPointErrorMsg}</div> : ''}
+                            </span>
+                        )
+                    }
+                },
+                {
+                    label: '库存',
+                    minWidth: '110',
+                    prop: 'inventoryNum',
+                    render: (h, scope) => {
+                        return (
+                            <span>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
+                                {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
+                            </span>
+                        )
+                    }
+                },
                 {
                     label: '限购数量',
-                    prop: 'limitNum',
+                    prop: 'purchaseLimitNum',
                     width: '210',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.limitNum} onInput={(val) => { this.setAllCol('limitNum', val) }} ></el-input>
+                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.setAllCol('purchaseLimitNum', val) }} ></el-input>
                             </span>
                         )
                     },
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>
+                                <el-input class={scope.row._numError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
                         )
@@ -140,14 +190,14 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            this.form.radio === '1'
+                            this.form.discountType === '1'
                                 ? <span>
-                                    <el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>折
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discount') }}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope) }}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discount') }}></el-input>元
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -163,12 +213,13 @@ export default {
     },
     computed: {
         ...mapState({
-            eventProducts: state => state.eventManage.eventProducts
+            eventProducts: state => state.eventManage.eventProducts,
+            userInfo: state => state.userInfo
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.form.endDate)
+                    let beginDateVal = new Date(this.form.endTime)
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -178,7 +229,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.form.startDate)
+                    let beginDateVal = new Date(this.form.startTime)
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -187,11 +238,11 @@ export default {
         }
     },
     methods: {
-        ...mapMutations({
-            removeProduct: 'REMOVE_EVENT_PRODUCTS'
-        }),
+        ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS' ]),
         radioChange (val) {
-            this.tableData.map((item) => {
+            this.discount = ''
+            this.purchaseLimitNum = ''
+            this.form.spikeSku.map((item) => {
                 item.discount = ''
                 item._error = false
                 item._numError = false
@@ -207,47 +258,83 @@ export default {
             return res == 0 ? 0 : `¥${res}`
         },
         /** 设置某行 */
-        setOneCol (val, scope) {
-            scope.row[scope.column.property] = isNum(val, this.form.radio === '1' ? 1 : 2)
-            this.validate(scope.row)
-            if (!scope.row._error && val) {
-                this.form.radio === '1'
+        setOneCol (val, scope, key = '') {
+            scope.row[scope.column.property] = isNum(val, this.form.discountType === '1' ? 1 : 2)
+            this.validate(scope.row, key)
+            if (!scope.row._error && val && key === 'discount') {
+                this.form.discountType === '1'
                     ? scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
                     : scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
             }
         },
         /** 设置所有 */
         setAllCol (key, val) {
-            if (this.form.radio === '2') {
+            if (this.form.discountType === '2') {
                 this[key] = isNum(val, 2)
             }
-            if (this.form.radio === '1') {
+            if (this.form.discountType === '1') {
                 this[key] = isNum(val, 1)
             }
             // 限购数量
-            if (key === 'limitNum') {
+            if (key === 'purchaseLimitNum') {
                 this[key] = val.replace(/[^\d]/g, '')
             }
-            this.tableData.map((item) => {
+            this.form.spikeSku.map((item) => {
                 item[key] = this[key]
-                this.validate(item)
-                if (!item._error && val) {
-                    this.form.radio === '1'
+                this.validate(item, key)
+                if (!item._error && val && key === 'discount') {
+                    this.form.discountType === '1'
                         ? item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
                         : item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0)).toFixed(2)
                 }
             })
         },
         /** 校验 */
-        validate (item) {
-            if (item.limitNum > item.inventoryNum) {
+        validate (item, action = '') {
+            // true 需要在特定的操作才触发。
+            if (action === 'submit') {
+                if (!item.sellingPoint) {
+                    item.sellingPointErrorMsg = '卖点不能为空'
+                    this.$set(item, '_sellingPointError', true)
+                }
+                if (!item.inventoryNum) {
+                    item.inventoryNumErrorMsg = '库存不能小于0'
+                    this.$set(item, '_inventoryNumError', true)
+                }
+            }
+            if (item.sellingPoint) {
+                item.sellingPointErrorMsg = ''
+                this.$set(item, '_sellingPointError', false)
+            }
+            if (item.inventoryNum) {
+                item.inventoryNumErrorMsg = ''
+                this.$set(item, '_inventoryNumError', false)
+            }
+            if ((action === 'submit') && (!item.purchaseLimitNum || item.purchaseLimitNum == 0)) {
+                console.log('限购数量不能小于0')
+                item.numErrorMsg = '限购数量不能小于0'
+                this.$set(item, '_numError', true)
+                // return
+            }
+            if (action === 'submit') {
+                if (!item.discount) {
+                    console.log('优惠折扣不可低于1折')
+                    item.errorMsg = '优惠折扣不可低于1折'
+                    this.$set(item, '_error', true)
+                    return
+                } else {
+                    item._error = false
+                    item.errorMsg = ''
+                }
+            }
+            if (item.purchaseLimitNum > item.inventoryNum) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
-            } else {
+            } else if (item.purchaseLimitNum) {
                 item._numError = false
                 item.numErrorMsg = ''
             }
-            if (this.form.radio === '2') {
+            if (this.form.discountType === '2') {
                 if (item.sellPrice - (item.discount ? item.discount : 0) <= 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
@@ -256,27 +343,24 @@ export default {
                     item.errorMsg = ''
                 }
             } else {
-                if (item.discount && Number(item.discount) > 10) {
+                if (item.discount && item.discount > 10) {
                     item.errorMsg = '最大折扣不能大于10'
                     this.$set(item, '_error', true)
-                    return
-                }
-                if (item.discount && Number(item.discount) < 1) {
-                    item.errorMsg = '优惠最高折扣不可低于1折'
+                } else if (item.discount && item.discount < 1) {
+                    item.errorMsg = '优惠折扣不可低于1折'
                     item._error = true
-                    return
+                } else if (item.discount) {
+                    item._error = false
+                    item.errorMsg = ''
                 }
-                item._error = false
-                item.errorMsg = ''
             }
-        },
-        log () {
-            console.log(this.tableData)
+            this.$forceUpdate()
         },
         /** 移除 */
         onRemove (val) {
             //
-            this.removeProduct(val)
+            this.REMOVE_EVENT_PRODUCTS(val)
+            this.form.spikeSku = this.form.spikeSku.filter(item => item.id != val.id)
         },
         /** 刷单 */
         onOrder (val) {
@@ -285,10 +369,22 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                //
+            }).then(async () => {
+                if (!val.id) {
+                    this.$message.error(`刷单的前置条件需要活动开启`)
+                    return
+                }
+                if (this.isPending) return
+                this.isPending = true
+                try {
+                    const { data } = await clickFarming({ id: val.id, updateBy: this.userInfo.employeeName })
+                    this.isPending = false
+                    console.log(data)
+                } catch (error) {
+                    this.isPending = false
+                }
             }).catch(() => {
-                //
+                this.isPending = false
             })
         },
         /** 初始化拖拽 */
@@ -301,96 +397,156 @@ export default {
                     dataTransfer.setData('Text', '')
                 },
                 onEnd: evt => {
-                    this.tableData.splice(evt.newIndex, 0, this.tableData.splice(evt.oldIndex, 1)[0])
-                    // let newArray = this.tableData.slice()
-                    let newArray = JSON.parse(JSON.stringify(this.tableData))
-                    this.tableData = []
+                    this.form.spikeSku.splice(evt.newIndex, 0, this.form.spikeSku.splice(evt.oldIndex, 1)[0])
+                    // let newArray = this.form.spikeSku.slice()
+                    let newArray = JSON.parse(JSON.stringify(this.form.spikeSku))
+                    this.form.spikeSku = []
                     this.$nextTick(function () {
-                        this.tableData = newArray
+                        this.form.spikeSku = newArray
                     })
+                    this.ADD_EVENT_PRODUCTS([])
+                    this.ADD_EVENT_PRODUCTS(this.form.spikeSku)
                 }
             })
         },
         /** 保存 */
-        onSave () {
-            console.log(this.tableData)
-            this.tableData.some((item) => {
-                this.validate(item)
+        async onSave (status) {
+            console.log(this.form)
+            /* let temp = true
+            this.$refs['form'].validate((valid, errors) => {
+                if (!valid) {
+                    let arr = Object.values(errors)
+                    for (let i = 0; i < arr.length; i++) {
+                        this.$message.error(`${arr[0][0].message}`)
+                        break
+                    }
+                    temp = false
+                }
+            })
+            if (!temp) return false */
+            let flag = true
+            this.form.spikeSku.some((item, index) => {
+                this.validate(item, 'submit')
+                item.sort = index + 1
+                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
                 if (item._error || item._numError) {
-                    let msg = item.numErrorMsg ? `${item.skuName}，${item.numErrorMsg}` : `${item.skuName}，${item.errorMsg}`
+                    /* let msg = item.numErrorMsg ? `${item.skuName}，${item.numErrorMsg}` : `${item.skuName}，${item.errorMsg}`
                     this.$message({
                         message: msg,
                         type: 'error'
                     })
-                    return true// 当内部return true时跳出整个循环
+                    flag = false
+                    return true// 当内部return true时跳出整个循环 */
+                    flag = false
                 }
             })
+            if (flag) {
+                if (this.isPending) return
+                this.isPending = true
+                try {
+                    this.form.status = status
+                    this.form.createBy = this.userInfo.employeeName
+                    await saveOrEditEvent(this.form)
+                    this.isPending = false
+                    this.$message.success(`提交成功！`)
+                    this.$router.push('/hmall/eventMange')
+                } catch (error) {
+                    this.isPending = false
+                }
+            }
+        },
+        validateSpikeName (rule, value, callback) {
+            if (value === '') {
+                callback(new Error('请输入活动名称'))
+                return
+            }
+            let reg = /^[\u4e00-\u9fa5]{2,}$/
+            if (value && !reg.test(value)) {
+                callback(new Error('活动名称最少为2个汉字字符'))
+            } else {
+                callback()
+            }
         },
         /** 初始化优惠设置 */
         onInitDiscount () {
-            this.tableData.map((item) => {
-                // if (item.salePrice) {
+            this.form.spikeSku.map((item) => {
                 let temp = ''
-                this.form.radio === '1'
+                this.form.discountType === '1'
                     ? temp = item.salePrice ? ((item.salePrice / item.sellPrice) * 10) : ''
                     : temp = item.salePrice ? (item.sellPrice - item.salePrice) : ''
-                this.$set(item, 'discount', temp)
-                // }
+                if (item.sellPrice == item.salePrice) this.$set(item, 'discount', '')
+                else this.$set(item, 'discount', temp.toFixed(2))
             })
-            console.log(this.tableData)
         },
         setTableData (data) {
-            this.tableData = data
-            this.tableData.forEach(item => {
-                this.$set(item, 'limitNum', '')
-                this.$set(item, 'salePrice', '')
-                // this.$set(item, 'discount', '')
+            this.form.spikeSku = data
+            this.form.spikeSku.forEach(item => {
+                this.$set(item, 'salePrice', item.sellPrice)
+                this.$set(item, 'sort', '')
+                this.$set(item, '_numError', false)
+                this.$set(item, '_error', false)
+                this.$set(item, '_sellingPointError', false)
+                this.$set(item, '_inventoryNumError', false)
+                this.$set(item, 'numErrorMsg', '')
+                this.$set(item, 'errorMsg', '')
+                this.$set(item, 'sellingPointErrorMsg', '')
+                this.$set(item, 'inventoryNumErrorMsg', '')
+                this.$set(item, 'sellingPoint', '')
+                // sid
             })
             this.onInitDiscount()
             this.$nextTick(() => {
                 this.setSort()
             })
-            console.log('this.tableData', this.tableData)
+            console.log('this.form.spikeSku', this.form.spikeSku)
         }
 
     },
     mounted () {
-        this.setTableData(this.eventProducts)
-        /* this.tableData = [
-            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', retailPrice: 23154234, limitNum: 8, inventoryNum: 30, sellPrice: 12000, salePrice: 9000, discount: '' },
+        // this.setTableData(this.eventProducts)
+        /* this.form.spikeSku = [
+            { id: 1, name: '测试商美的中央空调（Midea）3匹智能直流变频 风管机一拖一 家用卡机', retailPrice: 23154234, purchaseLimitNum: 8, inventoryNum: 30, sellPrice: 12000, salePrice: 9000, discount: '' },
             {
-                id: 2, name: '测试商品名称2', retailPrice: 88888, limitNum: 0, inventoryNum: 10, sellPrice: 20000, order: 2, discount: ''
+                id: 2, name: '测试商品名称2', retailPrice: 88888, purchaseLimitNum: 0, inventoryNum: 10, sellPrice: 20000, order: 2, discount: ''
             },
-            { id: 3, name: '测试商品名称3', retailPrice: 20000, limitNum: 1, inventoryNum: 30, sellPrice: 10000, salePrice: 9000, discount: '' },
-            { id: 4, name: '测试商品名称4', retailPrice: null, limitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' },
-            { id: 5, name: '测试商品名称5', retailPrice: null, limitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' }
+            { id: 3, name: '测试商品名称3', retailPrice: 20000, purchaseLimitNum: 1, inventoryNum: 30, sellPrice: 10000, salePrice: 9000, discount: '' },
+            { id: 4, name: '测试商品名称4', retailPrice: null, purchaseLimitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' },
+            { id: 5, name: '测试商品名称5', retailPrice: null, purchaseLimitNum: 2, inventoryNum: 30, sellPrice: 40000, discount: '' }
         ]
         this.onInitDiscount()
         this.$nextTick(() => {
             this.setSort()
         }) */
+    },
+    activated () {
+        this.setTableData(this.eventProducts)
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('createEditEvent')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'addProducts') {
+            clearCache('createEditEvent')
+        }
+        next()
     }
-    /* beforeRouteEnter (to, from, next) {
-        next(vm => {
-            if (from.path === '/hmall/addProducts') {
-                vm.setTableData(vm.eventProducts)
-            }
-        })
-    } */
 }
 
 </script>
 
 <style scoped lang="scss">
-.forminfo h2{font-size: 20px; margin:20px 0 15px;}
+.forminfo h2{font-size: 18px; margin:20px 0 15px;background: #f2f2f2; padding:7px 0 7px 5px}
 /deep/.flxinput{ display: flex;align-items: center;}
-/deep/.flxinput font{ width: 80px}
+/deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed{ position: fixed; bottom: 3px;width: 100%;text-align: center;margin-left: -100px;z-index: 999}
+.subfixed{position: fixed;bottom: 3px;width: 186px;left: 50%;transform: translateX(-90px);text-align: center;z-index: 999;}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
 /deep/.errormsg{color:#f56c6c;font-size: 12px;margin-top: 2px}
 /deep/.movedom{opacity: .8;color: #fff!important;background: #42b983!important;}
+/deep/.error .el-input__inner{ border:1px solid #f56c6c }
 </style>

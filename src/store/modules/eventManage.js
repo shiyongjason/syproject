@@ -34,6 +34,11 @@ const actions = {
     async findListSku ({ commit }, params) {
         const { data } = await instance.get('/product/api/sku', { params })
         commit(types.SKU_DATA, data)
+    },
+    /** 活动详情 */
+    async eventInfo ({ commit }, id) {
+        const { data } = await instance.get(`/api/spike/base-info/${id}`, {})
+        commit(types.SKU_DATA, data)
     }
 
 }
