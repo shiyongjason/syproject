@@ -507,7 +507,6 @@ export default {
                 // if (!item.inventoryNum) {
                 this.$set(item, 'inventoryNum', item.inventoryRemainNum)
                 // }
-                // sid
             })
             this.onInitDiscount()
 
@@ -517,13 +516,9 @@ export default {
         },
         async getEventInfo () {
             await this.eventInfo(this.$route.query.eventId)
-            console.log('this.eventInfos', this.eventInfos)
             this.form = this.eventInfos
-            // console.log(this.form)
-            /* const { spikeSku } = this.eventInfos
-            console.log('spikeSku', spikeSku)
+            const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
-            console.log(this.form) */
         }
 
     },
