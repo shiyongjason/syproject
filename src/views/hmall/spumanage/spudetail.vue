@@ -29,10 +29,11 @@
                         <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
                     </template>
                     <template v-else>
-                        <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" /></template>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" :maxlength="50" />
+                    </template>
                 </el-form-item>
                 <el-form-item label="商品名称：" style="width: 460px;">
-                    <el-input placeholder="" maxlength="50" v-model="form.spuName" :disabled="operate=='audit'">
+                    <el-input placeholder="" maxlength="100" v-model="form.spuName" :disabled="operate=='audit'">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
