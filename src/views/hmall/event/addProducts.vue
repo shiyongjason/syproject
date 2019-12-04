@@ -4,17 +4,17 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-select v-model="queryParams">
-                            <el-option label="SPU编号" value="">
+                        <el-select v-model="queryType">
+                            <el-option label="SPU编号" value="1">
                             </el-option>
-                            <el-option label="SKU编号" value="1">
+                            <el-option label="SKU编号" value="2">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.skuCode" placeholder="输入对应的商品编号" maxlength="50"></el-input>
+                        <el-input v-model="queryCode" placeholder="输入对应的商品编号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -60,9 +60,13 @@ export default {
         return {
             queryParams: {
                 skuCode: '',
+                spuCode: '',
                 pageSize: 10,
                 pageNumber: 1
             },
+            copyParams: {},
+            queryCode: '',
+            queryType: '1',
             tableData: [],
             tableLabel: [
                 { label: '商品', prop: 'skuName', width: '250' },
@@ -106,10 +110,28 @@ export default {
     },
     async mounted () {
         this.onFindSkuList()
+        this.copyParams = { ...this.queryParams }
     },
     methods: {
         ...mapMutations({ addProducts: 'ADD_EVENT_PRODUCTS' }),
         ...mapActions({ setNewTags: 'setNewTags', findListSku: 'findListSku' }),
+        searchList () {
+            this.queryParams.pageNumber = 1
+            if (this.queryType === '1') {
+                this.queryParams.spuCode = this.queryCode
+                this.queryParams.skuCode = ''
+            } else {
+                this.queryParams.skuCode = this.queryCode
+                this.queryParams.spuCode = ''
+            }
+            this.onFindSkuList()
+        },
+        onRest () {
+            this.queryCode = ''
+            this.queryType = '1'
+            this.queryParams = { ...this.copyParams }
+            this.searchList()
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.onFindSkuList()
@@ -119,9 +141,19 @@ export default {
             this.onFindSkuList()
         },
         onAddproduct () {
-            this.addProducts(this.multiSelection)
-            this.findChecked()
-            this.setNewTags((this.$route.fullPath).split('?')[0])
+            if (this.multiSelection.length > 0) {
+                this.addProducts(this.multiSelection)
+                this.$notify({
+                    message: '商品添加成功',
+                    type: 'success'
+                })
+                this.onFindSkuList()
+            } else {
+                this.$message({
+                    message: '请选择商品',
+                    type: 'warning'
+                })
+            }
         },
         onBack () {
             // this.$router.go(-1)
@@ -162,6 +194,10 @@ export default {
     // display: flex;
     // justify-content: flex-start;
     // align-items: center;
+    white-space:normal;
+    word-break:break-all;
+    word-wrap:break-word;
+    width: 240px;
     text-align: left;
     img {
         display: block;
@@ -172,10 +208,9 @@ export default {
     }
 }
 /deep/ .pulled {
-    background: #eeeeee;
-    opacity: 0.5;
+    background: #e3e3e3e3;
+    opacity: 0.7;
+
 }
-.pulled h1 {
-    color: #504b4b;
-}
+
 </style>

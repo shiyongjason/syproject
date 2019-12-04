@@ -2,7 +2,8 @@ import * as types from '../mutation-types'
 import instance from '@/api/axios_new'
 const state = {
     eventProducts: JSON.parse(sessionStorage.getItem('eventProducts')) || [],
-    skuData: []
+    skuData: [],
+    spikeData: []
 }
 
 const getters = {
@@ -15,6 +16,9 @@ const mutations = {
         payload && payload.map(item => {
             productArr.push(item)
         })
+        // 去重
+        // const newproductArr = productArr.filter(item => item.id)
+        // console.log(newproductArr)
         state.eventProducts = productArr
         sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
         // state.eventProducts = payload
@@ -27,6 +31,9 @@ const mutations = {
     },
     [types.SKU_DATA] (state, payload) {
         state.skuData = payload
+    },
+    [types.SPIKE_DATA] (state, payload) {
+        state.spikeData = payload
     }
 }
 
@@ -39,6 +46,10 @@ const actions = {
     async eventInfo ({ commit }, id) {
         const { data } = await instance.get(`/api/spike/base-info/${id}`, {})
         commit(types.SKU_DATA, data)
+    },
+    async findSpike ({ commit }, params) {
+        const { data } = await instance.get('/ops/api/spike', { params })
+        commit(types.SPIKE_DATA, data)
     }
 
 }
