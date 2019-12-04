@@ -53,7 +53,11 @@ const actions = {
     /** 活动详情 */
     async eventInfo ({ commit }, id) {
         const { data } = await instance.get(`/ops/api/spike/base-info/${id}`, {})
-        commit(types.ADD_EVENT_PRODUCTS, data.spikeSku)
+        let len = data.spikeSku.length - state.eventProducts.length
+        if (len < 0) {
+            const arr = state.eventProducts.splice(len)
+            data.spikeSku = data.spikeSku.concat(arr)
+        }
         commit(types.SET_EVENT_INFO, data)
     },
     async findSpike ({ commit }, params) {
