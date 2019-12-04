@@ -358,7 +358,6 @@ export default {
         },
         /** 移除 */
         onRemove (val) {
-            //
             this.REMOVE_EVENT_PRODUCTS(val)
             this.form.spikeSku = this.form.spikeSku.filter(item => item.id != val.id)
         },
@@ -370,8 +369,8 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                if (!val.id) {
-                    this.$message.error(`刷单的前置条件需要活动开启`)
+                if (!val.id || val.inventoryRemainNum === 0) {
+                    this.$message.error(`刷单的前置条件需要活动已经开启，库存不为零。`)
                     return
                 }
                 if (this.isPending) return
