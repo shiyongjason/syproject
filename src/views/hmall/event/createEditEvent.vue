@@ -92,8 +92,6 @@ import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { saveEvent, editEvent, clickFarming } from './api/index'
 import { clearCache, newCache } from '@/utils/index'
-import moment from 'moment'
-
 export default {
     name: 'createEditEvent',
     components: { hosJoyTable },
@@ -507,7 +505,6 @@ export default {
                 // if (!item.inventoryNum) {
                 this.$set(item, 'inventoryNum', item.inventoryRemainNum)
                 // }
-                // sid
             })
             this.onInitDiscount()
 
@@ -517,13 +514,9 @@ export default {
         },
         async getEventInfo () {
             await this.eventInfo(this.$route.query.eventId)
-            console.log('this.eventInfos', this.eventInfos)
             this.form = this.eventInfos
-            // console.log(this.form)
-            /* const { spikeSku } = this.eventInfos
-            console.log('spikeSku', spikeSku)
+            const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
-            console.log(this.form) */
         }
 
     },

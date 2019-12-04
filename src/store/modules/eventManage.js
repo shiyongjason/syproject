@@ -4,7 +4,7 @@ const state = {
     eventProducts: JSON.parse(sessionStorage.getItem('eventProducts')) || [],
     skuData: [],
     spikeData: [],
-    eventInfo: {}
+    eventInfos: {}
 }
 
 const getters = {
@@ -42,7 +42,6 @@ const mutations = {
     },
     [types.SET_EVENT_INFO] (state, payload) {
         state.eventInfos = payload
-        console.log('state.eventInfos', state.eventInfos)
     }
 }
 
