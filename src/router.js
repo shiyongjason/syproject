@@ -647,7 +647,7 @@ const routerMapping = [
                 meta: {
                     title: '创建/编辑活动',
                     tagName: '创建/编辑活动',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/hmall/event/createEditEvent')

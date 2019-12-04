@@ -7,3 +7,7 @@ export const REMOVE_EVENT_PRODUCTS = 'REMOVE_EVENT_PRODUCTS'
 export const SKU_DATA = 'SKU_DATA'
 // spike 活动页面
 export const SPIKE_DATA = 'SPIKE_DATA'
+//  活动详情
+export const SET_EVENT_INFO = 'SET_EVENT_INFO'
+// 清空session
+export const EMPTY_EVENT_PRODUCTS = 'EMPTY_EVENT_PRODUCTS'
