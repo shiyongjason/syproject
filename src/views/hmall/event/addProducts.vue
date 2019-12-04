@@ -157,8 +157,8 @@ export default {
         },
         onBack () {
             // this.$router.go(-1)
-            this.$router.push('/hmall/createEditEvent')
             this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/hmall/createEditEvent')
         },
         selectable (row) {
             return !row.isChecked
