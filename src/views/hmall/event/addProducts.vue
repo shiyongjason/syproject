@@ -183,6 +183,10 @@ export default {
     // display: flex;
     // justify-content: flex-start;
     // align-items: center;
+    white-space:normal;
+    word-break:break-all;
+    word-wrap:break-word;
+    width: 240px;
     text-align: left;
     img {
         display: block;
@@ -193,10 +197,9 @@ export default {
     }
 }
 /deep/ .pulled {
-    background: #eeeeee;
-    opacity: 0.5;
+    background: #e3e3e3e3;
+    opacity: 0.7;
+
 }
-.pulled h1 {
-    color: #504b4b;
-}
+
 </style>
