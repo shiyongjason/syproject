@@ -16,6 +16,9 @@ const mutations = {
         payload && payload.map(item => {
             productArr.push(item)
         })
+        // 去重
+        // const newproductArr = productArr.filter(item => item.id)
+        // console.log(newproductArr)
         state.eventProducts = productArr
         sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
         // state.eventProducts = payload

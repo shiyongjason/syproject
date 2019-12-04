@@ -11,11 +11,9 @@
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-select v-model="queryParams.spikeTimeType">
-                            <el-option label="活动预热时间" :value=1>
+                            <el-option label="活动开始时间" :value=1>
                             </el-option>
-                            <el-option label="活动开始时间" :value=2>
-                            </el-option>
-                            <el-option label="活动结束时间" :value=3>
+                            <el-option label="活动结束时间" :value=2>
                             </el-option>
                         </el-select>
                     </div>
@@ -66,7 +64,7 @@
 
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEdit()">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
                     <el-button type="primary" size="mini" plain>复制</el-button>
                     <el-button type="warning" size="mini" plain>发布</el-button>
                     <el-button type="danger" size="mini" plain>终止</el-button>
@@ -171,6 +169,9 @@ export default {
         },
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
+        },
+        onEditEvent (id) {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id } })
         }
     }
 }

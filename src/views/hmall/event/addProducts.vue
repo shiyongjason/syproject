@@ -119,16 +119,17 @@ export default {
             this.queryParams.pageNumber = 1
             if (this.queryType === '1') {
                 this.queryParams.spuCode = this.queryCode
+                this.queryParams.skuCode = ''
             } else {
                 this.queryParams.skuCode = this.queryCode
+                this.queryParams.spuCode = ''
             }
             this.onFindSkuList()
         },
         onRest () {
             this.queryCode = ''
-            this.queryType = '0'
+            this.queryType = '1'
             this.queryParams = { ...this.copyParams }
-            console.log(this.copyParams)
             this.searchList()
         },
         handleSizeChange (val) {
@@ -140,9 +141,19 @@ export default {
             this.onFindSkuList()
         },
         onAddproduct () {
-            this.addProducts(this.multiSelection)
-            this.findChecked()
-            this.setNewTags((this.$route.fullPath).split('?')[0])
+            if (this.multiSelection.length > 0) {
+                this.addProducts(this.multiSelection)
+                this.$notify({
+                    message: '商品添加成功',
+                    type: 'success'
+                })
+                this.onFindSkuList()
+            } else {
+                this.$message({
+                    message: '请选择商品',
+                    type: 'warning'
+                })
+            }
         },
         onBack () {
             // this.$router.go(-1)
