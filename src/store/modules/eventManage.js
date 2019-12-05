@@ -72,6 +72,12 @@ const actions = {
     async findEventTrack ({ commit }, params) {
         const { data } = await axios.get('ets/api/b2b/activity/grid', { params })
         commit(types.EVENT_DATA, data)
+    },
+    /** 复制活动 */
+    async copy ({ commit }, id) {
+        const { data } = await instance.get(`/ops/api/spike/copy/${id}`, {})
+        console.log(data)
+        commit(types.SET_EVENT_INFO, data)
     }
 
 }
