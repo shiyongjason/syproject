@@ -885,8 +885,7 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
 function makeIndex (data, next, query) {
@@ -904,7 +903,6 @@ function makeIndex (data, next, query) {
         let path = ''
         if (query.route) {
             path = '/' + query.route.split(',').join('/')
-            console.log(path)
         } else {
             path = index.join('/')
         }
