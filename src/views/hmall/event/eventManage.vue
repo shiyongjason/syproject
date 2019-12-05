@@ -65,7 +65,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
-                    <el-button type="primary" size="mini" plain>复制</el-button>
+                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
                     <el-button type="warning" size="mini" plain>发布</el-button>
                     <el-button type="danger" size="mini" plain>终止</el-button>
                     <el-tooltip class="item" effect="dark" placement="bottom-start">
@@ -140,6 +140,9 @@ export default {
         ...mapActions({
             findSpike: 'findSpike'
         }),
+        onCopy (id) {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+        },
         searchList () {
             this.queryParams.pageNumber = 1
             this.onFindeSpike()

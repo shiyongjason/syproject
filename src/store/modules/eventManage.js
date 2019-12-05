@@ -63,6 +63,12 @@ const actions = {
     async findSpike ({ commit }, params) {
         const { data } = await instance.get('/ops/api/spike', { params })
         commit(types.SPIKE_DATA, data)
+    },
+    /** 复制活动 */
+    async copy ({ commit }, id) {
+        const { data } = await instance.get(`/ops/api/spike/copy/${id}`, {})
+        console.log(data)
+        commit(types.SET_EVENT_INFO, data)
     }
 
 }

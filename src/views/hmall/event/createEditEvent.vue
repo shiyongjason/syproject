@@ -80,10 +80,24 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed">
+        <div class="subfixed" v-if="this.form.status!==2||$route.query.copeId">
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
+        <div class="subfixed" v-else>
+            <el-button type="primary" @click='()=>{$router.go(-1)}'>取消</el-button>
+            <el-button type="primary" @click='onSave(2)'>活动更新</el-button>
+        </div>
+        <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
+        <center>
+            <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
+            <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p>
+        </center>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="onCancle">取 消</el-button>
+            <el-button type="primary" @click="onSureOrder">确 定</el-button>
+        </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -94,11 +108,15 @@ import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { saveEvent, editEvent, clickFarming } from './api/index'
 import { clearCache, newCache } from '@/utils/index'
+import moment from 'moment'
 export default {
     name: 'createEditEvent',
     components: { hosJoyTable },
     data () {
         return {
+            orderRow: '',
+            remind: false,
+            orderDialogVisible: false,
             isPending: false,
             sortable: null,
             form: {
@@ -137,8 +155,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._sellingPointError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12'></el-input>
-                                {scope.row._sellingPointError ? <div class='errormsg'>{scope.row.sellingPointErrorMsg}</div> : ''}
+                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12'></el-input>
                             </span>
                         )
                     }
@@ -241,7 +258,7 @@ export default {
     },
     methods: {
         ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS' ]),
-        ...mapActions(['eventInfo']),
+        ...mapActions(['eventInfo', 'copy']),
         radioChange (val) {
             this.discount = ''
             this.purchaseLimitNum = ''
@@ -266,9 +283,15 @@ export default {
             else scope.row[scope.column.property] = val
             this.validate(scope.row, key)
             if (!scope.row._error && val && key === 'discount') {
-                this.form.discountType === 1
-                    ? scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
-                    : scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0)).toFixed(2)
+                if (this.form.discountType === 1) {
+                    if ((scope.row.sellPrice * (scope.row.discount / 10) + '').indexOf('.') != -1) {
+                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
+                    } else {
+                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10))
+                    }
+                } else {
+                    scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0))
+                }
             }
         },
         /** 设置所有 */
@@ -287,9 +310,15 @@ export default {
                 item[key] = this[key]
                 this.validate(item, key)
                 if (!item._error && val && key === 'discount') {
-                    this.form.discountType === 1
-                        ? item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
-                        : item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0)).toFixed(2)
+                    if (this.form.discountType === 1) {
+                        if ((item.sellPrice * (item.discount / 10) + '').indexOf('.') != -1) {
+                            item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
+                        } else {
+                            item.salePrice = (item.sellPrice * (item.discount / 10))
+                        }
+                    } else {
+                        item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0))
+                    }
                 }
             })
         },
@@ -297,18 +326,10 @@ export default {
         validate (item, action = '') {
             // true 需要在特定的操作才触发。
             if (action === 'submit') {
-                if (!item.sellingPoint) {
-                    item.sellingPointErrorMsg = '卖点不能为空'
-                    this.$set(item, '_sellingPointError', true)
-                }
                 if (!item.inventoryNum) {
                     item.inventoryNumErrorMsg = '库存不能小于0'
                     this.$set(item, '_inventoryNumError', true)
                 }
-            }
-            if (item.sellingPoint) {
-                item.sellingPointErrorMsg = ''
-                this.$set(item, '_sellingPointError', false)
             }
             if (item.inventoryNum) {
                 item.inventoryNumErrorMsg = ''
@@ -366,28 +387,33 @@ export default {
         /** 刷单 */
         onOrder (val) {
             // 刷单前置条件：活动已经开启，库存不为零。
-            this.$confirm('确认是否刷单一次?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-                if (!val.id || val.inventoryRemainNum === 0) {
-                    this.$message.error(`刷单的前置条件需要活动已经开启，库存不为零。`)
-                    return
-                }
-                if (this.isPending) return
-                this.isPending = true
-                try {
-                    await clickFarming({ sid: val.id, updateBy: this.userInfo.employeeName })
-                    this.isPending = false
-                    val.clickFarmingNum += 1
-                    this.getEventInfo()
-                } catch (error) {
-                    this.isPending = false
-                }
-            }).catch(() => {
+            if (!val.productId || val.inventoryRemainNum === 0) {
+                this.$message.error(`刷单的前置条件需要活动已经开启，库存不为零。`)
+                return
+            }
+            this.orderRow = val
+            if (!this.remind) this.orderDialogVisible = true
+            else this.onSureOrder()
+        },
+        onCancle () {
+            this.orderDialogVisible = false
+            this.remind = false
+            sessionStorage.setItem('remind', false)
+        },
+        onrRemind () {
+            sessionStorage.setItem('remind', this.remind)
+        },
+        async onSureOrder () {
+            if (this.isPending) return
+            this.isPending = true
+            try {
+                await clickFarming({ productId: this.orderRow.id, updateBy: this.userInfo.employeeName })
                 this.isPending = false
-            })
+                this.getEventInfo()
+                this.orderDialogVisible = false
+            } catch (error) {
+                this.isPending = false
+            }
         },
         /** 初始化拖拽 */
         setSort () {
@@ -440,11 +466,19 @@ export default {
                 }
             })
             if (flag) {
+                if (status === 2) {
+                    let now = moment().format('YYYY-MM-DD HH:mm:ss')
+                    console.log(moment(this.form.startTime).valueOf(), moment(now).valueOf())
+                    let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
+                    if (consumingMinutes < 10) {
+                        this.$message.error(`只能创建当前时间10分钟后开始的活动`)
+                        return
+                    }
+                }
                 if (this.isPending) return
                 this.isPending = true
                 try {
                     this.form.status = status
-
                     if (this.$route.query.eventId) {
                         this.form.updateBy = this.userInfo.employeeName
                         await editEvent(this.form)
@@ -489,7 +523,6 @@ export default {
             this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
         },
         setTableData (data) {
-            console.log('setTableData', data)
             this.form.spikeSku = data
             this.form.spikeSku.forEach(item => {
                 if (!item.salePrice) this.$set(item, 'salePrice', item.sellPrice)
@@ -497,15 +530,13 @@ export default {
                 if (!item.sort) this.$set(item, 'sort', '')
                 if (!item._numError) this.$set(item, '_numError', false)
                 if (!item._error) this.$set(item, '_error', false)
-                if (!item._sellingPointError) this.$set(item, '_sellingPointError', false)
                 if (!item._inventoryNumError) this.$set(item, '_inventoryNumError', false)
                 if (!item.numErrorMsg) this.$set(item, 'numErrorMsg', '')
                 if (!item.errorMsg) this.$set(item, 'errorMsg', '')
-                if (!item.sellingPointErrorMsg) this.$set(item, 'sellingPointErrorMsg', '')
-                if (!item.inventoryNumErrorMsg) this.$set(item, 'inventoryNumErrorMsg', '')
                 if (!item.sellingPoint) this.$set(item, 'sellingPoint', '')
+                if (!item.inventoryNumErrorMsg) this.$set(item, 'inventoryNumErrorMsg', '')
                 if (!item.inventoryNum) this.$set(item, 'inventoryNum', item.inventoryRemainNum)
-                if (!item.sid) this.$set(item, 'sid', '')
+                if (!item.productId) this.$set(item, 'productId', null)
             })
             this.onInitDiscount()// 初始化，写入session
             this.$nextTick(() => {
@@ -516,7 +547,12 @@ export default {
             await this.eventInfo(this.$route.query.eventId)
             this.form = this.eventInfos
             const { spikeSku } = this.eventInfos
-            console.log(this.eventInfos)
+            this.setTableData(spikeSku)
+        },
+        async onCopy () {
+            await this.copy(this.$route.query.copeId)
+            this.form = this.eventInfos
+            const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         }
 
@@ -524,9 +560,12 @@ export default {
     async activated () {
         if (this.$route.query.eventId) {
             this.getEventInfo()
+        } else if (this.$route.query.copeId) {
+            this.onCopy()
         } else {
             this.setTableData(this.eventProducts)
         }
+        this.remind = JSON.parse(sessionStorage.getItem('eventremindProducts')) || false
     },
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
@@ -549,11 +588,15 @@ export default {
 /deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed{position: fixed;bottom: 3px;width: 186px;left: 50%;transform: translateX(-90px);text-align: center;z-index: 999;}
+.subfixed{position: fixed;bottom:35px;width: 186px;left: 50%;transform: translateX(-90px);text-align: center;z-index: 999;}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
 /deep/.errormsg{color:#f56c6c;font-size: 12px;margin-top: 2px}
 /deep/.movedom{opacity: .8;color: #fff!important;background: #42b983!important;}
 /deep/.error .el-input__inner{ border:1px solid #f56c6c }
+/deep/.orderDialog .el-dialog{ height: 230px}
+/deep/.orderDialog .el-dialog__body{ min-height: auto !important}
+.isremind{margin-top:12px;}
+.isremind font{color:#a6a8ab;font-weight: 200;}
 </style>
