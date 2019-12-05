@@ -62,14 +62,15 @@
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{IsEventName(scope.data.row.status)}}
+
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
                     <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
-                    <el-tooltip class="item" effect="dark" placement="bottom-start">
-                        <div slot="content">累计PV：1315<br />累计UV：1011<br /> 累计订单数：11<br />累计支付数：1,025</div>
+                    <el-tooltip placement="bottom-start" effect="dark">
+                        <div slot="content" v-if="scope.data.row.pvdata">累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付数：{{scope.data.row.pvdata.payClicks}}</div>
                         <el-button type="info" size="mini" plain @click="onClickStatics(scope.data)">数据统计</el-button>
                     </el-tooltip>
                 </template>
@@ -105,13 +106,15 @@ export default {
             ],
             paginationInfo: {},
             eventsState: EVENT_LIST,
-            eventName: ['待发布', '预热中', '进行中', '已结束', '已取消']
+            eventName: ['待发布', '预热中', '进行中', '已结束', '已取消'],
+            PVdata: {}
         }
     },
     computed: {
         ...mapState({
             spikeData: state => state.eventManage.spikeData,
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            listTrack: state => state.eventManage.listTrack
         }),
         pickerOptionsStart () {
             return {
@@ -140,7 +143,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findSpike: 'findSpike'
+            findSpike: 'findSpike',
+            hoverTrack: 'hoverTrack'
         }),
         onCopy (id) {
             this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
@@ -163,7 +167,14 @@ export default {
         },
         async onFindeSpike () {
             await this.findSpike(this.queryParams)
-            this.tableData = this.spikeData.records
+            let spikelist = this.spikeData.records
+            // TODO 影响性能吗
+            spikelist && spikelist.map(async (item, index) => {
+                await this.hoverTrack({ activityId: item.id, activityName: item.spikeName })
+                item.pvdata = this.listTrack
+                this.$set(item, index, this.listTrack)
+            })
+            this.tableData = spikelist
             this.paginationInfo = {
                 total: this.spikeData.total,
                 pageNumber: this.spikeData.current,
@@ -180,6 +191,9 @@ export default {
                 type: 'success'
             })
             this.onFindeSpike()
+        },
+        async onShow (val) {
+
         },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })
