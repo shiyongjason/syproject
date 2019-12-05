@@ -142,7 +142,7 @@ export default {
                 }
             },
             purchaseLimitNum: '',
-            discount: '',
+            discountValue: '',
             tableData: [],
             column: [
                 { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
@@ -167,7 +167,8 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
+                                <i class='mark'>*</i>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -188,7 +189,8 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._numError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
+                                <i class='mark'>*</i>
+                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
                         )
@@ -196,13 +198,13 @@ export default {
                 },
                 {
                     label: '优惠设置',
-                    prop: 'discount',
+                    prop: 'discountValue',
                     width: '210',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discount} onInput={(val) => { this.setAllCol('discount', val) }}></el-input>
+                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.setAllCol('discountValue', val) }}></el-input>
                             </span>
                         )
                     },
@@ -210,11 +212,13 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discount') }}></el-input>折
+                                    <i class='mark'>*</i>
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discount') }}></el-input>元
+                                    <i class='mark'>*</i>
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
@@ -260,17 +264,15 @@ export default {
         ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS' ]),
         ...mapActions(['eventInfo', 'copy']),
         radioChange (val) {
-            this.discount = ''
+            this.discountValue = ''
             this.purchaseLimitNum = ''
             this.form.spikeSku.map((item) => {
-                item.discount = ''
+                item.discountValue = ''
                 item._error = false
                 item._numError = false
                 item.numErrorMsg = ''
                 item.errorMsg = ''
-                this.validate(item)
             })
-            this.onInitDiscount()
         },
         formatterMoney (row, column) {
             if (row[column.property] == null) return '-'
@@ -282,16 +284,8 @@ export default {
             if (key != 'sellingPoint') scope.row[scope.column.property] = isNum(val, this.form.discountType === 1 ? 1 : 2)
             else scope.row[scope.column.property] = val
             this.validate(scope.row, key)
-            if (!scope.row._error && val && key === 'discount') {
-                if (this.form.discountType === 1) {
-                    if ((scope.row.sellPrice * (scope.row.discount / 10) + '').indexOf('.') != -1) {
-                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10)).toFixed(2)
-                    } else {
-                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discount / 10))
-                    }
-                } else {
-                    scope.row.salePrice = (scope.row.sellPrice - (scope.row.discount ? scope.row.discount : 0))
-                }
+            if (!scope.row._error && val && key === 'discountValue') {
+                this.handleSetSalePrice(scope.row)
             }
         },
         /** 设置所有 */
@@ -309,18 +303,24 @@ export default {
             this.form.spikeSku.map((item) => {
                 item[key] = this[key]
                 this.validate(item, key)
-                if (!item._error && val && key === 'discount') {
-                    if (this.form.discountType === 1) {
-                        if ((item.sellPrice * (item.discount / 10) + '').indexOf('.') != -1) {
-                            item.salePrice = (item.sellPrice * (item.discount / 10)).toFixed(2)
-                        } else {
-                            item.salePrice = (item.sellPrice * (item.discount / 10))
-                        }
-                    } else {
-                        item.salePrice = (item.sellPrice - (item.discount ? item.discount : 0))
-                    }
+                if (!item._error && val && key === 'discountValue') {
+                    this.handleSetSalePrice(item)
                 }
             })
+        },
+        handleSetSalePrice (item) {
+            if (this.form.discountType === 1) {
+                if ((item.sellPrice * (item.discountValue / 10) + '').indexOf('.') != -1) {
+                    item.salePrice = (item.sellPrice * (item.discountValue / 10)).toFixed(2)
+                    if ((item.salePrice + '').indexOf('.00') != -1) {
+                        item.salePrice = item.salePrice.split('.')[0]
+                    }
+                } else {
+                    item.salePrice = (item.sellPrice * (item.discountValue / 10))
+                }
+            } else {
+                item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
+            }
         },
         /** 校验 */
         validate (item, action = '') {
@@ -341,8 +341,9 @@ export default {
                 // return
             }
             if (action === 'submit') {
-                if (!item.discount) {
-                    item.errorMsg = '优惠折扣不可低于1折'
+                if (!item.discountValue) {
+                    if (this.form.discountType === 1) item.errorMsg = '优惠折扣不可低于1折'
+                    else item.errorMsg = '直降不能小于0'
                     this.$set(item, '_error', true)
                     return
                 } else {
@@ -358,7 +359,7 @@ export default {
                 item.numErrorMsg = ''
             }
             if (this.form.discountType === 2) {
-                if (item.sellPrice - (item.discount ? item.discount : 0) <= 0) {
+                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) <= 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
                 } else {
@@ -366,13 +367,13 @@ export default {
                     item.errorMsg = ''
                 }
             } else {
-                if (item.discount && item.discount > 10) {
+                if (item.discountValue && item.discountValue > 10) {
                     item.errorMsg = '最大折扣不能大于10'
                     this.$set(item, '_error', true)
-                } else if (item.discount && item.discount < 1) {
+                } else if (item.discountValue && item.discountValue < 1) {
                     item.errorMsg = '优惠折扣不可低于1折'
                     item._error = true
-                } else if (item.discount) {
+                } else if (item.discountValue) {
                     item._error = false
                     item.errorMsg = ''
                 }
@@ -455,25 +456,19 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum && item.inventoryOriginNum != 0) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum && item.inventoryRemainNum != 0) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
-                if (item._error || item._numError || item._inventoryNumError || item._sellingPointError) {
-                    /* let msg = item.numErrorMsg ? `${item.skuName}，${item.numErrorMsg}` : `${item.skuName}，${item.errorMsg}`
-                    this.$message({ message: msg,type: 'error' })
-                    flag = false
-                    return true// 当内部return true时跳出整个循环 */
-                    flag = false
-                }
+                if (!item.inventoryOriginNum) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                if (!item.inventoryRemainNum) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
                 if (status === 2) {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
-                    console.log(moment(this.form.startTime).valueOf(), moment(now).valueOf())
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
                     if (consumingMinutes < 10) {
-                        this.$message.error(`只能创建当前时间10分钟后开始的活动`)
+                        this.$message.error(`只能创建当前时间10分钟后的活动`)
                         return
                     }
+                    this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
                 }
                 if (this.isPending) return
                 this.isPending = true
@@ -492,6 +487,8 @@ export default {
                 } catch (error) {
                     this.isPending = false
                 }
+            } else {
+                this.$message.error(`信息尚未填写完整`)
             }
         },
         validateSpikeName (rule, value, callback) {
@@ -507,38 +504,28 @@ export default {
             }
         },
         /** 初始化优惠设置 */
-        onInitDiscount () {
-            this.form.spikeSku.map((item) => {
-                let temp = ''
-                this.form.discountType === 1
-                    ? temp = item.salePrice ? ((item.salePrice / item.sellPrice) * 10) : ''
-                    : temp = item.salePrice ? (item.sellPrice - item.salePrice) : ''
-                if (item.sellPrice == item.salePrice) this.$set(item, 'discount', '')
-                else {
-                    if ((temp + '').indexOf('.') != -1) this.$set(item, 'discount', temp.toFixed(2))
-                    else this.$set(item, 'discount', temp)
-                }
-            })
+        onInit () {
             this.EMPTY_EVENT_PRODUCTS()
             this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
         },
         setTableData (data) {
             this.form.spikeSku = data
             this.form.spikeSku.forEach(item => {
-                if (!item.salePrice) this.$set(item, 'salePrice', item.sellPrice)
-                if (!item.purchaseLimitNum) this.$set(item, 'purchaseLimitNum', '')// 限购
-                if (!item.sort) this.$set(item, 'sort', '')
-                if (!item._numError) this.$set(item, '_numError', false)
-                if (!item._error) this.$set(item, '_error', false)
-                if (!item._inventoryNumError) this.$set(item, '_inventoryNumError', false)
-                if (!item.numErrorMsg) this.$set(item, 'numErrorMsg', '')
-                if (!item.errorMsg) this.$set(item, 'errorMsg', '')
-                if (!item.sellingPoint) this.$set(item, 'sellingPoint', '')
-                if (!item.inventoryNumErrorMsg) this.$set(item, 'inventoryNumErrorMsg', '')
-                if (!item.inventoryNum) this.$set(item, 'inventoryNum', item.inventoryRemainNum)
-                if (!item.productId) this.$set(item, 'productId', null)
+                !item.salePrice && this.$set(item, 'salePrice', item.sellPrice)
+                !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '')// 限购
+                !item.sort && this.$set(item, 'sort', '')
+                !item._numError && this.$set(item, '_numError', false)
+                !item._error && this.$set(item, '_error', false)
+                !item._inventoryNumError && this.$set(item, '_inventoryNumError', false)
+                !item.numErrorMsg && this.$set(item, 'numErrorMsg', '')
+                !item.errorMsg && this.$set(item, 'errorMsg', '')
+                !item.sellingPoint && this.$set(item, 'sellingPoint', '')
+                !item.inventoryNumErrorMsg && this.$set(item, 'inventoryNumErrorMsg', '')
+                !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
+                !item.productId && this.$set(item, 'productId', null)
+                !item.discountValue && this.$set(item, 'discountValue', '')
             })
-            this.onInitDiscount()// 初始化，写入session
+            this.onInit()// 初始化，写入session
             this.$nextTick(() => {
                 this.setSort()
             })
@@ -565,7 +552,7 @@ export default {
         } else {
             this.setTableData(this.eventProducts)
         }
-        this.remind = JSON.parse(sessionStorage.getItem('eventremindProducts')) || false
+        this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
     },
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
@@ -599,4 +586,5 @@ export default {
 /deep/.orderDialog .el-dialog__body{ min-height: auto !important}
 .isremind{margin-top:12px;}
 .isremind font{color:#a6a8ab;font-weight: 200;}
+/deep/.mark{ font-style: normal;color: #F56C6C}
 </style>

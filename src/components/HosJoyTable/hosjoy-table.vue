@@ -17,7 +17,7 @@
                 </el-table-column>
                 <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item" :key='index'></hosjoy-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center" :width="actionWidth" class-name="allowDrag">
+            <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
