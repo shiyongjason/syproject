@@ -281,15 +281,7 @@ export default {
             else scope.row[scope.column.property] = val
             this.validate(scope.row, key)
             if (!scope.row._error && val && key === 'discountValue') {
-                if (this.form.discountType === 1) {
-                    if ((scope.row.sellPrice * (scope.row.discountValue / 10) + '').indexOf('.') != -1) {
-                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discountValue / 10)).toFixed(2)
-                    } else {
-                        scope.row.salePrice = (scope.row.sellPrice * (scope.row.discountValue / 10))
-                    }
-                } else {
-                    scope.row.salePrice = (scope.row.sellPrice - (scope.row.discountValue ? scope.row.discountValue : 0))
-                }
+                this.handleSetSalePrice(scope.row)
             }
         },
         /** 设置所有 */
@@ -308,17 +300,23 @@ export default {
                 item[key] = this[key]
                 this.validate(item, key)
                 if (!item._error && val && key === 'discountValue') {
-                    if (this.form.discountType === 1) {
-                        if ((item.sellPrice * (item.discountValue / 10) + '').indexOf('.') != -1) {
-                            item.salePrice = (item.sellPrice * (item.discountValue / 10)).toFixed(2)
-                        } else {
-                            item.salePrice = (item.sellPrice * (item.discountValue / 10))
-                        }
-                    } else {
-                        item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
-                    }
+                    this.handleSetSalePrice(item)
                 }
             })
+        },
+        handleSetSalePrice (item) {
+            if (this.form.discountType === 1) {
+                if ((item.sellPrice * (item.discountValue / 10) + '').indexOf('.') != -1) {
+                    item.salePrice = (item.sellPrice * (item.discountValue / 10)).toFixed(2)
+                    if ((item.salePrice + '').indexOf('.00') != -1) {
+                        item.salePrice = item.salePrice.split('.')[0]
+                    }
+                } else {
+                    item.salePrice = (item.sellPrice * (item.discountValue / 10))
+                }
+            } else {
+                item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
+            }
         },
         /** 校验 */
         validate (item, action = '') {
@@ -340,7 +338,8 @@ export default {
             }
             if (action === 'submit') {
                 if (!item.discountValue) {
-                    item.errorMsg = '优惠折扣不可低于1折'
+                    if (this.form.discountType === 1) item.errorMsg = '优惠折扣不可低于1折'
+                    else item.errorMsg = '直降不能小于0'
                     this.$set(item, '_error', true)
                     return
                 } else {
