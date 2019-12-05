@@ -55,7 +55,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
-    name: 'eventmanage',
+    name: 'addProducts',
     data () {
         return {
             queryParams: {

@@ -72,7 +72,9 @@
                         </template>
                         <template slot="action" slot-scope="scope">
                             <el-button type="primary" size='small' @click="onRemove(scope.data.row)">移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">刷单（{{scope.data.row.order?scope.data.row.order:0}}）</el-button>
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">
+                                刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
+                            </el-button>
                         </template>
                     </hosJoyTable>
                 </div>
@@ -358,7 +360,6 @@ export default {
         },
         /** 移除 */
         onRemove (val) {
-            //
             this.REMOVE_EVENT_PRODUCTS(val)
             this.form.spikeSku = this.form.spikeSku.filter(item => item.id != val.id)
         },
@@ -370,8 +371,8 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                if (!val.id) {
-                    this.$message.error(`刷单的前置条件需要活动开启`)
+                if (!val.id || val.inventoryRemainNum === 0) {
+                    this.$message.error(`刷单的前置条件需要活动已经开启，库存不为零。`)
                     return
                 }
                 if (this.isPending) return
@@ -379,6 +380,7 @@ export default {
                 try {
                     await clickFarming({ sid: val.id, updateBy: this.userInfo.employeeName })
                     this.isPending = false
+                    val.clickFarmingNum += 1
                     this.getEventInfo()
                 } catch (error) {
                     this.isPending = false
@@ -492,22 +494,20 @@ export default {
             this.form.spikeSku.forEach(item => {
                 if (!item.salePrice) this.$set(item, 'salePrice', item.sellPrice)
                 if (!item.purchaseLimitNum) this.$set(item, 'purchaseLimitNum', '')// 限购
-                this.$set(item, 'sort', '')
-                this.$set(item, '_numError', false)
-                this.$set(item, '_error', false)
-                this.$set(item, '_sellingPointError', false)
-                this.$set(item, '_inventoryNumError', false)
-                this.$set(item, 'numErrorMsg', '')
-                this.$set(item, 'errorMsg', '')
-                this.$set(item, 'sellingPointErrorMsg', '')
-                this.$set(item, 'inventoryNumErrorMsg', '')
-                this.$set(item, 'sellingPoint', '')
-                // if (!item.inventoryNum) {
-                this.$set(item, 'inventoryNum', item.inventoryRemainNum)
-                // }
+                if (!item.sort) this.$set(item, 'sort', '')
+                if (!item._numError) this.$set(item, '_numError', false)
+                if (!item._error) this.$set(item, '_error', false)
+                if (!item._sellingPointError) this.$set(item, '_sellingPointError', false)
+                if (!item._inventoryNumError) this.$set(item, '_inventoryNumError', false)
+                if (!item.numErrorMsg) this.$set(item, 'numErrorMsg', '')
+                if (!item.errorMsg) this.$set(item, 'errorMsg', '')
+                if (!item.sellingPointErrorMsg) this.$set(item, 'sellingPointErrorMsg', '')
+                if (!item.inventoryNumErrorMsg) this.$set(item, 'inventoryNumErrorMsg', '')
+                if (!item.sellingPoint) this.$set(item, 'sellingPoint', '')
+                if (!item.inventoryNum) this.$set(item, 'inventoryNum', item.inventoryRemainNum)
+                if (!item.sid) this.$set(item, 'sid', '')
             })
-            this.onInitDiscount()
-
+            this.onInitDiscount()// 初始化，写入session
             this.$nextTick(() => {
                 this.setSort()
             })
@@ -516,6 +516,7 @@ export default {
             await this.eventInfo(this.$route.query.eventId)
             this.form = this.eventInfos
             const { spikeSku } = this.eventInfos
+            console.log(this.eventInfos)
             this.setTableData(spikeSku)
         }
 
