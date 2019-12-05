@@ -55,7 +55,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
 export default {
-    name: 'eventmanage',
+    name: 'addProducts',
     data () {
         return {
             queryParams: {
@@ -158,6 +158,7 @@ export default {
         onBack () {
             // this.$router.go(-1)
             this.setNewTags((this.$route.fullPath).split('?')[0])
+            // this.$router.push('/hmall/createEditEvent')
             this.$router.go(-1)
         },
         selectable (row) {

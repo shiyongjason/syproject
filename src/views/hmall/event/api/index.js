@@ -13,3 +13,8 @@ export const editEvent = (params) => {
 export const clickFarming = (params) => {
     return instance.post('/ops/api/spike/click-farming', params)
 }
+
+// 发布 终止 活动
+export const updateSpikeStatus = (params) => {
+    return instance.post('/ops/api/spike/status', params)
+}

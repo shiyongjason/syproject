@@ -61,13 +61,13 @@
                     {{scope.data.row.startTime|formatterTime}}~ {{scope.data.row.endTime|formatterTime}}
                 </template>
                 <template slot="status" slot-scope="scope">
- {{IsEventName(scope.data.row.status)}}
+                    {{IsEventName(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
-                    <el-button type="warning" size="mini" plain>发布</el-button>
-                    <el-button type="danger" size="mini" plain>终止</el-button>
+                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4">发布</el-button>
+                    <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
                     <el-tooltip class="item" effect="dark" placement="bottom-start">
                         <div slot="content">累计PV：1315<br />累计UV：1011<br /> 累计订单数：11<br />累计支付数：1,025</div>
                         <el-button type="info" size="mini" plain @click="onClickStatics(scope.data)">数据统计</el-button>
@@ -81,6 +81,7 @@
 <script>
 import { EVENT_LIST } from '../store/const'
 import { mapActions, mapState } from 'vuex'
+import { updateSpikeStatus } from './api/index'
 export default {
     name: 'eventmanage',
     data () {
@@ -109,7 +110,8 @@ export default {
     },
     computed: {
         ...mapState({
-            spikeData: state => state.eventManage.spikeData
+            spikeData: state => state.eventManage.spikeData,
+            userInfo: state => state.userInfo
         }),
         pickerOptionsStart () {
             return {
@@ -169,7 +171,10 @@ export default {
             }
         },
         IsEventName (val) {
-            return this.eventName[val]
+            return this.eventName[val - 1]
+        },
+        async onOperate (item, val) {
+            await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
         },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })
