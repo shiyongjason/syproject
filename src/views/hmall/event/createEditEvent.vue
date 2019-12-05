@@ -167,7 +167,8 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
+                                <i class='mark'>*</i>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -188,7 +189,8 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._numError ? 'error' : ''} style='width:110px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
+                                <i class='mark'>*</i>
+                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
                         )
@@ -210,10 +212,12 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
+                                    <i class='mark'>*</i>
                                     <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
+                                    <i class='mark'>*</i>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
@@ -452,8 +456,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum && item.inventoryOriginNum != 0) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum && item.inventoryRemainNum != 0) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                if (!item.inventoryOriginNum) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                if (!item.inventoryRemainNum) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
@@ -483,6 +487,8 @@ export default {
                 } catch (error) {
                     this.isPending = false
                 }
+            } else {
+                this.$message.error(`信息尚未填写完整`)
             }
         },
         validateSpikeName (rule, value, callback) {
@@ -505,19 +511,19 @@ export default {
         setTableData (data) {
             this.form.spikeSku = data
             this.form.spikeSku.forEach(item => {
-                if (!item.salePrice) this.$set(item, 'salePrice', item.sellPrice)
-                if (!item.purchaseLimitNum) this.$set(item, 'purchaseLimitNum', '')// 限购
-                if (!item.sort) this.$set(item, 'sort', '')
-                if (!item._numError) this.$set(item, '_numError', false)
-                if (!item._error) this.$set(item, '_error', false)
-                if (!item._inventoryNumError) this.$set(item, '_inventoryNumError', false)
-                if (!item.numErrorMsg) this.$set(item, 'numErrorMsg', '')
-                if (!item.errorMsg) this.$set(item, 'errorMsg', '')
-                if (!item.sellingPoint) this.$set(item, 'sellingPoint', '')
-                if (!item.inventoryNumErrorMsg) this.$set(item, 'inventoryNumErrorMsg', '')
-                if (!item.inventoryNum) this.$set(item, 'inventoryNum', item.inventoryRemainNum)
-                if (!item.productId) this.$set(item, 'productId', null)
-                if (!item.discountValue) this.$set(item, 'discountValue', '')
+                !item.salePrice && this.$set(item, 'salePrice', item.sellPrice)
+                !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '')// 限购
+                !item.sort && this.$set(item, 'sort', '')
+                !item._numError && this.$set(item, '_numError', false)
+                !item._error && this.$set(item, '_error', false)
+                !item._inventoryNumError && this.$set(item, '_inventoryNumError', false)
+                !item.numErrorMsg && this.$set(item, 'numErrorMsg', '')
+                !item.errorMsg && this.$set(item, 'errorMsg', '')
+                !item.sellingPoint && this.$set(item, 'sellingPoint', '')
+                !item.inventoryNumErrorMsg && this.$set(item, 'inventoryNumErrorMsg', '')
+                !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
+                !item.productId && this.$set(item, 'productId', null)
+                !item.discountValue && this.$set(item, 'discountValue', '')
             })
             this.onInit()// 初始化，写入session
             this.$nextTick(() => {
@@ -546,7 +552,7 @@ export default {
         } else {
             this.setTableData(this.eventProducts)
         }
-        this.remind = JSON.parse(sessionStorage.getItem('eventremindProducts')) || false
+        this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
     },
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
@@ -580,4 +586,5 @@ export default {
 /deep/.orderDialog .el-dialog__body{ min-height: auto !important}
 .isremind{margin-top:12px;}
 .isremind font{color:#a6a8ab;font-weight: 200;}
+/deep/.mark{ font-style: normal;color: #F56C6C}
 </style>
