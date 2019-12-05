@@ -6,7 +6,8 @@ const state = {
     skuData: {},
     spikeData: {},
     eventTrackData: {},
-    eventInfos: {}
+    eventInfos: {},
+    listTrack: {}
 }
 
 const getters = {
@@ -47,6 +48,9 @@ const mutations = {
     },
     [types.EVENT_DATA] (state, payload) {
         state.eventTrackData = payload
+    },
+    [types.LIST_TRACK] (state, payload) {
+        state.listTrack = payload
     }
 }
 
@@ -72,6 +76,10 @@ const actions = {
     async findEventTrack ({ commit }, params) {
         const { data } = await axios.get('ets/api/b2b/activity/grid', { params })
         commit(types.EVENT_DATA, data)
+    },
+    async hoverTrack ({ commit }, params) {
+        const { data } = await axios.get('ets/api/b2b/activity/hover', { params })
+        commit(types.LIST_TRACK, data)
     },
     /** 复制活动 */
     async copy ({ commit }, id) {

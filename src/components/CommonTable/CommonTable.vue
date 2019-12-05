@@ -13,7 +13,7 @@
             </div>
         </el-collapse-transition>
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe'  :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4" :row-class-name="rowClassName">
+        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border  :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4" :row-class-name="rowClassName">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
@@ -85,7 +85,7 @@ export default {
         },
         stripe: {
             type: Boolean,
-            default: false
+            default: true
         },
         isBlank: {
             type: Boolean,

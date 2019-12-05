@@ -13,3 +13,5 @@ export const SPIKE_DATA = 'SPIKE_DATA'
 export const SET_EVENT_INFO = 'SET_EVENT_INFO'
 // 清空session
 export const EMPTY_EVENT_PRODUCTS = 'EMPTY_EVENT_PRODUCTS'
+// 列表 hover 埋点数据
+export const LIST_TRACK = 'LIST_TRACK'
