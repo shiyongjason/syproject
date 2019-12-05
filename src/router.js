@@ -855,8 +855,8 @@ const routerMapping = [
         component: Layout,
         children: [
             {
-                path: 'archivesList',
-                name: 'archivesList',
+                path: 'versionUpdating',
+                name: 'versionUpdating',
                 meta: {
                     title: '版本更新',
                     tagName: '版本更新',
@@ -906,7 +906,6 @@ function makeIndex (data, next, query) {
         } else {
             path = index.join('/')
         }
-
         if (!path) {
             path = '/'
         }
