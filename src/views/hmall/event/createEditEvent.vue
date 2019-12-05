@@ -431,9 +431,9 @@ export default {
                     this.form.spikeSku = []
                     this.$nextTick(function () {
                         this.form.spikeSku = newArray
+                        this.EMPTY_EVENT_PRODUCTS()
+                        this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
                     })
-                    this.EMPTY_EVENT_PRODUCTS()
-                    this.ADD_EVENT_PRODUCTS(this.form.spikeSku)// 写入session
                 }
             })
         },

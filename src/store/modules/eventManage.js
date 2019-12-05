@@ -65,9 +65,16 @@ const actions = {
         let len = data.spikeSku.length - state.eventProducts.length
         if (len < 0) {
             const arr = state.eventProducts.splice(len)
-            data.spikeSku = data.spikeSku.concat(arr)
+            data.spikeSku = state.eventProducts.concat(arr)
+            commit(types.SET_EVENT_INFO, data)
+        } else {
+            if (state.eventProducts && state.eventProducts.length > 0) {
+                data.spikeSku = state.eventProducts
+                commit(types.SET_EVENT_INFO, data)
+            } else {
+                commit(types.SET_EVENT_INFO, data)
+            }
         }
-        commit(types.SET_EVENT_INFO, data)
     },
     async findSpike ({ commit }, params) {
         const { data } = await instance.get('/ops/api/spike', { params })
