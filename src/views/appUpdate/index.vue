@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">创建时间：</div>
+                <div class="query-col-title">更新时间：</div>
                 <div class="query-col-input">
                     <el-date-picker v-model="queryParams.beginDate" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
@@ -137,7 +137,7 @@ export default {
                     let beginDateVal = this.queryParams.beginDate
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime() - 3600 * 1000 * 24
+                            time.getTime() < new Date(beginDateVal).getTime()
                         )
                     }
                 }
@@ -174,7 +174,8 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                platformType: ''
+                platformType: '',
+                product: ''
             },
             searchParams: {},
             tableData: [],
@@ -236,10 +237,10 @@ export default {
             // console.log(this.searchParams)
             const { data } = await getAppVersionList(this.searchParams)
             // console.log(data)
-            this.tableData = data.data.records
+            this.tableData = data.data.list
             this.pagination = {
-                pageNumber: data.data.current,
-                pageSize: data.data.size,
+                pageNumber: data.data.pageNum,
+                pageSize: data.data.pageSize,
                 total: data.data.total
             }
             this.tableData.map(i => {
