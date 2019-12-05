@@ -10,19 +10,22 @@
         </el-form-item>
         <template v-if="archiveSignPO.rcDocFlag==='1'" >
             <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <el-input  v-model='archiveSignPO.realControllerName' @input="onInputChange(archiveSignPO.realControllerName,'actualController')" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.realControllerName?archiveSignPO.realControllerName:'-'}}</span>
+                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='actualController'">
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'actualController')" ><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                </div>
             </el-form-item>
             <el-form-item prop="realControllerContactNo" label="联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','tel',archiveSignPO.realControllerContactNo)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.realControllerContactNo?archiveSignPO.realControllerContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realControllerIdcard" label="身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
+                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('actualController','idCard',archiveSignPO.realControllerIdcard)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.realControllerIdcard?archiveSignPO.realControllerIdcard:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realcontrollerList" label="实控人身份证归档：" label-width='160px'>
-                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" showProgress v-model="archiveSignPO.realcontrollerList" @successCb="onSuccessCb('b-realcontroller')" :action='action' :uploadParameters='uploadParameters'>
+                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" showProgress v-model="archiveSignPO.realcontrollerList" @successCb="onSuccessCb('b-realcontroller')" :action='action' :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
                 <picView v-else :fileList='archiveSignPO.realcontrollerList' />
             </el-form-item>
@@ -40,15 +43,18 @@
         </el-form-item>
         <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
             <el-form-item prop="shareholderName" label="自然人股东姓名：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.shareholderName" @input="onInputChange(archiveSignPO.shareholderName,'naturalPerson')" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','name',archiveSignPO.shareholderName)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.shareholderName?archiveSignPO.shareholderName:'-'}}</span>
+                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='naturalPerson'">
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'naturalPerson')"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                </div>
             </el-form-item>
             <el-form-item prop="shareholderContactNo" label="自然人股东联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','tel',archiveSignPO.shareholderContactNo)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.shareholderContactNo?archiveSignPO.shareholderContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="shareholderIdcard" label="自然人股东身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
+                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('naturalPerson','idCard',archiveSignPO.shareholderIdcard)" @focus="()=>{suggestions=[]}"></el-input>
                 <span v-else>{{archiveSignPO.shareholderIdcard?archiveSignPO.shareholderIdcard:'-'}}</span>
             </el-form-item>
         </template>
@@ -94,17 +100,20 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="该文件签约人：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'name',jtem.archiveSignInvestPO.signerName)" @input="onInputChange(jtem.archiveSignInvestPO.signerName,`version${index}${jndex}`)" @focus="()=>{suggestions=[]}"></el-input>
                                 <span v-else>{{jtem.archiveSignInvestPO.signerName?jtem.archiveSignInvestPO.signerName:'-'}}</span>
+                                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips===`version${index}${jndex}`">
+                                    <p v-for="(item,kndex) in suggestions" :key="kndex" @click="chooseOneTips(item,'version',index,jndex)"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                                </div>
                             </el-form-item>
                             <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)" @focus="()=>{suggestions=[]}"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerContactNo?jtem.archiveSignInvestPO.signerContactNo:'-'}}
                                 </span>
                             </el-form-item>
                             <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18' @blur="onBlur(`version${index}${jndex}`,'idCard',jtem.archiveSignInvestPO.signerIdcard)" @focus="()=>{suggestions=[]}"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
                                 </span>
@@ -229,6 +238,10 @@ export default {
     components: { hosjoyUpload, picView },
     data () {
         return {
+            timer: '',
+            inputTips: {},
+            suggestions: [],
+            showTips: '',
             assureRadio: '1',
             signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
             action: fileUploadUrl + 'tms/files/upload',
@@ -249,6 +262,82 @@ export default {
         }
     },
     methods: {
+        chooseOneTips (item, key, index, jndex) {
+            if (key === 'version') {
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerName = item.name || ''
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerIdcard = item.idCard || ''
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerContactNo = item.tel || ''
+                let key = `version${index}${jndex}`
+                this.$set(this.inputTips[key], 'name', item.name || '')
+                this.$set(this.inputTips[key], 'tel', item.tel || '')
+                this.$set(this.inputTips[key], 'idCard', item.idCard || '')
+            }
+            if (key === 'actualController') {
+                this.$set(this.archiveSignPO, 'realControllerName', item.name || '')
+                this.$set(this.archiveSignPO, 'realControllerContactNo', item.tel || '')
+                this.$set(this.archiveSignPO, 'realControllerIdcard', item.idCard || '')
+                this.$set(this.inputTips.actualController, 'name', item.name || '')
+                this.$set(this.inputTips.actualController, 'tel', item.tel || '')
+                this.$set(this.inputTips.actualController, 'idCard', item.idCard || '')
+            }
+            if (key === 'naturalPerson') {
+                this.$set(this.archiveSignPO, 'shareholderName', item.name || '')
+                this.$set(this.archiveSignPO, 'shareholderContactNo', item.tel || '')
+                this.$set(this.archiveSignPO, 'shareholderIdcard', item.idCard || '')
+                this.$set(this.inputTips.naturalPerson, 'name', item.name || '')
+                this.$set(this.inputTips.naturalPerson, 'tel', item.tel || '')
+                this.$set(this.inputTips.naturalPerson, 'idCard', item.idCard || '')
+            }
+            this.showTips = ''
+        },
+        onInputChange (val, k) {
+            if (!val) {
+                this.suggestions = []
+                return
+            }
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                let arr = Object.values(this.inputTips)
+                let result = []
+                let obj = {}
+                // 去重
+                for (var i = 0; i < arr.length; i++) {
+                    if (!obj[arr[i].idCard]) {
+                        result.push(arr[i])
+                        obj[arr[i].idCard] = true
+                    }
+                }
+                result.forEach(item => {
+                    if (item && item.name && item.name.toLowerCase().indexOf(val.toLowerCase()) != -1) {
+                        if (item.tel || item.idCard) {
+                            this.suggestions.push(
+                                {
+                                    name: item.name,
+                                    tel: item.tel || '',
+                                    idCard: item.idCard || ''
+                                }
+                            )
+                            this.showTips = k
+                        }
+                    }
+                })
+            }, 500)
+        },
+        onBlur (key, subKey, val, index) {
+            if (!(key in this.inputTips)) {
+                let obj = {
+                    name: '',
+                    tel: '',
+                    idCard: ''
+                }
+                this.$set(this.inputTips, key, obj)
+            }
+            if (!val) return
+            this.inputTips[key][subKey] = val
+            setTimeout(() => {
+                this.showTips = ''
+            }, 600)
+        },
         getUrlBase64 (url, fileName, ext = '') {
             let _this = this
             var canvas = document.createElement('canvas') // 创建canvas DOM元素
@@ -336,6 +425,37 @@ export default {
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
         console.log(this.archiveSignPO)
+        if (this.$route.query.archiveId) {
+            // 初始化input tips
+            this.$set(this.inputTips, 'actualController',
+                {
+                    name: this.archiveSignPO.realControllerName,
+                    tel: this.archiveSignPO.realControllerContactNo,
+                    idCard: this.archiveSignPO.realControllerIdcard
+                }
+            )
+            this.$set(this.inputTips, 'naturalPerson',
+                {
+                    name: this.archiveSignPO.shareholderName,
+                    tel: this.archiveSignPO.shareholderContactNo,
+                    idCard: this.archiveSignPO.shareholderIdcard
+                }
+            )
+            this.archiveSignPO.signBOs.map((item, index) => {
+                item.version.map((jtem, jndex) => {
+                    if (jtem.archiveSignInvestPO.signerName) {
+                        this.$set(this.inputTips, `version${index}${jndex}`,
+                            {
+                                name: jtem.archiveSignInvestPO.signerName,
+                                tel: jtem.archiveSignInvestPO.signerContactNo,
+                                idCard: jtem.archiveSignInvestPO.signerIdcard
+                            }
+                        )
+                    }
+                })
+            })
+            console.log(this.inputTips)
+        }
         // this.onAdd()
         // if (!this.$route.query.archiveId) this.onAdd()
     }
@@ -377,4 +497,10 @@ export default {
 }
 .fileItem{ display: flex;justify-content: space-between;align-items: center;}
 .fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
+.tips{ width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
+margin-top: 3px; background: #fff; z-index: 999; color: #606266;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);}
+.tips p{ display: flex;justify-content: space-between;}
+.tips p:hover{color:#FF7A45!important;cursor: pointer;}
+.tips p:hover span{color:#FF7A45!important}
+.tips p span{font-size: 12px; padding-left: 5px;color: #b1b2b5;}
 </style>
