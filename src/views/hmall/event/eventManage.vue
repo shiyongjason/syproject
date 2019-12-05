@@ -172,6 +172,11 @@ export default {
         },
         async onOperate (item, val) {
             await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
+            this.$message({
+                message: val == 2 ? '发布成功' : '终止成功',
+                type: 'success'
+            })
+            this.onFindeSpike()
         },
         onClickStatics () {
             this.$router.push({ path: '/hmall/eventStatistics', query: {} })

@@ -1,9 +1,11 @@
 import * as types from '../mutation-types'
 import instance from '@/api/axios_new'
+import axios from 'axios'
 const state = {
     eventProducts: JSON.parse(sessionStorage.getItem('eventProducts')) || [],
-    skuData: [],
-    spikeData: [],
+    skuData: {},
+    spikeData: {},
+    eventTrackData: {},
     eventInfos: {}
 }
 
@@ -42,6 +44,9 @@ const mutations = {
     },
     [types.SET_EVENT_INFO] (state, payload) {
         state.eventInfos = payload
+    },
+    [types.EVENT_DATA] (state, payload) {
+        state.eventTrackData = payload
     }
 }
 
@@ -63,6 +68,10 @@ const actions = {
     async findSpike ({ commit }, params) {
         const { data } = await instance.get('/ops/api/spike', { params })
         commit(types.SPIKE_DATA, data)
+    },
+    async findEventTrack ({ commit }, params) {
+        const { data } = await axios.get('ets/api/b2b/activity/grid', { params })
+        commit(types.EVENT_DATA, data)
     }
 
 }

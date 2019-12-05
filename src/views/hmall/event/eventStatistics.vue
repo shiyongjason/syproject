@@ -5,10 +5,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">活动名称：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.orderTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.orderTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -38,9 +38,9 @@
                         <span>商品名称</span>
                         <span>累计PV</span>
                     </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        <span>1.格力中央空调</span>
-                        <span>1212</span>
+                    <div v-for="(item,index) in productPVRankings" :key="index" class="text item">
+                        <span>{{index+1}}.{{item.productName}}</span>
+                        <span>{{item.pv}}</span>
                     </div>
                 </el-card>
             </div>
@@ -53,9 +53,9 @@
                         <span>商品名称</span>
                         <span>累计成交订单数量</span>
                     </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        <span>1.格力中央空调</span>
-                        <span>1212</span>
+                   <div v-for="(item,index) in productPayedRankings" :key="index" class="text item">
+                        <span>{{index+1}}.{{item.productName}}</span>
+                        <span>{{item.payed}}</span>
                     </div>
                 </el-card>
             </div>
@@ -68,9 +68,9 @@
                         <span>商品名称</span>
                         <span>累计成交订单金额</span>
                     </div>
-                    <div v-for="o in 4" :key="o" class="text item">
-                        <span>1.格力中央空调</span>
-                        <span>1212</span>
+                   <div v-for="(item,index) in productTotalMoneyRankings" :key="index" class="text item">
+                        <span>{{index+1}}.{{item.productName}}</span>
+                        <span>{{item.totalMoney}}</span>
                     </div>
                 </el-card>
             </div>
@@ -78,32 +78,41 @@
     </div>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'eventstatics',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                startTime: '',
+                endTime: ''
+            },
             tableData: [],
             tableLabel: [
-                { label: '时间', prop: 'spuCode' },
-                { label: '访问PV（按日）', prop: 'spuCode' },
-                { label: '访问UV（按日）', prop: 'spuCode' },
+                { label: '时间', prop: 'date' },
+                { label: '访问PV（按日）', prop: 'pv' },
+                { label: '访问UV（按日）', prop: 'uv' },
                 { label: '提交订单点击数', prop: 'spuCode' },
-                { label: '提交订单点击数', prop: 'spuCode' },
-                { label: '支付点击数', prop: 'spuCode' },
-                { label: '成交订单数', prop: 'spuCode' },
-                { label: '成交订单总额', prop: 'spuCode' },
-                { label: '转化率', prop: 'spuCode' }
-            ]
+                { label: '支付点击数', prop: 'orderCommits' },
+                { label: '成交订单数', prop: 'payed' },
+                { label: '成交订单总额', prop: 'totalMoney' },
+                { label: '转化率', prop: 'inversionRate' }
+            ],
+            productPVRankings: [],
+            productPayedRankings: [],
+            productTotalMoneyRankings: []
         }
     },
     computed: {
+        ...mapState({
+            eventTrackData: state => state.eventManage.eventTrackData
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal)
                     }
                 }
             }
@@ -113,16 +122,29 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal)
                     }
                 }
             }
         }
     },
     mounted () {
-        this.tableData = [{ spuCode: 2 }]
+        this.findTracks()
     },
     methods: {
+        ...mapActions({
+            findEventTrack: 'findEventTrack'
+        }),
+        async findTracks () {
+            await this.findEventTrack(this.queryParams)
+            this.tableData = this.eventTrackData.recentActivityInfo
+            this.productPVRankings = this.eventTrackData.productPVRankings
+            this.productPayedRankings = this.eventTrackData.productPayedRankings
+            this.productTotalMoneyRankings = this.eventTrackData.productTotalMoneyRankings
+        },
+        searchList () {
+            this.findTracks()
+        }
 
     }
 
