@@ -17,7 +17,7 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        <el-button type="primary" class="ml20" @click="onExportTable()">
                             导出详情
                         </el-button>
                     </div>
@@ -79,6 +79,7 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
 export default {
     name: 'eventstatics',
     data () {
@@ -144,6 +145,13 @@ export default {
         },
         searchList () {
             this.findTracks()
+        },
+        onExportTable () {
+            var url = ''
+            for (var key in this.queryParams) {
+                url += (key + '=' + this.queryParams[key] + '&')
+            }
+            location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
         }
 
     }
