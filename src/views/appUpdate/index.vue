@@ -188,7 +188,7 @@ export default {
                 { label: '产品', prop: 'productN' },
                 { label: '平台', prop: 'platformTypeN' },
                 { label: '版本号', prop: 'versionCode' },
-                { label: '版本状态', prop: 'status' },
+                { label: '上版状态', prop: 'status' },
                 { label: '强制更新', prop: 'forcedN' },
                 { label: '更新描述', prop: 'remark' },
                 { label: '下载地址', prop: 'versionAddress' },
