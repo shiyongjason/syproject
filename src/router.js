@@ -844,7 +844,31 @@ const routerMapping = [
                 component: () => import('./views/jinyunplatform/amountImport')
             }
         ]
+    },
+    {
+        path: '/appUpdate',
+        meta: {
+            title: 'App管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'versionUpdating',
+                name: 'versionUpdating',
+                meta: {
+                    title: '版本更新',
+                    tagName: '版本更新',
+                    parentName: 'App管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/appUpdate/index.vue')
+            }
+        ]
     }
+
 ]
 
 const router = new Router({
@@ -861,8 +885,7 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
 function makeIndex (data, next, query) {
@@ -880,11 +903,9 @@ function makeIndex (data, next, query) {
         let path = ''
         if (query.route) {
             path = '/' + query.route.split(',').join('/')
-            console.log(path)
         } else {
             path = index.join('/')
         }
-
         if (!path) {
             path = '/'
         }

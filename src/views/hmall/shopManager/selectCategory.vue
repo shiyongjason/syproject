@@ -218,7 +218,7 @@
 import { IsChinese } from '@/rules'
 import { findCategoryByParent } from '@/views/hmall/category/api/index'
 import { findCategoryAttribute, findRelationBrand, createProduct, findProductDetails, updateProduct, reviewPass, reviewReject } from './api/index'
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { Money } from '@/utils/rules.js'
 export default {
@@ -296,7 +296,7 @@ export default {
         },
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
@@ -304,7 +304,7 @@ export default {
             }
         },
         uploadImgServer () {
-            return fileUploadUrl + 'tms/files/upload-list'
+            return interfaceUrl + 'tms/files/upload-list'
         },
         uploadImgParams () {
             return {

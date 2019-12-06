@@ -25,7 +25,6 @@ import CoPartner from './components/copartnerLook.vue'
 import LegalInfoLook from './components/legalInfoLook.vue'
 import CompanyBasicLook from './components/legalInfo/companyBasicLook.vue'
 import InvestmentOutLook from './components/legalInfo/investmentOutLook.vue'
-// import { fileUploadUrl } from '@/api/config'
 export default {
     components: {
         KPI, CoPartner, CompanyBasicLook, InvestmentOutLook, LegalInfoLook

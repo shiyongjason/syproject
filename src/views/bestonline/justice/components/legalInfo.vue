@@ -212,7 +212,7 @@
 <script>
 import { mapState } from 'vuex'
 import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'legal_info',
@@ -259,7 +259,7 @@ export default {
         // },
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.name
                 },
