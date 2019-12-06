@@ -118,7 +118,7 @@
 <script>
 import brandTable from './components/brandTable'
 import { mapState } from 'vuex'
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { findBrandList, createBrand, updateBrand, findBrandDetails } from './api/index'
 import { BRAND_STATUS } from './const'
 import { IsChinese } from '@/rules'
@@ -170,7 +170,7 @@ export default {
     computed: {
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
