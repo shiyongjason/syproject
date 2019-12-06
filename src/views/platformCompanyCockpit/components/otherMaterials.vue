@@ -31,7 +31,7 @@
 
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 
 export default {
@@ -40,7 +40,7 @@ export default {
     components: { hosjoyUpload },
     data () {
         return {
-            action: fileUploadUrl + 'tms/files/upload',
+            action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
                 reservedName: true

@@ -118,7 +118,7 @@
 </template>
 
 <script>
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
 import { findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, getSpuspec, findBrands } from './api/index'
 import { deepCopy } from '@/utils/utils'
@@ -236,7 +236,7 @@ export default {
     computed: {
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
@@ -245,7 +245,7 @@ export default {
         },
         /* TODO 富文本编辑器 */
         uploadImgServer () {
-            return fileUploadUrl + 'tms/files/upload-list'
+            return interfaceUrl + 'tms/files/upload-list'
         },
         uploadImgParams () {
             return {
