@@ -436,7 +436,7 @@ export default {
             }
             // console.log(params)
             const { data } = await addAuthType(params)
-            // console.log(data)
+            console.log(data)
             this.init()
         },
         clearCache () {
