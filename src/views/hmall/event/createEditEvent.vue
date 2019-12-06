@@ -321,6 +321,7 @@ export default {
             } else {
                 item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
             }
+            item.salePrice = (item.salePrice).toFixed(2)
         },
         /** 校验 */
         validate (item, action = '') {

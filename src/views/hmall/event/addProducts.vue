@@ -212,5 +212,10 @@ export default {
     opacity: 0.7;
 
 }
+.el-notification__group{
+/deep/ .el-notification__content{
+    margin: 0 !important
+}
+}
 
 </style>
