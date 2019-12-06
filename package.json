@@ -20,7 +20,8 @@
     "tree-table-vue": "^1.1.0",
     "vue": "^2.6.6",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "sortablejs": "1.8.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
