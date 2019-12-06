@@ -861,8 +861,7 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
 function makeIndex (data, next, query) {
