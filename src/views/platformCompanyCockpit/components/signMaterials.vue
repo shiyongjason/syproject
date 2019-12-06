@@ -5,8 +5,11 @@
                 <span class="labeldiy">实控人信息归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="0">否</el-radio>
-            <span style="margin-left:18px" v-else>{{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':'-'}}</span>
+            <span style="margin-left:18px" v-else>
+                {{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':archiveSignPO.rcDocFlag==='2'?'无':'-'}}
+            </span>
         </el-form-item>
         <template v-if="archiveSignPO.rcDocFlag==='1'" >
             <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
@@ -36,9 +39,10 @@
                 <span class="labeldiy">自然人股东信息归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="0">否</el-radio>
             <span v-else>
-                {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
+                {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='2'?'无':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
             </span>
         </el-form-item>
         <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
@@ -66,9 +70,10 @@
                 <span class="ab" style="margin-left:63px;">
                     <!-- <el-radio v-if="isEdit" :value="item[`v${index+1}SignerFlag`]" @input="(val)=>{item[`v${index+1}SignerFlag`]=val;item.archiveSignInvestPO.investVersion=`${index+1}.0`}" label="1">是</el-radio> -->
                     <el-radio v-if="isEdit" v-model="item.radio" label="1">是</el-radio>
+                    <el-radio v-if="isEdit" v-model="item.radio" label="2">无</el-radio>
                     <el-radio v-if="isEdit" v-model="item.radio" label="0">否</el-radio>
                     <span v-else>
-                        {{item.radio==='1'?'是':item.radio==='0'?'否':'-'}}
+                        {{item.radio==='1'?'是':item.radio==='0'?'否':item.radio==='2'?'无':'-'}}
                     </span>
                     <template v-if="item.radio==='1'" >
                         <div v-for="(jtem,jndex) in item.version" :key="jndex" class="filepr">
@@ -119,7 +124,7 @@
                                 </span>
                             </el-form-item>
                             <el-form-item prop="idCardList" label="签约人身份证归档：" label-width='160px' >
-                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
+                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
                                 </hosjoyUpload>
                                 <picView v-else :fileList='jtem.idCardList' />
                             </el-form-item>
@@ -135,9 +140,10 @@
                 <span class="labeldiy">投资履约担保函归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="0">否</el-radio>
             <span v-else>
-                {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':'-'}}
+                {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':archiveSignPO.guanranteeDocFlag==='2'?'无':'-'}}
             </span>
         </el-form-item>
         <template v-if="archiveSignPO.guanranteeDocFlag==='1'" >
@@ -176,8 +182,14 @@
             <template #label>
                 <span class="labeldiy">其余B档签约材料：</span>
             </template>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="2">无</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="0">否</el-radio>
+            <span v-else>
+                {{archiveSignPO.otherContractInformationFlag==='1'?'是':archiveSignPO.otherContractInformationFlag==='0'?'否':archiveSignPO.otherContractInformationFlag==='2'?'无':'-'}}
+            </span>
         </el-form-item>
-        <el-form-item prop="num"  label-width='160px'>
+        <el-form-item prop="num" label-width='160px' v-if="archiveSignPO.otherContractInformationFlag==='1'">
             <template #label>
                 <span style="display: inline-block;">文件：</span>
             </template>

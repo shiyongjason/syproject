@@ -6,7 +6,8 @@
                     <span class="tit-l" v-if="$route.query.archiveId">{{isEdit?'编辑档案':form.platformBasicInfoPO.companyName}}</span>
                     <span class="tit-l" v-else>新增档案</span>
                     <span class="tit-r">
-                        <div v-if="!isEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline poseditor" @click="onIsEdit"></div>
+                        <div  class="el-icon-edit-outline poseditor" @click="onIsEdit"></div>
+                        <!-- <div v-if="!isEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline poseditor" @click="onIsEdit"></div> -->
                         <el-button type="primary" style="width:100px" @click="onDialogBtn">档案标注</el-button>
                     </span>
                 </div>
@@ -134,6 +135,7 @@ export default {
                     rcDocFlag: '1',
                     shareholderDocFlag: '1',
                     guanranteeDocFlag: '0',
+                    otherContractInformationFlag: '0',
                     realcontrollerList: [], // B-实控人身份证归档
                     assureFileList: [], // B-担保函归档
                     otherBList: [], // B-其余B档签约材料
@@ -144,6 +146,7 @@ export default {
                     commerialDocFlag: '0',
                     capitalDocFlag: '0',
                     stocktransferDocFlag: '0',
+                    otherCommerialDocFlag: '0',
                     commercial: [], // C-其余工商材料归档
                     capital: [], // C-增减资协议
                     stocktransfer: []// C-股转版协议
@@ -151,6 +154,7 @@ export default {
                 signBOs: [],
                 // 其余
                 otherFiles: {
+                    otherDocFlag: '0',
                     fileList: []
                 }
             },
