@@ -193,6 +193,7 @@ export default {
                     prop: 'commerialDocFlag',
                     render: (h, scope) => {
                         if (!scope.row.commerialDocFlag || scope.row.commerialDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                        if (scope.row.otherCommerialDocFlag == '2' && scope.row.capitalDocFlag == '2' && scope.row.stocktransferDocFlag == '2') return (<span>无</span>)
                         if (scope.row.commerialDocFlag === '1') {
                             return (
                                 <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'C档（工商）')}>
@@ -209,7 +210,9 @@ export default {
                             label: '实控人',
                             prop: 'realControllerName',
                             render: (h, scope) => {
-                                if (!scope.row.realControllerName || scope.row.rcDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.rcDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.rcDocFlag === '2') return (<span>无</span>)
+                                if (!scope.row.realControllerName) return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.realControllerName) {
                                     let temp = this.getDocNum('b-realcontroller', scope.row)
                                     if (temp && temp.length > 0) {
@@ -228,7 +231,9 @@ export default {
                             label: '自然人股东',
                             prop: 'shareholderName',
                             render: (h, scope) => {
-                                if (!scope.row.shareholderName || scope.row.shareholderDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.shareholderDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.shareholderDocFlag === '2') return (<span>无</span>)
+                                if (!scope.row.shareholderName) return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.shareholderName) {
                                     return (
                                         <span>
@@ -244,14 +249,15 @@ export default {
                             label: '投资协议',
                             prop: 'signBOs',
                             render: (h, scope) => {
-                                let flag = true // 都是未归档
-                                for (let i = 0; i < 5; i++) {
-                                    if (scope.row[`v${i + 1}SignerFlag`] == 1) {
-                                        flag = false
-                                    }
-                                }
-                                if (flag) {
+                                if (
+                                    scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0
+                                ) {
                                     return <span><i class="el-icon-close"></i></span>
+                                }
+                                if (
+                                    scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2
+                                ) {
+                                    return <span>无</span>
                                 }
                                 this.getsignBOs(scope.row.signBOs, scope.row, scope.$index)
                                 let str = ''
@@ -271,7 +277,9 @@ export default {
                             label: '担保函签约人',
                             prop: 'guanranteeName',
                             render: (h, scope) => {
-                                if (scope.row.guanranteeName == null || scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
+                                if (scope.row.guanranteeDocFlag == '2') return (<span>无</span>)
+                                if (scope.row.guanranteeName == null) return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.guanranteeName) {
                                     let temp = this.getDocNum('b-guarantee', scope.row)
                                     if (temp && temp.length > 0) {

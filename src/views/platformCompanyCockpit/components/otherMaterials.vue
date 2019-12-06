@@ -8,7 +8,7 @@
             <el-radio v-if="isEdit" v-model="otherFiles.otherDocFlag" label="1">是</el-radio>
             <el-radio v-if="isEdit" v-model="otherFiles.otherDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="otherFiles.otherDocFlag" label="0">否</el-radio>
-            <span v-if="!isEdit">{{otherFiles.otherDocFlag==='0'?'否':otherFiles.otherDocFlag==='1'?'是':otherFiles.stocktransferDocFlag==='2'?'无':'-'}}</span>
+            <span v-if="!isEdit">{{otherFiles.otherDocFlag==='0'?'否':otherFiles.otherDocFlag==='1'?'是':otherFiles.otherDocFlag==='2'?'无':'-'}}</span>
             <template v-if="otherFiles.otherDocFlag==='1'" >
             <hosjoyUpload v-if="isEdit" v-model="otherFiles.fileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('fileList','d-other')" style="margin-top:10px">
                 <el-button size="small" type="primary">点击上传</el-button>

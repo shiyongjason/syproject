@@ -57,9 +57,9 @@
             </el-form-item>
             <template v-if="business.otherCommerialDocFlag==='1'" >
                 <el-form-item prop="num" label-width='160px'>
-                    <!-- <template #label>
+                    <template #label>
                         <span style="margin-top: 16px;display: inline-block;">其余工商材料：</span>
-                    </template> -->
+                    </template>
                     <hosjoyUpload v-if="isEdit" :fileSize='100' :fileNum='100' v-model="business.commercial" showAsFileName :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('commercial','c-commercial')">
                         <el-button size="small" type="primary">点击上传</el-button>
                     </hosjoyUpload>
@@ -93,9 +93,9 @@
             </el-form-item>
             <template v-if="business.capitalDocFlag==='1'" >
                 <el-form-item prop="num" label-width='160px'>
-                    <!-- <template #label>
+                    <template #label>
                         <span style="margin-top: 16px;display: inline-block;">增减资协议：</span>
-                    </template> -->
+                    </template>
                     <hosjoyUpload v-if="isEdit" v-model="business.capital" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('capital','c-capital')">
                         <el-button size="small" type="primary">点击上传</el-button>
                     </hosjoyUpload>
@@ -129,9 +129,9 @@
             </el-form-item>
         <template v-if="business.stocktransferDocFlag==='1'" >
             <el-form-item prop="num" label-width='160px'>
-                <!-- <template #label>
+                <template #label>
                     <span style="margin-top: 16px;display: inline-block;">股转版协议：</span>
-                </template> -->
+                </template>
                 <hosjoyUpload v-if="isEdit" v-model="business.stocktransfer" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('stocktransfer','c-stocktransfer')">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </hosjoyUpload>

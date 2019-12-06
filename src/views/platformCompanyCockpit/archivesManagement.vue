@@ -6,8 +6,7 @@
                     <span class="tit-l" v-if="$route.query.archiveId">{{isEdit?'编辑档案':form.platformBasicInfoPO.companyName}}</span>
                     <span class="tit-l" v-else>新增档案</span>
                     <span class="tit-r">
-                        <div  class="el-icon-edit-outline poseditor" @click="onIsEdit"></div>
-                        <!-- <div v-if="!isEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline poseditor" @click="onIsEdit"></div> -->
+                        <div v-if="!isEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline poseditor" @click="onIsEdit"></div>
                         <el-button type="primary" style="width:100px" @click="onDialogBtn">档案标注</el-button>
                     </span>
                 </div>
@@ -38,7 +37,7 @@
                             <el-tab-pane label="其余材料" name="others">
                                 <el-form :model="form.otherFiles" ref='formSign' label-width="140px" label-position='left'>
                                     <!-- v-if为了兼容上传图片误删-->
-                                    <otherMaterials v-model="form.otherFiles" :isEdit='isEdit' v-if="activeName==='others'" />
+                                    <otherMaterials v-model="form.otherFiles" :otherDocFlagSync.sync='form.platformBasicInfoPO.otherDocFlag' :isEdit='isEdit' />
                                 </el-form>
                             </el-tab-pane>
                     </el-tabs>
@@ -126,7 +125,7 @@ export default {
                     addressOther: '',
                     oldCompanyName: '',
                     departmentId: '',
-
+                    otherDocFlag: '0',
                     dd: []// A-尽调材料
                 },
                 commonDocPOs: [],
@@ -135,7 +134,7 @@ export default {
                     rcDocFlag: '1',
                     shareholderDocFlag: '1',
                     guanranteeDocFlag: '0',
-                    otherContractInformationFlag: '0',
+                    otherContractInformationFlag: 0,
                     realcontrollerList: [], // B-实控人身份证归档
                     assureFileList: [], // B-担保函归档
                     otherBList: [], // B-其余B档签约材料
@@ -192,6 +191,11 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
+        onRadioEmit (val) {
+            this.form.platformBasicInfoPO.otherDocFlag = val
+            console.log(this.form)
+            this.$forceUpdate()
+        },
         onDialogBtn () {
             this.dialogVisible = true
             if (this.isEdit) this.dialogIsEdit = true
@@ -237,6 +241,7 @@ export default {
             this.getFile('c-capital', 'archiveCommercialPO', 'capital')// 设置C-增减资协议
             this.getFile('c-stocktransfer', 'archiveCommercialPO', 'stocktransfer')// 设置C-股转版协议
             this.getFile('d-other', 'otherFiles', 'fileList')// 设置C-股转版协议
+            this.$set(this.form.otherFiles, 'otherDocFlag', data.platformBasicInfoPO.otherDocFlag)
             let arr = []
             for (let i = 0; i < 5; i++) {
                 let version = []
@@ -332,6 +337,7 @@ export default {
             this.form.otherFiles.fileList.map(item => {
                 this.form.commonDocPOs.push(item)
             })
+            this.form.platformBasicInfoPO.otherDocFlag = this.form.otherFiles.otherDocFlag
             this.$refs['formBaseInfo'].validate(async (valid, errors) => {
                 if (valid) {
                     let flag = ''
@@ -410,6 +416,7 @@ export default {
             this.$set(this.form.archiveCommercialPO, 'stocktransfer', [])
             this.$set(this.form, 'otherFiles', { fileList: [] })
             this.formatForm()
+            console.log(this.form)
         },
         async onRemark () {
             this.form.platformBasicInfoPO.archiveStatus = this.remarkTemp.archiveStatus

@@ -182,14 +182,14 @@
             <template #label>
                 <span class="labeldiy">其余B档签约材料：</span>
             </template>
-            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="1">是</el-radio>
-            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="2">无</el-radio>
-            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" label="0">否</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=1>是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=2>无</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=0>否</el-radio>
             <span v-else>
-                {{archiveSignPO.otherContractInformationFlag==='1'?'是':archiveSignPO.otherContractInformationFlag==='0'?'否':archiveSignPO.otherContractInformationFlag==='2'?'无':'-'}}
+                {{archiveSignPO.otherContractInformationFlag=='1'?'是':archiveSignPO.otherContractInformationFlag=='0'?'否':archiveSignPO.otherContractInformationFlag=='2'?'无':'-'}}
             </span>
         </el-form-item>
-        <el-form-item prop="num" label-width='160px' v-if="archiveSignPO.otherContractInformationFlag==='1'">
+        <el-form-item prop="num" label-width='160px' v-if="archiveSignPO.otherContractInformationFlag=='1'">
             <template #label>
                 <span style="display: inline-block;">文件：</span>
             </template>
