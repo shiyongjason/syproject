@@ -435,7 +435,7 @@ export default {
                 authType: type
             }
             // console.log(params)
-            const { data } = await addAuthType(params)
+            await addAuthType(params)
             // console.log(data)
             this.init()
         },

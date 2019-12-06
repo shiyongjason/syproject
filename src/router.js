@@ -609,6 +609,48 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/spumanage/skuset')
+            },
+            {
+                path: 'eventMange',
+                name: 'eventMange',
+                meta: {
+                    title: '活动管理',
+                    tagName: '活动管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/eventManage')
+            },
+            {
+                path: 'eventStatistics',
+                name: 'eventStatistics',
+                meta: {
+                    title: '数据监测',
+                    tagName: '数据监测',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/eventStatistics')
+            },
+            {
+                path: 'addProducts',
+                name: 'addProducts',
+                meta: {
+                    title: '添加商品',
+                    tagName: '添加商品',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/addProducts')
+            },
+            {
+                path: 'createEditEvent',
+                name: 'createEditEvent',
+                meta: {
+                    title: '创建/编辑活动',
+                    tagName: '创建/编辑活动',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/createEditEvent')
             }
         ]
     },
@@ -844,7 +886,31 @@ const routerMapping = [
                 component: () => import('./views/jinyunplatform/amountImport')
             }
         ]
+    },
+    {
+        path: '/appUpdate',
+        meta: {
+            title: 'App管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'versionUpdating',
+                name: 'versionUpdating',
+                meta: {
+                    title: '版本更新',
+                    tagName: '版本更新',
+                    parentName: 'App管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/appUpdate/index.vue')
+            }
+        ]
     }
+
 ]
 
 const router = new Router({
@@ -861,8 +927,7 @@ const router = new Router({
             name: '403',
             component: () => import('./views/error/403'),
             hidden: true
-        },
-        ...routerMapping
+        }
     ]
 })
 function makeIndex (data, next, query) {
@@ -880,11 +945,9 @@ function makeIndex (data, next, query) {
         let path = ''
         if (query.route) {
             path = '/' + query.route.split(',').join('/')
-            console.log(path)
         } else {
             path = index.join('/')
         }
-
         if (!path) {
             path = '/'
         }
