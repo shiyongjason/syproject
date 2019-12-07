@@ -8,7 +8,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-input">
                                 <el-form-item prop="spikeName" label="活动名称：" style="display: flex;">
-                                    <el-input style="width:466px" v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
+                                    <el-input style="width:466px" v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled='form.status==1||form.status==2'></el-input>
                                 </el-form-item>
                             </div>
                         </div>
@@ -34,8 +34,8 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">优惠方式：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.discountType" :label=1 @change='radioChange'>折扣</el-radio>
-                                <el-radio v-model="form.discountType" :label=2 @change='radioChange'>直降（平台补贴）</el-radio>
+                                <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='form.status==1||form.status==2'>折扣</el-radio>
+                                <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='form.status==1||form.status==2'>直降（平台补贴）</el-radio>
                             </div>
                         </div>
                     </div>
@@ -43,9 +43,9 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">会员限制：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.memberScope" :label=1>所有会员</el-radio>
-                                <el-radio v-model="form.memberScope" :label=2>首单会员（第一次购买）</el-radio>
-                                <el-radio v-model="form.memberScope" :label=3>新注册会员</el-radio>
+                                <el-radio v-model="form.memberScope" :label=1 :disabled='form.status==1||form.status==2'>所有会员</el-radio>
+                                <el-radio v-model="form.memberScope" :label=2 :disabled='form.status==1||form.status==2'>首单会员（第一次购买）</el-radio>
+                                <el-radio v-model="form.memberScope" :label=3 :disabled='form.status==1||form.status==2'>新注册会员</el-radio>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>
                             <div class="query-col-input">
-                                <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}">添加商品</el-button>
+                                <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}" :disabled='form.status==1||form.status==2'>添加商品</el-button>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                             </div>
                         </template>
                         <template slot="action" slot-scope="scope">
-                            <el-button type="primary" size='small' @click="onRemove(scope.data.row)">移除</el-button>
+                            <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='form.status==1||form.status==2'>移除</el-button>
                             <el-button type="primary" size='small' @click="onOrder(scope.data.row)">
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
                             </el-button>
@@ -159,7 +159,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12'></el-input>
+                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12' disabled={this.form.status == 1 || this.form.status == 2}></el-input>
                             </span>
                         )
                     }
@@ -179,7 +179,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -194,12 +194,12 @@ export default {
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} ></el-input>
+                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>
                                 <span class='popover'>
                                     <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
                                         <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 1); this.popoverVisible = false }}>应用到全部</p>
                                         <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 2); this.popoverVisible = false }}>应用到未填写</p>
-                                        <i class="el-icon-caret-bottom" slot="reference"></i>
+                                        {(this.form.status == 1 || this.form.status == 2) ? '' : <i class="el-icon-caret-bottom" slot="reference"></i> }
                                     </el-popover>
                                 </span>
                             </span>
@@ -208,7 +208,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
+                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
                         )
@@ -223,12 +223,12 @@ export default {
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }}></el-input>
+                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>
                                 <span class='popover'>
                                     <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
                                         <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
                                         <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
-                                        <i class="el-icon-caret-bottom" slot="reference"></i>
+                                        {(this.form.status == 1 || this.form.status == 2) ? '' : <i class="el-icon-caret-bottom" slot="reference"></i> }
                                     </el-popover>
                                 </span>
                             </span>
@@ -238,11 +238,11 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>折
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.form.status == 1 || this.form.status == 2}></el-input>元
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
@@ -566,7 +566,7 @@ export default {
             })
         },
         async getEventInfo (i = '') {
-            if (i == 1) await this.eventInfo(this.$route.query.copeId)
+            if (this.$route.query.copeId) await this.eventInfo(this.$route.query.copeId)
             else await this.eventInfo(this.$route.query.eventId)
             console.log(this.eventInfos)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
