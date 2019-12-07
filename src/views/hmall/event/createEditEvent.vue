@@ -243,7 +243,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -415,7 +415,7 @@ export default {
         onOrder (val) {
             // 刷单前置条件：活动已经开启，库存不为零。
             if (!val.productId || val.inventoryRemainNum === 0) {
-                this.$message.error(`刷单的前置条件需要活动已经开启，库存不为零。`)
+                this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
             }
             this.orderRow = val
@@ -434,7 +434,7 @@ export default {
             if (this.isPending) return
             this.isPending = true
             try {
-                await clickFarming({ productId: this.orderRow.id, updateBy: this.userInfo.employeeName })
+                await clickFarming({ productId: this.orderRow.productId, updateBy: this.userInfo.employeeName })
                 this.isPending = false
                 this.getEventInfo(1)
                 this.orderDialogVisible = false
@@ -565,8 +565,9 @@ export default {
                 this.setSort()
             })
         },
-        async getEventInfo (i) {
-            await this.eventInfo(this.$route.query.eventId)
+        async getEventInfo (i = '') {
+            if (i == 1) await this.eventInfo(this.$route.query.copeId)
+            else await this.eventInfo(this.$route.query.eventId)
             console.log(this.eventInfos)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
