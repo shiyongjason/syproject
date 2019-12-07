@@ -17,7 +17,7 @@
                             <!-- <div class="query-col-title">活动时间：</div> -->
                             <div class="query-cont-col">
                                 <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
-                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间">
+                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='form.status==2'>
                                 </el-date-picker>
                                 </el-form-item>
                                 <div class="line ml5 mr5">-</div>
@@ -86,7 +86,7 @@
         </div>
         <div class="subfixed" v-else>
             <el-button type="primary" @click='()=>{$router.go(-1)}'>取消</el-button>
-            <el-button type="primary" @click='onSave(2)'>活动更新</el-button>
+            <el-button type="primary" @click="onSave(2,'upload')">活动更新</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
         <center>
@@ -114,6 +114,8 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            popoverVisible: false,
+            otpopoverVisible: false,
             orderRow: '',
             remind: false,
             orderDialogVisible: false,
@@ -164,10 +166,17 @@ export default {
                     label: '库存',
                     minWidth: '110',
                     prop: 'inventoryNum',
-                    render: (h, scope) => {
+                    renderHeader: (h, scope) => {
                         return (
                             <span>
                                 <i class='mark'>*</i>
+                                <font>{scope.column.label}</font>
+                            </span>
+                        )
+                    },
+                    render: (h, scope) => {
+                        return (
+                            <span>
                                 <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
@@ -177,19 +186,26 @@ export default {
                 {
                     label: '限购数量',
                     prop: 'purchaseLimitNum',
-                    width: '210',
+                    width: '250',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
+                                <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.setAllCol('purchaseLimitNum', val) }} ></el-input>
+                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} ></el-input>
+                                <span class='popover'>
+                                    <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
+                                        <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 1); this.popoverVisible = false }}>应用到全部</p>
+                                        <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 2); this.popoverVisible = false }}>应用到未填写</p>
+                                        <i class="el-icon-caret-bottom" slot="reference"></i>
+                                    </el-popover>
+                                </span>
                             </span>
                         )
                     },
                     render: (h, scope) => {
                         return (
                             <span>
-                                <i class='mark'>*</i>
                                 <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
@@ -199,12 +215,20 @@ export default {
                 {
                     label: '优惠设置',
                     prop: 'discountValue',
-                    width: '210',
+                    width: '250',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
+                                <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.setAllCol('discountValue', val) }}></el-input>
+                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }}></el-input>
+                                <span class='popover'>
+                                    <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
+                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
+                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
+                                        <i class="el-icon-caret-bottom" slot="reference"></i>
+                                    </el-popover>
+                                </span>
                             </span>
                         )
                     },
@@ -212,12 +236,10 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <i class='mark'>*</i>
                                     <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>折
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    <i class='mark'>*</i>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
@@ -288,20 +310,21 @@ export default {
                 this.handleSetSalePrice(scope.row)
             }
         },
-        /** 设置所有 */
-        setAllCol (key, val) {
+        /** 设置所有 action(1应用全部，2应用到未填写) */
+        setAllCol (key, val, action = '') {
             if (this.form.discountType === 2) {
                 this[key] = isNum(val, 2)
             }
             if (this.form.discountType === 1) {
                 this[key] = isNum(val, 1)
             }
-            // 限购数量
-            if (key === 'purchaseLimitNum') {
-                this[key] = val.replace(/[^\d]/g, '')
-            }
             this.form.spikeSku.map((item) => {
-                item[key] = this[key]
+                if (action == 1) {
+                    item[key] = this[key]
+                }
+                if (action == 2 && !item[key]) {
+                    item[key] = this[key]
+                }
                 this.validate(item, key)
                 if (!item._error && val && key === 'discountValue') {
                     this.handleSetSalePrice(item)
@@ -411,7 +434,7 @@ export default {
             try {
                 await clickFarming({ productId: this.orderRow.id, updateBy: this.userInfo.employeeName })
                 this.isPending = false
-                this.getEventInfo()
+                this.getEventInfo(1)
                 this.orderDialogVisible = false
             } catch (error) {
                 this.isPending = false
@@ -439,7 +462,7 @@ export default {
             })
         },
         /** 保存 */
-        async onSave (status) {
+        async onSave (status, mark = '') {
             console.log(this.form)
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
@@ -462,7 +485,7 @@ export default {
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
-                if (status === 2) {
+                if (status === 2 && mark === '') {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
                     if (consumingMinutes < 10) {
@@ -474,7 +497,7 @@ export default {
                 if (this.isPending) return
                 this.isPending = true
                 try {
-                    this.form.status = status
+                    if (mark === '') this.form.status = status
                     if (this.$route.query.eventId) {
                         this.form.updateBy = this.userInfo.employeeName
                         await editEvent(this.form)
@@ -497,9 +520,9 @@ export default {
                 callback(new Error('请输入活动名称'))
                 return
             }
-            let reg = /^[\u4e00-\u9fa5]{2,}$/
-            if (value && !reg.test(value)) {
-                callback(new Error('活动名称最少为2个汉字字符'))
+            // let reg = /^[\u4e00-\u9fa5]{2,}$/
+            if (value && value.length < 2) {
+                callback(new Error('活动名称最少为2个字符'))
             } else {
                 callback()
             }
@@ -525,17 +548,22 @@ export default {
                 !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
                 !item.productId && this.$set(item, 'productId', null)
                 !item.discountValue && this.$set(item, 'discountValue', '')
+                !item.clickFarmingNum && this.$set(item, 'clickFarmingNum', 0)
             })
             this.onInit()// 初始化，写入session
             this.$nextTick(() => {
                 this.setSort()
             })
         },
-        async getEventInfo () {
+        async getEventInfo (i) {
             await this.eventInfo(this.$route.query.eventId)
-            this.form = this.eventInfos
+            console.log(this.eventInfos)
+            this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
+            /* if (i == 1) {
+                console.log(this.form)
+            } */
         },
         async onCopy () {
             await this.copy(this.$route.query.copeId)
@@ -587,5 +615,6 @@ export default {
 /deep/.orderDialog .el-dialog__body{ min-height: auto !important}
 .isremind{margin-top:12px;}
 .isremind font{color:#a6a8ab;font-weight: 200;}
-/deep/.mark{ font-style: normal;color: #F56C6C}
+/deep/.mark{ font-style: normal;color: #F56C6C; padding-right: 3px}
+/deep/.el-popover .popover-p{ line-height: 30px;color: #F56C6C; }
 </style>
