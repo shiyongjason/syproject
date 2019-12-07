@@ -54,7 +54,7 @@ import { findCompanyList, findProvinceAndCity, findPaltList, findBranchList } fr
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
-import { ossUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 export default {
@@ -218,7 +218,7 @@ export default {
             for (var key in this.searchParams) {
                 url += (key + '=' + this.searchParams[key] + '&')
             }
-            location.href = ossUrl + 'develop/developbasicinfo/exportCompanyList?exportType=2&' + url
+            location.href = interfaceUrl + 'develop/developbasicinfo/exportCompanyList?exportType=2&' + url
         },
         onSizeChange (val) {
             this.searchParams.pageSize = val
