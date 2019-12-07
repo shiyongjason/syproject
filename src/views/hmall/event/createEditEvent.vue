@@ -81,10 +81,12 @@
             </el-form>
         </div>
         <div class="subfixed" v-if="this.form.status!==2||$route.query.copeId">
+            <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
         <div class="subfixed" v-else>
+            <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='()=>{$router.go(-1)}'>取消</el-button>
             <el-button type="primary" @click="onSave(2,'upload')">活动更新</el-button>
         </div>
@@ -263,20 +265,20 @@ export default {
         }),
         pickerOptionsStart () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = new Date(this.form.endTime)
-                    if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                disabledDate: time => {
+                    let endDateVal = this.form.endTime
+                    if (endDateVal) {
+                        return time.getTime() >= new Date(endDateVal).getTime()
                     }
                 }
             }
         },
         pickerOptionsEnd () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = new Date(this.form.startTime)
+                disabledDate: time => {
+                    let beginDateVal = this.form.startTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                     }
                 }
             }
@@ -476,6 +478,14 @@ export default {
                 }
             })
             if (!temp) return false
+            if (this.form.spikeSku && this.form.spikeSku.length == 0) {
+                this.$message.error(`活动商品不能为空`)
+                return
+            }
+            if (this.form.startTime === this.form.endTime) {
+                this.$message.error(`活动结束时间不能和开始时间一样`)
+                return
+            }
             let flag = true
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
@@ -604,7 +614,7 @@ export default {
 /deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed{position: fixed;bottom:35px;width: 186px;left: 50%;transform: translateX(-90px);text-align: center;z-index: 999;}
+.subfixed{position: fixed;bottom:35px;width: 266px;left: 50%;transform: translateX(-133px);text-align: center;z-index: 999;}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
