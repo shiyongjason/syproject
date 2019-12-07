@@ -47,15 +47,15 @@
                     </div>
                 </div>
             </div>
-            <div class="query-cont-row">
+        </div>
+        <div class="page-body-cont">
+             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddevent">
                         新建活动
                     </el-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="eventTime" slot-scope="scope">
                     {{scope.data.row.startTime|formatterTime}}~ {{scope.data.row.endTime|formatterTime}}
@@ -67,7 +67,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
-                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4">发布</el-button>
+                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
                     <el-tooltip placement="bottom-start" effect="dark">
                         <div slot="content" v-if="scope.data.row.pvdata">累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付数：{{scope.data.row.pvdata.payClicks}}</div>
@@ -159,11 +159,11 @@ export default {
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.searchList()
+            this.onFindeSpike()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
+            this.onFindeSpike()
         },
         async onFindeSpike () {
             await this.findSpike(this.queryParams)
