@@ -186,10 +186,10 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">支付时间：</div>
                                 <div class="query-col-input">
-                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerReceivablesStart">
+                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerReceivablesStart">
                                     </el-date-picker>
                                     <span class="ml10 mr10">-</span>
-                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerReceivablesEnd">
+                                    <el-date-picker v-model="queryParamsReceivables.paymentTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerReceivablesEnd">
                                     </el-date-picker>
                                 </div>
                             </div>
@@ -373,7 +373,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsReceivables.paymentTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -383,7 +383,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsReceivables.paymentTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
