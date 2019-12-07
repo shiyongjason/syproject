@@ -3,12 +3,12 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">活动名称：</div>
+                    <div class="query-col-title">时间筛选：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入结束时间" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
