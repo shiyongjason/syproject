@@ -17,7 +17,7 @@
                             <!-- <div class="query-col-title">活动时间：</div> -->
                             <div class="query-cont-col">
                                 <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
-                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间">
+                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='form.status==2'>
                                 </el-date-picker>
                                 </el-form-item>
                                 <div class="line ml5 mr5">-</div>
