@@ -31,15 +31,16 @@
                     </div>
                 </div>
             </div>
-            <div class="query-cont-row">
+        </div>
+        <div class="page-body-cont">
+              <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddproduct">
                         添加({{'已添加'+eventProducts.length}}个)
                     </el-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
+            <div class="query-cont-row">已选择{{multiSelection.length}}</div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :selectable="selectable" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250
               :row-class-name="tableRowClassName"  :isShowIndex='false'>
                 <template slot="skuName" slot-scope="scope">
