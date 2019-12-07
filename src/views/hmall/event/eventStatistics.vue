@@ -174,7 +174,12 @@ export default {
         span {
             word-break:break-all;
             &:first-child {
-                flex: 2;
+                flex: 3;
+                margin-right:10px;
+            }
+            &:last-child {
+                text-align:right;
+                flex: 1;
             }
         }
     }

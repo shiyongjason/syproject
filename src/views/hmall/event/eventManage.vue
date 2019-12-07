@@ -47,15 +47,15 @@
                     </div>
                 </div>
             </div>
-            <div class="query-cont-row">
+        </div>
+        <div class="page-body-cont">
+             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddevent">
                         新建活动
                     </el-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="eventTime" slot-scope="scope">
                     {{scope.data.row.startTime|formatterTime}}~ {{scope.data.row.endTime|formatterTime}}
