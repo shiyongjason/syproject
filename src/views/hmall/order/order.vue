@@ -333,7 +333,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.orderTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -343,7 +343,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.orderTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -363,7 +363,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.misTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -373,7 +373,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsReceivables.paymentTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -383,7 +383,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsReceivables.paymentTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -393,7 +393,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeEnd
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() >= new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -403,7 +403,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsProductTotal.orderTimeStart
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
