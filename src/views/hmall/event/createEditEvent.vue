@@ -221,11 +221,11 @@ export default {
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val.replace(/[^\d]/g, '') }}></el-input>
+                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }}></el-input>
                                 <span class='popover'>
                                     <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
                                         <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
-                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.opopotpopoverVisibleoverVisible = false }}>应用到未填写</p>
+                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
                                         <i class="el-icon-caret-bottom" slot="reference"></i>
                                     </el-popover>
                                 </span>
@@ -317,10 +317,6 @@ export default {
             }
             if (this.form.discountType === 1) {
                 this[key] = isNum(val, 1)
-            }
-            // 限购数量
-            if (key === 'purchaseLimitNum') {
-                this[key] = val.replace(/[^\d]/g, '')
             }
             this.form.spikeSku.map((item) => {
                 if (action == 1) {
@@ -500,7 +496,7 @@ export default {
                 if (this.isPending) return
                 this.isPending = true
                 try {
-                    this.form.status = status
+                    if (mark === '') this.form.status = status
                     if (this.$route.query.eventId) {
                         this.form.updateBy = this.userInfo.employeeName
                         await editEvent(this.form)
