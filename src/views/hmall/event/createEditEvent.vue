@@ -243,7 +243,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
