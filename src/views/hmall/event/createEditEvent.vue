@@ -80,7 +80,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="this.form.status==1||$route.query.copeId">
+        <div class="subfixed" v-if="this.form.status==1 || this.form.status == '' || $route.query.copeId">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -193,13 +193,15 @@ export default {
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
                                 <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
-                                <span class='popover'>
-                                    <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
-                                        <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 1); this.popoverVisible = false }}>应用到全部</p>
-                                        <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 2); this.popoverVisible = false }}>应用到未填写</p>
-                                        {(this.form.status == 1 || this.form.status == 2) ? '' : <i class="el-icon-caret-bottom" slot="reference"></i> }
-                                    </el-popover>
-                                </span>
+                                {
+                                    this.disableStatus ? '' : (<span class='popover'>
+                                        <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
+                                            <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 1); this.popoverVisible = false }}>应用到全部</p>
+                                            <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 2); this.popoverVisible = false }}>应用到未填写</p>
+                                            <i class="el-icon-caret-bottom" slot="reference"></i>
+                                        </el-popover>
+                                    </span>)
+                                }
                             </span>
                         )
                     },
@@ -222,13 +224,15 @@ export default {
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
                                 <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
-                                <span class='popover'>
-                                    <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
-                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
-                                        <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
-                                        {(this.form.status == 1 || this.form.status == 2) ? '' : <i class="el-icon-caret-bottom" slot="reference"></i> }
-                                    </el-popover>
-                                </span>
+                                {
+                                    this.disableStatus ? '' : (<span class='popover'>
+                                        <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
+                                            <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
+                                            <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
+                                            <i class="el-icon-caret-bottom" slot="reference"></i>
+                                        </el-popover>
+                                    </span>)
+                                }
                             </span>
                         )
                     },
