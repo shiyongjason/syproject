@@ -28,3 +28,13 @@ export const createWorkOrder = (params) => axios.post(`service/api/work-orders`,
 export function findServiceManagementList (params) {
     return axios.get(`/service/api/service-manager`, { params })
 }
+
+// mis重新同步
+export function updateMisSync (orderId) {
+    return axios.post(`/service/api/orders/re-sync-mis/${orderId}`)
+}
+
+// mis手动触发同步
+export function updateMisSyncManual (orderId) {
+    return axios.post(`/service/api/orders/sync-mis-success/${orderId}`)
+}
