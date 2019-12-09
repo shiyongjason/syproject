@@ -75,7 +75,7 @@
                         </template>
                         <template slot="action" slot-scope="scope">
                             <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled='$route.query.status&&$route.query.status==4'>
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled="($route.query.status&&$route.query.status==4)||$route.query.copeId!=''">
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
                             </el-button>
                         </template>
@@ -603,9 +603,6 @@ export default {
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
-            /* if (i == 1) {
-                console.log(this.form)
-            } */
         },
         async onCopy () {
             await this.copy(this.$route.query.copeId)

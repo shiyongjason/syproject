@@ -104,8 +104,32 @@ const actions = {
     /** 复制活动 */
     async copy ({ commit }, id) {
         const { data } = await instance.get(`/ops/api/spike/copy/${id}`, {})
-        console.log(data)
-        commit(types.SET_EVENT_INFO, data)
+        let len = data.spikeSku.length - state.eventProducts.length
+        console.log(len)
+        if (len < 0) {
+            const arr = state.eventProducts.splice(len)
+            data.spikeSku = state.eventProducts.concat(arr)
+            commit(types.SET_EVENT_INFO, data)
+        } else {
+            console.log(state.eventProducts)
+            if (state.eventProducts && state.eventProducts.length > 0) {
+                // 改变刷单数和库存数
+                state.eventProducts.map(item => {
+                    data.spikeSku.map(jtem => {
+                        if (item.productId == jtem.productId) {
+                            item.inventoryNum = jtem.inventoryNum
+                            item.inventoryRemainNum = jtem.inventoryRemainNum
+                            item.clickFarmingNum = jtem.clickFarmingNum
+                        }
+                    })
+                })
+                data.spikeSku = state.eventProducts// 拖动会改变顺序
+                commit(types.SET_EVENT_INFO, data)
+            } else { // state.eventProducts=[]
+                // 初始化设置session
+                commit(types.SET_EVENT_INFO, data)
+            }
+        }
     }
 
 }
