@@ -20,10 +20,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入结束时间" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -62,7 +62,6 @@
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{IsEventName(scope.data.row.status)}}
-
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id,scope.data.row.status)">编辑</el-button>
@@ -83,6 +82,7 @@
 import { EVENT_LIST } from '../store/const'
 import { mapActions, mapState } from 'vuex'
 import { updateSpikeStatus } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'eventmanage',
     data () {
@@ -140,6 +140,16 @@ export default {
     mounted () {
         this.onFindeSpike()
         this.copyParams = { ...this.queryParams }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('eventmanage')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'createEditEvent') {
+            clearCache('eventmanage')
+        }
+        next()
     },
     methods: {
         ...mapActions({

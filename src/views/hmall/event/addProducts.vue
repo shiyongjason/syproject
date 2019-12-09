@@ -144,7 +144,7 @@ export default {
         onAddproduct () {
             if (this.multiSelection.length > 0) {
                 this.addProducts(this.multiSelection)
-                this.$notify({
+                this.$message({
                     message: '商品添加成功',
                     type: 'success'
                 })
