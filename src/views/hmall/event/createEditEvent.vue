@@ -88,7 +88,7 @@
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
-        <div class="subfixed" v-else>
+        <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button @click='()=>{$router.go(-1)}'>返回</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
@@ -157,7 +157,7 @@ export default {
             discountValue: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '300', className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '330', className: 'allowDrag' },
                 { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
@@ -254,8 +254,8 @@ export default {
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
+                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -431,7 +431,12 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
+            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
+            if (this.form.status == 1) {
+                this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
+                return
+            }
             if (!val.productId || val.inventoryRemainNum === 0 || this.$route.query.copeId) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
@@ -518,8 +523,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
