@@ -177,7 +177,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -311,6 +311,7 @@ export default {
         },
         /** 设置某行 */
         setOneCol (val, scope, key = '') {
+            if (key === 'purchaseLimitNum') val = Number(val.replace(/[^\d]/g, ''))
             if (key != 'sellingPoint') scope.row[scope.column.property] = isNum(val, this.form.discountType === 1 ? 1 : 2)
             else scope.row[scope.column.property] = val
             this.validate(scope.row, key)
@@ -352,7 +353,7 @@ export default {
             } else {
                 item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
             }
-            item.salePrice = (item.salePrice).toFixed(2)
+            item.salePrice = Number(item.salePrice).toFixed(2)
         },
         /** 校验 */
         validate (item, action = '') {
@@ -391,7 +392,7 @@ export default {
                 item.numErrorMsg = ''
             }
             if (this.form.discountType === 2) {
-                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) <= 0) {
+                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) < 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
                 } else {
@@ -488,8 +489,18 @@ export default {
                 this.$message.error(`活动商品不能为空`)
                 return
             }
-            if (this.form.startTime === this.form.endTime) {
+            let hours = moment.duration(moment(this.form.endTime).valueOf() - moment(this.form.startTime).valueOf()).as('hours')
+            if (hours == 0) {
                 this.$message.error(`活动结束时间不能和开始时间一样`)
+                return
+            }
+            if (hours < 0) {
+                this.$message.error(`开始时间不能大于结束时间`)
+                return
+            }
+            //
+            if (hours > 4 * 24) {
+                this.$message.error(`活动时间最多持续四天`)
                 return
             }
             let flag = true
@@ -501,11 +512,16 @@ export default {
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
+                // if status === 2 &&
                 if (status === 2 && mark === '') {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
                     if (consumingMinutes < 10) {
                         this.$message.error(`只能创建当前时间10分钟后的活动`)
+                        return
+                    }
+                    if (consumingMinutes > 4 * 24 * 60) {
+                        this.$message.error(`只能提前4天发布`)
                         return
                     }
                     this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
@@ -528,7 +544,7 @@ export default {
                     this.isPending = false
                 }
             } else {
-                this.$message.error(`信息尚未填写完整`)
+                // this.$message.error(`信息尚未填写完整`)
             }
         },
         validateSpikeName (rule, value, callback) {
