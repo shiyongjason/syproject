@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <div class="query-cont-row">
+            <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddevent">
                         新建活动
@@ -65,13 +65,14 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
-                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)"  v-if="scope.data.row.status!=5&&scope.data.row.status!=4">复制</el-button>
+                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
                     <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
-                    <el-tooltip placement="bottom-start" effect="dark">
-                        <div slot="content" v-if="scope.data.row.pvdata">累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付数：{{scope.data.row.pvdata.payClicks}}</div>
-                        <el-button type="info" size="mini" v-if="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
+                    <el-tooltip placement="bottom-start" >
+                        <div slot="content" v-if="scope.data.row.pvdata">截止到{{scope.data.row.pvdata.expiryDate}}<br>累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付金额：{{scope.data.row.pvdata.totalMoney}}</div>
+                        <el-button type="info" size="mini" v-show="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
                     </el-tooltip>
+
                 </template>
             </basicTable>
         </div>
@@ -149,7 +150,7 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'createEditEvent') {
+        if (to.name != 'createEditEvent' || to.name != 'eventstatics') {
             clearCache('eventmanage')
         }
         next()
@@ -188,6 +189,7 @@ export default {
                 this.$set(item, index, this.listTrack)
             })
             this.tableData = spikelist
+            console.log(this.tableData)
             this.paginationInfo = {
                 total: this.spikeData.total,
                 pageNumber: this.spikeData.current,

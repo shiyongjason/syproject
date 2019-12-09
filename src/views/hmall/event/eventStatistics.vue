@@ -26,6 +26,9 @@
         </div>
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='true'>
+           <template slot="totalMoney" slot-scope="scope">
+               ¥{{scope.data.row.totalMoney}}
+               </template>
             </basicTable>
         </div>
         <div class="page-body-cont page-static">
@@ -70,7 +73,7 @@
                     </div>
                    <div v-for="(item,index) in productTotalMoneyRankings" :key="index" class="text item">
                         <span>{{index+1}}.{{item.productName}}</span>
-                        <span>{{item.totalMoney}}</span>
+                        <span>¥{{item.totalMoney}}</span>
                     </div>
                 </el-card>
             </div>
