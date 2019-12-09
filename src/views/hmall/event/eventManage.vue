@@ -223,7 +223,8 @@ export default {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         },
         onEditEvent (val) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id } })
+            if (val.status === 2) this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id, action: 'preheat' } })
+            else this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id } })
         }
     }
 }
