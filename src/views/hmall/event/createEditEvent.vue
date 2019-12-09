@@ -157,7 +157,7 @@ export default {
             discountValue: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '300', className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '330', className: 'allowDrag' },
                 { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
@@ -254,7 +254,7 @@ export default {
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
