@@ -65,7 +65,7 @@
 
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id,scope.data.row.status)">编辑</el-button>
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
                     <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
@@ -201,8 +201,8 @@ export default {
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         },
-        onEditEvent (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id } })
+        onEditEvent (id, status = '') {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id, status: status } })
         }
     }
 }
