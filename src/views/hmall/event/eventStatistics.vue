@@ -47,7 +47,7 @@
             <div class="static-box">
                 <el-card class="box-card">
                     <div slot="header" class="clearfix">
-                        <span>成交TOP榜单（按订单数</span>
+                        <span>成交TOP榜单（按订单数）</span>
                     </div>
                     <div class="item">
                         <span>商品名称</span>
@@ -87,7 +87,6 @@ export default {
             queryParams: {
                 startTime: '',
                 endTime: '',
-                activityName: this.$route.query.activityName,
                 activityId: this.$route.query.activityId
             },
             tableData: [],

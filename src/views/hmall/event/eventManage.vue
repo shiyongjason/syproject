@@ -141,6 +141,9 @@ export default {
         this.onFindeSpike()
         this.copyParams = { ...this.queryParams }
     },
+    activated () {
+        this.onFindeSpike()
+    },
     beforeRouteEnter (to, from, next) {
         newCache('eventmanage')
         next()
@@ -195,7 +198,7 @@ export default {
             return this.eventName[val - 1]
         },
         onOperate (item, val) {
-            this.$confirm('是终止该活动?', '提示', {
+            this.$confirm(val == 2 ? '是发布该活动' : '是终止该活动', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -214,7 +217,7 @@ export default {
 
         },
         onClickStatics (val) {
-            this.$router.push({ path: '/hmall/eventStatistics', query: { activityId: val.id, activityName: val.spikeName } })
+            this.$router.push({ path: '/hmall/eventStatistics', query: { activityId: val.id } })
         },
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
