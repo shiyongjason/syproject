@@ -88,7 +88,7 @@
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
-        <div class="subfixed" v-else>
+        <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button @click='()=>{$router.go(-1)}'>返回</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
@@ -431,7 +431,12 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
+            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
+            if (this.form.status == 1) {
+                this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
+                return
+            }
             if (!val.productId || val.inventoryRemainNum === 0 || this.$route.query.copeId) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
@@ -518,8 +523,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
