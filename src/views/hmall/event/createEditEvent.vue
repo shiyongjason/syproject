@@ -25,7 +25,7 @@
                                     <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
                                     </el-date-picker>
                                 </el-form-item>
-                                <div class="timeTips" v-if="!$route.query.status||$route.query.status!=3">只能创建10分钟后开始的活动</div>
+                                <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
                             </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         </template>
                         <template slot="action" slot-scope="scope">
                             <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled="($route.query.status&&$route.query.status==4)||$route.query.copeId!=''">
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
                             </el-button>
                         </template>
@@ -83,7 +83,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="$route.query.status!=3 || $route.query.copeId">
+        <div class="subfixed" v-if="disableStatus || $route.query.copeId">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -296,8 +296,7 @@ export default {
         },
         disableStatus () {
             // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            // return this.$route.query.eventId && this.form.status != 1
-            return this.$route.query.eventId && this.$route.query.status == 3
+            return this.$route.query.eventId && this.form.status != 1
         }
     },
     methods: {
@@ -431,7 +430,7 @@ export default {
         /** 刷单 */
         onOrder (val) {
             // 刷单前置条件：活动已经开启，库存不为零。
-            if (!val.productId || val.inventoryRemainNum === 0) {
+            if (!val.productId || val.inventoryRemainNum === 0 || this.$route.query.copeId) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
             }
