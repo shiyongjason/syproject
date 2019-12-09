@@ -452,7 +452,8 @@ export default {
             this.$emit('search-event', { status: this.activeName < 1 ? '' : this.activeName })
         },
         async updateMisSync (orderId) {
-            await updateMisSync(orderId)
+            const { data } = await updateMisSync(orderId)
+            return data
         },
         async updateMisSyncManual (params) {
             await updateMisSyncManual(params)
@@ -472,12 +473,19 @@ export default {
                 cancelButtonText: '关闭问题'
             }).then(async () => {
                 try {
-                    await this.updateMisSync(row.id)
-                    this.$message({
-                        type: 'success',
-                        message: '重新同步成功!'
-                    })
-                    this.$emit('search')
+                    const data = await this.updateMisSync(row.id)
+                    if (data) {
+                        this.$message({
+                            type: 'success',
+                            message: '同步数据成功!'
+                        })
+                        this.$emit('search')
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '同步数据失败!'
+                        })
+                    }
                 } catch (e) {}
             }).catch(async (action) => {
                 if (action === 'cancel') {
