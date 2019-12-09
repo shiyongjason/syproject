@@ -64,7 +64,7 @@
                     {{IsEventName(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)"  v-if="scope.data.row.status!=5&&scope.data.row.status!=4">复制</el-button>
                     <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
@@ -194,13 +194,21 @@ export default {
         IsEventName (val) {
             return this.eventName[val - 1]
         },
-        async onOperate (item, val) {
-            await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
-            this.$message({
-                message: val == 2 ? '发布成功' : '终止成功',
-                type: 'success'
+        onOperate (item, val) {
+            this.$confirm('是终止该活动?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
+                this.$message({
+                    message: val == 2 ? '发布成功' : '终止成功',
+                    type: 'success'
+                })
+                this.onFindeSpike()
+            }).catch(() => {
+
             })
-            this.onFindeSpike()
         },
         async onShow (val) {
 
@@ -211,8 +219,8 @@ export default {
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         },
-        onEditEvent (id, status = '') {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id, status: status } })
+        onEditEvent (val) {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id, status: val.status } })
         }
     }
 }
