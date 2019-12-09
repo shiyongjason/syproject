@@ -83,7 +83,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="!disableStatus || $route.query.copeId">
+        <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -273,7 +273,8 @@ export default {
         ...mapState({
             eventProducts: state => state.eventManage.eventProducts,
             userInfo: state => state.userInfo,
-            eventInfos: state => state.eventManage.eventInfos
+            eventInfos: state => state.eventManage.eventInfos,
+            isCollapse: state => state.isCollapse
         }),
         pickerOptionsStart () {
             return {
@@ -658,7 +659,20 @@ export default {
 /deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed{position: fixed;bottom:35px;width: 266px;left: 50%;transform: translateX(-133px);text-align: center;z-index: 999;}
+.subfixed {
+    position: fixed;
+    bottom: 0;
+    background: #ffffff;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center;
+    z-index: 99;
+}
+.maxLeft {
+    left: 200px;
+    transition: 0.3s;
+}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
