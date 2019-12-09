@@ -115,7 +115,11 @@ export default {
             const arr = this.item.commonDocPOs.filter(item => {
                 return item.docType === title
             })
-            return { title, file: arr }
+            let flag = ''
+            if (title === 'c-commercial') flag = this.item.otherCommerialDocFlag
+            if (title === 'c-capital') flag = this.item.capitalDocFlag
+            if (title === 'c-stocktransfer') flag = this.item.stocktransferDocFlag
+            return { title, flag, file: arr }
         },
         getName (code) {
             return this.nameList[code] || '未知'
@@ -150,6 +154,7 @@ export default {
         }
         if (this.dialog === 'C档（工商）') {
             let arr = this.getFile('c')
+            console.log(arr)
             return (
                 <div class='box'>
                     <div class='mb5'>工商材料归档情况：</div>
@@ -159,22 +164,24 @@ export default {
                                 <div>
                                     <p>{this.getName(item.title)} ：</p>
                                     {
-                                        item.file.length === 0
-                                            ? '-'
-                                            : item.file.map((jtem, jndex) => {
-                                                return (
-                                                    <p>
-                                                        <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
-                                                        {
-                                                            jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
-                                                                ? <span class='download'><el-button type="primary" on-click={() => {
-                                                                    this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
-                                                                }} size='mini'>下载</el-button></span>
-                                                                : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
-                                                        }
-                                                    </p>
-                                                )
-                                            })
+                                        item.flag == 2
+                                            ? <span>无</span>
+                                            : item.file.length === 0
+                                                ? '-'
+                                                : item.file.map((jtem, jndex) => {
+                                                    return (
+                                                        <p>
+                                                            <span class='filename'><a href={jtem.fileUrl} target='_blank'>{jtem.fileName}</a></span>
+                                                            {
+                                                                jtem.fileName.toLowerCase().indexOf('.png') != -1 || jtem.fileName.toLowerCase().indexOf('.jpg') != -1 || jtem.fileName.toLowerCase().indexOf('.jpeg') != -1
+                                                                    ? <span class='download'><el-button type="primary" on-click={() => {
+                                                                        this.getUrlBase64(jtem.fileUrl, `dom${jndex}`, jtem.fileName)
+                                                                    }} size='mini'>下载</el-button></span>
+                                                                    : <span><a class='downloadfile' href={jtem.fileUrl} target='_blank'>下载</a></span>
+                                                            }
+                                                        </p>
+                                                    )
+                                                })
                                     }
 
                                 </div>
@@ -341,7 +348,7 @@ export default {
                                                         </div>
                                                     )
                                                 }) : '-'
-                                            : '-'
+                                            : this.item[`v${index + 1}SignerFlag`] === 2 ? '无' : '-'
                                     }
                                 </div>
                             )

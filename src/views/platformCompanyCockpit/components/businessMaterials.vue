@@ -48,36 +48,48 @@
         <template v-if="business.commerialDocFlag==='1'" >
             <el-form-item prop="num"  label-width='160px'>
                 <template #label>
-                    <span style="margin-top: 16px;display: inline-block;">其余工商材料归档：</span>
+                    <span style="display: inline-block;">其余工商材料归档：</span>
                 </template>
-                <hosjoyUpload v-if="isEdit" :fileSize='100' :fileNum='100' v-model="business.commercial" showAsFileName :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('commercial','c-commercial')">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                </hosjoyUpload>
-                <div class="filename" v-else>
-                    <span v-if="business.commercial.length===0">-</span>
-                    <template v-else>
-                        <div class="fileItem" v-for="(item,index) in business.commercial" :key="index" >
-                            <span class="posrtv">
-                                <template v-if="item&&item.fileUrl">
-                                    <i class="el-icon-document"></i>
-                                    <a :href="item.fileUrl" target="_blank">
-                                        <font>{{item.fileName}}</font>
-                                    </a>
-                                </template>
-                            </span>
-                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
-                            <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                        </div>
-                    </template>
-                </div>
+                <el-radio v-if="isEdit" v-model="business.otherCommerialDocFlag" label="1">是</el-radio>
+                <el-radio v-if="isEdit" v-model="business.otherCommerialDocFlag" label="2">无</el-radio>
+                <el-radio v-if="isEdit" v-model="business.otherCommerialDocFlag" label="0">否</el-radio>
+                <span v-if="!isEdit">{{business.otherCommerialDocFlag==='0'?'否':business.otherCommerialDocFlag==='1'?'是':business.otherCommerialDocFlag==='2'?'无':'-'}}</span>
             </el-form-item>
+            <template v-if="business.otherCommerialDocFlag==='1'" >
+                <el-form-item prop="num" label-width='160px'>
+                    <template #label>
+                        <span style="margin-top: 16px;display: inline-block;">其余工商材料：</span>
+                    </template>
+                    <hosjoyUpload v-if="isEdit" :fileSize='100' :fileNum='100' v-model="business.commercial" showAsFileName :action='action' :uploadParameters='uploadParameters' style="margin:15px 0 0" @successCb="onSuccessCb('commercial','c-commercial')">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </hosjoyUpload>
+                    <div class="filename" v-else>
+                        <span v-if="business.commercial.length===0">-</span>
+                        <template v-else>
+                            <div class="fileItem" v-for="(item,index) in business.commercial" :key="index" >
+                                <span class="posrtv">
+                                    <template v-if="item&&item.fileUrl">
+                                        <i class="el-icon-document"></i>
+                                        <a :href="item.fileUrl" target="_blank">
+                                            <font>{{item.fileName}}</font>
+                                        </a>
+                                    </template>
+                                </span>
+                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                            </div>
+                        </template>
+                    </div>
+                </el-form-item>
+            </template>
             <el-form-item label-width='160px'>
                 <template #label>
                     <span>增减资协议是否归档：</span>
                 </template>
                 <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="1">是</el-radio>
+                <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="2">无</el-radio>
                 <el-radio v-if="isEdit" v-model="business.capitalDocFlag" label="0">否</el-radio>
-                <span v-if="!isEdit">{{business.capitalDocFlag==='0'?'否':business.capitalDocFlag==='1'?'是':'-'}}</span>
+                <span v-if="!isEdit">{{business.capitalDocFlag==='0'?'否':business.capitalDocFlag==='1'?'是':business.capitalDocFlag==='2'?'无':'-'}}</span>
             </el-form-item>
             <template v-if="business.capitalDocFlag==='1'" >
                 <el-form-item prop="num" label-width='160px'>
@@ -111,8 +123,9 @@
                     <span>股转版协议是否归档：</span>
                 </template>
                 <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="1">是</el-radio>
+                <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="2">无</el-radio>
                 <el-radio v-if="isEdit" v-model="business.stocktransferDocFlag" label="0">否</el-radio>
-                <span v-if="!isEdit">{{business.stocktransferDocFlag==='0'?'否':business.stocktransferDocFlag==='1'?'是':'-'}}</span>
+                <span v-if="!isEdit">{{business.stocktransferDocFlag==='0'?'否':business.stocktransferDocFlag==='1'?'是':business.stocktransferDocFlag==='2'?'无':'-'}}</span>
             </el-form-item>
         <template v-if="business.stocktransferDocFlag==='1'" >
             <el-form-item prop="num" label-width='160px'>

@@ -14,7 +14,7 @@
             <div class="query-cont-col">
                 <div class="flex-wrap-title">订单商品金额：</div>
                 <div class="flex-wrap-cont">
-                    {{details.orderAmount}}元
+                    {{details.currentAmount}}元
                 </div>
             </div>
             <div class="query-cont-col">
