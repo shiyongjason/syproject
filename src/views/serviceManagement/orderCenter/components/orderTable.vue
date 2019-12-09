@@ -36,7 +36,7 @@
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
                             <font v-if="hosAuthCheck(youZanDetailsAuth) || hosAuthCheck(channelDetailsAuth)" @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
-                            <font @click="openMisError(item.syncErrMsg)" v-if="item.syncStatus === 1">失败原因</font>
+                            <font @click="openMisError(item.syncErrMsg)" v-if="item.syncStatus === 1" style="margin-left: 20px">失败原因</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -485,6 +485,7 @@ export default {
                             type: 'error',
                             message: '同步数据失败!'
                         })
+                        this.$emit('search')
                     }
                 } catch (e) {}
             }).catch(async (action) => {
