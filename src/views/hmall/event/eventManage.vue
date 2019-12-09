@@ -157,15 +157,7 @@ export default {
             hoverTrack: 'hoverTrack'
         }),
         onCopy (id) {
-            this.$confirm('是否复制该活动?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
-            }).catch(() => {
-
-            })
+            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
         },
         searchList () {
             this.queryParams.pageNumber = 1
@@ -219,8 +211,8 @@ export default {
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         },
-        onEditEvent (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id } })
+        onEditEvent (id, status = '') {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id, status: status } })
         }
     }
 }

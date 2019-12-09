@@ -25,6 +25,7 @@
                                     <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
                                     </el-date-picker>
                                 </el-form-item>
+                                <div class="timeTips" v-if="!$route.query.status||$route.query.status!=3">只能创建10分钟后开始的活动</div>
                             </div>
                     </div>
                 </div>
@@ -32,20 +33,22 @@
                     <h2>2.设置规则和优惠</h2>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <div class="query-col-title">优惠方式：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
-                                <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                                <el-form-item prop="discountType" label="优惠方式：" style="display: flex;">
+                                    <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
+                                    <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                                </el-form-item>
                             </div>
                         </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <div class="query-col-title">会员限制：</div>
                             <div class="query-col-input">
+                                <el-form-item prop="memberScope" label="会员限制：" style="display: flex;">
                                 <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
                                 <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
                                 <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
+                                </el-form-item>
                             </div>
                         </div>
                     </div>
@@ -72,7 +75,7 @@
                         </template>
                         <template slot="action" slot-scope="scope">
                             <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled='$route.query.status&&$route.query.status==4'>
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
                             </el-button>
                         </template>
@@ -80,7 +83,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="this.form.status==1 || this.form.status == '' || $route.query.copeId">
+        <div class="subfixed" v-if="$route.query.status!=3 || $route.query.copeId">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -140,6 +143,12 @@ export default {
                     ],
                     endTime: [
                         { required: true, message: '请选择活动结束时间', trigger: 'change' }
+                    ],
+                    discountType: [
+                        { required: true, message: '请选择优惠方式', trigger: 'change' }
+                    ],
+                    memberScope: [
+                        { required: true, message: '请选择会员限制', trigger: 'change' }
                     ]
                 }
             },
@@ -148,7 +157,7 @@ export default {
             tableData: [],
             column: [
                 { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
-                { label: '商建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
+                { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
                     label: '卖点',
@@ -287,7 +296,8 @@ export default {
         },
         disableStatus () {
             // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            return this.$route.query.eventId && this.form.status != 1
+            // return this.$route.query.eventId && this.form.status != 1
+            return this.$route.query.eventId && this.$route.query.status == 3
         }
     },
     methods: {
@@ -384,7 +394,7 @@ export default {
                     item.errorMsg = ''
                 }
             }
-            if (Number(item.purchaseLimitNum) > Number(item.inventoryNum)) {
+            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.inventoryNum))) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else if (item.purchaseLimitNum) {
@@ -649,4 +659,5 @@ export default {
 .isremind font{color:#a6a8ab;font-weight: 200;}
 /deep/.mark{ font-style: normal;color: #F56C6C; padding-right: 3px}
 /deep/.el-popover .popover-p{ line-height: 30px;color: #F56C6C; }
+.timeTips{ color: #FF7A45; margin-left: 30px}
 </style>
