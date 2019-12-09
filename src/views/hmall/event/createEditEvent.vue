@@ -83,7 +83,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="disableStatus || $route.query.copeId">
+        <div class="subfixed" v-if="!disableStatus || $route.query.copeId">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -94,7 +94,7 @@
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
         <center>
             <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
-            <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p>
+            <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
         </center>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
@@ -117,6 +117,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            isFirst: true,
             popoverVisible: false,
             otpopoverVisible: false,
             orderRow: '',
@@ -156,7 +157,7 @@ export default {
             discountValue: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '300', className: 'allowDrag' },
                 { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
@@ -195,13 +196,13 @@ export default {
                 {
                     label: '限购数量',
                     prop: 'purchaseLimitNum',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
@@ -226,13 +227,13 @@ export default {
                 {
                     label: '优惠设置',
                     prop: 'discountValue',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
@@ -596,22 +597,23 @@ export default {
                 this.setSort()
             })
         },
-        async getEventInfo (i = '') {
-            if (this.$route.query.copeId) await this.eventInfo(this.$route.query.copeId)
-            else await this.eventInfo(this.$route.query.eventId)
+        async getEventInfo () {
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.eventInfo(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         },
         async onCopy () {
-            await this.copy(this.$route.query.copeId)
-            this.form = this.eventInfos
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.copy(obj)
+            this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         }
 
     },
-    async activated () {
+    /*  async activated () {
         if (this.$route.query.eventId) {
             this.getEventInfo()
         } else if (this.$route.query.copeId) {
@@ -620,10 +622,24 @@ export default {
             this.setTableData(this.eventProducts)
         }
         this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-    },
+    }, */
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
-        next()
+        next(vm => {
+            if (from.path == '/hmall/addProducts') {
+                vm.isFirst = false
+            } else {
+                vm.isFirst = true
+            }
+            if (vm.$route.query.eventId && vm.isFirst) {
+                vm.getEventInfo()
+            } else if (vm.$route.query.copeId && vm.isFirst) {
+                vm.onCopy()
+            } else {
+                vm.setTableData(vm.eventProducts)
+            }
+            vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
+        })
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
