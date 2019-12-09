@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-              <div class="query-cont-row">
+            <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onAddproduct">
                         添加({{'已添加'+eventProducts.length}}个)
@@ -42,7 +42,13 @@
             </div>
             <div class="query-cont-row">已选择{{multiSelection.length}}</div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :selectable="selectable" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250
-              :row-class-name="tableRowClassName"  :isShowIndex='false'>
+                :row-class-name="tableRowClassName" :isShowIndex='false'>
+                <template slot="retailPrice" slot-scope="scope">
+                    ¥{{scope.data.row.retailPrice}}
+                </template>
+                 <template slot="sellPrice" slot-scope="scope">
+                    ¥{{scope.data.row.sellPrice}}
+                </template>
                 <template slot="skuName" slot-scope="scope">
                     <div class="proImg">
                         <img :src="scope.data.row.pictureUrl" alt="">
@@ -144,7 +150,7 @@ export default {
         onAddproduct () {
             if (this.multiSelection.length > 0) {
                 this.addProducts(this.multiSelection)
-                this.$notify({
+                this.$message({
                     message: '商品添加成功',
                     type: 'success'
                 })
@@ -195,9 +201,9 @@ export default {
     // display: flex;
     // justify-content: flex-start;
     // align-items: center;
-    white-space:normal;
-    word-break:break-all;
-    word-wrap:break-word;
+    white-space: normal;
+    word-break: break-all;
+    word-wrap: break-word;
     width: 240px;
     text-align: left;
     img {
@@ -211,12 +217,10 @@ export default {
 /deep/ .pulled {
     background: #e3e3e3e3;
     opacity: 0.7;
-
 }
-.el-notification__group{
-/deep/ .el-notification__content{
-    margin: 0 !important
+.el-notification__group {
+    /deep/ .el-notification__content {
+        margin: 0 !important;
+    }
 }
-}
-
 </style>

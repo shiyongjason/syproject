@@ -20,10 +20,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入结束时间" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -62,16 +62,15 @@
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{IsEventName(scope.data.row.status)}}
-
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
-                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
-                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)"  v-if="scope.data.row.status!=5&&scope.data.row.status!=4">复制</el-button>
+                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
                     <el-tooltip placement="bottom-start" effect="dark">
                         <div slot="content" v-if="scope.data.row.pvdata">累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付数：{{scope.data.row.pvdata.payClicks}}</div>
-                        <el-button type="info" size="mini" v-if="scope.data.row.status!=1" plain @click="onClickStatics(scope.data)">数据统计</el-button>
+                        <el-button type="info" size="mini" v-if="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
                     </el-tooltip>
                 </template>
             </basicTable>
@@ -83,6 +82,7 @@
 import { EVENT_LIST } from '../store/const'
 import { mapActions, mapState } from 'vuex'
 import { updateSpikeStatus } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'eventmanage',
     data () {
@@ -141,6 +141,19 @@ export default {
         this.onFindeSpike()
         this.copyParams = { ...this.queryParams }
     },
+    activated () {
+        this.onFindeSpike()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('eventmanage')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'createEditEvent') {
+            clearCache('eventmanage')
+        }
+        next()
+    },
     methods: {
         ...mapActions({
             findSpike: 'findSpike',
@@ -184,25 +197,33 @@ export default {
         IsEventName (val) {
             return this.eventName[val - 1]
         },
-        async onOperate (item, val) {
-            await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
-            this.$message({
-                message: val == 2 ? '发布成功' : '终止成功',
-                type: 'success'
+        onOperate (item, val) {
+            this.$confirm(val == 2 ? '是发布该活动' : '是终止该活动', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await updateSpikeStatus({ id: item.id, status: val, updateBy: this.userInfo.employeeName })
+                this.$message({
+                    message: val == 2 ? '发布成功' : '终止成功',
+                    type: 'success'
+                })
+                this.onFindeSpike()
+            }).catch(() => {
+
             })
-            this.onFindeSpike()
         },
         async onShow (val) {
 
         },
-        onClickStatics () {
-            this.$router.push({ path: '/hmall/eventStatistics', query: {} })
+        onClickStatics (val) {
+            this.$router.push({ path: '/hmall/eventStatistics', query: { activityId: val.id } })
         },
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })
         },
-        onEditEvent (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: id } })
+        onEditEvent (val) {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id, status: val.status } })
         }
     }
 }

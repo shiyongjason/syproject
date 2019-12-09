@@ -25,6 +25,7 @@
                                     <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
                                     </el-date-picker>
                                 </el-form-item>
+                                <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
                             </div>
                     </div>
                 </div>
@@ -32,20 +33,22 @@
                     <h2>2.设置规则和优惠</h2>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <div class="query-col-title">优惠方式：</div>
                             <div class="query-col-input">
-                                <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
-                                <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                                <el-form-item prop="discountType" label="优惠方式：" style="display: flex;">
+                                    <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
+                                    <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                                </el-form-item>
                             </div>
                         </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <div class="query-col-title">会员限制：</div>
                             <div class="query-col-input">
+                                <el-form-item prop="memberScope" label="会员限制：" style="display: flex;">
                                 <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
                                 <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
                                 <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
+                                </el-form-item>
                             </div>
                         </div>
                     </div>
@@ -80,7 +83,7 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="this.form.status==1 || this.form.status == '' || $route.query.copeId">
+        <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
@@ -91,7 +94,7 @@
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
         <center>
             <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
-            <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p>
+            <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
         </center>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
@@ -114,6 +117,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            isFirst: true,
             popoverVisible: false,
             otpopoverVisible: false,
             orderRow: '',
@@ -140,6 +144,12 @@ export default {
                     ],
                     endTime: [
                         { required: true, message: '请选择活动结束时间', trigger: 'change' }
+                    ],
+                    discountType: [
+                        { required: true, message: '请选择优惠方式', trigger: 'change' }
+                    ],
+                    memberScope: [
+                        { required: true, message: '请选择会员限制', trigger: 'change' }
                     ]
                 }
             },
@@ -147,8 +157,8 @@ export default {
             discountValue: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
-                { label: '商建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '300', className: 'allowDrag' },
+                { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
                     label: '卖点',
@@ -177,7 +187,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val.replace(/[^\d]/g, ''), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -186,13 +196,13 @@ export default {
                 {
                     label: '限购数量',
                     prop: 'purchaseLimitNum',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
@@ -217,13 +227,13 @@ export default {
                 {
                     label: '优惠设置',
                     prop: 'discountValue',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
@@ -263,7 +273,8 @@ export default {
         ...mapState({
             eventProducts: state => state.eventManage.eventProducts,
             userInfo: state => state.userInfo,
-            eventInfos: state => state.eventManage.eventInfos
+            eventInfos: state => state.eventManage.eventInfos,
+            isCollapse: state => state.isCollapse
         }),
         pickerOptionsStart () {
             return {
@@ -311,6 +322,7 @@ export default {
         },
         /** 设置某行 */
         setOneCol (val, scope, key = '') {
+            if (key === 'purchaseLimitNum') val = Number(val.replace(/[^\d]/g, ''))
             if (key != 'sellingPoint') scope.row[scope.column.property] = isNum(val, this.form.discountType === 1 ? 1 : 2)
             else scope.row[scope.column.property] = val
             this.validate(scope.row, key)
@@ -352,7 +364,7 @@ export default {
             } else {
                 item.salePrice = (item.sellPrice - (item.discountValue ? item.discountValue : 0))
             }
-            item.salePrice = (item.salePrice).toFixed(2)
+            item.salePrice = Number(item.salePrice).toFixed(2)
         },
         /** 校验 */
         validate (item, action = '') {
@@ -383,7 +395,7 @@ export default {
                     item.errorMsg = ''
                 }
             }
-            if (Number(item.purchaseLimitNum) > Number(item.inventoryNum)) {
+            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.inventoryNum))) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else if (item.purchaseLimitNum) {
@@ -391,7 +403,7 @@ export default {
                 item.numErrorMsg = ''
             }
             if (this.form.discountType === 2) {
-                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) <= 0) {
+                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) < 0) {
                     item.errorMsg = '优惠最高金额不可超过销售价格'
                     item._error = true
                 } else {
@@ -420,7 +432,7 @@ export default {
         /** 刷单 */
         onOrder (val) {
             // 刷单前置条件：活动已经开启，库存不为零。
-            if (!val.productId || val.inventoryRemainNum === 0) {
+            if (!val.productId || val.inventoryRemainNum === 0 || this.$route.query.copeId) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
             }
@@ -488,8 +500,18 @@ export default {
                 this.$message.error(`活动商品不能为空`)
                 return
             }
-            if (this.form.startTime === this.form.endTime) {
+            let hours = moment.duration(moment(this.form.endTime).valueOf() - moment(this.form.startTime).valueOf()).as('hours')
+            if (hours == 0) {
                 this.$message.error(`活动结束时间不能和开始时间一样`)
+                return
+            }
+            if (hours < 0) {
+                this.$message.error(`开始时间不能大于结束时间`)
+                return
+            }
+            //
+            if (hours > 4 * 24) {
+                this.$message.error(`活动时间最多持续四天`)
                 return
             }
             let flag = true
@@ -501,11 +523,16 @@ export default {
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
+                // if status === 2 &&
                 if (status === 2 && mark === '') {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
                     if (consumingMinutes < 10) {
                         this.$message.error(`只能创建当前时间10分钟后的活动`)
+                        return
+                    }
+                    if (consumingMinutes > 4 * 24 * 60) {
+                        this.$message.error(`只能提前4天发布`)
                         return
                     }
                     this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
@@ -528,7 +555,7 @@ export default {
                     this.isPending = false
                 }
             } else {
-                this.$message.error(`信息尚未填写完整`)
+                // this.$message.error(`信息尚未填写完整`)
             }
         },
         validateSpikeName (rule, value, callback) {
@@ -571,25 +598,23 @@ export default {
                 this.setSort()
             })
         },
-        async getEventInfo (i = '') {
-            if (this.$route.query.copeId) await this.eventInfo(this.$route.query.copeId)
-            else await this.eventInfo(this.$route.query.eventId)
+        async getEventInfo () {
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.eventInfo(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
-            /* if (i == 1) {
-                console.log(this.form)
-            } */
         },
         async onCopy () {
-            await this.copy(this.$route.query.copeId)
-            this.form = this.eventInfos
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.copy(obj)
+            this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         }
 
     },
-    async activated () {
+    /*  async activated () {
         if (this.$route.query.eventId) {
             this.getEventInfo()
         } else if (this.$route.query.copeId) {
@@ -598,10 +623,24 @@ export default {
             this.setTableData(this.eventProducts)
         }
         this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-    },
+    }, */
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
-        next()
+        next(vm => {
+            if (from.path == '/hmall/addProducts') {
+                vm.isFirst = false
+            } else {
+                vm.isFirst = true
+            }
+            if (vm.$route.query.eventId && vm.isFirst) {
+                vm.getEventInfo()
+            } else if (vm.$route.query.copeId && vm.isFirst) {
+                vm.onCopy()
+            } else {
+                vm.setTableData(vm.eventProducts)
+            }
+            vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
+        })
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
@@ -620,7 +659,20 @@ export default {
 /deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed{position: fixed;bottom:35px;width: 266px;left: 50%;transform: translateX(-133px);text-align: center;z-index: 999;}
+.subfixed {
+    position: fixed;
+    bottom: 0;
+    background: #ffffff;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center;
+    z-index: 99;
+}
+.maxLeft {
+    left: 200px;
+    transition: 0.3s;
+}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
@@ -633,4 +685,5 @@ export default {
 .isremind font{color:#a6a8ab;font-weight: 200;}
 /deep/.mark{ font-style: normal;color: #F56C6C; padding-right: 3px}
 /deep/.el-popover .popover-p{ line-height: 30px;color: #F56C6C; }
+.timeTips{ color: #FF7A45; margin-left: 30px}
 </style>
