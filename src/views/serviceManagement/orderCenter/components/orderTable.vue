@@ -466,6 +466,8 @@ export default {
         },
         openMisDialog (row) {
             this.$confirm('原因：' + row.syncErrMsg, '同步mis系统失败', {
+                closeOnClickModal: false,
+                distinguishCancelAndClose: true,
                 confirmButtonText: '重新同步',
                 cancelButtonText: '关闭问题'
             }).then(async () => {
@@ -477,13 +479,15 @@ export default {
                     })
                     this.$emit('search')
                 } catch (e) {}
-            }).catch(async () => {
-                await this.updateMisSyncManual(row.id)
-                this.$message({
-                    type: 'success',
-                    message: '关闭成功!'
-                })
-                this.$emit('search')
+            }).catch(async (action) => {
+                if (action === 'cancel') {
+                    await this.updateMisSyncManual(row.id)
+                    this.$message({
+                        type: 'success',
+                        message: '关闭成功!'
+                    })
+                    this.$emit('search')
+                }
             })
         }
     },
