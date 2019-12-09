@@ -83,18 +83,18 @@
                 </div>
             </el-form>
         </div>
-        <div class="subfixed" v-if="$route.query.status!=3 || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
+        <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
-        <div class="subfixed" v-else>
+        <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
             <el-button @click='()=>{$router.go(-1)}'>返回</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
         <center>
             <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
-            <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p>
+            <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
         </center>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
@@ -117,6 +117,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            isFirst: true,
             popoverVisible: false,
             otpopoverVisible: false,
             orderRow: '',
@@ -156,7 +157,7 @@ export default {
             discountValue: '',
             tableData: [],
             column: [
-                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '160', className: 'allowDrag' },
+                { label: '商品', prop: 'skuName', slot: 'skuName', minWidth: '300', className: 'allowDrag' },
                 { label: '建议零售价', prop: 'retailPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 { label: '销售价格', prop: 'sellPrice', formatter: this.formatterMoney, className: 'allowDrag' },
                 {
@@ -195,13 +196,13 @@ export default {
                 {
                     label: '限购数量',
                     prop: 'purchaseLimitNum',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
@@ -226,13 +227,13 @@ export default {
                 {
                     label: '优惠设置',
                     prop: 'discountValue',
-                    width: '250',
+                    width: '180',
                     renderHeader: (h, scope) => {
                         return (
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
                                 {
                                     this.disableStatus ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
@@ -254,7 +255,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -430,7 +431,12 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
+            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
+            if (this.form.status == 1) {
+                this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
+                return
+            }
             if (!val.productId || val.inventoryRemainNum === 0 || this.$route.query.copeId) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
                 return
@@ -517,8 +523,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                if (!item.inventoryOriginNum) this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                if (!item.inventoryRemainNum) this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
+                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
@@ -597,22 +603,23 @@ export default {
                 this.setSort()
             })
         },
-        async getEventInfo (i = '') {
-            if (this.$route.query.copeId) await this.eventInfo(this.$route.query.copeId)
-            else await this.eventInfo(this.$route.query.eventId)
+        async getEventInfo () {
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.eventInfo(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         },
         async onCopy () {
-            await this.copy(this.$route.query.copeId)
-            this.form = this.eventInfos
+            let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
+            await this.copy(obj)
+            this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         }
 
     },
-    async activated () {
+    /*  async activated () {
         if (this.$route.query.eventId) {
             this.getEventInfo()
         } else if (this.$route.query.copeId) {
@@ -621,10 +628,24 @@ export default {
             this.setTableData(this.eventProducts)
         }
         this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-    },
+    }, */
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
-        next()
+        next(vm => {
+            if (from.path == '/hmall/addProducts') {
+                vm.isFirst = false
+            } else {
+                vm.isFirst = true
+            }
+            if (vm.$route.query.eventId && vm.isFirst) {
+                vm.getEventInfo()
+            } else if (vm.$route.query.copeId && vm.isFirst) {
+                vm.onCopy()
+            } else {
+                vm.setTableData(vm.eventProducts)
+            }
+            vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
+        })
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
