@@ -64,13 +64,13 @@
                     {{IsEventName(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)">编辑</el-button>
-                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
-                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1||scope.data.row.status==5)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
+                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row.id)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)"  v-if="scope.data.row.status!=5&&scope.data.row.status!=4">复制</el-button>
+                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
                     <el-tooltip placement="bottom-start" effect="dark">
                         <div slot="content" v-if="scope.data.row.pvdata">累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付数：{{scope.data.row.pvdata.payClicks}}</div>
-                        <el-button type="info" size="mini" v-if="scope.data.row.status!=1" plain @click="onClickStatics(scope.data)">数据统计</el-button>
+                        <el-button type="info" size="mini" v-if="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
                     </el-tooltip>
                 </template>
             </basicTable>
@@ -157,7 +157,15 @@ export default {
             hoverTrack: 'hoverTrack'
         }),
         onCopy (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+            this.$confirm('是否复制该活动?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+            }).catch(() => {
+
+            })
         },
         searchList () {
             this.queryParams.pageNumber = 1
@@ -205,8 +213,8 @@ export default {
         async onShow (val) {
 
         },
-        onClickStatics () {
-            this.$router.push({ path: '/hmall/eventStatistics', query: {} })
+        onClickStatics (val) {
+            this.$router.push({ path: '/hmall/eventStatistics', query: { activityId: val.id, activityName: val.spikeName } })
         },
         onAddevent () {
             this.$router.push({ path: '/hmall/createEditEvent', query: {} })

@@ -86,15 +86,17 @@ export default {
         return {
             queryParams: {
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                activityName: this.$route.query.activityName,
+                activityId: this.$route.query.activityId
             },
             tableData: [],
             tableLabel: [
                 { label: '时间', prop: 'date' },
                 { label: '访问PV（按日）', prop: 'pv' },
                 { label: '访问UV（按日）', prop: 'uv' },
-                { label: '提交订单点击数', prop: 'spuCode' },
-                { label: '支付点击数', prop: 'orderCommits' },
+                { label: '提交订单点击数', prop: 'orderCommits' },
+                { label: '支付点击数', prop: 'payClick' },
                 { label: '成交订单数', prop: 'payed' },
                 { label: '成交订单总额', prop: 'totalMoney' },
                 { label: '转化率', prop: 'inversionRate' }
