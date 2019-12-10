@@ -310,11 +310,8 @@ export default {
                 this.showTips = k
             }, 220)
 
-            let arr = Object.values(this.inputTips)
+            this.suggestions = Object.values(this.inputTips)
             // 去重
-            for (var i = 0; i < arr.length; i++) {
-                this.suggestions.push(arr[i])
-            }
             let hash = {}
             this.suggestions = this.suggestions.reduce((preVal, curVal) => {
                 // eslint-disable-next-line
