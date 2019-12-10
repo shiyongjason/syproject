@@ -166,7 +166,7 @@ export default {
                                     {
                                         item.flag == 2
                                             ? <span>无</span>
-                                            : item.file.length === 0
+                                            : item.file.length === 0 || item.flag == 0
                                                 ? '-'
                                                 : item.file.map((jtem, jndex) => {
                                                     return (

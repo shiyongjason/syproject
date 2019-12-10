@@ -39,7 +39,7 @@
         <!-- 投资履约担保函归档 -->
         <el-form-item label-width='160px'>
             <template #label>
-                <span>工商材料是否归档：</span>
+                <span class="labeldiy">工商材料是否归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="business.commerialDocFlag" label="1">是</el-radio>
             <el-radio v-if="isEdit" v-model="business.commerialDocFlag" label="0">否</el-radio>
