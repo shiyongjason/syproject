@@ -314,11 +314,15 @@ export default {
             let obj = {}
             // 去重
             for (var i = 0; i < arr.length; i++) {
-                if (!obj[arr[i].name]) {
-                    this.suggestions.push(arr[i])
-                    obj[arr[i].name] = true
-                }
+                this.suggestions.push(arr[i])
             }
+            let hash = {}
+            this.suggestions = this.suggestions.reduce((preVal, curVal) => {
+                // eslint-disable-next-line
+                hash[curVal.idCard] ? '' : hash[curVal.idCard] = true && preVal.push(curVal)
+                return preVal
+            }, [])
+
             console.log(this.suggestions)
         },
         onBlur (key, subKey, val, index) {
