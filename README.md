@@ -5,22 +5,24 @@
 
 //
 pickerOptionsStart () {
-        return {
-            disabledDate: (time) => {
-                let beginDateVal = this.formData.endTime
-                if (beginDateVal) {
-                    return time.getTime() > new Date(beginDateVal).getTime() - 8.64e7
-                }
+    return {
+        disabledDate: time => {
+            let endDateVal = this.form.endTime
+            if (endDateVal) {
+                return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
             }
-        }
-    },
-    pickerOptionsEnd () {
-        return {
-            disabledDate: (time) => {
-                let beginDateVal = this.formData.startTime
-                if (beginDateVal) {
-                    return time.getTime() < new Date(beginDateVal).getTime()
-                }
-            }
+            return time.getTime() <= Date.now() - 8.64e7
         }
     }
+},
+pickerOptionsEnd () {
+    return {
+        disabledDate: time => {
+            let beginDateVal = this.form.startTime
+            if (beginDateVal) {
+                return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
+            }
+            return time.getTime() <= Date.now() - 8.64e7
+        }
+    }
+},

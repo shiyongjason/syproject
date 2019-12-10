@@ -281,8 +281,9 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.form.endTime
                     if (endDateVal) {
-                        return time.getTime() >= new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
                     }
+                    return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -293,6 +294,7 @@ export default {
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                     }
+                    return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
