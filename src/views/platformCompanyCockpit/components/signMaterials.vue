@@ -311,7 +311,6 @@ export default {
             }, 220)
 
             let arr = Object.values(this.inputTips)
-            let obj = {}
             // 去重
             for (var i = 0; i < arr.length; i++) {
                 this.suggestions.push(arr[i])
