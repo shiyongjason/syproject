@@ -11,13 +11,15 @@
                 {{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':archiveSignPO.rcDocFlag==='2'?'无':'-'}}
             </span>
         </el-form-item>
-        <template v-if="archiveSignPO.rcDocFlag==='1'" >
+        <template v-if="archiveSignPO.rcDocFlag==='1'">
             <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
                 <!-- @input="onInputChange(archiveSignPO.realControllerName,'actualController')" -->
-                <el-input  v-model='archiveSignPO.realControllerName' placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="onFocus('actualController')"></el-input>
+                <el-input v-model='archiveSignPO.realControllerName' placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="onFocus('actualController')"></el-input>
                 <span v-else>{{archiveSignPO.realControllerName?archiveSignPO.realControllerName:'-'}}</span>
                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='actualController'">
-                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'actualController')" ><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'actualController')">
+                        <font>{{item.name}}</font><span>{{item.idCard}}</span>
+                    </p>
                 </div>
             </el-form-item>
             <el-form-item prop="realControllerContactNo" label="联系方式：" label-width='160px'>
@@ -46,12 +48,14 @@
                 {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='2'?'无':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
             </span>
         </el-form-item>
-        <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
+        <template v-if="archiveSignPO.shareholderDocFlag==='1'">
             <el-form-item prop="shareholderName" label="自然人股东姓名：" label-width='160px'>
                 <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','name',archiveSignPO.shareholderName)" @focus="onFocus('naturalPerson')"></el-input>
                 <span v-else>{{archiveSignPO.shareholderName?archiveSignPO.shareholderName:'-'}}</span>
                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='naturalPerson'">
-                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'naturalPerson')"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'naturalPerson')">
+                        <font>{{item.name}}</font><span>{{item.idCard}}</span>
+                    </p>
                 </div>
             </el-form-item>
             <el-form-item prop="shareholderContactNo" label="自然人股东联系方式：" label-width='160px'>
@@ -76,9 +80,9 @@
                     <span v-else>
                         {{item.radio==='1'?'是':item.radio==='0'?'否':item.radio==='2'?'无':'-'}}
                     </span>
-                    <template v-if="item.radio==='1'" >
+                    <template v-if="item.radio==='1'">
                         <div v-for="(jtem,jndex) in item.version" :key="jndex" class="filepr">
-                            <el-form-item prop="documentList"  label-width='160px'  >
+                            <el-form-item prop="documentList" label-width='160px'>
                                 <template #label>
                                     <span style="margin-top: 16px;display: inline-block;">第{{jndex+1}}份文件：</span>
                                 </template>
@@ -90,7 +94,7 @@
                                 <div class="filename" v-else>
                                     <span v-if="jtem.documentList.length===0">-</span>
                                     <template v-else>
-                                        <div class="fileItem" v-for="(item,index) in jtem.documentList" :key="index" >
+                                        <div class="fileItem" v-for="(item,index) in jtem.documentList" :key="index">
                                             <span class="posrtv">
                                                 <template v-if="item&&item.fileUrl">
                                                     <i class="el-icon-document"></i>
@@ -105,34 +109,38 @@
                                     </template>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="该文件签约人：" label-width='160px' >
+                            <el-form-item label="该文件签约人：" label-width='160px'>
                                 <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'name',jtem.archiveSignInvestPO.signerName)" @focus="onFocus(`version${index}${jndex}`)"></el-input>
                                 <span v-else>{{jtem.archiveSignInvestPO.signerName?jtem.archiveSignInvestPO.signerName:'-'}}</span>
                                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips===`version${index}${jndex}`">
-                                    <p v-for="(item,kndex) in suggestions" :key="kndex" @click="chooseOneTips(item,'version',index,jndex)"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                                    <p v-for="(item,kndex) in suggestions" :key="kndex" @click="chooseOneTips(item,'version',index,jndex)">
+                                        <font>{{item.name}}</font><span>{{item.idCard}}</span>
+                                    </p>
                                 </div>
                             </el-form-item>
-                            <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)" ></el-input>
+                            <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px'>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerContactNo?jtem.archiveSignInvestPO.signerContactNo:'-'}}
                                 </span>
                             </el-form-item>
-                            <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
+                            <el-form-item label="签约人身份证号：" label-width='160px' :key="jndex+index">
                                 <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18' @blur="onBlur(`version${index}${jndex}`,'idCard',jtem.archiveSignInvestPO.signerIdcard)"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
                                 </span>
                             </el-form-item>
-                            <el-form-item prop="idCardList" label="签约人身份证归档：" label-width='160px' >
-                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
+                            <el-form-item prop="idCardList" label="签约人身份证归档：" label-width='160px'>
+                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')">
                                 </hosjoyUpload>
                                 <picView v-else :fileList='jtem.idCardList' />
                             </el-form-item>
                         </div>
                     </template>
                 </span>
-                <div class="mt10"><el-button v-if="isEdit&&archiveSignPO.signBOs.length>0&&item.radio==='1'" type="primary" class="addbtn" @click="onSubAdd(index)" icon='el-icon-circle-plus-outline'>新增</el-button></div>
+                <div class="mt10">
+                    <el-button v-if="isEdit&&archiveSignPO.signBOs.length>0&&item.radio==='1'" type="primary" class="addbtn" @click="onSubAdd(index)" icon='el-icon-circle-plus-outline'>新增</el-button>
+                </div>
             </div>
         </el-form-item>
         <!-- 投资履约担保函归档 -->
@@ -147,18 +155,18 @@
                 {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':archiveSignPO.guanranteeDocFlag==='2'?'无':'-'}}
             </span>
         </el-form-item>
-        <template v-if="archiveSignPO.guanranteeDocFlag==='1'" >
-            <el-form-item prop="assureFileList"  label-width='160px'>
+        <template v-if="archiveSignPO.guanranteeDocFlag==='1'">
+            <el-form-item prop="assureFileList" label-width='160px'>
                 <template #label>
                     <span style="margin-top: 16px;display: inline-block;">担保函归档：</span>
                 </template>
                 <hosjoyUpload v-if="isEdit" v-model="archiveSignPO.assureFileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' style="margin:15px 0" @successCb="onSuccessCb('b-guarantee')">
-                    <el-button size="small" type="primary" >点击上传</el-button>
+                    <el-button size="small" type="primary">点击上传</el-button>
                 </hosjoyUpload>
                 <div class="filename" v-else>
                     <span v-if="archiveSignPO.assureFileList.length===0">-</span>
                     <template v-else>
-                        <div class="fileItem" v-for="(item,index) in archiveSignPO.assureFileList" :key="index" >
+                        <div class="fileItem" v-for="(item,index) in archiveSignPO.assureFileList" :key="index">
                             <span class="posrtv">
                                 <template v-if="item&&item.fileUrl">
                                     <i class="el-icon-document"></i>
@@ -200,7 +208,7 @@
             <div class="filename" style="margin-top:0" v-else>
                 <span v-if="archiveSignPO.otherBList.length===0">-</span>
                 <template v-else>
-                    <div class="fileItem" v-for="(item,index) in archiveSignPO.otherBList" :key="index" >
+                    <div class="fileItem" v-for="(item,index) in archiveSignPO.otherBList" :key="index">
                         <span class="posrtv">
                             <template v-if="item&&item.fileUrl">
                                 <i class="el-icon-document"></i>
@@ -303,26 +311,30 @@ export default {
             }
             this.showTips = ''
         },
+        deReduce (arr) {
+            for (var i = 0; i < arr.length - 1; i++) {
+                for (var j = i + 1; j < arr.length; j++) {
+                    if (JSON.stringify(arr[i]) == JSON.stringify(arr[j])) {
+                        arr.splice(j, 1)
+                        // 因为数组长度减小1，所以直接 j++ 会漏掉一个元素，所以要 j--
+                        j--
+                    }
+                }
+            }
+            return arr
+        },
         onFocus (k) {
-            console.log(this.inputTips)
             this.suggestions = []
             setTimeout(() => {
                 this.showTips = k
             }, 220)
 
             let arr = Object.values(this.inputTips)
-            let obj = {}
             // 去重
             for (var i = 0; i < arr.length; i++) {
                 this.suggestions.push(arr[i])
             }
-            let hash = {}
-            this.suggestions = this.suggestions.reduce((preVal, curVal) => {
-                // eslint-disable-next-line
-                hash[curVal.idCard] ? '' : hash[curVal.idCard] = true && preVal.push(curVal)
-                return preVal
-            }, [])
-
+            this.suggestions = this.deReduce(this.suggestions)
             console.log(this.suggestions)
         },
         onBlur (key, subKey, val, index) {
@@ -464,44 +476,107 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-.archiveSignPO{
+.archiveSignPO {
     border: 1px solid #e4e7ed;
     border-top: none;
     padding: 70px;
 }
-.labeldiy{ color: #000; font-weight:bold;}
+.labeldiy {
+    color: #000;
+    font-weight: bold;
+}
 
-.addbtn{
+.addbtn {
     width: 130px;
     margin-left: 160px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-/deep/.addbtn i{ font-size: 18px}
-.filepr{ position: relative;}
-.delabs{ position: absolute;right:0;font-size: 12px;border-radius: 3px;padding: 10px 16px;color: #FFF;background-color: #FF7A45;border-color: #FF7A45;display: inline-block; line-height: 1}
-.filename{
+/deep/.addbtn i {
+    font-size: 18px;
+}
+.filepr {
+    position: relative;
+}
+.delabs {
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 10px 16px;
+    color: #fff;
+    background-color: #ff7a45;
+    border-color: #ff7a45;
+    display: inline-block;
+    line-height: 1;
+}
+.filename {
     margin-top: 17px;
     color: #6e6f73;
-    span{
-            display: flex;
-            align-items: center;
-            margin-right: 15px;
+    span {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
         i {
             font-size: 21px;
             font-weight: bold;
         }
-        a {color: #FF7A45; margin-left: 10px}
+        a {
+            color: #ff7a45;
+            margin-left: 10px;
+        }
     }
-    .posrtv{ position: relative;color: #FF7A45;}
+    .posrtv {
+        position: relative;
+        color: #ff7a45;
+    }
 }
-.fileItem{ display: flex;justify-content: space-between;align-items: center;}
-.fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
-.tips{ min-width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
-margin-top: 3px; background: #fff; z-index: 999; color: #606266;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);}
-.tips p{ display: flex;justify-content: space-between;}
-.tips p:hover{color:#FF7A45!important;cursor: pointer;}
-.tips p:hover span{color:#FF7A45!important}
-.tips p span{font-size: 12px; padding-left: 5px;color: #b1b2b5;}
+.fileItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.fileItemDownLoad {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #ff7a45;
+    border-color: #ff7a45;
+    display: block;
+    line-height: 13px;
+    float: right;
+    height: 13px;
+    cursor: pointer;
+}
+.tips {
+    min-width: 224px;
+    position: absolute;
+    padding: 0 15px;
+    border-radius: 4px;
+    border: 1px solid #dcdfe6;
+    box-sizing: border-box;
+    margin-top: 3px;
+    background: #fff;
+    z-index: 999;
+    color: #606266;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.tips p {
+    display: flex;
+    justify-content: space-between;
+}
+.tips p:hover {
+    color: #ff7a45 !important;
+    cursor: pointer;
+}
+.tips p:hover span {
+    color: #ff7a45 !important;
+}
+.tips p span {
+    font-size: 12px;
+    padding-left: 5px;
+    color: #b1b2b5;
+}
 </style>
