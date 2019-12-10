@@ -192,9 +192,10 @@ export default {
                     label: 'C档（工商）',
                     prop: 'commerialDocFlag',
                     render: (h, scope) => {
+                        // commerialDocFlag 工商材料是否归档
                         if (!scope.row.commerialDocFlag || scope.row.commerialDocFlag === '0') return (<span><i class="el-icon-close"></i></span>)
-                        if (scope.row.otherCommerialDocFlag == '2' && scope.row.capitalDocFlag == '2' && scope.row.stocktransferDocFlag == '2') return (<span>无</span>)
-                        if (scope.row.commerialDocFlag === '1') {
+                        if (scope.row.commerialDocFlag == '1') {
+                            // if (scope.row.otherCommerialDocFlag == '2' && scope.row.capitalDocFlag == '2' && scope.row.stocktransferDocFlag == '2') return (<span>无</span>)
                             return (
                                 <span class='colorypointer' on-click={() => this.openDialog(scope.row, scope.$index, 'C档（工商）')}>
                                     <i class="el-icon-check"></i>
@@ -277,7 +278,6 @@ export default {
                             label: '担保函签约人',
                             prop: 'guanranteeName',
                             render: (h, scope) => {
-                                console.log(scope.row.guanranteeDocFlag)
                                 if (scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.guanranteeDocFlag == '2') return (<span>无</span>)
                                 if (scope.row.guanranteeName == null) return (<span><i class="el-icon-close"></i></span>)

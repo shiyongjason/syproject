@@ -305,13 +305,11 @@ export default {
         },
         onFocus (k) {
             console.log(this.inputTips)
-
             this.suggestions = []
-
             setTimeout(() => {
                 this.showTips = k
             }, 220)
-            // this.suggestions = Object.values(this.inputTips)
+
             let arr = Object.values(this.inputTips)
             let obj = {}
             // 去重
@@ -496,7 +494,7 @@ export default {
 }
 .fileItem{ display: flex;justify-content: space-between;align-items: center;}
 .fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
-.tips{ width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
+.tips{ min-width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
 margin-top: 3px; background: #fff; z-index: 999; color: #606266;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);}
 .tips p{ display: flex;justify-content: space-between;}
 .tips p:hover{color:#FF7A45!important;cursor: pointer;}
