@@ -250,12 +250,12 @@ export default {
                             prop: 'signBOs',
                             render: (h, scope) => {
                                 if (
-                                    scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0 && scope.row[`v1SignerFlag`] == 0
+                                    scope.row[`v1SignerFlag`] == 0 && scope.row[`v2SignerFlag`] == 0 && scope.row[`v3SignerFlag`] == 0 && scope.row[`v4SignerFlag`] == 0 && scope.row[`v5SignerFlag`] == 0
                                 ) {
                                     return <span><i class="el-icon-close"></i></span>
                                 }
                                 if (
-                                    scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2 && scope.row[`v1SignerFlag`] == 2
+                                    scope.row[`v1SignerFlag`] == 2 && scope.row[`v2SignerFlag`] == 2 && scope.row[`v3SignerFlag`] == 2 && scope.row[`v4SignerFlag`] == 2 && scope.row[`v5SignerFlag`] == 2
                                 ) {
                                     return <span>无</span>
                                 }
@@ -277,6 +277,7 @@ export default {
                             label: '担保函签约人',
                             prop: 'guanranteeName',
                             render: (h, scope) => {
+                                console.log(scope.row.guanranteeDocFlag)
                                 if (scope.row.guanranteeDocFlag == '0') return (<span><i class="el-icon-close"></i></span>)
                                 if (scope.row.guanranteeDocFlag == '2') return (<span>无</span>)
                                 if (scope.row.guanranteeName == null) return (<span><i class="el-icon-close"></i></span>)
@@ -291,6 +292,8 @@ export default {
                                     } else {
                                         return <span>{scope.row.guanranteeName}</span>
                                     }
+                                } else {
+                                    return <span><i class="el-icon-close"></i></span>
                                 }
                             }
                         }

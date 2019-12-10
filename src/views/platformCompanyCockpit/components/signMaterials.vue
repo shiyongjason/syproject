@@ -13,18 +13,19 @@
         </el-form-item>
         <template v-if="archiveSignPO.rcDocFlag==='1'" >
             <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
-                <el-input  v-model='archiveSignPO.realControllerName' @input="onInputChange(archiveSignPO.realControllerName,'actualController')" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="()=>{suggestions=[]}"></el-input>
+                <!-- @input="onInputChange(archiveSignPO.realControllerName,'actualController')" -->
+                <el-input  v-model='archiveSignPO.realControllerName' placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="onFocus('actualController')"></el-input>
                 <span v-else>{{archiveSignPO.realControllerName?archiveSignPO.realControllerName:'-'}}</span>
                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='actualController'">
                     <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'actualController')" ><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
                 </div>
             </el-form-item>
             <el-form-item prop="realControllerContactNo" label="联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','tel',archiveSignPO.realControllerContactNo)" @focus="()=>{suggestions=[]}"></el-input>
+                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','tel',archiveSignPO.realControllerContactNo)"></el-input>
                 <span v-else>{{archiveSignPO.realControllerContactNo?archiveSignPO.realControllerContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realControllerIdcard" label="身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('actualController','idCard',archiveSignPO.realControllerIdcard)" @focus="()=>{suggestions=[]}"></el-input>
+                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('actualController','idCard',archiveSignPO.realControllerIdcard)"></el-input>
                 <span v-else>{{archiveSignPO.realControllerIdcard?archiveSignPO.realControllerIdcard:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realcontrollerList" label="实控人身份证归档：" label-width='160px'>
@@ -47,18 +48,18 @@
         </el-form-item>
         <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
             <el-form-item prop="shareholderName" label="自然人股东姓名：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderName" @input="onInputChange(archiveSignPO.shareholderName,'naturalPerson')" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','name',archiveSignPO.shareholderName)" @focus="()=>{suggestions=[]}"></el-input>
+                <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','name',archiveSignPO.shareholderName)" @focus="onFocus('naturalPerson')"></el-input>
                 <span v-else>{{archiveSignPO.shareholderName?archiveSignPO.shareholderName:'-'}}</span>
                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='naturalPerson'">
                     <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'naturalPerson')"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
                 </div>
             </el-form-item>
             <el-form-item prop="shareholderContactNo" label="自然人股东联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','tel',archiveSignPO.shareholderContactNo)" @focus="()=>{suggestions=[]}"></el-input>
+                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','tel',archiveSignPO.shareholderContactNo)"></el-input>
                 <span v-else>{{archiveSignPO.shareholderContactNo?archiveSignPO.shareholderContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="shareholderIdcard" label="自然人股东身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('naturalPerson','idCard',archiveSignPO.shareholderIdcard)" @focus="()=>{suggestions=[]}"></el-input>
+                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('naturalPerson','idCard',archiveSignPO.shareholderIdcard)"></el-input>
                 <span v-else>{{archiveSignPO.shareholderIdcard?archiveSignPO.shareholderIdcard:'-'}}</span>
             </el-form-item>
         </template>
@@ -105,20 +106,20 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="该文件签约人：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'name',jtem.archiveSignInvestPO.signerName)" @input="onInputChange(jtem.archiveSignInvestPO.signerName,`version${index}${jndex}`)" @focus="()=>{suggestions=[]}"></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'name',jtem.archiveSignInvestPO.signerName)" @focus="onFocus(`version${index}${jndex}`)"></el-input>
                                 <span v-else>{{jtem.archiveSignInvestPO.signerName?jtem.archiveSignInvestPO.signerName:'-'}}</span>
                                 <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips===`version${index}${jndex}`">
                                     <p v-for="(item,kndex) in suggestions" :key="kndex" @click="chooseOneTips(item,'version',index,jndex)"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
                                 </div>
                             </el-form-item>
                             <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)" @focus="()=>{suggestions=[]}"></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)" ></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerContactNo?jtem.archiveSignInvestPO.signerContactNo:'-'}}
                                 </span>
                             </el-form-item>
                             <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18' @blur="onBlur(`version${index}${jndex}`,'idCard',jtem.archiveSignInvestPO.signerIdcard)" @focus="()=>{suggestions=[]}"></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18' @blur="onBlur(`version${index}${jndex}`,'idCard',jtem.archiveSignInvestPO.signerIdcard)"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
                                 </span>
@@ -302,38 +303,25 @@ export default {
             }
             this.showTips = ''
         },
-        onInputChange (val, k) {
-            if (!val) {
-                this.suggestions = []
-                return
-            }
-            clearTimeout(this.timer)
-            this.timer = setTimeout(() => {
-                let arr = Object.values(this.inputTips)
-                let result = []
-                let obj = {}
-                // 去重
-                for (var i = 0; i < arr.length; i++) {
-                    if (!obj[arr[i].idCard]) {
-                        result.push(arr[i])
-                        obj[arr[i].idCard] = true
-                    }
+        onFocus (k) {
+            console.log(this.inputTips)
+
+            this.suggestions = []
+
+            setTimeout(() => {
+                this.showTips = k
+            }, 220)
+            // this.suggestions = Object.values(this.inputTips)
+            let arr = Object.values(this.inputTips)
+            let obj = {}
+            // 去重
+            for (var i = 0; i < arr.length; i++) {
+                if (!obj[arr[i].name]) {
+                    this.suggestions.push(arr[i])
+                    obj[arr[i].name] = true
                 }
-                result.forEach(item => {
-                    if (item && item.name && item.name.toLowerCase().indexOf(val.toLowerCase()) != -1) {
-                        if (item.tel || item.idCard) {
-                            this.suggestions.push(
-                                {
-                                    name: item.name,
-                                    tel: item.tel || '',
-                                    idCard: item.idCard || ''
-                                }
-                            )
-                            this.showTips = k
-                        }
-                    }
-                })
-            }, 500)
+            }
+            console.log(this.suggestions)
         },
         onBlur (key, subKey, val, index) {
             if (!(key in this.inputTips)) {
@@ -344,11 +332,10 @@ export default {
                 }
                 this.$set(this.inputTips, key, obj)
             }
-            if (!val) return
-            this.inputTips[key][subKey] = val
+            this.inputTips[key][subKey] = val || ''
             setTimeout(() => {
                 this.showTips = ''
-            }, 600)
+            }, 200)
         },
         getUrlBase64 (url, fileName, ext = '') {
             let _this = this
