@@ -75,7 +75,7 @@
                         </template>
                         <template slot="action" slot-scope="scope">
                             <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)">
+                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
                             </el-button>
                         </template>
@@ -117,6 +117,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            canNotOrder: false,
             isFirst: true,
             popoverVisible: false,
             otpopoverVisible: false,
@@ -255,7 +256,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -647,6 +648,7 @@ export default {
                 vm.setTableData(vm.eventProducts)
             }
             vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
+            if (vm.$route.query.action) vm.canNotOrder = true
         })
     },
     beforeRouteLeave (to, from, next) {

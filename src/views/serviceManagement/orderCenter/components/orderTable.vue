@@ -36,7 +36,7 @@
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
                             <font v-if="hosAuthCheck(youZanDetailsAuth) || hosAuthCheck(channelDetailsAuth)" @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
-                            <font @click="openMisError(item.syncErrMsg)" v-if="item.syncStatus === 1">失败原因</font>
+                            <font @click="openMisError(item.syncErrMsg)" v-if="item.syncStatus === 1" style="margin-left: 20px">失败原因</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -452,7 +452,8 @@ export default {
             this.$emit('search-event', { status: this.activeName < 1 ? '' : this.activeName })
         },
         async updateMisSync (orderId) {
-            await updateMisSync(orderId)
+            const { data } = await updateMisSync(orderId)
+            return data
         },
         async updateMisSyncManual (params) {
             await updateMisSyncManual(params)
@@ -466,24 +467,36 @@ export default {
         },
         openMisDialog (row) {
             this.$confirm('原因：' + row.syncErrMsg, '同步mis系统失败', {
+                closeOnClickModal: false,
+                distinguishCancelAndClose: true,
                 confirmButtonText: '重新同步',
                 cancelButtonText: '关闭问题'
             }).then(async () => {
                 try {
-                    await this.updateMisSync(row.id)
+                    const data = await this.updateMisSync(row.id)
+                    if (data) {
+                        this.$message({
+                            type: 'success',
+                            message: '同步数据成功!'
+                        })
+                        this.$emit('search')
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '同步数据失败!'
+                        })
+                        this.$emit('search')
+                    }
+                } catch (e) {}
+            }).catch(async (action) => {
+                if (action === 'cancel') {
+                    await this.updateMisSyncManual(row.id)
                     this.$message({
                         type: 'success',
-                        message: '重新同步成功!'
+                        message: '关闭成功!'
                     })
                     this.$emit('search')
-                } catch (e) {}
-            }).catch(async () => {
-                await this.updateMisSyncManual(row.id)
-                this.$message({
-                    type: 'success',
-                    message: '关闭成功!'
-                })
-                this.$emit('search')
+                }
             })
         }
     },
