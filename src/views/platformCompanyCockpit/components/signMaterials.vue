@@ -305,22 +305,20 @@ export default {
         },
         onFocus (k) {
             console.log(this.inputTips)
-
             this.suggestions = []
-
             setTimeout(() => {
                 this.showTips = k
             }, 220)
-            // this.suggestions = Object.values(this.inputTips)
-            let arr = Object.values(this.inputTips)
-            let obj = {}
+
+            this.suggestions = Object.values(this.inputTips)
             // 去重
-            for (var i = 0; i < arr.length; i++) {
-                if (!obj[arr[i].name]) {
-                    this.suggestions.push(arr[i])
-                    obj[arr[i].name] = true
-                }
-            }
+            let hash = {}
+            this.suggestions = this.suggestions.reduce((preVal, curVal) => {
+                // eslint-disable-next-line
+                hash[curVal.idCard] ? '' : hash[curVal.idCard] = true && preVal.push(curVal)
+                return preVal
+            }, [])
+
             console.log(this.suggestions)
         },
         onBlur (key, subKey, val, index) {
@@ -496,7 +494,7 @@ export default {
 }
 .fileItem{ display: flex;justify-content: space-between;align-items: center;}
 .fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
-.tips{ width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
+.tips{ min-width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
 margin-top: 3px; background: #fff; z-index: 999; color: #606266;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);}
 .tips p{ display: flex;justify-content: space-between;}
 .tips p:hover{color:#FF7A45!important;cursor: pointer;}
