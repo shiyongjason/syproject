@@ -84,7 +84,7 @@
             </el-form>
         </div>
         <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button type="primary" @click='()=>{$router.go(-1)}'>返回</el-button>
+            <el-button @click="()=>{$router.push('/hmall/eventMange')}">返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
@@ -535,8 +535,8 @@ export default {
                 if (status === 2 && mark === '') {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
-                    if (consumingMinutes < 10) {
-                        this.$message.error(`只能创建当前时间10分钟后的活动`)
+                    if (consumingMinutes < 9) {
+                        this.$message.error(`只能创建10分钟后开始的活动`)
                         return
                     }
                     if (consumingMinutes > 4 * 24 * 60) {
@@ -598,7 +598,7 @@ export default {
                 !item.inventoryNumErrorMsg && this.$set(item, 'inventoryNumErrorMsg', '')
                 !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
                 !item.productId && this.$set(item, 'productId', null)
-                !item.discountValue && this.$set(item, 'discountValue', '')
+                if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '')
                 !item.clickFarmingNum && this.$set(item, 'clickFarmingNum', 0)
             })
             this.onInit()// 初始化，写入session
@@ -668,20 +668,8 @@ export default {
 /deep/.flxinput font{ width: 90px}
 .goods{ display: flex}
 .goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed {
-    position: fixed;
-    bottom: 0;
-    background: #ffffff;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    text-align: center;
-    z-index: 99;
-}
-.maxLeft {
-    left: 200px;
-    transition: 0.3s;
-}
+.subfixed {position: fixed;bottom: 6px;left: 0;right: 0;padding: 10px;text-align: center;z-index: 99;}
+.maxLeft {left: 200px;transition: 0.3s;}
 .pb20{ padding-bottom: 20px !important}
 .goods-name{ text-align: left}
 /deep/.el-table .warning-row {background: #ffc7c7;}
