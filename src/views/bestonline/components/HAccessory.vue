@@ -29,7 +29,7 @@
     </div>
 </template>
 <script>
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { addAttach, getAttach } from '../api/index'
 import { mapState } from 'vuex'
 import { AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT } from '@/utils/auth_const'
@@ -60,7 +60,7 @@ export default {
         }),
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },

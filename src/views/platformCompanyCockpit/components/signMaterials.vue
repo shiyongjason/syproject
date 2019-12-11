@@ -200,7 +200,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import picView from './picView'
 import { checkIdCard } from '@/utils/rules.js'
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 
 const _signBOsForm = {
@@ -231,7 +231,7 @@ export default {
         return {
             assureRadio: '1',
             signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
-            action: fileUploadUrl + 'tms/files/upload',
+            action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
