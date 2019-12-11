@@ -19,15 +19,6 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">客户身份：</div>
-                        <div class="query-col-input">
-                            <el-select v-model="searchForm.role" clearable style="width: 100%">
-                                <el-option v-for="(item,index) in role" :key="index" :label="item.label" :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
                         <div class="query-col-title">手机号：</div>
                         <div class="query-col-input">
                             <el-input v-model="searchForm.mobile" clearable placeholder="请输入手机号" maxlength='11' />
@@ -47,9 +38,9 @@
                         <el-button type="primary" @click="search('form')">
                             搜索
                         </el-button>
-                        <el-button type="primary" @click="$emit('add')">
-                            新增客户
-                        </el-button>
+                        <!--<el-button type="primary" @click="$emit('add')">-->
+                            <!--新增客户-->
+                        <!--</el-button>-->
                     </div>
                 </el-form>
             </div>
@@ -60,7 +51,7 @@
 <script>
 export default {
     name: 'searchForm',
-    props: ['value', 'role', 'channelType'],
+    props: ['value', 'channelType'],
     data () {
         return {}
     },

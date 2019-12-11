@@ -1,123 +1,73 @@
 <template>
     <div class="order-channel-detail page-body">
+        <div class="page-body-cont query-cont">
+            <div class="title">详情页面</div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">订单来源：</div>
+                <div class="query-col-input">
+                    <template v-if="details.source === '1'">有赞</template>
+                    <template v-if="details.source === '2'">孩子王</template>
+                    <template v-if="details.source === '3'">考拉买菜</template>
+                    <template v-if="details.source === '4'">大众点评</template>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">订单商品金额：</div>
+                <div class="flex-wrap-cont">
+                    {{details.currentAmount}}元
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">订单日期：</div>
+                <div class="flex-wrap-cont">
+                    {{details.orderTime  | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">备注（买家）：</div>
+                <div class="flex-wrap-cont">
+                    {{details.buyerRemark}}
+                </div>
+            </div>
+            <br/>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">备注（卖家）：</div>
+                <div class="query-col-input">
+                    {{details.sellerRemark}}
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">客户姓名：</div>
+                <div class="query-col-input">
+                    {{details.customerName}}
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">客户电话：</div>
+                <div class="flex-wrap-cont">
+                    {{details.customerPhone}}
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">地址：</div>
+                <div class="flex-wrap-cont">
+                    {{details.customerAddress}}
+                </div>
+            </div>
+        </div>
         <div class="page-body-cont">
-            <div class="title">渠道订单详情</div>
             <table>
                 <tr>
-                    <td>顾客姓名</td>
-                    <td>{{details.channelUserName}}</td>
+                    <th>商品MDM编码</th>
+                    <th>商品名称</th>
+                    <th>商品单价</th>
+                    <th>商品数量</th>
                 </tr>
-                <tr>
-                    <td>电话</td>
-                    <td>{{details.mobile}}</td>
-                </tr>
-                <tr>
-                    <td>地址</td>
-                    <td>{{details.address}}</td>
-                </tr>
-                <tr>
-                    <td>商品名称</td>
-                    <td>{{details.goodsName}}</td>
-                </tr>
-                <tr>
-                    <td>数量</td>
-                    <td>{{details.goodsNum}}</td>
-                </tr>
-                <tr>
-                    <td>可用次数</td>
-                    <td>{{details.availableNum}}</td>
-                </tr>
-                <tr>
-                    <td>金额</td>
-                    <td>{{details.payAmount}}</td>
-                </tr>
-                <tr>
-                    <td>订单日期</td>
-                    <td>{{details.payTime | formatDate('YYYY-MM-DD')}}</td>
-                </tr>
-                <tr>
-                    <td>备注</td>
-                    <td>{{isNullAddSymbol(details.sellerRemark)}}</td>
-                </tr>
-                <tr>
-                    <td>订单号</td>
-                    <td>{{details.channelOrderNo}}</td>
-                </tr>
-                <tr>
-                    <td>订单来源</td>
-                    <td>
-                        <template v-if="details.source === 1">有赞</template>
-                        <template v-if="details.source === 2">孩子王</template>
-                        <template v-if="details.source === 3">考拉买菜</template>
-                        <template v-if="details.source === 4">大众点评</template>
-                    </td>
-                </tr>
-                <tr>
-                    <td>复购订单</td>
-                    <td>{{details.isRepurchaseOrder == null  ? '空' : details.isRepurchaseOrder ? '是' : '否'}}</td>
-                </tr>
-                <tr>
-                    <td>订单状态</td>
-                    <td>
-                        <template v-if="details.status === 1">待发货</template>
-                        <template v-if="details.status === 2">已发货</template>
-                        <template v-if="details.status === 3">已完成</template>
-                        <template v-if="details.status === 4">已退款</template>
-                        <template v-if="details.status === 5">已下单</template>
-                        <template v-if="details.status === 6">已收货</template>
-                        <template v-if="details.status === 7">已预约</template>
-                        <template v-if="details.status === 8">已派工</template>
-                    </td>
-                </tr>
-                <tr>
-                    <td>服务类型</td>
-                    <td>
-                        <template v-if="details.serviceType === 1">实物商品</template>
-                        <template v-if="details.serviceType === 2">管家服务</template>
-                        <template v-if="details.serviceType === 3">甲醛检测</template>
-                        <template v-if="details.serviceType === 4">螨虫检测</template>
-                        <template v-if="details.serviceType === 5">第三方服务</template>
-                    </td>
-                </tr>
-                <tr>
-                    <td>线下服务管家</td>
-                    <td>{{isNullAddSymbol(details.offlineHousekeeper)}}</td>
-                </tr>
-                <tr>
-                    <td>是否添加微信</td>
-                    <td>{{details.isAddWechat === null  ? '空' : details.isAddWechat ? '是' : '否'}}</td>
-                </tr>
-                <tr>
-                    <td>线上管家</td>
-                    <td>{{isNullAddSymbol(details.onlineHousekeeper)}}</td>
-                </tr>
-                <tr>
-                    <td>服务评价</td>
-                    <td>{{isNullAddSymbol(details.content)}}</td>
-                </tr>
-                <tr>
-                    <td>是否转化</td>
-                    <td>{{details.isConversion == null  ? '空' : details.isConversion ? '是' : '否'}}</td>
-                </tr>
-                <tr>
-                    <td>转化订单号</td>
-                    <td>{{isNullAddSymbol(details.conversionOrderNo)}}</td>
-                </tr>
-                <tr>
-                    <td>创建人</td>
-                    <td>{{isNullAddSymbol(details.createBy)}}</td>
-                </tr>
-                <tr>
-                    <td>创建时间</td>
-                    <td>{{details.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
-                </tr>
-                <tr>
-                    <td>修改人</td>
-                    <td>{{details.updateBy}}</td>
-                </tr>
-                <tr>
-                    <td>修改时间</td>
-                    <td>{{details.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</td>
+                <tr v-for="item in details.orderGoodsList" :key="item.goodsCode">
+                    <td>{{item.goodsCode}}</td>
+                    <td>{{item.goodsName}}</td>
+                    <td>{{item.price}}</td>
+                    <td>{{item.num}}</td>
                 </tr>
             </table>
             <div class="btn-group">
@@ -130,6 +80,7 @@
 <script>
 import { findChannelOrderDetails } from './api/index'
 import { mapState, mapMutations } from 'vuex'
+
 export default {
     name: 'orderChannelDetails',
     computed: {
@@ -179,20 +130,38 @@ export default {
 </script>
 
 <style scoped>
-.title{
-    padding: 12px 0 18px 0;
-    font-weight: bold;
-    font-size: 16px;
-}
-table{
-    border-collapse: collapse;
-}
-    td{
-        width: 200px;
-        border: 1px solid #999999;
-        padding: 8px 12px;
+    .title {
+        padding: 12px 0 18px 0;
+        font-weight: bold;
+        font-size: 16px;
     }
-    .btn-group{
+    .query-cont-col {
+        width: 220px;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+
+    th {
+        font-size: 12px;
+        color: #000000;
+        background: #f2f2f4;
+        text-align: center;
+        padding: 8px 12px;
+        font-weight: 400;
+        border: 1px solid #EBEEF5;
+    }
+
+    td {
+        width: 200px;
+        border: 1px solid #EBEEF5;
+        padding: 8px 12px;
+        font-size: 12px;
+        text-align: center;
+    }
+
+    .btn-group {
         padding: 20px 12px;
         max-width: 800px;
         text-align: center;

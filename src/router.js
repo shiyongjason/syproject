@@ -32,11 +32,35 @@ const routerMapping = [
         ]
     },
     {
+        path: '/sysAdmin',
+        meta: {
+            title: '系統管理',
+            isMenu: true,
+            icon: 'hosjoy_set',
+            redirect: 'noredirect'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'routerConfig',
+                name: 'routerConfig',
+                meta: {
+                    title: '路由配置',
+                    tagName: '路由配置',
+                    isMenu: true,
+                    icon: '',
+                    component: './views/routerConfig'
+                },
+                component: () => import('./views/routerConfig')
+            }
+        ]
+    },
+    {
         path: '/jinyunPlatform',
         meta: {
             title: '金云平台',
             isMenu: true,
-            icon: 'hosjoy_cloud_service'
+            icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [
@@ -609,6 +633,17 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
             },
             {
+                path: 'houseKeeperManagement',
+                name: 'houseKeeperManagement',
+                meta: {
+                    title: '管家管理',
+                    tagName: '管家管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/houseKeeperManagement/houseKeeperManagement.vue')
+            },
+            {
                 path: 'orderCenter',
                 name: 'orderCenter',
                 meta: {
@@ -620,15 +655,15 @@ const routerMapping = [
                 component: () => import('@/views/serviceManagement/orderCenter/order.vue')
             },
             {
-                path: 'reservation',
-                name: 'reservation',
+                path: 'workOrder',
+                name: 'workOrder',
                 meta: {
-                    title: '预约信息',
-                    tagName: '预约信息',
+                    title: '工单信息',
+                    tagName: '工单信息',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/serviceManagement/reservation/index.vue')
+                component: () => import('@/views/serviceManagement/workOrder/index.vue')
             },
             {
                 path: 'customerRecord',
@@ -717,6 +752,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/serviceManagement/tags/tags.vue')
+            },
+            {
+                path: 'channelManagement',
+                name: 'channelManagement',
+                meta: {
+                    title: '渠道管理',
+                    tagName: '渠道管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
             }
         ]
     },
@@ -754,7 +800,75 @@ const routerMapping = [
                 component: () => import('@/views/platformCompanyCockpit/archivesManagement.vue')
             }
         ]
+    },
+    {
+        path: '/jinyun',
+        meta: {
+            title: '金云系统',
+            isMenu: true,
+            icon: 'hosjoy_stay_online'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
+                path: 'enterpriseCA',
+                name: 'enterpriseCA',
+                meta: {
+                    title: '企业CA',
+                    tagName: '企业CA',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/enterpriseCA')
+            },
+            {
+                path: 'amountImport',
+                name: 'amountImport',
+                meta: {
+                    title: '额度导入',
+                    tagName: '额度导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/amountImport')
+            }
+        ]
+    },
+    {
+        path: '/appUpdate',
+        meta: {
+            title: 'App管理',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'versionUpdating',
+                name: 'versionUpdating',
+                meta: {
+                    title: '版本更新',
+                    tagName: '版本更新',
+                    parentName: 'App管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/appUpdate/index.vue')
+            }
+        ]
     }
+
 ]
 
 const router = new Router({
@@ -789,11 +903,9 @@ function makeIndex (data, next, query) {
         let path = ''
         if (query.route) {
             path = '/' + query.route.split(',').join('/')
-            console.log(path)
         } else {
             path = index.join('/')
         }
-
         if (!path) {
             path = '/'
         }
