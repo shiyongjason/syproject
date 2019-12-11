@@ -1,6 +1,6 @@
 <template>
     <div class="tunematerials">
-        <el-form-item label="尽调材料归档：">
+        <el-form-item label="尽调材料归档：" style="font-weight:bold;color: #000;">
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="1">是</el-radio>
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="0">否</el-radio>
             <span v-else>{{platformBasicInfoPO.ddDocFlag==='1'?'是':platformBasicInfoPO.ddDocFlag==='0'?'否':'-'}}</span>
