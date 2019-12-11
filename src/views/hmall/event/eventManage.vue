@@ -200,7 +200,7 @@ export default {
             return this.eventName[val - 1]
         },
         onOperate (item, val) {
-            this.$confirm(val == 2 ? '是发布该活动' : '是终止该活动', '提示', {
+            this.$confirm(val == 2 ? '是否发布该活动' : '是否终止该活动', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
