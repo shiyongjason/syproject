@@ -66,7 +66,7 @@
                 </div>
                 <div class="page-table">
                     <!-- table -->
-                    <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="form.spikeSku" align="center" actionWidth='180px' >
+                    <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px' >
                         <template slot="skuName" slot-scope="scope">
                             <div class="goods">
                                 <img :src="scope.data.row.pictureUrl">
@@ -256,7 +256,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -406,8 +406,8 @@ export default {
                 item.numErrorMsg = ''
             }
             if (this.form.discountType === 2) {
-                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) < 0) {
-                    item.errorMsg = '优惠最高金额不可超过销售价格'
+                if (item.sellPrice - (item.discountValue ? item.discountValue : 0) <= 0) {
+                    item.errorMsg = '优惠最高金额不可大于等于销售价格'
                     item._error = true
                 } else {
                     item._error = false
@@ -586,7 +586,7 @@ export default {
         setTableData (data) {
             this.form.spikeSku = data
             this.form.spikeSku.forEach(item => {
-                !item.salePrice && this.$set(item, 'salePrice', item.sellPrice)
+                if (!item.salePrice) this.$set(item, 'salePrice', item.salePrice)
                 !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '')// 限购
                 !item.sort && this.$set(item, 'sort', '')
                 !item._numError && this.$set(item, '_numError', false)
@@ -612,6 +612,12 @@ export default {
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
+            if (this.$route.query.action) {
+                let now = moment().format('YYYY-MM-DD HH:mm:ss')
+                let seconds = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('seconds')
+                if (seconds <= 0) this.canNotOrder = false
+                else this.canNotOrder = true
+            }
         },
         async onCopy () {
             let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
@@ -648,7 +654,6 @@ export default {
                 vm.setTableData(vm.eventProducts)
             }
             vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-            if (vm.$route.query.action) vm.canNotOrder = true
         })
     },
     beforeRouteLeave (to, from, next) {
