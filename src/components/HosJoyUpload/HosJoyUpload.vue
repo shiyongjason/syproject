@@ -347,5 +347,5 @@ export default {
 }
 .elupload{overflow: hidden;height: 120px;margin-top: 13px;}
 .pdfimg{width: 130px;height: 120px;text-align: center;display: flex;align-items: center;justify-content: center;}
-.pdfimg img{width: 88%}
+.pdfimg img{width: 76%}
 </style>
