@@ -2,7 +2,7 @@
     <div class="tunematerials">
         <el-form-item>
             <template #label>
-                <span class="labeldiy">实控人信息归档：</span>
+                <span class="labeldiy">尽调材料归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="1">是</el-radio>
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="0">否</el-radio>
