@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
@@ -5,6 +6,7 @@ import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
+import ServiceManagement from './catalogue/serviceManagement'
 Vue.use(Router)
 
 const routerMapping = [
@@ -713,8 +715,8 @@ const routerMapping = [
                 component: () => import('@/views/appUpdate/index.vue')
             }
         ]
-    }
-
+    },
+    ServiceManagement
 ]
 
 const router = new Router({
@@ -763,8 +765,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 

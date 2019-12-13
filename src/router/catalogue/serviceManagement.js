@@ -1,3 +1,5 @@
+import Layout from '@/views/layout/Default.vue'
+
 export default {
     path: '/serviceManagement',
     meta: {
@@ -149,6 +151,39 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
+        },
+        {
+            path: 'userPower',
+            name: 'userPower',
+            meta: {
+                title: '用户权益查询',
+                tagName: '用户权益查询',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/serviceManagement/userPower/userPower.vue')
+        },
+        {
+            path: 'serviceCategory',
+            name: 'serviceCategory',
+            meta: {
+                title: '服务资源类目管理',
+                tagName: '服务资源类目管理',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/serviceManagement/serviceCategory/category.vue')
+        },
+        {
+            path: 'serviceResource',
+            name: 'serviceResource',
+            meta: {
+                title: '服务资源管理',
+                tagName: '服务资源管理',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/serviceManagement/serviceResource/resource.vue')
         }
     ]
 }
