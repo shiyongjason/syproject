@@ -44,14 +44,35 @@
                                             </div>
                                         </td>
                                         <template v-if="itemb.authTypes && itemb.authTypes.length == 2">
-                                            <template v-for="(itemAuthType, authTypeIndex) in itemb.authTypes">
-                                                <td :key="authTypeIndex + '_authType'" width="300">
-                                                    <div>{{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}</div>
+                                            <template v-if="itemb.authTypes[0].authType == 0">
+                                                <td width="300">
+                                                    <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(authTypeIndex, itemAuthType)" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                    </div>
+                                                </td>
+                                                <td width="300">
+                                                    <div>敏感操作</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
+                                            <template v-else>
+                                                <td width="300">
+                                                    <div>敏感字段</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
+                                                    </div>
+                                                </td>
+                                                <td width="300">
+                                                    <div>敏感操作</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                    </div>
+                                                </td>
+                                            </template>
+                                            <!-- </template> -->
                                         </template>
                                         <template v-else-if="itemb.authTypes && itemb.authTypes.length == 1">
                                             <template v-if="itemb.authTypes[0].authType == 0">
@@ -76,6 +97,14 @@
                                                     </div>
                                                 </td>
                                             </template>
+                                        </template>
+                                        <template v-else-if="itemb.authTypes && itemb.authTypes.length > 2">
+                                            <td width="300">
+                                                数据异常
+                                            </td>
+                                            <td width="300">
+                                                数据异常
+                                            </td>
                                         </template>
                                         <template v-else>
                                             <td width="300">
