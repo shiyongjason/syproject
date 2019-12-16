@@ -517,7 +517,7 @@ export default {
     width: 100%;
 }
 .is-round {
-    padding: 10px 15px;
+    padding: 5px 10px;
 }
 .tablelist {
     border: 1px solid #dddddd;
