@@ -8,14 +8,14 @@
             <div class="query-cont-col">
                 <div class="query-col-title">企业名称：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.companyName" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入企业名称">
                     </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="请选择时间" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
@@ -27,26 +27,35 @@
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div>
             </div>
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='180'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='120'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" @click="uploadSeal(scope.data.row)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
-            <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
-            <el-dialog title="上传印章图片" :visible.sync="dialogPicture" width='25%'>
-                <div class="query-cont-col">
-                    <div class="flex-wrap-title">印章：</div>
-                    <!-- <div class="flex-wrap-cont">
-                        <el-input type="text" v-model="uploadImg.alias" maxlength="50" placeholder="请输入品牌名称"></el-input>
-                    </div> -->
-                </div>
-                <div>
-                    <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+            <el-dialog title="银行账户信息修改" :visible.sync="dialogPicture" width='50%' :close-on-click-modal='false'>
+                <div class='dialogLayout'>
+                    <el-form label-position="right" :rules="rules" ref="ruleForm" label-width="80px" :model="formBank">
+                        <el-form-item label="企业名称" prop="customerName">
+                            <el-input v-model="formBank.customerName" disabled width='150'></el-input>
+                        </el-form-item>
+                        <el-form-item label="客户号" prop="customerId">
+                            <el-input v-model="formBank.customerId" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="账户名称" prop="accountName">
+                            <el-input v-model="formBank.accountName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="开户银行" prop="bankName">
+                            <el-input v-model="formBank.bankName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="银行账号" prop="accountNumber">
+                            <el-input v-model="formBank.accountNumber"></el-input>
+                        </el-form-item>
+                    </el-form>
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="onCancle">取 消</el-button>
-                    <el-button type="primary" @click="onSure">确 定</el-button>
+                    <el-button type="primary" @click="onSure('ruleForm')">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -56,69 +65,35 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/accountApply'
-import { getSignList, getSignsDetail, signImage } from './api/index'
-import CaDialog from './components/dialog'
+import { getBankList, getSignsDetail, updataBankAccount, deleteBankAccount } from './api/index'
 import { interfaceUrl } from '@/api/config'
+import { setTimeout } from 'timers'
 export default {
     name: 'enterpriseCA',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        }),
-        uploadInfo () {
-            return {
-                action: interfaceUrl + 'tms/files/upload',
-                data: {
-
-                },
-                accept: 'image/jpeg, image/jpg, image/png'
-            }
-        },
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeEnd
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() > new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeStart
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        }
+        })
     },
     components: {
-        apply: apply,
-        CaDialog: CaDialog
+        apply: apply
     },
     data () {
         return {
             tableLabel: [
-                { label: '账户编号', prop: 'companyName' },
-                { label: '客户名称', prop: 'companyType' },
-                { label: '客户号', prop: 'companySignatureId' },
-                { label: '账户名称', prop: 'operatorSignatureId' },
-                { label: '开户银行', prop: 'operatorName' },
-                { label: '银行账号', prop: 'operatorPhone' },
+                { label: '账户编号', prop: 'accountId' },
+                { label: '客户名称', prop: 'customerName' },
+                { label: '客户号', prop: 'customerId' },
+                { label: '账户名称', prop: 'accountName' },
+                { label: '开户银行', prop: 'bankName' },
+                { label: '银行账号', prop: 'accountNumber' },
                 { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
             ],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                companyName: '',
-                createDate: ''
+                customerName: '',
+                createTime: ''
             },
             searchParams: {},
             tableData: [],
@@ -139,6 +114,24 @@ export default {
             imageUrl: '',
             uploadImg: {
                 alias: ''
+            },
+            formBank: {},
+            rules: {
+                customerName: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                customerId: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                accountName: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                bankName: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                accountNumber: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -147,20 +140,9 @@ export default {
     },
     methods: {
         async onQuery () {
-            // console.log(this.searchParams)
-            const { data } = await getSignList(this.queryParams)
-            console.log(data)
+            const { data } = await getBankList(this.queryParams)
+            // console.log(data)
             this.tableData = data.records
-            this.tableData.map(i => {
-                if (i.companyType == 1) i.companyType = '借款方'
-                if (i.companyType == 2) i.companyType = '资金方'
-                if (i.companyType == 3) i.companyType = '合作方'
-                if (i.companyType == 4) i.companyType = '组织方'
-                if (i.companyType == 5) i.companyType = '担保方'
-                if (i.companyDocumentType == 1) i.companyDocumentType = '统一社会信用代码证'
-                if (i.status == 1) i.status = '认证成功'
-                if (i.status == 2) i.status = '认证失败'
-            })
             // 控制页数和页码
             this.pagination = {
                 pageNumber: data.current,
@@ -173,8 +155,8 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'companyName', '')
-            this.$set(this.queryParams, 'createDate', '')
+            this.$set(this.queryParams, 'customerName', '')
+            this.$set(this.queryParams, 'createTime', '')
             this.onSearch()
         },
         async createTags () { },
@@ -187,35 +169,48 @@ export default {
             this.queryParams.pageSize = val
             this.onQuery()
         },
-        async onupdate (i) {
-            // const { data } = await getSignsDetail(i.id)
-            // console.log(data)
-            // this.customerForm = data
-            // this.dialog = true
+        async onupdate (row) {
+            this.formBank = { ...row }
+            this.dialogPicture = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
         },
-        async uploadSeal (row) {
-            // this.$set(this, 'imageUrl', '')
-            // this.$set(this.uploadImg, 'imageUrl', row.companySealImage)
-            // this.uploadImg.accountId = row.companySignatureId
-            // setTimeout(() => {
-            //     this.$set(this, 'imageUrl', row.companySealImage)
-            //     this.dialogPicture = true
-            // }, 0)
+        async onDelete (row) {
+            this.$confirm(`是否确认删除该银行账户?`, '确认删除', {
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                await deleteBankAccount(row)
+                this.onQuery()
+                this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success'
+                })
+            }).catch(() => { })
         },
         readUrl (val) {
             console.log(val)
             this.uploadImg.imageUrl = val.imageUrl
         },
-        async onSure () {
-            if (!this.uploadImg.imageUrl) {
-                this.$message.warning('请上传图片')
-                return
-            }
-            await signImage(this.uploadImg)
-            this.dialogPicture = false
+        onSure (formName) {
+            this.$refs[formName].validate(async (valid) => {
+                if (valid) {
+                    await updataBankAccount(this.formBank)
+                    this.dialogPicture = false
+                    this.onQuery()
+                    this.$message({
+                        showClose: true,
+                        message: '修改成功',
+                        type: 'success'
+                    })
+                } else {
+                    return false
+                }
+            })
         },
         onCancle () {
-            // this.uploadImg.imageUrl = this.imageUrl
             this.dialogPicture = false
         }
     }
@@ -224,12 +219,18 @@ export default {
 
 <style lang='scss' scoped>
 /deep/ .el-dialog {
-    min-width: 350px;
+    min-width: 525px;
+}
+.dialogLayout {
+    padding: 20px 24px;
 }
 /deep/ .el-dialog__body {
     min-height: 256px;
 }
 .add-tags-dialog {
     padding-top: 20px;
+}
+.el-dialog .el-input {
+    width: 300px;
 }
 </style>

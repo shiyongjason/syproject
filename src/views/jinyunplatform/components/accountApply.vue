@@ -8,17 +8,17 @@
                 <el-input v-model="ruleForm.companyName" placeholder='请选择企业名称' disabled></el-input>
                 <el-button class="applyBtn" @click="onChoose">选择</el-button>
             </el-form-item>
-            <el-form-item label="客户号" label-width='150px' prop="operatorIdNumber">
-                <el-input v-model="ruleForm.operatorIdNumber" placeholder='自动获取' disabled></el-input>
+            <el-form-item label="客户号" label-width='150px' prop="customerId">
+                <el-input v-model="ruleForm.customerId" placeholder='自动获取' disabled></el-input>
             </el-form-item>
-            <el-form-item label="账户名称" label-width='150px' prop="operatorEmail">
-                <el-input v-model="ruleForm.operatorEmail" placeholder='请输入账户名称'></el-input>
+            <el-form-item label="账户名称" label-width='150px' prop="accountName">
+                <el-input v-model="ruleForm.accountName" placeholder='请输入账户名称' maxlength='100'></el-input>
             </el-form-item>
-            <el-form-item label="开户银行" label-width='150px' prop="companyLicenseNumber">
-                <el-input v-model="ruleForm.companyLicenseNumber" placeholder='请输入组织机构代码'></el-input>
+            <el-form-item label="开户银行" label-width='150px' prop="bankName">
+                <el-input v-model="ruleForm.bankName" placeholder='请输入组织机构代码' maxlength='100'></el-input>
             </el-form-item>
-            <el-form-item label="银行账号" label-width='150px' prop="legalName">
-                <el-input v-model="ruleForm.legalName" placeholder='请输入法人姓名' width='500'></el-input>
+            <el-form-item label="银行账号" label-width='150px' prop="accountNumber">
+                <el-input v-model="ruleForm.accountNumber" placeholder='请输入法人姓名' maxlength='50'></el-input>
             </el-form-item>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
@@ -56,7 +56,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getSignSelector, signCa } from '../api/index'
+import { getSignSelector, bankAccount } from '../api/index'
 import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     name: 'caApply',
@@ -71,43 +71,23 @@ export default {
                 companyType: ''
             },
             ruleForm: {
-                companyDocumentType: 1
+
             },
             rules: {
-                operatorName: [
-                    { required: true, message: '请输入操作人姓名', trigger: 'blur' }
-                ],
-                operatorPhone: [
-                    { required: true, message: '请输入操作人手机号', trigger: 'blur' },
-                    { validator: PHONE, trigger: 'blur' }
-                ],
-                operatorEmail: [
-                    { required: true, message: '请输入操作人邮箱', trigger: 'blur' }
-                ],
-                operatorIdNumber: [
-                    { required: true, message: '请输入操作人身份证号', trigger: 'blur' },
-                    { validator: checkIdCard, trigger: 'blur' }
-                ],
-                companyType: [
-                    { required: true, message: '请选择企业类型', trigger: 'change' }
-                ],
                 companyName: [
-                    { required: true, message: '请选择企业名称', trigger: 'blur' }
+                    { required: true, message: '请选择账户名称', trigger: 'blur' }
                 ],
-                companyLicenseNumber: [
-                    { required: true, message: '请输入组织机构代码', trigger: 'blur' },
-                    { validator: this.checkOIBCode, trigger: 'blur' }
+                customerId: [
+                    { required: true, message: '请选择账户名称', trigger: 'blur' }
                 ],
-                legalName: [
-                    { required: true, message: '请输入法人姓名', trigger: 'blur' }
+                accountName: [
+                    { required: true, message: '请输入账户名称', trigger: 'blur' }
                 ],
-                legalPhone: [
-                    { required: true, message: '请输入法人手机号', trigger: 'blur' },
-                    { validator: PHONE, trigger: 'blur' }
+                bankName: [
+                    { required: true, message: '请输入开户银行', trigger: 'blur' }
                 ],
-                legalIdNumber: [
-                    { required: true, message: '请输入法人身份证号', trigger: 'blur' },
-                    { validator: checkIdCard, trigger: 'blur' }
+                accountNumber: [
+                    { required: true, message: '请输入银行账号', trigger: 'blur' }
                 ]
             },
             companyType: [
@@ -119,7 +99,7 @@ export default {
             ],
             productSource: [],
             removeValue: false,
-            companyName: ''
+            companyNameObj: {}
         }
     },
     components: {
@@ -140,14 +120,19 @@ export default {
         onQuery () {
             this.$emit('onSearch')
         },
-        async signCa () {
-            await signCa(this.ruleForm)
+        async bankAccount () {
+            await bankAccount(this.ruleForm)
         },
         onSubmit (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
-                    await this.signCa()
+                    await this.bankAccount()
                     this.onQuery()
+                    this.$message({
+                        showClose: true,
+                        message: '提交成功',
+                        type: 'success'
+                    })
                 } else {
                     console.log('error submit!!')
                     return false
@@ -155,7 +140,11 @@ export default {
             })
         },
         onSave () {
-            this.ruleForm.companyName = this.companyName
+            this.$set(this.ruleForm, 'companyName', this.companyNameObj.name)
+            this.$set(this.ruleForm, 'customerId', this.companyNameObj.customerId)
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
             this.dialogVisible = false
         },
         cancel () {
@@ -163,30 +152,21 @@ export default {
             this.addTags.labelName = ''
         },
         async onChoose () {
-            // const params = {
-            //     companyType: this.ruleForm.companyType
-            // }
-            // const { data } = await getSignSelector(params)
-            // if (this.ruleForm.companyType == 1) {
-            //     this.productSource = data.corporations
-            //     this.productSource.map(item => {
-            //         item.value = item.name
-            //         item.selectCode = item.name
-            //     })
-            // } else if (this.ruleForm.companyType == 2) {
-            //     this.productSource = data.fundProviders
-            //     this.productSource.map(item => {
-            //         item.value = item.name
-            //         item.selectCode = item.name
-            //     })
-            // } else {
-            //     this.productSource = []
-            // }
+            const params = {
+                companyType: 1
+            }
+            const { data } = await getSignSelector(params)
+            console.log(data)
+            this.productSource = data.corporations
+            this.productSource.map(item => {
+                item.value = item.name
+                item.selectCode = item.name
+            })
             this.dialogVisible = true
         },
         backFindcode (val) {
-            console.log(val.value.value)
-            this.companyName = val.value.value
+            console.log(val.value)
+            this.companyNameObj = val.value
         }
     }
 }
