@@ -44,8 +44,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getProcessesList, signImage, getProductsArr } from './api/index'
-import { interfaceUrl } from '@/api/config'
+import { getProcessesList, getProductsArr } from './api/index'
 export default {
     name: 'enterpriseCA',
     computed: {
@@ -131,8 +130,7 @@ export default {
                 if (valid) {
                     this.onSearch()
                 } else {
-                    console.log('error submit!!');
-                    return false;
+                    return false
                 }
             })
             // this.onSearch ()

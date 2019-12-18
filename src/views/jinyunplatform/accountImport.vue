@@ -65,9 +65,7 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/accountApply'
-import { getBankList, getSignsDetail, updataBankAccount, deleteBankAccount } from './api/index'
-import { interfaceUrl } from '@/api/config'
-import { setTimeout } from 'timers'
+import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
 export default {
     name: 'enterpriseCA',
     computed: {
