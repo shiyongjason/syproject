@@ -57,7 +57,6 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getSignSelector, bankAccount } from '../api/index'
-import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     name: 'caApply',
     data () {

@@ -1,6 +1,9 @@
 <template>
     <div class="tunematerials">
-        <el-form-item label="尽调材料归档：">
+        <el-form-item>
+            <template #label>
+                <span class="labeldiy">尽调材料归档：</span>
+            </template>
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="1">是</el-radio>
             <el-radio v-if="isEdit" v-model="platformBasicInfoPO.ddDocFlag" label="0">否</el-radio>
             <span v-else>{{platformBasicInfoPO.ddDocFlag==='1'?'是':platformBasicInfoPO.ddDocFlag==='0'?'否':'-'}}</span>
@@ -109,4 +112,5 @@ export default {
 }
 .fileItem{ display: flex;justify-content: space-between;align-items: center;}
 .fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
+.labeldiy{ color: #000; font-weight:bold;}
 </style>
