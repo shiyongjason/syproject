@@ -8,7 +8,8 @@
     "preview": "vue-cli-service build --mode preview",
     "dev": "vue-cli-service build --mode dev",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "count": "cloc src/views/serviceManagement"
   },
   "dependencies": {
     "app-info-parser": "^0.3.5",
@@ -31,6 +32,7 @@
     "@vue/eslint-config-standard": "^4.0.0",
     "axios": "^0.18.0",
     "babel-eslint": "^10.0.1",
+    "cloc": "^2.5.1",
     "element-ui": "~2.12.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
