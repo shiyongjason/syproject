@@ -113,7 +113,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters('serviceManagement', ['doneServiceCategoryTree', 'resetServiceCategoryTree']),
+        ...mapGetters(['doneServiceCategoryTree', 'resetServiceCategoryTree']),
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -277,7 +277,7 @@ export default {
         async deleteServiceResourcesCategory (id) {
             await deleteServiceResourcesCategory(id)
         },
-        ...mapActions('serviceManagement', ['findServiceResourcesCategory'])
+        ...mapActions(['findServiceResourcesCategory'])
     },
     mounted () {
         this.findServiceResourcesCategory()

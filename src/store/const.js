@@ -25,3 +25,5 @@ export const IS_COLLAPSE = 'IS_COLLAPSE'
 
 // 第一次登陆状态
 export const IS_FIRST = 'IS_FIRST'
+// 服务资源类目树结构
+export const FIND_SERVICE_RESOURCES_CATEGORY = 'FIND_SERVICE_RESOURCES_CATEGORY'

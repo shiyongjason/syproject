@@ -184,6 +184,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/serviceManagement/serviceResource/resource.vue')
+        },
+        {
+            path: 'serviceResourceDetails',
+            name: 'serviceResourceDetails',
+            meta: {
+                title: '服务资源信息',
+                tagName: '服务资源信息',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/serviceManagement/serviceResource/addOrEditOrDetails.vue')
         }
     ]
 }

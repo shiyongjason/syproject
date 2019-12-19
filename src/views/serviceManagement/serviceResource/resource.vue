@@ -42,9 +42,8 @@
                     </div>
                 </div>
             </div>
-            <div class="page-body-cont query-cont">
-                <el-button type="primary" class="ml20" @click="onQuery()">批量导入</el-button>
-                <el-button type="primary" class="ml20" @click="onQuery()">新增</el-button>
+            <div class="page-body-cont query-cont all-alone-bar">
+                <el-button type="primary" class="ml20" @click="addResource">添加</el-button>
             </div>
             <div class="page-body-cont">
                 <basicTable :isShowIndex="true" :isAction="true" :isPagination='true' :tableLabel="tableLabel"
@@ -281,11 +280,26 @@ export default {
     methods: {
         handleChange (value) {
             console.log(value)
+        },
+        addResource () {
+            this.$router.push({
+                path: '/serviceManagement/serviceResource'
+            })
+        },
+        onSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.search()
+        },
+        onCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.search()
         }
     }
 }
 </script>
 
 <style scoped>
-
+.all-alone-bar{
+    padding-bottom: 20px;
+}
 </style>

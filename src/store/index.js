@@ -5,7 +5,7 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-import serviceManagement from '@/views/serviceManagement/store/index'
+import serviceManagement from './modules/serviceManagement'
 
 Vue.use(Vuex)
 
