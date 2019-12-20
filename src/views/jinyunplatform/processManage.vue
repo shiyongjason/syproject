@@ -46,7 +46,7 @@
 import { mapState } from 'vuex'
 import { getProcessesList, getProductsArr } from './api/index'
 export default {
-    name: 'enterpriseCA',
+    name: 'processManage',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo

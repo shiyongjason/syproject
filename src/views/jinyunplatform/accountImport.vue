@@ -67,7 +67,7 @@ import { mapState } from 'vuex'
 import apply from './components/accountApply'
 import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
 export default {
-    name: 'enterpriseCA',
+    name: 'accountImport',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo

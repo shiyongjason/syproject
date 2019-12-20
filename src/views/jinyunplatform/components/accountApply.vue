@@ -58,7 +58,7 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getSignSelector, bankAccount } from '../api/index'
 export default {
-    name: 'caApply',
+    name: 'accountApply',
     data () {
         return {
             dialogVisible: false,

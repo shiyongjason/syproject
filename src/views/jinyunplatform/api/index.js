@@ -42,3 +42,7 @@ export const getProductsArr = (params) => axios.get(interfaceUrl + `backend/proc
 */
 // Boss后台分页查询服务订单
 export const getRecognitions = (params) => axios.get(interfaceUrl + `backend/face-recognitions/page`, { params })
+// 查询未通过人脸识别认证详情
+export const getRecognitionsDetail = (params) => axios.get(interfaceUrl + `backend/face-recognitions/${params.id}`)
+// 验证
+export const artifVali = (params) => axios.put(interfaceUrl + `backend/face-recognitions/${params.id}/certifie`, params)
