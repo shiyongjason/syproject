@@ -2,6 +2,23 @@ import * as Const from '../const'
 import * as Request from '../../views/serviceManagement/api'
 
 const getters = {
+    doneServiceCategoryList: state => {
+        function makeTreeList (data) {
+            let subTemp = []
+            if (data.child && data.child.length) {
+                data.child.forEach(value => {
+                    subTemp.push(makeTreeList(value))
+                })
+            }
+
+            return {
+                label: data.name,
+                value: data.id,
+                children: subTemp.length < 1 ? null : subTemp
+            }
+        }
+        return makeTreeList(state.serviceCategoryTree).children
+    },
     doneServiceCategoryTree: state => {
         function makeTreeList (data) {
             let subTemp = []
@@ -20,7 +37,7 @@ const getters = {
                 updateTime: data.updateTime,
                 depth: data.depth,
                 path: data.path,
-                children: subTemp
+                children: subTemp.length < 1 ? null : subTemp
             }
         }
         return [makeTreeList(state.serviceCategoryTree)]
