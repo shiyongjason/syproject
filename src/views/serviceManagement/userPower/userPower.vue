@@ -33,40 +33,27 @@
             <div class="page-body-cont">
                 <div class="sub-title">用户权益</div>
                 <el-table :data="tableData" class="table">
-                    <el-table-column
-                        label="序号"
-                        align="center"
-                        width="80px"
-                        type="index">
+                    <el-table-column label="序号" align="center" width="80px" type="index">
                     </el-table-column>
-                    <el-table-column
-                        prop="date"
-                        align="center"
-                        label="渠道名称">
+                    <el-table-column prop="date" align="center" label="渠道名称">
                     </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        align="center"
-                        label="服务项目">
+                    <el-table-column prop="name" align="center" label="服务项目">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="可用次数">
+                    <el-table-column prop="address" align="center" label="可用次数">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="操作">
+                    <el-table-column prop="address" align="center" label="操作">
                     </el-table-column>
                 </el-table>
                 <div class="sub-title">权益操作记录</div>
                 <div class="page-body-cont query-cont">
                     <div class="query-cont-col">
-                        <div class="query-col-title">变动时间：</div>
+                        <div class="query-col-title">创建时间：</div>
                         <div class="query-col-input">
-                            <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入姓名">
-                            </el-input>
+                            <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            </el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
@@ -95,41 +82,19 @@
                     </div>
                 </div>
                 <el-table :data="tableData" class="table">
-                    <el-table-column
-                        label="序号"
-                        align="center"
-                        width="80px"
-                        type="index">
+                    <el-table-column label="序号" align="center" width="80px" type="index">
                     </el-table-column>
-                    <el-table-column
-                        prop="date"
-                        align="center"
-                        label="渠道名称">
+                    <el-table-column prop="date" align="center" label="渠道名称">
                     </el-table-column>
-                    <el-table-column
-                        prop="name"
-                        align="center"
-                        label="订单号">
+                    <el-table-column prop="name" align="center" label="订单号">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="服务项目">
+                    <el-table-column prop="address" align="center" label="服务项目">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="变动时间">
+                    <el-table-column prop="address" align="center" label="变动时间">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="变动类型">
+                    <el-table-column prop="address" align="center" label="变动类型">
                     </el-table-column>
-                    <el-table-column
-                        prop="address"
-                        align="center"
-                        label="变动次数">
+                    <el-table-column prop="address" align="center" label="变动次数">
                     </el-table-column>
                 </el-table>
             </div>
@@ -140,6 +105,28 @@
 <script>
 export default {
     name: 'userPower',
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.endDate
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.startDate
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        }
+    },
     data () {
         return {
             queryParams: {},
@@ -169,24 +156,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .sub-title {
-        line-height: 15px;
-        padding: 6px 15px;
-        border-left: 3px solid #FF7A45;
-        margin-top: 15px;
-        margin-bottom: 30px;
-    }
+.sub-title {
+    line-height: 15px;
+    padding: 6px 15px;
+    border-left: 3px solid #ff7a45;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
 
-    .table {
-        width: 1000px;
-        margin: 20px 50px;
-        border-top: 1px solid #EBEEF5;
-        border-left: 1px solid #EBEEF5;
-    }
-    /deep/.el-table th{
-        border-right: 1px solid #EBEEF5;
-    }
-    /deep/.el-table__row td{
-        border-right: 1px solid #EBEEF5;
-    }
+.table {
+    width: 1000px;
+    margin: 20px 50px;
+    border-top: 1px solid #ebeef5;
+    border-left: 1px solid #ebeef5;
+}
+/deep/.el-table th {
+    border-right: 1px solid #ebeef5;
+}
+/deep/.el-table__row td {
+    border-right: 1px solid #ebeef5;
+}
 </style>
