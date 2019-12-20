@@ -906,6 +906,17 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/jinyunplatform/processManage')
+            },
+            {
+                path: 'faceRecognition',
+                name: 'faceRecognition',
+                meta: {
+                    title: '人脸识别',
+                    tagName: '人脸识别',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/faceRecognition')
             }
         ]
     },

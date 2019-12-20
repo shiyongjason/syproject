@@ -22,7 +22,7 @@
                         </el-select>
                     </el-form-item>
                 </el-form>
-                <div class="query-cont-col">
+                <div class="query-cont-col" style="padding-top: 20px;">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onFormSearch('ruleForm')">搜索</el-button>
                     </div>

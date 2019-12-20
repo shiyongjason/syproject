@@ -1,22 +1,21 @@
 <template>
     <div class="tags-wrapper page-body">
-        <apply @onSearch='onSearch'></apply>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <h3>银行账户列表</h3>
+                <h3>人脸识别验证</h3>
             </div><br>
             <div class="query-cont-col">
-                <div class="query-col-title">企业名称：</div>
+                <div class="query-col-title">姓名：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入企业名称">
                     </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">创建时间：</div>
+                <div class="query-col-title">身份证号：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间">
-                    </el-date-picker>
+                    <el-input type="text" maxlength="50" v-model="queryParams.idCardNumber" placeholder="请输入企业名称">
+                    </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -30,10 +29,9 @@
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='120'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onupdate(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
-            <el-dialog title="银行账户信息修改" :visible.sync="dialogPicture" width='50%' :close-on-click-modal='false'>
+            <el-dialog title="人脸识别确认验证详情页" :visible.sync="dialogPicture" width='50%' :close-on-click-modal='false'>
                 <div class='dialogLayout'>
                     <el-form label-position="right" :rules="rules" ref="ruleForm" label-width="80px" :model="formBank">
                         <el-form-item label="企业名称" prop="customerName">
@@ -64,8 +62,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import apply from './components/accountApply'
-import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
+import { getRecognitions, updataBankAccount, deleteBankAccount } from './api/index'
 export default {
     name: 'enterpriseCA',
     computed: {
@@ -73,50 +70,46 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    components: {
-        apply: apply
-    },
     data () {
         return {
             tableLabel: [
-                { label: '账户编号', prop: 'accountId' },
-                { label: '客户名称', prop: 'customerName' },
-                { label: '客户号', prop: 'customerId' },
-                { label: '账户名称', prop: 'accountName' },
-                { label: '开户银行', prop: 'bankName' },
-                { label: '银行账号', prop: 'accountNumber' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
+                { label: '用户唯一标识', prop: 'accountId' },
+                { label: '姓名', prop: 'customerName' },
+                { label: '身份证号', prop: 'customerId' },
+                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' },
+                { label: '身份证认证结果', prop: 'accountName' },
+                { label: '人脸识别认证结果', prop: 'bankName' }
             ],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                customerName: '',
-                createTime: ''
+                idCardNumber: '',
+                name: ''
             },
             searchParams: {},
             tableData: [],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
-                total: 100
+                total: 0
             },
             dialogPicture: false,
             formBank: {},
             rules: {
                 customerName: [
-                    { required: true, message: '请输入企业名称', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ],
                 customerId: [
-                    { required: true, message: '请输入客户号', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ],
                 accountName: [
-                    { required: true, message: '请输入账户名称', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ],
                 bankName: [
-                    { required: true, message: '请输入开户银行', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ],
                 accountNumber: [
-                    { required: true, message: '请输入银行账号', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ]
             }
         }
@@ -126,7 +119,7 @@ export default {
     },
     methods: {
         async onQuery () {
-            const { data } = await getBankList(this.queryParams)
+            const { data } = await getRecognitions(this.queryParams)
             // console.log(data)
             this.tableData = data.records
             // 控制页数和页码
@@ -141,10 +134,12 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'customerName', '')
-            this.$set(this.queryParams, 'createTime', '')
+            this.$set(this.queryParams, 'idCardNumber', '')
+            this.$set(this.queryParams, 'name', '')
             this.onSearch()
         },
+        async createTags () { },
+        async cancel () { },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
@@ -159,20 +154,6 @@ export default {
             this.$nextTick(() => {
                 this.$refs.ruleForm.clearValidate()
             })
-        },
-        async onDelete (row) {
-            this.$confirm(`是否确认删除该银行账户?`, '确认删除', {
-                confirmButtonText: '确定删除',
-                cancelButtonText: '取消'
-            }).then(async () => {
-                await deleteBankAccount(row)
-                this.onQuery()
-                this.$message({
-                    showClose: true,
-                    message: '删除成功',
-                    type: 'success'
-                })
-            }).catch(() => { })
         },
         onSure (formName) {
             this.$refs[formName].validate(async (valid) => {

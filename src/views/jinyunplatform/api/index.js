@@ -37,3 +37,8 @@ export const deleteBankAccount = (params) => axios.delete(interfaceUrl + `backen
 export const getProcessesList = (params) => axios.get(interfaceUrl + `backend/processes`, { params })
 // 产品名称列表
 export const getProductsArr = (params) => axios.get(interfaceUrl + `backend/processes/products/name`, { params })
+/*
+人脸识别
+*/
+// Boss后台分页查询服务订单
+export const getRecognitions = (params) => axios.get(interfaceUrl + `backend/face-recognitions/page`, { params })

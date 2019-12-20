@@ -74,10 +74,10 @@ export default {
             },
             rules: {
                 companyName: [
-                    { required: true, message: '请选择账户名称', trigger: 'blur' }
+                    { required: true, message: '请选择企业名称', trigger: 'blur' }
                 ],
                 customerId: [
-                    { required: true, message: '请选择账户名称', trigger: 'blur' }
+                    { required: true, message: '请选择企业名称', trigger: 'blur' }
                 ],
                 accountName: [
                     { required: true, message: '请输入账户名称', trigger: 'blur' }
