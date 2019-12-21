@@ -16,7 +16,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="流程类型：" prop="processType">
-                        <el-select v-model="queryParams.processType" placeholder="请选择产品名称">
+                        <el-select v-model="queryParams.processType" placeholder="请选择流程类型">
                             <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>

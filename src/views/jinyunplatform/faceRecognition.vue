@@ -7,14 +7,14 @@
             <div class="query-cont-col">
                 <div class="query-col-title">姓名：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="50" v-model="queryParams.name" placeholder="请输入姓名">
                     </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">身份证号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.idCardNumber" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="50" v-model="queryParams.idCardNumber" placeholder="请输入身份证号">
                     </el-input>
                 </div>
             </div>
@@ -44,7 +44,10 @@
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="12"><span class="detail-name">生日：</span>{{formFace.birthday}}</el-col>
-                        <el-col :span="12"><span class="detail-name">地址：</span>{{formFace.address}}</el-col>
+                        <el-col :span="12">
+                            <span class="detail-name">地址：</span>
+                            <span>{{formFace.address}}</span>
+                        </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="12"><span class="detail-name">身份证正来源：</span>{{formFace.frontTypeN}}</el-col>
@@ -251,7 +254,7 @@ export default {
     }
 }
 /deep/ .el-dialog {
-    min-width: 525px;
+    min-width: 720px;
 }
 .dialogLayout {
     padding: 20px 24px;

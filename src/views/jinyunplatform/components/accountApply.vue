@@ -15,10 +15,11 @@
                 <el-input v-model="ruleForm.accountName" placeholder='请输入账户名称' maxlength='100'></el-input>
             </el-form-item>
             <el-form-item label="开户银行" label-width='150px' prop="bankName">
-                <el-input v-model="ruleForm.bankName" placeholder='请输入组织机构代码' maxlength='100'></el-input>
+                <el-input v-model="ruleForm.bankName" placeholder='请输入开户银行' maxlength='100'></el-input>
+                <i class="inputTip">精确到具体支行</i>
             </el-form-item>
             <el-form-item label="银行账号" label-width='150px' prop="accountNumber">
-                <el-input v-model="ruleForm.accountNumber" placeholder='请输入法人姓名' maxlength='50'></el-input>
+                <el-input v-model="ruleForm.accountNumber" placeholder='请输入银行账号' maxlength='50'></el-input>
             </el-form-item>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
@@ -133,7 +134,7 @@ export default {
                         type: 'success'
                     })
                 } else {
-                    console.log('error submit!!')
+                    // console.log('error submit!!')
                     return false
                 }
             })
@@ -155,7 +156,7 @@ export default {
                 companyType: 1
             }
             const { data } = await getSignSelector(params)
-            console.log(data)
+            // console.log(data)
             this.productSource = data.corporations
             this.productSource.map(item => {
                 item.value = item.name
@@ -164,7 +165,7 @@ export default {
             this.dialogVisible = true
         },
         backFindcode (val) {
-            console.log(val.value)
+            // console.log(val.value)
             this.companyNameObj = val.value
         }
     }
@@ -182,5 +183,13 @@ export default {
 }
 .dialogContent {
     padding-top: 30px;
+}
+.inputTip{
+    position: absolute;
+    right: 5px;
+    top: 40px;
+    color: red;
+    font-size: 12px;
+    font-style: normal;
 }
 </style>
