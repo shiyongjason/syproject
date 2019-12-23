@@ -2,6 +2,12 @@ import * as Const from '../const'
 import * as Request from '../../views/serviceManagement/api'
 
 const getters = {
+    doneServiceTemplateDetails: state => {
+        return state.serviceTemplateDetails
+    },
+    doneServiceTemplateList: state => {
+        return state.serviceTemplateList
+    },
     doneServiceCategoryList: state => {
         function makeTreeList (data) {
             let subTemp = []
@@ -14,6 +20,7 @@ const getters = {
             return {
                 label: data.name,
                 value: data.id,
+                parentId: data.parentId,
                 children: subTemp.length < 1 ? null : subTemp
             }
         }
@@ -69,17 +76,33 @@ const getters = {
     }
 }
 const state = {
-    serviceCategoryTree: []
+    serviceCategoryTree: [],
+    serviceTemplateList: [],
+    serviceTemplateDetails: {}
 }
 const mutations = {
     [Const.FIND_SERVICE_RESOURCES_CATEGORY] (state, data) {
         state.serviceCategoryTree = data
+    },
+    [Const.GET_SERVICE_RESOURCES_TEMPLATE] (state, data) {
+        state.serviceTemplateList = data
+    },
+    [Const.GET_SERVICE_RESOURCES_TEMPLATE_DETAILS] (state, data) {
+        state.serviceTemplateDetails = data
     }
 }
 const actions = {
     async findServiceResourcesCategory ({ commit }) {
         const { data } = await Request.findServiceResourcesCategory()
         commit('FIND_SERVICE_RESOURCES_CATEGORY', data)
+    },
+    async getServiceResourcesTemplate ({ commit }, params) {
+        const { data } = await Request.getServiceResourcesTemplate(params)
+        commit('GET_SERVICE_RESOURCES_TEMPLATE', data)
+    },
+    async getServiceResourcesTemplateDetails ({ commit }, templateId) {
+        const { data } = await Request.getServiceResourcesTemplateDetails(templateId)
+        commit('GET_SERVICE_RESOURCES_TEMPLATE_DETAILS', data)
     }
 }
 export default {

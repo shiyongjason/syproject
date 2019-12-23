@@ -2,11 +2,12 @@
     <div>
         <div class="page-body">
             <h3>新建服务资源</h3>
+            {{this.form.serviceResourceList}}
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <div class="query-col-title"><span class="red">*</span>资源模板名称：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="20" v-model="message.name" placeholder="请输入" @blur="nameChange">
+                        <el-input type="text" maxlength="20" v-model="message.name" placeholder="请输入" @blur="nameChange" :disabled="pageDisabled">
                         </el-input>
                     </div>
                 </div>
@@ -14,6 +15,7 @@
                     <div class="flex-wrap-title"><span class="red">*</span>资源类目：</div>
                     <div class="flex-wrap-cont">
                         <el-cascader
+                            :disabled="pageDisabled"
                             v-model="message.categoryId"
                             :options="doneServiceCategoryList"
                            ></el-cascader>
@@ -22,7 +24,7 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">说明：</div>
                     <div class="flex-wrap-cont">
-                       <el-input v-model="message.description"></el-input>
+                       <el-input v-model="message.description" :disabled="pageDisabled"></el-input>
                     </div>
                 </div>
             </div>
@@ -32,11 +34,12 @@
                 </h3>
                 <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                     <div class="row" v-for="(item,idx) in form.serviceResourceList" :key="item.id">
-                        <span @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
+                        <span v-if="!pageDisabled" @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
                         <el-form-item label="规格名" :prop="'serviceResourceList.'+ idx + '.name'"
                                       :rules="[
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]"
+                                      :disabled="pageDisabled"
                         >
                             <el-input type="text" v-model="item.name" max-length="20"  @blur="attributeChangeHandler"></el-input>
                         </el-form-item>
@@ -44,15 +47,15 @@
                             <el-form-item  :label="index === 0 ? '规格值': ''" v-for="(subItem,index) in item.attributeList" :key="subItem.id" class="attribute-list"
                                            :prop="'serviceResourceList.'+ idx +'.attributeList.'+ index + '.value'"
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
-                                      {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
+                                      {validator: checkFormValue,trigger: 'blur', whitespace: true}]" :disabled="pageDisabled">
                                 <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler"></el-input>
-                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="item.attributeList.length > 1"></span>
-                                <span @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
+                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="!pageDisabled && item.attributeList.length > 1"></span>
+                                <span  v-if="!pageDisabled" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="add">
-                        <el-button type="primary" size="mini" @click="addSpecification">添加规格值</el-button>
+                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格值</el-button>
                     </div>
                 </el-form>
                 <h3 class="detailed-title title" v-show="attributeTable.length> 0">
@@ -69,11 +72,12 @@
                         </tr>
                         <tr v-for="(item,index) in attributeTable" :key="index">
                             <td v-for="(subItem,idx) in item.attributeList" :key="idx" v-text="subItem.value"></td>
-                            <td v-text="attributeTablePrefixName + item.totalName"></td>
-                            <td><el-input type="text" class="mdm-number" v-model="item.mdmCode"></el-input></td>
+                            <td v-text="attributeTablePrefixName + item.name"></td>
+                            <td><el-input type="text" class="mdm-number" v-model="item.mdmCode" :disabled="pageDisabled"></el-input></td>
                             <td>
                                 <el-switch
                                     v-model="item.isDisable"
+                                    :disabled="pageDisabled"
                                     active-color="#13ce66"
                                     inactive-color="#DCDFE6">
                                 </el-switch>
@@ -82,8 +86,9 @@
                     </table>
                 </div>
                 <div class="btn-group">
-                    <el-button type="primary" class="ml20" @click="onSave">保存</el-button>
-                    <el-button type="primary" class="ml20" @click="onCancel">取消</el-button>
+                    <el-button type="primary" class="ml20" @click="onSave" v-if="!pageDisabled">保存</el-button>
+                    <el-button type="primary" class="ml20" @click="onCancel" v-if="!pageDisabled">取消</el-button>
+                    <el-button type="primary" class="ml20" @click="onCancel"  v-if="pageDisabled">关闭</el-button>
                 </div>
             </div>
         </div>
@@ -92,12 +97,14 @@
 
 <script>
 import { deepCopy } from '../../../utils/utils'
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { createServiceResourcesTemplate } from '../api/index'
+
 export default {
     name: 'addOrEditOrDetails',
     data () {
         return {
+            pageDisabled: false,
             message: {
                 categoryId: [],
                 description: '',
@@ -109,7 +116,6 @@ export default {
             rules: {},
             options: [],
             defaultAttribute: {
-                key: '',
                 value: ''
             },
             defaultSpecification: {
@@ -122,9 +128,27 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['doneServiceCategoryList'])
+        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateDetails']),
+        ...mapState({
+            tagsList: state => state.layout.tagsList
+        })
     },
     methods: {
+        ...mapMutations({
+            tagUpdate: 'TAG_UPDATE'
+        }),
+        closeTags () {
+            this.tagsList.some((item, index) => {
+                if (item.path === (this.$route.fullPath).split('?')[0]) {
+                    this.tagsList.splice(index, 1)
+                    return true
+                }
+            })
+            this.tagUpdate(this.tagsList)
+        },
+        reversedSerializeAttribute () {
+
+        },
         nameChange () {
             if (this.message.name.trim()) {
                 this.attributeTablePrefixName = this.message.name
@@ -133,18 +157,34 @@ export default {
         resetAttribute () {
             let tempAll = []
             this.form.serviceResourceList.forEach(value => {
-                let temp = deepCopy(value.attributeList)
+                let temp = deepCopy(value.attributeList.map(value2 => {
+                    return {
+                        value: value2.value,
+                        mdmCode: value2.mdmCode,
+                        isDisabled: value2.isDisabled,
+                        key: value.name
+                    }
+                }))
                 tempAll.push(temp)
             })
-            let temp = this.calcDescartes(tempAll)
+            let temp = []
+            if (tempAll.length < 2) {
+                tempAll[0].forEach(value => {
+                    temp.push([value])
+                })
+            } else {
+                temp = this.calcDescartes(tempAll)
+            }
+            console.log(temp)
             this.attributeTable = temp.map(value => {
+                console.log(value)
                 let totalName = ''
                 value.forEach(value1 => {
-                    totalName += value1.value
+                    totalName += ('( ' + value1.value + ' )')
                 })
                 return {
                     attributeList: value,
-                    totalName: totalName
+                    name: totalName
                 }
             })
         },
@@ -165,10 +205,10 @@ export default {
         calcDescartes (array) {
             if (array.length < 2) return array || []
             return [].reduce.call(array, function (col, set) {
-                var res = []
+                const res = []
                 col.forEach(function (c) {
                     set.forEach(function (s) {
-                        var t = [].concat(Array.isArray(c) ? c : [c])
+                        const t = [].concat(Array.isArray(c) ? c : [c])
                         t.push(s)
                         res.push(t)
                     })
@@ -199,20 +239,22 @@ export default {
                     params.categoryId = params.categoryId[params.categoryId.length - 1]
                     params.serviceResourceList = this.attributeTable.map(value => {
                         return {
-                            name: value.name,
+                            name: params.name + value.name,
                             mdmCode: value.mdmCode,
-                            isDisabled: value.isDisabled,
+                            isDisabled: value.isDisabled ? 1 : 0,
                             attributeList: value.attributeList
                         }
                     })
                     try {
                         await createServiceResourcesTemplate(params)
+                        this.onCancel()
                     } catch (e) {}
                 }
             })
         },
         onCancel () {
             history.go(-1)
+            this.closeTags()
         },
         addSpecification () {
             if (this.form.serviceResourceList.length > 10) {
@@ -237,10 +279,50 @@ export default {
             const temp = { ...this.defaultAttribute }
             item.attributeList.push(temp)
         },
-        ...mapActions(['findServiceResourcesCategory'])
+        async drawDetails (templateId) {
+            await this.getServiceResourcesTemplateDetails(templateId)
+            const data = this.doneServiceTemplateDetails
+            this.message = {
+                name: data.serviceResourceTemplate.name,
+                categoryId: data.serviceResourceTemplate.categoryId.split(','),
+                description: data.serviceResourceTemplate.description
+            }
+            //     [ { "name": "为", "attributeList": [ { "value": "我" } ] }, { "name": "为饿", "attributeList": [ { "value": "为" }, { "value": "嗯嗯" } ] } ]
+            const allAttribute = []
+            this.doneServiceTemplateDetails.serviceResourceList.forEach(value => {
+                value.attributeValue.forEach(value1 => {
+                    allAttribute.push(value1)
+                })
+            })
+            const keyList = [...new Set(allAttribute.map(item => item.key))]
+            let serviceResourceList = []
+            keyList.forEach(val => {
+                const tempObj = { name: val }
+                let temp = []
+                allAttribute.forEach(value => {
+                    if (val === value.key) {
+                        temp.push(value)
+                    }
+                })
+                tempObj.attributeList = temp
+                console.log(tempObj)
+                serviceResourceList.push(tempObj)
+            })
+            console.log(serviceResourceList)
+            this.form.serviceResourceList = serviceResourceList
+            this.attributeChangeHandler()
+        },
+        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails'])
     },
     mounted () {
         this.findServiceResourcesCategory()
+        const props = this.$route.query
+        if (props.methods === 'details') {
+            this.drawDetails(props.templateId)
+            this.pageDisabled = true
+        } else if (props.methods === 'edit') {
+            this.drawDetails(props.templateId)
+        }
     }
 }
 </script>

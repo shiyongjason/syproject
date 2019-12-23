@@ -24,3 +24,15 @@ export function createServiceResourcesTemplate (params) {
 export function getServiceResourcesTemplate (params) {
     return axios.get(`/service/api/service-resources/template/page`, { params })
 }
+// 服务资源模板删除
+export function deleteServiceResourcesTemplate (id) {
+    return axios.delete(`/service/api/service-resources/template/${id}`)
+}
+// 服务资源模板详情
+export function getServiceResourcesTemplateDetails (templateId) {
+    return axios.get(`/service/api/service-resources/template/detail/${templateId}`)
+}
+// 服务资源模板修改
+export function updateServiceResourcesTemplate (templateId, params) {
+    return axios.get(`/service/api/service-resources/template/${templateId}`, params)
+}

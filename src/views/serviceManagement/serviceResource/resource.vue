@@ -40,13 +40,13 @@
                             @onCurrentChange="onCurrentChange">
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn"
-                                   @click="onEdit(scope.data.row)">查看
+                                   @click="goDetails(scope.data.row)">查看
                         </el-button>
                         <el-button class="orangeBtn"
-                                   @click="onEdit(scope.data.row)">修改
+                                   @click="goEdit(scope.data.row)">修改
                         </el-button>
                         <el-button class="orangeBtn"
-                                   @click="onEdit(scope.data.row)">删除
+                                   @click="onDelete(scope.data.row)">删除
                         </el-button>
                     </template>
                 </basicTable>
@@ -57,18 +57,17 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { getServiceResourcesTemplate } from '../api/index'
+import { deleteServiceResourcesTemplate } from '../api/index'
 export default {
     name: 'resource',
     data () {
         return {
             categoryId: [],
             queryParams: {},
-            tableLabel: [{ label: '资源模板名称', prop: 'channelName' },
-                { label: '资源模板编号', prop: 'orderNo' },
-                { label: '资源类目', prop: 'workOrderNo' },
-                { label: '状态', prop: 'customerName' },
-                { label: '创建时间', prop: 'customerMobile' }
+            tableLabel: [{ label: '资源模板名称', prop: 'resourceTemplateName' },
+                { label: '资源模板编号', prop: 'templateId' },
+                { label: '资源类目', prop: 'categoryPath' },
+                { label: '创建时间', prop: 'createTime' }
             ],
             tableData: [],
             paginationData: {
@@ -79,12 +78,34 @@ export default {
         }
     },
     computed: {
-        'queryParams.categoryId' () {
-            return this.categoryId && this.categoryId.length > 0 ? this.categoryId[0] : ''
-        },
-        ...mapGetters(['doneServiceCategoryList'])
+        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateList'])
+    },
+    watch: {
+        categoryId (val, oldVal) {
+            if (val && val.length > 0) {
+                this.queryParams.categoryId = this.categoryId[this.categoryId.length - 1]
+            }
+        }
     },
     methods: {
+        goDetails (row) {
+            this.$router.push({
+                path: '/serviceManagement/serviceResourceDetails',
+                query: {
+                    methods: 'details',
+                    templateId: row.templateId
+                }
+            })
+        },
+        goEdit (row) {
+            this.$router.push({
+                path: '/serviceManagement/serviceResourceDetails',
+                query: {
+                    methods: 'edit',
+                    templateId: row.templateId
+                }
+            })
+        },
         addResource () {
             this.$router.push({
                 path: '/serviceManagement/serviceResourceDetails'
@@ -100,15 +121,30 @@ export default {
         },
         async onQuery () {
             const params = { ...this.queryParams }
-            const { data } = await getServiceResourcesTemplate(params)
-            this.tableData = data.records
+            // console.log(params)
+            await this.getServiceResourcesTemplate(params)
+            this.tableData = this.doneServiceTemplateList.records
             this.paginationData = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
+                pageNumber: this.doneServiceTemplateList.current,
+                pageSize: this.doneServiceTemplateList.size,
+                total: this.doneServiceTemplateList.total
             }
         },
-        ...mapActions(['findServiceResourcesCategory'])
+        onDelete (row) {
+            this.$alert('确认删除资源数据？', '', {
+                confirmButtonText: '确定',
+                showClose: false,
+                callback: async (action) => {
+                    if (action === 'confirm') {
+                        try {
+                            await deleteServiceResourcesTemplate(row.templateId)
+                            this.onQuery()
+                        } catch (e) {}
+                    }
+                }
+            })
+        },
+        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplate'])
     },
     mounted () {
         this.findServiceResourcesCategory()
