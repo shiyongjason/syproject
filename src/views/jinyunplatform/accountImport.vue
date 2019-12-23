@@ -43,13 +43,13 @@
                             <el-input v-model="formBank.customerId" disabled></el-input>
                         </el-form-item>
                         <el-form-item label="账户名称" prop="accountName">
-                            <el-input v-model="formBank.accountName"></el-input>
+                            <el-input v-model="formBank.accountName" maxlength='100'></el-input>
                         </el-form-item>
                         <el-form-item label="开户银行" prop="bankName">
-                            <el-input v-model="formBank.bankName"></el-input>
+                            <el-input v-model="formBank.bankName" maxlength='100'></el-input>
                         </el-form-item>
                         <el-form-item label="银行账号" prop="accountNumber">
-                            <el-input v-model="formBank.accountNumber"></el-input>
+                            <el-input v-model="formBank.accountNumber" maxlength='50'></el-input>
                         </el-form-item>
                     </el-form>
                 </div>
