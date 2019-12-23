@@ -8,7 +8,7 @@
                 <el-input v-model="ruleForm.companyName" placeholder='请选择企业名称' disabled></el-input>
                 <el-button class="applyBtn" @click="onChoose">选择</el-button>
             </el-form-item>
-            <el-form-item label="客户号" label-width='150px' prop="customerId">
+            <el-form-item label="客户号" label-width='150px'>
                 <el-input v-model="ruleForm.customerId" placeholder='自动获取' disabled></el-input>
             </el-form-item>
             <el-form-item label="账户名称" label-width='150px' prop="accountName">
@@ -77,9 +77,6 @@ export default {
                 companyName: [
                     { required: true, message: '请选择企业名称', trigger: 'blur' }
                 ],
-                customerId: [
-                    { required: true, message: '请选择企业名称', trigger: 'blur' }
-                ],
                 accountName: [
                     { required: true, message: '请输入账户名称', trigger: 'blur' }
                 ],
@@ -133,6 +130,7 @@ export default {
                         message: '提交成功',
                         type: 'success'
                     })
+                    this.ruleForm = {}
                 } else {
                     // console.log('error submit!!')
                     return false
