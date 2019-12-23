@@ -12,21 +12,23 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">手机号：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入姓名">
+                        <el-input type="text" maxlength="50" v-model="queryParams.mobile" placeholder="请输入姓名">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">渠道名称：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入姓名">
-                        </el-input>
+                        <el-select v-model="queryParams.channelType" clearable style="width: 100%">
+                            <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
+                        <el-button type="primary" class="ml20" @click="onResetRight()">重置</el-button>
                     </div>
                 </div>
             </div>
@@ -35,13 +37,16 @@
                 <el-table :data="tableData" class="table">
                     <el-table-column label="序号" align="center" width="80px" type="index">
                     </el-table-column>
-                    <el-table-column prop="date" align="center" label="渠道名称">
+                    <el-table-column prop="channelName" align="center" label="渠道名称">
                     </el-table-column>
-                    <el-table-column prop="name" align="center" label="服务项目">
+                    <el-table-column prop="serviceResourceName" align="center" label="服务项目">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="可用次数">
+                    <el-table-column prop="availableTimes" align="center" label="可用次数">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="操作">
+                    <el-table-column align="center" label="操作">
+                        <template slot-scope="scope">
+                            <el-button @click="handleClick(scope.row)">新增工单</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
                 <div class="sub-title">权益操作记录</div>
@@ -49,52 +54,50 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">创建时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.startDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="queryParamsTrace.operateBeginTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10">-</span>
-                            <el-date-picker v-model="queryParams.endDate" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="queryParamsTrace.operateEndTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">订单号：</div>
                         <div class="query-col-input">
-                            <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="内部订单号">
+                            <el-input type="text" maxlength="50" v-model="queryParamsTrace.orderNo" placeholder="内部订单号">
                             </el-input>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">变动类型：</div>
                         <div class="query-col-input">
-                            <el-select>
-                                <option label="全部" value=""></option>
-                                <option label="订单新增" value="1"></option>
-                                <option label="工单减扣" value="2"></option>
-                                <option label="工单新增" value="3"></option>
+                            <el-select v-model="queryParamsTrace.operateType" clearable style="width: 100%">
+                                <el-option v-for="(item,index) in operateType" :key="index" :label="item.label" :value="item.value">
+                                </el-option>
                             </el-select>
                         </div>
                     </div>
                     <div class="query-cont-col">
                         <div class="query-col-title">
-                            <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                            <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
+                            <el-button type="primary" class="ml20" @click="onQueryTrace()">搜索</el-button>
+                            <el-button type="primary" class="ml20" @click="onResetTrace()">重置</el-button>
                         </div>
                     </div>
                 </div>
-                <el-table :data="tableData" class="table">
+                <el-table :data="tableDataTrace" class="table">
                     <el-table-column label="序号" align="center" width="80px" type="index">
                     </el-table-column>
-                    <el-table-column prop="date" align="center" label="渠道名称">
+                    <el-table-column prop="channelName" align="center" label="渠道名称">
                     </el-table-column>
-                    <el-table-column prop="name" align="center" label="订单号">
+                    <el-table-column prop="orderNo" align="center" label="订单号">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="服务项目">
+                    <el-table-column prop="serviceResourceName" align="center" label="服务项目">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="变动时间">
+                    <el-table-column prop="createTime" align="center" label="变动时间">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="变动类型">
+                    <el-table-column prop="operateType" align="center" label="变动类型">
                     </el-table-column>
-                    <el-table-column prop="address" align="center" label="变动次数">
+                    <el-table-column prop="operateTimes" align="center" label="变动次数">
                     </el-table-column>
                 </el-table>
             </div>
@@ -103,13 +106,14 @@
 </template>
 
 <script>
+import { getAggregate, getUserRightsTrace } from './api/index'
 export default {
     name: 'userPower',
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParamsTrace.operateEndTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -119,7 +123,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = this.queryParamsTrace.operateBeginTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -130,27 +134,50 @@ export default {
     data () {
         return {
             queryParams: {},
-            tableData: [{
-                date: '2016-05-02',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1518 弄'
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄'
-            }, {
-                date: '2016-05-01',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1519 弄'
-            }, {
-                date: '2016-05-03',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1516 弄'
-            }]
+            queryParamsTrace: {},
+            tableData: [], // 用户权益
+            tableDataTrace: [], // 权益操作记录
+            channelType: [],
+            operateType: [
+                {
+                    value: '订单新增',
+                    lable: 1
+                },
+                {
+                    value: '订单扣减',
+                    lable: 2
+                },
+                {
+                    value: '工单新增',
+                    lable: 3
+                },
+                {
+                    value: '工单扣减',
+                    lable: 4
+                }
+            ]
         }
     },
     mounted () {
-        console.log(1)
+
+    },
+    methods: {
+        async onQuery () {
+            if (!this.queryParams.mobile) return
+            const { data } = await getAggregate(this.queryParams)
+            console.log(data)
+            this.tableData = data
+
+        },
+        async onQueryTrace () {
+            if (!this.queryParams.mobile) return
+            const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
+            console.log(dataTrace)
+            this.tableDataTrace = dataTrace
+        },
+        onResetRight () {
+
+        }
     }
 }
 </script>

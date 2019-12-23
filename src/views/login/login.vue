@@ -84,6 +84,7 @@ export default {
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
                     sessionStorage.setItem('token', data.access_token)
+                    sessionStorage.setItem('refreshToken', data.refresh_token)
                     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                     this.setUserInfo(userInfo)
                     tracking({
