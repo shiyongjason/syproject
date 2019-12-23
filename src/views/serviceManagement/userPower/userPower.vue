@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">客户姓名：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.customerName" placeholder="请输入姓名">
+                        <el-input type="text" maxlength="50" v-model="queryParams.disabledName" placeholder="请输入姓名" disabled>
                         </el-input>
                     </div>
                 </div>
@@ -54,10 +54,10 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">创建时间：</div>
                         <div class="query-col-input">
-                            <el-date-picker v-model="queryParamsTrace.operateBeginTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="queryParamsTrace.operateBeginTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span class="ml10 mr10">-</span>
-                            <el-date-picker v-model="queryParamsTrace.operateEndTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="queryParamsTrace.operateEndTime" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
                     </div>
@@ -115,7 +115,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsTrace.operateEndTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -125,7 +125,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParamsTrace.operateBeginTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -167,7 +167,7 @@ export default {
             const { data } = await getAggregate(this.queryParams)
             console.log(data)
             this.tableData = data
-
+            this.onQueryTrace()
         },
         async onQueryTrace () {
             if (!this.queryParams.mobile) return
