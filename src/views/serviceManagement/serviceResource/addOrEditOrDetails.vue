@@ -100,7 +100,6 @@ import { deepCopy } from '../../../utils/utils'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 import { createServiceResourcesTemplate } from '../api/index'
 
-
 export default {
     name: 'addOrEditOrDetails',
     data () {
