@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-       <workOrder ref='workOrder' @search='onSearch' :form='form' :dialog='dialog' @onDialog='onDialog'/>
+       <workOrder ref='workOrder' @search='onSearch' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='onDialog'/>
     </div>
 </template>
 
@@ -147,6 +147,7 @@ export default {
             orderForm: {
                 phone: ''
             },
+            houseKeeperData: []
         }
     },
     methods: {

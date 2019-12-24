@@ -102,12 +102,13 @@
                 </el-table>
             </div>
         </div>
-        <workOrder ref='workOrder' @search='onQuery' :form='form' :dialog='dialog' @onDialog='dialog = false' />
+        <workOrder ref='workOrder' @search='onQuery' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import { getAggregate, getUserRightsTrace } from './api/index'
+import { findServiceManagementList } from '../orderCenter/api/index'
 import workOrder from '../components/workOrder'
 export default {
     name: 'userPower',
@@ -179,7 +180,8 @@ export default {
                     label: '工单扣减',
                     value: 4
                 }
-            ]
+            ],
+            houseKeeperData: []
         }
     },
     mounted () {
@@ -209,9 +211,14 @@ export default {
 
         },
         handleClickShowDialog () {
+            this.findServiceManagementList()
             this.dialog = true
             this.$refs.workOrder.clearValidate()
-        }
+        },
+        async findServiceManagementList () {
+            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
+            this.houseKeeperData = data.records
+        },
     }
 }
 </script>
