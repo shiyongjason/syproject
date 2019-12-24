@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-       <workOrder ref='workOrder' @search='onSearch' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='onDialog'/>
+        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='onDialog' />
     </div>
 </template>
 
@@ -147,7 +147,8 @@ export default {
             orderForm: {
                 phone: ''
             },
-            houseKeeperData: []
+            houseKeeperData: [],
+            title: '新增工单'
         }
     },
     methods: {
@@ -263,55 +264,192 @@ export default {
         onDialog () {
             this.dialog = false
         },
-        onSearch () {
+        async clickHandle (form) {
+            // 新增工单
+            // form.createBy = this.userInfo.employeeName
+            // await createWorkOrder(form)
+            this.$refs.workOrder.onCloseDialog()
             this.$emit('search')
-        } 
+        }
     },
-    mounted () {}
+    mounted () { }
 }
 </script>
 
 <style lang='scss' scoped>
-/deep/.el-tabs__header{ margin-bottom: 0}
-.list-head{ overflow: hidden; background: #ccc; padding: 15px 10px;}
-.list-head ul{ display: flex}
-.list-head ul li{ flex:1; font-size: 14px; color: #000;text-align: center;}
-.list-head ul li:nth-child(1){ flex:0 0 260px;}
-.list-head ul li:nth-child(2){ flex:0 0 168px;}
-.list-head ul li:nth-child(3){ flex:1;}
-.list-table{ width: 100%; border-top:1px solid #ccc;margin-top: 10px; background: #fff;box-sizing: border-box;}
-.remark{color: #0033FF !important; position: relative; cursor: pointer;display: block;float: right; margin-right: 55px !important;}
-.appointbtn{ float:right;margin-top: -4px;}
-.remark-box{ position:absolute;width: 398px;top:25px;z-index: 999;right: 0;}
-.btnmore{ color: #0033FF;border:none;background:none; margin: 0;padding:0}
-.head-info span{color:#B4B4B4; margin-right: 60px;font-size: 14px;}
-.head-info{ padding:15px 0;border: 1px solid #DCDFE6;}
-.head-info span:nth-child(1){margin-right: 20px;}
-.content{ background: #fff;box-shadow:0px 3px 12px 3px rgba(45,108,238,0.08); margin-top: 10px }
-.table ul{ display: flex;}
+/deep/.el-tabs__header {
+    margin-bottom: 0;
+}
+.list-head {
+    overflow: hidden;
+    background: #ccc;
+    padding: 15px 10px;
+}
+.list-head ul {
+    display: flex;
+}
+.list-head ul li {
+    flex: 1;
+    font-size: 14px;
+    color: #000;
+    text-align: center;
+}
+.list-head ul li:nth-child(1) {
+    flex: 0 0 260px;
+}
+.list-head ul li:nth-child(2) {
+    flex: 0 0 168px;
+}
+.list-head ul li:nth-child(3) {
+    flex: 1;
+}
+.list-table {
+    width: 100%;
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    background: #fff;
+    box-sizing: border-box;
+}
+.remark {
+    color: #0033ff !important;
+    position: relative;
+    cursor: pointer;
+    display: block;
+    float: right;
+    margin-right: 55px !important;
+}
+.appointbtn {
+    float: right;
+    margin-top: -4px;
+}
+.remark-box {
+    position: absolute;
+    width: 398px;
+    top: 25px;
+    z-index: 999;
+    right: 0;
+}
+.btnmore {
+    color: #0033ff;
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+}
+.head-info span {
+    color: #b4b4b4;
+    margin-right: 60px;
+    font-size: 14px;
+}
+.head-info {
+    padding: 15px 0;
+    border: 1px solid #dcdfe6;
+}
+.head-info span:nth-child(1) {
+    margin-right: 20px;
+}
+.content {
+    background: #fff;
+    box-shadow: 0px 3px 12px 3px rgba(45, 108, 238, 0.08);
+    margin-top: 10px;
+}
+.table ul {
+    display: flex;
+}
 // .table ul:last-child{border-bottom:1px solid #DCDFE6;border-right:1px solid #DCDFE6;}
-.table ul li{ flex:1; font-size: 14px; color: #000; border-left:1px solid #DCDFE6;text-align: center;box-sizing: border-box; padding: 10px;border-bottom:1px solid #DCDFE6; position: relative;}
-.table ul li:last-child{border-right:1px solid #DCDFE6;}
-.table ul li:nth-child(1){ flex:0 0 430px;  text-align: left;line-height: normal; }
-.table ul li .goods{  text-align: left;display: flex;line-height: normal;}
-.table ul .nopadding{padding:0}
-.table ul .nopadding .goods{padding:10px}
-.table ul .nopadding .goods:nth-child(1){border-bottom:1px solid #DCDFE6}
-.table ul li:not(:first-child){ display: flex; align-items: center;justify-content: center;}
-.name{ margin-left: 15px}
-.name font{color: #0033FF; margin-top: 10px;display: block;}
-.name p{color:#6B6B6B; margin-top: 30px}
-.priceandnums{ position: absolute; right:20px}
-.priceandnums p:nth-child(1){margin-top: 10px;display: block; text-align: right}
-.priceandnums p:nth-child(2){color:#6B6B6B; margin-top: 30px; text-align: right}
-.bzo{ background: #fdeeee;color:#FF0000; line-height: 38px; padding-left: 10px;border:1px solid #DCDFE6; border-top:none }
-.bzt{ background: #fffaeb;color:#FF9900; line-height: 38px; padding-left: 10px;border:1px solid #DCDFE6; border-top:none }
-.sub{ text-align: right; margin-top: 10px}
-.bhover:hover{background: none;color: #FF7A45;border:1px solid #fff}
-    .empty{
-        text-align: center;
-        padding: 12px;
-    }
+.table ul li {
+    flex: 1;
+    font-size: 14px;
+    color: #000;
+    border-left: 1px solid #dcdfe6;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 10px;
+    border-bottom: 1px solid #dcdfe6;
+    position: relative;
+}
+.table ul li:last-child {
+    border-right: 1px solid #dcdfe6;
+}
+.table ul li:nth-child(1) {
+    flex: 0 0 430px;
+    text-align: left;
+    line-height: normal;
+}
+.table ul li .goods {
+    text-align: left;
+    display: flex;
+    line-height: normal;
+}
+.table ul .nopadding {
+    padding: 0;
+}
+.table ul .nopadding .goods {
+    padding: 10px;
+}
+.table ul .nopadding .goods:nth-child(1) {
+    border-bottom: 1px solid #dcdfe6;
+}
+.table ul li:not(:first-child) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.name {
+    margin-left: 15px;
+}
+.name font {
+    color: #0033ff;
+    margin-top: 10px;
+    display: block;
+}
+.name p {
+    color: #6b6b6b;
+    margin-top: 30px;
+}
+.priceandnums {
+    position: absolute;
+    right: 20px;
+}
+.priceandnums p:nth-child(1) {
+    margin-top: 10px;
+    display: block;
+    text-align: right;
+}
+.priceandnums p:nth-child(2) {
+    color: #6b6b6b;
+    margin-top: 30px;
+    text-align: right;
+}
+.bzo {
+    background: #fdeeee;
+    color: #ff0000;
+    line-height: 38px;
+    padding-left: 10px;
+    border: 1px solid #dcdfe6;
+    border-top: none;
+}
+.bzt {
+    background: #fffaeb;
+    color: #ff9900;
+    line-height: 38px;
+    padding-left: 10px;
+    border: 1px solid #dcdfe6;
+    border-top: none;
+}
+.sub {
+    text-align: right;
+    margin-top: 10px;
+}
+.bhover:hover {
+    background: none;
+    color: #ff7a45;
+    border: 1px solid #fff;
+}
+.empty {
+    text-align: center;
+    padding: 12px;
+}
 .edit-work-order {
     overflow: hidden;
 }

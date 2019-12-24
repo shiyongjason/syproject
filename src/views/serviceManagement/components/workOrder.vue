@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="新增工单" :visible.sync="dialog" class="edit-work-order" width="1100px" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog :title="title" :visible.sync="dialog" class="edit-work-order" width="1100px" :close-on-click-modal="false" :before-close="onCloseDialog">
             <el-form :inline="true" :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
                 <el-form-item label="渠道名称">
                     <el-select disabled v-model="form.channelType">
@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import { createWorkOrder } from '../orderCenter/api/index'
 export default {
     name: 'workOrderDialog',
     props: {
@@ -116,6 +115,12 @@ export default {
             type: Array,
             default () {
                 return []
+            }
+        },
+        title: {
+            type: String,
+            default () {
+                return '新增工单'
             }
         }
     },
@@ -209,7 +214,6 @@ export default {
                 if (valid) {
                     try {
                         this.isSaving = true
-                        this.form.createBy = this.userInfo.employeeName
                         this.form.reserveBeginTime = this.form.AloneData + ' ' + this.form.AloneDataTimeStart
                         this.form.reserveEndTime = this.form.AloneData + ' ' + this.form.AloneDataTimeEnd
                         this.houseKeeperData.forEach(value => {
@@ -217,11 +221,9 @@ export default {
                                 this.form.houseKeeper = value.name
                             }
                         })
-                        await createWorkOrder(this.form)
-                        this.$emit('search')
-                        this.isSaving = false
-                        this.onCloseDialog()
+                        this.$emit('clickHandle', this.form)
                     } catch (e) {
+                        console.log(e)
                         this.onCloseDialog()
                     }
                 } else {
@@ -230,6 +232,7 @@ export default {
             })
         },
         onCloseDialog () {
+            this.isSaving = false
             this.$emit('onDialog')
         },
         clearValidate () {

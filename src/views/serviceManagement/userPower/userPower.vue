@@ -3,16 +3,16 @@
         <div class="page-body">
             <div class="page-body-cont query-cont">
                 <!--<div class="query-cont-col">-->
-                    <!--<div class="query-col-title">客户姓名：</div>-->
-                    <!--<div class="query-col-input">-->
-                        <!--<el-input type="text" maxlength="50" v-model="queryParams.disabledName" placeholder="请输入姓名" disabled>-->
-                        <!--</el-input>-->
-                    <!--</div>-->
+                <!--<div class="query-col-title">客户姓名：</div>-->
+                <!--<div class="query-col-input">-->
+                <!--<el-input type="text" maxlength="50" v-model="queryParams.disabledName" placeholder="请输入姓名" disabled>-->
+                <!--</el-input>-->
+                <!--</div>-->
                 <!--</div>-->
                 <div class="query-cont-col">
-                    <div class="query-col-title">手机号(必填)：</div>
+                    <div class="query-col-title">手机号：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.mobile" placeholder="请输入姓名">
+                        <el-input type="text" maxlength="11" v-model="queryParams.mobile" placeholder="请输入手机号">
                         </el-input>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                        <el-button type="primary" class="ml20" @click="onResetRight()">重置</el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">变动类型：</div>
                         <div class="query-col-input">
-                            <el-select v-model="queryParamsTrace.operateType" clearable style="width: 100%">
+                            <el-select v-model="queryParamsTrace.operateType" clearable style="width: 100%" placeholder="全部">
                                 <el-option v-for="(item,index) in operateType" :key="index" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
@@ -101,7 +101,7 @@
                 </el-table>
             </div>
         </div>
-        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @search='onQuery' :form='form' :dialog='dialog' @onDialog='dialog = false' />
+        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @clickHandle='clickHandle' :form='form' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
@@ -188,10 +188,20 @@ export default {
             const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
             this.tableDataTrace = dataTrace
         },
-        onResetRight () {
-
+        onReset () {
+            this.$set(this.queryParams, 'mobile', '')
+            this.$set(this.queryParams, 'channelType', '')
+            this.onQuery()
+        },
+        onResetTrace () {
+            this.$set(this.queryParamsTrace, 'operateBeginTime', '')
+            this.$set(this.queryParamsTrace, 'operateEndTime', '')
+            this.$set(this.queryParamsTrace, 'orderNo', '')
+            this.$set(this.queryParamsTrace, 'operateType', '')
+            this.onQueryTrace()
         },
         handleClickShowDialog () {
+            this.findServiceManagementList()
             this.dialog = true
             this.$refs.workOrder.clearValidate()
         },
@@ -202,6 +212,11 @@ export default {
         async findChannelDict () {
             const { data } = await findChannelDict()
             this.channelType = data
+        },
+        async clickHandle (form) {
+            // 新增工单
+            console.log(form)
+            this.$refs.workOrder.onCloseDialog()
         }
     }
 }
@@ -226,6 +241,10 @@ export default {
     border-right: 1px solid #ebeef5;
 }
 /deep/.el-table__row td {
+    border-right: 1px solid #ebeef5;
+}
+/deep/ .is-scrolling-none {
+    box-sizing: border-box;
     border-right: 1px solid #ebeef5;
 }
 </style>
