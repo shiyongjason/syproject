@@ -98,7 +98,7 @@
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, createWorkOrder, findServiceManagementList } from '../api/index'
+import { updateOrderRemark, findServiceManagementList } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
