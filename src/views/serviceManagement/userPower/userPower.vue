@@ -179,22 +179,18 @@ export default {
                     label: '工单扣减',
                     value: 4
                 }
-            ],
-            propsParams: {}
+            ]
         }
     },
     mounted () {
-        this.propsParams = this.$route.query
-        if (this.propsParams.name) {
-            this.queryParams.disabledName = this.propsParams.name
-        }
-        if (this.propsParams.mobile) {
-            this.queryParams.mobile = this.propsParams.mobile
-        }
         this.onQuery()
     },
     methods: {
         async onQuery () {
+            if (!this.queryParams.mobile) {
+                this.$message.error(`手机号必填`)
+                return
+            }
             const { data } = await getAggregate(this.queryParams)
             console.log(data)
             this.tableData = data

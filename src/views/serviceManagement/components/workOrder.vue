@@ -111,6 +111,12 @@ export default {
             default () {
                 return false
             }
+        },
+        houseKeeperData: {
+            type: Array,
+            default () {
+                return []
+            }
         }
     },
     watch: {
@@ -194,7 +200,6 @@ export default {
                 }
             },
             isSaving: false,
-            houseKeeperData: [],
             channelType: []
         }
     },
