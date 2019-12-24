@@ -201,7 +201,6 @@ export default {
         },
         async onQueryTrace () {
             const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
-            console.log(dataTrace)
             this.tableDataTrace = dataTrace
         },
         onResetRight () {
