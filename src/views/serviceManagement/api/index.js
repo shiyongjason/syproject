@@ -34,5 +34,5 @@ export function getServiceResourcesTemplateDetails (templateId) {
 }
 // 服务资源模板修改
 export function updateServiceResourcesTemplate (templateId, params) {
-    return axios.get(`/service/api/service-resources/template/${templateId}`, params)
+    return axios.put(`/service/api/service-resources/template/${templateId}`, params)
 }

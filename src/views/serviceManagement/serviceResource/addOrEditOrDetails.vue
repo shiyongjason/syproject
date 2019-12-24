@@ -39,16 +39,15 @@
                                       :rules="[
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]"
-                                      :disabled="pageDisabled"
                         >
-                            <el-input type="text" v-model="item.name" max-length="20"  @blur="attributeChangeHandler"></el-input>
+                            <el-input type="text" v-model="item.name" max-length="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
                         </el-form-item>
                         <div v-show="item.name.trim().length> 0">
                             <el-form-item  :label="index === 0 ? '规格值': ''" v-for="(subItem,index) in item.attributeList" :key="subItem.id" class="attribute-list"
                                            :prop="'serviceResourceList.'+ idx +'.attributeList.'+ index + '.value'"
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
-                                      {validator: checkFormValue,trigger: 'blur', whitespace: true}]" :disabled="pageDisabled">
-                                <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler"></el-input>
+                                      {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
+                                <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
                                 <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="!pageDisabled && item.attributeList.length > 1"></span>
                                 <span  v-if="!pageDisabled" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
@@ -86,7 +85,8 @@
                     </table>
                 </div>
                 <div class="btn-group">
-                    <el-button type="primary" class="ml20" @click="onSave" v-if="!pageDisabled">保存</el-button>
+                    <el-button type="primary" class="ml20" @click="onSave" v-if="!pageDisabled && !propsParams.methods">保存</el-button>
+                    <el-button type="primary" class="ml20" @click="editSave" v-if="!pageDisabled  && propsParams.methods === 'edit'">保存</el-button>
                     <el-button type="primary" class="ml20" @click="onCancel" v-if="!pageDisabled">取消</el-button>
                     <el-button type="primary" class="ml20" @click="onCancel"  v-if="pageDisabled">关闭</el-button>
                 </div>
@@ -98,7 +98,7 @@
 <script>
 import { deepCopy } from '../../../utils/utils'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
-import { createServiceResourcesTemplate } from '../api/index'
+import { createServiceResourcesTemplate, updateServiceResourcesTemplate } from '../api/index'
 
 export default {
     name: 'addOrEditOrDetails',
@@ -124,7 +124,9 @@ export default {
             },
             attributeTable: [],
             serviceResourceName: [],
-            attributeTablePrefixName: ''
+            attributeTablePrefixName: '',
+            tempAttributeTable: [],
+            propsParams: ''
         }
     },
     computed: {
@@ -161,7 +163,7 @@ export default {
                     return {
                         value: value2.value,
                         mdmCode: value2.mdmCode,
-                        isDisabled: value2.isDisabled,
+                        isDisable: value2.isDisable,
                         key: value.name
                     }
                 }))
@@ -175,18 +177,26 @@ export default {
             } else {
                 temp = this.calcDescartes(tempAll)
             }
-            console.log(temp)
             this.attributeTable = temp.map(value => {
-                console.log(value)
                 let totalName = ''
                 value.forEach(value1 => {
-                    totalName += ('( ' + value1.value + ' )')
+                    totalName += ('(' + value1.value + ')')
                 })
                 return {
                     attributeList: value,
                     name: totalName
                 }
             })
+            if (this.propsParams.methods === 'edit' || this.propsParams.methods === 'details') {
+                this.attributeTable.forEach(value1 => {
+                    this.tempAttributeTable.forEach(value2 => {
+                        if (value2.name.indexOf(value1.name) > -1) {
+                            value1.mdmCode = value2.mdmCode
+                            value1.isDisable = value2.isDisable === 1
+                        }
+                    })
+                })
+            }
         },
         attributeChangeHandler () {
             this.$refs['form'].validate(async (valid) => {
@@ -241,12 +251,34 @@ export default {
                         return {
                             name: params.name + value.name,
                             mdmCode: value.mdmCode,
-                            isDisabled: value.isDisabled ? 1 : 0,
+                            isDisable: value.isDisable == true ? 1 : 0,
                             attributeList: value.attributeList
                         }
                     })
                     try {
                         await createServiceResourcesTemplate(params)
+                        this.onCancel()
+                    } catch (e) {}
+                }
+            })
+        },
+        editSave () {
+            // this.props.templateId
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    console.log(1)
+                    const params = { ...this.message }
+                    params.categoryId = params.categoryId[params.categoryId.length - 1]
+                    params.serviceResourceList = this.attributeTable.map(value => {
+                        return {
+                            name: params.name + value.name,
+                            mdmCode: value.mdmCode,
+                            isDisable: value.isDisable == true ? 1 : 0,
+                            attributeList: value.attributeList
+                        }
+                    })
+                    try {
+                        await updateServiceResourcesTemplate(this.propsParams.templateId, params)
                         this.onCancel()
                     } catch (e) {}
                 }
@@ -287,28 +319,20 @@ export default {
                 categoryId: data.serviceResourceTemplate.categoryId.split(','),
                 description: data.serviceResourceTemplate.description
             }
-            //     [ { "name": "为", "attributeList": [ { "value": "我" } ] }, { "name": "为饿", "attributeList": [ { "value": "为" }, { "value": "嗯嗯" } ] } ]
-            const allAttribute = []
-            this.doneServiceTemplateDetails.serviceResourceList.forEach(value => {
-                value.attributeValue.forEach(value1 => {
-                    allAttribute.push(value1)
-                })
-            })
-            const keyList = [...new Set(allAttribute.map(item => item.key))]
-            let serviceResourceList = []
+            this.tempAttributeTable = this.doneServiceTemplateDetails.serviceResourceList
+            const serviceResourceList = []
+            const keyList = [...new Set(this.doneServiceTemplateDetails.attributeList.map(item => item.key))]
             keyList.forEach(val => {
                 const tempObj = { name: val }
                 let temp = []
-                allAttribute.forEach(value => {
+                this.doneServiceTemplateDetails.attributeList.forEach(value => {
                     if (val === value.key) {
                         temp.push(value)
                     }
                 })
                 tempObj.attributeList = temp
-                console.log(tempObj)
                 serviceResourceList.push(tempObj)
             })
-            console.log(serviceResourceList)
             this.form.serviceResourceList = serviceResourceList
             this.attributeChangeHandler()
         },
@@ -316,12 +340,12 @@ export default {
     },
     mounted () {
         this.findServiceResourcesCategory()
-        const props = this.$route.query
-        if (props.methods === 'details') {
-            this.drawDetails(props.templateId)
+        this.propsParams = this.$route.query
+        if (this.propsParams.methods === 'details') {
+            this.drawDetails(this.propsParams.templateId)
             this.pageDisabled = true
-        } else if (props.methods === 'edit') {
-            this.drawDetails(props.templateId)
+        } else if (this.propsParams.methods === 'edit') {
+            this.drawDetails(this.propsParams.templateId)
         }
     }
 }
