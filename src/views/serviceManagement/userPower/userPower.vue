@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">手机号：</div>
+                    <div class="query-col-title">手机号(必填)：</div>
                     <div class="query-col-input">
                         <el-input type="text" maxlength="50" v-model="queryParams.mobile" placeholder="请输入姓名">
                         </el-input>
@@ -45,7 +45,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="操作">
                         <template slot-scope="scope">
-                            <el-button @click="handleClick(scope.row)">新增工单</el-button>
+                            <el-button @click="handleClickShowDialog(scope.row)">新增工单</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -95,18 +95,20 @@
                     </el-table-column>
                     <el-table-column prop="createTime" align="center" label="变动时间">
                     </el-table-column>
-                    <el-table-column prop="operateType" align="center" label="变动类型">
+                    <el-table-column prop="operateName" align="center" label="变动类型">
                     </el-table-column>
                     <el-table-column prop="operateTimes" align="center" label="变动次数">
                     </el-table-column>
                 </el-table>
             </div>
         </div>
+        <workOrder ref='workOrder' @search='onQuery' :form='form' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import { getAggregate, getUserRightsTrace } from './api/index'
+import workOrder from '../components/workOrder'
 export default {
     name: 'userPower',
     computed: {
@@ -131,52 +133,84 @@ export default {
             }
         }
     },
+    components: {
+        workOrder
+    },
     data () {
         return {
-            queryParams: {},
+            queryParams: { mobile: '18500000000' },
             queryParamsTrace: {},
+            dialog: false,
             tableData: [], // 用户权益
             tableDataTrace: [], // 权益操作记录
-            channelType: [],
+            form: {},
+            channelType: [
+                {
+                    label: '有赞商城',
+                    value: 1
+                },
+                {
+                    label: '孩子王',
+                    value: 2
+                },
+                {
+                    label: '考拉买菜',
+                    value: 3
+                },
+                {
+                    label: '大众点评',
+                    value: 4
+                }
+            ],
             operateType: [
                 {
-                    value: '订单新增',
-                    lable: 1
+                    label: '订单新增',
+                    value: 1
                 },
                 {
-                    value: '订单扣减',
-                    lable: 2
+                    label: '订单扣减',
+                    value: 2
                 },
                 {
-                    value: '工单新增',
-                    lable: 3
+                    label: '工单新增',
+                    value: 3
                 },
                 {
-                    value: '工单扣减',
-                    lable: 4
+                    label: '工单扣减',
+                    value: 4
                 }
             ]
         }
     },
     mounted () {
-
+        this.onQuery()
     },
     methods: {
         async onQuery () {
-            if (!this.queryParams.mobile) return
+            if (!this.queryParams.mobile) {
+                this.$message.error(`手机号必填`)
+                return
+            }
             const { data } = await getAggregate(this.queryParams)
             console.log(data)
             this.tableData = data
             this.onQueryTrace()
         },
         async onQueryTrace () {
-            if (!this.queryParams.mobile) return
+            if (!this.queryParams.mobile) {
+                this.$message.error(`手机号必填`)
+                return
+            }
             const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
             console.log(dataTrace)
             this.tableDataTrace = dataTrace
         },
         onResetRight () {
 
+        },
+        handleClickShowDialog () {
+            this.dialog = true
+            this.$refs.workOrder.clearValidate()
         }
     }
 }

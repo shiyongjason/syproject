@@ -96,6 +96,7 @@
 </template>
 
 <script>
+import { createWorkOrder } from '../orderCenter/api/index'
 export default {
     name: 'workOrderDialog',
     props: {
@@ -211,7 +212,7 @@ export default {
                                 this.form.houseKeeper = value.name
                             }
                         })
-                        // await createWorkOrder(this.form)
+                        await createWorkOrder(this.form)
                         this.$emit('search')
                         this.isSaving = false
                         this.onCloseDialog()

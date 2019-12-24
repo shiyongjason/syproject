@@ -91,7 +91,7 @@
                 </div>
             </div>
         </div>
-       <workOrder ref='workOrder' :form='form' :dialog='dialog' @onDialog='onDialog'/>
+       <workOrder ref='workOrder' @search='onSearch' :form='form' :dialog='dialog' @onDialog='onDialog'/>
     </div>
 </template>
 
@@ -261,7 +261,10 @@ export default {
         },
         onDialog () {
             this.dialog = false
-        }
+        },
+        onSearch () {
+            this.$emit('search')
+        } 
     },
     mounted () {}
 }
