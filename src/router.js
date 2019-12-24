@@ -909,6 +909,29 @@ const routerMapping = [
                 component: () => import('@/views/appUpdate/index.vue')
             }
         ]
+    },
+    {
+        path: '/comfortCloud',
+        meta: {
+            title: '舒适云概览',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'equipemtOverview',
+                name: 'equipemtOverview',
+                meta: {
+                    title: '设备概览',
+                    tagName: '设备概览',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+            }
+        ]
     }
 
 ]
