@@ -111,6 +111,8 @@ import { getAggregate, getUserRightsTrace, createWorkUserRights } from './api/in
 import { findServiceManagementList } from '../orderCenter/api/index'
 import { findChannelDict } from '../common/dictApi'
 import workOrder from '../components/workOrder'
+import { phoneRegular } from '@/utils/regular'
+
 export default {
     name: 'userPower',
     computed: {
@@ -186,6 +188,10 @@ export default {
     },
     methods: {
         async onQuery () {
+            if (!phoneRegular.test(this.queryParams.mobile)) {
+                this.$message.error('手机号码格式错误')
+                return
+            }
             const { data } = await getAggregate(this.queryParams)
             this.tableData = data
             this.onQueryTrace()
