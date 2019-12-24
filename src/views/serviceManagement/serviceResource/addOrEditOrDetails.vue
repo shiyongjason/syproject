@@ -57,33 +57,40 @@
                         <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格值</el-button>
                     </div>
                 </el-form>
-                <h3 class="detailed-title title" v-show="attributeTable.length> 0">
+                <h3 class="detailed-title title" v-show="attributeTable.list.length> 0">
                     规格明细
                     <!--<el-button type="primary" size="mini"  class="right" @click="onClose">一键关闭</el-button>-->
                 </h3>
-                <div class="details" v-show="attributeTable.length> 0">
-                    <table>
-                        <tr>
-                            <th v-for="(item,index) in serviceResourceName" :key="index" v-text="item.name"></th>
-                            <th>资源名称</th>
-                            <th>关联MDM编码</th>
-                            <th>是否可用</th>
-                        </tr>
-                        <tr v-for="(item,index) in attributeTable" :key="index">
-                            <td v-for="(subItem,idx) in item.attributeList" :key="idx" v-text="subItem.value"></td>
-                            <td v-text="attributeTablePrefixName + item.name"></td>
-                            <td><el-input type="text" class="mdm-number" v-model="item.mdmCode" :disabled="pageDisabled"></el-input></td>
-                            <td>
-                                <el-switch
-                                    v-model="item.isDisable"
-                                    :disabled="pageDisabled"
-                                    active-color="#13ce66"
-                                    inactive-color="#DCDFE6">
-                                </el-switch>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <el-form :model="attributeTable" ref="formAttribute">
+                    <div class="details" v-show="attributeTable.list.length> 0">
+                        <table>
+                            <tr>
+                                <th v-for="(item,index) in serviceResourceName" :key="index" v-text="item.name"></th>
+                                <th>资源名称</th>
+                                <th width="170px">关联MDM编码</th>
+                                <th>是否可用</th>
+                            </tr>
+                            <tr v-for="(item,index) in attributeTable.list" :key="index">
+                                <td v-for="(subItem,idx) in item.attributeList" :key="idx" v-text="subItem.value"></td>
+                                <td v-text="attributeTablePrefixName + item.name"></td>
+                                <td>
+                                    <el-form-item :prop="'list.'+ index +'.mdmCode'"
+                                                  :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }]" class="mdm-number">
+                                        <el-input class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
+                                    </el-form-item>
+                                </td>
+                                <td>
+                                    <el-switch
+                                        v-model="item.isDisable"
+                                        :disabled="pageDisabled"
+                                        active-color="#13ce66"
+                                        inactive-color="#DCDFE6">
+                                    </el-switch>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </el-form>
                 <div class="btn-group">
                     <el-button type="primary" class="ml20" @click="onSave" v-if="!pageDisabled && !propsParams.methods">保存</el-button>
                     <el-button type="primary" class="ml20" @click="editSave" v-if="!pageDisabled  && propsParams.methods === 'edit'">保存</el-button>
@@ -113,6 +120,9 @@ export default {
             form: {
                 serviceResourceList: []
             },
+            formAttribute: {
+
+            },
             rules: {},
             options: [],
             defaultAttribute: {
@@ -122,7 +132,7 @@ export default {
                 name: '',
                 attributeList: [{ value: '' }]
             },
-            attributeTable: [],
+            attributeTable: { list: [] },
             serviceResourceName: [],
             attributeTablePrefixName: '',
             tempAttributeTable: [],
@@ -177,7 +187,7 @@ export default {
             } else {
                 temp = this.calcDescartes(tempAll)
             }
-            this.attributeTable = temp.map(value => {
+            this.attributeTable.list = temp.map(value => {
                 let totalName = ''
                 value.forEach(value1 => {
                     totalName += ('(' + value1.value + ')')
@@ -188,11 +198,11 @@ export default {
                 }
             })
             if (this.propsParams.methods === 'edit' || this.propsParams.methods === 'details') {
-                this.attributeTable.forEach(value1 => {
+                this.attributeTable.list.forEach((value1, index) => {
                     this.tempAttributeTable.forEach(value2 => {
                         if (value2.name.indexOf(value1.name) > -1) {
-                            value1.mdmCode = value2.mdmCode
-                            value1.isDisable = value2.isDisable === 1
+                            this.$set(this.attributeTable.list[index], `mdmCode`, value2.mdmCode)
+                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable)
                         }
                     })
                 })
@@ -243,44 +253,65 @@ export default {
             return callback()
         },
         onSave () {
+            if (this.message.name.trim().length < 1) {
+                this.$message({
+                    type: 'error',
+                    message: '资源模板名称不能为空'
+                })
+                return
+            }
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    const params = { ...this.message }
-                    params.categoryId = params.categoryId[params.categoryId.length - 1]
-                    params.serviceResourceList = this.attributeTable.map(value => {
-                        return {
-                            name: params.name + value.name,
-                            mdmCode: value.mdmCode,
-                            isDisable: value.isDisable == true ? 1 : 0,
-                            attributeList: value.attributeList
+                    this.$refs['formAttribute'].validate(async (valid1) => {
+                        if (valid1) {
+                            const params = { ...this.message }
+                            params.categoryId = params.categoryId[params.categoryId.length - 1]
+                            params.serviceResourceList = this.attributeTable.list.map(value => {
+                                return {
+                                    name: params.name + value.name,
+                                    mdmCode: value.mdmCode,
+                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    attributeList: value.attributeList
+                                }
+                            })
+                            try {
+                                await createServiceResourcesTemplate(params)
+                                this.onCancel()
+                            } catch (e) {}
                         }
                     })
-                    try {
-                        await createServiceResourcesTemplate(params)
-                        this.onCancel()
-                    } catch (e) {}
                 }
             })
         },
         editSave () {
             // this.props.templateId
+            if (this.message.name.trim().length < 1) {
+                this.$message({
+                    type: 'error',
+                    message: '资源模板名称不能为空'
+                })
+                return
+            }
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    console.log(1)
-                    const params = { ...this.message }
-                    params.categoryId = params.categoryId[params.categoryId.length - 1]
-                    params.serviceResourceList = this.attributeTable.map(value => {
-                        return {
-                            name: params.name + value.name,
-                            mdmCode: value.mdmCode,
-                            isDisable: value.isDisable == true ? 1 : 0,
-                            attributeList: value.attributeList
+                    this.$refs['formAttribute'].validate(async (valid1) => {
+                        if (valid1) {
+                            const params = { ...this.message }
+                            params.categoryId = params.categoryId[params.categoryId.length - 1]
+                            params.serviceResourceList = this.attributeTable.list.map(value => {
+                                return {
+                                    name: params.name + value.name,
+                                    mdmCode: value.mdmCode,
+                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    attributeList: value.attributeList
+                                }
+                            })
+                            try {
+                                await updateServiceResourcesTemplate(this.propsParams.templateId, params)
+                                this.onCancel()
+                            } catch (e) {}
                         }
                     })
-                    try {
-                        await updateServiceResourcesTemplate(this.propsParams.templateId, params)
-                        this.onCancel()
-                    } catch (e) {}
                 }
             })
         },
@@ -314,9 +345,19 @@ export default {
         async drawDetails (templateId) {
             await this.getServiceResourcesTemplateDetails(templateId)
             const data = this.doneServiceTemplateDetails
+            let categoryId = data.serviceResourceTemplate.categoryId
+            this.doneServiceCategoryList.forEach(value => {
+                value.children.forEach(value1 => {
+                    value1.children.forEach(value12 => {
+                        if (value12.value === categoryId) {
+                            categoryId = [value.value, value1.value, value12.value]
+                        }
+                    })
+                })
+            })
             this.message = {
                 name: data.serviceResourceTemplate.name,
-                categoryId: data.serviceResourceTemplate.categoryId.split(','),
+                categoryId: categoryId,
                 description: data.serviceResourceTemplate.description
             }
             this.tempAttributeTable = this.doneServiceTemplateDetails.serviceResourceList
@@ -338,9 +379,13 @@ export default {
         },
         ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails'])
     },
-    mounted () {
-        this.findServiceResourcesCategory()
+    async mounted () {
         this.propsParams = this.$route.query
+        if (!this.propsParams.methods) {
+            this.findServiceResourcesCategory()
+        } else {
+            await this.findServiceResourcesCategory()
+        }
         if (this.propsParams.methods === 'details') {
             this.drawDetails(this.propsParams.templateId)
             this.pageDisabled = true
@@ -387,13 +432,17 @@ export default {
             text-align: center;
             th, td{
                 border: 1px solid #DCDFE6;
-                padding: 12px 5px;
+                padding: 20px 5px;
             }
 
         }
     }
     .mdm-number {
         width: 150px;
+        margin: auto;
+        .input{
+            width: 100%;
+        }
     }
     .attribute-list {
         margin-bottom: 25px;
