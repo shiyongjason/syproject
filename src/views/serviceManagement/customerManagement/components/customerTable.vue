@@ -14,20 +14,27 @@
             </el-table-column>
             <el-table-column prop="mobile" align="center" label="手机号"></el-table-column>
             <el-table-column
-                prop="nickname"
                 align="center"
                 label="微信昵称">
+                <template slot-scope="scope">
+                    {{ scope.row.nickname | isNotBlank}}
+                </template>
             </el-table-column>
-            <el-table-column prop="wechatId" align="center" label="微信号"></el-table-column>
+            <el-table-column  align="center" label="微信号">
+                <template slot-scope="scope">
+                    {{ scope.row.wechatId | isNotBlank}}
+                </template>
+            </el-table-column>
             <el-table-column prop="createTime" align="center" property="date" label="创建时间">
                 <template slot-scope="scope">
                     {{ formatTime(scope.row.createTime) }}
                 </template>
             </el-table-column>
-            <el-table-column prop="key" align="center" label="操作">
+            <el-table-column width="250px" prop="key" align="center" label="操作">
                 <template slot-scope="scope">
                     <el-button type='primary' @click="onEdit(scope.row)" size="mini">修改</el-button>
                     <el-button type='primary' @click="onAddTag(scope.row)" size="mini">加标签</el-button>
+                    <el-button type='primary' @click="goUserPower(scope.row)" size="mini">查看权益</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -88,6 +95,15 @@ export default {
         }
     },
     methods: {
+        goUserPower (row) {
+            this.$router.push({
+                path: '/serviceManagement/userPower',
+                query: {
+                    mobile: row.mobile ? row.mobile : '',
+                    name: row.name ? row.name : ''
+                }
+            })
+        },
         debounce (func, wait) {
             let _this = this
             return function () {
