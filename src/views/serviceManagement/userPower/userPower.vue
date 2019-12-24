@@ -2,13 +2,13 @@
     <div class="user-power">
         <div class="page-body">
             <div class="page-body-cont query-cont">
-                <div class="query-cont-col">
-                    <div class="query-col-title">客户姓名：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.disabledName" placeholder="请输入姓名" disabled>
-                        </el-input>
-                    </div>
-                </div>
+                <!--<div class="query-cont-col">-->
+                    <!--<div class="query-col-title">客户姓名：</div>-->
+                    <!--<div class="query-col-input">-->
+                        <!--<el-input type="text" maxlength="50" v-model="queryParams.disabledName" placeholder="请输入姓名" disabled>-->
+                        <!--</el-input>-->
+                    <!--</div>-->
+                <!--</div>-->
                 <div class="query-cont-col">
                     <div class="query-col-title">手机号(必填)：</div>
                     <div class="query-col-input">
@@ -19,9 +19,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">渠道名称：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.channelType" clearable style="width: 100%">
-                            <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
-                            </el-option>
+                        <el-select v-model="queryParams.channelType">
+                            <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -102,13 +101,14 @@
                 </el-table>
             </div>
         </div>
-        <workOrder ref='workOrder' @search='onQuery' :form='form' :dialog='dialog' @onDialog='dialog = false' />
+        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @search='onQuery' :form='form' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import { getAggregate, getUserRightsTrace } from './api/index'
 import { findServiceManagementList } from '../orderCenter/api/index'
+import { findChannelDict } from '../common/dictApi'
 import workOrder from '../components/workOrder'
 export default {
     name: 'userPower',
@@ -145,24 +145,7 @@ export default {
             tableData: [], // 用户权益
             tableDataTrace: [], // 权益操作记录
             form: {},
-            channelType: [
-                {
-                    label: '有赞商城',
-                    value: 1
-                },
-                {
-                    label: '孩子王',
-                    value: 2
-                },
-                {
-                    label: '考拉买菜',
-                    value: 3
-                },
-                {
-                    label: '大众点评',
-                    value: 4
-                }
-            ],
+            channelType: [],
             operateType: [
                 {
                     label: '订单新增',
@@ -180,10 +163,12 @@ export default {
                     label: '工单扣减',
                     value: 4
                 }
-            ]
+            ],
+            houseKeeperData: []
         }
     },
     mounted () {
+        this.findChannelDict()
         this.propsParams = this.$route.query
         if (this.propsParams.name) {
             this.queryParams.disabledName = this.propsParams.name
@@ -213,6 +198,10 @@ export default {
         async findServiceManagementList () {
             const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
+        },
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
         }
     }
 }
