@@ -148,19 +148,19 @@ export default {
             channelType: [],
             operateType: [
                 {
-                    label: '订单新增',
+                    label: '订单（下单）新增',
                     value: 1
                 },
                 {
-                    label: '订单扣减',
+                    label: '订单（退单）扣减',
                     value: 2
                 },
                 {
-                    label: '工单新增',
+                    label: '工单（取消）新增',
                     value: 3
                 },
                 {
-                    label: '工单扣减',
+                    label: '工单（预约）扣减',
                     value: 4
                 }
             ],
@@ -232,7 +232,7 @@ export default {
 }
 
 .table {
-    width: 1000px;
+    width: 1200px;
     margin: 20px 50px;
     border-top: 1px solid #ebeef5;
     border-left: 1px solid #ebeef5;
