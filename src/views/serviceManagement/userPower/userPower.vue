@@ -231,8 +231,8 @@ export default {
         async clickHandle (form) {
             // 新增工单
             form.createBy = this.userInfo.employeeName
+            // console.log(form)
             await createWorkUserRights(form)
-            console.log(form)
             this.$refs.workOrder.onCloseDialog()
         }
     }
