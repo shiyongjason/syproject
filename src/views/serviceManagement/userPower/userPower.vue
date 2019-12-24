@@ -108,6 +108,7 @@
 
 <script>
 import { getAggregate, getUserRightsTrace } from './api/index'
+import { findServiceManagementList } from '../orderCenter/api/index'
 import workOrder from '../components/workOrder'
 export default {
     name: 'userPower',
@@ -187,12 +188,14 @@ export default {
     },
     methods: {
         async onQuery () {
-            if (!this.queryParams.mobile) {
-                this.$message.error(`手机号必填`)
-                return
+            this.propsParams = this.$route.query
+            if (this.propsParams.name) {
+                this.queryParams.disabledName = this.propsParams.name
+            }
+            if (this.propsParams.mobile) {
+                this.queryParams.mobile = this.propsParams.mobile
             }
             const { data } = await getAggregate(this.queryParams)
-            console.log(data)
             this.tableData = data
             this.onQueryTrace()
         },
@@ -211,6 +214,10 @@ export default {
         handleClickShowDialog () {
             this.dialog = true
             this.$refs.workOrder.clearValidate()
+        },
+        async findServiceManagementList () {
+            const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
+            this.houseKeeperData = data.records
         }
     }
 }
