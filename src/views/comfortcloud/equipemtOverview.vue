@@ -52,12 +52,13 @@ export default {
     justify-content: flex-start;
     .top-box {
         flex: 1;
-        height: 100px;
+        height: 130px;
         background: #ffffff;
         margin: 10px;
         border-radius: 10px;
         box-shadow: 3px 3px #e5e5e5;
         padding: 10px;
+         box-sizing:border-box;
     }
     .bgactive {
         background: #ff7a45;

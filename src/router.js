@@ -920,6 +920,18 @@ const routerMapping = [
         component: Layout,
         children: [
             {
+                path: 'userOverview',
+                name: 'userOverview',
+                meta: {
+                    title: '用户概览',
+                    tagName: '用户概览',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/userOverview.vue')
+            },
+            {
                 path: 'equipemtOverview',
                 name: 'equipemtOverview',
                 meta: {

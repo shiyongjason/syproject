@@ -1,59 +1,32 @@
 <template>
-    <div class="smart-equip">
-        <div class="echart-tab">
-            <div class="echart-tab-fl">
-                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5"> 智能主机</span>
-            </div>
-            <div class="echart-time">
-                <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="开始日期">
-                </el-date-picker>
-                <span class="ml10">-</span>
-                <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="结束日期">
-                </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onSearch()">
-                    查询
-                </el-button>
-            </div>
-        </div>
-        <div class="echart-wrap">
-            <div class="" id="firstchart" style="height:500px"></div>
-        </div>
-        <div class="page-body-cont query-cont">
-            <h3>设备明细</h3>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">手机号/网关号：</div>
-                    <div class="query-col-input">
-                        <el-input placeholder="输入用户手机号或网关号" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">入网时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker type="date" v-model="startTime" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" v-model="endTime" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">设备种类：</div>
-                    <div class="query-col-input">
-                        <el-input placeholder="输入用户手机号或网关号" maxlength="50"></el-input>
-                    </div>
-                    <el-button type="primary" @click="onSearch()">
-                        查询
-                    </el-button>
+    <div class="page-body">
+        <div class="page-body-cont">
+            <h3>实时统计</h3>
+            <div class="static-wrap">
+                <div class="static-box" v-for="item in 5">
+                    <p>累计用户数（截止今日）</p>
+                    <p>3232</p>
+                    <p>环比昨日：-20.5%</p>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="postList" :isAction="true" isShowIndex>
-                <template slot="action" slot-scope="scope">
-                    <el-button @click="onupdate(scope.data.row)">修改</el-button>
-                </template>
-            </basicTable>
+            <div class="echart-tab">
+                <h3>历史统计</h3>
+                <div class="echart-time">
+                    <el-date-picker type="date" v-model="startTime" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    </el-date-picker>
+                    <span class="ml10 mr10">-</span>
+                    <el-date-picker type="date" v-model="endTime" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    </el-date-picker>
+                    <el-button type="primary" class="ml20" @click="onSearch()">
+                        查询
+                    </el-button>
+                </div>
+            </div>
+            <div class="echart-wrap">
+                <div class="" id="firstchart" style="height:500px"></div>
+            </div>
         </div>
     </div>
 </template>
@@ -63,13 +36,6 @@ import echarts from 'echarts'
 export default {
     data () {
         return {
-            tabindex: 0,
-            tableLabel: [
-                { label: '岗位名称', prop: 'positionName' },
-                { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
-                { label: '更新时间', prop: 'updateTime' }
-            ],
-            postList: [],
             startTime: moment().subtract(7, 'days').format('YYYY-MM-DD'),
             endTime: moment().format('YYYY-MM-DD')
         }
@@ -102,10 +68,7 @@ export default {
         this.drawLine()
     },
     methods: {
-        onTabs (val) {
-            this.tabindex = val
-        },
-        drawLine (data) {
+        drawLine () {
             // 基于准备好的dom，初始化echarts实例
             this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
@@ -153,20 +116,6 @@ export default {
                 lineY.push(data)
             }
             console.log(lineY)
-            // lineY[0].markLine = {
-            //     silent: true,
-            //     data: [{
-            //         yAxis: 5
-            //     }, {
-            //         yAxis: 100
-            //     }, {
-            //         yAxis: 200
-            //     }, {
-            //         yAxis: 300
-            //     }, {
-            //         yAxis: 400
-            //     }]
-            // }
             var option = {
                 // backgroundColor: '#cccccc',
                 tooltip: {
@@ -232,3 +181,39 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.static-wrap {
+    display: flex;
+    .static-box {
+        color: #ffffff;
+        flex: 1;
+        height: 100px;
+        margin: 10px;
+        align-items: center;
+        border: 1px solid #e5e5e5;
+        border-radius: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        &:nth-child(1) {
+            background: rgb(103, 194, 58);
+        }
+        &:nth-child(2) {
+            background: rgb(230, 162, 60);
+        }
+        &:nth-child(3) {
+            background: rgb(245, 108, 108);
+        }
+        &:nth-child(4) {
+            background: rgb(19, 194, 194);
+        }
+        &:nth-child(5) {
+            background: rgb(103, 194, 58);
+        }
+    }
+}
+.echart-tab{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+</style>
