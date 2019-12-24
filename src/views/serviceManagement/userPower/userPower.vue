@@ -139,7 +139,7 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '18500000000' },
+            queryParams: { mobile: '' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -184,26 +184,22 @@ export default {
         }
     },
     mounted () {
-        this.onQuery()
+        this.propsParams = this.$route.query
+        if (this.propsParams.name) {
+            this.queryParams.disabledName = this.propsParams.name
+        }
+        if (this.propsParams.mobile) {
+            this.queryParams.mobile = this.propsParams.mobile
+            this.onQuery()
+        }
     },
     methods: {
         async onQuery () {
-            this.propsParams = this.$route.query
-            if (this.propsParams.name) {
-                this.queryParams.disabledName = this.propsParams.name
-            }
-            if (this.propsParams.mobile) {
-                this.queryParams.mobile = this.propsParams.mobile
-            }
             const { data } = await getAggregate(this.queryParams)
             this.tableData = data
             this.onQueryTrace()
         },
         async onQueryTrace () {
-            if (!this.queryParams.mobile) {
-                this.$message.error(`手机号必填`)
-                return
-            }
             const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
             console.log(dataTrace)
             this.tableDataTrace = dataTrace
