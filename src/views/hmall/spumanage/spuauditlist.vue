@@ -59,7 +59,7 @@
                         <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
-               <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
                         <!-- <el-select v-model="queryParams.merchantCode">
@@ -68,7 +68,17 @@
                             <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
                             </el-option>
                         </el-select> -->
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
+                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue' />
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">提交时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -93,7 +103,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="false" :isAction="true" :actionWidth=150 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="spuName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.spuName}}
@@ -134,7 +144,10 @@ export default {
                 integrity: '',
                 auditStatus: '',
                 source: 1,
-                merchantCode: ''
+                merchantCode: '',
+                submitStartTime: '',
+                submitEndTime: ''
+
             },
             copyParams: {},
             tableData: [],
@@ -144,7 +157,8 @@ export default {
                 { label: '品牌', prop: 'brandName', width: '200' },
                 { label: '型号', prop: 'specification', width: '200' },
                 { label: '来源', prop: 'merchantName' },
-                { label: '状态', prop: 'status' }
+                { label: '状态', prop: 'status' },
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -157,7 +171,27 @@ export default {
             userInfo: state => state.userInfo,
             userInfo2: state => state.hmall.userInfo,
             categoryList: state => state.hmall.categoryList
-        })
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.submitEndTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal)
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.submitStartTime
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal)
+                    }
+                }
+            }
+        }
     },
     components: {
         HAutocomplete

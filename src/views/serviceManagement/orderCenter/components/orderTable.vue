@@ -36,6 +36,7 @@
                         <span class="remark">
                             <font @click="onShowRemark(item, index)">备注</font>
                             <font v-if="hosAuthCheck(youZanDetailsAuth) || hosAuthCheck(channelDetailsAuth)" @click="onShowDetail(item, index)" style="margin-left: 20px">详情</font>
+                            <font @click="openMisError(item.syncErrMsg)" v-if="item.syncStatus === 1" style="margin-left: 20px">失败原因</font>
                             <div class="remark-box" v-if="curIndex===index">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
@@ -76,12 +77,13 @@
                             </li>
                             <li>{{item.userName ? item.userName : '-'}}<br>{{item.receiverName ? item.receiverName : '-'}}</li>
                             <li>无需配送</li>
-                            <li>{{parseToMoney(item.payAmount)}}</li>
+                            <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
                                 <el-button v-if="item.status !== 4" type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
                                 <el-button v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
                                 <el-button v-if="item.status !== 4" type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
+                                <el-button v-if="item.syncStatus === 1" type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -98,7 +100,7 @@
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, findServiceManagementList, createWorkOrder } from '../api/index'
+import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -184,11 +186,7 @@ export default {
             this.$router.push({ path: '/serviceManagement/orderChannelEdit', query: { id: item.id } })
         },
         parseToMoney (money) {
-            if (money) {
-                const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                return res
-            }
-            return ''
+            return money ? money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
         },
         orderStatus (val) {
             let temp = ''
@@ -262,16 +260,53 @@ export default {
         onChangeTab () {
             this.$emit('search-event', { status: this.activeName < 1 ? '' : this.activeName })
         },
-        onDialog () {
-            this.dialog = false
+        async updateMisSync (orderId) {
+            const { data } = await updateMisSync(orderId)
+            return data
         },
-        async clickHandle (form) {
-            // 新增工单
-            form.createBy = this.userInfo.employeeName
-            // console.log(form)
-            await createWorkOrder(form)
-            this.$refs.workOrder.onCloseDialog()
-            this.$emit('search')
+        async updateMisSyncManual (params) {
+            await updateMisSyncManual(params)
+        },
+        openMisError (syncErrMsg) {
+            this.$confirm(syncErrMsg, '同步mis系统失败原因', {
+                showConfirmButton: false,
+                closeOnClickModal: false,
+                cancelButtonText: '关闭'
+            })
+        },
+        openMisDialog (row) {
+            this.$confirm('原因：' + row.syncErrMsg, '同步mis系统失败', {
+                closeOnClickModal: false,
+                distinguishCancelAndClose: true,
+                confirmButtonText: '重新同步',
+                cancelButtonText: '关闭问题'
+            }).then(async () => {
+                try {
+                    const data = await this.updateMisSync(row.id)
+                    if (data) {
+                        this.$message({
+                            type: 'success',
+                            message: '同步数据成功!'
+                        })
+                        this.$emit('search')
+                    } else {
+                        this.$message({
+                            type: 'error',
+                            message: '同步数据失败!'
+                        })
+                        this.$emit('search')
+                    }
+                } catch (e) {}
+            }).catch(async (action) => {
+                if (action === 'cancel') {
+                    await this.updateMisSyncManual(row.id)
+                    this.$message({
+                        type: 'success',
+                        message: '关闭成功!'
+                    })
+                    this.$emit('search')
+                }
+            })
         }
     },
     mounted () { }
@@ -455,4 +490,7 @@ export default {
 .edit-work-order {
     overflow: hidden;
 }
+    .mis-dialog{
+        text-align: center;
+    }
 </style>

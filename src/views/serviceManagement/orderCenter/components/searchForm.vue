@@ -162,6 +162,7 @@ export default {
                     type: 'success',
                     message: '导入成功'
                 })
+                this.$emit('search')
             }
         },
         isError (e) {

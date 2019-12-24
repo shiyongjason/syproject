@@ -8,7 +8,8 @@
                     <th rowspan="2" class="name-type">客户姓名 <span class="red">*</span></th>
                     <th rowspan="2" class="phone-type">客户电话 <span class="red">*</span></th>
                     <th rowspan="2" class="address-type">地址 <span class="red">*</span></th>
-                    <th rowspan="2" class="money-type">订单商品金额 <span class="red">*</span></th>
+                    <th rowspan="2" class="money-type">订单原始金额 <span class="red">*</span></th>
+                    <th rowspan="2" class="money-type">订单实付金额 <span class="red">*</span></th>
                     <th rowspan="2" class="address-type">订单日期 <span class="red">*</span></th>
                     <th rowspan="2" class="remark-type">备注(买家)</th>
                     <th rowspan="2" class="remark-type">备注(卖家)</th>
@@ -42,7 +43,10 @@
                                 <input v-model="item.customerAddress" type="text" class="self-ipt" placeholder="地址" maxlength="50"/>
                             </td>
                             <td v-if="index === 0" :rowspan="item.orderGoodsList.length">
-                                <input  v-model="item.orderAmount" type="text" class="self-ipt" placeholder="订单商品金额" maxlength="50"/>
+                                <input  v-model="item.originalAmount" type="text" class="self-ipt" placeholder="订单原始金额" maxlength="50"/>
+                            </td>
+                            <td v-if="index === 0" :rowspan="item.orderGoodsList.length">
+                                <input  v-model="item.currentAmount" type="text" class="self-ipt" placeholder="订单实付金额" maxlength="50"/>
                             </td>
                             <td v-if="index === 0" :rowspan="item.orderGoodsList.length">
                                 <el-date-picker
