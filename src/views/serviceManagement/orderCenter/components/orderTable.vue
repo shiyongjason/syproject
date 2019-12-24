@@ -98,7 +98,7 @@
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, findServiceManagementList } from '../api/index'
+import { updateOrderRemark, findServiceManagementList, createWorkOrder } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -171,7 +171,8 @@ export default {
                 AloneData: '',
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
-                reserveMode: 2
+                reserveMode: 2,
+                webSource: 'order'
             }
             this.dialog = true
             this.$refs.workOrder.clearValidate()
@@ -266,8 +267,9 @@ export default {
         },
         async clickHandle (form) {
             // 新增工单
-            // form.createBy = this.userInfo.employeeName
-            // await createWorkOrder(form)
+            form.createBy = this.userInfo.employeeName
+            // console.log(form)
+            await createWorkOrder(form)
             this.$refs.workOrder.onCloseDialog()
             this.$emit('search')
         }

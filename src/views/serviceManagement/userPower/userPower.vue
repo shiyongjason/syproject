@@ -106,7 +106,8 @@
 </template>
 
 <script>
-import { getAggregate, getUserRightsTrace } from './api/index'
+import { mapState } from 'vuex'
+import { getAggregate, getUserRightsTrace, createWorkUserRights } from './api/index'
 import { findServiceManagementList } from '../orderCenter/api/index'
 import { findChannelDict } from '../common/dictApi'
 import workOrder from '../components/workOrder'
@@ -132,14 +133,17 @@ export default {
                     }
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     components: {
         workOrder
     },
     data () {
         return {
-            queryParams: { mobile: '' },
+            queryParams: { mobile: '18500000000' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -177,6 +181,8 @@ export default {
             this.queryParams.mobile = this.propsParams.mobile
             this.onQuery()
         }
+        // kaifa
+        this.onQuery()
     },
     methods: {
         async onQuery () {
@@ -200,7 +206,16 @@ export default {
             this.$set(this.queryParamsTrace, 'operateType', '')
             this.onQueryTrace()
         },
-        handleClickShowDialog () {
+        handleClickShowDialog (row) {
+            this.form = {
+                ...row,
+                status: 2,
+                AloneData: '',
+                AloneDataTimeStart: '',
+                AloneDataTimeEnd: '',
+                reserveMode: 2,
+                webSource: 'userRights'
+            }
             this.findServiceManagementList()
             this.dialog = true
             this.$refs.workOrder.clearValidate()
@@ -215,6 +230,8 @@ export default {
         },
         async clickHandle (form) {
             // 新增工单
+            form.createBy = this.userInfo.employeeName
+            await createWorkUserRights(form)
             console.log(form)
             this.$refs.workOrder.onCloseDialog()
         }
@@ -232,7 +249,7 @@ export default {
 }
 
 .table {
-    width: 1000px;
+    width: 80%;
     margin: 20px 50px;
     border-top: 1px solid #ebeef5;
     border-left: 1px solid #ebeef5;

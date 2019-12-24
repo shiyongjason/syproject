@@ -7,7 +7,7 @@
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="订单号">
+                <el-form-item label="订单号" v-if="form.webSource == 'order'">
                     <el-input type="text" v-model="form.orderNo" disabled maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item prop="customerName" label="姓名">
@@ -34,8 +34,8 @@
                         <el-option label="管家预约" :value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="goodsName" label="服务项目">
-                    <el-input type="text" v-model="form.goodsName" placeholder="请输入服务项目" maxlength="20"></el-input>
+                <el-form-item prop="serviceResourceName" label="服务项目">
+                    <el-input type="text" v-model="form.serviceResourceName" placeholder="请输入服务项目" maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item label="服务商">
                     <el-input type="text" v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
@@ -183,7 +183,7 @@ export default {
                 reserveMode: [
                     { required: true, message: '预约方式不能为空', trigger: 'blur' }
                 ],
-                goodsName: [
+                serviceResourceName: [
                     { required: true, message: '服务项目不能为空', trigger: 'blur' }
                 ],
                 serviceNum: [
