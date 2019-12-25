@@ -38,10 +38,10 @@
                     <!-- 
                         下一期 是否 可以修改服务项目
                      -->
-                    <!-- <el-select :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange"> -->
-                    <el-select :disabled="true" v-model="form.serviceResourceName" @change="onChange">
+                    <el-select v-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
                         <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
                     </el-select>
+                    <div v-else class="serviceProject">{{`${form.serviceResourceName}(可用${form.availableTimes?form.availableTimes:0}次)`}}</div>
                 </el-form-item>
                 <el-form-item label="服务商">
                     <el-input type="text" v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
@@ -274,5 +274,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang='scss' scoped>
+/deep/.el-form-item__content .serviceProject {
+    // overflow: visible;
+    // text-overflow: ellipsis;
+    // white-space: nowrap;
+    width: 224px;
+}
 </style>
