@@ -161,7 +161,7 @@ export default {
             },
             tableLabel: [
                 { label: '渠道名称', prop: 'channelName' },
-                { label: '订单号', prop: 'orderNo' },
+                { label: '订单号', prop: 'orderNo', width: 240 },
                 { label: '工单号', prop: 'workOrderNo' },
                 { label: '姓名', prop: 'customerName' },
                 { label: '手机号', prop: 'customerMobile' },
@@ -363,8 +363,22 @@ export default {
     .el-dialog .el-input {
         width: 190px;
     }
-    .order-no {
-        border-bottom: 1px solid #ffffff;
-    }
 }
+.order-no {
+    position: relative;
+    padding: 10px 0;
+}
+.order-no:after{
+    content: "";
+    border-bottom: 1px solid #EBEEF5;
+    height: 1px;
+    position: absolute;
+    left: -10px;
+    width: 240px;
+    bottom: 0;
+}
+.order-no:last-child:after{
+    border-bottom: 0;
+}
+
 </style>
