@@ -1,7 +1,15 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <h3>实时统计</h3>
+            <h3 style="display:flex">实时统计 <div class="tooltip">
+                    <el-tooltip class="item" effect="dark" placement="right">
+                        <div slot="content">
+                            业务规则：<br>1、当日的累计用户数，统计规则为当日00:00-23:59:59
+                        </div>
+                        <i class="el-icon-question"></i>
+                    </el-tooltip>
+                </div>
+            </h3>
             <div class="static-wrap">
                 <div class="static-box" v-for="item in 5">
                     <p>累计用户数（截止今日）</p>
@@ -211,9 +219,9 @@ export default {
         }
     }
 }
-.echart-tab{
+.echart-tab {
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
 }
 </style>
