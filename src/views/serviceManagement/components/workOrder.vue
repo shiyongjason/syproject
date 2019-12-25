@@ -35,7 +35,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="serviceResourceName" label="服务项目">
-                    <!-- 
+                    <!--
                         下一期 是否 可以修改服务项目
                      -->
                     <el-select v-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
@@ -167,11 +167,15 @@ export default {
         }
         const validServiceNum = (rule, value, callback) => {
             // const Reg = /\d{5}/
-            const N = /^\+?[0-9]\d*$/
+            const N = /^\+?[1-9]\d*$/
             if (!value) {
                 callback(new Error('请填写服务数量'))
             } else if (!N.test(value)) {
-                callback(new Error('服务数量格式不正确'))
+                if (value == 0) {
+                    callback(new Error('服务数量不能为零'))
+                } else {
+                    callback(new Error('服务数量格式不正确'))
+                }
             } else {
                 callback()
             }
@@ -218,7 +222,8 @@ export default {
                 }
             },
             isSaving: false,
-            channelType: []
+            channelType: [],
+            serviceMaxNum: 0 //
         }
     },
     methods: {

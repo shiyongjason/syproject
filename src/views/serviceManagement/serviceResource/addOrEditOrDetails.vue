@@ -202,7 +202,7 @@ export default {
                     this.tempAttributeTable.forEach(value2 => {
                         if (value2.name.indexOf(value1.name) > -1) {
                             this.$set(this.attributeTable.list[index], `mdmCode`, value2.mdmCode)
-                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable)
+                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable === 1)
                         }
                     })
                 })

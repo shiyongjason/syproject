@@ -107,7 +107,7 @@
                 </basicTable>
             </div>
         </div>
-        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @clickHandle='clickHandle' :form='form' :dialog='dialog' @onDialog='dialog = false' />
+        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @clickHandle='clickHandle' title="修改工单" :form='form' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
