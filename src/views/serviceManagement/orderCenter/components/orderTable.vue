@@ -343,7 +343,6 @@ export default {
             })
         },
         async clickHandle (form) {
-            // console.log(form)
             form.createBy = this.userInfo.employeeName
             await createWorkOrder(form)
             this.$refs.workOrder.onCloseDialog()

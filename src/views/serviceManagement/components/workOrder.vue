@@ -8,7 +8,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="订单号" v-if="form.webisEdit">
-                    <el-input type="text" v-model="form.orderNo" disabled maxlength="25"></el-input>
+                    <el-input type="text" v-model="form.workOrderNo" disabled maxlength="25"></el-input>
                 </el-form-item>
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
@@ -77,7 +77,8 @@
                         <el-time-select placeholder="起始时间" v-model="form.AloneDataTimeStart" :picker-options="{
                                       start: '08:30',
                                       step: '00:15',
-                                      end: '18:30'
+                                      end: '18:30',
+                                       maxTime: form.AloneDataTimeEnd
                                     }">
                         </el-time-select>
                     </el-form-item>
@@ -142,12 +143,6 @@ export default {
                     return false
                 }
             })
-        },
-        'form.AloneData': {
-            handler (val) {
-                console.log(val)
-            },
-            immediate: true
         }
     },
     data () {
@@ -241,11 +236,8 @@ export default {
                         })
                         this.$emit('clickHandle', this.form)
                     } catch (e) {
-                        console.log(e)
                         this.onCloseDialog()
                     }
-                } else {
-                    // this.onCloseDialog()
                 }
             })
         },
@@ -263,11 +255,9 @@ export default {
             this.channelType = data
         },
         onChange (e) {
-            // console.log(11, e)
             let obj = this.form.serviceResourceArr.find((i) => {
                 return i.serviceResourceName == e
             })
-            // console.log(obj)
             this.form.availableTimes = obj.availableTimes
             this.form.mdmCode = obj.mdmCode
             this.form.serviceResourceName = obj.serviceResourceName

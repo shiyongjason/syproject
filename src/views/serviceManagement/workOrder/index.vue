@@ -78,12 +78,12 @@
                         <div class="order-no" v-for="item in scope.data.row.workOrderExtList" :key="item.orderNo" v-text="item.orderNo"></div>
                     </template>
                     <template slot="houseKeeper" slot-scope="scope">
-                        <span>{{scope.data.row.houseKeeper}}</span><br />
-                        <span>{{scope.data.row.houseKeeperMobile}}</span>
+                        <span>{{scope.data.row.houseKeeper | isNotBlank}}</span><br />
+                        <span>{{scope.data.row.houseKeeperMobile | isNotBlank}}</span>
                     </template>
                     <template slot="engineer" slot-scope="scope">
-                        <span>{{scope.data.row.engineer}}</span><br />
-                        <span>{{scope.data.row.engineerMobile}}</span>
+                        <span>{{scope.data.row.engineer | isNotBlank}}</span><br />
+                        <span>{{scope.data.row.engineerMobile | isNotBlank}}</span>
                     </template>
                     <template slot="reserveMode" slot-scope="scope">
                         <span v-if="scope.data.row.reserveMode === 1">公众号预约</span>
@@ -225,12 +225,11 @@ export default {
     watch: {
         'form.houseKeeperId' (val) {
             let mobile = ''
-            this.houseKeeperData.map(value => {
+            this.houseKeeperData.forEach(value => {
                 if (value.userId === val) {
                     mobile = value.mobile
                     this.$set(this.form, 'houseKeeperMobile', mobile)
                     this.$set(this.form, 'houseKeeper', value.name)
-                    return false
                 }
             })
         }
@@ -263,14 +262,11 @@ export default {
     methods: {
         async findWorkOrderDetail (id) {
             const { data } = await findWorkOrderDetail(id)
-            console.log(data)
             this.form = { ...data, webisEdit: true }
-            try { // 新增非必填
-                this.form.AloneData = this.form.reserveBeginTime.split(' ')[0]
-                this.form.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
-                this.form.AloneDataTimeEnd = this.form.reserveEndTime.split(' ')[1]
-                // delete this.form.reserveBeginTime
-                // delete this.form.reserveEndTime
+            try {
+                this.$set(this.form, 'AloneData', this.form.reserveBeginTime.split(' ')[0])
+                this.$set(this.form, 'AloneDataTimeStart', this.form.reserveBeginTime.split(' ')[1])
+                this.$set(this.form, 'AloneDataTimeEnd', this.form.reserveEndTime.split(' ')[1])
             } catch (e) {
             }
         },
@@ -279,7 +275,6 @@ export default {
             this.houseKeeperData = data.records
         },
         onEdit (row) {
-            // console.log(row)
             this.form = {}
             this.dialog = true
             this.editId = row.id
@@ -287,12 +282,6 @@ export default {
             this.$refs.workOrder.clearValidate()
         },
         async clickHandle (form) {
-            // if (form.serviceNum > this.userRightRow.availableTimes) {
-            //     this.$message.error('服务可用次数不足')
-            //     return
-            // }
-            // 修改工单
-            // console.log(form)
             this.form.updateBy = this.userInfo.employeeName
             await updateWorkOrder(form)
             this.$refs.workOrder.onCloseDialog()
