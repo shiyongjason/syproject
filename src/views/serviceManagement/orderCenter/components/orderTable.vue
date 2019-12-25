@@ -92,11 +92,11 @@
                                 <div v-if="item.syncStatus === 1" class="one-line">
                                     <el-button type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
                                 </div>
-                                <div v-if="item.syncStatus === 1" class="one-line">
+                                <div class="one-line">
                                     <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
                                 </div>
-                                <div v-if="item.syncStatus === 1" class="one-line">
-                                    <el-button type="primary" size='mini' @click="closeOrder(item)">取消订单</el-button>
+                                <div v-if="item.syncStatus !== 1" class="one-line">
+                                    <el-button type="primary" size='mini' @click="closeOrder(item.channelOrderNo)">取消订单</el-button>
                                 </div>
                             </li>
                         </ul>
@@ -107,15 +107,14 @@
                 </div>
             </div>
         </div>
-        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='onDialog' />
+        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, updateOrderStatus } from '../api/index'
-import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, createWorkOrder } from '../api/index'
+import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, updateOrderStatus, createWorkOrder } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -422,7 +421,7 @@ export default {
 }
 .content {
     background: #fff;
-    box-shadow: 0px 3px 12px 3px rgba(45, 108, 238, 0.08);
+    box-shadow: 0 3px 12px 3px rgba(45, 108, 238, 0.08);
     margin-top: 10px;
 }
 .table ul {
