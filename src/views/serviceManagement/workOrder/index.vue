@@ -74,6 +74,9 @@
             </div>
             <div class="page-body-cont">
                 <basicTable :isShowIndex="true" :isAction="true" :isPagination='true' :tableLabel="tableLabel" :tableData="tableData" :pagination="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
+                    <template slot="orderNo" slot-scope="scope">
+                        <div class="order-no" v-for="item in scope.data.row.workOrderExtList" :key="item.orderNo" v-text="item.orderNo"></div>
+                    </template>
                     <template slot="houseKeeper" slot-scope="scope">
                         <span>{{scope.data.row.houseKeeper}}</span><br />
                         <span>{{scope.data.row.houseKeeperMobile}}</span>
@@ -464,6 +467,9 @@ export default {
     }
     .el-dialog .el-input {
         width: 190px;
+    }
+    .order-no {
+        border-bottom: 1px solid #ffffff;
     }
 }
 </style>
