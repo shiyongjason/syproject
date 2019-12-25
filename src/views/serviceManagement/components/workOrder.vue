@@ -7,9 +7,6 @@
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="订单号" v-if="form.webSource == 'order'">
-                    <el-input type="text" v-model="form.orderNo" disabled maxlength="25"></el-input>
-                </el-form-item>
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
                 </el-form-item>

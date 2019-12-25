@@ -201,8 +201,7 @@ export default {
                 AloneData: '',
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
-                reserveMode: 2,
-                webSource: 'order'
+                reserveMode: 2
             }
             this.dialog = true
             this.$refs.workOrder.clearValidate()

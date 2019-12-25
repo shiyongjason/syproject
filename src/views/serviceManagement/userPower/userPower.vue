@@ -225,8 +225,7 @@ export default {
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
                 reserveMode: 2,
-                userRightMobile: this.queryParams.mobile,
-                webSource: 'userRights'
+                userRightMobile: this.queryParams.mobile
             }
             this.findServiceManagementList()
             this.dialog = true

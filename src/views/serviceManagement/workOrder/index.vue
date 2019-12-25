@@ -73,15 +73,13 @@
                 </div>
             </div>
             <div class="page-body-cont">
-                <basicTable :isShowIndex="true" :isAction="true" :isPagination='true' :tableLabel="tableLabel"  :tableData="tableData" :pagination="paginationData"
-                            @onSizeChange="onSizeChange"
-                            @onCurrentChange="onCurrentChange">
+                <basicTable :isShowIndex="true" :isAction="true" :isPagination='true' :tableLabel="tableLabel" :tableData="tableData" :pagination="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                     <template slot="houseKeeper" slot-scope="scope">
-                        <span>{{scope.data.row.houseKeeper}}</span><br/>
+                        <span>{{scope.data.row.houseKeeper}}</span><br />
                         <span>{{scope.data.row.houseKeeperMobile}}</span>
                     </template>
                     <template slot="engineer" slot-scope="scope">
-                        <span>{{scope.data.row.engineer}}</span><br/>
+                        <span>{{scope.data.row.engineer}}</span><br />
                         <span>{{scope.data.row.engineerMobile}}</span>
                     </template>
                     <template slot="reserveMode" slot-scope="scope">
@@ -125,15 +123,15 @@
                         <el-input v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
                     </el-form-item>
                     <el-form-item prop="houseKeeper" label="线下管家">
-                        <el-select v-model="form.houseKeeperId" >
+                        <el-select v-model="form.houseKeeperId">
                             <el-option :label="item.name" :value="item.userId" v-for="item in houseKeeperData" :key="item.code"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="houseKeeperMobile"  label="管家电话">
-                        <el-input v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11" ></el-input>
+                    <el-form-item prop="houseKeeperMobile" label="管家电话">
+                        <el-input v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11"></el-input>
                     </el-form-item>
                     <el-form-item prop="customerAddress" label="地址">
-                        <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50" ></el-input>
+                        <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item prop="reserveMode" label="预约方式">
                         <el-select v-model="form.reserveMode">
@@ -142,14 +140,14 @@
                             <el-option label="管家预约" :value="3"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item prop="goodsName" label="服务项目">
-                        <el-input v-model="form.goodsName" placeholder="请输入服务项目" maxlength="20"  ></el-input>
+                    <el-form-item prop="serviceResourceName" label="服务项目">
+                        <el-input v-model="form.serviceResourceName" placeholder="请输入服务项目" maxlength="20"></el-input>
                     </el-form-item>
                     <el-form-item label="服务商">
-                        <el-input v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"  ></el-input>
+                        <el-input v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
                     </el-form-item>
                     <el-form-item prop="type" label="服务状态">
-                        <el-select v-model="form.status"  >
+                        <el-select v-model="form.status">
                             <el-option label="已预约（待确认）" :value="1"></el-option>
                             <el-option label="已预约（已确认）" :value="2"></el-option>
                             <el-option label="已完成" :value="3"></el-option>
@@ -157,23 +155,22 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="工程师">
-                        <el-input v-model="form.engineer" placeholder="请输入工程师" maxlength="10"  ></el-input>
+                        <el-input v-model="form.engineer" placeholder="请输入工程师" maxlength="10"></el-input>
                     </el-form-item>
                     <el-form-item label="工程师电话">
-                        <el-input v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"  ></el-input>
+                        <el-input v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"></el-input>
                     </el-form-item>
                     <el-form-item prop="serviceNum" label="服务数量">
-                        <el-input v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5" ></el-input>
+                        <el-input v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5"></el-input>
                     </el-form-item>
                     <el-form-item label="买家备注">
-                        <el-input disabled v-model="form.buyerRemark" placeholder="" ></el-input>
+                        <el-input disabled v-model="form.buyerRemark" placeholder=""></el-input>
                     </el-form-item>
                     <el-form-item label="卖家备注">
-                        <el-input disabled v-model="form.sellerRemark" placeholder=""  ></el-input>
+                        <el-input disabled v-model="form.sellerRemark" placeholder=""></el-input>
                     </el-form-item>
                     <el-form-item label="服务时间" style="width: 100%">
-                        <el-date-picker v-model="AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd"
-                                        placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
+                        <el-date-picker v-model="AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
                         <el-time-select placeholder="起始时间" v-model="AloneDataTimeStart" :picker-options="{
                                       start: '08:30',
                                       step: '00:15',
@@ -190,9 +187,9 @@
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="dialog = false">取 消</el-button>
-                <el-button type="primary" @click="update" :loading="isSaving">修 改</el-button>
-            </span>
+                    <el-button @click="dialog = false">取 消</el-button>
+                    <el-button type="primary" @click="update" :loading="isSaving">修 改</el-button>
+                </span>
             </el-dialog>
         </div>
     </div>
@@ -285,7 +282,7 @@ export default {
                 reserveMode: [
                     { required: true, message: '预约方式不能为空', trigger: 'blur' }
                 ],
-                goodsName: [
+                serviceResourceName: [
                     { required: true, message: '服务项目不能为空', trigger: 'blur' }
                 ],
                 serviceNum: [
@@ -346,25 +343,7 @@ export default {
     methods: {
         async findWorkOrderDetail (id) {
             const { data } = await findWorkOrderDetail(id)
-            this.form = {
-                channelType: data.channelType,
-                orderId: data.orderId,
-                workOrderNo: data.workOrderNo,
-                customerName: data.customerName,
-                customerMobile: data.customerMobile,
-                customerAddress: data.customerAddress,
-                reserveMode: data.reserveMode,
-                goodsName: data.goodsName,
-                serviceProvider: data.serviceProvider,
-                status: data.status,
-                engineer: data.engineer,
-                engineerMobile: data.engineerMobile,
-                serviceNum: data.serviceNum,
-                buyerRemark: data.buyerRemark,
-                sellerRemark: data.sellerRemark,
-                reserveBeginTime: data.reserveBeginTime,
-                reserveEndTime: data.reserveEndTime
-            }
+            this.form = { ...data }
             try { // 新增非必填
                 this.AloneData = this.form.reserveBeginTime.split(' ')[0]
                 this.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
@@ -475,7 +454,7 @@ export default {
 
 <style scoped lang="scss">
 .edit-work-order {
-    /deep/.el-form-item{
+    /deep/.el-form-item {
         width: 300px;
         float: left;
     }
