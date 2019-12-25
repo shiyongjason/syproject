@@ -80,11 +80,11 @@
                             <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
-                                <div v-if="item.status !== 4"  class="one-line">
+                                <div v-if="item.status !== 4" class="one-line">
                                     <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
                                 </div>
                                 <div v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" class="one-line">
-                                    <el-button  type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                    <el-button type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
                                 </div>
                                 <div v-if="item.status !== 4" class="one-line">
                                     <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
@@ -107,14 +107,14 @@
                 </div>
             </div>
         </div>
-        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='onDialog' />
+        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual } from '../api/index'
+import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, createWorkOrder } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -171,7 +171,7 @@ export default {
         goUserPower (row) {
 
         },
-        closeOrder (){
+        closeOrder () {
 
         },
         async findServiceManagementList () {
@@ -316,7 +316,7 @@ export default {
                         })
                         this.$emit('search')
                     }
-                } catch (e) {}
+                } catch (e) { }
             }).catch(async (action) => {
                 if (action === 'cancel') {
                     await this.updateMisSyncManual(row.id)
@@ -327,6 +327,12 @@ export default {
                     this.$emit('search')
                 }
             })
+        },
+        async clickHandle (form) {
+            // console.log(form)
+            form.createBy = this.userInfo.employeeName
+            await createWorkOrder(form)
+            this.$refs.workOrder.onCloseDialog()
         }
     },
     mounted () { }
@@ -429,7 +435,7 @@ export default {
     border-right: 1px solid #dcdfe6;
     display: flex;
     flex-direction: column;
-    .one-line{
+    .one-line {
         margin-bottom: 14px;
     }
 }
@@ -515,7 +521,7 @@ export default {
 .edit-work-order {
     overflow: hidden;
 }
-    .mis-dialog{
-        text-align: center;
-    }
+.mis-dialog {
+    text-align: center;
+}
 </style>
