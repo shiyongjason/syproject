@@ -184,6 +184,9 @@ export default {
             this.queryParams.mobile = this.propsParams.mobile
             this.onQuery()
         }
+        if (this.propsParams.source) {
+            this.queryParams.channelType = this.propsParams.source
+        }
         // kaifa
         this.onQuery()
     },

@@ -92,11 +92,11 @@
                                 <div v-if="item.syncStatus === 1" class="one-line">
                                     <el-button type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
                                 </div>
-                                <div v-if="item.syncStatus === 1" class="one-line">
+                                <div class="one-line">
                                     <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
                                 </div>
-                                <div v-if="item.syncStatus === 1" class="one-line">
-                                    <el-button type="primary" size='mini' @click="closeOrder(item)">取消订单</el-button>
+                                <div v-if="item.syncStatus !== 1" class="one-line">
+                                    <el-button type="primary" size='mini' @click="closeOrder(item.channelOrderNo)">取消订单</el-button>
                                 </div>
                             </li>
                         </ul>
@@ -114,7 +114,7 @@
 <script>
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
-import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual } from '../api/index'
+import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, updateOrderStatus } from '../api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -169,10 +169,18 @@ export default {
     },
     methods: {
         goUserPower (row) {
-
+            this.$router.push({
+                path: '/serviceManagement/userPower',
+                query: {
+                    mobile: row.receiverMobile ? row.receiverMobile : '',
+                    source: row.source ? row.source : ''
+                }
+            })
         },
-        closeOrder (){
-
+        async closeOrder (channelOrderNo) {
+            await updateOrderStatus(channelOrderNo)
+            this.$message.success('取消成功')
+            this.$emit('search')
         },
         async findServiceManagementList () {
             const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家

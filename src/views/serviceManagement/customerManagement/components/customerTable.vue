@@ -99,8 +99,7 @@ export default {
             this.$router.push({
                 path: '/serviceManagement/userPower',
                 query: {
-                    mobile: row.mobile ? row.mobile : '',
-                    name: row.name ? row.name : ''
+                    mobile: row.mobile ? row.mobile : ''
                 }
             })
         },

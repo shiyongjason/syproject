@@ -38,3 +38,7 @@ export function updateMisSync (orderId) {
 export function updateMisSyncManual (orderId) {
     return axios.post(`/service/api/orders/sync-mis-success/${orderId}`)
 }
+// 订单取消
+export function updateOrderStatus (channelOrderNo) {
+    return axios.post(`/service/api/orders/cancel/${channelOrderNo}`)
+}
