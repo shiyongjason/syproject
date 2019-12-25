@@ -242,7 +242,8 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            tableLabel: [{ label: '渠道名称', prop: 'channelName' },
+            tableLabel: [
+                { label: '渠道名称', prop: 'channelName' },
                 { label: '订单号', prop: 'orderNo' },
                 { label: '工单号', prop: 'workOrderNo' },
                 { label: '姓名', prop: 'customerName' },
@@ -250,7 +251,7 @@ export default {
                 { label: '线下管家', prop: 'houseKeeper' },
                 { label: '地址', prop: 'customerAddress' },
                 { label: '预约方式', prop: 'reserveMode' },
-                { label: '服务项目', prop: 'goodsName' },
+                { label: '服务项目', prop: 'serviceResourceName' },
                 { label: '服务商', prop: 'serviceProvider' },
                 { label: '工程师', prop: 'engineer' },
                 { label: '服务时间', prop: 'reserveBeginTime' },

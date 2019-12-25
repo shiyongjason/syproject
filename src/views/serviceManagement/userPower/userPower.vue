@@ -170,7 +170,8 @@ export default {
                     value: 4
                 }
             ],
-            houseKeeperData: []
+            houseKeeperData: [],
+            userRightRow: {}
         }
     },
     mounted () {
@@ -213,6 +214,7 @@ export default {
             this.onQueryTrace()
         },
         handleClickShowDialog (row) {
+            this.userRightRow = row
             this.form = {
                 ...row,
                 status: 2,
@@ -220,6 +222,7 @@ export default {
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
                 reserveMode: 2,
+                userRightMobile: this.queryParams.mobile,
                 webSource: 'userRights'
             }
             this.findServiceManagementList()
@@ -235,9 +238,13 @@ export default {
             this.channelType = data
         },
         async clickHandle (form) {
+            if (form.serviceNum > this.userRightRow.availableTimes) {
+                this.$message.error('服务可用次数不足')
+                return
+            }
             // 新增工单
             form.createBy = this.userInfo.employeeName
-            // console.log(form)
+            console.log(form)
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
         }
