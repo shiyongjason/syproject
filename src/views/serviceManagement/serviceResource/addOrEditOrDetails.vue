@@ -2,7 +2,6 @@
     <div>
         <div class="page-body">
             <h3>新建服务资源</h3>
-            {{this.form.serviceResourceList}}
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <div class="query-col-title"><span class="red">*</span>资源模板名称：</div>
@@ -188,7 +187,7 @@ export default {
                 temp = this.calcDescartes(tempAll)
             }
             this.attributeTable.list = temp.map(value => {
-                let totalName = ''
+                let totalName = this.message.name
                 value.forEach(value1 => {
                     totalName += ('(' + value1.value + ')')
                 })
@@ -197,6 +196,7 @@ export default {
                     name: totalName
                 }
             })
+            // this.$forceUpdate()
             if (this.propsParams.methods === 'edit' || this.propsParams.methods === 'details') {
                 this.attributeTable.list.forEach((value1, index) => {
                     this.tempAttributeTable.forEach(value2 => {
@@ -208,16 +208,19 @@ export default {
                 })
             }
         },
+        attributeTableThUpdate () {
+            let serviceResourceName = []
+            this.form.serviceResourceList.forEach(value => {
+                serviceResourceName.push({
+                    name: value.name
+                })
+            })
+            this.serviceResourceName = serviceResourceName
+        },
         attributeChangeHandler () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    let serviceResourceName = []
-                    this.form.serviceResourceList.forEach(value => {
-                        serviceResourceName.push({
-                            name: value.name
-                        })
-                    })
-                    this.serviceResourceName = serviceResourceName
+                    this.attributeTableThUpdate()
                     this.resetAttribute()
                 }
             })
@@ -331,6 +334,7 @@ export default {
         },
         removeServiceResourceList (index) {
             this.form.serviceResourceList.splice(index, 1)
+            this.attributeTableThUpdate()
             this.resetAttribute()
         },
         removeAttributeList (item, index) {

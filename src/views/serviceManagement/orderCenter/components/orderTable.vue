@@ -80,10 +80,24 @@
                             <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
-                                <el-button v-if="item.status !== 4" type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
-                                <el-button v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
-                                <el-button v-if="item.status !== 4" type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
-                                <el-button v-if="item.syncStatus === 1" type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
+                                <div v-if="item.status !== 4"  class="one-line">
+                                    <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
+                                </div>
+                                <div v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" class="one-line">
+                                    <el-button  type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                </div>
+                                <div v-if="item.status !== 4" class="one-line">
+                                    <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
+                                </div>
+                                <div v-if="item.syncStatus === 1" class="one-line">
+                                    <el-button type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
+                                </div>
+                                <div v-if="item.syncStatus === 1" class="one-line">
+                                    <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
+                                </div>
+                                <div v-if="item.syncStatus === 1" class="one-line">
+                                    <el-button type="primary" size='mini' @click="closeOrder(item)">取消订单</el-button>
+                                </div>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -154,6 +168,12 @@ export default {
         }
     },
     methods: {
+        goUserPower (row) {
+
+        },
+        closeOrder (){
+
+        },
         async findServiceManagementList () {
             const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
@@ -407,6 +427,11 @@ export default {
 }
 .table ul li:last-child {
     border-right: 1px solid #dcdfe6;
+    display: flex;
+    flex-direction: column;
+    .one-line{
+        margin-bottom: 14px;
+    }
 }
 .table ul li:nth-child(1) {
     flex: 0 0 430px;
