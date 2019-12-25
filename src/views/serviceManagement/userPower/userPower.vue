@@ -145,7 +145,7 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '18500000000' },
+            queryParams: { mobile: '18501455666' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -192,7 +192,7 @@ export default {
     },
     methods: {
         async onQuery () {
-            if (!phoneRegular.test(this.queryParams.mobile)) {
+            if (this.queryParams.mobile && !phoneRegular.test(this.queryParams.mobile)) {
                 this.$message.error('手机号码格式错误')
                 return
             }
@@ -216,7 +216,12 @@ export default {
             this.$set(this.queryParamsTrace, 'operateType', '')
             this.onQueryTrace()
         },
-        handleClickShowDialog (row) {
+        async handleClickShowDialog (row) {
+            const params = {
+                mobile: this.queryParams.mobile,
+                channelType: row.channelType
+            }
+            const { data } = await getAggregate(params)
             this.userRightRow = row
             this.form = {
                 ...row,
@@ -225,7 +230,8 @@ export default {
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
                 reserveMode: 2,
-                userRightMobile: this.queryParams.mobile
+                userRightMobile: this.queryParams.mobile,
+                serviceResourceArr: data
             }
             this.findServiceManagementList()
             this.dialog = true

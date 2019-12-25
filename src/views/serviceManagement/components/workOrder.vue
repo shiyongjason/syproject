@@ -32,7 +32,9 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="serviceResourceName" label="服务项目">
-                    <el-input type="text" v-model="form.serviceResourceName" placeholder="请输入服务项目" maxlength="20"></el-input>
+                    <el-select v-model="form.serviceResourceName" @change="onChange">
+                        <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="服务商">
                     <el-input type="text" v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
@@ -93,6 +95,7 @@
 </template>
 
 <script>
+import { findChannelDict } from '../common/dictApi'
 export default {
     name: 'workOrderDialog',
     props: {
@@ -236,7 +239,24 @@ export default {
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
+        },
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
+        },
+        onChange (e) {
+            // console.log(11, e)
+            let obj = this.form.serviceResourceArr.find((i) => {
+                return i.serviceResourceName == e
+            })
+            // console.log(obj)
+            this.form.availableTimes = obj.availableTimes
+            this.form.mdmCode = obj.mdmCode
+            this.form.serviceResourceName = obj.serviceResourceName
         }
+    },
+    mounted () {
+        this.findChannelDict()
     }
 }
 </script>

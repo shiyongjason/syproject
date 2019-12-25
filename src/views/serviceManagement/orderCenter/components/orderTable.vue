@@ -80,11 +80,11 @@
                             <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
-                                <div v-if="item.status !== 4"  class="one-line">
+                                <div v-if="item.status !== 4" class="one-line">
                                     <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
                                 </div>
                                 <div v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" class="one-line">
-                                    <el-button  type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                    <el-button type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
                                 </div>
                                 <div v-if="item.status !== 4" class="one-line">
                                     <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
@@ -115,6 +115,7 @@
 import moment from 'moment'
 import { AUTH_SERVICE_YOUZAN_DETAILS, AUTH_SERVICE_CHANNEL_DETAILS, AUTH_SERVICE_CHANNEL_EDIT } from '@/utils/auth_const'
 import { updateOrderRemark, findServiceManagementList, updateMisSync, updateMisSyncManual, updateOrderStatus, createWorkOrder } from '../api/index'
+import { getAggregate } from '../../userPower/api/index'
 import { mapState } from 'vuex'
 import workOrder from '../../components/workOrder'
 export default {
@@ -186,7 +187,12 @@ export default {
             const { data } = await findServiceManagementList({ pageSize: 1000, pageNumber: 1, role: 1 }) // 管家人少，查出所有管家
             this.houseKeeperData = data.records
         },
-        addOrder (row) {
+        async addOrder (row) {
+            const params = {
+                mobile: row.receiverMobile,
+                channelType: row.source
+            }
+            const { data } = await getAggregate(params)
             this.findServiceManagementList()
             this.form = {
                 channelType: row.source,
@@ -201,7 +207,8 @@ export default {
                 AloneData: '',
                 AloneDataTimeStart: '',
                 AloneDataTimeEnd: '',
-                reserveMode: 2
+                reserveMode: 2,
+                serviceResourceArr: data
             }
             this.dialog = true
             this.$refs.workOrder.clearValidate()
@@ -323,7 +330,7 @@ export default {
                         })
                         this.$emit('search')
                     }
-                } catch (e) {}
+                } catch (e) { }
             }).catch(async (action) => {
                 if (action === 'cancel') {
                     await this.updateMisSyncManual(row.id)
@@ -442,7 +449,7 @@ export default {
     border-right: 1px solid #dcdfe6;
     display: flex;
     flex-direction: column;
-    .one-line{
+    .one-line {
         margin-bottom: 14px;
     }
 }
@@ -528,7 +535,7 @@ export default {
 .edit-work-order {
     overflow: hidden;
 }
-    .mis-dialog{
-        text-align: center;
-    }
+.mis-dialog {
+    text-align: center;
+}
 </style>
