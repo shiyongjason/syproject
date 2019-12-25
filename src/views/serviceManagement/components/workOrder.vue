@@ -7,6 +7,9 @@
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="订单号" v-if="form.webisEdit">
+                    <el-input type="text" v-model="form.orderNo" disabled maxlength="25"></el-input>
+                </el-form-item>
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
                 </el-form-item>
@@ -32,7 +35,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="serviceResourceName" label="服务项目">
-                    <el-select v-model="form.serviceResourceName" @change="onChange">
+                    <!-- 
+                        下一期 是否 可以修改服务项目
+                     -->
+                    <!-- <el-select :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange"> -->
+                    <el-select :disabled="true" v-model="form.serviceResourceName" @change="onChange">
                         <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
                     </el-select>
                 </el-form-item>
@@ -135,6 +142,12 @@ export default {
                     return false
                 }
             })
+        },
+        'form.AloneData': {
+            handler (val) {
+                console.log(val)
+            },
+            immediate: true
         }
     },
     data () {

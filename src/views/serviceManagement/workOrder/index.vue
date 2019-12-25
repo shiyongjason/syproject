@@ -106,104 +106,21 @@
                     </template>
                 </basicTable>
             </div>
-            <el-dialog title="修改工单" :visible.sync="dialog" class="edit-work-order" width="1000px" :close-on-click-modal="false">
-                <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="edit-work-order-form">
-                    <el-form-item label="渠道名称">
-                        <el-select disabled v-model="form.channelType">
-                            <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="订单号">
-                        <el-input v-model="form.orderId" disabled></el-input>
-                    </el-form-item>
-                    <el-form-item label="工单号">
-                        <el-input v-model="form.workOrderNo" disabled maxlength="25"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="customerName" label="姓名">
-                        <el-input v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="customerMobile" label="手机号">
-                        <el-input v-model="form.customerMobile" placeholder="请输入手机号" maxlength="11"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="houseKeeper" label="线下管家">
-                        <el-select v-model="form.houseKeeperId">
-                            <el-option :label="item.name" :value="item.userId" v-for="item in houseKeeperData" :key="item.code"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item prop="houseKeeperMobile" label="管家电话">
-                        <el-input v-model="form.houseKeeperMobile" placeholder="请输入管家电话" maxlength="11"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="customerAddress" label="地址">
-                        <el-input v-model="form.customerAddress" placeholder="请输入地址" maxlength="50"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="reserveMode" label="预约方式">
-                        <el-select v-model="form.reserveMode">
-                            <el-option label="公众号预约" :value="1"></el-option>
-                            <el-option label="电话预约" :value="2"></el-option>
-                            <el-option label="管家预约" :value="3"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item prop="serviceResourceName" label="服务项目">
-                        <el-input v-model="form.serviceResourceName" placeholder="请输入服务项目" maxlength="20"></el-input>
-                    </el-form-item>
-                    <el-form-item label="服务商">
-                        <el-input v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="type" label="服务状态">
-                        <el-select v-model="form.status">
-                            <el-option label="已预约（待确认）" :value="1"></el-option>
-                            <el-option label="已预约（已确认）" :value="2"></el-option>
-                            <el-option label="已完成" :value="3"></el-option>
-                            <el-option label="取消" :value="4"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="工程师">
-                        <el-input v-model="form.engineer" placeholder="请输入工程师" maxlength="10"></el-input>
-                    </el-form-item>
-                    <el-form-item label="工程师电话">
-                        <el-input v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"></el-input>
-                    </el-form-item>
-                    <el-form-item prop="serviceNum" label="服务数量">
-                        <el-input v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5"></el-input>
-                    </el-form-item>
-                    <el-form-item label="买家备注">
-                        <el-input disabled v-model="form.buyerRemark" placeholder=""></el-input>
-                    </el-form-item>
-                    <el-form-item label="卖家备注">
-                        <el-input disabled v-model="form.sellerRemark" placeholder=""></el-input>
-                    </el-form-item>
-                    <el-form-item label="服务时间" style="width: 100%">
-                        <el-date-picker v-model="AloneData" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions"></el-date-picker>
-                        <el-time-select placeholder="起始时间" v-model="AloneDataTimeStart" :picker-options="{
-                                      start: '08:30',
-                                      step: '00:15',
-                                      end: '18:30'
-                                    }">
-                        </el-time-select>
-                        <el-time-select placeholder="结束时间" v-model="AloneDataTimeEnd" :picker-options="{
-                                  start: '08:30',
-                                  step: '00:15',
-                                  end: '18:30',
-                                  minTime: AloneDataTimeStart
-                                }">
-                        </el-time-select>
-                    </el-form-item>
-                </el-form>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="dialog = false">取 消</el-button>
-                    <el-button type="primary" @click="update" :loading="isSaving">修 改</el-button>
-                </span>
-            </el-dialog>
         </div>
+        <workOrder ref='workOrder' :houseKeeperData="houseKeeperData" @clickHandle='clickHandle' :form='form' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 
 <script>
 import { findWorkOrderList, findServiceManagementList, findWorkOrderDetail, updateWorkOrder } from './api/index'
 import { mapState } from 'vuex'
+import workOrder from '../components/workOrder'
 import { findChannelDict } from '../common/dictApi'
 export default {
     name: 'reservation',
+    components: {
+        workOrder
+    },
     data () {
         const checkMobile = (rule, value, callback) => {
             const Reg = /^1\d{10}$/
@@ -346,11 +263,14 @@ export default {
     methods: {
         async findWorkOrderDetail (id) {
             const { data } = await findWorkOrderDetail(id)
-            this.form = { ...data }
+            console.log(data)
+            this.form = { ...data, webisEdit: true }
             try { // 新增非必填
-                this.AloneData = this.form.reserveBeginTime.split(' ')[0]
-                this.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
-                this.AloneDataTimeEnd = this.form.reserveEndTime.split(' ')[1]
+                this.form.AloneData = this.form.reserveBeginTime.split(' ')[0]
+                this.form.AloneDataTimeStart = this.form.reserveBeginTime.split(' ')[1]
+                this.form.AloneDataTimeEnd = this.form.reserveEndTime.split(' ')[1]
+                // delete this.form.reserveBeginTime
+                // delete this.form.reserveEndTime
             } catch (e) {
             }
         },
@@ -359,49 +279,24 @@ export default {
             this.houseKeeperData = data.records
         },
         onEdit (row) {
+            // console.log(row)
             this.form = {}
             this.dialog = true
             this.editId = row.id
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
             this.findWorkOrderDetail(this.editId)
+            this.$refs.workOrder.clearValidate()
         },
-        async update () {
-            this.$refs['form'].validate(async (valid) => {
-                if (valid) {
-                    try {
-                        this.isSaving = true
-                        this.form.updateBy = this.userInfo.employeeName
-                        if (this.AloneData) {
-                            this.form.reserveBeginTime = this.form.reserveEndTime = ''
-                            this.form.reserveBeginTime += this.AloneData
-                            this.form.reserveEndTime += this.AloneData
-                        } else {
-                            this.form.reserveBeginTime = this.form.reserveEndTime = ''
-                        }
-                        if (this.AloneDataTimeStart) {
-                            this.form.reserveBeginTime += ' ' + this.AloneDataTimeStart
-                        }
-                        if (this.AloneDataTimeEnd) {
-                            this.form.reserveEndTime += ' ' + this.AloneDataTimeEnd
-                        }
-                        this.houseKeeperData.forEach(value => {
-                            if (value.id === this.form.houseKeeperId) {
-                                this.form.houseKeeper = value.name
-                            }
-                        })
-                        await updateWorkOrder(this.editId, this.form)
-                        this.onQuery()
-                        this.isSaving = false
-                        this.dialog = false
-                    } catch (e) {
-                        this.isSaving = false
-                    }
-                } else {
-                    this.isSaving = false
-                }
-            })
+        async clickHandle (form) {
+            // if (form.serviceNum > this.userRightRow.availableTimes) {
+            //     this.$message.error('服务可用次数不足')
+            //     return
+            // }
+            // 修改工单
+            // console.log(form)
+            this.form.updateBy = this.userInfo.employeeName
+            await updateWorkOrder(form)
+            this.$refs.workOrder.onCloseDialog()
+            this.onQuery()
         },
         onQuery () {
             const { ...params } = this.queryParams

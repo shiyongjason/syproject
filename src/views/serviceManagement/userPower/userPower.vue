@@ -196,9 +196,12 @@ export default {
                 this.$message.error('手机号码格式错误')
                 return
             }
+            this.getAggregate()
+            this.onQueryTrace()
+        },
+        async getAggregate () {
             const { data } = await getAggregate(this.queryParams)
             this.tableData = data
-            this.onQueryTrace()
         },
         async onQueryTrace () {
             const { data: dataTrace } = await getUserRightsTrace({ ...this.queryParamsTrace, mobile: this.queryParams.mobile })
@@ -233,7 +236,7 @@ export default {
                 userRightMobile: this.queryParams.mobile,
                 serviceResourceArr: data
             }
-            this.findServiceManagementList()
+            this.findServiceManagementList() // 查询线下管家
             this.dialog = true
             this.$refs.workOrder.clearValidate()
         },
@@ -255,6 +258,7 @@ export default {
             console.log(form)
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
+            this.getAggregate()
         }
     }
 }
