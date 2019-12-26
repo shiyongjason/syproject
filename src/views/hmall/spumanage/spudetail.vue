@@ -29,10 +29,11 @@
                         <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
                     </template>
                     <template v-else>
-                        <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" /></template>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="specList" v-if="specList" @back-event="backFindSpec" :canDoBlurMethos="false" :maxlength="50" />
+                    </template>
                 </el-form-item>
                 <el-form-item label="商品名称：" style="width: 460px;">
-                    <el-input placeholder="" maxlength="50" v-model="form.spuName" :disabled="operate=='audit'">
+                    <el-input placeholder="" maxlength="100" v-model="form.spuName" :disabled="operate=='audit'">
                         <template slot="prepend">{{(brandName ? brandName : '')}}</template>
                     </el-input>
                 </el-form-item>
@@ -118,7 +119,7 @@
 </template>
 
 <script>
-import { fileUploadUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
 import { findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, getSpuspec, findBrands } from './api/index'
 import { deepCopy } from '@/utils/utils'
@@ -236,7 +237,7 @@ export default {
     computed: {
         uploadInfo () {
             return {
-                action: fileUploadUrl + 'tms/files/upload',
+                action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
@@ -245,7 +246,7 @@ export default {
         },
         /* TODO 富文本编辑器 */
         uploadImgServer () {
-            return fileUploadUrl + 'tms/files/upload-list'
+            return interfaceUrl + 'tms/files/upload-list'
         },
         uploadImgParams () {
             return {

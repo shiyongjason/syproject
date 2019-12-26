@@ -214,16 +214,15 @@ export default {
     }
 
     /deep/ .el-loading-mask {
-        position: absolute;
+        position: fixed;
         z-index: 2000;
         background-color: rgba(255, 255, 255, 0.9);
-        margin: 0;
         top: 0;
-        right: 0;
-        bottom: 0;
         left: 0;
         -webkit-transition: opacity 0.3s;
         transition: opacity 0.3s;
+        height: 100%;
+        width: 100%;
     }
 
     .edit-password {
