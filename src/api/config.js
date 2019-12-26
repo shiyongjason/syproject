@@ -7,6 +7,7 @@ let iframeUrl = ''
 let jinyun = ''
 let ccpBaseUrl = ''
 let B2bUrl = ''
+let fileUploadUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
 
 // var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
@@ -18,6 +19,7 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'http://192.168.20.248:30000/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -26,6 +28,7 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        fileUploadUrl = 'http://192.168.20.248:30000/'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -34,6 +37,7 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
@@ -42,6 +46,7 @@ switch (env) {
         jinyun = 'https://staging-jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
+        fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -51,6 +56,7 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://ccp.hosjoy.com/'
+        fileUploadUrl = 'https://hbp.hosjoy.com/'
         break
 }
 export {
@@ -59,5 +65,6 @@ export {
     iframeUrl,
     jinyun,
     ccpBaseUrl,
-    B2bUrl
+    B2bUrl,
+    fileUploadUrl
 }

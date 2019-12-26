@@ -609,6 +609,48 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/spumanage/skuset')
+            },
+            {
+                path: 'eventMange',
+                name: 'eventMange',
+                meta: {
+                    title: '活动管理',
+                    tagName: '活动管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/eventManage')
+            },
+            {
+                path: 'eventStatistics',
+                name: 'eventStatistics',
+                meta: {
+                    title: '数据监测',
+                    tagName: '数据监测',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/eventStatistics')
+            },
+            {
+                path: 'addProducts',
+                name: 'addProducts',
+                meta: {
+                    title: '添加商品',
+                    tagName: '添加商品',
+                    isMenu: false
+                },
+                component: () => import('@/views/hmall/event/addProducts')
+            },
+            {
+                path: 'createEditEvent',
+                name: 'createEditEvent',
+                meta: {
+                    title: '创建/编辑活动',
+                    tagName: '创建/编辑活动',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/event/createEditEvent')
             }
         ]
     },
