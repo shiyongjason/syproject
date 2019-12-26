@@ -131,6 +131,7 @@ export default {
                         type: 'success'
                     })
                     this.ruleForm = {}
+                    this.removeValue = !this.removeValue
                 } else {
                     // console.log('error submit!!')
                     return false
