@@ -39,9 +39,8 @@ export default {
     methods: {
         handleCommand (command) {
             if (command === 'exit') {
-                sessionStorage.removeItem('userInfo')
-                sessionStorage.removeItem('token')
-                sessionStorage.removeItem('tagsList')
+                // TODO 清除所有缓存
+                sessionStorage.clear()
                 this.$router.push('/login')
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true
