@@ -41,7 +41,7 @@ import { Phone } from '@/utils/rules'
 import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
-import { routerMapping } from '../../router'
+import { routerMapping } from '../../router/router'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 export default {
     data () {
@@ -84,6 +84,7 @@ export default {
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
                     sessionStorage.setItem('token', data.access_token)
+                    sessionStorage.setItem('refreshToken', data.refresh_token)
                     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                     this.setUserInfo(userInfo)
                     tracking({
