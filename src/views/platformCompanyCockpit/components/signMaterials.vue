@@ -5,24 +5,31 @@
                 <span class="labeldiy">实控人信息归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.rcDocFlag" label="0">否</el-radio>
-            <span style="margin-left:18px" v-else>{{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':'-'}}</span>
+            <span style="margin-left:18px" v-else>
+                {{archiveSignPO.rcDocFlag==='1'?'是':archiveSignPO.rcDocFlag==='0'?'否':archiveSignPO.rcDocFlag==='2'?'无':'-'}}
+            </span>
         </el-form-item>
         <template v-if="archiveSignPO.rcDocFlag==='1'" >
             <el-form-item prop="realControllerName" label="实控人姓名：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <!-- @input="onInputChange(archiveSignPO.realControllerName,'actualController')" -->
+                <el-input  v-model='archiveSignPO.realControllerName' placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','name',archiveSignPO.realControllerName)" @focus="onFocus('actualController')"></el-input>
                 <span v-else>{{archiveSignPO.realControllerName?archiveSignPO.realControllerName:'-'}}</span>
+                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='actualController'">
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'actualController')" ><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                </div>
             </el-form-item>
             <el-form-item prop="realControllerContactNo" label="联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.realControllerContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('actualController','tel',archiveSignPO.realControllerContactNo)"></el-input>
                 <span v-else>{{archiveSignPO.realControllerContactNo?archiveSignPO.realControllerContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realControllerIdcard" label="身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
+                <el-input v-model="archiveSignPO.realControllerIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('actualController','idCard',archiveSignPO.realControllerIdcard)"></el-input>
                 <span v-else>{{archiveSignPO.realControllerIdcard?archiveSignPO.realControllerIdcard:'-'}}</span>
             </el-form-item>
             <el-form-item prop="realcontrollerList" label="实控人身份证归档：" label-width='160px'>
-                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" showProgress v-model="archiveSignPO.realcontrollerList" @successCb="onSuccessCb('b-realcontroller')" :action='action' :uploadParameters='uploadParameters'>
+                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" showProgress v-model="archiveSignPO.realcontrollerList" @successCb="onSuccessCb('b-realcontroller')" :action='action' :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
                 <picView v-else :fileList='archiveSignPO.realcontrollerList' />
             </el-form-item>
@@ -33,22 +40,26 @@
                 <span class="labeldiy">自然人股东信息归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.shareholderDocFlag" label="0">否</el-radio>
             <span v-else>
-                {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
+                {{archiveSignPO.shareholderDocFlag==='1'?'是':archiveSignPO.shareholderDocFlag==='2'?'无':archiveSignPO.shareholderDocFlag==='0'?'否':'-'}}
             </span>
         </el-form-item>
         <template v-if="archiveSignPO.shareholderDocFlag==='1'" >
             <el-form-item prop="shareholderName" label="自然人股东姓名：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.shareholderName" placeholder="请输入姓名" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','name',archiveSignPO.shareholderName)" @focus="onFocus('naturalPerson')"></el-input>
                 <span v-else>{{archiveSignPO.shareholderName?archiveSignPO.shareholderName:'-'}}</span>
+                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips==='naturalPerson'">
+                    <p v-for="(item,index) in suggestions" :key="index" @click="chooseOneTips(item,'naturalPerson')"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                </div>
             </el-form-item>
             <el-form-item prop="shareholderContactNo" label="自然人股东联系方式：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30'></el-input>
+                <el-input v-model="archiveSignPO.shareholderContactNo" placeholder="请输入联系方式" v-if="isEdit" maxlength='30' @blur="onBlur('naturalPerson','tel',archiveSignPO.shareholderContactNo)"></el-input>
                 <span v-else>{{archiveSignPO.shareholderContactNo?archiveSignPO.shareholderContactNo:'-'}}</span>
             </el-form-item>
             <el-form-item prop="shareholderIdcard" label="自然人股东身份证号：" label-width='160px'>
-                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18'></el-input>
+                <el-input v-model="archiveSignPO.shareholderIdcard" placeholder="请输入身份证号" v-if="isEdit" maxlength='18' @blur="onBlur('naturalPerson','idCard',archiveSignPO.shareholderIdcard)"></el-input>
                 <span v-else>{{archiveSignPO.shareholderIdcard?archiveSignPO.shareholderIdcard:'-'}}</span>
             </el-form-item>
         </template>
@@ -60,9 +71,10 @@
                 <span class="ab" style="margin-left:63px;">
                     <!-- <el-radio v-if="isEdit" :value="item[`v${index+1}SignerFlag`]" @input="(val)=>{item[`v${index+1}SignerFlag`]=val;item.archiveSignInvestPO.investVersion=`${index+1}.0`}" label="1">是</el-radio> -->
                     <el-radio v-if="isEdit" v-model="item.radio" label="1">是</el-radio>
+                    <el-radio v-if="isEdit" v-model="item.radio" label="2">无</el-radio>
                     <el-radio v-if="isEdit" v-model="item.radio" label="0">否</el-radio>
                     <span v-else>
-                        {{item.radio==='1'?'是':item.radio==='0'?'否':'-'}}
+                        {{item.radio==='1'?'是':item.radio==='0'?'否':item.radio==='2'?'无':'-'}}
                     </span>
                     <template v-if="item.radio==='1'" >
                         <div v-for="(jtem,jndex) in item.version" :key="jndex" class="filepr">
@@ -94,23 +106,26 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="该文件签约人：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerName" placeholder="请输入姓名" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'name',jtem.archiveSignInvestPO.signerName)" @focus="onFocus(`version${index}${jndex}`)"></el-input>
                                 <span v-else>{{jtem.archiveSignInvestPO.signerName?jtem.archiveSignInvestPO.signerName:'-'}}</span>
+                                <div class="tips" v-if="isEdit&&suggestions.length>0&&showTips===`version${index}${jndex}`">
+                                    <p v-for="(item,kndex) in suggestions" :key="kndex" @click="chooseOneTips(item,'version',index,jndex)"><font>{{item.name}}</font><span>{{item.idCard}}</span></p>
+                                </div>
                             </el-form-item>
                             <el-form-item prop="signerContactNo" label="签约人联系方式：" label-width='160px' >
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerContactNo" placeholder="请输入联系方式" maxlength='30' @blur="onBlur(`version${index}${jndex}`,'tel',jtem.archiveSignInvestPO.signerContactNo)" ></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerContactNo?jtem.archiveSignInvestPO.signerContactNo:'-'}}
                                 </span>
                             </el-form-item>
                             <el-form-item label="签约人身份证号：" label-width='160px'  :key="jndex+index">
-                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18'></el-input>
+                                <el-input v-if="isEdit" v-model="jtem.archiveSignInvestPO.signerIdcard" placeholder="请输入身份证号" maxlength='18' @blur="onBlur(`version${index}${jndex}`,'idCard',jtem.archiveSignInvestPO.signerIdcard)"></el-input>
                                 <span v-else>
                                     {{jtem.archiveSignInvestPO.signerIdcard?jtem.archiveSignInvestPO.signerIdcard:'-'}}
                                 </span>
                             </el-form-item>
                             <el-form-item prop="idCardList" label="签约人身份证归档：" label-width='160px' >
-                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
+                                <hosjoyUpload accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' v-if="isEdit" v-model="jtem.idCardList" :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('2')" >
                                 </hosjoyUpload>
                                 <picView v-else :fileList='jtem.idCardList' />
                             </el-form-item>
@@ -126,9 +141,10 @@
                 <span class="labeldiy">投资履约担保函归档：</span>
             </template>
             <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="1">是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="2">无</el-radio>
             <el-radio v-if="isEdit" v-model="archiveSignPO.guanranteeDocFlag" label="0">否</el-radio>
             <span v-else>
-                {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':'-'}}
+                {{archiveSignPO.guanranteeDocFlag==='1'?'是':archiveSignPO.guanranteeDocFlag==='0'?'否':archiveSignPO.guanranteeDocFlag==='2'?'无':'-'}}
             </span>
         </el-form-item>
         <template v-if="archiveSignPO.guanranteeDocFlag==='1'" >
@@ -167,8 +183,14 @@
             <template #label>
                 <span class="labeldiy">其余B档签约材料：</span>
             </template>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=1>是</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=2>无</el-radio>
+            <el-radio v-if="isEdit" v-model="archiveSignPO.otherContractInformationFlag" :label=0>否</el-radio>
+            <span v-else>
+                {{archiveSignPO.otherContractInformationFlag=='1'?'是':archiveSignPO.otherContractInformationFlag=='0'?'否':archiveSignPO.otherContractInformationFlag=='2'?'无':'-'}}
+            </span>
         </el-form-item>
-        <el-form-item prop="num"  label-width='160px'>
+        <el-form-item prop="num" label-width='160px' v-if="archiveSignPO.otherContractInformationFlag=='1'">
             <template #label>
                 <span style="display: inline-block;">文件：</span>
             </template>
@@ -200,7 +222,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import picView from './picView'
 import { checkIdCard } from '@/utils/rules.js'
-import { interfaceUrl } from '@/api/config'
+import { fileUploadUrl } from '@/api/config'
 import { mapState } from 'vuex'
 
 const _signBOsForm = {
@@ -229,9 +251,13 @@ export default {
     components: { hosjoyUpload, picView },
     data () {
         return {
+            timer: '',
+            inputTips: {},
+            suggestions: [],
+            showTips: '',
             assureRadio: '1',
             signBOsForm: JSON.parse(JSON.stringify(_signBOsForm)),
-            action: interfaceUrl + 'tms/files/upload',
+            action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
@@ -249,6 +275,66 @@ export default {
         }
     },
     methods: {
+        chooseOneTips (item, key, index, jndex) {
+            if (key === 'version') {
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerName = item.name || ''
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerIdcard = item.idCard || ''
+                this.archiveSignPO.signBOs[index].version[jndex].archiveSignInvestPO.signerContactNo = item.tel || ''
+                let key = `version${index}${jndex}`
+                this.$set(this.inputTips[key], 'name', item.name || '')
+                this.$set(this.inputTips[key], 'tel', item.tel || '')
+                this.$set(this.inputTips[key], 'idCard', item.idCard || '')
+            }
+            if (key === 'actualController') {
+                this.$set(this.archiveSignPO, 'realControllerName', item.name || '')
+                this.$set(this.archiveSignPO, 'realControllerContactNo', item.tel || '')
+                this.$set(this.archiveSignPO, 'realControllerIdcard', item.idCard || '')
+                this.$set(this.inputTips.actualController, 'name', item.name || '')
+                this.$set(this.inputTips.actualController, 'tel', item.tel || '')
+                this.$set(this.inputTips.actualController, 'idCard', item.idCard || '')
+            }
+            if (key === 'naturalPerson') {
+                this.$set(this.archiveSignPO, 'shareholderName', item.name || '')
+                this.$set(this.archiveSignPO, 'shareholderContactNo', item.tel || '')
+                this.$set(this.archiveSignPO, 'shareholderIdcard', item.idCard || '')
+                this.$set(this.inputTips.naturalPerson, 'name', item.name || '')
+                this.$set(this.inputTips.naturalPerson, 'tel', item.tel || '')
+                this.$set(this.inputTips.naturalPerson, 'idCard', item.idCard || '')
+            }
+            this.showTips = ''
+        },
+        onFocus (k) {
+            console.log(this.inputTips)
+            this.suggestions = []
+            setTimeout(() => {
+                this.showTips = k
+            }, 220)
+
+            this.suggestions = Object.values(this.inputTips)
+            // 去重
+            let hash = {}
+            this.suggestions = this.suggestions.reduce((preVal, curVal) => {
+                // eslint-disable-next-line
+                hash[curVal.idCard] ? '' : hash[curVal.idCard] = true && preVal.push(curVal)
+                return preVal
+            }, [])
+
+            console.log(this.suggestions)
+        },
+        onBlur (key, subKey, val, index) {
+            if (!(key in this.inputTips)) {
+                let obj = {
+                    name: '',
+                    tel: '',
+                    idCard: ''
+                }
+                this.$set(this.inputTips, key, obj)
+            }
+            this.inputTips[key][subKey] = val || ''
+            setTimeout(() => {
+                this.showTips = ''
+            }, 200)
+        },
         getUrlBase64 (url, fileName, ext = '') {
             let _this = this
             var canvas = document.createElement('canvas') // 创建canvas DOM元素
@@ -336,6 +422,37 @@ export default {
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
         console.log(this.archiveSignPO)
+        if (this.$route.query.archiveId) {
+            // 初始化input tips
+            this.$set(this.inputTips, 'actualController',
+                {
+                    name: this.archiveSignPO.realControllerName,
+                    tel: this.archiveSignPO.realControllerContactNo,
+                    idCard: this.archiveSignPO.realControllerIdcard
+                }
+            )
+            this.$set(this.inputTips, 'naturalPerson',
+                {
+                    name: this.archiveSignPO.shareholderName,
+                    tel: this.archiveSignPO.shareholderContactNo,
+                    idCard: this.archiveSignPO.shareholderIdcard
+                }
+            )
+            this.archiveSignPO.signBOs.map((item, index) => {
+                item.version.map((jtem, jndex) => {
+                    if (jtem.archiveSignInvestPO.signerName) {
+                        this.$set(this.inputTips, `version${index}${jndex}`,
+                            {
+                                name: jtem.archiveSignInvestPO.signerName,
+                                tel: jtem.archiveSignInvestPO.signerContactNo,
+                                idCard: jtem.archiveSignInvestPO.signerIdcard
+                            }
+                        )
+                    }
+                })
+            })
+            console.log(this.inputTips)
+        }
         // this.onAdd()
         // if (!this.$route.query.archiveId) this.onAdd()
     }
@@ -377,4 +494,10 @@ export default {
 }
 .fileItem{ display: flex;justify-content: space-between;align-items: center;}
 .fileItemDownLoad{font-size: 12px;border-radius: 3px;padding: 8px 16px;color: #fff;background-color: #ff7a45;border-color: #ff7a45;display:block;line-height: 13px;float: right;height: 13px; cursor: pointer;}
+.tips{ min-width: 224px; position: absolute; padding: 0 15px;border-radius: 4px;border: 1px solid #DCDFE6; box-sizing: border-box;
+margin-top: 3px; background: #fff; z-index: 999; color: #606266;box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);}
+.tips p{ display: flex;justify-content: space-between;}
+.tips p:hover{color:#FF7A45!important;cursor: pointer;}
+.tips p:hover span{color:#FF7A45!important}
+.tips p span{font-size: 12px; padding-left: 5px;color: #b1b2b5;}
 </style>
