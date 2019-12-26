@@ -26,7 +26,7 @@
                         ref="tree">
                     </el-tree>
                 </div>
-                <div class="edit" v-if="editOpenStatus === 1">
+                <div class="edit" v-show="editOpenStatus === 1">
                     <div class="main">
                         <div class="sub-title">
                             {{editTitle.join(' -> ')}}
@@ -169,6 +169,7 @@ export default {
             return this.isSelectFlag
         },
         onAdd () {
+            this.$refs.form.clearValidate()
             if (this.tempSelectTree.depth > 3) {
                 this.$message({
                     type: 'warn',
@@ -192,6 +193,7 @@ export default {
             }
         },
         onUpdate () {
+            this.$refs.form.clearValidate()
             if (this.isSelect()) {
                 if (this.changeFormDataStatus === 2) {
                     this.reWriteData(this.tempSelectTree)
@@ -207,6 +209,7 @@ export default {
             }
         },
         onDelete () {
+            this.$refs.form.clearValidate()
             if (this.isSelect()) {
                 if (this.changeFormDataStatus === 2) {
                     this.reWriteData(this.tempSelectTree)
