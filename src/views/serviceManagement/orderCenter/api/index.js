@@ -22,9 +22,23 @@ export function updateChannelOrderDetails (id, params) {
 export function createChannelOrderList (params) {
     return axios.post(`/service/api/orders/reimport`, params)
 }
-// 新增工单
-export const createWorkOrder = (params) => axios.post(`service/api/work-orders`, params)
+// 工单管理-工单信息新增(订单入口)
+export const createWorkOrder = (params) => axios.post(`service/api/work-orders/for-order`, params)
 // 查找服务管家列表
 export function findServiceManagementList (params) {
     return axios.get(`/service/api/service-manager`, { params })
+}
+
+// mis重新同步
+export function updateMisSync (orderId) {
+    return axios.post(`/service/api/orders/re-sync-mis/${orderId}`)
+}
+
+// mis手动触发同步
+export function updateMisSyncManual (orderId) {
+    return axios.post(`/service/api/orders/sync-mis-success/${orderId}`)
+}
+// 订单取消
+export function updateOrderStatus (channelOrderNo) {
+    return axios.post(`/service/api/orders/cancel/${channelOrderNo}`)
 }

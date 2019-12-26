@@ -5,7 +5,8 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-
+import serviceManagement from './modules/serviceManagement'
+import eventManage from './modules/eventManage'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -28,7 +29,9 @@ const store = new Vuex.Store({
         // 视图的 store
         dueDiligence,
         hmall,
-        layout
+        layout,
+        serviceManagement,
+        eventManage
     }
 })
 
