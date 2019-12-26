@@ -41,7 +41,7 @@ import { Phone } from '@/utils/rules'
 import { mapMutations, mapActions } from 'vuex'
 import { iframeUrl } from '@/api/config'
 import { tracking } from '@/api/index'
-import { routerMapping } from '../../router/router'
+import { routerMapping } from '../../router'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 export default {
     data () {
