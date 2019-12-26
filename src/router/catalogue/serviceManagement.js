@@ -178,8 +178,8 @@ export default {
             path: 'serviceResource',
             name: 'serviceResource',
             meta: {
-                title: '服务资源管理',
-                tagName: '服务资源管理',
+                title: '服务资源模板管理',
+                tagName: '服务资源模板管理',
                 isMenu: true,
                 icon: ''
             },
