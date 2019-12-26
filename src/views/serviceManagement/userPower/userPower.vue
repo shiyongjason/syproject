@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="page-body-cont">
+            <div class="page-body-cont" v-show="isShow">
                 <div class="sub-title">用户权益</div>
                 <el-table :data="tableData" class="table">
                     <el-table-column label="序号" align="center" width="80px" type="index">
@@ -171,7 +171,8 @@ export default {
                 }
             ],
             houseKeeperData: [],
-            userRightRow: {}
+            userRightRow: {},
+            isShow: false
         }
     },
     mounted () {
@@ -188,7 +189,7 @@ export default {
             this.queryParams.channelType = this.propsParams.source
         }
         // kaifa
-        this.onQuery()
+        // this.onQuery()
     },
     methods: {
         async onQuery () {
@@ -196,6 +197,7 @@ export default {
                 this.$message.error('手机号码格式错误')
                 return
             }
+            this.isShow = true
             this.getAggregate()
             this.onQueryTrace()
         },
