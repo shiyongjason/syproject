@@ -80,7 +80,7 @@ import { getRateList, rateStatus } from './api/index'
 import { interfaceUrl } from '@/api/config'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
-    name: 'enterpriseCA',
+    name: 'amountImport',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo

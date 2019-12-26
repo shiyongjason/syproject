@@ -11,10 +11,15 @@
                     <table class="tablelist">
                         <thead>
                             <tr>
-                                <td width="">一级菜单</td>
-                                <td width="">二级菜单</td>
-                                <td width="">三级页面</td>
-                                <td width="" colspan=2>权限</td>
+                                <td width="" rowspan="2">一级菜单</td>
+                                <td width="" rowspan="2">二级菜单</td>
+                                <!-- 三级页面做到操作按钮上！！！-->
+                                <td width="" rowspan="2">三级菜单</td>
+                                <td width="" colspan="2">权限</td>
+                            </tr>
+                            <tr>
+                                <td width="">敏感字段</td>
+                                <td width="">敏感操作</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,56 +34,85 @@
                                             <div>
                                                 <!-- {{item.childAuthList.length}}{{indexa}} -->
                                                 <div @click="onEdit(2, item, index, indexa)">{{itema.authName}}</div>
-                                                <button v-show="item.childAuthList.length == indexa + 1" @click="popupMenu(2, item, index)">+</button>
+                                                <el-button v-show="item.childAuthList.length == indexa + 1" @click="popupMenu(2, item, index)" type="success" round>+</el-button>
                                             </div>
                                         </td>
                                         <td>
                                             <div>
                                                 <!-- {{indexb}}{{itema.childAuthList.length}} -->
                                                 <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
-                                                <button v-show="itema.childAuthList.length == indexb + 1" @click="popupMenu(3, itema, index, indexa)">+</button>
+                                                <el-button v-show="itema.childAuthList.length == indexb + 1" @click="popupMenu(3, itema, index, indexa)" type="success" round>+</el-button>
                                             </div>
                                         </td>
                                         <template v-if="itemb.authTypes && itemb.authTypes.length == 2">
-                                            <template v-for="(itemAuthType, authTypeIndex) in itemb.authTypes">
-                                                <td :key="authTypeIndex + '_authType'" width="300">
-                                                    <div>{{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}</div>
+                                            <template v-if="itemb.authTypes[0].authType == 0">
+                                                <td width="300">
+                                                    <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(authTypeIndex, itemAuthType)">配置</button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                    </div>
+                                                </td>
+                                                <td width="300">
+                                                    <div>敏感操作</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
+                                            <template v-else>
+                                                <td width="300">
+                                                    <div>敏感字段</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
+                                                    </div>
+                                                </td>
+                                                <td width="300">
+                                                    <div>敏感操作</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                    </div>
+                                                </td>
+                                            </template>
+                                            <!-- </template> -->
                                         </template>
                                         <template v-else-if="itemb.authTypes && itemb.authTypes.length == 1">
                                             <template v-if="itemb.authTypes[0].authType == 0">
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])">配置</button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
-                                                    <button @click="addSensitive(index, indexa, itema, 1)">+</button>
+                                                    <el-button @click="addSensitive(index, indexa, itema, 1)" type="success" round>+</el-button>
                                                 </td>
                                             </template>
                                             <template v-else>
                                                 <td width="300">
-                                                    <button @click="addSensitive(index, indexa, itema, 0)">+</button>
+                                                    <el-button @click="addSensitive(index, indexa, itema, 0)" type="success" round>+</el-button>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])">配置</button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
                                         </template>
-                                        <template v-else>
+                                        <template v-else-if="itemb.authTypes && itemb.authTypes.length > 2">
                                             <td width="300">
-                                                <button @click="addSensitive(index, indexa, itema, 0)">+</button>
+                                                数据异常
                                             </td>
                                             <td width="300">
-                                                <button @click="addSensitive(index, indexa, itema, 1)">+</button>
+                                                数据异常
+                                            </td>
+                                        </template>
+                                        <template v-else>
+                                            <td width="300">
+                                                <el-button @click="addSensitive(index, indexa, itema, 0)" type="success" round>+</el-button>
+                                            </td>
+                                            <td width="300">
+                                                <el-button @click="addSensitive(index, indexa, itema, 1)" type="success" round>+</el-button>
                                             </td>
                                         </template>
                                     </tr>
@@ -89,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogSeedVisible">
+        <el-dialog :title="title" :visible.sync="dialogSeedVisible" :close-on-click-modal='false'>
             <el-form :model="form" :rules="formRules" ref="form">
                 <el-form-item label="菜单名称" label-width="120px" prop="authName">
                     <el-input v-model="form.authName" autocomplete="off"></el-input>
@@ -106,14 +140,15 @@
                 <el-button type="primary" @click="onAddMenuSure('form')">确 定</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="敏感配置" :visible.sync="fieldVisible" width="50%" :close-on-click-modal='false'>
+        <el-dialog title="敏感配置" :visible.sync="fieldVisible" width="60%" :close-on-click-modal='false'>
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
                         <tr>
-                            <td width="25%">菜单</td>
-                            <td width="15%">代号</td>
-                            <td width="20%">排序</td>
+                            <td width="15%">菜单名</td>
+                            <td width="15%">Key</td>
+                            <td width="10%">排序</td>
+                            <td width="20%">资源uri</td>
                             <td width="20%">操作</td>
                             <td width="20%">操作</td>
                         </tr>
@@ -121,20 +156,23 @@
                     <tbody>
                         <tr v-for="(value, index) in list" :key="index">
                             <td>
-                                <input style="width: 100%" type="text" v-model="value.resourceName">
+                                <el-input v-model="value.resourceName" placeholder="请输入内容"></el-input>
                             </td>
                             <td>
-                                <input style="width: 100%" type="text" v-model="value.resourceKey">
+                                <el-input v-model="value.resourceKey" placeholder="请输入内容"></el-input>
                             </td>
                             <td>
-                                <input style="width: 100%" type="text" v-model="value.sort">
+                                <el-input v-model="value.sort" placeholder="请输入内容"></el-input>
+                            </td>
+                            <td>
+                                <el-input v-model="value.resourceAddress" placeholder="请输入内容"></el-input>
                             </td>
                             <td>
                                 <el-button @click="onResourceSure(index)">确 定</el-button>
                             </td>
                             <td>
-                                <button @click="addAuthList">+</button>
-                                <button>-</button>
+                                <el-button type="success" round @click="addAuthList" v-show="index + 1 == list.length">+</el-button>
+                                <!-- <button>-</button> -->
                             </td>
                         </tr>
                     </tbody>
@@ -197,7 +235,7 @@ export default {
     methods: {
         async init () {
             const { data } = await getAuth()
-            // console.log(data)
+            console.log(data)
             this.tableList = this.handlerTableList(data, 0)
         },
         // 计算table合并行数
@@ -392,15 +430,17 @@ export default {
             this.dialogFirVisible = false
         },
         async onResourceSure (i) {
-            // console.log(this.configObj)
+            console.log(this.configObj)
             // console.log(this.list[i])
             const params = {
                 authCode: this.configObj.authCode,
                 authTypeId: this.configObj.id,
                 resourceName: this.list[i].resourceName,
                 resourceKey: this.list[i].resourceKey,
-                sort: this.list[i].sort
+                sort: this.list[i].sort,
+                resourceAddress: this.list[i].resourceAddress
             }
+            console.log(params)
             if (this.list[i].id) {
                 params.id = this.list[i].id
                 await editAuthResource(params)
@@ -452,6 +492,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+* {
+    user-select: none;
+}
 .h-roletable {
     padding: 10px 0;
 }
@@ -464,11 +507,24 @@ export default {
     display: flex;
     justify-content: space-between;
 }
+.h-page-title .el-button {
+    position: fixed;
+    right: 44px;
+    z-index: 55;
+    background-color: #ff7a45;
+    color: #ffffff;
+}
+.el-dialog .el-input {
+    width: 100%;
+}
+.is-round {
+    padding: 5px 10px;
+}
 .tablelist {
     border: 1px solid #dddddd;
     border-collapse: collapse;
     width: 100%;
-
+    text-align: center;
     thead {
         background: #fafafa;
     }
