@@ -145,7 +145,7 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '18501455666' },
+            queryParams: { mobile: '' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -251,11 +251,12 @@ export default {
         async clickHandle (form) {
             if (form.serviceNum > this.userRightRow.availableTimes) {
                 this.$message.error('服务可用次数不足')
+                this.$refs.workOrder.closeIsSaving()
+                console.log(this.$refs.workOrder.isSaving)
                 return
             }
             // 新增工单
             form.createBy = this.userInfo.employeeName
-            console.log(form)
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
             this.getAggregate()

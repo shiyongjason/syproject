@@ -71,10 +71,11 @@
                             </tr>
                             <tr v-for="(item,index) in attributeTable.list" :key="index">
                                 <td v-for="(subItem,idx) in item.attributeList" :key="idx" v-text="subItem.value"></td>
-                                <td v-text="attributeTablePrefixName + item.name"></td>
+                                <td v-text="item.name"></td>
                                 <td>
                                     <el-form-item :prop="'list.'+ index +'.mdmCode'"
-                                                  :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }]" class="mdm-number">
+                                                  :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
+                                                  ,{ required: true, whitespace: true,validator: checkedMdmCodeReport, trigger: 'blur', message: 'mdmCode重复' }]" class="mdm-number">
                                         <el-input class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
                                     </el-form-item>
                                 </td>
@@ -133,7 +134,6 @@ export default {
             },
             attributeTable: { list: [] },
             serviceResourceName: [],
-            attributeTablePrefixName: '',
             tempAttributeTable: [],
             propsParams: ''
         }
@@ -148,6 +148,17 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
+        checkedMdmCodeReport (rule, value, callback) {
+            let temp = 0
+            this.attributeTable.list.forEach(value1 => {
+                if (value1.mdmCode === value) temp++
+            })
+            if (temp > 1) {
+                callback(new Error('msm编码重复'))
+            } else {
+                callback()
+            }
+        },
         closeTags () {
             this.tagsList.some((item, index) => {
                 if (item.path === (this.$route.fullPath).split('?')[0]) {
@@ -157,12 +168,11 @@ export default {
             })
             this.tagUpdate(this.tagsList)
         },
-        reversedSerializeAttribute () {
-
-        },
         nameChange () {
             if (this.message.name.trim()) {
-                this.attributeTablePrefixName = this.message.name
+                this.attributeTable.list.forEach(value => {
+                    value.name = this.message.name + value.name
+                })
             }
         },
         resetAttribute () {
@@ -196,7 +206,6 @@ export default {
                     name: totalName
                 }
             })
-            // this.$forceUpdate()
             if (this.propsParams.methods === 'edit' || this.propsParams.methods === 'details') {
                 this.attributeTable.list.forEach((value1, index) => {
                     this.tempAttributeTable.forEach(value2 => {
@@ -273,7 +282,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
                                 }
                             })
@@ -305,7 +314,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
                                 }
                             })

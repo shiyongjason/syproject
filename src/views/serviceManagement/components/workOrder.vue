@@ -38,7 +38,8 @@
                     <!--
                         下一期 是否 可以修改服务项目
                      -->
-                    <el-select v-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
+                    <el-input v-if="isNormal" v-model="form.serviceResourceName" max-length="30"></el-input>
+                    <el-select v-else-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
                         <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
                     </el-select>
                     <div v-else class="serviceProject">{{`${form.serviceResourceName}(可用${form.availableTimes?form.availableTimes:0}次)`}}</div>
@@ -61,7 +62,7 @@
                     <el-input type="text" v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"></el-input>
                 </el-form-item>
                 <el-form-item prop="serviceNum" label="服务数量">
-                    <el-input type="text" v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5"></el-input>
+                    <el-input :disabled="form.webisEdit" type="text" v-model="form.serviceNum" placeholder="请输入服务数量" maxlength="5"></el-input>
                 </el-form-item>
                 <el-form-item label="买家备注">
                     <el-input type="text" disabled v-model="form.buyerRemark" placeholder=""></el-input>
@@ -129,6 +130,12 @@ export default {
             type: String,
             default () {
                 return '新增工单'
+            }
+        },
+        isNormal: {
+            type: Boolean,
+            default () {
+                return false
             }
         }
     },
@@ -240,6 +247,9 @@ export default {
                     }
                 }
             })
+        },
+        closeIsSaving () {
+            this.isSaving = false
         },
         onCloseDialog () {
             this.isSaving = false
