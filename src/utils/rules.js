@@ -1,13 +1,13 @@
+import * as regular from './regular'
+
 export const PHONE = (rule, value, callback) => {
-    const Reg = /^1(3|4|5|7|8|9)\d{9}$/
-    if (!(Reg.test(value))) {
+    if (!(regular.phoneRegular.test(value))) {
         return callback(new Error('手机号码格式不正确'))
     }
     return callback()
 }
 export const Phone = (rule, value, callback) => {
-    const Reg = /^1(3|4|5|7|8|9)\d{9}$/
-    if (!(Reg.test(value))) {
+    if (!(regular.phoneRegular.test(value))) {
         return callback(new Error('手机号码格式不正确'))
     }
     return callback()
