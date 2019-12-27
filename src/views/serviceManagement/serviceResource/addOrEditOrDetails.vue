@@ -151,8 +151,8 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
-        clearError (isDisabled){
-            if(isDisabled){
+        clearError (isDisabled) {
+            if (isDisabled) {
                 this.$refs.formAttribute.clearValidate()
             }
         },
