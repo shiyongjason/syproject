@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="page-body">
-            <h3>新建服务资源</h3>
+            <h3 v-if="!propsParams.methods">新建服务资源</h3>
+            <h3 v-if="propsParams.methods === 'details'">服务资源详情</h3>
+            <h3 v-if="propsParams.methods === 'edit'">修改服务资源</h3>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <div class="query-col-title"><span class="red">*</span>资源模板名称：</div>
@@ -53,7 +55,7 @@
                         </div>
                     </div>
                     <div class="add">
-                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格值</el-button>
+                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格名</el-button>
                     </div>
                 </el-form>
                 <h3 class="detailed-title title" v-show="attributeTable.list.length> 0">
@@ -190,7 +192,7 @@ export default {
             })
             let temp = []
             if (tempAll.length < 2) {
-                tempAll[0].forEach(value => {
+                tempAll[0] && tempAll[0].forEach(value => {
                     temp.push([value])
                 })
             } else {
@@ -360,8 +362,8 @@ export default {
             const data = this.doneServiceTemplateDetails
             let categoryId = data.serviceResourceTemplate.categoryId
             this.doneServiceCategoryList.forEach(value => {
-                value.children.forEach(value1 => {
-                    value1.children.forEach(value12 => {
+                value.children && value.children.forEach(value1 => {
+                    value1.children && value1.children.forEach(value12 => {
                         if (value12.value === categoryId) {
                             categoryId = [value.value, value1.value, value12.value]
                         }
