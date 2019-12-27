@@ -76,7 +76,7 @@
                                 <td v-text="item.name"></td>
                                 <td>
                                     <el-form-item :prop="'list.'+ index +'.mdmCode'"
-                                                  :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
+                                                  :rules="[{ required: !item.isDisable, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
                                                   ,{ required: true, whitespace: true,validator: checkedMdmCodeReport, trigger: 'blur', message: 'mdmCode重复' }]" class="mdm-number">
                                         <el-input class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
                                     </el-form-item>
@@ -85,6 +85,7 @@
                                     <el-switch
                                         v-model="item.isDisable"
                                         :disabled="pageDisabled"
+                                        @change="clearError(item.isDisable)"
                                         active-color="#13ce66"
                                         inactive-color="#DCDFE6">
                                     </el-switch>
@@ -150,6 +151,11 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
+        clearError (isDisabled){
+            if(isDisabled){
+                this.$refs.formAttribute.clearValidate()
+            }
+        },
         checkedMdmCodeReport (rule, value, callback) {
             let temp = 0
             this.attributeTable.list.forEach(value1 => {
@@ -266,14 +272,26 @@ export default {
             }
             return callback()
         },
-        onSave () {
+        checkValidate () {
+            let temp = false
             if (this.message.name.trim().length < 1) {
                 this.$message({
                     type: 'error',
                     message: '资源模板名称不能为空'
                 })
-                return
+                temp = true
             }
+            if (this.message.categoryId.length < 2) {
+                this.$message({
+                    type: 'error',
+                    message: '资源类目必须为三级类目'
+                })
+                temp = true
+            }
+            return temp
+        },
+        onSave () {
+            if (this.checkValidate()) return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.$refs['formAttribute'].validate(async (valid1) => {
@@ -298,14 +316,7 @@ export default {
             })
         },
         editSave () {
-            // this.props.templateId
-            if (this.message.name.trim().length < 1) {
-                this.$message({
-                    type: 'error',
-                    message: '资源模板名称不能为空'
-                })
-                return
-            }
+            if (this.checkValidate()) return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.$refs['formAttribute'].validate(async (valid1) => {

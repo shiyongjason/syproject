@@ -20,6 +20,7 @@
                     <div class="flex-wrap-title">资源类目：</div>
                     <div class="flex-wrap-cont">
                         <el-cascader
+                            :props="{ checkStrictly: true }"
                             v-model="categoryId"
                             :options="doneServiceCategoryList"></el-cascader>
                     </div>
