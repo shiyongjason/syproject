@@ -36,7 +36,7 @@
                             <el-form-item label="父类目">
                                 <el-input v-model="form.parentName" type="text" disabled></el-input>
                             </el-form-item>
-                            <el-form-item label="当前类目层级">
+                            <el-form-item :label="editStatus === 1 ? '子类目层级' : '当前类目层级'">
                                 <el-select disabled v-model="form.depth">
                                     <el-option :value="1" label="服务资源"></el-option>
                                     <el-option :value="2" label="一级类目"></el-option>
@@ -44,7 +44,7 @@
                                     <el-option :value="4" label="三级类目"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item prop="name" label="当前类目名称">
+                            <el-form-item prop="name"  :label="editStatus === 1 ? '子类目层级' : '当前类目层级'">
                                 <el-input :disabled="editStatus > 2" v-model="form.name" type="text" maxlength="20"></el-input>
                             </el-form-item>
                             <el-form-item label="父类目编号" v-if="editStatus === 2">
@@ -151,7 +151,11 @@ export default {
             this.$set(this.form, 'id', data.id)
             this.$set(this.form, 'parentId', data.parentId)
             this.$set(this.form, 'parentName', data.parentName)
-            this.$set(this.form, 'depth', data.depth)
+            if (this.editStatus === 1) {
+                this.$set(this.form, 'depth', data.depth + 1)
+            } else {
+                this.$set(this.form, 'depth', data.depth)
+            }
             this.$set(this.form, 'updateBy', data.updateBy)
             this.$set(this.form, 'updateTime', data.updateTime)
             this.$set(this.form, 'name', data.label)
@@ -160,6 +164,7 @@ export default {
         },
         onTreeClick (data) {
             this.isSelectFlag = true
+            this.editOpenStatus = false
             this.tempSelectTree = data
             if (this.changeFormDataStatus === 1) {
                 this.reWriteData(data)
@@ -178,13 +183,13 @@ export default {
                 return
             }
             if (this.isSelect()) {
+                this.editStatus = 1
                 if (this.changeFormDataStatus === 2) {
                     this.reWriteData(this.tempSelectTree)
                 }
                 this.$set(this.form, 'name', '')
                 this.changeFormDataStatus = 2
                 this.editOpenStatus = 1
-                this.editStatus = 1
             } else {
                 this.$message({
                     type: 'warn',
@@ -195,12 +200,12 @@ export default {
         onUpdate () {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
+                this.editStatus = 2
                 if (this.changeFormDataStatus === 2) {
                     this.reWriteData(this.tempSelectTree)
                 }
                 this.changeFormDataStatus = 2
                 this.editOpenStatus = 1
-                this.editStatus = 2
             } else {
                 this.$message({
                     type: 'warn',
@@ -211,12 +216,12 @@ export default {
         onDelete () {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
+                this.editStatus = 3
                 if (this.changeFormDataStatus === 2) {
                     this.reWriteData(this.tempSelectTree)
                 }
                 this.changeFormDataStatus = 2
                 this.editOpenStatus = 1
-                this.editStatus = 3
             } else {
                 this.$message({
                     type: 'warn',
