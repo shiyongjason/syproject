@@ -2,6 +2,7 @@
     <div id="app">
         <router-view/>
     </div>
+    1
 </template>
 
 <style lang="scss">
