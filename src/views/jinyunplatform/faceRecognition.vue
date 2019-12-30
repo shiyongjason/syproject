@@ -60,6 +60,7 @@
                             </a>
                         </el-col>
                         <el-col :span="12"><span class="detail-name">身份证反面照：</span>
+
                             <a :href="formFace.backPhoto" target='_blank'>
                                 <img class="idImg" :src="formFace.backPhoto" alt="">
                             </a>
