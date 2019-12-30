@@ -69,9 +69,8 @@
                     <div class="title">人脸识别验证</div>
                     <el-row :gutter="10">
                         <el-col :span="12"><span class="detail-name">人脸认证视频：</span>
-                            <!-- {{formFace.faceVideo}} -->
                             <video id="video" width="320" height="240" controls>
-                                <source :src="formFace.faceVideo" type="video/mp4">
+<!--                                <source :src="formFace.faceVideo" type="video/mp4">-->
                                 您的浏览器不支持 HTML5 video 标签。
                             </video>
                         </el-col>
@@ -209,8 +208,14 @@ export default {
             else if (this.formFace.backType == 'unknown') this.formFace.backTypeN = '未知（识别失败）'
             else if (this.formFace.backType == 'ps') this.formFace.backTypeN = 'PS'
             else this.formFace.backTypeN = '不知名错误'
-            console.log(this.formFace)
+            // console.log(this.formFace)
             this.dialogPicture = true
+            // 动态修改视频地址
+            this.$nextTick(() => {
+                let vdo = document.getElementById('video')
+                vdo.src = data.faceVideo
+                vdo.play()
+            })
         },
         async onPass () {
             const params = {
