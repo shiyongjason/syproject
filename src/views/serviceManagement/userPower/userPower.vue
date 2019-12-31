@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <div class="page-body-cont">
+            <div class="page-body-cont" v-show="isShow">
                 <div class="sub-title">用户权益</div>
                 <el-table :data="tableData" class="table">
                     <el-table-column label="序号" align="center" width="80px" type="index">
@@ -145,7 +145,7 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '18501455666' },
+            queryParams: { mobile: '' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -171,7 +171,8 @@ export default {
                 }
             ],
             houseKeeperData: [],
-            userRightRow: {}
+            userRightRow: {},
+            isShow: false
         }
     },
     mounted () {
@@ -188,7 +189,7 @@ export default {
             this.queryParams.channelType = this.propsParams.source
         }
         // kaifa
-        this.onQuery()
+        // this.onQuery()
     },
     methods: {
         async onQuery () {
@@ -196,6 +197,7 @@ export default {
                 this.$message.error('手机号码格式错误')
                 return
             }
+            this.isShow = true
             this.getAggregate()
             this.onQueryTrace()
         },
@@ -251,11 +253,12 @@ export default {
         async clickHandle (form) {
             if (form.serviceNum > this.userRightRow.availableTimes) {
                 this.$message.error('服务可用次数不足')
+                this.$refs.workOrder.closeIsSaving()
+                console.log(this.$refs.workOrder.isSaving)
                 return
             }
             // 新增工单
             form.createBy = this.userInfo.employeeName
-            console.log(form)
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
             this.getAggregate()

@@ -107,7 +107,7 @@
                 </div>
             </div>
         </div>
-        <workOrder ref='workOrder' @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='dialog = false' />
+        <workOrder ref='workOrder' :isNormal="true" @clickHandle='clickHandle' :title='title' :form='form' :houseKeeperData='houseKeeperData' :dialog='dialog' @onDialog='dialog = false' />
     </div>
 </template>
 

@@ -6,7 +6,7 @@ import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
-import ServiceManagement from './catalogue/serviceManagement'
+import ServiceManagement from './router/catalogue/serviceManagement'
 Vue.use(Router)
 
 const routerMapping = [
@@ -29,7 +29,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/index/index'
                 },
-                component: () => import('../views/index/index')
+                component: () => import('./views/index/index')
             }
         ]
     },
@@ -53,7 +53,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/routerConfig'
                 },
-                component: () => import('../views/routerConfig')
+                component: () => import('./views/routerConfig')
             }
         ]
     },
@@ -75,7 +75,7 @@ const routerMapping = [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('../views/jinyunplatform/index')
+                component: () => import('./views/jinyunplatform/index')
             }
         ]
     },
@@ -109,7 +109,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/auth/organization'
                 },
-                component: () => import('../views/auth/organization')
+                component: () => import('./views/auth/organization')
             },
             {
                 path: 'postset',
@@ -121,7 +121,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/auth/postset'
                 },
-                component: () => import('../views/auth/postset')
+                component: () => import('./views/auth/postset')
             },
             {
                 path: 'role',
@@ -141,7 +141,7 @@ const routerMapping = [
                         })
                     }
                 },
-                component: () => import('../views/auth/role')
+                component: () => import('./views/auth/role')
             }
         ]
     },
@@ -165,7 +165,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/manageoverview'
                 },
-                component: () => import('../views/wisdom/manageoverview')
+                component: () => import('./views/wisdom/manageoverview')
             },
             {
                 path: 'branchTarget',
@@ -177,7 +177,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/branchTarget'
                 },
-                component: () => import('../views/wisdom/branchTarget')
+                component: () => import('./views/wisdom/branchTarget')
             },
             {
                 path: 'platformTarget',
@@ -189,7 +189,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/platformTarget'
                 },
-                component: () => import('../views/wisdom/platformTarget')
+                component: () => import('./views/wisdom/platformTarget')
             },
 
             {
@@ -202,7 +202,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/platcompanyinfo'
                 },
-                component: () => import('../views/wisdom/platcompanyinfo')
+                component: () => import('./views/wisdom/platcompanyinfo')
             },
 
             {
@@ -215,7 +215,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/platformSale'
                 },
-                component: () => import('../views/wisdom/platformSale')
+                component: () => import('./views/wisdom/platformSale')
             },
             {
                 path: 'branchSale',
@@ -227,7 +227,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/branchSale'
                 },
-                component: () => import('../views/wisdom/branchSale')
+                component: () => import('./views/wisdom/branchSale')
             },
             {
                 path: 'categorySale',
@@ -239,7 +239,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/categorySale'
                 },
-                component: () => import('../views/wisdom/categorySale')
+                component: () => import('./views/wisdom/categorySale')
             },
             {
                 path: 'profitStatistics',
@@ -251,7 +251,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/wisdom/profitStatistics'
                 },
-                component: () => import('../views/wisdom/profitStatistics')
+                component: () => import('./views/wisdom/profitStatistics')
             }
         ]
     },
@@ -275,7 +275,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/apply/index'
                 },
-                component: () => import('../views/bestonline/apply/index')
+                component: () => import('./views/bestonline/apply/index')
             },
             {
                 path: 'review',
@@ -287,7 +287,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/review'
                 },
-                component: () => import('../views/bestonline/review')
+                component: () => import('./views/bestonline/review')
             },
             {
                 path: 'reviewform',
@@ -307,7 +307,7 @@ const routerMapping = [
                         })
                     }
                 },
-                component: () => import('../views/bestonline/reviewform')
+                component: () => import('./views/bestonline/reviewform')
             },
             {
                 path: 'piecevote',
@@ -319,7 +319,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/piecevote'
                 },
-                component: () => import('../views/bestonline/piecevote')
+                component: () => import('./views/bestonline/piecevote')
             },
             {
                 path: 'pointscode',
@@ -331,7 +331,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/pointscode'
                 },
-                component: () => import('../views/bestonline/pointscode')
+                component: () => import('./views/bestonline/pointscode')
             },
             {
                 path: 'standard',
@@ -343,7 +343,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/standard'
                 },
-                component: () => import('../views/bestonline/standard')
+                component: () => import('./views/bestonline/standard')
             },
             {
                 path: 'applyform',
@@ -355,7 +355,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/bestonline/apply/applyForm'
                 },
-                component: () => import('../views/bestonline/apply/applyForm')
+                component: () => import('./views/bestonline/apply/applyForm')
             }
         ]
     },
@@ -377,7 +377,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/category/category.vue')
+                component: () => import('./views/hmall/category/category.vue')
             },
             {
                 path: 'brand',
@@ -389,7 +389,7 @@ const routerMapping = [
                     icon: '',
                     component: './views/hmall/brand/brand'
                 },
-                component: () => import('../views/hmall/brand/brand.vue')
+                component: () => import('./views/hmall/brand/brand.vue')
             },
             // {
             //     path: 'shopManager',
@@ -411,7 +411,7 @@ const routerMapping = [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('../views/hmall/shopManager/selectCategory.vue')
+                component: () => import('./views/hmall/shopManager/selectCategory.vue')
             },
             {
                 path: 'platform',
@@ -422,7 +422,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/platform/platform.vue')
+                component: () => import('./views/hmall/platform/platform.vue')
             },
             // {
             //     path: 'shopReviewList',
@@ -444,7 +444,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/attribute/attribute.vue')
+                component: () => import('./views/hmall/attribute/attribute.vue')
             },
             {
                 path: 'order',
@@ -455,7 +455,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/order/order.vue')
+                component: () => import('./views/hmall/order/order.vue')
             },
             {
                 path: 'coupon',
@@ -466,7 +466,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/coupon/coupon.vue')
+                component: () => import('./views/hmall/coupon/coupon.vue')
             },
             {
                 path: 'member',
@@ -477,7 +477,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/memberStore/member.vue')
+                component: () => import('./views/hmall/memberStore/member.vue')
             },
             {
                 path: 'memberPull',
@@ -488,7 +488,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/memberStore/memberPull.vue')
+                component: () => import('./views/hmall/memberStore/memberPull.vue')
             },
             // {
             //     path: 'publicShop',
@@ -510,7 +510,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/shopReview/activeReview.vue')
+                component: () => import('./views/hmall/shopReview/activeReview.vue')
             },
             {
                 path: 'wallet',
@@ -521,7 +521,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/walletPay/walletPay.vue')
+                component: () => import('./views/hmall/walletPay/walletPay.vue')
             },
             {
                 path: 'merchantReview',
@@ -532,7 +532,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/hmall/shopReview/merchantReview.vue')
+                component: () => import('./views/hmall/shopReview/merchantReview.vue')
             },
             // 这期不做
             // {
@@ -712,6 +712,17 @@ const routerMapping = [
             //     component: () => import('./views/jinyunplatform/index')
             // },
             {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
                 path: 'enterpriseCA',
                 name: 'enterpriseCA',
                 meta: {
@@ -720,7 +731,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('../views/jinyunplatform/enterpriseCA')
+                component: () => import('./views/jinyunplatform/enterpriseCA')
             },
             {
                 path: 'amountImport',
@@ -800,13 +811,13 @@ const router = new Router({
         {
             path: '/login',
             name: 'login',
-            component: () => import('../views/login/login'),
+            component: () => import('./views/login/login'),
             hidden: true
         },
         {
             path: '/403',
             name: '403',
-            component: () => import('../views/error/403'),
+            component: () => import('./views/error/403'),
             hidden: true
         }
     ]
