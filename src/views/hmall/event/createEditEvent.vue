@@ -294,6 +294,7 @@ export default {
     },
     watch: {
         pictureContainer (val) {
+            console.log(val)
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
             })
@@ -553,10 +554,9 @@ export default {
         },
         /** 保存 */
         async onSave (status, mark = '') {
+            console.log(this.pictureContainer)
+            this.form.image = this.pictureContainer.length > 0 ? this.pictureContainer[0].url : ''
             console.log(this.form)
-            this.pictureContainer.forEach((value, index) => {
-                this.form.image = value.url
-            })
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
                 if (!valid) {
