@@ -690,6 +690,7 @@ export default {
             let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
             await this.copy(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
+            this.pictureContainer.push({ url: this.form.image })
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
         }
