@@ -47,14 +47,14 @@
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]"
                         >
-                            <el-input type="text" v-model="item.name" max-length="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
+                            <el-input type="text" v-model="item.name" maxlength="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
                         </el-form-item>
                         <div v-show="item.name.trim().length> 0">
                             <el-form-item  :label="index === 0 ? '规格值': ''" v-for="(subItem,index) in item.attributeList" :key="subItem.id" class="attribute-list"
                                            :prop="'serviceResourceList.'+ idx +'.attributeList.'+ index + '.value'"
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
-                                <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
+                                <el-input type="text" v-model="subItem.value" maxlength="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
                                 <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="(!pageDisabled && item.attributeList.length > 1) && propsParams.methods !== 'edit'"></span>
                                 <span  v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
@@ -354,7 +354,7 @@ export default {
             if (this.form.serviceResourceList.length > 10) {
                 this.$message({
                     type: 'error',
-                    message: '规格值不能超过10个'
+                    message: '规格项不能超过10个'
                 })
             }
             const temp = deepCopy(this.defaultSpecification)
@@ -372,6 +372,13 @@ export default {
         },
         addAttributeList (item) {
             const temp = { ...this.defaultAttribute }
+            if (item.attributeList.length > 10) {
+                this.$message({
+                    type: 'error',
+                    message: '规格值不能超过10个'
+                })
+                return
+            }
             item.attributeList.push(temp)
         },
         async drawDetails (templateId) {
