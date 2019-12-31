@@ -16,7 +16,7 @@
                     <div class="flex-wrap-title"><span class="red">*</span>资源类目：</div>
                     <div class="flex-wrap-cont">
                         <el-cascader
-                            :disabled="pageDisabled"
+                            :disabled="pageDisabled || propsParams.methods === 'edit'"
                             v-model="message.categoryId"
                             :options="doneServiceCategoryList"
                            ></el-cascader>
@@ -25,7 +25,13 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">说明：</div>
                     <div class="flex-wrap-cont">
-                       <el-input v-model="message.description" :disabled="pageDisabled"></el-input>
+                       <el-input maxlength="100" v-model="message.description" :disabled="pageDisabled"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="propsParams.methods === 'edit'">
+                    <div class="flex-wrap-title">资源模板编号：</div>
+                    <div class="flex-wrap-cont">
+                       <el-input maxlength="100" v-model="propsParams.templateId" disabled ></el-input>
                     </div>
                 </div>
             </div>
@@ -33,9 +39,9 @@
                 <h3 class="add-btn title">
                     资源规格
                 </h3>
-                <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+                <el-form :disabled="propsParams.methods === 'edit'" :model="form" :rules="rules" ref="form" label-width="100px">
                     <div class="row" v-for="(item,idx) in form.serviceResourceList" :key="item.id">
-                        <span v-if="!pageDisabled" @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
+                        <span v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
                         <el-form-item label="规格名" :prop="'serviceResourceList.'+ idx + '.name'"
                                       :rules="[
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
@@ -49,13 +55,13 @@
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
                                 <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
-                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="!pageDisabled && item.attributeList.length > 1"></span>
-                                <span  v-if="!pageDisabled" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
+                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="(!pageDisabled && item.attributeList.length > 1) && propsParams.methods !== 'edit'"></span>
+                                <span  v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="add">
-                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格名</el-button>
+                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled && propsParams.methods !== 'edit'">添加规格名</el-button>
                     </div>
                 </el-form>
                 <h3 class="detailed-title title" v-show="attributeTable.list.length> 0">
@@ -78,7 +84,7 @@
                                     <el-form-item :prop="'list.'+ index +'.mdmCode'"
                                                   :rules="[{ required: !item.isDisable, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
                                                   ,{ required: true, whitespace: true,validator: checkedMdmCodeReport, trigger: 'blur', message: 'mdmCode重复' }]" class="mdm-number">
-                                        <el-input class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
+                                        <el-input maxlength="20" class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
                                     </el-form-item>
                                 </td>
                                 <td>
@@ -179,7 +185,7 @@ export default {
         nameChange () {
             if (this.message.name.trim()) {
                 this.attributeTable.list.forEach(value => {
-                    value.name = this.message.name + value.name
+                    value.name = this.message.name + value.name.replace(this.message.name, '')
                 })
             }
         },
@@ -302,7 +308,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 0 : 1,
+                                    isDisable: value.isDisable == true ? 1 : 0,
                                     attributeList: value.attributeList
                                 }
                             })
@@ -327,7 +333,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 0 : 1,
+                                    isDisable: value.isDisable == true ? 1 : 0,
                                     attributeList: value.attributeList
                                 }
                             })

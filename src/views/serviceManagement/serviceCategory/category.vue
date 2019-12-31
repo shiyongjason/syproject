@@ -93,7 +93,6 @@ export default {
         return {
             editStatus: 1, // 1:新增 2:修改 3:删除
             editOpenStatus: 2, // 1:打开 2:关闭
-            changeFormDataStatus: 1, // 点击是否切换form表单数据 1:切换 2:不切换
             isSelectFlag: false, // 是否选中tree
             tempSelectTree: {},
             filterText: '',
@@ -133,7 +132,7 @@ export default {
                 makeData(this.resetServiceCategoryTree, val)
             })
 
-            // temp.shift()
+            temp.pop()
             return temp
         }
     },
@@ -166,9 +165,6 @@ export default {
             this.isSelectFlag = true
             this.editOpenStatus = false
             this.tempSelectTree = data
-            if (this.changeFormDataStatus === 1) {
-                this.reWriteData(data)
-            }
         },
         isSelect () {
             return this.isSelectFlag
@@ -184,11 +180,8 @@ export default {
             }
             if (this.isSelect()) {
                 this.editStatus = 1
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
+                this.reWriteData(this.tempSelectTree)
                 this.$set(this.form, 'name', '')
-                this.changeFormDataStatus = 2
                 this.editOpenStatus = 1
             } else {
                 this.$message({
@@ -201,10 +194,7 @@ export default {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
                 this.editStatus = 2
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
-                this.changeFormDataStatus = 2
+                this.reWriteData(this.tempSelectTree)
                 this.editOpenStatus = 1
             } else {
                 this.$message({
@@ -217,10 +207,7 @@ export default {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
                 this.editStatus = 3
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
-                this.changeFormDataStatus = 2
+                this.reWriteData(this.tempSelectTree)
                 this.editOpenStatus = 1
             } else {
                 this.$message({
@@ -240,7 +227,6 @@ export default {
                     await this.createServiceResourcesCategory(params)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
-                    this.changeFormDataStatus = 1
                     this.editOpenStatus = 2
                 }
             })
@@ -253,7 +239,6 @@ export default {
                     await this.updateServiceResourcesCategory(param.id, param)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
-                    this.changeFormDataStatus = 1
                     this.editOpenStatus = 2
                 }
             })
@@ -268,12 +253,10 @@ export default {
                 await this.deleteServiceResourcesCategory(this.form.id)
                 this.findServiceResourcesCategory()
                 this.isSelectFlag = false
-                this.changeFormDataStatus = 1
                 this.editOpenStatus = 2
             }
         },
         onCancel () {
-            this.changeFormDataStatus = 1
             this.editOpenStatus = 2
         },
         async createServiceResourcesCategory (params) {
