@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont pb20">
-            <el-form :model="form" ref='form' :rules="rules.event" label-position='left' >
+            <el-form :model="form" ref='form' :rules="rules.event" label-position='left'>
                 <div class="forminfo">
                     <h2>1.设置活动基本信息</h2>
                     <div class="query-cont-row">
@@ -14,20 +14,36 @@
                         </div>
                     </div>
                     <div class="query-cont-row">
-                            <!-- <div class="query-col-title">活动时间：</div> -->
-                            <div class="query-cont-col">
-                                <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
-                                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='disableStatus'>
+                        <!-- <div class="query-col-title">活动时间：</div> -->
+                        <div class="query-cont-col">
+                            <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
+                                <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='disableStatus'>
                                 </el-date-picker>
-                                </el-form-item>
-                                <div class="line ml5 mr5">-</div>
-                                <el-form-item prop="endTime" style="margin-bottom:0">
-                                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
-                                    </el-date-picker>
-                                </el-form-item>
-                                <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
-                            </div>
+                            </el-form-item>
+                            <div class="line ml5 mr5">-</div>
+                            <el-form-item prop="endTime" style="margin-bottom:0">
+                                <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
+                                </el-date-picker>
+                            </el-form-item>
+                            <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
+                        </div>
                     </div>
+                    <el-form-item label="商品主图：" prop="image" ref="reqPictureList">
+                        <ul class="picture-container">
+                            <template v-if="pictureContainer.length>0">
+                                <li v-for="(item,index) in pictureContainer" :key="index">
+                                    <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
+                                    <img :src="item.url" :alt="item.url">
+                                    <span class="picture-setting" @click="pictureSetting(index)">
+                                        设为主图
+                                    </span>
+                                </li>
+                            </template>
+                            <el-upload v-bind="uploadInfo" v-if="pictureContainer.length<1" :on-error="pictureError" :on-success="pictureSuccess" :show-file-list="false" :before-upload="beforeAvatarUpload" style="float: left" list-type="picture-card">
+                                <i class="el-icon-plus"></i>
+                            </el-upload>
+                        </ul>
+                    </el-form-item>
                 </div>
                 <div class="forminfo">
                     <h2>2.设置规则和优惠</h2>
@@ -45,9 +61,9 @@
                         <div class="query-cont-col">
                             <div class="query-col-input">
                                 <el-form-item prop="memberScope" label="会员限制：" style="display: flex;">
-                                <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
-                                <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
-                                <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
+                                    <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
+                                    <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
+                                    <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
                                 </el-form-item>
                             </div>
                         </div>
@@ -66,7 +82,7 @@
                 </div>
                 <div class="page-table">
                     <!-- table -->
-                    <hosJoyTable ref="hosjoyTable" isShowIndex border  isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px' >
+                    <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
                         <template slot="skuName" slot-scope="scope">
                             <div class="goods">
                                 <img :src="scope.data.row.pictureUrl">
@@ -92,14 +108,14 @@
             <el-button @click='()=>{$router.go(-1)}'>返回</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
-        <center>
-            <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
-            <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
-        </center>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSureOrder">确 定</el-button>
-        </span>
+            <center>
+                <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
+                <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
+            </center>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onCancle">取 消</el-button>
+                <el-button type="primary" @click="onSureOrder">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -107,6 +123,7 @@
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
+import { interfaceUrl } from '@/api/config'
 import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { saveEvent, editEvent, clickFarming } from './api/index'
@@ -117,6 +134,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            pictureContainer: [], // 图片列表
             canNotOrder: false,
             isFirst: true,
             popoverVisible: false,
@@ -130,6 +148,7 @@ export default {
                 spikeName: '',
                 startTime: '',
                 endTime: '',
+                image: '',
                 discountType: 1, // 优惠方式 1：折扣 2：直降
                 memberScope: 1, // 会员限制 1：所有会员 2：首单会员 3：新注册会员
                 spikeSku: [],
@@ -145,6 +164,9 @@ export default {
                     ],
                     endTime: [
                         { required: true, message: '请选择活动结束时间', trigger: 'change' }
+                    ],
+                    image: [
+                        { required: true, message: '请选择活动图片' }
                     ],
                     discountType: [
                         { required: true, message: '请选择优惠方式', trigger: 'change' }
@@ -256,7 +278,7 @@ export default {
                                 </span>
                                 : <span>
                                     直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -270,6 +292,13 @@ export default {
             ]
         }
     },
+    watch: {
+        pictureContainer (val) {
+            this.$nextTick(() => {
+                if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
+            })
+        }
+    },
     computed: {
         ...mapState({
             eventProducts: state => state.eventManage.eventProducts,
@@ -277,6 +306,15 @@ export default {
             eventInfos: state => state.eventManage.eventInfos,
             isCollapse: state => state.isCollapse
         }),
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                name: 'multiFile'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -305,8 +343,32 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([ 'REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS' ]),
+        ...mapMutations(['REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS']),
         ...mapActions(['eventInfo', 'copy']),
+        beforeAvatarUpload (file) {
+            const isImage = ['image/jpeg', 'image/jpg', 'image/png']
+            const isJPG = file.type
+            if (!isImage.includes(isJPG)) {
+                this.$message.error('上传图片仅支持jpg、jpeg、png！')
+                return false
+            }
+            return true
+        },
+        pictureError () {
+            this.$message({
+                type: 'error',
+                message: '文件上传失败'
+            })
+        },
+        pictureSuccess (files, fileList) {
+            this.pictureContainer.push({ url: files.data.accessUrl })
+        },
+        pictureDelete (i) {
+            this.pictureContainer.splice(i, 1)
+        },
+        pictureSetting (i) {
+            this.pictureContainer.unshift((this.pictureContainer.splice(i, 1))[0])
+        },
         radioChange (val) {
             this.discountValue = ''
             this.purchaseLimitNum = ''
@@ -492,6 +554,9 @@ export default {
         /** 保存 */
         async onSave (status, mark = '') {
             console.log(this.form)
+            this.pictureContainer.forEach((value, index) => {
+                this.form.image = value.url
+            })
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
                 if (!valid) {
@@ -607,9 +672,11 @@ export default {
             })
         },
         async getEventInfo () {
+            this.pictureContainer = []
             let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
             await this.eventInfo(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
+            this.pictureContainer.push({ url: this.form.image })
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
             if (this.$route.query.action) {
@@ -668,24 +735,147 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.forminfo h2{font-size: 18px; margin:20px 0 15px;background: #f2f2f2; padding:7px 0 7px 5px}
-/deep/.flxinput{ display: flex;align-items: center;}
-/deep/.flxinput font{ width: 90px}
-.goods{ display: flex}
-.goods img{width: 70px; height: 70px; margin-right: 15px}
-.subfixed {position: fixed;bottom: 6px;left: 0;right: 0;padding: 10px;text-align: center;z-index: 99;}
-.maxLeft {left: 200px;transition: 0.3s;}
-.pb20{ padding-bottom: 20px !important}
-.goods-name{ text-align: left}
-/deep/.el-table .warning-row {background: #ffc7c7;}
-/deep/.errormsg{color:#f56c6c;font-size: 12px;margin-top: 2px}
-/deep/.movedom{opacity: .8;color: #fff!important;background: #42b983!important;}
-/deep/.error .el-input__inner{ border:1px solid #f56c6c }
-/deep/.orderDialog .el-dialog{ height: 230px}
-/deep/.orderDialog .el-dialog__body{ min-height: auto !important}
-.isremind{margin-top:12px;}
-.isremind font{color:#a6a8ab;font-weight: 200;}
-/deep/.mark{ font-style: normal;color: #F56C6C; padding-right: 3px}
-/deep/.el-popover .popover-p{ line-height: 30px;color: #F56C6C; }
-.timeTips{ color: #FF7A45; margin-left: 30px}
+.forminfo h2 {
+    font-size: 18px;
+    margin: 20px 0 15px;
+    background: #f2f2f2;
+    padding: 7px 0 7px 5px;
+}
+/deep/.flxinput {
+    display: flex;
+    align-items: center;
+}
+/deep/.flxinput font {
+    width: 90px;
+}
+.goods {
+    display: flex;
+}
+.goods img {
+    width: 70px;
+    height: 70px;
+    margin-right: 15px;
+}
+.subfixed {
+    position: fixed;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    text-align: center;
+    z-index: 99;
+}
+.maxLeft {
+    left: 200px;
+    transition: 0.3s;
+}
+.pb20 {
+    padding-bottom: 20px !important;
+}
+.goods-name {
+    text-align: left;
+}
+/deep/.el-table .warning-row {
+    background: #ffc7c7;
+}
+/deep/.errormsg {
+    color: #f56c6c;
+    font-size: 12px;
+    margin-top: 2px;
+}
+/deep/.movedom {
+    opacity: 0.8;
+    color: #fff !important;
+    background: #42b983 !important;
+}
+/deep/.error .el-input__inner {
+    border: 1px solid #f56c6c;
+}
+/deep/.orderDialog .el-dialog {
+    height: 230px;
+}
+/deep/.orderDialog .el-dialog__body {
+    min-height: auto !important;
+}
+.isremind {
+    margin-top: 12px;
+}
+.isremind font {
+    color: #a6a8ab;
+    font-weight: 200;
+}
+/deep/.mark {
+    font-style: normal;
+    color: #f56c6c;
+    padding-right: 3px;
+}
+/deep/.el-popover .popover-p {
+    line-height: 30px;
+    color: #f56c6c;
+}
+.timeTips {
+    color: #ff7a45;
+    margin-left: 30px;
+}
+.picture-container {
+    float: left;
+}
+.picture-container li {
+    width: 102px;
+    height: 102px;
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    margin-right: 12px;
+    float: left;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+.picture-container li img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    z-index: 1;
+}
+.picture-container li:hover .picture-delete {
+    bottom: 0;
+}
+.picture-container li:hover .picture-setting {
+    top: 0;
+}
+.picture-delete {
+    position: absolute;
+    bottom: -30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    font-size: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    transition: all 0.2s;
+    z-index: 2;
+}
+.picture-setting {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 100%;
+    line-height: 30px;
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    z-index: 2;
+}
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+}
 </style>
