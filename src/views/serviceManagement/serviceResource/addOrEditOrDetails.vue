@@ -126,6 +126,7 @@ export default {
                 description: '',
                 name: ''
             },
+            oldMessageName: '',
             form: {
                 serviceResourceList: []
             },
@@ -185,9 +186,10 @@ export default {
         nameChange () {
             if (this.message.name.trim()) {
                 this.attributeTable.list.forEach(value => {
-                    value.name = this.message.name + value.name.replace(this.message.name, '')
+                    value.name = this.message.name + value.name.replace(this.oldMessageName, '')
                 })
             }
+            this.oldMessageName = this.message.name
         },
         resetAttribute () {
             let tempAll = []
@@ -394,6 +396,7 @@ export default {
                     })
                 })
             })
+            this.oldMessageName = data.serviceResourceTemplate.name
             this.message = {
                 name: data.serviceResourceTemplate.name,
                 categoryId: categoryId,
