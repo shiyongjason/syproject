@@ -225,7 +225,7 @@ export default {
                     this.tempAttributeTable.forEach(value2 => {
                         if (value2.name.indexOf(value1.name) > -1) {
                             this.$set(this.attributeTable.list[index], `mdmCode`, value2.mdmCode)
-                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable === 1)
+                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable === 0)
                         }
                     })
                 })
@@ -308,7 +308,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
                                 }
                             })
@@ -333,7 +333,7 @@ export default {
                                 return {
                                     name: params.name + value.name,
                                     mdmCode: value.mdmCode,
-                                    isDisable: value.isDisable == true ? 1 : 0,
+                                    isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
                                 }
                             })
