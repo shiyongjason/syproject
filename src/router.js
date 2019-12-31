@@ -700,6 +700,17 @@ const routerMapping = [
         },
         component: Layout,
         children: [
+            // {
+            //     path: 'jyindex',
+            //     name: 'jyindex',
+            //     meta: {
+            //         title: '金云',
+            //         tagName: '金云',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('./views/jinyunplatform/index')
+            // },
             {
                 path: 'jyindex',
                 name: 'jyindex',
@@ -732,6 +743,39 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('./views/jinyunplatform/amountImport')
+            },
+            {
+                path: 'accountImport',
+                name: 'accountImport',
+                meta: {
+                    title: '账户导入',
+                    tagName: '账户导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/accountImport')
+            },
+            {
+                path: 'processManage',
+                name: 'processManage',
+                meta: {
+                    title: '流程查询',
+                    tagName: '流程查询',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/processManage')
+            },
+            {
+                path: 'faceRecognition',
+                name: 'faceRecognition',
+                meta: {
+                    title: '人脸识别',
+                    tagName: '人脸识别',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/faceRecognition')
             }
         ]
     },
@@ -861,7 +905,6 @@ router.beforeEach(async (to, from, next) => {
     }
     next()
 })
-
 export default router
 export {
     routerMapping
