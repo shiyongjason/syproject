@@ -28,14 +28,14 @@
                             <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
                         </div>
                     </div>
-                    <el-form-item label="商品主图：" prop="image" ref="reqPictureList">
+                    <el-form-item label="活动banner：" prop="image" ref="reqPictureList">
                         <ul class="picture-container">
                             <template v-if="pictureContainer.length>0">
                                 <li v-for="(item,index) in pictureContainer" :key="index">
                                     <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
                                     <img :src="item.url" :alt="item.url">
                                     <span class="picture-setting" @click="pictureSetting(index)">
-                                        设为主图
+                                       banner
                                     </span>
                                 </li>
                             </template>
@@ -43,6 +43,7 @@
                                 <i class="el-icon-plus"></i>
                             </el-upload>
                         </ul>
+                        <p style="color:#999">banner大小为 702px x 262px</p>
                     </el-form-item>
                 </div>
                 <div class="forminfo">
