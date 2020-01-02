@@ -81,14 +81,26 @@
                 </el-form-item>
             </el-form>
             <el-form :model="formData" :rules="formRules" ref="attachmentsUrl" label-position="right" label-width="150px">
-                <el-form-item label="附件：" prop="attachmentsUrl">
-                    <div class="flex-wrap-cont">
-                        <el-upload class="upload-demo" v-bind="uploadInfo" :multiple="true" :on-success="handleSuccess" :before-remove="beforeRemove" :on-remove="handleRemove" :on-exceed="handleExceed" :file-list="fileList" :on-change="handleCheckedSize" :before-upload="handleUpload">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                            <p style="line-height: 16px;color: #666666;margin-top: 10px">
-                                附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,必须支持,附件每个大小限制10M以内
-                            </p>
-                        </el-upload>
+                <el-form-item label="附件：">
+                    <div class="diy-upload">
+                        <el-form-item label="意向协议：" prop="intentionAgreement">
+                            <ApplyUpload :fileList="intentionAgreementFileList" :arrList.sync="intentionAgreementArrList" @validate="validate"></ApplyUpload>
+                        </el-form-item>
+                    </div>
+                    <div class="diy-upload">
+                        <el-form-item label="基础信息表：" prop="basicInformation">
+                            <ApplyUpload :fileList="basicInformationFileList" :arrList.sync="basicInformationArrList" @validate="validate"></ApplyUpload>
+                        </el-form-item>
+                    </div>
+                    <div class="diy-upload">
+                        <el-form-item label="调前备忘录：" prop="memorandum">
+                            <ApplyUpload :fileList="memorandumFileList" :arrList.sync="memorandumnArrList" @validate="validate"></ApplyUpload>
+                        </el-form-item>
+                    </div>
+                    <div class="diy-upload">
+                        <el-form-item label="其余材料：" prop="otherMaterials">
+                            <ApplyUpload :fileList="otherMaterialsFileList" :arrList.sync="otherMaterialsArrList" @validate="validate"></ApplyUpload>
+                        </el-form-item>
                     </div>
                 </el-form-item>
             </el-form>
@@ -106,6 +118,7 @@
     </div>
 </template>
 <script>
+import ApplyUpload from './components/applyUpload'
 import { interfaceUrl } from '@/api/config'
 import { adddueapply, getDueapplydetail, appDueapply, updateDueapply } from '../api/index'
 import { mapState } from 'vuex'
@@ -114,6 +127,9 @@ import { BUSINESS_OPTIONS } from './const.js'
 import { AUTH_BESTONLINE_APPLY_ADD_DRAFT, AUTH_BESTONLINE_APPLY_ADD_COMMIT, AUTH_BESTONLINE_APPLY_EDIT_DRAFT, AUTH_BESTONLINE_APPLY_EDIT_COMMIT } from '@/utils/auth_const.js'
 export default {
     name: 'applyEdit',
+    components: {
+        ApplyUpload
+    },
     data () {
         return {
             formData: {
@@ -179,22 +195,53 @@ export default {
                 mainSystemOther: [
                     { required: true, message: '请详细说明其他品类', trigger: 'blur' }
                 ],
-                attachmentsUrl: [
+                intentionAgreement: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (this.arrList.length <= 0) {
+                            if (this.intentionAgreementArrList.length <= 0) {
                                 return callback(new Error('请上传附件'))
                             }
                             return callback()
                         },
                         trigger: 'change'
                     }
-                ]
+                ],
+                basicInformation: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.basicInformationArrList.length <= 0) {
+                                return callback(new Error('请上传附件'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
+                memorandum: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.memorandumnArrList.length <= 0) {
+                                return callback(new Error('请上传附件'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'change'
+                    }
+                ],
+                otherMaterials: []
             },
             busOptions: BUSINESS_OPTIONS,
-            fileList: [],
-            arrList: [],
+            intentionAgreementFileList: [],
+            intentionAgreementArrList: [],
+            basicInformationFileList: [],
+            basicInformationArrList: [],
+            memorandumFileList: [],
+            memorandumnArrList: [],
+            otherMaterialsFileList: [],
+            otherMaterialsArrList: [],
             applyId: '',
             approvalStatus: '',
             checkList: [],
@@ -244,52 +291,9 @@ export default {
                 type: 'warning'
             })
         },
-        handleRemove (file, fileList) {
-            const fileurl = file.response ? file.response.data.accessUrl : file.url
-            this.arrList = this.arrList && this.arrList.filter(value =>
-                value.url !== fileurl
-            )
+        validate (prop) {
             this.$refs['attachmentsUrl'].validate(async (validate) => {
             })
-        },
-        handleSuccess (file) {
-            if (file.code !== 200) {
-                this.$confirm(file.message, '提示信息').catch(() => {
-                })
-            } else {
-                let uploadedUrl = file.data.accessUrl
-                let name = file.data.fileName
-                this.arrList.push({ url: uploadedUrl, name: name })
-                this.$refs.form.clearValidate('attachmentsUrl')
-            }
-            this.$refs['attachmentsUrl'].validate(async (validate) => {
-            })
-        },
-        handleExceed (files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-        },
-        beforeRemove (file, fileList) {
-            return this.$confirm(`确定移除 ${file.name}？`).then(() => {
-
-            })
-        },
-        handleCheckedSize (input, inputList) {
-            // 判断是否符合要求
-            if (input.size / (1024 * 1024) < 10) {
-                this.is10M = false
-            } else {
-                this.is10M = true
-            }
-        },
-        handleUpload (file) {
-            // TODO: 目前只有一个文件,待优化
-            if (this.is10M) {
-                this.$message({
-                    message: '建议不要超过10M',
-                    type: 'warning'
-                })
-                return false
-            }
         },
         async getDueapplydetail (applyId) {
             const { data } = await getDueapplydetail({ applyId: applyId })
@@ -444,5 +448,14 @@ export default {
 }
 .el-radio-group {
     width: 100%;
+}
+.diy-upload {
+    margin-bottom: 20px;
+}
+.diy-upload /deep/ .el-form-item__label {
+    text-align: left;
+}
+.diy-upload /deep/ .el-form-item__content {
+    margin-left: 0 !important;
 }
 </style>

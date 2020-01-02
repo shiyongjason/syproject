@@ -30,9 +30,16 @@
 
         </div>
         <div class="page-body-cont">
-            <div class="table-cont-title" v-if="addbtn">
+            <!-- <div class="table-cont-title" v-if="addbtn">
                 <span class="table-title-name"></span>
                 <el-button type="info" @click="addNewApply" v-if="hosAuthCheck(addAuthCode)">
+                    添加申请
+                </el-button>
+            </div> -->
+            <!-- 开发时删除权限控制,结束开发时请删除 -->
+            <div class="table-cont-title">
+                <span class="table-title-name"></span>
+                <el-button type="info" @click="addNewApply">
                     添加申请
                 </el-button>
             </div>
