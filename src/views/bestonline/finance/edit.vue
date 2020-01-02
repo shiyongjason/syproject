@@ -131,6 +131,7 @@ export default {
             this.isPending = true
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
+                this.findEmptyToast()
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
                     try {
@@ -201,6 +202,16 @@ export default {
                 this.activeName = '10'
             } else if (expandProfitStatement) {
                 this.activeName = '11'
+            }
+        },
+        findEmptyToast () {
+            console.log(this.form)
+            const result = this.form.assessmentList.some(i => {
+                return i.state === ''
+            })
+            console.log(result)
+            if (result) {
+                this.$message.warning('请选择财务尽调评估 结论')
             }
         }
     }
