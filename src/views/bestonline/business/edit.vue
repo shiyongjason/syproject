@@ -337,6 +337,12 @@ export default {
                 }
             })
         },
+        /**
+        * findValidFailIndex
+        * @param {Object} errorsObj - 报错对象
+        * @param {Array} propsArray - 检验字段数组
+        * @returns {Boolean} true - 布尔值
+        */
         validFailResult (errorsObj = {}, propsArray = [], activeName = '1') {
             let errorArray = Object.keys(errorsObj).filter(item => {
                 return [...propsArray].find(v => item.includes(v))
