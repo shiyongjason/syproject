@@ -310,7 +310,8 @@ export default {
                                 ...this.form,
                                 operationNode: 1,
                                 createUser: createUser,
-                                updateUser: createUser
+                                updateUser: createUser,
+                                applyId: this.$route.query.applyId
                             })
                             this.isPending = false
                         } catch (error) {
@@ -322,7 +323,8 @@ export default {
                                 ...this.form,
                                 operationNode: 1,
                                 createUser: createUser,
-                                updateUser: createUser
+                                updateUser: createUser,
+                                applyId: this.$route.query.applyId
                             })
                             this.isPending = false
                         } catch (error) {

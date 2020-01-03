@@ -129,6 +129,7 @@ export default {
                     this.form.updateUser = this.userInfo.employeeName
                     this.form.operationNode = 1
                     this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
+                    this.form.applyId = this.$route.query.applyId
                     if (this.form.dueOrganizationId) {
                         await updateOrganization(this.form)
                     } else {
