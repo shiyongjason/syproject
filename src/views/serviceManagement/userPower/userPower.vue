@@ -252,7 +252,6 @@ export default {
                 customerMobile: userMapper.mobile,
                 customerAddress: userMapper.address
             }
-            console.log(this.form)
             this.findServiceManagementList() // 查询线下管家
             this.dialog = true
             this.$refs.workOrder.clearValidate()

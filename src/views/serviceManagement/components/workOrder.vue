@@ -56,13 +56,13 @@
                         <el-option label="已预约（待确认）" :value="1"></el-option>
                         <el-option label="已预约（已确认）" :value="2"></el-option>
                         <el-option label="已完成" :value="3"></el-option>
-                        <el-option label="取消" :value="4"></el-option>
+                        <el-option v-if="form.webisEdit" label="取消" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="工程师">
                     <el-input type="text" v-model="form.engineer" placeholder="请输入工程师" maxlength="10"></el-input>
                 </el-form-item>
-                <el-form-item label="工程师电话">
+                <el-form-item label="工程师电话" prop="engineerMobile">
                     <el-input type="text" v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"></el-input>
                 </el-form-item>
                 <el-form-item prop="serviceNum" label="服务数量">
@@ -162,6 +162,8 @@ export default {
             if (!value) {
                 if (rule.field === 'customerMobile') {
                     callback(new Error('请输入手机号码'))
+                } else if (rule.field === 'engineerMobile') {
+                    callback(new Error('请输入工程师电话'))
                 } else {
                     callback(new Error('请输入管家电话'))
                 }
@@ -192,6 +194,9 @@ export default {
                     { required: true, message: '姓名不能为空', trigger: 'blur' }
                 ],
                 customerMobile: [
+                    { required: true, validator: checkMobile, trigger: 'blur' }
+                ],
+                engineerMobile: [
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
                 houseKeeperId: [
