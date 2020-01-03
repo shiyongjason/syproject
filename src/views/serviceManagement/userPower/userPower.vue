@@ -184,15 +184,25 @@ export default {
         if (this.propsParams.mobile) {
             this.queryParams.mobile = this.propsParams.mobile
             this.onQuery()
+        } else {
+            // 没携带手机就清楚缓存
+            sessionStorage.removeItem('userPowerPropsUserInfo')
         }
         if (this.propsParams.source) {
             this.queryParams.channelType = this.propsParams.source
+        }
+        if (this.propsParams.orderNo) {
+            this.queryParamsTrace.orderNo = this.propsParams.orderNo
         }
         // kaifa
         // this.onQuery()
     },
     methods: {
         async onQuery () {
+            if (!this.queryParams.mobile) {
+                this.$message.error('手机号码必填')
+                return
+            }
             if (this.queryParams.mobile && !phoneRegular.test(this.queryParams.mobile)) {
                 this.$message.error('手机号码格式错误')
                 return
@@ -212,7 +222,7 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'mobile', '')
             this.$set(this.queryParams, 'channelType', '')
-            this.onQuery()
+            this.isShow = false
         },
         onResetTrace () {
             this.$set(this.queryParamsTrace, 'operateBeginTime', '')
@@ -222,6 +232,7 @@ export default {
             this.onQueryTrace()
         },
         async handleClickShowDialog (row) {
+            const userMapper = JSON.parse(sessionStorage.getItem('userPowerPropsUserInfo'))
             const params = {
                 mobile: this.queryParams.mobile,
                 channelType: row.channelType
@@ -236,8 +247,12 @@ export default {
                 AloneDataTimeEnd: '',
                 reserveMode: 2,
                 userRightMobile: this.queryParams.mobile,
-                serviceResourceArr: data
+                serviceResourceArr: data,
+                customerName: userMapper.name,
+                customerMobile: userMapper.mobile,
+                customerAddress: userMapper.address
             }
+            console.log(this.form)
             this.findServiceManagementList() // 查询线下管家
             this.dialog = true
             this.$refs.workOrder.clearValidate()
@@ -261,7 +276,7 @@ export default {
             form.createBy = this.userInfo.employeeName
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
-            this.getAggregate()
+            this.onQuery()
         }
     }
 }

@@ -7,9 +7,9 @@
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="订单号" v-if="form.webisEdit">
-                    <el-input type="text" v-model="form.workOrderNo" disabled maxlength="25"></el-input>
-                </el-form-item>
+<!--                <el-form-item label="订单号" v-if="form.webisEdit">-->
+<!--                    <el-input type="text" v-model="form.workOrderNo" disabled maxlength="25"></el-input>-->
+<!--                </el-form-item>-->
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
                 </el-form-item>
@@ -38,11 +38,15 @@
                     <!--
                         下一期 是否 可以修改服务项目
                      -->
-                    <el-input v-if="isNormal" v-model="form.serviceResourceName" max-length="30"></el-input>
+                    <el-input v-if="isNormal" v-model="form.serviceResourceName" maxlength="30"></el-input>
                     <el-select v-else-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
                         <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
                     </el-select>
-                    <div v-else class="serviceProject">{{`${form.serviceResourceName}(可用${form.availableTimes?form.availableTimes:0}次)`}}</div>
+                    <div v-else class="serviceProject">{{form.serviceResourceName}}
+                        <template v-if="!form.webisEdit">
+                            (可用 {{form.availableTimes?form.availableTimes:0}}次)
+                        </template>
+                    </div>
                 </el-form-item>
                 <el-form-item label="服务商">
                     <el-input type="text" v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>

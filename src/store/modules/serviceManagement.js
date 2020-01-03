@@ -73,12 +73,16 @@ const getters = {
             return subTemp
         }
         return resetTreeList(state.serviceCategoryTree)
+    },
+    doneServiceResourceAttribute: state => {
+        return state.serviceResourcesAttribute
     }
 }
 const state = {
     serviceCategoryTree: [],
     serviceTemplateList: [],
-    serviceTemplateDetails: {}
+    serviceTemplateDetails: {},
+    serviceResourcesAttribute: {}
 }
 const mutations = {
     [Const.FIND_SERVICE_RESOURCES_CATEGORY] (state, data) {
@@ -89,6 +93,9 @@ const mutations = {
     },
     [Const.GET_SERVICE_RESOURCES_TEMPLATE_DETAILS] (state, data) {
         state.serviceTemplateDetails = data
+    },
+    [Const.GET_SERVICE_RESOURCES_ATTRIBUTE] (state, data) {
+        state.serviceResourcesAttribute = data
     }
 }
 const actions = {
@@ -103,6 +110,10 @@ const actions = {
     async getServiceResourcesTemplateDetails ({ commit }, templateId) {
         const { data } = await Request.getServiceResourcesTemplateDetails(templateId)
         commit('GET_SERVICE_RESOURCES_TEMPLATE_DETAILS', data)
+    },
+    async getServiceResourcesAttribute ({ commit }, id) {
+        const { data } = await Request.getServiceResourcesAttribute()
+        commit('GET_SERVICE_RESOURCES_ATTRIBUTE', data)
     }
 }
 export default {
