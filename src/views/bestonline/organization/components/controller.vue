@@ -31,12 +31,12 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`" :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`" :rules="rules.description(item, index)">
                             <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score">
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score(item, index)">
                             <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
                         </el-form-item>
                     </td>
@@ -100,10 +100,33 @@ export default {
         return {
             chartList: [],
             rules: {
-                score: [
-                    { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
-                ]
+                description: (item, index) => {
+                    return [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationControllerAssessmentCreateFormList[index].description) {
+                                    return callback(new Error(`${item.assessmentDimension}为必填项`))
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        }
+                    ]
+                },
+                score: (item, index) => {
+                    return [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationControllerAssessmentCreateFormList[index].score) {
+                                    return callback(new Error(`${item.assessmentDimension}的评分为必填项`))
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        },
+                        { validator: IsFixedTwoNumber, trigger: 'blur' }
+                    ]
+                }
             }
         }
     },
