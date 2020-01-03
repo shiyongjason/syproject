@@ -338,7 +338,7 @@ export default {
             })
         },
         /**
-        * findValidFailIndex
+        * validFailResult
         * @param {Object} errorsObj - 报错对象
         * @param {Array} propsArray - 检验字段数组
         * @returns {Boolean} true - 布尔值
