@@ -145,7 +145,7 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '' },
+            queryParams: { mobile: '', channelType: '' },
             queryParamsTrace: {},
             dialog: false,
             tableData: [], // 用户权益
@@ -177,7 +177,7 @@ export default {
     },
     mounted () {
         this.findChannelDict()
-        this.propsParams = this.$route.query
+        this.propsParams = { ...this.$route.query }
         if (this.propsParams.name) {
             this.queryParams.disabledName = this.propsParams.name
         }
