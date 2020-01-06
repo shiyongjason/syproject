@@ -190,6 +190,10 @@ export const getAttach = (params) => {
 export const addAttach = (params) => {
     return axios.post('develop/dueattach/', params)
 }
+
+export const deleteAttach = (params) => {
+    return axios.delete(`develop/dueattach/${params}`)
+}
 // 法务查询
 // export const findJusticeData = (params) => {
 //     return axios.get(`develop/duelegal/${params.applyId}`)
