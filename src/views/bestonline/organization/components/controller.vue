@@ -37,7 +37,7 @@
                     </td>
                     <td v-if="!item.isTitle">
                         <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score(item, index)">
-                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
+                            <el-input v-model.number="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -57,7 +57,7 @@
 <script>
 import { mapState } from 'vuex'
 import echarts from 'echarts'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { IsInteger } from '@/utils/rules'
 const weightMap = new Map([
     ['年龄', 0.2],
     ['健康', 0.3],
@@ -116,6 +116,7 @@ export default {
                 score: (item, index) => {
                     return [
                         {
+                            // 这边的验证很复杂，后台传过来的是null，前端置空后是'',验证时可以填0
                             validator: (rule, value, callback) => {
                                 if (!this.form.dueOrganizationControllerAssessmentCreateFormList[index].score) {
                                     return callback(new Error(`${item.assessmentDimension}的评分为必填项`))
@@ -124,7 +125,7 @@ export default {
                             },
                             trigger: 'blur'
                         },
-                        { validator: IsFixedTwoNumber, trigger: 'blur' }
+                        { validator: IsInteger, trigger: 'blur', message: '分数请输入自然数' }
                     ]
                 }
             }
