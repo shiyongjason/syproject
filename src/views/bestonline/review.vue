@@ -40,10 +40,6 @@
                         <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
                     </template>
                     <el-button class="orangeBtn" v-if="(scope.data.row.status == 0||scope.data.row.status ==3) && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row.applyId)">提交审核</el-button>
-                    <!-- 开发时删除权限控制,结束开发时请删除 -->
-                    <!-- <el-button class="orangeBtn" @click="onEdit(scope.data.row)">修改</el-button>
-                    <el-button class="orangeBtn" @click="onCheck(scope.data.row)">查看</el-button>
-                    <el-button class="orangeBtn" @click="onCommit(scope.data.row.applyId)">提交审核</el-button> -->
                 </template>
             </basicTable>
         </div>
