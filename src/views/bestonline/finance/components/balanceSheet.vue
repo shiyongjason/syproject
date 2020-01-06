@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="10">
         <template slot="title">
-            <p class="title-p">资产负债表（必填一项）</p>
+            <p class="title-p">资产负债表</p>
         </template>
         <div class="table-cont-tabs">
             <el-tabs type="card" v-model="tabName" @tab-click="onChangeYear">

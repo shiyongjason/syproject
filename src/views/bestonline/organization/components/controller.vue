@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="2">
         <template slot="title">
-            <p class="title-p">实际控制人评估(必填)</p>
+            <p class="title-p">实际控制人评估</p>
         </template>
         <p class="small-title">个人简介</p>
         <div class="item-wrapper">
