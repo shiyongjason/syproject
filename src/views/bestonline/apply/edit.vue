@@ -83,23 +83,23 @@
             <el-form :model="formData" :rules="formRules" ref="attachmentsUrl" label-position="right" label-width="150px">
                 <el-form-item label="附件：">
                     <div class="diy-upload">
-                        <el-form-item label="意向协议：" prop="intentionAgreement">
-                            <ApplyUpload :fileList="intentionAgreementFileList" :arrList.sync="intentionAgreementArrList" @validate="validate"></ApplyUpload>
+                        <el-form-item label="意向协议：" prop="intentProtocols">
+                            <ApplyUpload :fileList="intentProtocolsFileList" :arrList.sync="intentProtocolsArrList" @validate="validate('intentProtocols')"></ApplyUpload>
                         </el-form-item>
                     </div>
                     <div class="diy-upload">
-                        <el-form-item label="基础信息表：" prop="basicInformation">
-                            <ApplyUpload :fileList="basicInformationFileList" :arrList.sync="basicInformationArrList" @validate="validate"></ApplyUpload>
+                        <el-form-item label="基础信息表：" prop="basicInformations">
+                            <ApplyUpload :fileList="basicInformationsFileList" :arrList.sync="basicInformationsArrList" @validate="validate('basicInformations')"></ApplyUpload>
                         </el-form-item>
                     </div>
                     <div class="diy-upload">
-                        <el-form-item label="调前备忘录：" prop="memorandum">
-                            <ApplyUpload :fileList="memorandumFileList" :arrList.sync="memorandumnArrList" @validate="validate"></ApplyUpload>
+                        <el-form-item label="调前备忘录：" prop="preMemos">
+                            <ApplyUpload :fileList="preMemosFileList" :arrList.sync="preMemosArrList" @validate="validate('preMemos')"></ApplyUpload>
                         </el-form-item>
                     </div>
                     <div class="diy-upload">
-                        <el-form-item label="其余材料：" prop="otherMaterials">
-                            <ApplyUpload :fileList="otherMaterialsFileList" :arrList.sync="otherMaterialsArrList" @validate="validate"></ApplyUpload>
+                        <el-form-item label="其余材料：" prop="attachmentsUrl">
+                            <ApplyUpload :fileList="attachmentsUrlFileList" :arrList.sync="attachmentsUrlArrList" @validate="validate('attachmentsUrl')"></ApplyUpload>
                         </el-form-item>
                     </div>
                 </el-form-item>
@@ -133,6 +133,7 @@ export default {
     data () {
         return {
             formData: {
+                approvalStatus: 0,
                 targetPartner: '',
                 companyName: '',
                 cooperateType: '',
@@ -146,6 +147,9 @@ export default {
                 cooperateTarget: '',
                 signScale: '',
                 remark: '',
+                intentProtocols: '',
+                basicInformations: '',
+                preMemos: '',
                 attachmentsUrl: '',
                 applyId: '',
                 createUserName: '',
@@ -195,55 +199,55 @@ export default {
                 mainSystemOther: [
                     { required: true, message: '请详细说明其他品类', trigger: 'blur' }
                 ],
-                intentionAgreement: [
+                intentProtocols: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (this.intentionAgreementArrList.length <= 0) {
-                                return callback(new Error('请上传附件'))
+                            if (this.intentProtocolsArrList.length <= 0) {
+                                return callback(new Error('请上传意向协议附件'))
                             }
                             return callback()
                         },
                         trigger: 'change'
                     }
                 ],
-                basicInformation: [
+                basicInformations: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (this.basicInformationArrList.length <= 0) {
-                                return callback(new Error('请上传附件'))
+                            if (this.basicInformationsArrList.length <= 0) {
+                                return callback(new Error('请上传基础信息表附件'))
                             }
                             return callback()
                         },
                         trigger: 'change'
                     }
                 ],
-                memorandum: [
+                preMemos: [
                     {
                         required: true,
                         validator: (rule, value, callback) => {
-                            if (this.memorandumnArrList.length <= 0) {
-                                return callback(new Error('请上传附件'))
+                            if (this.preMemosArrList.length <= 0) {
+                                return callback(new Error('请上传调前备忘录附件'))
                             }
                             return callback()
                         },
                         trigger: 'change'
                     }
                 ],
-                otherMaterials: []
+                attachmentsUrl: []
             },
             busOptions: BUSINESS_OPTIONS,
-            intentionAgreementFileList: [],
-            intentionAgreementArrList: [],
-            basicInformationFileList: [],
-            basicInformationArrList: [],
-            memorandumFileList: [],
-            memorandumnArrList: [],
-            otherMaterialsFileList: [],
-            otherMaterialsArrList: [],
+            intentProtocolsFileList: [],
+            intentProtocolsArrList: [],
+            basicInformationsFileList: [],
+            basicInformationsArrList: [],
+            preMemosFileList: [],
+            preMemosArrList: [],
+            attachmentsUrlFileList: [],
+            attachmentsUrlArrList: [],
             applyId: '',
-            approvalStatus: '',
+            approvalStatus: 0,
             checkList: [],
             addDraftAuthCode: AUTH_BESTONLINE_APPLY_ADD_DRAFT,
             addCommitAuthCode: AUTH_BESTONLINE_APPLY_ADD_COMMIT,
@@ -292,7 +296,7 @@ export default {
             })
         },
         validate (prop) {
-            this.$refs['attachmentsUrl'].validate(async (validate) => {
+            this.$refs['attachmentsUrl'].validateField(prop, async (validate) => {
             })
         },
         async getDueapplydetail (applyId) {
@@ -302,8 +306,14 @@ export default {
                 this.isdisabled = true
             }
             this.formData = data.data
-            this.fileList = JSON.parse(this.formData.attachmentsUrl)
-            this.arrList = JSON.parse(data.data.attachmentsUrl)
+            this.intentProtocolsFileList = JSON.parse(this.formData.intentProtocols) || []
+            this.intentProtocolsArrList = JSON.parse(data.data.intentProtocols) || []
+            this.basicInformationsFileList = JSON.parse(this.formData.basicInformations) || []
+            this.basicInformationsArrList = JSON.parse(data.data.basicInformations) || []
+            this.preMemosFileList = JSON.parse(this.formData.preMemos) || []
+            this.preMemosArrList = JSON.parse(data.data.preMemos) || []
+            this.attachmentsUrlFileList = JSON.parse(this.formData.attachmentsUrl) || []
+            this.attachmentsUrlArrList = JSON.parse(data.data.attachmentsUrl) || []
             if (this.formData.mainSystem) {
                 this.formData.mainSystem.split(',').map(item => {
                     this.checkList.push(Number(item))
@@ -327,7 +337,10 @@ export default {
             this.$refs['form'].clearValidate()
             this.$refs['attachmentsUrl'].clearValidate()
             this.formData.mainSystem = this.checkList.join(',')
-            this.formData.attachmentsUrl = JSON.stringify(this.arrList)
+            this.formData.intentProtocols = JSON.stringify(this.intentProtocolsArrList)
+            this.formData.basicInformations = JSON.stringify(this.basicInformationsArrList)
+            this.formData.preMemos = JSON.stringify(this.preMemosArrList)
+            this.formData.attachmentsUrl = JSON.stringify(this.attachmentsUrlArrList)
             this.formData.organizationCode = this.userInfo.deptDoc
             if (!this.formData.companyName) {
                 this.showWarnMsg('请输入尽调公司名称')
@@ -372,7 +385,10 @@ export default {
                     this.$refs['form'].validate(async (validate) => {
                         if (validate) {
                             this.formData.mainSystem = this.checkList.join(',')
-                            this.formData.attachmentsUrl = JSON.stringify(this.arrList)
+                            this.formData.intentProtocols = JSON.stringify(this.intentProtocolsArrList)
+                            this.formData.basicInformations = JSON.stringify(this.basicInformationsArrList)
+                            this.formData.preMemos = JSON.stringify(this.preMemosArrList)
+                            this.formData.attachmentsUrl = JSON.stringify(this.attachmentsUrlArrList)
                             this.formData.createUserName = this.userInfo.name
                             this.formData.createUser = this.userInfo.jobNumber
                             this.formData.organizationCode = this.userInfo.deptDoc
@@ -385,6 +401,7 @@ export default {
                                         message: '修改成功',
                                         type: 'success'
                                     })
+                                    this.$router.go(-1)
                                 } catch (error) {
                                     this.isPending = false
                                 }
@@ -396,11 +413,11 @@ export default {
                                         message: '提交成功',
                                         type: 'success'
                                     })
+                                    this.$router.go(-1)
                                 } catch (error) {
                                     this.isPending = false
                                 }
                             }
-                            this.$router.go(-1)
                         } else {
                             this.isPending = false
                         }
