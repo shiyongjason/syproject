@@ -44,7 +44,7 @@
                                     <el-option :value="4" label="三级类目"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item prop="name"  :label="editStatus === 1 ? '子类目层级' : '当前类目层级'">
+                            <el-form-item prop="name"  :label="editStatus === 1 ? '子类目名称' : '当前类目名称'">
                                 <el-input :disabled="editStatus > 2" v-model="form.name" type="text" maxlength="20"></el-input>
                             </el-form-item>
                             <el-form-item label="父类目编号" v-if="editStatus === 2">

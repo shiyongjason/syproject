@@ -6,16 +6,16 @@
             </div>
             <div class="padd20">
                 <el-form label-position="right" :rules="rules" ref="ruleForm" :inline="true" label-width="100px" :model="queryParams">
-                    <el-form-item label="客户名称：" prop="customerName">
+                    <el-form-item label="客户名称：">
                         <el-input v-model="queryParams.customerName" placeholder="请输入客户名称" maxLength='100'></el-input>
                     </el-form-item>
-                    <el-form-item label="产品名称：" prop="productName">
+                    <el-form-item label="产品名称：">
                         <el-select v-model="queryParams.productName" placeholder="请选择产品名称">
                             <el-option v-for="item in options" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="流程类型：" prop="processType">
+                    <el-form-item label="流程类型：">
                         <el-select v-model="queryParams.processType" placeholder="请选择流程类型">
                             <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
                             </el-option>
@@ -73,30 +73,17 @@ export default {
                 total: 0
             },
             options: [],
-            flowTypes: ['预授信', '授信', '用信'],
-            rules: {
-                customerName: [
-                    { required: true, message: '请输入客户名称', trigger: 'blur' }
-                ],
-                productName: [
-                    { required: true, message: '请选择产品名称', trigger: 'change' }
-                ],
-                processType: [
-                    { required: true, message: '请选择流程类型', trigger: 'change' }
-                ]
-            }
+            flowTypes: ['预授信', '授信', '用信']
         }
     },
     async mounted () {
         const { data } = await getProductsArr()
         this.options = data
+        this.onQuery()
     },
     methods: {
         async onQuery () {
-            // console.log(this.searchParams)
-            console.log(this.queryParams)
             const { data } = await getProcessesList(this.queryParams)
-            console.log(data)
             this.tableData = data.records
             // 控制页数和页码
             this.pagination = {

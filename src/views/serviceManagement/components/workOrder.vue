@@ -7,9 +7,9 @@
                         <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="订单号" v-if="form.webisEdit">
-                    <el-input type="text" v-model="form.workOrderNo" disabled maxlength="25"></el-input>
-                </el-form-item>
+<!--                <el-form-item label="订单号" v-if="form.webisEdit">-->
+<!--                    <el-input type="text" v-model="form.workOrderNo" disabled maxlength="25"></el-input>-->
+<!--                </el-form-item>-->
                 <el-form-item prop="customerName" label="姓名">
                     <el-input type="text" v-model="form.customerName" placeholder="请输入姓名" maxlength="25"></el-input>
                 </el-form-item>
@@ -38,11 +38,15 @@
                     <!--
                         下一期 是否 可以修改服务项目
                      -->
-                    <el-input v-if="isNormal" v-model="form.serviceResourceName" max-length="30"></el-input>
+                    <el-input v-if="isNormal" v-model="form.serviceResourceName" maxlength="30"></el-input>
                     <el-select v-else-if="!form.webisEdit && !form.serviceResourceName" :disabled="form.webisEdit" v-model="form.serviceResourceName" @change="onChange">
                         <el-option :label="item.serviceResourceName" :value="item.serviceResourceName" v-for="item in form.serviceResourceArr" placeholder="请选择服务项目" :key="item.mdmCode"></el-option>
                     </el-select>
-                    <div v-else class="serviceProject">{{`${form.serviceResourceName}(可用${form.availableTimes?form.availableTimes:0}次)`}}</div>
+                    <div v-else class="serviceProject">{{form.serviceResourceName}}
+                        <template v-if="!form.webisEdit">
+                            (可用 {{form.availableTimes?form.availableTimes:0}}次)
+                        </template>
+                    </div>
                 </el-form-item>
                 <el-form-item label="服务商">
                     <el-input type="text" v-model="form.serviceProvider" placeholder="请输入服务商" maxlength="20"></el-input>
@@ -52,13 +56,13 @@
                         <el-option label="已预约（待确认）" :value="1"></el-option>
                         <el-option label="已预约（已确认）" :value="2"></el-option>
                         <el-option label="已完成" :value="3"></el-option>
-                        <el-option label="取消" :value="4"></el-option>
+                        <el-option v-if="form.webisEdit" label="取消" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="工程师">
                     <el-input type="text" v-model="form.engineer" placeholder="请输入工程师" maxlength="10"></el-input>
                 </el-form-item>
-                <el-form-item label="工程师电话">
+                <el-form-item label="工程师电话" prop="engineerMobile">
                     <el-input type="text" v-model="form.engineerMobile" placeholder="请输入工程师电话" maxlength="11"></el-input>
                 </el-form-item>
                 <el-form-item prop="serviceNum" label="服务数量">
@@ -158,6 +162,8 @@ export default {
             if (!value) {
                 if (rule.field === 'customerMobile') {
                     callback(new Error('请输入手机号码'))
+                } else if (rule.field === 'engineerMobile') {
+                    callback(new Error('请输入工程师电话'))
                 } else {
                     callback(new Error('请输入管家电话'))
                 }
@@ -188,6 +194,9 @@ export default {
                     { required: true, message: '姓名不能为空', trigger: 'blur' }
                 ],
                 customerMobile: [
+                    { required: true, validator: checkMobile, trigger: 'blur' }
+                ],
+                engineerMobile: [
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
                 houseKeeperId: [
