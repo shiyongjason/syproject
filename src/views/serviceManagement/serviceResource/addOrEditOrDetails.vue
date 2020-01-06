@@ -47,14 +47,31 @@
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]"
                         >
-                            <el-input type="text" v-model="item.name" maxlength="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
+                            <el-autocomplete
+                                v-model="item.name"
+                                :fetch-suggestions="querySearchAsyncName"
+                                :maxlength="20"
+                                @blur="attributeChangeHandler"
+                                placeholder="请输入规格名"
+                                @select="attributeChangeHandler"
+                            ></el-autocomplete>
+<!--                            <el-input type="text" v-model="item.name" maxlength="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>-->
                         </el-form-item>
                         <div v-show="item.name.trim().length> 0">
                             <el-form-item  :label="index === 0 ? '规格值': ''" v-for="(subItem,index) in item.attributeList" :key="subItem.id" class="attribute-list"
                                            :prop="'serviceResourceList.'+ idx +'.attributeList.'+ index + '.value'"
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
-                                <el-input type="text" v-model="subItem.value" maxlength="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
+                                <el-autocomplete
+                                    v-model="subItem.value"
+                                    :fetch-suggestions="querySearchAsyncValue"
+                                    :maxlength="20"
+                                    @blur="attributeChangeHandler"
+                                    placeholder="请输入规格名"
+                                    @select="attributeChangeHandler"
+                                    :disabled="pageDisabled"
+                                ></el-autocomplete>
+<!--                                <el-input type="text" v-model="subItem.value" maxlength="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>-->
                                 <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="(!pageDisabled && item.attributeList.length > 1) && propsParams.methods !== 'edit'"></span>
                                 <span  v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
@@ -126,6 +143,7 @@ export default {
                 description: '',
                 name: ''
             },
+            oldMessageName: '',
             form: {
                 serviceResourceList: []
             },
@@ -144,11 +162,14 @@ export default {
             attributeTable: { list: [] },
             serviceResourceName: [],
             tempAttributeTable: [],
-            propsParams: ''
+            propsParams: '',
+            attributeListName: [],
+            attributeListValue: [],
+            timeout: null
         }
     },
     computed: {
-        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateDetails']),
+        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateDetails', 'doneServiceResourceAttribute']),
         ...mapState({
             tagsList: state => state.layout.tagsList
         })
@@ -157,6 +178,21 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
+        querySearchAsyncName (queryString, cb) {
+            const restaurants = this.attributeListName
+            const results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+            cb(results)
+        },
+        querySearchAsyncValue (queryString, cb) {
+            const restaurants = this.attributeListValue
+            const results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+            cb(results)
+        },
+        createStateFilter (queryString) {
+            return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+            }
+        },
         clearError (isDisabled) {
             if (isDisabled) {
                 this.$refs.formAttribute.clearValidate()
@@ -185,9 +221,10 @@ export default {
         nameChange () {
             if (this.message.name.trim()) {
                 this.attributeTable.list.forEach(value => {
-                    value.name = this.message.name + value.name.replace(this.message.name, '')
+                    value.name = this.message.name + value.name.replace(this.oldMessageName, '')
                 })
             }
+            this.oldMessageName = this.message.name
         },
         resetAttribute () {
             let tempAll = []
@@ -331,7 +368,7 @@ export default {
                             params.categoryId = params.categoryId[params.categoryId.length - 1]
                             params.serviceResourceList = this.attributeTable.list.map(value => {
                                 return {
-                                    name: params.name + value.name,
+                                    name: value.name,
                                     mdmCode: value.mdmCode,
                                     isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
@@ -394,6 +431,7 @@ export default {
                     })
                 })
             })
+            this.oldMessageName = data.serviceResourceTemplate.name
             this.message = {
                 name: data.serviceResourceTemplate.name,
                 categoryId: categoryId,
@@ -416,7 +454,7 @@ export default {
             this.form.serviceResourceList = serviceResourceList
             this.attributeChangeHandler()
         },
-        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails'])
+        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails', 'getServiceResourcesAttribute'])
     },
     async mounted () {
         this.propsParams = this.$route.query
@@ -431,6 +469,14 @@ export default {
         } else if (this.propsParams.methods === 'edit') {
             this.drawDetails(this.propsParams.templateId)
         }
+        await this.getServiceResourcesAttribute()
+        const data = this.doneServiceResourceAttribute
+        this.attributeListName = data.attributeList.map(value => {
+            return { value: value }
+        })
+        this.attributeListValue = data.valueList.map(value => {
+            return { value: value }
+        })
     }
 }
 </script>

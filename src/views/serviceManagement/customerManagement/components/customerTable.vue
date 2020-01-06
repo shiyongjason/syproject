@@ -2,7 +2,7 @@
     <div class="page-body-cont">
         <el-table :data="tableData" border stripe style="width: 100%" size="small">
             <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="60"></el-table-column>
-            <el-table-column align="center" label="渠道名称">
+            <el-table-column align="center" label="获客渠道">
                 <template slot-scope="scope">
                     <span>{{getTypes('channelType',scope.row.channelType)}}</span>
                 </template>
@@ -96,6 +96,13 @@ export default {
     },
     methods: {
         goUserPower (row) {
+            // 产品要求携带用户参数过去
+            const userInfo = {
+                name: row.name,
+                address: row.address,
+                mobile: row.mobile
+            }
+            sessionStorage.setItem('userPowerPropsUserInfo', JSON.stringify(userInfo))
             this.$router.push({
                 path: '/serviceManagement/userPower',
                 query: {

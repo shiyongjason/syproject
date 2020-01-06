@@ -36,3 +36,7 @@ export function getServiceResourcesTemplateDetails (templateId) {
 export function updateServiceResourcesTemplate (templateId, params) {
     return axios.put(`/service/api/service-resources/template/${templateId}`, params)
 }
+// 服务资源模板获取联想提示规格名规格值
+export function getServiceResourcesAttribute () {
+    return axios.get(`/service/api/service-resources/attribute-value/cache`)
+}
