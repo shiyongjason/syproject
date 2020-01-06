@@ -131,7 +131,6 @@ export default {
             this.isPending = true
             this.$refs['form'].validate(async (valid, errors) => {
                 this.findValidFailIndex(errors)
-                this.findEmptyToast()
                 if (valid) {
                     this.form.dueFinanceBasic.type = 1
                     try {
@@ -153,66 +152,37 @@ export default {
                 }
             })
         },
-        findValidFailIndex (errors) {
-            const expandKpi = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandController = Object.keys(errors).filter(item => {
-                const index = item.indexOf('].') + 2
-                return profitabilityValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandOrganization = Object.keys(errors).filter(item => {
-                const index = item.indexOf('].') + 2
-                return solvencyValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandMotivationRisk = Object.keys(errors).filter(item => {
-                const index = item.indexOf('].') + 2
-                return operationAbilityValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandCapitalRiskAssessment = Object.keys(errors).filter(item => {
-                const index = item.indexOf('.') + 1
-                return capitalRiskAssessmentValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandTaxCompliance = Object.keys(errors).filter(item => {
-                const index = item.indexOf('].') + 2
-                return taxComplianceValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandBalanceSheet = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return balanceSheetValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandProfitStatement = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return profitStatementValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            if (expandKpi) {
-                this.activeName = '1'
-            } else if (expandController) {
-                this.activeName = '2'
-            } else if (expandOrganization) {
-                this.activeName = '4'
-            } else if (expandMotivationRisk) {
-                this.activeName = '5'
-            } else if (expandCapitalRiskAssessment) {
-                this.activeName = '6'
-            } else if (expandTaxCompliance) {
-                this.activeName = '7'
-            } else if (expandBalanceSheet) {
-                this.activeName = '10'
-            } else if (expandProfitStatement) {
-                this.activeName = '11'
+        /**
+        * validFailResult
+        * @param {Object} errorsObj - 报错对象
+        * @param {Array} propsArray - 检验字段数组
+        * @returns {Boolean} true - 布尔值
+        */
+        validFailResult (errorsObj = {}, propsArray = [], activeName = '1') {
+            let errorArray = Object.keys(errorsObj).filter(item => {
+                return [...propsArray].find(v => item.includes(v))
+            })
+            if (errorArray.length > 0) {
+                this.activeName = activeName
+                const message = errorsObj[errorArray[0]][0].tip ? errorsObj[errorArray[0]][0].tip : errorsObj[errorArray[0]][0].message
+                this.$message({
+                    message,
+                    type: 'warning'
+                })
+                return false
+            } else {
+                return true
             }
         },
-        findEmptyToast () {
-            console.log(this.form)
-            const result = this.form.assessmentList.some(i => {
-                return i.state === ''
-            })
-            console.log(result)
-            if (result) {
-                this.$message.warning('请选择财务尽调评估 结论')
-            }
+        findValidFailIndex (errors) {
+            this.validFailResult(errors, kpiValidProps, '1') &&
+            this.validFailResult(errors, profitabilityValidProps, '2') &&
+            this.validFailResult(errors, solvencyValidProps, '4') &&
+            this.validFailResult(errors, operationAbilityValidProps, '5') &&
+            this.validFailResult(errors, capitalRiskAssessmentValidProps, '6') &&
+            this.validFailResult(errors, taxComplianceValidProps, '7') &&
+            this.validFailResult(errors, balanceSheetValidProps, '10') &&
+            this.validFailResult(errors, profitStatementValidProps, '11')
         }
     }
 }
