@@ -9,7 +9,7 @@
                 <MotivationRisk />
             </el-form>
         </el-collapse>
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveOrganize" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
@@ -104,6 +104,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
+            isCollapse: state => state.isCollapse,
             form: state => state.dueDiligence.organizationData
         })
     },
