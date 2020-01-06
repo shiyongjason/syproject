@@ -128,14 +128,14 @@ export default {
         return {
             rules: {
                 endOrCurrent: [
-                    { required: true, message: '请填写期末余额', trigger: 'blur' },
+                    { required: true, message: '请填写本年度期末余额', trigger: 'blur' },
                     { validator: MoneyMinus }
                 ],
                 endOrCurrentNORequired: [
                     { validator: MoneyMinus }
                 ],
                 beginOrPrior: [
-                    { required: true, message: '请填写年初余额', trigger: 'blur' },
+                    { required: true, message: '请填写本年度年初余额', trigger: 'blur' },
                     { validator: MoneyMinus }
                 ],
                 beginOrPriorNORequired: [
