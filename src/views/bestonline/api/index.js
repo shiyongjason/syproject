@@ -35,6 +35,10 @@ export const getFlow = (params) => {
 /*
 @评审
 */
+// 查询尽调流程主表详情
+export const getDuemainDetail = (params) => {
+    return axios.get(`develop/duemain/${params}`)
+}
 // 获取评审
 export const getDuemain = (params) => {
     return axios.get('develop/duemain/queryPageList', { params })
