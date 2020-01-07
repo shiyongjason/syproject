@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { getAggregate, getUserRightsTrace, createWorkUserRights } from './api/index'
 import { findServiceManagementList } from '../orderCenter/api/index'
 import { findChannelDict } from '../common/dictApi'
@@ -117,6 +117,7 @@ import { phoneRegular } from '@/utils/regular'
 export default {
     name: 'userPower',
     computed: {
+        ...mapGetters(['doneWorkOrderUserInfo']),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -147,7 +148,7 @@ export default {
     data () {
         return {
             queryParams: { mobile: '', channelType: '' },
-            queryParamsTrace: {},
+            queryParamsTrace: { mobile: '', channelType: '' },
             dialog: false,
             tableData: [], // 用户权益
             tableDataTrace: [], // 权益操作记录
@@ -181,30 +182,25 @@ export default {
             this.queryParamsTrace.channelType = val
         }
     },
-    mounted () {
-        this.findChannelDict()
+    async mounted () {
         this.propsParams = { ...this.$route.query }
-        if (this.propsParams.name) {
-            this.queryParams.disabledName = this.propsParams.name
-        }
-        if (this.propsParams.channelType) {
-            this.queryParams.channelType = this.propsParams.channelType
-        }
-        if (this.propsParams.source) {
-            this.queryParams.channelType = this.propsParams.source
-        }
+        await this.findChannelDict()
         if (this.propsParams.orderNo) {
             this.queryParamsTrace.orderNo = this.propsParams.orderNo
         }
-        if (this.propsParams.mobile) {
+        if (this.propsParams.mobile && this.propsParams.source) {
             this.queryParams.mobile = this.propsParams.mobile
+            this.queryParams.channelType = this.propsParams.source - 0
+            this.queryParamsTrace.channelType = this.propsParams.source - 0
             this.onQuery()
-        } else {
-            // 没携带手机就清楚缓存
-            sessionStorage.removeItem('userPowerPropsUserInfo')
+            this.getWorkOrderUserInfo({
+                mobile: this.propsParams.mobile,
+                channelType: this.propsParams.source
+            })
         }
     },
     methods: {
+        ...mapActions(['getWorkOrderUserInfo']),
         async onQuery () {
             if (!this.queryParams.mobile) {
                 this.$message.error('手机号码必填')
@@ -239,7 +235,7 @@ export default {
             this.onQueryTrace()
         },
         async handleClickShowDialog (row) {
-            const userMapper = JSON.parse(sessionStorage.getItem('userPowerPropsUserInfo'))
+            const userMapper = this.doneWorkOrderUserInfo
             const params = {
                 mobile: this.queryParams.mobile,
                 channelType: row.channelType
@@ -275,7 +271,6 @@ export default {
             if (form.serviceNum > this.userRightRow.availableTimes) {
                 this.$message.error('服务可用次数不足')
                 this.$refs.workOrder.closeIsSaving()
-                console.log(this.$refs.workOrder.isSaving)
                 return
             }
             // 新增工单

@@ -146,10 +146,14 @@ export default {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
-        reWriteData (data) {
+        reWriteData (data, isAdd) {
             this.$set(this.form, 'id', data.id)
             this.$set(this.form, 'parentId', data.parentId)
-            this.$set(this.form, 'parentName', data.parentName)
+            if (isAdd) {
+                this.$set(this.form, 'parentName', data.label)
+            } else {
+                this.$set(this.form, 'parentName', data.parentName)
+            }
             if (this.editStatus === 1) {
                 this.$set(this.form, 'depth', data.depth + 1)
             } else {
@@ -180,7 +184,7 @@ export default {
             }
             if (this.isSelect()) {
                 this.editStatus = 1
-                this.reWriteData(this.tempSelectTree)
+                this.reWriteData(this.tempSelectTree, true)
                 this.$set(this.form, 'name', '')
                 this.editOpenStatus = 1
             } else {
@@ -224,7 +228,7 @@ export default {
                         name: this.form.name,
                         parentId: this.form.id
                     }
-                    await this.createServiceResourcesCategory(params)
+                    await createServiceResourcesCategory(params)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
                     this.editOpenStatus = 2
@@ -236,7 +240,7 @@ export default {
                 if (valid) {
                     const param = { ...this.form }
                     param.updateBy = this.userInfo.employeeName
-                    await this.updateServiceResourcesCategory(param.id, param)
+                    await updateServiceResourcesCategory(param.id, param)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
                     this.editOpenStatus = 2
@@ -250,7 +254,7 @@ export default {
                     message: '不能越级删除类目'
                 })
             } else {
-                await this.deleteServiceResourcesCategory(this.form.id)
+                await deleteServiceResourcesCategory(this.form.id)
                 this.findServiceResourcesCategory()
                 this.isSelectFlag = false
                 this.editOpenStatus = 2
@@ -258,15 +262,6 @@ export default {
         },
         onCancel () {
             this.editOpenStatus = 2
-        },
-        async createServiceResourcesCategory (params) {
-            await createServiceResourcesCategory(params)
-        },
-        async updateServiceResourcesCategory (id, params) {
-            await updateServiceResourcesCategory(id, params)
-        },
-        async deleteServiceResourcesCategory (id) {
-            await deleteServiceResourcesCategory(id)
         },
         ...mapActions(['findServiceResourcesCategory'])
     },

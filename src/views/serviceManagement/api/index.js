@@ -40,3 +40,7 @@ export function updateServiceResourcesTemplate (templateId, params) {
 export function getServiceResourcesAttribute () {
     return axios.get(`/service/api/service-resources/attribute-value/cache`)
 }
+// 手机号码获取用户信息
+export const getWorkOrderUserInfo = (params) => {
+    return axios.get(`service/api/channel-users/for-workorder`, { params })
+}
