@@ -99,7 +99,7 @@
                                 <td v-text="item.name"></td>
                                 <td>
                                     <el-form-item :prop="'list.'+ index +'.mdmCode'"
-                                                  :rules="[{ required: !item.isDisable, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
+                                                  :rules="[{ required: item.isDisable, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
                                                   ,{ required: true, whitespace: true,validator: checkedMdmCodeReport, trigger: 'blur', message: 'mdmCode重复' }]" class="mdm-number">
                                         <el-input maxlength="20" class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
                                     </el-form-item>
@@ -199,6 +199,10 @@ export default {
             }
         },
         checkedMdmCodeReport (rule, value, callback) {
+            if (!value) {
+                callback()
+                return
+            }
             let temp = 0
             this.attributeTable.list.forEach(value1 => {
                 if (value1.mdmCode === value) temp++
@@ -388,7 +392,7 @@ export default {
             this.closeTags()
         },
         addSpecification () {
-            if (this.form.serviceResourceList.length > 10) {
+            if (this.form.serviceResourceList.length > 9) {
                 this.$message({
                     type: 'error',
                     message: '规格项不能超过10个'
@@ -408,8 +412,9 @@ export default {
             if (temp) this.resetAttribute()
         },
         addAttributeList (item) {
+            console.log(item)
             const temp = { ...this.defaultAttribute }
-            if (item.attributeList.length > 10) {
+            if (item.attributeList.length > 9) {
                 this.$message({
                     type: 'error',
                     message: '规格值不能超过10个'

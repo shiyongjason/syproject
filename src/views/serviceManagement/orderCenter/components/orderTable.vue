@@ -95,7 +95,7 @@
                                     <div class="one-line">
                                         <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
                                     </div>
-                                    <div class="one-line">
+                                    <div v-if="item.source !== 1" class="one-line">
                                         <el-button type="primary" size='mini' @click="closeOrder(item.channelOrderNo)">取消订单</el-button>
                                     </div>
                                 </div>
