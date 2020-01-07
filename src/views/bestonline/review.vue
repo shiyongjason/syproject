@@ -46,7 +46,7 @@
         <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
             <div class="block">
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index"  :color="item.color">
+                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :color="item.color">
                         {{item.userName}}/
                         {{item.approveStatus===0?'待审核':item.approveStatus===2?'已驳回':item.approveStatus===1&&item.isCooperate==0?'可以合作':'不可合作'}}
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
@@ -178,7 +178,6 @@ export default {
         async showProcess (applyId) {
             this.dialogVisible = true
             const { data } = await getFlow({ applyId: applyId, origin: 1 })
-            console.log(data)
             this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
                 if (value.approveStatus == 1 || value.approveStatus == 2) {
@@ -186,7 +185,6 @@ export default {
                 }
                 return value
             })
-            console.log(this.dueApproval)
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
@@ -196,7 +194,8 @@ export default {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
         async onCommit (applyId) {
-            const row = await getDuemainDetail(applyId)
+            const { data } = await getDuemainDetail(applyId)
+            const row = data.data
             if (row.cooperativeFlag == 1) {
                 this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
                 return false

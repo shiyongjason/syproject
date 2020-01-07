@@ -215,6 +215,7 @@ export default {
     .upload-delete {
         margin-right: 20px;
         color: #F8B35A;
+        cursor: pointer;
     }
 }
 .noannex {
