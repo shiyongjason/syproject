@@ -163,7 +163,7 @@ export default {
                 if (rule.field === 'customerMobile') {
                     callback(new Error('请输入手机号码'))
                 } else if (rule.field === 'engineerMobile') {
-                    callback(new Error('请输入工程师电话'))
+                    callback()
                 } else {
                     callback(new Error('请输入管家电话'))
                 }
@@ -197,7 +197,7 @@ export default {
                     { required: true, validator: checkMobile, trigger: 'blur' }
                 ],
                 engineerMobile: [
-                    { required: true, validator: checkMobile, trigger: 'blur' }
+                    { required: false, validator: checkMobile, trigger: 'blur' }
                 ],
                 houseKeeperId: [
                     { required: true, message: '管家不能为空', trigger: 'change' }
