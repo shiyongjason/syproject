@@ -74,7 +74,16 @@
                                     <template v-if="item.source === iItem.code">{{iItem.name}}</template>
                                 </span>
                             </li>
-                            <li>{{item.userName ? item.userName : '-'}}<br>{{item.receiverName ? item.receiverName : '-'}}</li>
+                            <li>
+                                <template v-if="item.source === 1">
+                                    {{item.userName ? item.userName : '-'}}
+                                </template>
+                                <template v-else>
+                                    {{item.receiverName ? item.receiverName : '-'}}
+                                </template>
+                                <br>
+                                {{item.receiverName ? item.receiverName : '-'}}
+                            </li>
                             <li>无需配送</li>
                             <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
@@ -172,13 +181,6 @@ export default {
     },
     methods: {
         goUserPower (row) {
-            // 产品要求携带用户参数过去
-            const userInfo = {
-                name: row.receiverName,
-                address: row.receiverAddress,
-                mobile: row.receiverMobile
-            }
-            sessionStorage.setItem('userPowerPropsUserInfo', JSON.stringify(userInfo))
             this.$router.push({
                 path: '/serviceManagement/userPower',
                 query: {
