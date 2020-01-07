@@ -19,7 +19,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">渠道名称：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.channelType">
+                        <el-select v-model="queryParams.channelType" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
                             <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                         </el-select>
                     </div>
@@ -175,11 +176,25 @@ export default {
             isShow: false
         }
     },
+    watch: {
+        'queryParams.channelType' (val) {
+            this.queryParamsTrace.channelType = val
+        }
+    },
     mounted () {
         this.findChannelDict()
         this.propsParams = { ...this.$route.query }
         if (this.propsParams.name) {
             this.queryParams.disabledName = this.propsParams.name
+        }
+        if (this.propsParams.channelType) {
+            this.queryParams.channelType = this.propsParams.channelType
+        }
+        if (this.propsParams.source) {
+            this.queryParams.channelType = this.propsParams.source
+        }
+        if (this.propsParams.orderNo) {
+            this.queryParamsTrace.orderNo = this.propsParams.orderNo
         }
         if (this.propsParams.mobile) {
             this.queryParams.mobile = this.propsParams.mobile
@@ -188,14 +203,6 @@ export default {
             // 没携带手机就清楚缓存
             sessionStorage.removeItem('userPowerPropsUserInfo')
         }
-        if (this.propsParams.source) {
-            this.queryParams.channelType = this.propsParams.source
-        }
-        if (this.propsParams.orderNo) {
-            this.queryParamsTrace.orderNo = this.propsParams.orderNo
-        }
-        // kaifa
-        // this.onQuery()
     },
     methods: {
         async onQuery () {
