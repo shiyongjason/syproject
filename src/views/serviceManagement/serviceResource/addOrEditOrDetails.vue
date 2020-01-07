@@ -392,7 +392,29 @@ export default {
             this.closeTags()
         },
         addSpecification () {
-            if (this.form.serviceResourceList.length > 9) {
+            let serviceTemp = this.form.serviceResourceList
+
+            for (let i = 0; i < serviceTemp.length; i++) {
+                if (!serviceTemp[i].name) {
+                    this.$message({
+                        type: 'error',
+                        message: '规格名不能为空'
+                    })
+                    return
+                } else {
+                    let attributeTemp = serviceTemp[i].attributeList
+                    for (let j = 0; j < attributeTemp.length; j++) {
+                        if (!attributeTemp[j].value) {
+                            this.$message({
+                                type: 'error',
+                                message: '规格值不能为空'
+                            })
+                            return
+                        }
+                    }
+                }
+            }
+            if (serviceTemp.length > 9) {
                 this.$message({
                     type: 'error',
                     message: '规格项不能超过10个'
@@ -412,7 +434,15 @@ export default {
             if (temp) this.resetAttribute()
         },
         addAttributeList (item) {
-            console.log(item)
+            for (let i = 0; i < item.attributeList.length; i++) {
+                if (!item.attributeList[i].value) {
+                    this.$message({
+                        type: 'error',
+                        message: '规格值不能为空'
+                    })
+                    return
+                }
+            }
             const temp = { ...this.defaultAttribute }
             if (item.attributeList.length > 9) {
                 this.$message({

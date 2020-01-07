@@ -96,17 +96,11 @@ export default {
     },
     methods: {
         goUserPower (row) {
-            // 产品要求携带用户参数过去
-            const userInfo = {
-                name: row.name,
-                address: row.address,
-                mobile: row.mobile
-            }
-            sessionStorage.setItem('userPowerPropsUserInfo', JSON.stringify(userInfo))
             this.$router.push({
                 path: '/serviceManagement/userPower',
                 query: {
-                    mobile: row.mobile ? row.mobile : ''
+                    mobile: row.mobile ? row.mobile : '',
+                    source: row.channelType ? row.channelType : ''
                 }
             })
         },
