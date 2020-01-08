@@ -17,7 +17,7 @@ export const findPaltList = (params) => {
 }
 // 分部列表查询
 export const findBranchListNew = (params) => {
-    return axios.get(interfaceUrl + 'ims/subsectiontarget/subsection', { params })
+    return axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
 }
 // 保存档案
 export const saveInfo = (params) => {

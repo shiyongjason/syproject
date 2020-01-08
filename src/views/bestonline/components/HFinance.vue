@@ -82,7 +82,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <p class="small-title mb15">3、分析报告(必填)</p>
+                    <p class="small-title mb15">3、分析报告</p>
                     <el-form-item label="风险揭示：" prop="dueFinanceBasic.riskDisclosure">
                         <el-input type="textarea" style="width:600px" rows="6" :disabled="isdisabled" placeholder="请输入内容" v-model="form.dueFinanceBasic.riskDisclosure"></el-input>
                     </el-form-item>
@@ -93,7 +93,7 @@
                 </el-collapse-item>
                 <el-collapse-item name="2">
                     <template slot="title">
-                        <p class="titlt-p">盈利能力(必填)</p>
+                        <p class="titlt-p">盈利能力</p>
                     </template>
                     <table class="assessmentTable">
                         <thead>
@@ -242,7 +242,7 @@
                 </el-collapse-item>
                 <el-collapse-item name="4">
                     <template slot="title">
-                        <p class="titlt-p">偿债能力(必填)</p>
+                        <p class="titlt-p">偿债能力</p>
                     </template>
                     <div class="form-cont-row">
                         <div class="form-cont-col">
@@ -391,7 +391,7 @@
                 </el-collapse-item>
                 <el-collapse-item name="5">
                     <template slot="title">
-                        <p class="titlt-p">营运能力(必填)</p>
+                        <p class="titlt-p">营运能力</p>
                     </template>
                     <!--start-->
                     <table class="assessmentTable">
@@ -526,7 +526,7 @@
                 </el-collapse-item>
                 <el-collapse-item name="6">
                     <template slot="title">
-                        <p class="titlt-p">资金风险评估(必填)</p>
+                        <p class="titlt-p">资金风险评估</p>
                     </template>
                     <!--start-->
                     <div class="form-cont-row">
@@ -649,7 +649,7 @@
                 </el-collapse-item>
                 <el-collapse-item name="7">
                     <template slot="title">
-                        <p class="titlt-p">税务合规(必填)</p>
+                        <p class="titlt-p">税务合规</p>
                     </template>
                     <table class="assessmentTable">
                         <thead>

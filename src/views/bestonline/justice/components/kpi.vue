@@ -93,7 +93,7 @@ export default {
             controllerMateLegalRisksOptions: CONTROLLER_MATE_LEGAL_RISKS_OPTIONS,
             rules: {
                 state: [
-                    { required: true, message: '此项为必填项！', trigger: 'change' }
+                    { required: true, message: '法务尽调评估结论为必填项！', trigger: 'change' }
                 ]
             }
         }
