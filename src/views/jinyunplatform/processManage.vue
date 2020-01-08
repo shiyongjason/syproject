@@ -7,16 +7,16 @@
             <div class="padd20">
                 <el-form label-position="right" :rules="rules" ref="ruleForm" :inline="true" label-width="100px" :model="queryParams">
                     <el-form-item label="客户名称：">
-                        <el-input v-model="queryParams.customerName" placeholder="请输入客户名称" maxLength='100'></el-input>
+                        <el-input v-model="queryParams.customerName" clearable placeholder="请输入客户名称" maxLength='100'></el-input>
                     </el-form-item>
                     <el-form-item label="产品名称：">
-                        <el-select v-model="queryParams.productName" placeholder="请选择产品名称">
+                        <el-select v-model="queryParams.productName" clearable placeholder="请选择产品名称">
                             <el-option v-for="item in options" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="流程类型：">
-                        <el-select v-model="queryParams.processType" placeholder="请选择流程类型">
+                        <el-select v-model="queryParams.processType" clearable placeholder="请选择流程类型">
                             <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
