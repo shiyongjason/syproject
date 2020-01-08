@@ -65,14 +65,14 @@ export default {
         return {
             rules: {
                 endOrCurrent: [
-                    { required: true, message: '请填写本年度累计金额', trigger: 'blur' },
+                    { required: true, message: '请填写本年度累计金额（上年度）', trigger: 'blur' },
                     { validator: MoneyOrConnectorMinus }
                 ],
                 endOrCurrentNORequired: [
                     { validator: MoneyOrConnectorMinus }
                 ],
                 beginOrPrior: [
-                    { required: true, message: '请填写上年末度累计金额', trigger: 'blur' },
+                    { required: true, message: '请填写上年末度累计金额（上年度）', trigger: 'blur' },
                     { validator: MoneyOrConnectorMinus }
                 ],
                 beginOrPriorNORequired: [

@@ -67,7 +67,7 @@
                 </tr>
             </tbody>
         </table>
-        <el-form-item label="前10个月销售是否持续下滑：" label-width="220px" class="mt20" prop="firstTenMonthsDown">
+        <el-form-item label="前10个月销售是否持续下滑：" label-width="220px" class="mt20" prop="firstTenMonthsDown" :rules="rules.firstTenMonthsDown">
             <el-select v-model="form.firstTenMonthsDown" placeholder="请选择">
                 <el-option v-for="item in firstTenMonthsDownData" :key="item.key" :label="item.value" :value="item.key"></el-option>
             </el-select>
@@ -91,6 +91,9 @@ export default {
             rules: {
                 lastYearSales: [
                     { required: true, message: '请输入上年度销售业绩', trigger: 'blur' }
+                ],
+                firstTenMonthsDown: [
+                    { required: true, message: '请选择是否下滑', trigger: 'change' }
                 ]
             }
         }
