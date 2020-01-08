@@ -118,8 +118,8 @@ export default {
                 this.type = 1
                 return false
             }
-            const fileSuffix = file.name.substring(file.name.indexOf('.'))
-            if (this.uploadInfo.accept.indexOf(fileSuffix) == -1) {
+            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+            if (this.uploadInfo.accept.lastIndexOf(fileSuffix) == -1) {
                 this.$message.error('格式不正确！')
                 this.type = 1
                 return false
