@@ -229,7 +229,6 @@ export default {
             this.validFailResult(errors, companyValidProps, '6')
         },
         onAddList (key, type) {
-            console.log(key, type)
             const { ...obj } = this.justiceData[key][0]
             for (let key1 in obj) {
                 switch (typeof obj[key1]) {

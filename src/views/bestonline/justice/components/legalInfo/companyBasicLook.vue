@@ -69,9 +69,7 @@ export default {
     },
     methods: {
     },
-    mounted () {
-        console.log(this.justiceData)
-    }
+    mounted () {}
 }
 </script>
 
