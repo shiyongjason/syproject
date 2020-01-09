@@ -62,8 +62,7 @@ export default {
             createUser: '',
             dueAttachCreateFormList: [],
             tableList: [],
-            type: 0,
-            is10M: false,
+            isSave: false, // 用来判断是否是保存清空文件数组
             commitAuthCode: AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT
         }
     },
@@ -102,17 +101,15 @@ export default {
             this.$message.warning(`当前限制选择 15 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
         },
         beforeRemove (file, fileList) {
-            if (this.type === 1) {
-                this.type = 0
-                return true
+            if (!this.isSave) {
+                return this.$confirm(`确定移除 ${file.name}？`).then(() => {
+                    this.arrList.map((item, index) => {
+                        if (item.fileId === file.response.data.fileCode) {
+                            this.arrList.splice(index, 1)
+                        }
+                    })
+                }).catch(() => { })
             }
-            return this.$confirm(`确定移除 ${file.name}？`).then(() => {
-                this.arrList.map((item, index) => {
-                    if (item.fileId === file.response.data.fileCode) {
-                        this.arrList.splice(index, 1)
-                    }
-                })
-            }).catch(() => { })
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
@@ -121,13 +118,11 @@ export default {
                     message: '附件要保持100M以内',
                     type: 'warning'
                 })
-                this.type = 1
                 return false
             }
             const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
             if (this.uploadInfo.accept.lastIndexOf(fileSuffix) == -1) {
                 this.$message.error('格式不正确！')
-                this.type = 1
                 return false
             }
         },
@@ -151,6 +146,7 @@ export default {
             }).catch(() => { })
         },
         async onSvaeattach () {
+            this.isSave = true
             const formData = {
                 applyId: this.applyId,
                 createUser: this.userInfo.employeeName,
@@ -159,7 +155,6 @@ export default {
             if (this.arrList.length !== 0) {
                 await addAttach(formData)
                 this.getAttach(this.applyId)
-                this.type = 1
                 var e = document.createEvent('MouseEvents')
                 e.initEvent('click', true, true) // 这里的click可以换成你想触发的行为
                 for (let i = 0; i < this.arrList.length; i++) {
@@ -167,7 +162,6 @@ export default {
                 }
                 this.arrList = []
                 this.fileList = []
-                this.type = 0
                 this.$message({
                     showClose: true,
                     message: '提交成功',
@@ -175,6 +169,7 @@ export default {
                 })
                 return
             }
+            this.isSave = false
             this.$message({
                 showClose: true,
                 message: '附件为空',
