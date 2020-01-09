@@ -54,6 +54,7 @@
                                 @blur="attributeChangeHandler"
                                 placeholder="请输入规格名"
                                 @select="attributeChangeHandler"
+                                :disabled="pageDisabled"
                             ></el-autocomplete>
 <!--                            <el-input type="text" v-model="item.name" maxlength="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>-->
                         </el-form-item>
