@@ -651,6 +651,28 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/event/createEditEvent')
+            },
+            {
+                path: 'accountManage',
+                name: 'accountManage',
+                meta: {
+                    title: '账号管理',
+                    tagName: '账号管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/membership/accountManage')
+            },
+            {
+                path: 'bussinessManage',
+                name: 'bussinessManage',
+                meta: {
+                    title: '商家管理',
+                    tagName: '商家管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/membership/bussinessManage')
             }
         ]
     },
@@ -959,8 +981,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // const menu = makeMenus(routerMapping, resourceList)
+    const menu = routerMapping
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 

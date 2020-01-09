@@ -6,7 +6,7 @@ import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
 import eventManage from './modules/eventManage'
-
+import membership from './modules/membership'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -30,7 +30,8 @@ const store = new Vuex.Store({
         dueDiligence,
         hmall,
         layout,
-        eventManage
+        eventManage,
+        membership
     }
 })
 

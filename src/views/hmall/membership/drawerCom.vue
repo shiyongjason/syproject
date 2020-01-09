@@ -1,0 +1,253 @@
+<template>
+    <div class="drawer-wrap">
+        <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+            <div class="drawer-content">
+                <el-tabs v-model="activeName">
+                    <el-tab-pane label="功能管理" name="first"></el-tab-pane>
+                    <el-tab-pane label="基本信息" name="second"></el-tab-pane>
+                </el-tabs>
+                <el-form :model="form" v-if="activeName=='first'">
+                    <el-form-item label="商家账号：" :label-width="formLabelWidth">
+                        15195954045
+                    </el-form-item>
+                    <el-form-item label="企业名称：" :label-width="formLabelWidth">
+                        江苏舒适云信息技术有限公司
+                    </el-form-item>
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth">
+                        <el-select v-model="form.region" placeholder="请选择活动区域">
+                            <el-option label="区域一" value="shanghai"></el-option>
+                            <el-option label="区域二" value="beijing"></el-option>
+                        </el-select>
+
+                    </el-form-item>
+                    <el-form-item label="经营区域：" :label-width="formLabelWidth">
+                        <el-select v-model="form.businessProvince" placeholder="请选择省" @change="onChangeList(1)">
+                            <el-option label="请选择" value=""></el-option>
+                            <el-option v-for="(item) in proviceList" :key="item.provinceId" :label="item.name" :value="item.provinceId">
+                            </el-option>
+                        </el-select>
+                        <el-select v-model="form.cityid" placeholder="请选择市" @change="onChangeList(2)">
+                            <el-option label="请选择" value=""></el-option>
+                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
+                            </el-option>
+                        </el-select>
+                       <el-select v-model="form.areaid" placeholder="请选择市">
+                            <el-option label="请选择" value=""></el-option>
+                            <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
+                        <el-radio-group v-model="form.resource">
+                            <el-radio label="体系内"></el-radio>
+                            <el-radio label="体系外"></el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
+                        <el-switch v-model="form.delivery"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="认证状态：" :label-width="formLabelWidth">
+                        已认证（yyyy-mm-dd hh:mm:ss）
+                    </el-form-item>
+                    <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
+                        <el-checkbox-group v-model="form.type">
+                            <el-checkbox label="商品型" name="type"></el-checkbox>
+                            <el-checkbox label="运营型" name="type"></el-checkbox>
+                        </el-checkbox-group>
+                    </el-form-item>
+                    <el-form-item label="员工：" :label-width="formLabelWidth">
+                        <ul>
+                            <li>赵娟 仓储 15109789676</li>
+                            <li>赵娟 仓储 15109789676</li>
+                            <li>赵娟 仓储 15109789676</li>
+                        </ul>
+                    </el-form-item>
+                    <el-form-item label="注册时间：" :label-width="formLabelWidth">
+                        yyyy-mm-dd hh:mm:ss
+                    </el-form-item>
+                    <el-form-item label="最近更新时间：" :label-width="formLabelWidth">
+                        yyyy-mm-dd hh:mm:ss
+                    </el-form-item>
+                    <el-form-item label="最近维护人：" :label-width="formLabelWidth">
+                        赵娟（15195954045）
+                    </el-form-item>
+                </el-form>
+                <div class="drawer-footer" v-if="activeName=='first'">
+                    <el-button @click="cancelForm">取 消</el-button>
+                    <el-button type="primary" @click="$refs.drawer.closeDrawer()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                </div>
+                <div class="" v-if="activeName=='second'">
+                    <el-form :model="form">
+                        <el-form-item label="企业名称：" :label-width="formLabelWidth">
+                            江苏舒适云信息技术有限公司
+                        </el-form-item>
+                        <el-form-item label="企业类型：" :label-width="formLabelWidth">
+                            个体工商户
+                        </el-form-item>
+                        <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
+                            2716986423661687QAZ
+                        </el-form-item>
+                        <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="法人姓名：" :label-width="formLabelWidth">
+                            韦小宝
+                        </el-form-item>
+                        <el-form-item label="法人手机号：" :label-width="formLabelWidth">
+                            3778765678
+                        </el-form-item>
+                        <el-form-item label="法人身份证号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="法人身份证照片：" :label-width="formLabelWidth">
+                            <div style="float:left">
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                            <div style="float:left;margin-left:10px">
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="开户名：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="银行卡号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="联行号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="开户许可证图片：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="门头照：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="门店内景：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </el-drawer>
+    </div>
+</template>
+<script>
+import { mapGetters, mapActions } from 'vuex'
+export default {
+    name: 'account',
+    props: {
+        drawer: {
+            type: Boolean,
+            default: false
+        }
+    },
+    data () {
+        return {
+            activeName: 'first',
+            form: {
+                name: '',
+                region: '',
+                date1: '',
+                date2: '',
+                delivery: false,
+                type: [],
+                resource: '',
+                desc: ''
+            },
+            formLabelWidth: '140px',
+            loading: false,
+            proviceList: []
+        }
+    },
+    computed: {
+        ...mapGetters({
+            nestDdata: 'nestDdata'
+        }),
+        cityList () {
+            const province = this.proviceList.filter(item => item.provinceId == this.form.businessProvince)
+            if (province.length > 0) {
+                return province[0].cities
+            }
+            return []
+        },
+        areaList () {
+            const city = this.cityList.filter(item => item.cityId == this.form.cityid)
+            if (city.length > 0) {
+                return city[0].countries
+            }
+            return []
+        }
+    },
+    methods: {
+        ...mapActions({
+            findNest: 'findNest'
+        }),
+        handleClose () {
+            this.$emit('backEvent')
+        },
+        cancelForm () {
+
+        },
+        onChangeList (val) {
+            if (val === 1) {
+                this.areaList = []
+                this.cityList = []
+                this.form.areaid = ''
+                this.form.cityid = ''
+            } else {
+                this.areaList = []
+                this.form.areaid = ''
+            }
+        },
+        async getFindNest () {
+            await this.findNest()
+            console.log(this.nestDdata)
+            this.proviceList = this.nestDdata
+        }
+    },
+    mounted () {
+        this.getFindNest()
+    }
+}
+</script>
+<style  lang="scss" scoped>
+/deep/ .el-drawer__body {
+    overflow-y: scroll;
+    position: relative;
+}
+.drawer-content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    form {
+        // flex: 1;
+        margin-bottom: 60px;
+    }
+    .drawer-footer {
+        padding: 0 10px;
+        display: flex;
+        position: fixed;
+        bottom: 10px;
+        // left: 0;
+        right: 0;
+        button {
+            flex: 1;
+        }
+    }
+}
+/deep/ .el-tabs__item.is-active {
+    background: transparent;
+    color: #000;
+}
+</style>

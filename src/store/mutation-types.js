@@ -1,3 +1,4 @@
+// B2B 特价活动
 export const DEMO = 'DEMO'
 // 活动商品数据
 export const ADD_EVENT_PRODUCTS = 'ADD_EVENT_PRODUCTS'
@@ -15,3 +16,6 @@ export const SET_EVENT_INFO = 'SET_EVENT_INFO'
 export const EMPTY_EVENT_PRODUCTS = 'EMPTY_EVENT_PRODUCTS'
 // 列表 hover 埋点数据
 export const LIST_TRACK = 'LIST_TRACK'
+
+// B2b 会员体系
+export const NEST_DATA = 'NEST_DATA'
