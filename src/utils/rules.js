@@ -83,7 +83,6 @@ export function plusOrMinus (values) {
     } else {
         newValue = values.replace(/[^0-9.-]/g, '')
     }
-    console.log(newValue)
     return values == '' ? '' : newValue
 }
 
