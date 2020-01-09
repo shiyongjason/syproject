@@ -14,7 +14,7 @@
         :before-upload="handleUpload">
             <el-button size="small" type="primary">点击上传</el-button>
             <p style="line-height: 16px;color: #666666;margin-top: 10px">
-                附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,必须支持,附件每个大小限制10M以内
+                附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xls,xlsx,ppt,必须支持,附件每个大小限制10M以内
             </p>
         </el-upload>
         <div>
