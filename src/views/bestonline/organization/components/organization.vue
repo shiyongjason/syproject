@@ -175,7 +175,7 @@ export default {
                             validator: (rule, value, callback) => {
                                 if (!this.form.dueOrganizationPostCreateFormList[index].proportion) {
                                     if (this.form.dueOrganizationPostCreateFormList[index].proportion !== 0) {
-                                        return callback(new Error(`${item.post}的评分为必填项`))
+                                        return callback(new Error(`${item.post}为必填项`))
                                     }
                                 }
                                 return callback()

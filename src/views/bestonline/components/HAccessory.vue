@@ -18,11 +18,17 @@
                 </div>
                 <p class="small-title " v-if="roleType">附件上传</p>
                 <div class="upload" v-if="roleType">
-                    <el-upload class="upload-demo" v-bind="uploadInfo"
+                    <el-upload class="upload-demo"
+                    v-bind="uploadInfo"
+                    :limit="15"
                     :multiple="true"
-                    :on-success="handleSuccess" :before-remove="beforeRemove" :on-exceed="handleExceed" :file-list="fileList" :before-upload="handleUpload">
+                    :on-success="handleSuccess"
+                    :before-remove="beforeRemove"
+                    :on-exceed="handleExceed"
+                    :file-list="fileList"
+                    :before-upload="handleUpload">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制100M以内</div>
+                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xls,xlsx,ppt,zip,rar,必须支持,附件每个大小限制100M以内</div>
                     </el-upload>
                 </div>
                 <!--end-->
@@ -30,7 +36,7 @@
         </el-collapse>
         <div class="flex-wrap-row" v-if="roleType">
             <el-col :span="2" :offset="8">
-                <el-button type="primary" @click="onSvaeattach" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
+                <el-button type="primary" @click="onSvaeattach" :loading="loading" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -56,8 +62,8 @@ export default {
             createUser: '',
             dueAttachCreateFormList: [],
             tableList: [],
-            type: 0,
-            is10M: false,
+            isSave: false, // 用来判断是否是保存清空文件数组
+            loading: false, // 防重复提交
             commitAuthCode: AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT
         }
     },
@@ -82,10 +88,10 @@ export default {
     },
     methods: {
         handleSuccess (file) {
-            // console.log(file)
             if (file.code !== 200) {
                 this.$confirm(file.message, '提示信息').catch(() => { })
             } else {
+                this.loading = false
                 let uploadedUrl = file.data.accessUrl
                 let name = file.data.fileName
                 let fileId = file.data.fileCode
@@ -93,20 +99,18 @@ export default {
             }
         },
         handleExceed (files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+            this.$message.warning(`当前限制选择 15 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
         },
         beforeRemove (file, fileList) {
-            if (this.type === 1) {
-                this.type = 0
-                return true
+            if (!this.isSave) {
+                return this.$confirm(`确定移除 ${file.name}？`).then(() => {
+                    this.arrList.map((item, index) => {
+                        if (item.fileId === file.response.data.fileCode) {
+                            this.arrList.splice(index, 1)
+                        }
+                    })
+                }).catch(() => { })
             }
-            return this.$confirm(`确定移除 ${file.name}？`).then(() => {
-                this.arrList.map((item, index) => {
-                    if (item.fileId === file.response.data.fileCode) {
-                        this.arrList.splice(index, 1)
-                    }
-                })
-            }).catch(() => { })
         },
         handleUpload (file) {
             // TODO: 目前只有一个文件,待优化
@@ -115,15 +119,14 @@ export default {
                     message: '附件要保持100M以内',
                     type: 'warning'
                 })
-                this.type = 1
                 return false
             }
             const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
             if (this.uploadInfo.accept.lastIndexOf(fileSuffix) == -1) {
                 this.$message.error('格式不正确！')
-                this.type = 1
                 return false
             }
+            this.loading = true
         },
         async getAttach () {
             const { data } = await getAttach(this.applyId)
@@ -145,6 +148,7 @@ export default {
             }).catch(() => { })
         },
         async onSvaeattach () {
+            this.isSave = true
             const formData = {
                 applyId: this.applyId,
                 createUser: this.userInfo.employeeName,
@@ -153,7 +157,6 @@ export default {
             if (this.arrList.length !== 0) {
                 await addAttach(formData)
                 this.getAttach(this.applyId)
-                this.type = 1
                 var e = document.createEvent('MouseEvents')
                 e.initEvent('click', true, true) // 这里的click可以换成你想触发的行为
                 for (let i = 0; i < this.arrList.length; i++) {
@@ -161,7 +164,6 @@ export default {
                 }
                 this.arrList = []
                 this.fileList = []
-                this.type = 0
                 this.$message({
                     showClose: true,
                     message: '提交成功',
@@ -169,6 +171,7 @@ export default {
                 })
                 return
             }
+            this.isSave = false
             this.$message({
                 showClose: true,
                 message: '附件为空',
