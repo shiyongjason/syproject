@@ -95,14 +95,14 @@ export default {
             lastTwoYearAllSales: 0, // 前年销售总额
             rules: {
                 currentYearSales: [
-                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change'  }
+                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change' }
                 ],
                 lastYearSales: [
                     { required: true, message: '请输入上年度销售业绩', trigger: 'blur' },
                     { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数' }
                 ],
                 lastTwoYearSales: [
-                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change'  }
+                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change' }
                 ],
                 firstTenMonthsDown: [
                     { required: true, message: '请选择是否下滑', trigger: 'change' }
@@ -130,9 +130,9 @@ export default {
                         databaseLastYearAllSales = parseFloat(item.lastYearSales)
                         databaseLastTwoYearAllSales = parseFloat(item.lastTwoYearSales)
                     } else {
-                        this.currentYearAllSales += parseFloat(item.currentYearSales ? item.currentYearSales : 0)
-                        this.lastYearAllSales += parseFloat(item.lastYearSales ? item.lastYearSales : 0)
-                        this.lastTwoYearAllSales += parseFloat(item.lastTwoYearSales ? item.lastTwoYearSales : 0)
+                        this.currentYearAllSales += parseFloat(this.oninput(item.currentYearSales))
+                        this.lastYearAllSales += parseFloat(this.oninput(item.lastYearSales))
+                        this.lastTwoYearAllSales += parseFloat(this.oninput(item.lastTwoYearSales))
                     }
                 })
                 this.currentYearAllSales = (this.currentYearAllSales ? this.currentYearAllSales : 0).toFixed(2)
@@ -158,15 +158,9 @@ export default {
         }
     },
     methods: {
-        oninputSale (i, v, e) {
-            e.target.value = plusOrMinus(e.target.value.toString())
-            // console.log(e.target.value)
-            // this.dueBusinessSaleCreateFormList[i][v] = e.target.value
-            // console.log(this.dueBusinessSaleCreateFormList[i][v])
-        },
-        oninput (value, e) {
-            // 通过正则过滤小数点后两位
-            this[value] = plusOrMinus(e.target.value.toString())
+        oninput (value) {
+            if (value == null) value = 0
+            return plusOrMinus(value.toString()) == '' ? 0 : plusOrMinus(value.toString())
         }
     },
     filters: {
