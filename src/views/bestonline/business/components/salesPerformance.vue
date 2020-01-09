@@ -28,8 +28,10 @@
                             {{currentYearAllSales}}
                         </template>
                         <template v-else>
-                            <el-input placeholder="" maxlength="25" v-model="item.currentYearSales" @keyup.native="oninputSale(index,'currentYearSales',$event)">
-                            </el-input>
+                            <el-form-item label-width="0" :prop="`dueBusinessSaleCreateFormList[${index}].currentYearSales`" :rules="rules.currentYearSales">
+                                <el-input placeholder="" maxlength="25" v-model="item.currentYearSales">
+                                </el-input>
+                            </el-form-item>
                         </template>
                     </td>
                     <td>
@@ -42,7 +44,7 @@
                         </template>
                         <template v-else>
                             <el-form-item label-width="0" :prop="`dueBusinessSaleCreateFormList[${index}].lastYearSales`" :rules="rules.lastYearSales">
-                                <el-input maxlength="25" v-model="item.lastYearSales" @keyup.native="oninputSale(index, 'lastYearSales', $event)">
+                                <el-input maxlength="25" v-model="item.lastYearSales">
                                 </el-input>
                             </el-form-item>
                         </template>
@@ -56,8 +58,10 @@
                             {{lastTwoYearAllSales}}
                         </template>
                         <template v-else>
-                            <el-input placeholder="" maxlength="25" v-model="item.lastTwoYearSales" @keyup.native="oninputSale(index, 'lastTwoYearSales', $event)">
-                            </el-input>
+                            <el-form-item label-width="0" :prop="`dueBusinessSaleCreateFormList[${index}].lastTwoYearSales`" :rules="rules.lastTwoYearSales">
+                                <el-input placeholder="" maxlength="25" v-model="item.lastTwoYearSales">
+                                </el-input>
+                            </el-form-item>
                         </template>
                     </td>
                     <td>
@@ -78,6 +82,7 @@
 import { MAIN_COMMERCIAL_OPTIONS, MAIN_CATEGORY_OPTIONS, DOWN_OPTIONS } from '../const'
 import { mapState } from 'vuex'
 import { plusOrMinus } from '../../../../utils/rules'
+import { IsFixedTwoNumber } from '@/utils/rules.js'
 export default {
     name: 'business_mode',
     data () {
@@ -89,8 +94,15 @@ export default {
             lastYearAllSales: 0, // 去年销售总额
             lastTwoYearAllSales: 0, // 前年销售总额
             rules: {
+                currentYearSales: [
+                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change'  }
+                ],
                 lastYearSales: [
-                    { required: true, message: '请输入上年度销售业绩', trigger: 'blur' }
+                    { required: true, message: '请输入上年度销售业绩', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数' }
+                ],
+                lastTwoYearSales: [
+                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'change'  }
                 ],
                 firstTenMonthsDown: [
                     { required: true, message: '请选择是否下滑', trigger: 'change' }
