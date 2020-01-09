@@ -28,7 +28,7 @@
                     :file-list="fileList"
                     :before-upload="handleUpload">
                         <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xsl,xlsx,ppt,zip,rar,必须支持,附件每个大小限制100M以内</div>
+                        <div slot="tip" class="el-upload__tip">附件格式除视频类的、录音类的暂时不需支持外，其他附件格式都支持。常见的一些附件格式：jpg,jpeg,png,pdf,word,xls,xlsx,ppt,zip,rar,必须支持,附件每个大小限制100M以内</div>
                     </el-upload>
                 </div>
                 <!--end-->
