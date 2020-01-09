@@ -193,10 +193,6 @@ export default {
             this.queryParams.channelType = this.propsParams.source - 0
             this.queryParamsTrace.channelType = this.propsParams.source - 0
             this.onQuery()
-            this.getWorkOrderUserInfo({
-                mobile: this.propsParams.mobile,
-                channelType: this.propsParams.source
-            })
         }
     },
     methods: {
@@ -235,7 +231,6 @@ export default {
             this.onQueryTrace()
         },
         async handleClickShowDialog (row) {
-            const userMapper = this.doneWorkOrderUserInfo
             const params = {
                 mobile: this.queryParams.mobile,
                 channelType: row.channelType
@@ -251,12 +246,18 @@ export default {
                 reserveMode: 2,
                 userRightMobile: this.queryParams.mobile,
                 serviceResourceArr: data,
-                customerName: userMapper.name,
-                customerMobile: userMapper.mobile,
-                customerAddress: userMapper.address
+                customerName: '',
+                customerMobile: '',
+                customerAddress: ''
             }
-            this.findServiceManagementList() // 查询线下管家
             this.dialog = true
+            await this.getWorkOrderUserInfo(params)
+            const userMapper = this.doneWorkOrderUserInfo
+            console.log(userMapper)
+            this.form.customerName = userMapper.name
+            this.form.customerMobile = userMapper.mobile
+            this.form.customerAddress = userMapper.address
+            this.findServiceManagementList() // 查询线下管家
             this.$refs.workOrder.clearValidate()
         },
         async findServiceManagementList () {
