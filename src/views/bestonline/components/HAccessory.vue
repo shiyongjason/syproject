@@ -36,7 +36,7 @@
         </el-collapse>
         <div class="flex-wrap-row" v-if="roleType">
             <el-col :span="2" :offset="8">
-                <el-button type="primary" @click="onSvaeattach" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
+                <el-button type="primary" @click="onSvaeattach" :loading="loading" v-if="hosAuthCheck(commitAuthCode)">提交</el-button>
             </el-col>
         </div>
     </div>
@@ -63,6 +63,7 @@ export default {
             dueAttachCreateFormList: [],
             tableList: [],
             isSave: false, // 用来判断是否是保存清空文件数组
+            loading: false, // 防重复提交
             commitAuthCode: AUTH_BESTONLINE_REVIEW_UPLOAD_COMMIT
         }
     },
@@ -87,10 +88,10 @@ export default {
     },
     methods: {
         handleSuccess (file) {
-            // console.log(file)
             if (file.code !== 200) {
                 this.$confirm(file.message, '提示信息').catch(() => { })
             } else {
+                this.loading = false
                 let uploadedUrl = file.data.accessUrl
                 let name = file.data.fileName
                 let fileId = file.data.fileCode
@@ -125,6 +126,7 @@ export default {
                 this.$message.error('格式不正确！')
                 return false
             }
+            this.loading = true
         },
         async getAttach () {
             const { data } = await getAttach(this.applyId)
