@@ -75,12 +75,7 @@
                                 </span>
                             </li>
                             <li>
-                                <template v-if="item.source === 1">
-                                    {{item.userName ? item.userName : '-'}}
-                                </template>
-                                <template v-else>
-                                    {{item.receiverName ? item.receiverName : '-'}}
-                                </template>
+                                {{item.userName ? item.userName : '-'}}
                                 <br>
                                 {{item.receiverName ? item.receiverName : '-'}}
                             </li>
