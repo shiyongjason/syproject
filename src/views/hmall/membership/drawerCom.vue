@@ -6,70 +6,66 @@
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
                     <el-tab-pane label="基本信息" name="second"></el-tab-pane>
                 </el-tabs>
-                <el-form :model="form" v-if="activeName=='first'">
+                <el-form :model="bossDetail" v-if="activeName=='first'">
                     <el-form-item label="商家账号：" :label-width="formLabelWidth">
-                        15195954045
+                        {{bossDetail.merchantAccount}}
                     </el-form-item>
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        江苏舒适云信息技术有限公司
+                        {{bossDetail.companyName}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth">
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="bossDetail.subsectionCode" placeholder="全部" :clearable=true >
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
-
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth">
-                        <el-select v-model="form.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                        <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                             <el-option label="请选择" value=""></el-option>
                             <el-option v-for="(item) in proviceList" :key="item.provinceId" :label="item.name" :value="item.provinceId">
                             </el-option>
                         </el-select>
-                        <el-select v-model="form.cityid" placeholder="请选择市" @change="onChangeList(2)">
+                        <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
                             <el-option label="请选择" value=""></el-option>
                             <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                             </el-option>
                         </el-select>
-                       <el-select v-model="form.areaid" placeholder="请选择区">
+                        <el-select v-model="bossDetail.countryId" placeholder="请选择区">
                             <el-option label="请选择" value=""></el-option>
                             <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                             </el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
-                        <el-radio-group v-model="form.resource">
-                            <el-radio label="体系内"></el-radio>
-                            <el-radio label="体系外"></el-radio>
+                        <el-radio-group v-model="bossDetail.merchantType">
+                            <el-radio :label="1">体系内</el-radio>
+                            <el-radio :label="2">体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
-                        <el-switch v-model="form.delivery"></el-switch>
+                        <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
                     </el-form-item>
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                        已认证（yyyy-mm-dd hh:mm:ss）
+                        {{bossDetail.isAuthentication==0?'未认证':'已认证'}}（{{bossDetail.authenticationTime | formatterTime}}）
                     </el-form-item>
                     <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
-                        <el-checkbox-group v-model="form.type">
-                            <el-checkbox label="商品型" name="type"></el-checkbox>
-                            <el-checkbox label="运营型" name="type"></el-checkbox>
+                        <el-checkbox-group>
+                            <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
+                            <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul>
-                            <li>赵娟 仓储 15109789676</li>
-                            <li>赵娟 仓储 15109789676</li>
-                            <li>赵娟 仓储 15109789676</li>
+                            <li v-for="(item,index) in bossDetail.staff" :key=index>{{item.name}} {{item.role}} {{item.phone}}</li>
                         </ul>
                     </el-form-item>
                     <el-form-item label="注册时间：" :label-width="formLabelWidth">
-                        yyyy-mm-dd hh:mm:ss
+                        {{bossDetail.registrationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近更新时间：" :label-width="formLabelWidth">
-                        yyyy-mm-dd hh:mm:ss
+                        {{bossDetail.updateTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        赵娟（15195954045）
+                        {{bossDetail.updateBy}}
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
@@ -156,19 +152,7 @@ export default {
     data () {
         return {
             activeName: 'first',
-            form: {
-                name: '',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: '',
-                provinceId: '',
-                cityid: '',
-                areaid: ''
-            },
+            branchArr: [],
             formLabelWidth: '140px',
             loading: false,
             proviceList: [],
@@ -181,7 +165,7 @@ export default {
                 countryName: '',
                 isAuthentication: '',
                 isAutoDispatch: '',
-                isCommodity: '',
+                isCommodity: '', // 是否商品型商家
                 isOperational: '',
                 merchantAccount: '',
                 merchantType: '',
@@ -199,17 +183,18 @@ export default {
     computed: {
         ...mapGetters({
             nestDdata: 'nestDdata',
-            merchantDetail: 'merchantDetail'
+            merchantDetail: 'merchantDetail',
+            branchList: 'branchList'
         }),
         cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.form.provinceId)
+            const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
             if (province.length > 0) {
                 return province[0].cities
             }
             return []
         },
         areaList () {
-            const city = this.cityList.filter(item => item.cityId == this.form.cityid)
+            const city = this.cityList.filter(item => item.cityId == this.bossDetail.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -226,7 +211,8 @@ export default {
     methods: {
         ...mapActions({
             findNest: 'findNest',
-            findMerchantDetail: 'findMerchantDetail'
+            findMerchantDetail: 'findMerchantDetail',
+            findBranch: 'findBranch'
         }),
         handleClose () {
             this.$emit('backEvent')
@@ -234,12 +220,16 @@ export default {
         cancelForm () {
 
         },
+        async onGetbranch () {
+            await this.findBranch()
+            this.branchArr = this.branchList
+        },
         onChangeList (val) {
             if (val === 1) {
-                this.form.areaid = ''
-                this.form.cityid = ''
+                this.form.countryId = ''
+                this.form.cityId = ''
             } else if (val === 2) {
-                this.form.areaid = ''
+                this.form.countryId = ''
             }
         },
         async getFindNest () {
@@ -254,6 +244,7 @@ export default {
     },
     mounted () {
         this.getFindNest()
+        this.onGetbranch()
     }
 }
 </script>
