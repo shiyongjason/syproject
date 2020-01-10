@@ -6,7 +6,7 @@
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
                     <el-tab-pane label="基本信息" name="second"></el-tab-pane>
                 </el-tabs>
-                <el-form :model="bossDetail" v-if="activeName=='first'">
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm" v-if="activeName=='first'">
                     <el-form-item label="商家账号：" :label-width="formLabelWidth">
                         {{bossDetail.merchantAccount}}
                     </el-form-item>
@@ -18,22 +18,36 @@
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="经营区域：" :label-width="formLabelWidth">
-                        <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
-                            <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(item) in proviceList" :key="item.provinceId" :label="item.name" :value="item.provinceId">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
-                            <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
-                            </el-option>
-                        </el-select>
-                        <el-select v-model="bossDetail.countryId" placeholder="请选择区">
-                            <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
+                        <el-col :span="6">
+                            <el-form-item prop="provinceId">
+                                <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option v-for="(item) in proviceList" :key="item.provinceId" :label="item.name" :value="item.provinceId">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="1">-</el-col>
+                        <el-col :span="6">
+                            <el-form-item prop="cityId">
+                                <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="1">-</el-col>
+                        <el-col :span="6">
+                            <el-form-item prop="countryId">
+                                <el-select v-model="bossDetail.countryId" placeholder="请选择区">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     </el-form-item>
                     <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
                         <el-radio-group v-model="bossDetail.merchantType">
@@ -48,10 +62,8 @@
                         {{bossDetail.isAuthentication==0?'未认证':'已认证'}}（{{bossDetail.authenticationTime | formatterTime}}）
                     </el-form-item>
                     <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
-
                         <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
                         <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
-
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul>
@@ -179,6 +191,17 @@ export default {
                 updateBy: '',
                 updateTime: '',
                 updatePhone: ''
+            },
+            rules: {
+                countryId: [
+                    { required: true, message: '请选择区', trigger: 'change' }
+                ],
+                cityId: [
+                    { required: true, message: '请选择市', trigger: 'change' }
+                ],
+                provinceId: [
+                    { required: true, message: '请选择省', trigger: 'change' }
+                ]
             }
         }
     },
@@ -208,10 +231,10 @@ export default {
     },
     watch: {
         merchantCode: {
-            handler (val) {
-                console.log(val)
-                if (val) {
-                    this.getMerchtDetail(val)
+            handler (newV, oldV) {
+                console.log(newV, oldV)
+                if (newV) {
+                    this.getMerchtDetail(newV)
                 }
             },
             deep: true
@@ -229,23 +252,27 @@ export default {
         cancelForm () {
             this.$emit('backEvent')
         },
-        async onSaveDetail () {
+        onSaveDetail () {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
             params.merchantCode = this.merchantCode
-            this.loading = true
-            try {
-                await putMerchantDetail(params)
-                this.$message({
-                    message: '数据保存成功',
-                    type: 'success'
-                })
-                this.$emit('backEvent')
-                this.loading = false
-            } catch (error) {
-                this.loading = false
-            }
+            this.$refs['ruleForm'].validate(async (valid) => {
+                if (valid) {
+                    this.loading = true
+                    try {
+                        await putMerchantDetail(params)
+                        this.$message({
+                            message: '数据保存成功',
+                            type: 'success'
+                        })
+                        this.$emit('backEvent')
+                        this.loading = false
+                    } catch (error) {
+                        this.loading = false
+                    }
+                }
+            })
         },
         async onGetbranch () {
             await this.findBranch()
