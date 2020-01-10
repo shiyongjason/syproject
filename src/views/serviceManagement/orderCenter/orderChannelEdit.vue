@@ -63,7 +63,7 @@
                     <th>商品单价</th>
                     <th>商品数量</th>
                 </tr>
-                <tr v-for="item in details.orderGoodsList" :key="item.goodsCode">
+                <tr v-for="(item,index) in details.orderGoodsList" :key="index">
                     <td><input v-model="item.goodsCode" class="goods-mdm" type="text" placeholder="商品MDM编码"></td>
                     <td>{{item.goodsName}}</td>
                     <td>{{item.price}}</td>

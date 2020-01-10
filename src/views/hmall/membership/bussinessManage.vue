@@ -148,7 +148,14 @@ export default {
                 { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
-
+                        return (
+                            <span class="iconfl">
+                                <font>{scope.column.label}</font>
+                                <el-tooltip class="item" effect="dark" content="开通钱包即为已认证" placement="top-start">
+                                    <i class='el-icon-question'></i>
+                                </el-tooltip>
+                            </span>
+                        )
                     } },
                 { label: '认证时间', prop: 'authenticationTime' },
                 { label: '商家角色权限', prop: 'merchantRolePermission' },
@@ -270,5 +277,12 @@ export default {
 }
 .colorGreen{
     color: #67C23A
+}
+/deep/.iconfl{
+    position: relative;
+    i{
+        position: absolute;
+        top: 3px;
+    }
 }
 </style>

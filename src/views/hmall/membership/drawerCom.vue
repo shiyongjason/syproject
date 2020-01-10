@@ -192,7 +192,6 @@ export default {
         }),
         cityList () {
             const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
-            console.log(province)
             if (province.length > 0) {
                 return province[0].cities
             }
@@ -233,9 +232,10 @@ export default {
             try {
                 await putMerchantDetail(params)
                 this.$message({
-                    message: '恭喜你，这是一条成功消息',
+                    message: '数据保存成功',
                     type: 'success'
                 })
+                this.$emit('backEvent')
                 this.loading = false
             } catch (error) {
                 this.loading = false
@@ -247,10 +247,10 @@ export default {
         },
         onChangeList (val) {
             if (val === 1) {
-                this.form.countryId = ''
-                this.form.cityId = ''
+                this.bossDetail.countryId = ''
+                this.bossDetail.cityId = ''
             } else if (val === 2) {
-                this.form.countryId = ''
+                this.bossDetail.countryId = ''
             }
         },
         async getFindNest () {
