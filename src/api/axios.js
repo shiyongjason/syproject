@@ -29,7 +29,9 @@ const cancelRequst = (config) => {
 axios.interceptors.request.use(
     (config) => {
         const token = sessionStorage.getItem('token')
+        const refreshToken = sessionStorage.getItem('refreshToken')
         token && (config.headers['Authorization'] = `Bearer ${token}`)
+        refreshToken && (config.headers['RefreshToken'] = `${refreshToken}`)
         // cancelRequst(config) // 在一个请求发送前执行一下取消操作
         // config.cancelToken = new CancelToken(cancelMethod => {
         //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
@@ -44,6 +46,8 @@ axios.interceptors.request.use(
 // 添加响应拦截器
 axios.interceptors.response.use(
     (response) => {
+        response.headers.new_access_token && sessionStorage.setItem('token', response.headers.new_access_token)
+        response.headers.new_refresh_token && sessionStorage.setItem('refreshToken', response.headers.new_refresh_token)
         cancelRequst(response.config)// 请求响应后，把已经完成的请求从requestArr中移除
         // TODO 处理 老boss用户不存在不提示错误直接进入首页
         const config = response.config

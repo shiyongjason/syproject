@@ -38,7 +38,7 @@
 
 <script>
 export default {
-    name: 'CAdialog',
+    name: 'dialog',
     props: {
         dialog: {
             type: Boolean,
