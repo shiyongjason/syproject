@@ -92,6 +92,7 @@ export default {
                 this.$confirm(file.message, '提示信息').catch(() => { })
             } else {
                 this.loading = false
+                this.isSave = false
                 let uploadedUrl = file.data.accessUrl
                 let name = file.data.fileName
                 let fileId = file.data.fileCode
@@ -119,11 +120,13 @@ export default {
                     message: '附件要保持100M以内',
                     type: 'warning'
                 })
+                this.isSave = true
                 return false
             }
             const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
             if (this.uploadInfo.accept.lastIndexOf(fileSuffix) == -1) {
                 this.$message.error('格式不正确！')
+                this.isSave = true
                 return false
             }
             this.loading = true
