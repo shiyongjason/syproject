@@ -4,6 +4,9 @@ import Layout from '@/views/layout/Default.vue'
 import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
+import axios from 'axios'
+import { B2bUrl } from './api/config'
+import qs from 'qs'
 import jwtDecode from 'jwt-decode'
 Vue.use(Router)
 
@@ -1032,6 +1035,29 @@ router.beforeEach(async (to, from, next) => {
             from_page_name: from.meta.title || '',
             user_agent: navigator.userAgent
         })
+    }
+    // TODO 获取B2b token 项目路径 hmall（重新获取token）
+    if (to.path.indexOf('hmall') > 0) {
+        console.log(2)
+        // 登录token带到请求的头部中，用于校验登录状态
+        const token = sessionStorage.getItem('tokenB2b')
+        if (token) {
+            axios.defaults.headers['Authorization'] = 'Bearer ' + token
+        } else {
+            const newInstance = axios.create({
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            const { data } = await newInstance.post(B2bUrl + 'uaa/oauth/token', qs.stringify({
+                'grant_type': 'client_credentials',
+                'client_id': 'boss',
+                'client_secret': 'boss',
+                'scope': 'boss'
+            }))
+            sessionStorage.setItem('tokenB2b', data.access_token)
+            axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
+        }
     }
     next()
 })

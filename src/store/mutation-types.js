@@ -19,3 +19,7 @@ export const LIST_TRACK = 'LIST_TRACK'
 
 // B2b 会员体系
 export const NEST_DATA = 'NEST_DATA'
+export const MERCHT_DATA = 'MERCHT_DATA'
+export const MERCHT_DETAIL = 'MERCHT_DETAIL'
+export const MERCHT_STATIC = 'MERCHT_STATIC'
+export const BRANCH_LIST = 'BRANCH_LIST'

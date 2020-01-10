@@ -21,7 +21,7 @@
 
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth">
-                        <el-select v-model="form.businessProvince" placeholder="请选择省" @change="onChangeList(1)">
+                        <el-select v-model="form.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                             <el-option label="请选择" value=""></el-option>
                             <el-option v-for="(item) in proviceList" :key="item.provinceId" :label="item.name" :value="item.provinceId">
                             </el-option>
@@ -31,7 +31,7 @@
                             <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                             </el-option>
                         </el-select>
-                       <el-select v-model="form.areaid" placeholder="请选择市">
+                       <el-select v-model="form.areaid" placeholder="请选择区">
                             <el-option label="请选择" value=""></el-option>
                             <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                             </el-option>
@@ -147,6 +147,10 @@ export default {
         drawer: {
             type: Boolean,
             default: false
+        },
+        merchantCode: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -160,19 +164,45 @@ export default {
                 delivery: false,
                 type: [],
                 resource: '',
-                desc: ''
+                desc: '',
+                provinceId: '',
+                cityid: '',
+                areaid: ''
             },
             formLabelWidth: '140px',
             loading: false,
-            proviceList: []
+            proviceList: [],
+            bossDetail: {
+                authenticationTime: '',
+                cityId: '',
+                cityName: '',
+                companyName: '',
+                countryId: '',
+                countryName: '',
+                isAuthentication: '',
+                isAutoDispatch: '',
+                isCommodity: '',
+                isOperational: '',
+                merchantAccount: '',
+                merchantType: '',
+                provinceId: '',
+                provinceName: '',
+                registrationTime: '',
+                staff: [],
+                subsectionCode: '',
+                subsectionName: '',
+                updateBy: '',
+                updateTime: ''
+            }
         }
     },
     computed: {
         ...mapGetters({
-            nestDdata: 'nestDdata'
+            nestDdata: 'nestDdata',
+            merchantDetail: 'merchantDetail'
         }),
         cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.form.businessProvince)
+            const province = this.proviceList.filter(item => item.provinceId == this.form.provinceId)
             if (province.length > 0) {
                 return province[0].cities
             }
@@ -186,9 +216,17 @@ export default {
             return []
         }
     },
+    watch: {
+        merchantCode (val) {
+            if (val) {
+                this.getMerchtDetail(val)
+            }
+        }
+    },
     methods: {
         ...mapActions({
-            findNest: 'findNest'
+            findNest: 'findNest',
+            findMerchantDetail: 'findMerchantDetail'
         }),
         handleClose () {
             this.$emit('backEvent')
@@ -198,19 +236,20 @@ export default {
         },
         onChangeList (val) {
             if (val === 1) {
-                this.areaList = []
-                this.cityList = []
                 this.form.areaid = ''
                 this.form.cityid = ''
-            } else {
-                this.areaList = []
+            } else if (val === 2) {
                 this.form.areaid = ''
             }
         },
         async getFindNest () {
             await this.findNest()
-            console.log(this.nestDdata)
             this.proviceList = this.nestDdata
+        },
+        async getMerchtDetail (val) {
+            await this.findMerchantDetail({ merchantCode: val })
+            console.log(this.merchantDetail)
+            this.bossDetail = { ...this.merchantDetail }
         }
     },
     mounted () {
