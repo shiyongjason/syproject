@@ -712,6 +712,17 @@ const routerMapping = [
             //     component: () => import('./views/jinyunplatform/index')
             // },
             {
+                path: 'jyindex',
+                name: 'jyindex',
+                meta: {
+                    title: '金云',
+                    tagName: '金云',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('./views/jinyunplatform/index')
+            },
+            {
                 path: 'enterpriseCA',
                 name: 'enterpriseCA',
                 meta: {
@@ -894,7 +905,6 @@ router.beforeEach(async (to, from, next) => {
     }
     next()
 })
-
 export default router
 export {
     routerMapping

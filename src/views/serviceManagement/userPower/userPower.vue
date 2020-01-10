@@ -19,7 +19,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">渠道名称：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.channelType">
+                        <el-select v-model="queryParams.channelType" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
                             <el-option :label="item.name" :value="item.code" v-for="item in channelType" :key="item.code"></el-option>
                         </el-select>
                     </div>
@@ -106,7 +107,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { getAggregate, getUserRightsTrace, createWorkUserRights } from './api/index'
 import { findServiceManagementList } from '../orderCenter/api/index'
 import { findChannelDict } from '../common/dictApi'
@@ -116,6 +117,7 @@ import { phoneRegular } from '@/utils/regular'
 export default {
     name: 'userPower',
     computed: {
+        ...mapGetters(['doneWorkOrderUserInfo']),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -145,8 +147,8 @@ export default {
     },
     data () {
         return {
-            queryParams: { mobile: '' },
-            queryParamsTrace: {},
+            queryParams: { mobile: '', channelType: '' },
+            queryParamsTrace: { mobile: '', channelType: '' },
             dialog: false,
             tableData: [], // 用户权益
             tableDataTrace: [], // 权益操作记录
@@ -175,24 +177,31 @@ export default {
             isShow: false
         }
     },
-    mounted () {
-        this.findChannelDict()
-        this.propsParams = this.$route.query
-        if (this.propsParams.name) {
-            this.queryParams.disabledName = this.propsParams.name
+    watch: {
+        'queryParams.channelType' (val) {
+            this.queryParamsTrace.channelType = val
         }
-        if (this.propsParams.mobile) {
+    },
+    async mounted () {
+        this.propsParams = { ...this.$route.query }
+        await this.findChannelDict()
+        if (this.propsParams.orderNo) {
+            this.queryParamsTrace.orderNo = this.propsParams.orderNo
+        }
+        if (this.propsParams.mobile && this.propsParams.source) {
             this.queryParams.mobile = this.propsParams.mobile
+            this.queryParams.channelType = this.propsParams.source - 0
+            this.queryParamsTrace.channelType = this.propsParams.source - 0
             this.onQuery()
         }
-        if (this.propsParams.source) {
-            this.queryParams.channelType = this.propsParams.source
-        }
-        // kaifa
-        // this.onQuery()
     },
     methods: {
+        ...mapActions(['getWorkOrderUserInfo']),
         async onQuery () {
+            if (!this.queryParams.mobile) {
+                this.$message.error('手机号码必填')
+                return
+            }
             if (this.queryParams.mobile && !phoneRegular.test(this.queryParams.mobile)) {
                 this.$message.error('手机号码格式错误')
                 return
@@ -212,7 +221,7 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'mobile', '')
             this.$set(this.queryParams, 'channelType', '')
-            this.onQuery()
+            this.isShow = false
         },
         onResetTrace () {
             this.$set(this.queryParamsTrace, 'operateBeginTime', '')
@@ -236,10 +245,19 @@ export default {
                 AloneDataTimeEnd: '',
                 reserveMode: 2,
                 userRightMobile: this.queryParams.mobile,
-                serviceResourceArr: data
+                serviceResourceArr: data,
+                customerName: '',
+                customerMobile: '',
+                customerAddress: ''
             }
-            this.findServiceManagementList() // 查询线下管家
             this.dialog = true
+            await this.getWorkOrderUserInfo(params)
+            const userMapper = this.doneWorkOrderUserInfo
+            console.log(userMapper)
+            this.form.customerName = userMapper.name
+            this.form.customerMobile = userMapper.mobile
+            this.form.customerAddress = userMapper.address
+            this.findServiceManagementList() // 查询线下管家
             this.$refs.workOrder.clearValidate()
         },
         async findServiceManagementList () {
@@ -254,14 +272,13 @@ export default {
             if (form.serviceNum > this.userRightRow.availableTimes) {
                 this.$message.error('服务可用次数不足')
                 this.$refs.workOrder.closeIsSaving()
-                console.log(this.$refs.workOrder.isSaving)
                 return
             }
             // 新增工单
             form.createBy = this.userInfo.employeeName
             await createWorkUserRights(form)
             this.$refs.workOrder.onCloseDialog()
-            this.getAggregate()
+            this.onQuery()
         }
     }
 }

@@ -36,7 +36,7 @@
                             <el-form-item label="父类目">
                                 <el-input v-model="form.parentName" type="text" disabled></el-input>
                             </el-form-item>
-                            <el-form-item label="当前类目层级">
+                            <el-form-item :label="editStatus === 1 ? '子类目层级' : '当前类目层级'">
                                 <el-select disabled v-model="form.depth">
                                     <el-option :value="1" label="服务资源"></el-option>
                                     <el-option :value="2" label="一级类目"></el-option>
@@ -44,7 +44,7 @@
                                     <el-option :value="4" label="三级类目"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item prop="name" label="当前类目名称">
+                            <el-form-item prop="name"  :label="editStatus === 1 ? '子类目名称' : '当前类目名称'">
                                 <el-input :disabled="editStatus > 2" v-model="form.name" type="text" maxlength="20"></el-input>
                             </el-form-item>
                             <el-form-item label="父类目编号" v-if="editStatus === 2">
@@ -93,7 +93,6 @@ export default {
         return {
             editStatus: 1, // 1:新增 2:修改 3:删除
             editOpenStatus: 2, // 1:打开 2:关闭
-            changeFormDataStatus: 1, // 点击是否切换form表单数据 1:切换 2:不切换
             isSelectFlag: false, // 是否选中tree
             tempSelectTree: {},
             filterText: '',
@@ -133,7 +132,7 @@ export default {
                 makeData(this.resetServiceCategoryTree, val)
             })
 
-            // temp.shift()
+            temp.pop()
             return temp
         }
     },
@@ -147,11 +146,19 @@ export default {
             if (!value) return true
             return data.label.indexOf(value) !== -1
         },
-        reWriteData (data) {
+        reWriteData (data, isAdd) {
             this.$set(this.form, 'id', data.id)
             this.$set(this.form, 'parentId', data.parentId)
-            this.$set(this.form, 'parentName', data.parentName)
-            this.$set(this.form, 'depth', data.depth)
+            if (isAdd) {
+                this.$set(this.form, 'parentName', data.label)
+            } else {
+                this.$set(this.form, 'parentName', data.parentName)
+            }
+            if (this.editStatus === 1) {
+                this.$set(this.form, 'depth', data.depth + 1)
+            } else {
+                this.$set(this.form, 'depth', data.depth)
+            }
             this.$set(this.form, 'updateBy', data.updateBy)
             this.$set(this.form, 'updateTime', data.updateTime)
             this.$set(this.form, 'name', data.label)
@@ -160,10 +167,8 @@ export default {
         },
         onTreeClick (data) {
             this.isSelectFlag = true
+            this.editOpenStatus = false
             this.tempSelectTree = data
-            if (this.changeFormDataStatus === 1) {
-                this.reWriteData(data)
-            }
         },
         isSelect () {
             return this.isSelectFlag
@@ -178,13 +183,10 @@ export default {
                 return
             }
             if (this.isSelect()) {
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
-                this.$set(this.form, 'name', '')
-                this.changeFormDataStatus = 2
-                this.editOpenStatus = 1
                 this.editStatus = 1
+                this.reWriteData(this.tempSelectTree, true)
+                this.$set(this.form, 'name', '')
+                this.editOpenStatus = 1
             } else {
                 this.$message({
                     type: 'warn',
@@ -195,12 +197,9 @@ export default {
         onUpdate () {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
-                this.changeFormDataStatus = 2
-                this.editOpenStatus = 1
                 this.editStatus = 2
+                this.reWriteData(this.tempSelectTree)
+                this.editOpenStatus = 1
             } else {
                 this.$message({
                     type: 'warn',
@@ -211,12 +210,9 @@ export default {
         onDelete () {
             this.$refs.form.clearValidate()
             if (this.isSelect()) {
-                if (this.changeFormDataStatus === 2) {
-                    this.reWriteData(this.tempSelectTree)
-                }
-                this.changeFormDataStatus = 2
-                this.editOpenStatus = 1
                 this.editStatus = 3
+                this.reWriteData(this.tempSelectTree)
+                this.editOpenStatus = 1
             } else {
                 this.$message({
                     type: 'warn',
@@ -232,10 +228,9 @@ export default {
                         name: this.form.name,
                         parentId: this.form.id
                     }
-                    await this.createServiceResourcesCategory(params)
+                    await createServiceResourcesCategory(params)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
-                    this.changeFormDataStatus = 1
                     this.editOpenStatus = 2
                 }
             })
@@ -245,10 +240,9 @@ export default {
                 if (valid) {
                     const param = { ...this.form }
                     param.updateBy = this.userInfo.employeeName
-                    await this.updateServiceResourcesCategory(param.id, param)
+                    await updateServiceResourcesCategory(param.id, param)
                     this.findServiceResourcesCategory()
                     this.isSelectFlag = false
-                    this.changeFormDataStatus = 1
                     this.editOpenStatus = 2
                 }
             })
@@ -260,25 +254,14 @@ export default {
                     message: '不能越级删除类目'
                 })
             } else {
-                await this.deleteServiceResourcesCategory(this.form.id)
+                await deleteServiceResourcesCategory(this.form.id)
                 this.findServiceResourcesCategory()
                 this.isSelectFlag = false
-                this.changeFormDataStatus = 1
                 this.editOpenStatus = 2
             }
         },
         onCancel () {
-            this.changeFormDataStatus = 1
             this.editOpenStatus = 2
-        },
-        async createServiceResourcesCategory (params) {
-            await createServiceResourcesCategory(params)
-        },
-        async updateServiceResourcesCategory (id, params) {
-            await updateServiceResourcesCategory(id, params)
-        },
-        async deleteServiceResourcesCategory (id) {
-            await deleteServiceResourcesCategory(id)
         },
         ...mapActions(['findServiceResourcesCategory'])
     },

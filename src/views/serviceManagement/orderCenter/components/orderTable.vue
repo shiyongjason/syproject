@@ -70,34 +70,40 @@
                                 </div>
                             </li>
                             <li>
-                                <template v-if="item.source === 1">有赞商城</template>
-                                <template v-if="item.source === 2">孩子王</template>
-                                <template v-if="item.source === 3">考拉买菜</template>
-                                <template v-if="item.source === 4">大众点评</template>
+                                <span v-for="iItem in channelType" :key="iItem.code">
+                                    <template v-if="item.source === iItem.code">{{iItem.name}}</template>
+                                </span>
                             </li>
-                            <li>{{item.userName ? item.userName : '-'}}<br>{{item.receiverName ? item.receiverName : '-'}}</li>
+                            <li>
+                                {{item.userName ? item.userName : '-'}}
+                                <br>
+                                {{item.receiverName ? item.receiverName : '-'}}
+                            </li>
                             <li>无需配送</li>
                             <li>{{parseToMoney(item.currentAmount)}}</li>
                             <li>{{orderStatus(item.status)}}</li>
                             <li>
-                                <div v-if="item.status !== 4" class="one-line">
-                                    <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
+                                <div v-if="item.status !== 4">
+                                    <div class="one-line">
+                                        <el-button type="primary" size='mini' @click="onLink(item)">工单信息</el-button>
+                                    </div>
+                                    <div v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" class="one-line">
+                                        <el-button type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
+                                    </div>
+                                    <div class="one-line">
+                                        <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
+                                    </div>
+                                    <div v-if="item.syncStatus === 1" class="one-line">
+                                        <el-button type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
+                                    </div>
+                                    <div class="one-line">
+                                        <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
+                                    </div>
+                                    <div v-if="item.source !== 1" class="one-line">
+                                        <el-button type="primary" size='mini' @click="closeOrder(item.channelOrderNo)">取消订单</el-button>
+                                    </div>
                                 </div>
-                                <div v-if="item.source !== 1 && hosAuthCheck(channelEditAuth)" class="one-line">
-                                    <el-button type="primary" size='mini' @click="onEdit(item)">编辑</el-button>
-                                </div>
-                                <div v-if="item.status !== 4" class="one-line">
-                                    <el-button type="primary" size='mini' @click="addOrder(item)">新增工单</el-button>
-                                </div>
-                                <div v-if="item.syncStatus === 1" class="one-line">
-                                    <el-button type="primary" size='mini' @click="openMisDialog(item)">同步失败</el-button>
-                                </div>
-                                <div class="one-line">
-                                    <el-button type="primary" size='mini' @click="goUserPower(item)">查看权益</el-button>
-                                </div>
-                                <div v-if="item.status !== 4" class="one-line">
-                                    <el-button type="primary" size='mini' @click="closeOrder(item.channelOrderNo)">取消订单</el-button>
-                                </div>
+                                <div v-else> - </div>
                             </li>
                         </ul>
                         <div class="bzo" v-if="item.buyerRemark">买家备注：{{item.buyerRemark}}</div>
@@ -174,7 +180,8 @@ export default {
                 path: '/serviceManagement/userPower',
                 query: {
                     mobile: row.receiverMobile ? row.receiverMobile : '',
-                    source: row.source ? row.source : ''
+                    source: row.source ? row.source : '',
+                    orderNo: row.orderNo ? row.orderNo : ''
                 }
             })
         },

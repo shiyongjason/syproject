@@ -1,7 +1,9 @@
 <template>
     <div>
         <div class="page-body">
-            <h3>新建服务资源</h3>
+            <h3 v-if="!propsParams.methods">新建服务资源</h3>
+            <h3 v-if="propsParams.methods === 'details'">服务资源详情</h3>
+            <h3 v-if="propsParams.methods === 'edit'">修改服务资源</h3>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <div class="query-col-title"><span class="red">*</span>资源模板名称：</div>
@@ -14,7 +16,7 @@
                     <div class="flex-wrap-title"><span class="red">*</span>资源类目：</div>
                     <div class="flex-wrap-cont">
                         <el-cascader
-                            :disabled="pageDisabled"
+                            :disabled="pageDisabled || propsParams.methods === 'edit'"
                             v-model="message.categoryId"
                             :options="doneServiceCategoryList"
                            ></el-cascader>
@@ -23,7 +25,13 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">说明：</div>
                     <div class="flex-wrap-cont">
-                       <el-input v-model="message.description" :disabled="pageDisabled"></el-input>
+                       <el-input maxlength="100" v-model="message.description" :disabled="pageDisabled"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="propsParams.methods === 'edit'">
+                    <div class="flex-wrap-title">资源模板编号：</div>
+                    <div class="flex-wrap-cont">
+                       <el-input maxlength="100" v-model="propsParams.templateId" disabled ></el-input>
                     </div>
                 </div>
             </div>
@@ -31,29 +39,47 @@
                 <h3 class="add-btn title">
                     资源规格
                 </h3>
-                <el-form :model="form" :rules="rules" ref="form" label-width="100px">
+                <el-form :disabled="propsParams.methods === 'edit'" :model="form" :rules="rules" ref="form" label-width="100px">
                     <div class="row" v-for="(item,idx) in form.serviceResourceList" :key="item.id">
-                        <span v-if="!pageDisabled" @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
+                        <span v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="removeServiceResourceList(idx)" class="ml10 el-icon-remove-outline parent-delete form-add-remove"></span>
                         <el-form-item label="规格名" :prop="'serviceResourceList.'+ idx + '.name'"
                                       :rules="[
                                       { required: true, whitespace: true, trigger: 'blur', message: '请输入规格名' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]"
                         >
-                            <el-input type="text" v-model="item.name" max-length="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
+                            <el-autocomplete
+                                v-model="item.name"
+                                :fetch-suggestions="querySearchAsyncName"
+                                :maxlength="20"
+                                @blur="attributeChangeHandler"
+                                placeholder="请输入规格名"
+                                @select="attributeChangeHandler"
+                                :disabled="pageDisabled"
+                            ></el-autocomplete>
+<!--                            <el-input type="text" v-model="item.name" maxlength="20"  @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>-->
                         </el-form-item>
                         <div v-show="item.name.trim().length> 0">
                             <el-form-item  :label="index === 0 ? '规格值': ''" v-for="(subItem,index) in item.attributeList" :key="subItem.id" class="attribute-list"
                                            :prop="'serviceResourceList.'+ idx +'.attributeList.'+ index + '.value'"
                                            :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入规格值' },
                                       {validator: checkFormValue,trigger: 'blur', whitespace: true}]">
-                                <el-input type="text" v-model="subItem.value" max-length="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>
-                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="!pageDisabled && item.attributeList.length > 1"></span>
-                                <span  v-if="!pageDisabled" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
+                                <el-autocomplete
+                                    v-model="subItem.value"
+                                    :fetch-suggestions="querySearchAsyncValue"
+                                    :maxlength="20"
+                                    @blur="attributeChangeHandler"
+                                    placeholder="请输入规格名"
+                                    @select="attributeChangeHandler"
+                                    :disabled="pageDisabled"
+                                ></el-autocomplete>
+<!--                                <el-input type="text" v-model="subItem.value" maxlength="20" @blur="attributeChangeHandler" :disabled="pageDisabled"></el-input>-->
+                                <span @click.prevent="removeAttributeList(item,index)" class="ml10 el-icon-remove-outline form-add-remove" v-show="(!pageDisabled && item.attributeList.length > 1) && propsParams.methods !== 'edit'"></span>
+                                <span  v-if="!pageDisabled && propsParams.methods !== 'edit'" @click.prevent="addAttributeList(item)" class="ml10 el-icon-circle-plus-outline form-add-remove"></span>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="add">
-                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled">添加规格值</el-button>
+                        <el-button type="primary" size="mini" @click="addSpecification" v-if="!pageDisabled && propsParams.methods !== 'edit'">添加规格名</el-button>
                     </div>
                 </el-form>
                 <h3 class="detailed-title title" v-show="attributeTable.list.length> 0">
@@ -74,15 +100,16 @@
                                 <td v-text="item.name"></td>
                                 <td>
                                     <el-form-item :prop="'list.'+ index +'.mdmCode'"
-                                                  :rules="[{ required: true, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
+                                                  :rules="[{ required: item.isDisable, whitespace: true, trigger: 'blur', message: '请输入mdmCode' }
                                                   ,{ required: true, whitespace: true,validator: checkedMdmCodeReport, trigger: 'blur', message: 'mdmCode重复' }]" class="mdm-number">
-                                        <el-input class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
+                                        <el-input maxlength="20" class="input" type="text" v-model="item.mdmCode" :disabled="pageDisabled"></el-input>
                                     </el-form-item>
                                 </td>
                                 <td>
                                     <el-switch
                                         v-model="item.isDisable"
                                         :disabled="pageDisabled"
+                                        @change="clearError(item.isDisable)"
                                         active-color="#13ce66"
                                         inactive-color="#DCDFE6">
                                     </el-switch>
@@ -117,6 +144,7 @@ export default {
                 description: '',
                 name: ''
             },
+            oldMessageName: '',
             form: {
                 serviceResourceList: []
             },
@@ -135,11 +163,14 @@ export default {
             attributeTable: { list: [] },
             serviceResourceName: [],
             tempAttributeTable: [],
-            propsParams: ''
+            propsParams: '',
+            attributeListName: [],
+            attributeListValue: [],
+            timeout: null
         }
     },
     computed: {
-        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateDetails']),
+        ...mapGetters(['doneServiceCategoryList', 'doneServiceTemplateDetails', 'doneServiceResourceAttribute']),
         ...mapState({
             tagsList: state => state.layout.tagsList
         })
@@ -148,7 +179,31 @@ export default {
         ...mapMutations({
             tagUpdate: 'TAG_UPDATE'
         }),
+        querySearchAsyncName (queryString, cb) {
+            const restaurants = this.attributeListName
+            const results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+            cb(results)
+        },
+        querySearchAsyncValue (queryString, cb) {
+            const restaurants = this.attributeListValue
+            const results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants
+            cb(results)
+        },
+        createStateFilter (queryString) {
+            return (state) => {
+                return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+            }
+        },
+        clearError (isDisabled) {
+            if (isDisabled) {
+                this.$refs.formAttribute.clearValidate()
+            }
+        },
         checkedMdmCodeReport (rule, value, callback) {
+            if (!value) {
+                callback()
+                return
+            }
             let temp = 0
             this.attributeTable.list.forEach(value1 => {
                 if (value1.mdmCode === value) temp++
@@ -171,9 +226,10 @@ export default {
         nameChange () {
             if (this.message.name.trim()) {
                 this.attributeTable.list.forEach(value => {
-                    value.name = this.message.name + value.name
+                    value.name = this.message.name + value.name.replace(this.oldMessageName, '')
                 })
             }
+            this.oldMessageName = this.message.name
         },
         resetAttribute () {
             let tempAll = []
@@ -190,7 +246,7 @@ export default {
             })
             let temp = []
             if (tempAll.length < 2) {
-                tempAll[0].forEach(value => {
+                tempAll[0] && tempAll[0].forEach(value => {
                     temp.push([value])
                 })
             } else {
@@ -211,7 +267,7 @@ export default {
                     this.tempAttributeTable.forEach(value2 => {
                         if (value2.name.indexOf(value1.name) > -1) {
                             this.$set(this.attributeTable.list[index], `mdmCode`, value2.mdmCode)
-                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable === 1)
+                            this.$set(this.attributeTable.list[index], `isDisable`, value2.isDisable === 0)
                         }
                     })
                 })
@@ -264,14 +320,26 @@ export default {
             }
             return callback()
         },
-        onSave () {
+        checkValidate () {
+            let temp = false
             if (this.message.name.trim().length < 1) {
                 this.$message({
                     type: 'error',
                     message: '资源模板名称不能为空'
                 })
-                return
+                temp = true
             }
+            if (this.message.categoryId.length < 2) {
+                this.$message({
+                    type: 'error',
+                    message: '资源类目必须为三级类目'
+                })
+                temp = true
+            }
+            return temp
+        },
+        onSave () {
+            if (this.checkValidate()) return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.$refs['formAttribute'].validate(async (valid1) => {
@@ -296,14 +364,7 @@ export default {
             })
         },
         editSave () {
-            // this.props.templateId
-            if (this.message.name.trim().length < 1) {
-                this.$message({
-                    type: 'error',
-                    message: '资源模板名称不能为空'
-                })
-                return
-            }
+            if (this.checkValidate()) return
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.$refs['formAttribute'].validate(async (valid1) => {
@@ -312,7 +373,7 @@ export default {
                             params.categoryId = params.categoryId[params.categoryId.length - 1]
                             params.serviceResourceList = this.attributeTable.list.map(value => {
                                 return {
-                                    name: params.name + value.name,
+                                    name: value.name,
                                     mdmCode: value.mdmCode,
                                     isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
@@ -332,10 +393,32 @@ export default {
             this.closeTags()
         },
         addSpecification () {
-            if (this.form.serviceResourceList.length > 10) {
+            let serviceTemp = this.form.serviceResourceList
+
+            for (let i = 0; i < serviceTemp.length; i++) {
+                if (!serviceTemp[i].name) {
+                    this.$message({
+                        type: 'error',
+                        message: '规格名不能为空'
+                    })
+                    return
+                } else {
+                    let attributeTemp = serviceTemp[i].attributeList
+                    for (let j = 0; j < attributeTemp.length; j++) {
+                        if (!attributeTemp[j].value) {
+                            this.$message({
+                                type: 'error',
+                                message: '规格值不能为空'
+                            })
+                            return
+                        }
+                    }
+                }
+            }
+            if (serviceTemp.length > 9) {
                 this.$message({
                     type: 'error',
-                    message: '规格值不能超过10个'
+                    message: '规格项不能超过10个'
                 })
             }
             const temp = deepCopy(this.defaultSpecification)
@@ -352,7 +435,23 @@ export default {
             if (temp) this.resetAttribute()
         },
         addAttributeList (item) {
+            for (let i = 0; i < item.attributeList.length; i++) {
+                if (!item.attributeList[i].value) {
+                    this.$message({
+                        type: 'error',
+                        message: '规格值不能为空'
+                    })
+                    return
+                }
+            }
             const temp = { ...this.defaultAttribute }
+            if (item.attributeList.length > 9) {
+                this.$message({
+                    type: 'error',
+                    message: '规格值不能超过10个'
+                })
+                return
+            }
             item.attributeList.push(temp)
         },
         async drawDetails (templateId) {
@@ -360,14 +459,15 @@ export default {
             const data = this.doneServiceTemplateDetails
             let categoryId = data.serviceResourceTemplate.categoryId
             this.doneServiceCategoryList.forEach(value => {
-                value.children.forEach(value1 => {
-                    value1.children.forEach(value12 => {
+                value.children && value.children.forEach(value1 => {
+                    value1.children && value1.children.forEach(value12 => {
                         if (value12.value === categoryId) {
                             categoryId = [value.value, value1.value, value12.value]
                         }
                     })
                 })
             })
+            this.oldMessageName = data.serviceResourceTemplate.name
             this.message = {
                 name: data.serviceResourceTemplate.name,
                 categoryId: categoryId,
@@ -390,7 +490,7 @@ export default {
             this.form.serviceResourceList = serviceResourceList
             this.attributeChangeHandler()
         },
-        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails'])
+        ...mapActions(['findServiceResourcesCategory', 'getServiceResourcesTemplateDetails', 'getServiceResourcesAttribute'])
     },
     async mounted () {
         this.propsParams = this.$route.query
@@ -405,6 +505,14 @@ export default {
         } else if (this.propsParams.methods === 'edit') {
             this.drawDetails(this.propsParams.templateId)
         }
+        await this.getServiceResourcesAttribute()
+        const data = this.doneServiceResourceAttribute
+        this.attributeListName = data.attributeList.map(value => {
+            return { value: value }
+        })
+        this.attributeListValue = data.valueList.map(value => {
+            return { value: value }
+        })
     }
 }
 </script>

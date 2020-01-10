@@ -1,6 +1,13 @@
 import * as Const from '../const'
 import * as Request from '../../views/serviceManagement/api'
 
+const state = {
+    serviceCategoryTree: [],
+    serviceTemplateList: [],
+    serviceTemplateDetails: {},
+    serviceResourcesAttribute: {},
+    workOrderUserInfo: {}
+}
 const getters = {
     doneServiceTemplateDetails: state => {
         return state.serviceTemplateDetails
@@ -73,12 +80,11 @@ const getters = {
             return subTemp
         }
         return resetTreeList(state.serviceCategoryTree)
-    }
-}
-const state = {
-    serviceCategoryTree: [],
-    serviceTemplateList: [],
-    serviceTemplateDetails: {}
+    },
+    doneServiceResourceAttribute: state => {
+        return state.serviceResourcesAttribute
+    },
+    doneWorkOrderUserInfo: state => state.workOrderUserInfo
 }
 const mutations = {
     [Const.FIND_SERVICE_RESOURCES_CATEGORY] (state, data) {
@@ -89,6 +95,12 @@ const mutations = {
     },
     [Const.GET_SERVICE_RESOURCES_TEMPLATE_DETAILS] (state, data) {
         state.serviceTemplateDetails = data
+    },
+    [Const.GET_SERVICE_RESOURCES_ATTRIBUTE] (state, data) {
+        state.serviceResourcesAttribute = data
+    },
+    [Const.GET_WORK_ORDER_USER_INFO] (state, data) {
+        state.workOrderUserInfo = data
     }
 }
 const actions = {
@@ -103,6 +115,14 @@ const actions = {
     async getServiceResourcesTemplateDetails ({ commit }, templateId) {
         const { data } = await Request.getServiceResourcesTemplateDetails(templateId)
         commit('GET_SERVICE_RESOURCES_TEMPLATE_DETAILS', data)
+    },
+    async getServiceResourcesAttribute ({ commit }, id) {
+        const { data } = await Request.getServiceResourcesAttribute()
+        commit('GET_SERVICE_RESOURCES_ATTRIBUTE', data)
+    },
+    async getWorkOrderUserInfo ({ commit }, params) {
+        const { data } = await Request.getWorkOrderUserInfo(params)
+        commit('GET_WORK_ORDER_USER_INFO', data)
     }
 }
 export default {
