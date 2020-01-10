@@ -186,7 +186,8 @@ export default {
         this.propsParams = { ...this.$route.query }
         await this.findChannelDict()
         if (this.propsParams.orderNo) {
-            this.queryParamsTrace.orderNo = this.propsParams.orderNo
+            this.$set(this.queryParamsTrace, 'orderNo', this.propsParams.orderNo)
+            // this.queryParamsTrace.orderNo = this.propsParams.orderNo
         }
         if (this.propsParams.mobile && this.propsParams.source) {
             this.queryParams.mobile = this.propsParams.mobile
@@ -253,7 +254,6 @@ export default {
             this.dialog = true
             await this.getWorkOrderUserInfo(params)
             const userMapper = this.doneWorkOrderUserInfo
-            console.log(userMapper)
             this.form.customerName = userMapper.name
             this.form.customerMobile = userMapper.mobile
             this.form.customerAddress = userMapper.address
