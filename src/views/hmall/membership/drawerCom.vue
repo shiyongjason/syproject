@@ -136,7 +136,7 @@
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { putMerchantDetail } from './api/index'
 export default {
     name: 'account',
@@ -182,6 +182,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         ...mapGetters({
             nestDdata: 'nestDdata',
             merchantDetail: 'merchantDetail',
@@ -220,10 +223,11 @@ export default {
             this.$emit('backEvent')
         },
         cancelForm () {
-
+            this.$emit('backEvent')
         },
         async onSaveDetail () {
             const params = { ...this.bossDetail }
+            params.updateBy = this.userInfo.employeeName
             params.merchantCode = this.merchantCode
             this.loading = true
             try {
@@ -255,7 +259,6 @@ export default {
         },
         async getMerchtDetail (val) {
             await this.findMerchantDetail({ merchantCode: val })
-            console.log(this.merchantDetail)
             this.bossDetail = { ...this.merchantDetail }
         }
     },
