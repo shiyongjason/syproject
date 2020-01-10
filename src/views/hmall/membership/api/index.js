@@ -18,7 +18,7 @@ export const getBossMerchantStatic = (params) => {
 }
 // 更新商家详情统计
 export const putMerchantDetail = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', { params })
+    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', params)
 }
 // 分部列表
 export const findBrandsList = (params) => {

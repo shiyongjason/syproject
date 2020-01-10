@@ -14,7 +14,7 @@
                         {{bossDetail.companyName}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth">
-                        <el-select v-model="bossDetail.subsectionCode" placeholder="全部" :clearable=true >
+                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true >
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
@@ -48,10 +48,10 @@
                         {{bossDetail.isAuthentication==0?'未认证':'已认证'}}（{{bossDetail.authenticationTime | formatterTime}}）
                     </el-form-item>
                     <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
-                        <el-checkbox-group>
+
                             <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
                             <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
-                        </el-checkbox-group>
+
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul>
@@ -70,7 +70,7 @@
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
                     <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="$refs.drawer.closeDrawer()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
                 <div class="" v-if="activeName=='second'">
                     <el-form :model="form">
@@ -137,6 +137,7 @@
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { putMerchantDetail } from './api/index'
 export default {
     name: 'account',
     props: {
@@ -188,6 +189,7 @@ export default {
         }),
         cityList () {
             const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
+            console.log(province)
             if (province.length > 0) {
                 return province[0].cities
             }
@@ -219,6 +221,21 @@ export default {
         },
         cancelForm () {
 
+        },
+        async onSaveDetail () {
+            const params = { ...this.bossDetail }
+            params.merchantCode = this.merchantCode
+            this.loading = true
+            try {
+                await putMerchantDetail(params)
+                this.$message({
+                    message: '恭喜你，这是一条成功消息',
+                    type: 'success'
+                })
+                this.loading = false
+            } catch (error) {
+                this.loading = false
+            }
         },
         async onGetbranch () {
             await this.findBranch()
