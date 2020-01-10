@@ -14,7 +14,7 @@
                         {{bossDetail.companyName}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth">
-                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true >
+                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
@@ -49,8 +49,8 @@
                     </el-form-item>
                     <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
 
-                            <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
-                            <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
+                        <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
+                        <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
 
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
@@ -65,7 +65,7 @@
                         {{bossDetail.updateTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy}}
+                        {{bossDetail.updateBy}} {{bossDetail.updatePhone}}
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
@@ -177,7 +177,8 @@ export default {
                 subsectionCode: '',
                 subsectionName: '',
                 updateBy: '',
-                updateTime: ''
+                updateTime: '',
+                updatePhone: ''
             }
         }
     },
@@ -206,10 +207,14 @@ export default {
         }
     },
     watch: {
-        merchantCode (val) {
-            if (val) {
-                this.getMerchtDetail(val)
-            }
+        merchantCode: {
+            handler (val) {
+                console.log(val)
+                if (val) {
+                    this.getMerchtDetail(val)
+                }
+            },
+            deep: true
         }
     },
     methods: {
@@ -227,6 +232,7 @@ export default {
         async onSaveDetail () {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
+            params.phone = this.userInfo.phoneNumber
             params.merchantCode = this.merchantCode
             this.loading = true
             try {

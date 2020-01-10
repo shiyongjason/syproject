@@ -158,7 +158,7 @@ export default {
                         )
                     } },
                 { label: '认证时间', prop: 'authenticationTime' },
-                { label: '商家角色权限', prop: 'merchantRolePermission' },
+                { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
                 { label: '自动推送至店铺', prop: 'isAutoDispatch' },
                 { label: '状态', prop: 'isEnabled' }
             ],
@@ -264,6 +264,7 @@ export default {
         },
         restDrawer () {
             this.drawer = false
+            this.onFindMlist()
         }
     }
 }

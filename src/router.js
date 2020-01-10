@@ -12,6 +12,8 @@ import jwtDecode from 'jwt-decode'
 import ServiceManagement from './router/catalogue/serviceManagement'
 import B2brouter from './router/B2brouter'
 import Jyrouter from './router/Jyrouter'
+import Bestrouter from './router/Bestrouter'
+import Wisdomrouter from './router/Wisdomrouter'
 Vue.use(Router)
 
 const routerMapping = [
@@ -151,220 +153,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/wisdom',
-        meta: {
-            title: '好智慧-经营分析',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        // redirect: '/wisdom/' + this.children[0].path,
-        component: Layout,
-        children: [
-            {
-                path: 'manageoverview',
-                name: 'manageoverview',
-                meta: {
-                    title: '经营概览',
-                    tagName: '经营概览',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/manageoverview'
-                },
-                component: () => import('./views/wisdom/manageoverview')
-            },
-            {
-                path: 'branchTarget',
-                name: 'branchTarget',
-                meta: {
-                    title: '分部目标管理',
-                    tagName: '分部目标管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/branchTarget'
-                },
-                component: () => import('./views/wisdom/branchTarget')
-            },
-            {
-                path: 'platformTarget',
-                name: 'platformTarget',
-                meta: {
-                    title: '平台目标管理',
-                    tagName: '平台目标管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platformTarget'
-                },
-                component: () => import('./views/wisdom/platformTarget')
-            },
-
-            {
-                path: 'platcompanyinfo',
-                name: 'platcompanyinfo',
-                meta: {
-                    title: '平台公司基本信息',
-                    tagName: '平台公司基本信息',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platcompanyinfo'
-                },
-                component: () => import('./views/wisdom/platcompanyinfo')
-            },
-
-            {
-                path: 'platformSale',
-                name: 'platformSale',
-                meta: {
-                    title: '平台销售分析',
-                    tagName: '平台销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platformSale'
-                },
-                component: () => import('./views/wisdom/platformSale')
-            },
-            {
-                path: 'branchSale',
-                name: 'branchSale',
-                meta: {
-                    title: '分部销售分析',
-                    tagName: '分部销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/branchSale'
-                },
-                component: () => import('./views/wisdom/branchSale')
-            },
-            {
-                path: 'categorySale',
-                name: 'categorySale',
-                meta: {
-                    title: '品类销售分析',
-                    tagName: '品类销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/categorySale'
-                },
-                component: () => import('./views/wisdom/categorySale')
-            },
-            {
-                path: 'profitStatistics',
-                name: 'profitStatistics',
-                meta: {
-                    title: '利润统计',
-                    tagName: '利润统计',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/profitStatistics'
-                },
-                component: () => import('./views/wisdom/profitStatistics')
-            }
-        ]
-    },
-    {
-        path: '/bestonline',
-        meta: {
-            title: '尽调管理',
-            isMenu: true,
-            icon: 'hosjoy_jindiao'
-        },
-        // redirect: '/wisdom/' + this.children[0].path,
-        component: Layout,
-        children: [
-            {
-                path: 'application',
-                name: 'application',
-                meta: {
-                    title: '尽调申请',
-                    tagName: '尽调申请',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/apply/index'
-                },
-                component: () => import('./views/bestonline/apply/index')
-            },
-            {
-                path: 'review',
-                name: 'review',
-                meta: {
-                    title: '现场尽调',
-                    tagName: '现场尽调',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/review'
-                },
-                component: () => import('./views/bestonline/review')
-            },
-            {
-                path: 'reviewform',
-                name: 'reviewform',
-                meta: {
-                    title: '修改',
-                    isMenu: false,
-                    icon: '',
-                    component: './views/bestonline/reviewform',
-                    func: (menus, route) => {
-                        const len = menus.length
-                        menus.splice(len - 1, 0, {
-                            path: '/bestonline/review',
-                            meta: {
-                                title: '现场尽调'
-                            }
-                        })
-                    }
-                },
-                component: () => import('./views/bestonline/reviewform')
-            },
-            {
-                path: 'piecevote',
-                name: 'piecevote',
-                meta: {
-                    title: '一项否决配置',
-                    tagName: '一项否决配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/piecevote'
-                },
-                component: () => import('./views/bestonline/piecevote')
-            },
-            {
-                path: 'pointscode',
-                name: 'pointscode',
-                meta: {
-                    title: '评分规则配置',
-                    tagName: '评分规则配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/pointscode'
-                },
-                component: () => import('./views/bestonline/pointscode')
-            },
-            {
-                path: 'standard',
-                name: 'standard',
-                meta: {
-                    title: '标准分数配置',
-                    tagName: '标准分数配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/standard'
-                },
-                component: () => import('./views/bestonline/standard')
-            },
-            {
-                path: 'applyform',
-                name: 'applyform',
-                meta: {
-                    title: '尽调申请详情',
-                    tagName: '尽调申请详情',
-                    isMenu: false,
-                    icon: '',
-                    component: './views/bestonline/apply/applyForm'
-                },
-                component: () => import('./views/bestonline/apply/applyForm')
-            }
-        ]
-    },
-    {
         path: '/platformCompanyCockpit',
         meta: {
             title: '平台公司驾驶舱',
@@ -422,6 +210,8 @@ const routerMapping = [
             }
         ]
     },
+    Wisdomrouter,
+    Bestrouter,
     ServiceManagement,
     B2brouter,
     Jyrouter
