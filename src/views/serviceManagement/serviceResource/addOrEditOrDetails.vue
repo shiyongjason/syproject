@@ -348,7 +348,7 @@ export default {
                             params.categoryId = params.categoryId[params.categoryId.length - 1]
                             params.serviceResourceList = this.attributeTable.list.map(value => {
                                 return {
-                                    name: params.name + value.name,
+                                    name: value.name,
                                     mdmCode: value.mdmCode,
                                     isDisable: value.isDisable == true ? 0 : 1,
                                     attributeList: value.attributeList
