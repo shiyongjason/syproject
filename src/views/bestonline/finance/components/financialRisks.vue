@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="6">
         <template slot="title">
-            <p class="title-p">资金风险评估(必填)</p>
+            <p class="title-p">资金风险评估</p>
         </template>
         <div class="form-cont-row">
             <div class="form-cont-col">
@@ -83,7 +83,7 @@ export default {
                     { validator: twoNumber }
                 ],
                 companyBorrowsShareholders: [
-                    { required: true, message: '请输入股东借款金额', trigger: 'blur' },
+                    { required: true, message: '请输入公司向股东借款金额', trigger: 'blur' },
                     { validator: twoNumber }
                 ],
                 shareholdersBorrowsCompany: [

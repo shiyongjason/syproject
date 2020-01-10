@@ -35,6 +35,10 @@ export const getFlow = (params) => {
 /*
 @评审
 */
+// 查询尽调流程主表详情
+export const getDuemainDetail = (params) => {
+    return axios.get(`develop/duemain/${params}`)
+}
 // 获取评审
 export const getDuemain = (params) => {
     return axios.get('develop/duemain/queryPageList', { params })
@@ -189,6 +193,10 @@ export const getAttach = (params) => {
 
 export const addAttach = (params) => {
     return axios.post('develop/dueattach/', params)
+}
+
+export const deleteAttach = (params) => {
+    return axios.delete(`develop/dueattach/${params}`)
 }
 // 法务查询
 // export const findJusticeData = (params) => {

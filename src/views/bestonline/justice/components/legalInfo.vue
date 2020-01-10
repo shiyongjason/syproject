@@ -52,18 +52,28 @@
                         <i class="el-icon-circle-plus-outline pointer" v-if="index === 0" @click="onAddList('debtList', 'defaultDebt')"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('debtList', item.id)"></i>
                     </template>
-                    <el-form label-position="right" label-width="150px" class="legal-form">
-                        <el-form-item label="借款：">
+                    <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+                    <div class="form-cont-row mt20">
+                        <div class="form-cont-col">
+                        <el-form-item
+                        label="借款："
+                        label-width="150px"
+                        :prop="`debtList[${index}].debt`"
+                        :rules="rules.debt(item, index)">
                             <el-input v-model="item.debt" placeholder="借款" maxlength="25">
                                 <template slot="suffix">万</template>
                             </el-input>
                         </el-form-item>
-                        <el-form-item label="用途：">
+                        <el-form-item
+                        label="用途："
+                        label-width="150px">
                             <el-select v-model="item.purpose" placeholder="请选择用途">
                                 <el-option v-for="item in debtPurposeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
-                    </el-form>
+                        </div>
+                    </div>
+                    <!-- </el-form> -->
                 </div>
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
@@ -97,14 +107,24 @@
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 3 ? 4 : type)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
-                    <el-form label-position="right" label-width="150px" class="legal-form">
-                        <el-form-item label="担保：">
-                            <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
-                        </el-form-item>
-                        <el-form-item label="对应金额：">
-                            <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
-                        </el-form-item>
-                    </el-form>
+                    <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+                    <div class="form-cont-row mt20">
+                        <div class="form-cont-col">
+                            <el-form-item
+                            label="担保："
+                            label-width="150px">
+                                <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
+                            </el-form-item>
+                            <el-form-item
+                            label="对应金额："
+                            label-width="150px"
+                            :prop="`assureList[${index}].money`"
+                            :rules="rules.money(item, index)">
+                                <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <!-- </el-form> -->
                 </div>
             </div>
             <div v-if="type ==2 || type == 3">
@@ -114,14 +134,22 @@
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 3 ? 4 : type)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
-                    <el-form label-position="right" label-width="150px" class="legal-form">
-                        <el-form-item label="担保：">
-                            <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
-                        </el-form-item>
-                        <el-form-item label="对应金额：">
-                            <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
-                        </el-form-item>
-                    </el-form>
+                    <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+                    <div class="form-cont-row mt20">
+                        <div class="form-cont-col">
+                            <el-form-item label="担保：">
+                                <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
+                            </el-form-item>
+                            <el-form-item
+                                label="对应金额："
+                                label-width="150px"
+                                :prop="`assureList[${index}].money`"
+                                :rules="rules.money(item, index)">
+                                <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <!-- </el-form> -->
                 </div>
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
@@ -149,14 +177,22 @@
                         <i class="el-icon-circle-plus-outline pointer" v-if="index==0" @click="onAddList('assureList', 'defaultAssure', type == 2 ? 3 : 5)"></i>
                         <i class="el-icon-remove-outline pointer" v-else @click="onRemoveList('assureList', item.id)"></i>
                     </template>
-                    <el-form label-position="right" label-width="150px" class="legal-form">
-                        <el-form-item label="担保：">
-                            <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
-                        </el-form-item>
-                        <el-form-item label="对应金额：">
-                            <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
-                        </el-form-item>
-                    </el-form>
+                    <!-- <el-form label-position="right" label-width="150px" class="legal-form"> -->
+                    <div class="form-cont-row mt20">
+                        <div class="form-cont-col">
+                            <el-form-item label="担保：" label-width="150px">
+                                <el-input v-model="item.assure" placeholder="担保" maxlength="25"></el-input>
+                            </el-form-item>
+                            <el-form-item
+                            label="对应金额："
+                            label-width="150px"
+                            :prop="`assureList[${index}].money`"
+                            :rules="rules.nonOperationalAssuremoney(item, index)">
+                                <el-input v-model="item.money" placeholder="对应金额" maxlength="25"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                    <!-- </el-form> -->
                 </div>
             </div>
             <el-form class="legallnfoRemark" label-position="top" label-width="200px" v-if="justiceData.dueLegalRemarkCreateForm" :model="justiceData.dueLegalRemarkCreateForm">
@@ -190,7 +226,7 @@
                     </div>
                     <div class="form-cont-row">
                         <div class="form-cont-col">
-                            <el-form-item label="涉及金额：" label-width="200px" :prop="`punishmentList[${index}].moneyInvolved`" :rules="rules.moneyInvolved">
+                            <el-form-item label="涉及金额：" label-width="200px" :prop="`punishmentList[${index}].moneyInvolved`" :rules="rules.moneyInvolved(item, index)">
                                 <el-input v-model="item.moneyInvolved" placeholder="请输入涉及金额" maxlength="25"></el-input>
                             </el-form-item>
                         </div>
@@ -213,7 +249,7 @@
 import { mapState } from 'vuex'
 import { DEBT_PURPOSE_OPTIONS, PUNISHMENT_TYPE_OPTIONS, PONDERANCE_OPTIONS } from '../const'
 import { interfaceUrl } from '@/api/config'
-import { IsFixedTwoNumber } from '@/utils/rules'
+// import { IsFixedTwoNumber } from '@/utils/rules'
 export default {
     name: 'legal_info',
     props: {
@@ -228,8 +264,49 @@ export default {
             punishmentTypeOptions: PUNISHMENT_TYPE_OPTIONS,
             ponderanceOptions: PONDERANCE_OPTIONS,
             rules: {
-                moneyInvolved: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                moneyInvolved: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.punishmentList[index].moneyInvolved
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
+                ],
+                debt: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.debtList[index].debt
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
+                ],
+                money: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.assureList[index].money
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
+                ],
+                nonOperationalAssuremoney: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.nonOperationalAssureList[index].money
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
                 ]
             }
         }
@@ -475,5 +552,8 @@ export default {
 .legallnfoTitle {
     font-size: 14px;
     margin-bottom: 10px;
+}
+.el-form-item {
+    margin-bottom: 20px !important;
 }
 </style>

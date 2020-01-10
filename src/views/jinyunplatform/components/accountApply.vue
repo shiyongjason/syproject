@@ -123,6 +123,13 @@ export default {
         onSubmit (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
+                    this.$store.dispatch('tracking', {
+                        type: 9,
+                        event: 1,
+                        page: 3,
+                        page_name: '账户导入',
+                        page_path_name: 'accountImport'
+                    })
                     await this.bankAccount()
                     this.onQuery()
                     this.$message({
@@ -183,7 +190,7 @@ export default {
 .dialogContent {
     padding-top: 30px;
 }
-.inputTip{
+.inputTip {
     position: absolute;
     right: 5px;
     top: 40px;

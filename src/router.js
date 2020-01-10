@@ -57,28 +57,29 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/jinyunPlatform',
-        meta: {
-            title: '金云平台',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: '',
-                name: 'jinyunplatform',
-                meta: {
-                    title: '金云平台',
-                    tagName: '金云平台',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
+    // 上线无bug待删除的无用代码
+    // {
+    //     path: '/jinyunPlatform',
+    //     meta: {
+    //         title: '金云平台',
+    //         isMenu: true,
+    //         icon: 'hosjoy_stay_online'
+    //     },
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: '',
+    //             name: 'jinyunplatform',
+    //             meta: {
+    //                 title: '金云平台',
+    //                 tagName: '金云平台',
+    //                 isMenu: false,
+    //                 icon: ''
+    //             },
+    //             component: () => import('./views/jinyunplatform/index')
+    //         }
+    //     ]
+    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -700,17 +701,6 @@ const routerMapping = [
         },
         component: Layout,
         children: [
-            // {
-            //     path: 'jyindex',
-            //     name: 'jyindex',
-            //     meta: {
-            //         title: '金云',
-            //         tagName: '金云',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/jinyunplatform/index')
-            // },
             {
                 path: 'jyindex',
                 name: 'jyindex',
@@ -851,8 +841,14 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    // const menu = makeMenus(routerMapping, resourceList)
-    const menu = routerMapping
+    // 开发环境菜单配置
+    let menu = ''
+    if (process.env.NODE_ENV == 'development') {
+        menu = routerMapping
+        // menu = makeMenus(routerMapping, resourceList)
+    } else {
+        menu = makeMenus(routerMapping, resourceList)
+    }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
