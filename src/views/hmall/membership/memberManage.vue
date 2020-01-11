@@ -17,13 +17,20 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true >
+                        <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">经营区域：</div>
+                    <div class="query-col-title">
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}" filterable>
+                        </el-cascader>
+                    </div>
                 </div>
             </div>
             <div class="query-cont-row">
@@ -88,11 +95,8 @@
             <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum}}；已认证：{{bossStatic.authenticationNum}}；启用状态：{{bossStatic.enabledNum}}；禁用状态：{{bossStatic.forbiddenNum}}；上架商品总数：{{bossStatic.onMarketTotalNum}}；
                 店铺商品总数：{{bossStatic.omMerchantTotalNum}}；会员总数：{{bossStatic.memberTotalNum}}</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
-                <template slot="merchantType" slot-scope="scope">
-                    {{scope.data.row.merchantType==1?'体系内':'体系外'}}
-                </template>
-                <template slot="merchantRolePermission" slot-scope="scope">
-                    {{merchantRole[scope.data.row.merchantRolePermission-1]}}
+                <template slot="source" slot-scope="scope">
+                    {{memberSource[scope.data.row.source]}}
                 </template>
                 <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'否':'是'}}
@@ -105,20 +109,20 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
-                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</el-button>
+                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'member')">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <drawerCom :drawer=drawer @backEvent='restDrawer' :merchantCode='companyCode' ref="drawercom"></drawerCom>
+        <drawerCom :drawer=drawer @backEvent='restDrawer' ref="drawercom" :merchantCode='companyCode'></drawerCom>
     </div>
 </template>
 <script>
 import drawerCom from './drawerCom'
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { changeState } from './api/index'
+import { changeMemberState } from './api/index'
 export default {
-    name: 'bussinessmanage',
+    name: 'membermanage',
     data () {
         return {
             queryParams: {
@@ -133,17 +137,16 @@ export default {
                 pageSize: 10,
                 registrationEndTime: '',
                 registrationStartTime: '',
-                subsectionCode: ''
+                subsectionCode: '',
+                provinceId: ''
             },
             paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '150px' },
-                { label: '所属分部', prop: 'subsectionName', width: '180px' },
-                { label: '商家类型', prop: 'merchantType' },
-                { label: '上架商品数', prop: 'omMarketNum' },
-                { label: '店铺商品数', prop: 'omMerchantNum' },
-                { label: '会员数', prop: 'memberNum' },
+                { label: '所属商家', prop: 'merchantName', width: '180px' },
+                { label: '省市区', prop: 'addressName' },
+                { label: '会员来源', prop: 'source' },
                 { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '200px' },
                 { label: '认证状态',
                     prop: 'isAuthentication',
@@ -158,18 +161,18 @@ export default {
                         )
                     } },
                 { label: '认证时间', prop: 'authenticationTime' },
-                { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
-                { label: '自动推送至店铺', prop: 'isAutoDispatch' },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
             drawer: false,
             checked: false,
-            merchantRole: ['商品型', '运营型', '商品运营型', '无权限'],
+            memberSource: ['存量会员店', '存量平台公司', 'app注册', '商家注册', '好友推荐', '商家邀请'],
             bossStatic: {},
             copyParams: {},
             branchArr: [],
-            companyCode: ''
+            companyCode: '',
+            options: [],
+            optarr: ''
         }
     },
     components: {
@@ -180,9 +183,10 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            merchantData: 'merchantData',
-            merchantStatic: 'merchantStatic',
-            branchList: 'branchList'
+            memberData: 'memberData',
+            memberStatic: 'memberStatic',
+            branchList: 'branchList',
+            nestDdata: 'nestDdata'
         }),
         pickerOptionsStart () {
             return {
@@ -209,12 +213,14 @@ export default {
         this.onFindMlist()
         this.onGetbranch()
         this.copyParams = deepCopy(this.queryParams)
+        this.getFindNest()
     },
     methods: {
         ...mapActions({
-            findMerchantList: 'findMerchantList',
-            findMerchantStatic: 'findMerchantStatic',
-            findBranch: 'findBranch'
+            findMemberList: 'findMemberList',
+            findMemberStatic: 'findMemberStatic',
+            findBranch: 'findBranch',
+            findNest: 'findNest'
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
@@ -230,36 +236,47 @@ export default {
         },
         async onFindMlist (val) {
             if (val) this.queryParams.pageNumber = val
-            await this.findMerchantList(this.queryParams)
-            this.tableData = this.merchantData.records
+            await this.findMemberList(this.queryParams)
+            this.tableData = this.memberData.records
             this.paginationInfo = {
-                total: this.merchantData.total,
-                pageNumber: this.merchantData.current,
-                pageSize: this.merchantData.size
+                total: this.memberData.total,
+                pageNumber: this.memberData.current,
+                pageSize: this.memberData.size
             }
             this.onStatic()
         },
         async onStatic () {
-            await this.findMerchantStatic(this.queryParams)
-            this.bossStatic = this.merchantStatic
+            await this.findMemberStatic(this.queryParams)
+            this.bossStatic = this.memberStatic
         },
         async onGetbranch () {
             await this.findBranch()
             this.branchArr = this.branchList
         },
         onOperate (val) {
-            this.$confirm(val.isEnabled == 0 ? '是否确认启用该商家的账号?' : '是否确认禁用该商家的账号？禁用后商家将无法使用相关功能，你还要继续吗？', '提示', {
+            this.$confirm(val.isEnabled == 0 ? '是否确认启用该会员的账号？' : '是否确认禁用该会员的账号？禁用后会员将无法使用相关功能，你还要继续吗？', '提示', {
                 confirmButtonText: val.isEnabled == 0 ? '确认启用' : '确认禁用',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await changeState({ merchantCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
+                await changeMemberState({ merchantCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
                 this.$message({
-                    message: val.isEnabled == 0 ? '商家账号启用成功' : '商家账号禁用成功',
+                    message: val.isEnabled == 0 ? '会员账号启用成功' : '会员账号禁用成功',
                     type: 'success'
                 })
                 this.onFindMlist()
             })
+        },
+        async getFindNest () {
+            await this.findNest()
+            this.options = this.nestDdata
+        },
+        cityChange (val) {
+            const cityarr = []
+            val && val.map(item => {
+                cityarr.push(item[1])
+            })
+            this.queryParams.provinceId = cityarr.join(',')
         },
         onFindInfo (val, type) {
             this.companyCode = val
@@ -277,15 +294,15 @@ export default {
 .eltagtop {
     margin-bottom: 10px;
 }
-.colorRed{
+.colorRed {
     color: #f00000;
 }
-.colorGreen{
-    color: #67C23A
+.colorGreen {
+    color: #67c23a;
 }
-/deep/.iconfl{
+/deep/.iconfl {
     position: relative;
-    i{
+    i {
         position: absolute;
         top: 3px;
     }

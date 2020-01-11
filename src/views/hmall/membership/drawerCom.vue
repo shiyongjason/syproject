@@ -1,22 +1,27 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+        <el-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+            {{type}}
             <div class="drawer-content">
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
                     <el-tab-pane label="基本信息" name="second"></el-tab-pane>
                 </el-tabs>
                 <el-form :model="bossDetail" :rules="rules" ref="ruleForm" v-if="activeName=='first'">
-                    <el-form-item label="商家账号：" :label-width="formLabelWidth">
-                        {{bossDetail.merchantAccount}}
+                    <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
+                        <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
+                        <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
                     </el-form-item>
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        {{bossDetail.companyName}}
+                        {{bossDetail.companyName?bossDetail.companyName:'-'}}
                     </el-form-item>
-                    <el-form-item label="所属分部：" :label-width="formLabelWidth">
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
                         <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item label="所属商家：" :label-width="formLabelWidth" v-if="type==='member'">
+                        <HAutocomplete :placeholder="'输入商家'" @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj = "targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
@@ -49,21 +54,28 @@
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
-                        <el-radio-group v-model="bossDetail.merchantType">
-                            <el-radio :label="1">体系内</el-radio>
-                            <el-radio :label="2">体系外</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
-                        <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
-                    </el-form-item>
+                    <template v-if="type==='merchant'">
+                        <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
+                            <el-radio-group v-model="bossDetail.merchantType">
+                                <el-radio :label="1">体系内</el-radio>
+                                <el-radio :label="2">体系外</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
+                            <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
+                        </el-form-item>
+                        <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
+                            <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
+                            <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
+                        </el-form-item>
+                    </template>
+                    <template v-if="type==='member'">
+                        <el-form-item label="会员来源：" :label-width="formLabelWidth">
+                            {{memberSource[bossDetail.source]}}
+                        </el-form-item>
+                    </template>
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
                         {{bossDetail.isAuthentication==0?'未认证':'已认证'}}（{{bossDetail.authenticationTime | formatterTime}}）
-                    </el-form-item>
-                    <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
-                        <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
-                        <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul>
@@ -148,28 +160,31 @@
     </div>
 </template>
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { putMerchantDetail } from './api/index'
+import { putMerchantDetail, putMemberDetail } from './api/index'
 export default {
     name: 'account',
     props: {
         drawer: {
             type: Boolean,
             default: false
-        },
-        merchantCode: {
-            type: String,
-            default: ''
         }
     },
     data () {
         return {
+            type: '',
+            removeValue: true,
+            merchantArr: [],
             activeName: 'first',
             branchArr: [],
             formLabelWidth: '140px',
             loading: false,
             proviceList: [],
+            merchantCode: '',
+            memberCode: '',
             bossDetail: {
+                memberAccount: '',
                 authenticationTime: '',
                 cityId: '',
                 cityName: '',
@@ -191,6 +206,7 @@ export default {
                 updateBy: '',
                 updateTime: '',
                 updatePhone: ''
+
             },
             rules: {
                 countryId: [
@@ -202,8 +218,16 @@ export default {
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
                 ]
+            },
+            memberSource: ['存量会员店', '存量平台公司', 'app注册', '商家注册', '好友推荐', '商家邀请'],
+            targetObj: {
+                selectName: '',
+                selectCode: ''
             }
         }
+    },
+    components: {
+        HAutocomplete
     },
     computed: {
         ...mapState({
@@ -212,7 +236,9 @@ export default {
         ...mapGetters({
             nestDdata: 'nestDdata',
             merchantDetail: 'merchantDetail',
-            branchList: 'branchList'
+            branchList: 'branchList',
+            memberDetail: 'memberDetail',
+            merchantList: 'merchantList'
         }),
         cityList () {
             const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
@@ -230,21 +256,23 @@ export default {
         }
     },
     watch: {
-        merchantCode: {
-            handler (newV, oldV) {
-                console.log(newV, oldV)
-                if (newV) {
-                    this.getMerchtDetail(newV)
-                }
-            },
-            deep: true
-        }
+        // merchantCode: {
+        //     handler (newV, oldV) {
+        //         console.log(newV, oldV)
+        //         if (newV) {
+        //             this.getMerchtDetail(newV)
+        //         }
+        //     },
+        //     deep: true
+        // }
     },
     methods: {
         ...mapActions({
             findNest: 'findNest',
             findMerchantDetail: 'findMerchantDetail',
-            findBranch: 'findBranch'
+            findBranch: 'findBranch',
+            findMemberDetail: 'findMemberDetail',
+            findMerchant: 'findMerchant'
         }),
         handleClose () {
             this.$emit('backEvent')
@@ -257,11 +285,17 @@ export default {
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
             params.merchantCode = this.merchantCode
+            console.log(params)
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
                     try {
-                        await putMerchantDetail(params)
+                        if (this.type === 'merchant') {
+                            await putMerchantDetail(params)
+                        } else if (this.type === 'member') {
+                            params.memberCode = this.memberCode
+                            await putMemberDetail(params)
+                        }
                         this.$message({
                             message: '数据保存成功',
                             type: 'success'
@@ -290,14 +324,30 @@ export default {
             await this.findNest()
             this.proviceList = this.nestDdata
         },
-        async getMerchtDetail (val) {
-            await this.findMerchantDetail({ merchantCode: val })
-            this.bossDetail = { ...this.merchantDetail }
+        async getMerchantList () {
+            await this.findMerchant()
+            this.merchantArr = this.merchantList
+        },
+        async getMerchtMemberDetail (val, type) {
+            this.type = type
+            if (type === 'merchant') {
+                this.merchantCode = val
+                await this.findMerchantDetail({ merchantCode: val })
+                this.bossDetail = { ...this.merchantDetail }
+            } else {
+                this.memberCode = val
+                await this.findMemberDetail({ memberCode: val })
+                this.bossDetail = { ...this.memberDetail }
+            }
+        },
+        backFindbrand (val) {
+            this.merchantCode = val.value.selectCode
         }
     },
     mounted () {
         this.getFindNest()
         this.onGetbranch()
+        this.getMerchantList()
     }
 }
 </script>
@@ -316,6 +366,7 @@ export default {
     form {
         // flex: 1;
         margin-bottom: 60px;
+        border-bottom: 1px solid #e5e5e5;
     }
     .drawer-footer {
         padding: 0 10px;

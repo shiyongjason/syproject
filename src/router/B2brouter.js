@@ -316,6 +316,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/hmall/membership/bussinessManage')
+        },
+        {
+            path: 'memberManage',
+            name: 'memberManage',
+            meta: {
+                title: '会员管理',
+                tagName: '会员管理',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/hmall/membership/memberManage')
         }
     ]
 }

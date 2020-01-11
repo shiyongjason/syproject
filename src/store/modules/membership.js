@@ -1,11 +1,15 @@
 import * as types from '../mutation-types'
-import { getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList } from '@/views/hmall/membership/api'
+import { getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList, getBossMember, getBossMemberStatic, getBossMemberDetail, getMerchantList } from '@/views/hmall/membership/api'
 const state = {
     nestDdata: {},
     merchantData: [],
     merchantDetail: {},
     merchantStatic: {},
-    branchList: []
+    branchList: [],
+    memberData: [],
+    memberDetail: {},
+    memberStatic: {},
+    merchantList: []
 }
 
 const getters = {
@@ -13,7 +17,18 @@ const getters = {
     merchantData: state => state.merchantData,
     merchantDetail: state => state.merchantDetail,
     merchantStatic: state => state.merchantStatic,
-    branchList: state => state.branchList
+    branchList: state => state.branchList,
+    memberData: state => state.memberData,
+    memberDetail: state => state.memberDetail,
+    memberStatic: state => state.memberStatic,
+    merchantList: state => {
+        // TODO 模糊搜索组件
+        state.merchantList && state.merchantList.map(item => {
+            item.value = item.companyName
+            item.selectCode = item.companyCode
+        })
+        return state.merchantList
+    }
 }
 
 const mutations = {
@@ -31,6 +46,18 @@ const mutations = {
     },
     [types.BRANCH_LIST] (state, payload) {
         state.branchList = payload
+    },
+    [types.MEMBER_DATA] (state, payload) {
+        state.memberData = payload
+    },
+    [types.MEMBER_DETAIL] (state, payload) {
+        state.memberDetail = payload
+    },
+    [types.MEMBER_STATIC] (state, payload) {
+        state.memberStatic = payload
+    },
+    [types.MERCHT_LIST] (state, payload) {
+        state.merchantList = payload
     }
 }
 
@@ -54,6 +81,22 @@ const actions = {
     async findBranch ({ commit }, params) {
         const { data } = await findBrandsList(params)
         commit(types.BRANCH_LIST, data)
+    },
+    async findMemberList ({ commit }, params) {
+        const { data } = await getBossMember(params)
+        commit(types.MEMBER_DATA, data)
+    },
+    async findMemberDetail ({ commit }, params) {
+        const { data } = await getBossMemberDetail(params)
+        commit(types.MEMBER_DETAIL, data)
+    },
+    async findMemberStatic ({ commit }, params) {
+        const { data } = await getBossMemberStatic(params)
+        commit(types.MEMBER_STATIC, data)
+    },
+    async findMerchant ({ commit }, params) {
+        const { data } = await getMerchantList(params)
+        commit(types.MERCHT_LIST, data)
     }
 }
 export default {
