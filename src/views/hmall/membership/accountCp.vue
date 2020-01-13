@@ -1,18 +1,18 @@
 <template>
     <div class="drawer-wrap">
         <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
-            <div class="container">
+            <div class="container" v-for="(item,index) in account" :key="index">
                 <div class="con-box">
                     <span>企业名称：</span>
-                    <span>江苏舒适云信息技术有限公司</span>
+                    <span>{{item.companyName}}</span>
                 </div>
                 <div class="con-box">
                     <span>大B账号类型：</span>
-                    <span><i>管理员</i></span>
+                    <span><i>{{item.merchantAccountType?item.merchantAccountType:'--'}}</i></span>
                 </div>
                  <div class="con-box">
                     <span>小b账号类型：</span>
-                    <span><i>管理员</i></span>
+                    <span><i>{{item.memberAccountType?item.memberAccountType:'--'}}</i></span>
                 </div>
             </div>
         </el-drawer>
@@ -30,23 +30,27 @@ export default {
     },
     data () {
         return {
-
+            account: []
         }
     },
     computed: {
         ...mapGetters({
-            myDoubleSalaryGetter: 'doubleSalaryList',
-            myTotalSalary: 'totalSalary'
+            accountDetail: 'accountDetail'
         })
     },
     methods: {
         ...mapActions({
-            findNest: 'findNest'
+            findAccountDetail: 'findAccountDetail'
         }),
         handleClose () {
             this.$emit('backEvent')
+        },
+        async onFindAccountDetail (val) {
+            await this.findAccountDetail(val)
+            this.account = this.accountDetail
         }
-    }
+    },
+    mounted () {}
 }
 </script>
 <style  lang="scss" scoped>

@@ -1,6 +1,8 @@
 import * as types from '../mutation-types'
-import { getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList, getBossMember,
-    getBossMemberStatic, getBossMemberDetail, getMerchantList, getAccountList } from '@/views/hmall/membership/api'
+import {
+    getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList, getBossMember,
+    getBossMemberStatic, getBossMemberDetail, getMerchantList, getAccountList, getAccountDetail
+} from '@/views/hmall/membership/api'
 const state = {
     nestDdata: {},
     merchantData: [],
@@ -11,7 +13,8 @@ const state = {
     memberDetail: {},
     memberStatic: {},
     merchantList: [],
-    accountData: {}
+    accountData: {},
+    accountDetail: {}
 }
 
 const getters = {
@@ -31,7 +34,8 @@ const getters = {
         })
         return state.merchantList
     },
-    accountData: state => state.accountData
+    accountData: state => state.accountData,
+    accountDetail: state => state.accountDetail
 }
 
 const mutations = {
@@ -64,6 +68,9 @@ const mutations = {
     },
     [types.ACCOUNT_DATA] (state, payload) {
         state.accountData = payload
+    },
+    [types.ACCOUNT_DETAIL] (state, payload) {
+        state.accountDetail = payload
     }
 }
 
@@ -107,6 +114,10 @@ const actions = {
     async findAccountList ({ commit }, params) {
         const { data } = await getAccountList(params)
         commit(types.ACCOUNT_DATA, data)
+    },
+    async findAccountDetail ({ commit }, params) {
+        const { data } = await getAccountDetail(params)
+        commit(types.ACCOUNT_DETAIL, data)
     }
 }
 export default {

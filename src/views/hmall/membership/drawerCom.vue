@@ -1,7 +1,6 @@
 <template>
     <div class="drawer-wrap">
         <el-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
-            {{type}}
             <div class="drawer-content">
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>

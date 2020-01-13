@@ -44,11 +44,11 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
             @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode)">查看详情</el-button>
+                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.username)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <accountCp :drawer=drawer @backEvent='restDrawer'></accountCp>
+        <accountCp :drawer=drawer @backEvent='restDrawer' ref="account"></accountCp>
     </div>
 </template>
 <script>
@@ -65,14 +65,15 @@ export default {
                 pageNumber: 1,
                 createTimeStart: '',
                 createTimeEnd: '',
-                source: ''
+                source: '',
+                registerTimeOrderBy: 'desc'
             },
             copyParams: {},
             paginationInfo: {},
             tableLabel: [
                 { label: '账号', prop: 'username', width: '180' },
                 { label: '注册时间', prop: 'createTime', width: '150', sortable: true },
-                { label: '最近登录时间', prop: 'lastLoginTime', width: '150', sortable: true },
+                { label: '最近登录时间', prop: 'lastLoginTime', width: '150' },
                 { label: '账号来源', prop: 'source' },
                 { label: '最近登录平台', prop: 'lastLoginFrom' },
                 { label: '最近登录设备', prop: 'lastLoginDevice' },
@@ -132,16 +133,12 @@ export default {
         },
         onSortChange (val) {
             if (val.prop === 'createTime') {
-                this.queryParams.createTime = val.order === 'descending' ? 'desc' : 'asc'
-                this.queryParams.authenticationTime = ''
-            } else {
-                this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
-                this.queryParams.createTime = ''
+                this.queryParams.registerTimeOrderBy = val.order === 'descending' ? 'desc' : 'asc'
             }
-
             this.onFindAccountList()
         },
-        onFindInfo () {
+        onFindInfo (val) {
+            this.$refs.account.onFindAccountDetail(val)
             this.drawer = true
         },
         restDrawer () {

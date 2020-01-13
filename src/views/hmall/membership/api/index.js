@@ -57,3 +57,7 @@ export const getMerchantList = (params) => {
 export const getAccountList = (params) => {
     return axios.get(B2bUrl + 'uaa/openapi/account/list', { params })
 }
+// 账号详情
+export const getAccountDetail = (params) => {
+    return axios.get(B2bUrl + `uaa/openapi/account/${params}`)
+}
