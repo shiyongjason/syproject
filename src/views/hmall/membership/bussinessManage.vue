@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
+                    <div class="query-col-title">创建时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -87,7 +87,8 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用状态：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用状态：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
                 店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+             @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
                 <template slot="merchantType" slot-scope="scope">
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
                 </template>
@@ -103,7 +104,7 @@
                   <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
-                <template slot="action" slot-scope="scope">
+                <template slot="action" slot-scope="scope" >
                     <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
                     <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</el-button>
                 </template>
@@ -133,7 +134,10 @@ export default {
                 pageSize: 10,
                 registrationEndTime: '',
                 registrationStartTime: '',
-                subsectionCode: ''
+                subsectionCode: '',
+                authenticationTime: '',
+                createTime: 'desc'
+
             },
             paginationInfo: {},
             tableLabel: [
@@ -144,7 +148,7 @@ export default {
                 { label: '上架商品数', prop: 'omMarketNum' },
                 { label: '店铺商品数', prop: 'omMerchantNum' },
                 { label: '会员数', prop: 'memberNum' },
-                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
+                { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
@@ -157,7 +161,7 @@ export default {
                             </span>
                         )
                     } },
-                { label: '认证时间', prop: 'authenticationTime' },
+                { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
                 { label: '自动推送至店铺', prop: 'isAutoDispatch' },
                 { label: '状态', prop: 'isEnabled' }
@@ -222,6 +226,17 @@ export default {
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
+            this.onFindMlist()
+        },
+        onSortChange (val) {
+            if (val.prop === 'registrationTime') {
+                this.queryParams.createTime = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.authenticationTime = ''
+            } else {
+                this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.createTime = ''
+            }
+
             this.onFindMlist()
         },
         handleCurrentChange (val) {

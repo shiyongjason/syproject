@@ -84,7 +84,8 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+            @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
@@ -130,7 +131,9 @@ export default {
                 registrationEndTime: '',
                 registrationStartTime: '',
                 merchantName: '',
-                areaIds: ''
+                areaIds: '',
+                authenticationTime: '',
+                createTime: 'desc'
             },
             paginationInfo: {},
             tableLabel: [
@@ -139,7 +142,7 @@ export default {
                 { label: '所属商家', prop: 'merchantName', width: '150px' },
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
-                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
+                { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
@@ -152,7 +155,7 @@ export default {
                             </span>
                         )
                     } },
-                { label: '认证时间', prop: 'authenticationTime' },
+                { label: '认证时间', prop: 'authenticationTime', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
@@ -224,6 +227,18 @@ export default {
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
+            this.onFindMlist()
+        },
+        onSortChange (val) {
+            console.log(val)
+            if (val.prop === 'registrationTime') {
+                this.queryParams.createTime = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.authenticationTime = ''
+            } else {
+                this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.createTime = ''
+            }
+
             this.onFindMlist()
         },
         async onFindMlist (val) {
