@@ -44,10 +44,14 @@ const formatDateDuration = function (time) {
     }
     return tempTime
 }
+function isNotBlank (value) {
+    return value || '-'
+}
 
 export default {
     formatterTime,
     formatterDate,
     formatDateDuration,
-    money
+    money,
+    isNotBlank
 }

@@ -6,7 +6,7 @@ export const findWorkOrderDetail = (id) => axios.get(`service/api/work-orders/${
 // 新增工单
 export const createWorkOrder = (id, params) => axios.put(`service/api/work-orders/${id}`, params)
 // 修改工单
-export const updateWorkOrder = (id, params) => axios.put(`service/api/work-orders/${id}`, params)
+export const updateWorkOrder = (params) => axios.put(`service/api/work-orders/${params.id}`, params)
 // 查找服务管家列表
 export function findServiceManagementList (params) {
     return axios.get(`/service/api/service-manager`, { params })
