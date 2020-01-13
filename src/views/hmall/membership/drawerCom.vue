@@ -184,28 +184,28 @@ export default {
             merchantCode: '',
             memberCode: '',
             bossDetail: {
-                memberAccount: '',
-                authenticationTime: '',
-                cityId: '',
-                cityName: '',
-                companyName: '',
-                countryId: '',
-                countryName: '',
-                isAuthentication: '',
-                isAutoDispatch: '',
-                isCommodity: '', // 是否商品型商家
-                isOperational: '',
-                merchantAccount: '',
-                merchantType: '',
-                provinceId: '',
-                provinceName: '',
-                registrationTime: '',
-                staff: [],
-                subsectionCode: '',
-                subsectionName: '',
-                updateBy: '',
-                updateTime: '',
-                updatePhone: ''
+                // memberAccount: '',
+                // authenticationTime: '',
+                // cityId: '',
+                // cityName: '',
+                // companyName: '',
+                // countryId: '',
+                // countryName: '',
+                // isAuthentication: '',
+                // isAutoDispatch: '',
+                // isCommodity: '', // 是否商品型商家
+                // isOperational: '',
+                // merchantAccount: '',
+                // merchantType: '',
+                // provinceId: '',
+                // provinceName: '',
+                // registrationTime: '',
+                // staff: [],
+                // subsectionCode: '',
+                // subsectionName: '',
+                // updateBy: '',
+                // updateTime: '',
+                // updatePhone: ''
 
             },
             rules: {
@@ -284,16 +284,17 @@ export default {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
-            params.merchantCode = this.merchantCode
             console.log(params)
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
                     try {
                         if (this.type === 'merchant') {
+                            params.merchantCode = this.merchantCode
                             await putMerchantDetail(params)
                         } else if (this.type === 'member') {
                             params.memberCode = this.memberCode
+                            delete params.merchantName
                             await putMemberDetail(params)
                         }
                         this.$message({
@@ -338,10 +339,12 @@ export default {
                 this.memberCode = val
                 await this.findMemberDetail({ memberCode: val })
                 this.bossDetail = { ...this.memberDetail }
+                this.targetObj.selectCode = this.memberDetail.merchantCode
+                this.targetObj.selectName = this.memberDetail.merchantName
             }
         },
         backFindbrand (val) {
-            this.merchantCode = val.value.selectCode
+            this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
         }
     },
     mounted () {

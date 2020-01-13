@@ -1,5 +1,6 @@
 import * as types from '../mutation-types'
-import { getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList, getBossMember, getBossMemberStatic, getBossMemberDetail, getMerchantList } from '@/views/hmall/membership/api'
+import { getChiness, getBossMerchant, getBossMerchantDetail, getBossMerchantStatic, findBrandsList, getBossMember,
+    getBossMemberStatic, getBossMemberDetail, getMerchantList, getAccountList } from '@/views/hmall/membership/api'
 const state = {
     nestDdata: {},
     merchantData: [],
@@ -9,7 +10,8 @@ const state = {
     memberData: [],
     memberDetail: {},
     memberStatic: {},
-    merchantList: []
+    merchantList: [],
+    accountData: {}
 }
 
 const getters = {
@@ -28,7 +30,8 @@ const getters = {
             item.selectCode = item.companyCode
         })
         return state.merchantList
-    }
+    },
+    accountData: state => state.accountData
 }
 
 const mutations = {
@@ -58,6 +61,9 @@ const mutations = {
     },
     [types.MERCHT_LIST] (state, payload) {
         state.merchantList = payload
+    },
+    [types.ACCOUNT_DATA] (state, payload) {
+        state.accountData = payload
     }
 }
 
@@ -97,6 +103,10 @@ const actions = {
     async findMerchant ({ commit }, params) {
         const { data } = await getMerchantList(params)
         commit(types.MERCHT_LIST, data)
+    },
+    async findAccountList ({ commit }, params) {
+        const { data } = await getAccountList(params)
+        commit(types.ACCOUNT_DATA, data)
     }
 }
 export default {

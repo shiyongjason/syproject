@@ -28,7 +28,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-title">
-                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}" filterable>
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
@@ -62,9 +62,9 @@
                         <el-select v-model="queryParams.isAuthentication">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="是" value="1">
+                            <el-option label="已认证" value="1">
                             </el-option>
-                            <el-option label="否" value="0">
+                            <el-option label="未认证" value="0">
                             </el-option>
                         </el-select>
                     </div>
@@ -138,7 +138,8 @@ export default {
                 registrationEndTime: '',
                 registrationStartTime: '',
                 subsectionCode: '',
-                provinceId: ''
+                provinceId: '',
+                areaIds: ''
             },
             paginationInfo: {},
             tableLabel: [
@@ -269,14 +270,20 @@ export default {
         },
         async getFindNest () {
             await this.findNest()
-            this.options = this.nestDdata
+            this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.cities.map(value => {
+                    value.cities = value.countries
+                })
+                return item
+            })
         },
         cityChange (val) {
+            console.log(val)
             const cityarr = []
             val && val.map(item => {
-                cityarr.push(item[1])
+                cityarr.push(item[2])
             })
-            this.queryParams.provinceId = cityarr.join(',')
+            this.queryParams.areaIds = cityarr.join(',')
         },
         onFindInfo (val, type) {
             this.companyCode = val

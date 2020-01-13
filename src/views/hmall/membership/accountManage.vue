@@ -5,35 +5,31 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">账号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.createTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">账号来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.integrity">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="完整" value="1">
-                            </el-option>
-                            <el-option label="不完整" value="0">
+                        <el-select v-model="queryParams.source">
+                            <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <el-button type="primary" class="ml20" @click="onFindAccountList(1)">
                             查询
                         </el-button>
                         <el-button type="primary" class="ml20" @click="onRest()">
@@ -44,39 +40,45 @@
             </div>
         </div>
         <div class="page-body-cont">
+            <el-tag size="medium" class="eltagtop">已筛选 {{accountData.total}} 项 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
-                <template slot="brandName" slot-scope="scope">
-                    {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
-                </template>
-                <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
-                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onFindInfo(scope.data.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <accountCp :drawer=drawer @backEvent = 'restDrawer'></accountCp>
+        <accountCp :drawer=drawer @backEvent='restDrawer'></accountCp>
     </div>
 </template>
 <script>
 import accountCp from './accountCp'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'spumange',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                username: '',
+                pageSize: 10,
+                pageNumber: 1,
+                createTimeStart: '',
+                createTimeEnd: '',
+                source: ''
+            },
             paginationInfo: {},
             tableLabel: [
-                { label: 'SPU编码', prop: 'spuCode' },
-                { label: '品牌', prop: 'brandName' },
-                { label: '商品名称', prop: 'spuName', width: '200' }
+                { label: '账号', prop: 'username', width: '200' },
+                { label: '注册时间', prop: 'createTime', width: '200' },
+                { label: '最近登录时间', prop: 'spuName', width: '200' },
+                { label: '账号来源', prop: 'source', width: '200' },
+                { label: '最近登录平台', prop: 'lastLoginFrom', width: '200' },
+                { label: '最近登录设备', prop: 'lastLoginDevice', width: '200' },
+                { label: '最近登录版本', prop: 'lastLoginVersion', width: '200' }
             ],
-            tableData: [{ spuCode: 111, brandName: 'hah', spuName: '233' }],
-            drawer: false
+            tableData: [],
+            drawer: false,
+            options: [{ key: '', value: '全部' }, { key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' }, { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }]
         }
     },
     components: {
@@ -104,40 +106,43 @@ export default {
             }
         },
         ...mapState({
-            userInfo: state => state.userInfo,
-            userInfo2: state => state.hmall.userInfo,
-            categoryList: state => state.hmall.categoryList
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            accountData: 'accountData'
         })
-
     },
-    async mounted () {
-
+    mounted () {
+        this.onFindAccountList()
     },
     methods: {
+        ...mapActions({
+            findAccountList: 'findAccountList'
+        }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.searchList()
+            this.onFindAccountList()
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
+            this.onFindAccountList()
         },
         onFindInfo () {
             this.drawer = true
         },
         restDrawer () {
             this.drawer = false
+        },
+        async onFindAccountList (val) {
+            if (val) this.queryParams.pageNumber = val
+            await this.findAccountList(this.queryParams)
+            this.tableData = this.accountData.records
+            this.paginationInfo = {
+                total: this.accountData.total,
+                pageNumber: this.accountData.current,
+                pageSize: this.accountData.size
+            }
         }
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('spumange')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'spudetail') {
-            clearCache('spumange')
-        }
-        next()
     }
 }
 </script>
@@ -147,5 +152,8 @@ export default {
 }
 .colgry {
     color: #ccc;
+}
+.eltagtop{
+    margin-bottom: 10px;
 }
 </style>
