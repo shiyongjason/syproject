@@ -109,17 +109,17 @@ export default {
             },
             component: () => import('@/views/hmall/coupon/coupon.vue')
         },
-        {
-            path: 'member',
-            name: 'member',
-            meta: {
-                title: '会员审核列表',
-                tagName: '会员审核列表',
-                isMenu: true,
-                icon: ''
-            },
-            component: () => import('@/views/hmall/memberStore/member.vue')
-        },
+        // {
+        //     path: 'member',
+        //     name: 'member',
+        //     meta: {
+        //         title: '会员审核列表',
+        //         tagName: '会员审核列表',
+        //         isMenu: true,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/hmall/memberStore/member.vue')
+        // },
         {
             path: 'memberPull',
             name: 'memberPull',
@@ -164,17 +164,17 @@ export default {
             },
             component: () => import('@/views/hmall/walletPay/walletPay.vue')
         },
-        {
-            path: 'merchantReview',
-            name: 'merchantReview',
-            meta: {
-                title: '商户审核列表',
-                tagName: '商户审核列表',
-                isMenu: true,
-                icon: ''
-            },
-            component: () => import('@/views/hmall/shopReview/merchantReview.vue')
-        },
+        // {
+        //     path: 'merchantReview',
+        //     name: 'merchantReview',
+        //     meta: {
+        //         title: '商户审核列表',
+        //         tagName: '商户审核列表',
+        //         isMenu: true,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/hmall/shopReview/merchantReview.vue')
+        // },
         // 这期不做
         // {
         //     path: 'memberManagement',
