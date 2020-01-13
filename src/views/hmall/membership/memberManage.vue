@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商家账号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.adminAccount" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -14,34 +14,20 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
+
                 <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
+                    <div class="query-col-title">所属商家：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-title">
-                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
-                        </el-cascader>
+                        <el-input v-model="queryParams.merchantName" placeholder="请输入商家" maxlength="50"></el-input>
                     </div>
                 </div>
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">商家类型：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.merchantType">
-                            <el-option label="全部" value=""></el-option>
-                            <el-option label="体系内" value="1"></el-option>
-                            <el-option label="体系外" value="2"></el-option>
-                        </el-select>
+                    <div class="query-col-title">经营区域：</div>
+                    <div class="query-col-title">
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                        </el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -54,6 +40,7 @@
                         </el-date-picker>
                     </div>
                 </div>
+
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
@@ -80,6 +67,9 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="onFindMlist(1)">
                             查询
@@ -92,20 +82,23 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum}}；已认证：{{bossStatic.authenticationNum}}；启用状态：{{bossStatic.enabledNum}}；禁用状态：{{bossStatic.forbiddenNum}}；上架商品总数：{{bossStatic.onMarketTotalNum}}；
-                店铺商品总数：{{bossStatic.omMerchantTotalNum}}；会员总数：{{bossStatic.memberTotalNum}}</el-tag>
+            <el-tag size="medium" class="eltagtop">
+                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
-                    {{memberSource[scope.data.row.source]}}
+                    {{memberSource[scope.data.row.source-1]}}
                 </template>
-                <template slot="isEnabled" slot-scope="scope">
-                    {{scope.data.row.isEnabled==0?'否':'是'}}
+                <template slot="addressName" slot-scope="scope">
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
                     {{scope.data.row.isAutoDispatch==0?'否':'是'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
                     <span :class="scope.data.row.isAuthentication==0?'colorRed':'colorGreen'">{{scope.data.row.isAuthentication==0?'未认证':'已认证'}}</span>
+                </template>
+                <template slot="isEnabled" slot-scope="scope">
+                    {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
@@ -131,24 +124,22 @@ export default {
                 companyName: '',
                 isAuthentication: '',
                 isEnabled: '',
-                merchantAccount: '',
-                merchantType: '',
+                adminAccount: '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
                 registrationStartTime: '',
-                subsectionCode: '',
-                provinceId: '',
+                merchantName: '',
                 areaIds: ''
             },
             paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '150px' },
-                { label: '所属商家', prop: 'merchantName', width: '180px' },
-                { label: '省市区', prop: 'addressName' },
-                { label: '会员来源', prop: 'source' },
-                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '200px' },
+                { label: '所属商家', prop: 'merchantName', width: '150px' },
+                { label: '省市区', prop: 'addressName', width: '150px' },
+                // { label: '会员来源', prop: 'source' },
+                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
                 { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {

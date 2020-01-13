@@ -85,8 +85,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum}}；已认证：{{bossStatic.authenticationNum}}；启用状态：{{bossStatic.enabledNum}}；禁用状态：{{bossStatic.forbiddenNum}}；上架商品总数：{{bossStatic.onMarketTotalNum}}；
-                店铺商品总数：{{bossStatic.omMerchantTotalNum}}；会员总数：{{bossStatic.memberTotalNum}}</el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用状态：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用状态：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
+                店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="merchantType" slot-scope="scope">
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
@@ -94,14 +94,14 @@
                 <template slot="merchantRolePermission" slot-scope="scope">
                     {{merchantRole[scope.data.row.merchantRolePermission-1]}}
                 </template>
-                <template slot="isEnabled" slot-scope="scope">
-                    {{scope.data.row.isEnabled==0?'否':'是'}}
-                </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
                     {{scope.data.row.isAutoDispatch==0?'否':'是'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
                     <span :class="scope.data.row.isAuthentication==0?'colorRed':'colorGreen'">{{scope.data.row.isAuthentication==0?'未认证':'已认证'}}</span>
+                </template>
+                  <template slot="isEnabled" slot-scope="scope">
+                    {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
