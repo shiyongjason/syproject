@@ -6,23 +6,32 @@
             </div>
             <div class="padd20">
                 <!-- 有空改一下 -->
-                <el-form label-position="right" ref="ruleForm" :inline="true" label-width="100px" :model="queryParams">
-                    <el-form-item label="客户名称：">
-                        <el-input v-model="queryParams.customerName" clearable placeholder="请输入客户名称" maxLength='100'></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品名称：">
+                <div class="query-cont-col">
+                    <div class="query-col-title">客户名称：</div>
+                    <div class="query-col-input">
+                        <el-input maxlength="100" v-model="queryParams.customerName" placeholder="请输入客户名称" clearable>
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">产品名称：</div>
+                    <div class="query-col-input">
                         <el-select v-model="queryParams.productName" clearable placeholder="请选择产品名称">
                             <el-option v-for="item in options" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="流程类型：">
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">流程类型：</div>
+                    <div class="query-col-input">
                         <el-select v-model="queryParams.processType" clearable placeholder="请选择流程类型">
                             <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                </el-form>
+                    </div>
+                </div>
+                <br>
                 <div class="query-cont-col" style="padding-top: 20px;">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onFormSearch">搜索</el-button>
@@ -101,9 +110,7 @@ export default {
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'productName', '')
             this.$set(this.queryParams, 'processType', '')
-            this.$nextTick(() => {
-                this.$refs.ruleForm.clearValidate()
-            })
+            this.onQuery()
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
