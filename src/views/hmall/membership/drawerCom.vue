@@ -69,11 +69,11 @@
                             <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
                         </el-form-item>
                     </template>
-                    <template v-if="type==='member'">
+                    <!-- <template v-if="type==='member'">
                         <el-form-item label="会员来源：" :label-width="formLabelWidth">
                             {{memberSource[bossDetail.source]}}
                         </el-form-item>
-                    </template>
+                    </template> -->
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
                         {{bossDetail.isAuthentication==0?'未认证':'已认证'}}（{{bossDetail.authenticationTime | formatterTime}}）
                     </el-form-item>
