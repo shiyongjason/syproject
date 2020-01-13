@@ -66,15 +66,16 @@ export default {
                 createTimeEnd: '',
                 source: ''
             },
+            copyParams: {},
             paginationInfo: {},
             tableLabel: [
-                { label: '账号', prop: 'username', width: '200' },
-                { label: '注册时间', prop: 'createTime', width: '200' },
-                { label: '最近登录时间', prop: 'spuName', width: '200' },
-                { label: '账号来源', prop: 'source', width: '200' },
-                { label: '最近登录平台', prop: 'lastLoginFrom', width: '200' },
-                { label: '最近登录设备', prop: 'lastLoginDevice', width: '200' },
-                { label: '最近登录版本', prop: 'lastLoginVersion', width: '200' }
+                { label: '账号', prop: 'username', width: '180' },
+                { label: '注册时间', prop: 'createTime' },
+                { label: '最近登录时间', prop: 'spuName' },
+                { label: '账号来源', prop: 'source' },
+                { label: '最近登录平台', prop: 'lastLoginFrom' },
+                { label: '最近登录设备', prop: 'lastLoginDevice' },
+                { label: '最近登录版本', prop: 'lastLoginVersion' }
             ],
             tableData: [],
             drawer: false,
@@ -114,6 +115,7 @@ export default {
     },
     mounted () {
         this.onFindAccountList()
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
         ...mapActions({
@@ -132,6 +134,10 @@ export default {
         },
         restDrawer () {
             this.drawer = false
+        },
+        onRest () {
+            this.queryParams = deepCopy(this.copyParams)
+            this.onFindAccountList(1)
         },
         async onFindAccountList (val) {
             if (val) this.queryParams.pageNumber = val

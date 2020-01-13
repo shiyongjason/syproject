@@ -138,13 +138,13 @@ export default {
             paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
-                { label: '管理员账号', prop: 'adminAccount', width: '150px' },
+                { label: '管理员账号', prop: 'adminAccount', width: '120px' },
                 { label: '所属分部', prop: 'subsectionName', width: '180px' },
                 { label: '商家类型', prop: 'merchantType' },
                 { label: '上架商品数', prop: 'omMarketNum' },
                 { label: '店铺商品数', prop: 'omMerchantNum' },
                 { label: '会员数', prop: 'memberNum' },
-                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '200px' },
+                { label: '注册时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px' },
                 { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
