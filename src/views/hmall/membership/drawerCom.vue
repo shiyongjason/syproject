@@ -20,7 +20,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属商家：" :label-width="formLabelWidth" v-if="type==='member'">
-                        <HAutocomplete :placeholder="'输入商家'" @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj = "targetObj" :remove-value='removeValue' />
+                        <HAutocomplete :placeholder="'输入商家'" @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
@@ -92,8 +92,10 @@
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
-                    <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <div class="drawer-button">
+                        <el-button @click="cancelForm">取 消</el-button>
+                        <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    </div>
                 </div>
                 <div class="" v-if="activeName=='second'">
                     <el-form :model="form">
@@ -162,6 +164,7 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { putMerchantDetail, putMemberDetail } from './api/index'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'account',
     props: {
@@ -207,6 +210,7 @@ export default {
                 // updatePhone: ''
 
             },
+            copyDetail: {},
             rules: {
                 countryId: [
                     { required: true, message: '请选择区', trigger: 'change' }
@@ -274,16 +278,35 @@ export default {
             findMerchant: 'findMerchant'
         }),
         handleClose () {
-            this.$emit('backEvent')
+            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+                this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '返回',
+                    type: 'warning'
+                }).then(async () => {
+                    this.$emit('backEvent')
+                })
+            } else {
+                this.$emit('backEvent')
+            }
         },
         cancelForm () {
-            this.$emit('backEvent')
+            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+                this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '返回',
+                    type: 'warning'
+                }).then(async () => {
+                    this.$emit('backEvent')
+                })
+            } else {
+                this.$emit('backEvent')
+            }
         },
         onSaveDetail () {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
-            console.log(params)
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
@@ -341,6 +364,7 @@ export default {
                 this.targetObj.selectCode = this.memberDetail.merchantCode
                 this.targetObj.selectName = this.memberDetail.merchantName
             }
+            this.copyDetail = deepCopy(this.bossDetail)
         },
         backFindbrand (val) {
             this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
@@ -356,7 +380,7 @@ export default {
 <style  lang="scss" scoped>
 /deep/ .el-drawer__body {
     overflow-y: scroll;
-    position: relative;
+    // position: relative;
 }
 .drawer-content {
     width: 100%;
@@ -368,17 +392,22 @@ export default {
     form {
         // flex: 1;
         margin-bottom: 60px;
-        border-bottom: 1px solid #e5e5e5;
+        // border-bottom: 1px solid #e5e5e5;
     }
     .drawer-footer {
-        padding: 0 10px;
-        display: flex;
-        position: fixed;
-        bottom: 10px;
-        // left: 0;
+        position: absolute;
+        bottom: 0;
+        left: 0;
         right: 0;
+        padding: 12px 24px;
+        border-top: 1px solid #e5e5ea;
+        background: #fff;
+        z-index: 1000;
         button {
             flex: 1;
+        }
+        .drawer-button {
+            text-align: right;
         }
     }
 }
