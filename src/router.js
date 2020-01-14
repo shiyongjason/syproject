@@ -263,8 +263,13 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    // const menu = makeMenus(routerMapping, resourceList)
-    const menu = routerMapping
+    // 开发环境菜单配置
+    let menu = ''
+    if (process.env.NODE_ENV == 'development') {
+        menu = routerMapping
+    } else {
+        menu = makeMenus(routerMapping, resourceList)
+    }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
