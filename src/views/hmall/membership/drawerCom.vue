@@ -4,9 +4,9 @@
             <div class="drawer-content">
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
-                    <el-tab-pane label="基本信息" name="second"></el-tab-pane>
+                    <!-- <el-tab-pane label="基本信息" name="second"></el-tab-pane> -->
                 </el-tabs>
-                <el-form :model="bossDetail" :rules="rules" ref="ruleForm" v-if="activeName=='first'">
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm" >
                     <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
                         <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
                         <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
@@ -97,7 +97,7 @@
                         <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
-                <div class="" v-if="activeName=='second'">
+                <!-- <div class="" v-if="activeName=='second'">
                     <el-form :model="form">
                         <el-form-item label="企业名称：" :label-width="formLabelWidth">
                             江苏舒适云信息技术有限公司
@@ -155,7 +155,7 @@
                             </div>
                         </el-form-item>
                     </el-form>
-                </div>
+                </div> -->
             </div>
         </el-drawer>
     </div>
