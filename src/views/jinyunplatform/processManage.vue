@@ -26,7 +26,7 @@
                     <div class="query-col-title">流程类型：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.processType" clearable placeholder="请选择流程类型">
-                            <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
+                            <el-option v-for="item in flowTypes" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -83,7 +83,16 @@ export default {
                 total: 0
             },
             options: [],
-            flowTypes: ['预授信', '授信', '用信']
+            flowTypes: [{
+                label: '预授信',
+                value: 'pre_credit'
+            }, {
+                label: '用信',
+                value: 'act_loan'
+            }, {
+                label: '授信',
+                value: 'act_credit'
+            }]
         }
     },
     async mounted () {
