@@ -27,7 +27,7 @@
         <el-dialog :title="title" :visible.sync="dialog" :close-on-click-modal="false" width="500px">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px">
                 <el-form-item prop="name" label="渠道名称">
-                    <el-input v-model="form.name" maxlength="20" style="width: 300px"></el-input>
+                    <el-input v-model="form.name" maxlength="20" style="width: 300px" placeholder="请输入渠道名称"></el-input>
                 </el-form-item>
                 <el-form-item label="渠道编码">
                     <el-input v-model="form.id" disabled maxlength="20" style="width: 300px"></el-input>
