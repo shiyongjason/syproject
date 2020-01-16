@@ -105,7 +105,7 @@
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
                 <template slot="action" slot-scope="scope" >
-                    <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button>
+                    <!-- <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button> -->
                     <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</el-button>
                 </template>
             </basicTable>
