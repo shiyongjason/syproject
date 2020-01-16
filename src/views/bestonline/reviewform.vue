@@ -188,7 +188,7 @@ export default {
         font-weight: 500;
         margin: 0;
     }
-    .jd-bottom {
+    /deep/ .jd-bottom {
         position: fixed;
         bottom: 0;
         background: #ffffff;
@@ -198,11 +198,11 @@ export default {
         text-align: center;
         z-index: 99;
     }
-    .minLeft {
+    /deep/ .minLeft {
         left: 64px;
         transition: 0.3s;
     }
-    .maxLeft {
+    /deep/ .maxLeft {
         left: 200px;
         transition: 0.3s;
     }

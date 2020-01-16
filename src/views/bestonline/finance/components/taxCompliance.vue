@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="7">
         <template slot="title">
-            <p class="title-p">税务合规(必填)</p>
+            <p class="title-p">税务合规</p>
         </template>
         <table class="item-wrapper">
             <thead>

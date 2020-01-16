@@ -47,10 +47,14 @@ export const SELECT_OPTIONS = [
 ]
 
 // KPI 校验字段
-export const kpiValidProps = new Set(['dueBusinessAssessmentCreateFormList', 'riskDisclosure', 'analysisDescription', 'wholesaleShare'])
+export const kpiValidProps = new Set(['dueBusinessAssessmentCreateFormList', 'share', 'riskDisclosure', 'analysisDescription'])
 // 业务模式 校验字段
 export const businessModelValidProps = new Set(['mainBusinessFormatOneId', 'businessFormatOneRatio', 'mainCategoryOneId', 'categoryOneSalesRatio', 'mainBrandOneName', 'brandOneSalesRatio'])
+// 销售业绩(含税)（万元）校验字段
+export const salesPerformanceValidProps = new Set(['dueBusinessSaleCreateFormList', 'firstTenMonthsDown'])
 // 上游-供应商结构 校验字段
 export const UpstreamSupplierStructureValidProps = new Set(['supplierName', 'purchaseAmount', 'proportion', 'isProvideContract'])
+// 下游-客户结构 校验字段
+export const DownstreamCustomerValidProps = new Set(['dueBusinessCustomerCreateFormList'])
 // 新合资公司规划 校验字段
 export const NewJointVenturePlanningValidProps = new Set(['webServiceCategory', 'webBusinessCategory', 'brandManagement', 'annualSalesScale', 'netProfitRate', 'downstreamSwitchChannelsCustomers', 'marketingChannelsPlans', 'fundingRequirements'])
