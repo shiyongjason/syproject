@@ -75,7 +75,7 @@
             </el-collapse-item>
             <el-collapse-item name="2">
                 <template slot="title">
-                    <p class="title-p">实际控制人评估(必填)</p>
+                    <p class="title-p">实际控制人评估</p>
                 </template>
                 <p class="small-title">个人简介</p>
                 <div class="item-wrapper">
@@ -314,7 +314,6 @@ export default {
                     return item
                 })
             }
-            console.log(form.dueOrganizationAssessmentCreateFormList)
             form.actualControllerSocialId = this.switchValueToLabel(SOCIAL_REVIEW_OPTIONS, form.actualControllerSocialId)
             form.actualCompanyControllerId = this.switchValueToLabel(CONTROLL_OPTIONS, form.actualCompanyControllerId)
             form.organizationalStabilityId = this.switchValueToLabel(STABLE_OPTIONS, form.organizationalStabilityId)

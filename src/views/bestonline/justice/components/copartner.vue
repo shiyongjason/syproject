@@ -96,7 +96,6 @@ export default {
         'justiceData.copartnerInfoList': {
             handler (oldval) {
                 this.restaurants = JSON.parse(JSON.stringify(oldval))
-                console.log(this.restaurants)
             },
             deep: true
 

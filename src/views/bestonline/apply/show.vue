@@ -51,8 +51,29 @@
             </div>
             <div>
                 <label class="el-form-item__label" style="width: 150px;">附件：</label>
-                <div  class="el-form-item__content" style="margin-left: 150px;" v-for="(item,index) in fileList" :key="index">
-                    <a :href="item.url" target="_blank">{{item.name}}</a>
+                <div class="el-form-item__content" style="margin-left: 150px;">
+                    1、意向协议
+                    <div style="margin-left: 10px;" v-for="(item,index) in intentProtocols" :key="index">
+                        <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </div>
+                </div>
+                <div class="el-form-item__content" style="margin-left: 150px;">
+                    2、基础信息表
+                    <div style="margin-left: 10px;" v-for="(item,index) in basicInformations" :key="index">
+                        <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </div>
+                </div>
+                <div class="el-form-item__content" style="margin-left: 150px;">
+                    3、调前备忘录
+                    <div style="margin-left: 10px;" v-for="(item,index) in preMemos" :key="index">
+                        <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </div>
+                </div>
+                <div class="el-form-item__content" style="margin-left: 150px;">
+                    4、其余材料
+                    <div style="margin-left: 10px;" v-for="(item,index) in attachmentsUrl" :key="index">
+                        <a :href="item.url" target="_blank">{{item.name}}</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +121,10 @@ export default {
         async getDueapplydetail (applyId) {
             const { data } = await getDueapplydetail({ applyId: applyId })
             this.formData = data.data
-            this.fileList = JSON.parse(this.formData.attachmentsUrl)
+            this.attachmentsUrl = JSON.parse(this.formData.attachmentsUrl)
+            this.intentProtocols = JSON.parse(this.formData.intentProtocols)
+            this.basicInformations = JSON.parse(this.formData.basicInformations)
+            this.preMemos = JSON.parse(this.formData.preMemos)
             this.formData.cooperateTypeName = COOPERATE_TYPE_MAP.get(this.formData.cooperateType)
             this.formData.salesTypeName = SALES_TYPE_MAP.get(this.formData.salesType)
             this.checkList = this.formData.mainSystem.split(',')
