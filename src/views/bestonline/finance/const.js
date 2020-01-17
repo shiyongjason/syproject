@@ -52,6 +52,6 @@ export const capitalRiskAssessmentValidProps = new Set(['shareholdersBorrowsComp
 // 税务合规(必填) 校验字段
 export const taxComplianceValidProps = new Set(['annualTaxableBusinessIncome', 'taxableIncomeRatio', 'taxBearingRate'])
 // 资产负债表（必填一项）校验字段
-export const balanceSheetValidProps = new Set(['assetsLiabilities.assetListT', 'assetsLiabilities.assetListB', 'assetsLiabilities.assetListL'])
+export const balanceSheetValidProps = new Set(['assetsLiabilities.assetListT', 'assetsLiabilities.liabilitiesListT', 'assetsLiabilities.assetListB', 'assetsLiabilities.assetListL', 'assetsLiabilities.liabilitiesListL'])
 // 利潤表 校验字段
 export const profitStatementValidProps = new Set(['dueFinanceProfit.contentListT', 'dueFinanceProfit.contentListB', 'dueFinanceProfit.contentListL'])

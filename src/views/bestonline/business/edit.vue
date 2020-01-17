@@ -107,7 +107,7 @@ import SalesPerformance from './components/salesPerformance.vue'
 import { mapState, mapActions } from 'vuex'
 import { IsPositiveInteger, IsFixedTwoNumber, Money } from '@/utils/rules'
 import { AUTH_BESTONLINE_REVIEW_BUSINESS_DRAFT, AUTH_BESTONLINE_REVIEW_BUSINESS_COMMIT } from '@/utils/auth_const'
-import { kpiValidProps, businessModelValidProps, UpstreamSupplierStructureValidProps, NewJointVenturePlanningValidProps } from './const.js'
+import { kpiValidProps, businessModelValidProps, salesPerformanceValidProps, UpstreamSupplierStructureValidProps, DownstreamCustomerValidProps, NewJointVenturePlanningValidProps } from './const.js'
 export default {
     components: {
         BusinessMode, MarketingModel, SalesPerformance, Supplier, Customer, Members, Competitor, Plan
@@ -225,7 +225,7 @@ export default {
                     { required: true, message: '请输入资金用款需求', trigger: 'blur' }
                 ],
                 state: [
-                    { required: true, message: '此项为必填项！', trigger: 'change' }
+                    { required: true, message: '商业尽调评估结论为必填项！', trigger: 'change' }
                 ],
                 customerName: [
                     { required: true, message: '请输入供应商名称', trigger: 'blur' }
@@ -235,9 +235,6 @@ export default {
                 ],
                 memberShopNum: [
                     { validator: IsPositiveInteger, message: '请输入正整数', trigger: 'blur' }
-                ],
-                firstTenMonthsDown: [
-                    { required: true, message: '请选择是否下滑', trigger: 'change' }
                 ],
                 lastYearSales: [
                     { required: true, message: '请输入', trigger: 'blur' }
@@ -313,7 +310,8 @@ export default {
                                 ...this.form,
                                 operationNode: 1,
                                 createUser: createUser,
-                                updateUser: createUser
+                                updateUser: createUser,
+                                applyId: this.$route.query.applyId
                             })
                             this.isPending = false
                         } catch (error) {
@@ -325,7 +323,8 @@ export default {
                                 ...this.form,
                                 operationNode: 1,
                                 createUser: createUser,
-                                updateUser: createUser
+                                updateUser: createUser,
+                                applyId: this.$route.query.applyId
                             })
                             this.isPending = false
                         } catch (error) {
@@ -340,32 +339,34 @@ export default {
                 }
             })
         },
-        findValidFailIndex (errors) {
-            const expandKpi = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandController = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return businessModelValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandOrganization = Object.keys(errors).filter(item => {
-                const index = item.indexOf('].') + 2
-                return UpstreamSupplierStructureValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            const expandMotivationRisk = Object.keys(errors).filter(item => {
-                const index = item.indexOf('.') + 1
-                return NewJointVenturePlanningValidProps.has(index == -1 ? item : item.substring(index))
-            }).length > 0
-            if (expandKpi) {
-                this.activeName = '1'
-            } else if (expandController) {
-                this.activeName = '2'
-            } else if (expandOrganization) {
-                this.activeName = '5'
-            } else if (expandMotivationRisk) {
-                this.activeName = '9'
+        /**
+        * validFailResult
+        * @param {Object} errorsObj - 报错对象
+        * @param {Array} propsArray - 检验字段数组
+        * @returns {Boolean} true - 布尔值
+        */
+        validFailResult (errorsObj = {}, propsArray = [], activeName = '1') {
+            let errorArray = Object.keys(errorsObj).filter(item => {
+                return [...propsArray].find(v => item.includes(v))
+            })
+            if (errorArray.length > 0) {
+                this.activeName = activeName
+                this.$message({
+                    message: errorsObj[errorArray[0]][0].message,
+                    type: 'warning'
+                })
+                return false
+            } else {
+                return true
             }
+        },
+        findValidFailIndex (errors) {
+            this.validFailResult(errors, kpiValidProps, '1') &&
+            this.validFailResult(errors, businessModelValidProps, '2') &&
+            this.validFailResult(errors, salesPerformanceValidProps, '3') &&
+            this.validFailResult(errors, UpstreamSupplierStructureValidProps, '5') &&
+            this.validFailResult(errors, DownstreamCustomerValidProps, '6') &&
+            this.validFailResult(errors, NewJointVenturePlanningValidProps, '9')
         }
     },
     filters: {

@@ -9,7 +9,7 @@
                 <MotivationRisk />
             </el-form>
         </el-collapse>
-        <div class="flex-wrap-row top20">
+        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click="onSaveOrganize" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>
@@ -26,7 +26,7 @@ import KPI from './components/kpi.vue'
 import Controller from './components/controller.vue'
 import Organization from './components/organization.vue'
 import MotivationRisk from './components/motivationRisk.vue'
-import { IsPositiveInteger } from '@/utils/rules'
+import { IsPositiveInteger, IsFixedTwoNumber } from '@/utils/rules'
 import { kpiValidProps, controllerValidProps, organizationValidProps, motivationRiskValidProps } from './const.js'
 import { AUTH_BESTONLINE_REVIEW_ORGANIZATION_DRAFT, AUTH_BESTONLINE_REVIEW_ORGANIZATION_COMMIT } from '@/utils/auth_const'
 export default {
@@ -75,7 +75,8 @@ export default {
                 ],
                 averageSalaryOnJob: [
                     // TODO: 这个校验要看看怎么做
-                    { required: true, message: '请输入在职人员平均薪资', trigger: 'blur' }
+                    { required: true, message: '请输入在职人员平均薪资', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, message: '在职人员平均薪资为正实数', trigger: 'blur' }
                 ],
                 socialSecurityNum: [
                     { required: true, message: '请输入缴纳社保人数', trigger: 'blur' },
@@ -104,6 +105,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
+            isCollapse: state => state.isCollapse,
             form: state => state.dueDiligence.organizationData
         })
     },
@@ -129,6 +131,7 @@ export default {
                     this.form.updateUser = this.userInfo.employeeName
                     this.form.operationNode = 1
                     this.form.dueOrganizationControllerAssessmentCreateFormList = this.form.dueOrganizationControllerAssessmentCreateFormList.filter(item => !item.isTitle)
+                    this.form.applyId = this.$route.query.applyId
                     if (this.form.dueOrganizationId) {
                         await updateOrganization(this.form)
                     } else {
@@ -142,32 +145,32 @@ export default {
                 }
             })
         },
-        findValidFailIndex (errors) {
-            const expandKpi = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return kpiValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandController = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return controllerValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandOrganization = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return organizationValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            const expandMotivationRisk = Object.keys(errors).filter(item => {
-                const index = item.indexOf('[')
-                return motivationRiskValidProps.has(index == -1 ? item : item.substring(0, index))
-            }).length > 0
-            if (expandKpi) {
-                this.activeName = '1'
-            } else if (expandController) {
-                this.activeName = '2'
-            } else if (expandOrganization) {
-                this.activeName = '3'
-            } else if (expandMotivationRisk) {
-                this.activeName = '4'
+        /**
+        * validFailResult
+        * @param {Object} errorsObj - 报错对象
+        * @param {Array} propsArray - 检验字段数组
+        * @returns {Boolean} true - 布尔值
+        */
+        validFailResult (errorsObj = {}, propsArray = [], activeName = '1') {
+            let errorArray = Object.keys(errorsObj).filter(item => {
+                return [...propsArray].find(v => item.includes(v))
+            })
+            if (errorArray.length > 0) {
+                this.activeName = activeName
+                this.$message({
+                    message: errorsObj[errorArray[0]][0].message,
+                    type: 'warning'
+                })
+                return false
+            } else {
+                return true
             }
+        },
+        findValidFailIndex (errors) {
+            this.validFailResult(errors, kpiValidProps, '1') &&
+            this.validFailResult(errors, controllerValidProps, '2') &&
+            this.validFailResult(errors, organizationValidProps, '3') &&
+            this.validFailResult(errors, motivationRiskValidProps, '4')
         }
     }
 }

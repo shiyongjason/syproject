@@ -132,9 +132,7 @@ export default {
             this.justiceData.relatedCompanyList = this.justiceData.relatedCompanyList.filter(item => item.id !== id)
         }
     },
-    mounted () {
-        console.log(this.justiceData)
-    }
+    mounted () { }
 }
 </script>
 

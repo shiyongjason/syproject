@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="2">
         <template slot="title">
-            <p class="title-p">盈利能力(必填)</p>
+            <p class="title-p">盈利能力</p>
         </template>
         <table class="custom-table">
             <thead>
