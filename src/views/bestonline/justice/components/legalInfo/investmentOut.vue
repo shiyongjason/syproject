@@ -13,12 +13,12 @@
                         <el-input v-model="item.investmentCompany" placeholder="投资公司" maxlength="25">
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="投资金额：" label-width="150px" :prop="`investmentsOutList[${index}].investmentAmount`" :rules="rules.investmentAmount">
+                    <el-form-item label="投资金额：" label-width="150px" :prop="`investmentsOutList[${index}].investmentAmount`" :rules="rules.investmentAmount(item, index)">
                         <el-input v-model="item.investmentAmount" placeholder="请输入投资金额" maxlength="25">
                             <template slot="suffix">万</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="投资比例：" label-width="150px" :prop="`investmentsOutList[${index}].investmentRatio`" :rules="rules.investmentRatio">
+                    <el-form-item label="投资比例：" label-width="150px" :prop="`investmentsOutList[${index}].investmentRatio`" :rules="rules.investmentRatio(item, index)">
                         <el-input v-model="item.investmentRatio" placeholder="请输入投资比例" maxlength="25">
                             <template slot="suffix">%</template>
                         </el-input>
@@ -32,7 +32,7 @@
                             <el-option v-for="item in investmentTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="投资收益：" label-width="150px" :prop="`investmentsOutList[${index}].investmentIncome`" :rules="rules.investmentIncome">
+                    <el-form-item label="投资收益：" label-width="150px" :prop="`investmentsOutList[${index}].investmentIncome`" :rules="rules.investmentIncome(item, index)">
                         <el-input v-model="item.investmentIncome" placeholder="请输入投资收益" maxlength="25">
                             <template slot="suffix">万</template>
                         </el-input>
@@ -48,7 +48,7 @@
 <script>
 import { mapState } from 'vuex'
 import { INVESTMENT_TYPE_OPTIONS } from '../../const'
-import { IsFixedTwoNumber } from '@/utils/rules'
+// import { IsFixedTwoNumber } from '@/utils/rules'
 
 export default {
     name: 'investment_out',
@@ -62,14 +62,38 @@ export default {
         return {
             investmentTypeOptions: INVESTMENT_TYPE_OPTIONS,
             rules: {
-                investmentAmount: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                investmentAmount: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.investmentsOutList[index].investmentAmount
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
                 ],
-                investmentRatio: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                investmentRatio: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.investmentsOutList[index].investmentRatio
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
                 ],
-                investmentIncome: [
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
+                investmentIncome: (item, index) => [
+                    { validator: (rule, value, callback) => {
+                        var Reg = /^[0-9]+(.[0-9]{1,2})?$/
+                        let model = this.investmentsOutList[index].investmentIncome
+                        if (model && !Reg.test(model)) {
+                            return callback(new Error('可以输入有两位小数的正实数'))
+                        }
+                        return callback()
+                    },
+                    trigger: 'blur' }
                 ]
             }
         }

@@ -61,3 +61,10 @@ export const PONDERANCE_OPTIONS = [
     { value: 1, label: '中' },
     { value: 2, label: '低' }
 ]
+
+// KPI 校验字段
+export const kpiValidProps = new Set(['assessmentList', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.companyLoanTotalGuarantee', 'affairs.riskDisclosure', 'affairs.analysisDescription'])
+// 业务模式 校验字段
+export const partnerValidProps = new Set(['copartnerInfoList'])
+// 销售业绩(含税)（万元）校验字段
+export const companyValidProps = new Set(['affairs.annualReport', 'affairs.businessLicense', 'affairs.articlesOfAssociation', 'affairs.pledgeOfStockRight', 'affairs.businessQualification', 'branchAgencyList', 'relatedCompanyList'])

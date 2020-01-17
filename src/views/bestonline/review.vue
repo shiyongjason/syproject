@@ -39,14 +39,14 @@
                     <template v-else>
                         <el-button class="orangeBtn" v-if="hosAuthCheck(showAuthCode)" @click="onCheck(scope.data.row)">查看</el-button>
                     </template>
-                    <el-button class="orangeBtn" v-if="(scope.data.row.status == 0||scope.data.row.status ==3) && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row)">提交审核</el-button>
+                    <el-button class="orangeBtn" v-if="(scope.data.row.status == 0||scope.data.row.status ==3) && submitbtn && hosAuthCheck(commitAuthCode)" @click="onCommit(scope.data.row.applyId)">提交审核</el-button>
                 </template>
             </basicTable>
         </div>
         <el-dialog title="审批状态" :visible.sync="dialogVisible" width="750px" center :close-on-click-modal=false>
             <div class="block">
                 <el-timeline>
-                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index"  :color="item.color">
+                    <el-timeline-item v-for="(item, index) in dueApproval" :key="index" :color="item.color">
                         {{item.userName}}/
                         {{item.approveStatus===0?'待审核':item.approveStatus===2?'已驳回':item.approveStatus===1&&item.isCooperate==0?'可以合作':'不可合作'}}
                         &nbsp;&nbsp;&nbsp;&nbsp;{{item.updateTime}}<br />
@@ -61,7 +61,7 @@
     </div>
 </template>
 <script>
-import { getDuemain, postDuemain, getFlow } from './api/index.js'
+import { getDuemain, getDuemainDetail, postDuemain, getFlow } from './api/index.js'
 import { APPROVAL_STATUS_OPTIONS } from './const'
 import { mapState } from 'vuex'
 import { AUTH_BESTONLINE_REVIEW_EDIT, AUTH_BESTONLINE_REVIEW_SHOW, AUTH_BESTONLINE_REVIEW_COMMIT, AUTH_BESTONLINE_REVIEW_OPERATE } from '@/utils/auth_const'
@@ -178,7 +178,6 @@ export default {
         async showProcess (applyId) {
             this.dialogVisible = true
             const { data } = await getFlow({ applyId: applyId, origin: 1 })
-            console.log(data)
             this.dueApproval = data.data.pageContent
             this.dueApproval && this.dueApproval.map(value => {
                 if (value.approveStatus == 1 || value.approveStatus == 2) {
@@ -186,7 +185,6 @@ export default {
                 }
                 return value
             })
-            console.log(this.dueApproval)
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
@@ -195,7 +193,9 @@ export default {
         onCheck (row) {
             this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
-        async onCommit (row) {
+        async onCommit (applyId) {
+            const { data } = await getDuemainDetail(applyId)
+            const row = data.data
             if (row.cooperativeFlag == 1) {
                 this.$message.warning({ showClose: true, message: '请先提交合作目标信息' })
                 return false
