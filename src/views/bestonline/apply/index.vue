@@ -199,4 +199,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .el-dialog__body{
+    max-height: 500px;
+    overflow: auto;
+}
 </style>

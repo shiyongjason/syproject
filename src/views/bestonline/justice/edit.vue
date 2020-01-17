@@ -1,6 +1,6 @@
 <template>
     <div class="jd-manage">
-          <p v-if="justiceData.affairs.type==1">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
+        <p v-if="justiceData.affairs.type==1">已提交 {{justiceData.affairs.updateTime}} {{ justiceData.affairs.updateUser}} </p>
         <div id="top"></div>
         <el-form ref="form" :model="justiceData" :rules="rules">
             <el-collapse v-model="activeName" accordion>
@@ -37,6 +37,7 @@ import CompanyBasic from './components/legalInfo/companyBasic.vue'
 import InvestmentOut from './components/legalInfo/investmentOut.vue'
 import { AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT, AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT } from '@/utils/auth_const'
 import { IsFixedTwoNumber } from '../../../utils/rules'
+import { kpiValidProps, partnerValidProps, companyValidProps } from './const.js'
 export default {
     components: {
         KPI, CoPartner, CompanyBasic, InvestmentOut, LegalInfo
@@ -95,15 +96,7 @@ export default {
                 ] */
             },
             draftAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_DRAFT,
-            commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT,
-            /** key:activeName   value:必填项 */
-            active: {
-                '1': ['affairs.analysisDescription', 'affairs.companyLoanTotalGuarantee', 'affairs.legalRisksOfCompany', 'affairs.legalRisksOfController', 'affairs.legalRisksOfControllerMate', 'affairs.personalOperatingloansTotalGuarantees', 'affairs.riskDisclosure', 'assessmentList['],
-                '2': ['copartnerInfoList['],
-                '6': ['affairs.annualReport', 'affairs.businessLicense', 'affairs.articlesOfAssociation', 'affairs.pledgeOfStockRight', 'affairs.businessQualification', 'branchAgencyList[', 'relatedCompanyList[']
-            },
-            /** key:必填项   value:activeName */
-            activePlus: {}
+            commitAuthCode: AUTH_BESTONLINE_REVIEW_JUSTICE_COMMIT
         }
     },
     watch: {
@@ -200,30 +193,42 @@ export default {
             params.updateUser = this.userInfo.employeeName
             if (this.type === 1) {
                 this.$refs['form'].validate(async (validate, errors) => {
-                    if (errors && Object.keys(errors).length > 0) {
-                        let key = JSON.stringify(errors).split('{"')[1].split('":')[0]
-                        let temp = ''
-                        for (const k in this.activePlus) {
-                            if (key.indexOf(k) > -1) temp = k
-                        }
-                        this.activeName = this.activePlus[temp]
-                        document.getElementById('top').scrollIntoView()
-                    }
+                    this.findValidFailIndex(errors)
                     if (validate) {
                         this.doSave(params, messageTip)
-                    } else {
-                        this.$message({
-                            type: 'warning',
-                            message: '有必填项未填写，请重新检查！ '
-                        })
                     }
                 })
             } else {
                 this.doSave(params, messageTip)
             }
         },
+        /**
+        * validFailResult
+        * @param {Object} errorsObj - 报错对象
+        * @param {Array} propsArray - 检验字段数组
+        * @returns {Boolean} true - 布尔值
+        */
+        validFailResult (errorsObj = {}, propsArray = [], activeName = '1') {
+            let errorArray = Object.keys(errorsObj).filter(item => {
+                return [...propsArray].find(v => item.includes(v))
+            })
+            if (errorArray.length > 0) {
+                this.activeName = activeName
+                this.$message({
+                    message: errorsObj[errorArray[0]][0].message,
+                    type: 'warning'
+                })
+                return false
+            } else {
+                return true
+            }
+        },
+        findValidFailIndex (errors) {
+            this.validFailResult(errors, kpiValidProps, '1') &&
+            this.validFailResult(errors, partnerValidProps, '2') &&
+            this.validFailResult(errors, companyValidProps, '6')
+        },
         onAddList (key, type) {
-            console.log(key, type)
             const { ...obj } = this.justiceData[key][0]
             for (let key1 in obj) {
                 switch (typeof obj[key1]) {
@@ -257,13 +262,6 @@ export default {
     async mounted () {
         this.applyId = this.$route.query.applyId
         // await this.findJusticeData({ applyId: this.applyId })
-        for (const key in this.active) {
-            let all = this.active[key].reduce((res, item) => {
-                res[item] = key
-                return res
-            }, {})
-            this.activePlus = Object.assign({}, this.activePlus, all)
-        }
     }
 }
 </script>
