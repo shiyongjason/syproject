@@ -4,7 +4,7 @@
             <el-table-column type="index" :index="indexMethod" label="序号" align="center" width="60"></el-table-column>
             <el-table-column align="center" label="获客渠道">
                 <template slot-scope="scope">
-                    <span>{{getTypes('channelType',scope.row.channelType)}}</span>
+                    <span>{{channelName(scope.row.channelType)}}</span>
                 </template>
             </el-table-column>
             <el-table-column prop="name" align="center" label="姓名">
@@ -95,6 +95,13 @@ export default {
         }
     },
     methods: {
+        channelName (id) {
+            let tempName = ''
+            this.channelType.forEach(value => {
+                if (value.code === id) tempName = value.name
+            })
+            return tempName
+        },
         goUserPower (row) {
             this.$router.push({
                 path: '/serviceManagement/userPower',
@@ -169,9 +176,6 @@ export default {
                 id: [],
                 query: ''
             }
-        },
-        getTypes (obj, key) {
-            return this[obj][key].label
         },
         indexMethod (index) {
             return this.pageSize * (this.pageNumber - 1) + index + 1
