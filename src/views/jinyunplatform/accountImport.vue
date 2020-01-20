@@ -125,6 +125,15 @@ export default {
         this.onSearch()
     },
     methods: {
+        tracking (event) {
+            this.$store.dispatch('tracking', {
+                type: 9,
+                event,
+                page: 3,
+                page_name: '账户导入',
+                page_path_name: 'accountImport'
+            })
+        },
         async onQuery () {
             const { data } = await getBankList(this.queryParams)
             // console.log(data)
@@ -137,6 +146,7 @@ export default {
             }
         },
         onSearch (val) {
+            this.tracking(2)
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
@@ -165,6 +175,7 @@ export default {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
+                this.tracking(6)
                 await deleteBankAccount(row)
                 this.onQuery()
                 this.$message({
@@ -177,6 +188,7 @@ export default {
         onSure (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
+                    this.tracking(5)
                     await updataBankAccount(this.formBank)
                     this.dialogPicture = false
                     this.onQuery()

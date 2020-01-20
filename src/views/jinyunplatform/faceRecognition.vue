@@ -70,7 +70,7 @@
                     <el-row :gutter="10">
                         <el-col :span="12"><span class="detail-name">人脸认证视频：</span>
                             <video id="video" width="320" height="240" controls>
-<!--                                <source :src="formFace.faceVideo" type="video/mp4">-->
+                                <!--                                <source :src="formFace.faceVideo" type="video/mp4">-->
                                 您的浏览器不支持 HTML5 video 标签。
                             </video>
                         </el-col>
@@ -156,6 +156,15 @@ export default {
         this.onSearch()
     },
     methods: {
+        tracking (event) {
+            this.$store.dispatch('tracking', {
+                type: 9,
+                event,
+                page: 5,
+                page_name: '人脸识别',
+                page_path_name: 'faceRecognition'
+            })
+        },
         async onQuery () {
             const { data } = await getRecognitions(this.queryParams)
             this.tableData = data.records
@@ -171,6 +180,7 @@ export default {
             }
         },
         onSearch (val) {
+            this.tracking(2)
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
@@ -218,6 +228,7 @@ export default {
             })
         },
         async onPass () {
+            this.tracking(7)
             const params = {
                 id: this.formFace.id,
                 updateBy: this.userInfo.jobNumber // 员工工号
