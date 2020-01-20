@@ -154,6 +154,15 @@ export default {
         this.onSearch()
     },
     methods: {
+        tracking (event) {
+            this.$store.dispatch('tracking', {
+                type: 9,
+                event,
+                page: 1,
+                page_name: '企业CA',
+                page_path_name: 'enterpriseCA'
+            })
+        },
         async onQuery () {
             // console.log(this.searchParams)
             const { data } = await getSignList(this.queryParams)
@@ -177,6 +186,7 @@ export default {
             }
         },
         onSearch (val) {
+            this.tracking(2)
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
@@ -196,12 +206,13 @@ export default {
             this.onQuery()
         },
         async onupdate (i) {
+            this.tracking(3)
             const { data } = await getSignsDetail(i.id)
-            console.log(data)
             this.customerForm = data
             this.dialog = true
         },
         async uploadSeal (row) {
+            this.tracking(4)
             this.$set(this, 'imageUrl', '')
             this.$set(this.uploadImg, 'imageUrl', row.companySealImage)
             this.uploadImg.accountId = row.companySignatureId
@@ -211,7 +222,6 @@ export default {
             }, 0)
         },
         readUrl (val) {
-            console.log(val)
             this.uploadImg.imageUrl = val.imageUrl
         },
         async onSure () {
@@ -231,7 +241,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-/deep/ .el-dialog{
+/deep/ .el-dialog {
     min-width: 350px;
 }
 /deep/ .el-dialog__body {

@@ -5,26 +5,36 @@
                 <h3>审批流程查询</h3>
             </div>
             <div class="padd20">
-                <el-form label-position="right" :rules="rules" ref="ruleForm" :inline="true" label-width="100px" :model="queryParams">
-                    <el-form-item label="客户名称：">
-                        <el-input v-model="queryParams.customerName" placeholder="请输入客户名称" maxLength='100'></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品名称：">
-                        <el-select v-model="queryParams.productName" placeholder="请选择产品名称">
+                <!-- 有空改一下 -->
+                <div class="query-cont-col">
+                    <div class="query-col-title">客户名称：</div>
+                    <div class="query-col-input">
+                        <el-input maxlength="100" v-model="queryParams.customerName" placeholder="请输入客户名称" clearable>
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">产品名称：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.productName" clearable placeholder="请选择产品名称">
                             <el-option v-for="item in options" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                    <el-form-item label="流程类型：">
-                        <el-select v-model="queryParams.processType" placeholder="请选择流程类型">
-                            <el-option v-for="item in flowTypes" :key="item" :label="item" :value="item">
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">流程类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.processType" clearable placeholder="请选择流程类型">
+                            <el-option v-for="item in flowTypes" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-form-item>
-                </el-form>
+                    </div>
+                </div>
+                <br>
                 <div class="query-cont-col" style="padding-top: 20px;">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onFormSearch('ruleForm')">搜索</el-button>
+                        <el-button type="primary" class="ml20" @click="onFormSearch">搜索</el-button>
                     </div>
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
@@ -73,7 +83,16 @@ export default {
                 total: 0
             },
             options: [],
-            flowTypes: ['预授信', '授信', '用信']
+            flowTypes: [{
+                label: '预授信',
+                value: 'pre_credit'
+            }, {
+                label: '用信',
+                value: 'act_loan'
+            }, {
+                label: '授信',
+                value: 'act_credit'
+            }]
         }
     },
     async mounted () {
@@ -100,9 +119,7 @@ export default {
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'productName', '')
             this.$set(this.queryParams, 'processType', '')
-            this.$nextTick(() => {
-                this.$refs.ruleForm.clearValidate()
-            })
+            this.onQuery()
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -113,14 +130,14 @@ export default {
             this.onQuery()
         },
         onFormSearch (formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    this.onSearch()
-                } else {
-                    return false
-                }
+            this.$store.dispatch('tracking', {
+                type: 9,
+                event: 1,
+                page: 4,
+                page_name: '流程查询',
+                page_path_name: 'processManage'
             })
-            // this.onSearch ()
+            this.onSearch()
         }
     }
 }

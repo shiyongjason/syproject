@@ -168,6 +168,13 @@ export default {
         onSubmit (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
+                    this.$store.dispatch('tracking', {
+                        type: 9,
+                        event: 1,
+                        page: 1,
+                        page_name: '企业CA',
+                        page_path_name: 'enterpriseCA'
+                    })
                     await this.signCa()
                     this.onQuery()
                 } else {
@@ -211,7 +218,6 @@ export default {
             this.dialogVisible = true
         },
         backFindcode (val) {
-            console.log(val.value.value)
             this.companyName = val.value.value
         }
     }
