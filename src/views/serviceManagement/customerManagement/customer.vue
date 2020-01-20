@@ -1,6 +1,6 @@
 <template>
     <div class="customerManagement page-body">
-        <search-form @search='onSearch' @add="onAddCustomer" v-model="searchForm" :channelType='channelType' />
+        <search-form @search='onSearch' @add="onAddCustomer" v-model="searchForm"/>
         <customer-table :tableData='list' @edit="onEdit" :pageSize='queryParams.pageSize' :pageNumber='queryParams.pageNumber'  :channelType='channelType' />
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
@@ -13,7 +13,7 @@
 import searchForm from './components/searchForm'
 import customerTable from './components/customerTable'
 import addOrUpdata from './components/addOrUpdata'
-import { findCustomerList, findUserDetailsTagList } from './api/index'
+import { findUserList, findUserDetailsTagList } from './api/index'
 import { pagination } from '@/utils/mixins.js'
 import { findChannelDict } from '../common/dictApi'
 
@@ -101,7 +101,7 @@ export default {
         },
         async getList () {
             let params = { ...this.searchForm, ...this.queryParams }
-            const { data } = await findCustomerList(params)
+            const { data } = await findUserList(params)
             this.list = data.records
             this.page.total = data.total
         },
