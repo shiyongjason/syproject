@@ -7,6 +7,7 @@ import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
 import ServiceManagement from './router/catalogue/serviceManagement'
+import JinyunPlatform from './router/jinyunplatform/index.js'
 Vue.use(Router)
 
 const routerMapping = [
@@ -57,28 +58,29 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/jinyunPlatform',
-        meta: {
-            title: '金云平台',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: '',
-                name: 'jinyunplatform',
-                meta: {
-                    title: '金云平台',
-                    tagName: '金云平台',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
+    // 上线无bug待删除的无用代码
+    // {
+    //     path: '/jinyunPlatform',
+    //     meta: {
+    //         title: '金云平台',
+    //         isMenu: true,
+    //         icon: 'hosjoy_stay_online'
+    //     },
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: '',
+    //             name: 'jinyunplatform',
+    //             meta: {
+    //                 title: '金云平台',
+    //                 tagName: '金云平台',
+    //                 isMenu: false,
+    //                 icon: ''
+    //             },
+    //             component: () => import('./views/jinyunplatform/index')
+    //         }
+    //     ]
+    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -692,94 +694,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/jinyun',
-        meta: {
-            title: '金云系统',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            // {
-            //     path: 'jyindex',
-            //     name: 'jyindex',
-            //     meta: {
-            //         title: '金云',
-            //         tagName: '金云',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/jinyunplatform/index')
-            // },
-            {
-                path: 'jyindex',
-                name: 'jyindex',
-                meta: {
-                    title: '金云',
-                    tagName: '金云',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            },
-            {
-                path: 'enterpriseCA',
-                name: 'enterpriseCA',
-                meta: {
-                    title: '企业CA',
-                    tagName: '企业CA',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/enterpriseCA')
-            },
-            {
-                path: 'amountImport',
-                name: 'amountImport',
-                meta: {
-                    title: '额度导入',
-                    tagName: '额度导入',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/amountImport')
-            },
-            {
-                path: 'accountImport',
-                name: 'accountImport',
-                meta: {
-                    title: '账户导入',
-                    tagName: '账户导入',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/accountImport')
-            },
-            {
-                path: 'processManage',
-                name: 'processManage',
-                meta: {
-                    title: '流程查询',
-                    tagName: '流程查询',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/processManage')
-            },
-            {
-                path: 'faceRecognition',
-                name: 'faceRecognition',
-                meta: {
-                    title: '人脸识别',
-                    tagName: '人脸识别',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/faceRecognition')
-            }
-        ]
-    },
-    {
         path: '/appUpdate',
         meta: {
             title: 'App管理',
@@ -802,6 +716,7 @@ const routerMapping = [
             }
         ]
     },
+    JinyunPlatform,
     ServiceManagement
 ]
 
