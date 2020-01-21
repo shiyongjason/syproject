@@ -106,8 +106,7 @@ export default {
             this.$router.push({
                 path: '/serviceManagement/userPower',
                 query: {
-                    mobile: row.mobile ? row.mobile : '',
-                    source: row.channelType ? row.channelType : ''
+                    mobile: row.mobile ? row.mobile : ''
                 }
             })
         },
