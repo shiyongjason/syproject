@@ -1,5 +1,6 @@
 <template>
     <div class="page-body">
+
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">渠道名称：</div>
