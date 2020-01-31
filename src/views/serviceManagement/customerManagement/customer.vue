@@ -84,13 +84,8 @@ export default {
             })
         },
         onSearch () {
+            this.queryParams.pageNumber = 1
             this.getList()
-        },
-        onSizeChange (val) {
-            this.queryParams.pageSize = val
-        },
-        onCurrentChange (val) {
-            this.queryParams.pageNumber = val
         },
         onAddCustomer () {
             this.showDetail = false
