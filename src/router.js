@@ -748,6 +748,30 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+            },
+            {
+                path: 'homeOverview',
+                name: 'homeOverview',
+                meta: {
+                    title: '家庭概览',
+                    tagName: '家庭概览',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/homeManage.vue')
+            },
+            {
+                path: 'homedetail',
+                name: 'homedetail',
+                meta: {
+                    title: '家庭详情',
+                    tagName: '家庭详情',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/homedetail.vue')
             }
         ]
     },
