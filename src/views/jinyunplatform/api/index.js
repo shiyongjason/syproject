@@ -4,8 +4,16 @@ import { interfaceUrl } from '@/api/config'
 export const signCa = (params) => axios.post(interfaceUrl + `backend/signs`, params)
 // 查询企业CA认证详情
 export const getSignsDetail = (params) => axios.get(interfaceUrl + `backend/signs/${params}`)
-// 分页查询服务订单
+// 分页查询服务订单（企业ca认证）
 export const getSignList = (params) => axios.get(interfaceUrl + `backend/signs/page`, { params })
+// 分页查询服务订单（个人ca认证）
+export const getSignPersonList = (params) => axios.get(interfaceUrl + `backend/signs/account/page`, { params })
+// 查询关联个人CA认证的企业CA集合
+export const getPersonRelevence = (accountId) => axios.get(interfaceUrl + `backend/signs/${accountId}/list`)
+// 注销企业CA认证
+export const logoutConmanyCA = (orgId) => axios.put(interfaceUrl + `backend/signs/delete/org/${orgId}`)
+// 注销个人CA认证
+export const logoutPersonCA = (accountId) => axios.put(interfaceUrl + `backend/signs/delete/account/${accountId}`)
 // 上传印章
 export const signImage = (params) => axios.post(interfaceUrl + `backend/signs/image-seals`, params)
 // 通过企业类型查询企业信息
