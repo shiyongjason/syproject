@@ -4,17 +4,40 @@
             <h3 style="display:flex">实时统计 <div class="tooltip">
                     <el-tooltip class="item" effect="dark" placement="right">
                         <div slot="content">
-                            业务规则：<br>1、当日的累计用户数，统计规则为当日00:00-23:59:59
+                            <p><i>累计用户数（截止今日）：</i>从统计时间开始，截止到当前时间，启动过APP的所有独立用户（去重，以独立设备为判断标准）</p>
+                            <p><i>新注册用户数（今日）：</i>统计时间内（当日00：00-当前时间）注册成功的新会员数</p>
+
+                            <p><i>活跃用户（今日）：</i>统计时间内启动过APP的独立用户数【独立用户打开过程序则计为1次，无论浏览多少个页面，每天一台设备打开多次计为一个活跃用户】
+                            </p>
+                            <p><i>启动次数（今日）：</i>统计时间内（当日00：00-当前时间）打开应用的次数，打开即视为启动。完全退出或后台运行超过30s后再次进入应用，视为一次新启动。
+                            </p>
+                            <p><i>使用时长（截止今日）：</i>截止到当前时间，所有用户登录APP状态的累计时间值，APP内退出登录或应用放在后台视为非登录状态
+                            </p>
                         </div>
                         <i class="el-icon-question"></i>
                     </el-tooltip>
                 </div>
             </h3>
             <div class="static-wrap">
-                <div class="static-box" v-for="item in 5">
+                <div :class="['static-box',tabindex==1?'active':'']" @click="onClickTab(1)">
                     <p>累计用户数（截止今日）</p>
-                    <p>3232</p>
-                    <p>环比昨日：-20.5%</p>
+                    <p>{{realData.totalUser}}</p>
+                </div>
+                <div :class="['static-box',tabindex==2?'active':'']" @click="onClickTab(2)">
+                    <p>新注册用户（今日）</p>
+                    <p>{{realData.totalNewUser}}</p>
+                </div>
+                <div :class="['static-box',tabindex==3?'active':'']" @click="onClickTab(3)">
+                    <p>活跃用户（今日）</p>
+                    <p>{{realData.totalActiveUser}}</p>
+                </div>
+                <div :class="['static-box',tabindex==4?'active':'']" @click="onClickTab(4)">
+                    <p>启动次数（今日）</p>
+                    <p>{{realData.totalStartUser}}</p>
+                </div>
+                <div :class="['static-box',tabindex==5?'active':'']" @click="onClickTab(5)">
+                    <p>使用时长（截止今日）</p>
+                    <p>{{realData.totalUsingTime}}</p>
                 </div>
             </div>
         </div>
@@ -41,14 +64,24 @@
 <script>
 import moment from 'moment'
 import echarts from 'echarts'
+import { mapActions, mapState, mapGetters } from 'vuex'
 export default {
     data () {
         return {
             startTime: moment().subtract(7, 'days').format('YYYY-MM-DD'),
-            endTime: moment().format('YYYY-MM-DD')
+            endTime: moment().format('YYYY-MM-DD'),
+            realData: {},
+            tabindex: 1
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            realReport: 'realReport'
+
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -74,8 +107,20 @@ export default {
     },
     mounted () {
         this.drawLine()
+        this.findReports()
     },
     methods: {
+        ...mapActions({
+            findRealreport: 'findRealreport',
+        }),
+        onClickTab (val) {
+            this.tabindex = val
+        },
+        async  findReports () {
+            await this.findRealreport()
+            console.log(this.realReport)
+            this.realData = this.realReport
+        },
         drawLine () {
             // 基于准备好的dom，初始化echarts实例
             this.myChart = echarts.init(document.getElementById('firstchart'))
@@ -93,7 +138,7 @@ export default {
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
-            for (var i = 0; i < charts.names.length; i++) {
+            for (var i = 0;i < charts.names.length;i++) {
                 var x = i
                 if (x > color.length - 1) {
                     x = color.length - 1
@@ -190,38 +235,68 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.page-body-cont {
+    h3 {
+        border-bottom: 1px solid #e5e5e5;
+        line-height: 36px;
+    }
+}
 .static-wrap {
     display: flex;
+    .active {
+        border: 1px solid #ff7131 !important;
+        border-bottom: 4px solid #ff7131 !important;
+    }
     .static-box {
-        color: #ffffff;
+        // color: #ffffff;
         flex: 1;
         height: 100px;
         margin: 10px;
         align-items: center;
         border: 1px solid #e5e5e5;
-        border-radius: 10px;
+
         padding: 10px;
         box-sizing: border-box;
-        &:nth-child(1) {
-            background: rgb(103, 194, 58);
+        p {
+            &:first-child {
+                font-size: 18px;
+                line-height: 36px;
+                color: #000000;
+            }
+            &:last-child {
+                font-size: 30px;
+                font-weight: 700;
+            }
         }
-        &:nth-child(2) {
-            background: rgb(230, 162, 60);
-        }
-        &:nth-child(3) {
-            background: rgb(245, 108, 108);
-        }
-        &:nth-child(4) {
-            background: rgb(19, 194, 194);
-        }
-        &:nth-child(5) {
-            background: rgb(103, 194, 58);
-        }
+        // &:nth-child(1) {
+        //     background: rgb(103, 194, 58);
+        // }
+        // &:nth-child(2) {
+        //     background: rgb(230, 162, 60);
+        // }
+        // &:nth-child(3) {
+        //     background: rgb(245, 108, 108);
+        // }
+        // &:nth-child(4) {
+        //     background: rgb(19, 194, 194);
+        // }
+        // &:nth-child(5) {
+        //     background: rgb(103, 194, 58);
+        // }
     }
 }
 .echart-tab {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+.el-tooltip__popper {
+    p {
+        line-height: 30px;
+    }
+    i {
+        font-style: normal;
+        color: #ff7131;
+    }
 }
 </style>

@@ -39,4 +39,7 @@ export const GET_WORK_ORDER_USER_INFO = 'GET_WORK_ORDER_USER_INFO'
 // 舒适云数据后台
 // 家庭管理
 
+// 用户概览
+// 实时数据
+export const REAL_REPORT = 'REAL_REPORT'
 

@@ -2,12 +2,11 @@ import * as types from '../mutation-types'
 import instance from '@/api/axios_new'
 import axios from 'axios'
 const state = {
-    homeData：{ }
+    homeData：{ },
 }
 
 const getters = {
     eventProducts: state => state.eventProducts,
-
 }
 
 const mutations = {
