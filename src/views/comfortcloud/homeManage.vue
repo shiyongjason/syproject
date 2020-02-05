@@ -38,7 +38,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row.homeId)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -117,7 +117,6 @@ export default {
     },
     methods: {
         async onQuery () {
-            // console.log(this.searchParams)
             const { data } = await findHomeGeneralSituation(this.queryParams)
             this.tableData = data.data.pageContent
             this.pagination = {
@@ -125,11 +124,6 @@ export default {
                 pageSize: data.data.pageSize,
                 total: data.data.totalElements
             }
-            // this.tableData.map(i => {
-            //     i.productN = i.product == 1 ? '单分享' : i.product == 2 ? 'IOT' : i.product
-            //     i.platformTypeN = i.platformType == 1 ? '安卓' : i.platformType == 2 ? '苹果' : i.platformType
-            //     i.forcedN = i.forced ? '是' : '否'
-            // })
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -150,8 +144,9 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        onEdit (homeId) {
-            this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: homeId } })
+        onEdit (row) {
+            sessionStorage.setItem('comfortCloud', JSON.stringify(row))
+            this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: row.homeId } })
         }
     }
 }
