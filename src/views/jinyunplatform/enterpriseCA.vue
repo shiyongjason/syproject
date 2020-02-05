@@ -9,7 +9,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">{{tableName}}：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.companyName" placeholder="请输入企业名称">
+                    <el-input type="text" maxlength="20" v-model="queryParams.companyName" :placeholder="placeholder">
                     </el-input>
                 </div>
             </div>
@@ -121,6 +121,9 @@ export default {
                     }
                 }
             }
+        },
+        placeholder () {
+            return '请输入' + this.tableName
         }
     },
     components: {
