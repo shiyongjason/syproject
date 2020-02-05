@@ -144,8 +144,8 @@ export default {
         },
         handleTableClick (tab, event) {
             let indexTemp
-            this.roomList.forEach((value,index) => {
-                if (tab.paneName === value.roomName + value.roomId){
+            this.roomList.forEach((value, index) => {
+                if (tab.paneName === value.roomName + value.roomId) {
                     indexTemp = index
                 }
             })
