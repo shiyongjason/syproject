@@ -1,34 +1,24 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
-        <div class="page-body-cont query-cont spanflex">
-            <span>会员概况 </span>
-            <span>会员数量：377个</span>
-        </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">手机号：：</div>
+                <div class="query-col-title">登录时间：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.product" clearable>
-                        <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <el-date-picker v-model="queryParams.product" type="date" value-format='yyyy-MM-dd' placeholder="登录时间">
+                    </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">注册时间： </div>
+                <div class="query-col-title">手机号： </div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.beginDate" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
-                    </el-date-picker>
+                    <el-input v-model="queryParams" placeholder="输入用户手机号" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
-             </div>
+            </div>
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
@@ -38,6 +28,13 @@
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -48,31 +45,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.endDate
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() > new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.beginDate
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        }
+        })
     },
     data () {
         return {
@@ -90,11 +63,14 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '昵称', prop: 'productN' },
-                { label: '手机号', prop: 'platformTypeN', width: '120px' },
-                { label: '家庭数', prop: 'versionCode' },
-                { label: '注册时间', prop: 'status' },
-                { label: '是否已绑定微信', prop: 'forcedN' }
+                { label: '手机号', prop: 'productN' },
+                { label: '登录时间', prop: 'platformTypeN', width: '120px' },
+                { label: '登录地址', prop: 'versionCode' },
+                { label: '登录时APP的版本号', prop: 'status' },
+                { label: '手机操作系统', prop: 'forcedN' },
+                { label: '登录终端操作系统版本', prop: 'forcedN' },
+                { label: '登录终端品牌 ', prop: 'forcedN' },
+                { label: '登录终端机型 ', prop: 'forcedN' }
             ]
         }
     },
@@ -137,7 +113,7 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/memberDetail', query: {} })
+            this.$router.push({ path: '/comfortCloud/homedetail', query: {} })
         }
     }
 } 
