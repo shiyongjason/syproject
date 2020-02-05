@@ -211,6 +211,29 @@ const routerMapping = [
             }
         ]
     },
+    {
+        path: '/paymentCentral',
+        meta: {
+            title: '中金支付',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'offlinetransfer',
+                name: 'offlinetransfer',
+                meta: {
+                    title: '线下转账白名单管理',
+                    tagName: '线下转账白名单管理',
+                    parentName: '中金支付',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/paymentCentral/offlineTransfer.vue')
+            }
+        ]
+    },
     Wisdomrouter,
     Bestrouter,
     ServiceManagement,
@@ -238,7 +261,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0;i < data.length;i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -321,7 +344,7 @@ router.beforeEach(async (to, from, next) => {
         })
     }
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
-    if (to.path.indexOf('hmall') > 0) {
+    if (to.path.indexOf('hmall') > 0 || to.path.indexOf('paymentCentral') > 0){
         // 登录token带到请求的头部中，用于校验登录状态
         const token = sessionStorage.getItem('tokenB2b')
         if (token) {

@@ -29,3 +29,6 @@ export const MEMBER_STATIC = 'MEMBER_STATIC'
 export const MERCHT_LIST = 'MERCHT_LIST'
 export const ACCOUNT_DATA = 'ACCOUNT_DATA'
 export const ACCOUNT_DETAIL = 'ACCOUNT_DETAIL'
+
+// 中金 支付
+export const PAYMENT_WHITE = 'PAYMENT_WHITE'
