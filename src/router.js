@@ -784,6 +784,18 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/memberManage.vue')
+            },
+            {
+                path: 'memberdetail',
+                name: 'memberdetail',
+                meta: {
+                    title: '会员登录详情',
+                    tagName: '会员登录详情',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/memberDetail.vue')
             }
         ]
     },
