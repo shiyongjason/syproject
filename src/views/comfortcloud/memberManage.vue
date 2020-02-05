@@ -28,16 +28,26 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
-             </div>
+            </div>
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
+                <template slot="productN" slot-scope="scope">
+                    <p @click="onShowHome(scope.data.row)">{{scope.data.row.productN}}</p>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录 详情</el-button>
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -95,7 +105,8 @@ export default {
                 { label: '家庭数', prop: 'versionCode' },
                 { label: '注册时间', prop: 'status' },
                 { label: '是否已绑定微信', prop: 'forcedN' }
-            ]
+            ],
+            dialogVisible: false
         }
     },
     watch: {
@@ -138,6 +149,9 @@ export default {
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/memberDetail', query: {} })
+        },
+        onShowHome () {
+            this.dialogVisible = true
         }
     }
 } 
