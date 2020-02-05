@@ -4,7 +4,7 @@
             <div class="query-cont">
                 <p>家庭概览</p>
                 <div class="query-flex">
-                    <div>名称：我的家</div>
+                    <div>名称：{{ homeDetail.familyPopulation | isNotBlank}}</div>
                     <div>家庭成员数：4</div>
                     <div>创建时间：2019-08-08</div>
                     <div>设备数：2</div>
@@ -46,7 +46,7 @@
         </div>
         <div class="page-body page-wrap">
             <div class="page-body-cont">
-                <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tabs v-model="activeName" @tab-click="handleTableClick">
                     <el-tab-pane label="用户管理" name="first"></el-tab-pane>
                     <el-tab-pane label="配置管理" name="second"></el-tab-pane>
                     <el-tab-pane label="角色管理" name="third"></el-tab-pane>
@@ -82,8 +82,8 @@
     </div>
 </template>
 <script>
-import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import { findHomeGeneralDetails, findHomePopulationDetails } from './api/index'
 export default {
     name: 'homedetail',
     computed: {
@@ -93,53 +93,24 @@ export default {
     },
     data () {
         return {
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
+            homeDetail: {},
+            homePopulationDetail: {},
             tableLabel: [
-                { label: '昵称', prop: 'productN' },
-                { label: '手机号', prop: 'platformTypeN', width: '120px' },
-                { label: '角色 ', prop: 'versionCode' }
-            ]
+                { label: '昵称', prop: 'nick' },
+                { label: '手机号', prop: 'phone' },
+                { label: '角色', prop: 'role' }
+            ],
+            tableData: [],
+            pagination: {},
+            activeName: 'first'
         }
     },
-    watch: {
-
-    },
     mounted () {
-        this.onSearch()
+        this.findHomeGeneralDetails()
+        this.findHomePopulationDetails()
     },
     methods: {
-        async onQuery () {
-            // console.log(this.searchParams)
-            const { data } = await getAppVersionList(this.searchParams)
-            // console.log(data)
-            this.tableData = data.data.list
-            this.pagination = {
-                pageNumber: data.data.pageNum,
-                pageSize: data.data.pageSize,
-                total: data.data.total
-            }
-            this.tableData.map(i => {
-                i.productN = i.product == 1 ? '单分享' : i.product == 2 ? 'IOT' : i.product
-                i.platformTypeN = i.platformType == 1 ? '安卓' : i.platformType == 2 ? '苹果' : i.platformType
-                i.forcedN = i.forced ? '是' : '否'
-            })
-        },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
-        },
-        onReset () {
-            this.$set(this.queryParams, 'product', '')
-            this.$set(this.queryParams, 'platformType', '')
-            this.$set(this.queryParams, 'beginDate', '')
-            this.$set(this.queryParams, 'endDate', '')
-            this.onSearch()
-        },
+        // TODO 还未提供接口
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery()
@@ -147,9 +118,22 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
+        },
+        async findHomeGeneralDetails () {
+            console.log(this.$route.query.homeId)
+            const { data } = await findHomeGeneralDetails(this.$route.query.homeId)
+            this.homeDetail = data
+        },
+        async findHomePopulationDetails () {
+            console.log(this.$route.query.homeId)
+            const { data } = await findHomePopulationDetails(this.$route.query.homeId)
+            this.tableData = data.data
+        },
+        handleTableClick () {
+
         }
     }
-} 
+}
 </script>
 
 <style lang='scss' scoped>
@@ -171,7 +155,7 @@ export default {
     }
 }
 .page-wrap {
-    padding-top: 0px;
+    padding-top: 0;
     .page-title {
         margin-bottom: 10px;
         padding-bottom: 10px;

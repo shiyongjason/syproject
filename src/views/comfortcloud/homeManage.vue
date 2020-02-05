@@ -38,15 +38,15 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row.homeId)">详情</el-button>
                 </template>
             </basicTable>
         </div>
     </div>
 </template>
 <script>
-import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import { findHomeGeneralSituation } from './api/index'
 export default {
     name: 'homemanage',
     computed: {
@@ -94,17 +94,18 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '家庭名称', prop: 'productN' },
-                { label: '管理员手机号', prop: 'platformTypeN', width: '120px' },
-                { label: '成员数', prop: 'versionCode' },
-                { label: '物联网关', prop: 'status' },
-                { label: '零科米网关', prop: 'forcedN' },
-                { label: '设备数', prop: 'remark' },
-                { label: '房间数', prop: 'versionAddress' },
-                { label: '创建时间 ', prop: 'createUid', formatters: 'dateTime' },
-                { label: '地址', prop: 'updateTime', }
+                { label: '家庭名称', prop: 'homeName' },
+                { label: '管理员手机号', prop: 'phone' },
+                { label: '成员数', prop: 'memberCount' },
+                { label: '物联网关', prop: 'wuLianIotId' },
+                { label: '零科米网关', prop: 'linkIotId' },
+                { label: '设备数', prop: 'deviceCount' },
+                { label: '房间数', prop: 'roomCount' },
+                { label: '创建时间 ', prop: 'createTime', formatters: 'dateTime' },
+                { label: '地址', prop: 'address' }
 
-            ]
+            ],
+            productType: []
         }
     },
     watch: {
@@ -117,19 +118,18 @@ export default {
     methods: {
         async onQuery () {
             // console.log(this.searchParams)
-            const { data } = await getAppVersionList(this.searchParams)
-            // console.log(data)
-            this.tableData = data.data.list
+            const { data } = await findHomeGeneralSituation(this.queryParams)
+            this.tableData = data.data.pageContent
             this.pagination = {
-                pageNumber: data.data.pageNum,
+                pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
-                total: data.data.total
+                total: data.data.totalElements
             }
-            this.tableData.map(i => {
-                i.productN = i.product == 1 ? '单分享' : i.product == 2 ? 'IOT' : i.product
-                i.platformTypeN = i.platformType == 1 ? '安卓' : i.platformType == 2 ? '苹果' : i.platformType
-                i.forcedN = i.forced ? '是' : '否'
-            })
+            // this.tableData.map(i => {
+            //     i.productN = i.product == 1 ? '单分享' : i.product == 2 ? 'IOT' : i.product
+            //     i.platformTypeN = i.platformType == 1 ? '安卓' : i.platformType == 2 ? '苹果' : i.platformType
+            //     i.forcedN = i.forced ? '是' : '否'
+            // })
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -150,11 +150,11 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        onEdit (val) {
-            this.$router.push({ path: '/comfortCloud/homedetail', query: {} })
+        onEdit (homeId) {
+            this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: homeId } })
         }
     }
-} 
+}
 </script>
 
 <style lang='scss' scoped>
