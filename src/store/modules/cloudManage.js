@@ -1,14 +1,16 @@
 import * as types from '../mutation-types'
 import axios from 'axios'
-import { getMembersituation, getMemberDetail } from '@/views/comfortcloud/api'
+import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/comfortcloud/api'
 const state = {
     memberData: {},
-    memberDetail: {}
+    memberDetail: {},
+    familyData: {}
 }
 
 const getters = {
     memberData: state => state.memberData,
-    memberDetail: state => state.memberDetail
+    memberDetail: state => state.memberDetail,
+    familyData: state => state.familyData
 }
 
 const mutations = {
@@ -17,6 +19,9 @@ const mutations = {
     },
     [types.MEMBER_DETAIL] (state, payload) {
         state.memberDetail = payload
+    },
+    [types.FAMILY_DATA] (state, payload) {
+        state.familyData = payload
     }
 }
 
@@ -27,8 +32,11 @@ const actions = {
     },
     async findMemberDetail ({ commit }, params) {
         const { data } = await getMemberDetail(params)
-        console.log(data)
         commit(types.MEMBER_DETAIL, data.data)
+    },
+    async findFamilyDetail ({ commit }, params) {
+        const { data } = await getFamilyDetail(params)
+        commit(types.FAMILY_DATA, data.data)
     }
 }
 export default {

@@ -25,7 +25,7 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false" :actionMinWidth='280'>
+            <basicTable :tableLabel="tableLabel" :isShowIndex='true' :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false" :actionMinWidth='280'>
 
             </basicTable>
         </div>
