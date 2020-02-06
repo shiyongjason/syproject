@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
+                    <div class="query-col-title">创建时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -266,7 +266,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await changeMemberState({ merchantCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
+                await changeMemberState({ companyCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
                 this.$message({
                     message: val.isEnabled == 0 ? '会员账号启用成功' : '会员账号禁用成功',
                     type: 'success'
