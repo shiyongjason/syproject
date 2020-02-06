@@ -106,8 +106,11 @@
                 <template slot="isAuthentication" slot-scope="scope">
                     <span :class="scope.data.row.isAuthentication==0?'colorRed':'colorGreen'">{{scope.data.row.isAuthentication==0?'未认证':'已认证'}}</span>
                 </template>
-                  <template slot="isEnabled" slot-scope="scope">
+                <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
+                </template>
+                <template slot="authenticationTime" slot-scope="scope">
+                    {{scope.data.row.authenticationTime | formatDate}}
                 </template>
                 <template slot="action" slot-scope="scope" >
                     <!-- <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button> -->

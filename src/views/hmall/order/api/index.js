@@ -4,7 +4,7 @@ import axios from 'axios'
 
 // 订单记录
 export const findOrderList = (params) => {
-    return instance.get(B2bUrl + 'order/api/boss/orders', {
+    return instance.get(B2bUrl + '/api/boss/payments/receive', {
         params
     })
 }
@@ -28,7 +28,7 @@ export const findProductTotalList = (params) => {
 }
 // 商品统计导出列表
 export const exportTotalList = (params) => {
-    let url = B2bUrl + 'order/api/boss/order-products/export?'
+    let url = B2bUrl + '/api/boss/payments/receive/export?'
     for (let key in params) {
         url += ('&' + key + '=' + params[key])
     }
