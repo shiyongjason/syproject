@@ -62,7 +62,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: '',
+                phone: this.$route.query.phone,
                 endTime: '',
                 startTime: ''
             },
