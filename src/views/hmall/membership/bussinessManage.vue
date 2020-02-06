@@ -18,7 +18,7 @@
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true >
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.subsectionName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -91,8 +91,8 @@
                 店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
              @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
-                <template slot="organizationName" slot-scope="scope">
-                    {{scope.data.row.organizationName || '无'}}
+                <template slot="subsectionName" slot-scope="scope">
+                    {{scope.data.row.subsectionName || '无'}}
                 </template>
                 <template slot="merchantType" slot-scope="scope">
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
@@ -151,7 +151,7 @@ export default {
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '120px' },
-                { label: '所属分部', prop: 'organizationName', width: '180px' },
+                { label: '所属分部', prop: 'subsectionName', width: '180px' },
                 { label: '商家类型', prop: 'merchantType' },
                 { label: '上架商品数', prop: 'omMarketNum' },
                 { label: '店铺商品数', prop: 'omMerchantNum' },
@@ -255,7 +255,6 @@ export default {
             if (val) this.queryParams.pageNumber = val
             await this.findMerchantList(this.queryParams)
             this.tableData = this.merchantData.records
-            console.log(this.tableData)
             this.paginationInfo = {
                 total: this.merchantData.total,
                 pageNumber: this.merchantData.current,
