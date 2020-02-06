@@ -153,7 +153,6 @@ export default {
             this.activeList = this.roomList[indexTemp]
         },
         goMemberDetail (row) {
-            // todo 跳转到会员详情
             this.$router.push({ path: '/comfortCloud/memberdetail', query: { phone: row.phone } })
         }
     }
