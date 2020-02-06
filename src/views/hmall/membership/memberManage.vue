@@ -143,7 +143,8 @@ export default {
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
-                {                    label: '认证状态',
+                {
+                    label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
                         return (
@@ -154,7 +155,8 @@ export default {
                                 </el-tooltip>
                             </span>
                         )
-                    }                },
+                    }
+                },
                 { label: '认证时间', prop: 'authenticationTime', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
