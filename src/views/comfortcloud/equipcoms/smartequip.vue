@@ -2,7 +2,7 @@
     <div class="smart-equip">
         <div class="echart-tab">
             <div class="echart-tab-fl">
-                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5"> 智能主机</span>
+                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5" :key=index> 智能主机</span>
             </div>
             <div class="echart-time">
                 <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="开始日期">
@@ -122,7 +122,7 @@ export default {
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
-            for (var i = 0; i < charts.names.length; i++) {
+            for (var i = 0;i < charts.names.length;i++) {
                 var x = i
                 if (x > color.length - 1) {
                     x = color.length - 1

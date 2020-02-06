@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <h3 style="display:flex">实时统计 <div class="tooltip">
+            <h3 style="display:flex;font-weight:400">实时统计 <div class="tooltip">
                     <el-tooltip class="item" effect="dark" placement="right">
                         <div slot="content">
                             <p><i>累计用户数（截止今日）：</i>从统计时间开始，截止到当前时间，启动过APP的所有独立用户（去重，以独立设备为判断标准）</p>
@@ -322,6 +322,10 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    h3{
+        border: none;
+        font-weight: 400
+    }
 }
 .el-tooltip__popper {
     p {

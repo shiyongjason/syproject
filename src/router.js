@@ -744,7 +744,7 @@ const routerMapping = [
                     title: '设备概览',
                     tagName: '设备概览',
                     parentName: '舒适云概览',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/equipemtOverview.vue')

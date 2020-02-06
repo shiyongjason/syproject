@@ -4,14 +4,17 @@
             <div class="query-cont-col">
                 <div class="query-col-title">登录时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.product" type="date" value-format='yyyy-MM-dd' placeholder="登录时间">
+                    <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    </el-date-picker>
+                    <span class="ml10">-</span>
+                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">手机号： </div>
                 <div class="query-col-input">
-                    <el-input v-model="queryParams" placeholder="输入用户手机号" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.phone" placeholder="输入用户手机号" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -22,31 +25,55 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
-                <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录 详情</el-button>
-                </template>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false" :actionMinWidth='280'>
+
             </basicTable>
         </div>
     </div>
 </template>
 <script>
 // import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
-    name: 'membermanage',
+    name: 'memberdetail',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        ...mapGetters({
+            memberDetail: 'memberDetail'
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams.endTime
+                    if (endDateVal) {
+                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.startTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        }
     },
     data () {
         return {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                platformType: '',
-                product: ''
+                endTime: '',
+                startTime: '',
+                phone: this.$route.query.phone
             },
             searchParams: {},
             tableData: [],
@@ -56,14 +83,14 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '手机号', prop: 'productN' },
-                { label: '登录时间', prop: 'platformTypeN', width: '120px' },
-                { label: '登录地址', prop: 'versionCode' },
-                { label: '登录时APP的版本号', prop: 'status' },
-                { label: '手机操作系统', prop: 'forcedN' },
-                { label: '登录终端操作系统版本', prop: 'forcedN' },
-                { label: '登录终端品牌 ', prop: 'forcedN' },
-                { label: '登录终端机型 ', prop: 'forcedN' }
+                { label: '手机号', prop: 'phone' },
+                { label: '登录时间', prop: 'loginTime', width: '120px' },
+                { label: '登录地址', prop: 'loginAddress' },
+                { label: '登录时APP的版本号', prop: 'appVer' },
+                { label: '手机操作系统', prop: 'phoneType' },
+                { label: '登录终端操作系统版本', prop: 'phoneOsVer' },
+                { label: '登录终端品牌 ', prop: 'phoneBrand' },
+                { label: '登录终端机型 ', prop: 'phoneModel' }
             ]
         }
     },
@@ -71,19 +98,21 @@ export default {
 
     },
     mounted () {
-        this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
     methods: {
+        ...mapActions({
+            findMemberDetail: 'findMemberDetail'
+        }),
         async onQuery () {
             // console.log(this.searchParams)
-            const { data } = await getAppVersionList(this.searchParams)
-            // console.log(data)
-            this.tableData = data.data.list
+            await this.findMemberDetail(this.searchParams)
+            console.log(this.memberDetail)
+            this.tableData = this.memberDetail.pageContent
             this.pagination = {
-                pageNumber: data.data.pageNum,
-                pageSize: data.data.pageSize,
-                total: data.data.total
+                pageNumber: this.memberDetail.pageNumber,
+                pageSize: this.memberDetail.pageSize,
+                total: this.memberDetail.totalElements
             }
         },
         onSearch () {
@@ -104,9 +133,6 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
-        },
-        onEdit (val) {
-            this.$router.push({ path: '/comfortCloud/homedetail', query: {} })
         }
     }
 }

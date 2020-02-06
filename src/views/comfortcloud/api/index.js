@@ -29,7 +29,9 @@ export function findRoomDetail (homeId) {
 }
 
 // 会员概览
-
 export function getMembersituation (params) {
     return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
+}
+export function getMemberDetail (params) {
+    return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }

@@ -25,3 +25,4 @@ export const REAL_REPORT = 'REAL_REPORT'
 export const HOSTORY_REPORT = 'HOSTORY_REPORT'
 // 会员管理
 export const MEMBER_DATA = 'MEMBER_DATA'
+export const MEMBER_DETAIL = 'MEMBER_DETAIL'

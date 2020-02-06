@@ -17,7 +17,7 @@
                     <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -67,7 +67,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
+                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -78,9 +78,9 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
+                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
-                    return time.getTime() <= Date.now() - 8.64e7
+                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
@@ -126,7 +126,6 @@ export default {
         async onQuery () {
             await this.findMembersituation(this.searchParams)
             this.membernewData = this.memberData
-            console.log(this.membernewData)
             this.tableData = this.membernewData.pageContent
             this.pagination = {
                 pageNumber: this.membernewData.pageNumber,
@@ -148,7 +147,7 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/memberDetail', query: {} })
+            this.$router.push({ path: '/comfortcloud/memberDetail', query: { phone: val.phone } })
         },
         onShowHome () {
             this.dialogVisible = true
