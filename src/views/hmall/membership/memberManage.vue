@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label="''">只看启用</el-checkbox>
+                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
@@ -231,21 +231,14 @@ export default {
         },
         onSortChange (val) {
             console.log(val)
-            if (val.order) {
-                let order = val.order === 'descending' ? 'desc' : 'asc'
-                if (val.prop === 'registrationTime') {
-                    this.queryParams.createTime = order
-                    this.queryParams.authenticationTime = ''
-                } else {
-                    this.queryParams.authenticationTime = order
-                    this.queryParams.createTime = ''
-                }
-            } else {
-                this.queryParams.createTime = 'desc'
+            if (val.prop === 'registrationTime') {
+                this.queryParams.createTime = val.order === 'descending' ? 'desc' : 'asc'
                 this.queryParams.authenticationTime = ''
+            } else {
+                this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.createTime = ''
             }
-            console.log(this.queryParams.authenticationTime)
-            console.log(this.queryParams.createTime)
+
             this.onFindMlist()
         },
         async onFindMlist (val) {
@@ -301,7 +294,6 @@ export default {
         onFindInfo (val, type) {
             this.companyCode = val
             this.drawer = true
-            console.log(type)
             this.$refs.drawercom.getMerchtMemberDetail(val, type)
         },
         restDrawer () {
