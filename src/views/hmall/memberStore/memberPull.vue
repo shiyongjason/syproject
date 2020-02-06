@@ -82,8 +82,8 @@ export default {
                 recommendedMember: ''
             },
             tableLabel: [{ label: '会员', prop: 'memberName' },
-            { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
-            { label: '邀请人（会员）', prop: 'recommendName' }],
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '邀请人（会员）', prop: 'recommendName' }],
             paginationInfo: {},
             tableData: [],
             B2bUrl: B2bUrl
@@ -137,8 +137,8 @@ export default {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' 
-            + url + 'access_token=' + sessionStorage.getItem('token')
+            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' +
+            url + 'access_token=' + sessionStorage.getItem('token')
         },
         async getRecomendboss () {
             const { data } = await getRecomendboss(this.queryParams)

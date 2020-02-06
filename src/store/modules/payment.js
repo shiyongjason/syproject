@@ -11,7 +11,7 @@ const getters = {
 const mutations = {
     [types.PAYMENT_WHITE] (state, payload) {
         state.paymentWhite = payload
-    },
+    }
 }
 
 const actions = {
