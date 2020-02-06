@@ -307,6 +307,7 @@ export default {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
+            params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
