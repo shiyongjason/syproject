@@ -67,7 +67,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
+                    <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label="''">只看启用</el-checkbox>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
@@ -155,7 +155,7 @@ export default {
                             </span>
                         )
                     } },
-                { label: '认证时间', prop: 'authenticationTime', width: '150px', sortable: true },
+                { label: '认证时间', prop: 'authenticationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
@@ -231,14 +231,21 @@ export default {
         },
         onSortChange (val) {
             console.log(val)
-            if (val.prop === 'registrationTime') {
-                this.queryParams.createTime = val.order === 'descending' ? 'desc' : 'asc'
-                this.queryParams.authenticationTime = ''
+            if (val.order) {
+                let order = val.order === 'descending' ? 'desc' : 'asc'
+                if (val.prop === 'registrationTime') {
+                    this.queryParams.createTime = order
+                    this.queryParams.authenticationTime = ''
+                } else {
+                    this.queryParams.authenticationTime = order
+                    this.queryParams.createTime = ''
+                }
             } else {
-                this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
-                this.queryParams.createTime = ''
+                this.queryParams.createTime = 'desc'
+                this.queryParams.authenticationTime = ''
             }
-
+            console.log(this.queryParams.authenticationTime)
+            console.log(this.queryParams.createTime)
             this.onFindMlist()
         },
         async onFindMlist (val) {
@@ -294,6 +301,7 @@ export default {
         onFindInfo (val, type) {
             this.companyCode = val
             this.drawer = true
+            console.log(type)
             this.$refs.drawercom.getMerchtMemberDetail(val, type)
         },
         restDrawer () {
