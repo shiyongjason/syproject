@@ -25,7 +25,8 @@ const actions = {
         commit(types.REAL_REPORT, data.data)
     },
     async findHostoryreport ({ commit }, params) {
-        const { data } = await getHostoryreport()
+        console.log(params)
+        const { data } = await getHostoryreport(params)
         commit(types.HOSTORY_REPORT, data.data)
     }
 }

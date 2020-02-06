@@ -31,7 +31,7 @@
     </div>
 </template>
 <script>
-import { interfaceUrl } from '@/api/config'
+// import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 export default {
     name: 'membermanage',

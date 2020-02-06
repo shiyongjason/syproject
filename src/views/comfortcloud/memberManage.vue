@@ -80,7 +80,7 @@ export default {
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
+                    return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }

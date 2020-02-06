@@ -19,23 +19,23 @@
                 </div>
             </h3>
             <div class="static-wrap">
-                <div :class="['static-box',tabindex==1?'active':'']" @click="onClickTab(1)">
+                <div :class="['static-box',tabindex=='totalUser'?'active':'']" @click="onClickTab('totalUser')">
                     <p>累计用户数（截止今日）</p>
                     <p>{{realData.totalUser}}</p>
                 </div>
-                <div :class="['static-box',tabindex==2?'active':'']" @click="onClickTab(2)">
+                <div :class="['static-box',tabindex=='totalNewUser'?'active':'']" @click="onClickTab('totalNewUser')">
                     <p>新注册用户（今日）</p>
                     <p>{{realData.totalNewUser}}</p>
                 </div>
-                <div :class="['static-box',tabindex==3?'active':'']" @click="onClickTab(3)">
+                <div :class="['static-box',tabindex=='totalActiveUser'?'active':'']" @click="onClickTab('totalActiveUser')">
                     <p>活跃用户（今日）</p>
                     <p>{{realData.totalActiveUser}}</p>
                 </div>
-                <div :class="['static-box',tabindex==4?'active':'']" @click="onClickTab(4)">
+                <div :class="['static-box',tabindex=='totalStartUser'?'active':'']" @click="onClickTab('totalStartUser')">
                     <p>启动次数（今日）</p>
                     <p>{{realData.totalStartUser}}</p>
                 </div>
-                <div :class="['static-box',tabindex==5?'active':'']" @click="onClickTab(5)">
+                <div :class="['static-box',tabindex=='totalUsingTime'?'active':'']" @click="onClickTab('totalUsingTime')">
                     <p>使用时长（截止今日）</p>
                     <p>{{realData.totalUsingTime}}</p>
                 </div>
@@ -45,12 +45,14 @@
             <div class="echart-tab">
                 <h3>历史统计</h3>
                 <div class="echart-time">
-                    <el-date-picker type="date" v-model="startTime" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <p :class="[pindex==1?'active':'']" @click="onClickTime(1)">过去7天</p>
+                    <p :class="[pindex==2?'active':'']" @click="onClickTime(2)">过去31天</p>
+                    <el-date-picker type="date" v-model="startDate" :clearable=false placeholder="开始日期" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" v-model="endTime" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker type="date" v-model="endDate" :clearable=false placeholder="结束日期" value-format='yyyy-MM-dd' :picker-options="pickerOptionsEnd">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onSearch()">
+                    <el-button type="primary" class="ml20" @click="findHostoryReports()">
                         查询
                     </el-button>
                 </div>
@@ -68,12 +70,13 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 export default {
     data () {
         return {
-            startTime: moment().subtract(7, 'days').format('YYYY-MM-DD'),
-            endTime: moment().format('YYYY-MM-DD'),
+            startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+            endDate: moment().format('YYYY-MM-DD'),
             moduleName: '',
             realData: {},
-            tabindex: 1,
-            hostoryData: {}
+            tabindex: 'totalUser',
+            hostoryData: {},
+            pindex: 1
         }
     },
     computed: {
@@ -87,9 +90,9 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.endTime
+                    let endDateVal = this.endDate
                     if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -98,9 +101,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.startTime
+                    let beginDateVal = this.startDate
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
+                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -118,29 +121,52 @@ export default {
         }),
         onClickTab (val) {
             this.tabindex = val
+            this.findHostoryReports()
+        },
+        onClickTime (val) {
+            this.pindex = val
+            if (val == 1) {
+                this.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD')
+                this.endDate = moment().format('YYYY-MM-DD')
+            }
+            if (val == 2) {
+                this.startDate = moment().subtract(31, 'days').format('YYYY-MM-DD')
+                this.endDate = moment().format('YYYY-MM-DD')
+            }
         },
         async findReports () {
             await this.findRealreport()
             this.realData = this.realReport
         },
         async findHostoryReports () {
-            await this.findHostoryreport()
+            let params = {
+                endDate: this.endDate,
+                moduleName: this.tabindex,
+                startDate: this.startDate
+            }
+            await this.findHostoryreport(params)
             this.hostoryData = this.hostoryReport
+            this.drawLine()
         },
         drawLine () {
+            var m = new Map([['totalUser', '累计用户数'], ['totalNewUser', '注册用户数'], ['totalActiveUser', '活跃用户']
+                , ['totalStartUser', '启动次数'], ['totalUsingTime', '使用时长']])
             // 基于准备好的dom，初始化echarts实例
             this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
             var charts = {
                 unit: '单位',
-                names: ['中央', '地暖'],
-                lineX: ['2018-11-11 17:01', '2018-11-11 17:02', '2018-11-11 17:03', '2018-11-11 17:04', '2018-11-11 17:05', '2018-11-11 17:06', '2018-11-11 17:07', '2018-11-11 17:08', '2018-11-11 17:09', '2018-11-11 17:10', '2018-11-11 17:11', '2018-11-11 17:12', '2018-11-11 17:13', '2018-11-11 17:14', '2018-11-11 17:15', '2018-11-11 17:16', '2018-11-11 17:17', '2018-11-11 17:18', '2018-11-11 17:19', '2018-11-11 17:20'],
-                value: [
-                    [451, 352, 303, 534, 95, 236, 217, 328, 159, 151, 231, 192, 453, 524, 165, 236, 527, 328, 129, 530],
-                    [360, 545, 80, 192, 330, 580, 192, 80, 250, 453, 352, 28, 625, 345, 65, 325, 468, 108, 253, 98]
-                ]
-
+                names: [m.get(this.tabindex)],
+                lineX: [],
+                value: []
             }
+
+            let newArr = []
+            this.hostoryData && this.hostoryData.map(val => {
+                charts.lineX.push(val.dateTime)
+                newArr.push(val.value)
+            })
+            charts.value.push(newArr)
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
@@ -192,7 +218,7 @@ export default {
                     // right: '4%'
                 },
                 grid: {
-                    top: '10%',
+                    top: '12%',
                     left: '3%',
                     right: '3%',
                     bottom: '3%',
@@ -207,7 +233,7 @@ export default {
                         //     color: 'rgb(0,253,255,0.6)'
                         // },
                         formatter: function (params) {
-                            return params.split(' ')[0] + '\n' + params.split(' ')[1]
+                            return params.split(' ')[0]
                         }
                     }
                 },
@@ -295,6 +321,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 10px;
 }
 .el-tooltip__popper {
     p {
@@ -302,6 +329,16 @@ export default {
     }
     i {
         font-style: normal;
+        color: #ff7131;
+    }
+}
+.echart-time {
+    display: flex;
+    align-items: center;
+    p {
+        margin-right: 10px;
+    }
+    .active {
         color: #ff7131;
     }
 }
