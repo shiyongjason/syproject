@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
+                    <div class="query-col-title">创建时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.registrationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -83,9 +83,9 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-            @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；
+            </el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
@@ -143,7 +143,7 @@ export default {
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
-                { label: '认证状态',
+                {                    label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
                         return (
@@ -154,7 +154,7 @@ export default {
                                 </el-tooltip>
                             </span>
                         )
-                    } },
+                    }                },
                 { label: '认证时间', prop: 'authenticationTime', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
@@ -219,6 +219,8 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.options = []
+            this.getFindNest()
             this.onFindMlist(1)
         },
         handleSizeChange (val) {
@@ -266,7 +268,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await changeMemberState({ merchantCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
+                await changeMemberState({ companyCode: val.companyCode, status: val.isEnabled == 0 ? 1 : 0, phone: this.userInfo.phoneNumber, updateBy: this.userInfo.employeeName })
                 this.$message({
                     message: val.isEnabled == 0 ? '会员账号启用成功' : '会员账号禁用成功',
                     type: 'success'
