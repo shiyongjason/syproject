@@ -29,9 +29,9 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
                 <template slot="homeCount" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row)">{{scope.data.row.homeCount}}</p>
+                    <p @click="onShowHome(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
                 </template>
                 <template slot="wx_openid" slot-scope="scope">
                     {{scope.data.row.wx_openid?'是':'否'}}
@@ -41,8 +41,10 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
-            <span>这是一段信息</span>
+        <el-dialog title="家庭信息 " :visible.sync="dialogVisible" width="40%">
+            <basicTable :tableLabel="homeLabel" :tableData="homeData" :isShowIndex='true'>
+
+            </basicTable>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -55,36 +57,6 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'membermanage',
-    computed: {
-        ...mapState({
-            userInfo: state => state.userInfo
-        }),
-        ...mapGetters({
-            memberData: 'memberData'
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        }
-    },
     data () {
         return {
             queryParams: {
@@ -109,11 +81,44 @@ export default {
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '是否已绑定微信', prop: 'wx_openid' }
             ],
-            dialogVisible: false
+            dialogVisible: false,
+            homeLabel: [
+                { label: '家庭名称', prop: 'homeName' },
+                { label: '管理员手机号', prop: 'phone' }
+            ],
+            homeData: []
         }
     },
-    watch: {
-
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            memberData: 'memberData',
+            familyData: 'familyData'
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams.endTime
+                    if (endDateVal) {
+                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.startTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        }
     },
     mounted () {
         // this.tableData = [{ productN: '123' }]
@@ -121,7 +126,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findMembersituation: 'findMembersituation'
+            findMembersituation: 'findMembersituation',
+            findFamilyDetail: 'findFamilyDetail'
         }),
         async onQuery () {
             await this.findMembersituation(this.searchParams)
@@ -138,7 +144,6 @@ export default {
             this.onQuery()
         },
         onCurrentChange (val) {
-            console.log(val)
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery()
         },
@@ -149,8 +154,11 @@ export default {
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/memberDetail', query: { phone: val.phone } })
         },
-        onShowHome () {
+        async onShowHome (val) {
             this.dialogVisible = true
+            await this.findFamilyDetail(val)
+            console.log(this.familyData)
+            this.homeData = this.familyData
         }
     }
 }
@@ -170,5 +178,12 @@ export default {
             text-align: right;
         }
     }
+}
+.colred {
+    color: #ff7a45;
+    cursor: pointer;
+}
+/deep/.el-dialog__body {
+    padding-top: 10px;
 }
 </style>

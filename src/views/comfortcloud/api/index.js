@@ -35,3 +35,6 @@ export function getMembersituation (params) {
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }
+export function getFamilyDetail (params) {
+    return axios.get(iotUrl + `/uc/user-manage/home-info/${params}`)
+}
