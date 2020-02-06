@@ -83,9 +83,9 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；
-            </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；</el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+            @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
@@ -143,8 +143,7 @@ export default {
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
-                {
-                    label: '认证状态',
+                { label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
                         return (
@@ -155,9 +154,8 @@ export default {
                                 </el-tooltip>
                             </span>
                         )
-                    }
-                },
-                { label: '认证时间', prop: 'authenticationTime', width: '150px', sortable: true },
+                    } },
+                { label: '认证时间', prop: 'authenticationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
@@ -221,8 +219,6 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
-            this.options = []
-            this.getFindNest()
             this.onFindMlist(1)
         },
         handleSizeChange (val) {
@@ -242,7 +238,6 @@ export default {
                 this.queryParams.authenticationTime = val.order === 'descending' ? 'desc' : 'asc'
                 this.queryParams.createTime = ''
             }
-
             this.onFindMlist()
         },
         async onFindMlist (val) {
