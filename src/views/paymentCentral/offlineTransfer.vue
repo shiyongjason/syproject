@@ -24,8 +24,7 @@
                     <div class="query-col-title">状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.isDownload">
-                            <el-option v-for="item in downState" :key="item.key" :label="item.label"
-                            :value="item.key">
+                            <el-option v-for="item in downState" :key="item.key" :label="item.label" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -56,7 +55,7 @@
     </div>
 </template>
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapState, mapGetters } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
     name: 'paymentwhite',
@@ -134,9 +133,9 @@ export default {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?' +
-            url + 'access_token=' + sessionStorage.getItem('tokenB2b')
-        }
+            location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?'
+                + url + 'access_token=' + sessionStorage.getItem('tokenB2b')
+        },
     }
 }
 </script>

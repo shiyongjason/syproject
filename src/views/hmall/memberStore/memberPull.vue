@@ -51,10 +51,10 @@
                 <!-- <template slot="authenticated" slot-scope="scope">
                     {{scope.data.row.authenticated==1?'是':'否'}}
                 </template> -->
-                 <template slot="memberName" slot-scope="scope">
+                <template slot="memberName" slot-scope="scope">
                     {{scope.data.row.memberAccount}}{{scope.data.row.memberName}}
                 </template>
-                 <template slot="recommendName" slot-scope="scope">
+                <template slot="recommendName" slot-scope="scope">
                     {{scope.data.row.recommendedAccount}}{{scope.data.row.recommendedMemberName}}
                 </template>
             </basicTable>
@@ -83,7 +83,8 @@ export default {
             },
             tableLabel: [{ label: '会员', prop: 'memberName' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '邀请人（会员）', prop: 'recommendName' }],
+                { label: '邀请人（会员）', prop: 'recommendName' }
+            ],
             paginationInfo: {},
             tableData: [],
             B2bUrl: B2bUrl
@@ -137,8 +138,7 @@ export default {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' +
-            url + 'access_token=' + sessionStorage.getItem('token')
+            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' + url + 'access_token=' + sessionStorage.getItem('token')
         },
         async getRecomendboss () {
             const { data } = await getRecomendboss(this.queryParams)
