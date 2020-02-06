@@ -6,7 +6,7 @@
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
                     <!-- <el-tab-pane label="基本信息" name="second"></el-tab-pane> -->
                 </el-tabs>
-                <el-form :model="bossDetail" :rules="rules" ref="ruleForm" >
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
                     <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
                         <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
                         <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
@@ -27,7 +27,7 @@
                             <el-form-item prop="provinceId">
                                 <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                                     <el-option label="请选择" value=""></el-option>
-                                    <template v-for="item in proviceList" >
+                                    <template v-for="item in proviceList">
                                         <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
                                         </el-option>
                                     </template>
@@ -312,7 +312,9 @@ export default {
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
-            params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
+            if (params.subsectionCode) {
+                params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
+            }
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
