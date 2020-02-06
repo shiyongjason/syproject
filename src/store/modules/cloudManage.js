@@ -2,7 +2,7 @@ import * as types from '../mutation-types'
 import axios from 'axios'
 import { getMembersituation } from '@/views/comfortcloud/api'
 const state = {
-    memberData: {},
+    memberData: {}
 }
 
 const getters = {

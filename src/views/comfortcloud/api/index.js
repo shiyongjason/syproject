@@ -19,6 +19,10 @@ export function findHomeUserList (homeId) {
 export const getRealreport = (params) => {
     return axios.get(iotUrl + '/uc/user/statistics/real/report', { params })
 }
+// 历史统计
+export const getHostoryreport = (params) => {
+    return axios.get(iotUrl + '/uc/user/statistics/history/report', { params })
+}
 // 房间列表详情
 export function findRoomDetail (homeId) {
     return axios.get(iotUrl + `/api/home-manage/room-detail/${homeId}`)

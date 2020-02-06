@@ -51,7 +51,7 @@
     </div>
 </template>
 <script>
-import { interfaceUrl } from '@/api/config'
+// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'membermanage',
@@ -124,7 +124,6 @@ export default {
             findMembersituation: 'findMembersituation'
         }),
         async onQuery () {
-
             await this.findMembersituation(this.searchParams)
             this.membernewData = this.memberData
             console.log(this.membernewData)
@@ -155,7 +154,7 @@ export default {
             this.dialogVisible = true
         }
     }
-} 
+}
 </script>
 
 <style lang='scss' scoped>

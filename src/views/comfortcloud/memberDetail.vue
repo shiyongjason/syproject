@@ -109,9 +109,8 @@ export default {
             this.$router.push({ path: '/comfortCloud/homedetail', query: {} })
         }
     }
-} 
+}
 </script>
-
 <style lang='scss' scoped>
 .spanflex {
     display: flex;

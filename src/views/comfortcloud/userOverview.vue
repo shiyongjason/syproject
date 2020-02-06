@@ -70,8 +70,10 @@ export default {
         return {
             startTime: moment().subtract(7, 'days').format('YYYY-MM-DD'),
             endTime: moment().format('YYYY-MM-DD'),
+            moduleName: '',
             realData: {},
-            tabindex: 1
+            tabindex: 1,
+            hostoryData: {}
         }
     },
     computed: {
@@ -79,8 +81,8 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            realReport: 'realReport'
-
+            realReport: 'realReport',
+            hostoryReport: 'hostoryReport'
         }),
         pickerOptionsStart () {
             return {
@@ -106,20 +108,24 @@ export default {
         }
     },
     mounted () {
-        this.drawLine()
+        this.findHostoryReports()
         this.findReports()
     },
     methods: {
         ...mapActions({
             findRealreport: 'findRealreport',
+            findHostoryreport: 'findHostoryreport'
         }),
         onClickTab (val) {
             this.tabindex = val
         },
-        async  findReports () {
+        async findReports () {
             await this.findRealreport()
-            console.log(this.realReport)
             this.realData = this.realReport
+        },
+        async findHostoryReports () {
+            await this.findHostoryreport()
+            this.hostoryData = this.hostoryReport
         },
         drawLine () {
             // 基于准备好的dom，初始化echarts实例
@@ -251,7 +257,7 @@ export default {
         // color: #ffffff;
         flex: 1;
         height: 100px;
-        margin: 10px;
+        margin: 5px;
         align-items: center;
         border: 1px solid #e5e5e5;
 
@@ -259,7 +265,7 @@ export default {
         box-sizing: border-box;
         p {
             &:first-child {
-                font-size: 18px;
+                font-size: 16px;
                 line-height: 36px;
                 color: #000000;
             }

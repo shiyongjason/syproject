@@ -22,5 +22,6 @@ export const LIST_TRACK = 'LIST_TRACK'
 // 用户概览
 // 实时数据
 export const REAL_REPORT = 'REAL_REPORT'
+export const HOSTORY_REPORT = 'HOSTORY_REPORT'
 // 会员管理
 export const MEMBER_DATA = 'MEMBER_DATA'
