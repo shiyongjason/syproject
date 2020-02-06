@@ -22,9 +22,9 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
-                </div>
+                </div> -->
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
@@ -163,8 +163,8 @@ export default {
                     } },
                 { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
-                { label: '自动推送至店铺', prop: 'isAutoDispatch' },
-                { label: '状态', prop: 'isEnabled' }
+                { label: '自动推送至店铺', prop: 'isAutoDispatch' }
+                // { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
             drawer: false,
