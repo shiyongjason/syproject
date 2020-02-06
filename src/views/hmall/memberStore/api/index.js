@@ -4,7 +4,6 @@ import instance from '@/api/axios_new.js'
 export const findMemberList = (params) => instance.get('/merchant/api/members/page', { params })
 // export const findMemberList = (params) => instance.get('/api/company/boss/recommended', { params })
 
-
 // 会员店审核
 export const createMemberReview = (params) => instance.put(`/merchant/api/members/${params.id}`, params)
 
