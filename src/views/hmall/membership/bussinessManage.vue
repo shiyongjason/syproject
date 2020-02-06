@@ -91,8 +91,8 @@
                 店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
              @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
-                <template slot="subsectionName" slot-scope="scope">
-                    {{scope.data.row.subsectionName || '无'}}
+                <template slot="organizationName" slot-scope="scope">
+                    {{scope.data.row.organizationName || '无'}}
                 </template>
                 <template slot="merchantType" slot-scope="scope">
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
@@ -101,7 +101,7 @@
                     {{merchantRole[scope.data.row.merchantRolePermission-1]}}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
-                    {{scope.data.row.isAutoDispatch==0?'否':'是'}}
+                    {{scope.data.row.isAutoDispatch==0?'已关闭':'已开启'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
                     <span :class="scope.data.row.isAuthentication==0?'colorRed':'colorGreen'">{{scope.data.row.isAuthentication==0?'未认证':'已认证'}}</span>
@@ -151,7 +151,7 @@ export default {
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '120px' },
-                { label: '所属分部', prop: 'subsectionName', width: '180px' },
+                { label: '所属分部', prop: 'organizationName', width: '180px' },
                 { label: '商家类型', prop: 'merchantType' },
                 { label: '上架商品数', prop: 'omMarketNum' },
                 { label: '店铺商品数', prop: 'omMerchantNum' },
@@ -255,6 +255,7 @@ export default {
             if (val) this.queryParams.pageNumber = val
             await this.findMerchantList(this.queryParams)
             this.tableData = this.merchantData.records
+            console.log(this.tableData)
             this.paginationInfo = {
                 total: this.merchantData.total,
                 pageNumber: this.merchantData.current,
