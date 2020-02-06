@@ -26,7 +26,7 @@
                             @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true"
                             :actionMinWidth='280'>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
+                        <el-button class="orangeBtn" @click="goMemberDetail(scope.data.row)">详情</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -152,9 +152,9 @@ export default {
             this.activeName = this.roomList[indexTemp].roomName + this.roomList[indexTemp].roomId
             this.activeList = this.roomList[indexTemp]
         },
-        onEdit (row) {
+        goMemberDetail (row) {
             // todo 跳转到会员详情
-            this.$router.push({ path: '/comfortCloud/homedetail', query: { id: row.id } })
+            this.$router.push({ path: '/comfortCloud/memberdetail', query: { phone: row.phone } })
         }
     }
 }

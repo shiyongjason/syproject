@@ -8,19 +8,17 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号/网关号：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.product" clearable>
-                        <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <el-input type="text"
+                              v-model="queryParams.searchNum" maxlength="20" placeholder="手机或网关号"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.beginDate" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -56,7 +54,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -68,7 +66,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.beginDate
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime()
@@ -84,7 +82,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 platformType: '',
-                product: ''
+                searchNum: ''
             },
             searchParams: {},
             tableData: [],
@@ -104,8 +102,7 @@ export default {
                 { label: '创建时间 ', prop: 'createTime', formatters: 'dateTime' },
                 { label: '地址', prop: 'address' }
 
-            ],
-            productType: []
+            ]
         }
     },
     watch: {
@@ -130,10 +127,11 @@ export default {
             this.onQuery()
         },
         onReset () {
-            this.$set(this.queryParams, 'product', '')
-            this.$set(this.queryParams, 'platformType', '')
-            this.$set(this.queryParams, 'beginDate', '')
-            this.$set(this.queryParams, 'endDate', '')
+            this.queryParams = {
+                pageNumber: 1,
+                pageSize: 10,
+                searchNum: ''
+            }
             this.onSearch()
         },
         onCurrentChange (val) {
