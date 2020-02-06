@@ -1,11 +1,11 @@
-import * as types from '../const'
+import * as types from '../mutation-types'
 import { getRealreport } from '@/views/comfortcloud/api'
 const state = {
-    realReport:{},
+    realReport: {}
 }
 
 const getters = {
-    realReport: state => state.realReport,
+    realReport: state => state.realReport
 }
 
 const mutations = {
@@ -17,7 +17,6 @@ const mutations = {
 const actions = {
     async findRealreport ({ commit }, params) {
         const { data } = await getRealreport()
-        console.log(data)
         commit(types.REAL_REPORT, data.data)
     }
 

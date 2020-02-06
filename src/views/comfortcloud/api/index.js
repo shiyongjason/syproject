@@ -23,3 +23,9 @@ export const getRealreport = (params) => {
 export function findRoomDetail (homeId) {
     return axios.get(iotUrl + `/api/home-manage/room-detail/${homeId}`)
 }
+
+// 会员概览
+
+export function getMembersituation (params) {
+    return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
+}

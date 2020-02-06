@@ -2,25 +2,22 @@
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont spanflex">
             <span>会员概况 </span>
-            <span>会员数量：377个</span>
+            <span>会员数量：{{membernewData.totalElements}}个</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">手机号：：</div>
+                <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.product" clearable>
-                        <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">注册时间： </div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.beginDate" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -33,15 +30,18 @@
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
-                <template slot="productN" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row)">{{scope.data.row.productN}}</p>
+                <template slot="homeCount" slot-scope="scope">
+                    <p @click="onShowHome(scope.data.row)">{{scope.data.row.homeCount}}</p>
+                </template>
+                <template slot="wx_openid" slot-scope="scope">
+                    {{scope.data.row.wx_openid?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录 详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="40%">
             <span>这是一段信息</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -52,34 +52,35 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'membermanage',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
+        ...mapGetters({
+            memberData: 'memberData'
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.endDate
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() > new Date(beginDateVal).getTime()
-                        )
+                    let endDateVal = this.queryParams.endTime
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
                     }
+                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.beginDate
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime()
-                        )
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                     }
+                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
@@ -89,8 +90,9 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                platformType: '',
-                product: ''
+                phone: '',
+                endTime: '',
+                startTime: ''
             },
             searchParams: {},
             tableData: [],
@@ -99,12 +101,13 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            membernewData: [],
             tableLabel: [
-                { label: '昵称', prop: 'productN' },
-                { label: '手机号', prop: 'platformTypeN', width: '120px' },
-                { label: '家庭数', prop: 'versionCode' },
-                { label: '注册时间', prop: 'status' },
-                { label: '是否已绑定微信', prop: 'forcedN' }
+                { label: '昵称', prop: 'nick' },
+                { label: '手机号', prop: 'phone', width: '120px' },
+                { label: '家庭数', prop: 'homeCount' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '是否已绑定微信', prop: 'wx_openid' }
             ],
             dialogVisible: false
         }
@@ -113,33 +116,31 @@ export default {
 
     },
     mounted () {
-        this.tableData = [{ productN: '123' }]
+        // this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
     methods: {
+        ...mapActions({
+            findMembersituation: 'findMembersituation'
+        }),
         async onQuery () {
-            // console.log(this.searchParams)
-            const { data } = await getAppVersionList(this.searchParams)
-            // console.log(data)
-            this.tableData = data.data.list
+
+            await this.findMembersituation(this.searchParams)
+            this.membernewData = this.memberData
+            console.log(this.membernewData)
+            this.tableData = this.membernewData.pageContent
             this.pagination = {
-                pageNumber: data.data.pageNum,
-                pageSize: data.data.pageSize,
-                total: data.data.total
+                pageNumber: this.membernewData.pageNumber,
+                pageSize: this.membernewData.pageSize,
+                total: this.membernewData.totalElements
             }
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onReset () {
-            this.$set(this.queryParams, 'product', '')
-            this.$set(this.queryParams, 'platformType', '')
-            this.$set(this.queryParams, 'beginDate', '')
-            this.$set(this.queryParams, 'endDate', '')
-            this.onSearch()
-        },
         onCurrentChange (val) {
+            console.log(val)
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery()
         },
