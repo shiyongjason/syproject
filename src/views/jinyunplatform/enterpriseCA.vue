@@ -13,10 +13,17 @@
                     </el-input>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-show="activeName == 'enterprise'">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
                     <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="请选择时间" :picker-options="pickerOptionsStart">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div class="query-cont-col" v-show="activeName == 'personage'">
+                <div class="query-col-title">创建日期：</div>
+                <div class="query-col-input">
+                    <el-date-picker v-model="queryParams.personageCreateDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </div>
             </div>
@@ -169,7 +176,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 companyName: '',
-                createDate: ''
+                createDate: '',
+                personageCreateDate: ''
             },
             searchParams: {},
             tableData: [],
@@ -234,7 +242,8 @@ export default {
             this.tableLabel = this.tableLabelPerson
             const params = {
                 ...this.queryParams,
-                customerName: this.queryParams.companyName
+                customerName: this.queryParams.companyName,
+                createDate:  this.queryParams.personageCreateDate
             }
             const { data } = await getSignPersonList(params)
             this.tableData = data.records
