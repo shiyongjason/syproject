@@ -38,6 +38,7 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -47,6 +48,7 @@ switch (env) {
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
@@ -56,6 +58,7 @@ switch (env) {
         B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'production':
         // TODO: 给产品调用
@@ -66,6 +69,7 @@ switch (env) {
         B2bUrl = 'https://b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://ccp.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
 }
 export {
