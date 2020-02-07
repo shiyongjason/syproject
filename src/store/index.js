@@ -9,6 +9,8 @@ import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import membership from './modules/membership'
 import payment from './modules/payment'
+import userRealreport from './modules/userRealreport'
+import cloudmanage from './modules/cloudManage'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -35,7 +37,10 @@ const store = new Vuex.Store({
         eventManage,
         membership,
         serviceManagement,
-        payment
+        payment,
+        eventManage,
+        userRealreport,
+        cloudmanage
     }
 })
 
