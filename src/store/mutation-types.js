@@ -42,3 +42,4 @@ export const HOSTORY_REPORT = 'HOSTORY_REPORT'
 // 会员管理
 export const MEMBERS_DATA = 'MEMBERS_DATA'
 export const MEMBERS_DETAIL = 'MEMBERS_DETAIL'
+export const FAMILY_DATA = 'FAMILY_DATA'

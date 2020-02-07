@@ -1,5 +1,4 @@
 import * as types from '../mutation-types'
-import axios from 'axios'
 import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/comfortcloud/api'
 const state = {
     memberData: {},
