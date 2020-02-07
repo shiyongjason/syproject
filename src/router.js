@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
@@ -5,6 +6,8 @@ import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import jwtDecode from 'jwt-decode'
+import ServiceManagement from './router/catalogue/serviceManagement'
+import JinyunPlatform from './router/jinyunplatform/index.js'
 Vue.use(Router)
 
 const routerMapping = [
@@ -55,28 +58,29 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/jinyunPlatform',
-        meta: {
-            title: '金云平台',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: '',
-                name: 'jinyunplatform',
-                meta: {
-                    title: '金云平台',
-                    tagName: '金云平台',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
+    // 上线无bug待删除的无用代码
+    // {
+    //     path: '/jinyunPlatform',
+    //     meta: {
+    //         title: '金云平台',
+    //         isMenu: true,
+    //         icon: 'hosjoy_stay_online'
+    //     },
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: '',
+    //             name: 'jinyunplatform',
+    //             meta: {
+    //                 title: '金云平台',
+    //                 tagName: '金云平台',
+    //                 isMenu: false,
+    //                 icon: ''
+    //             },
+    //             component: () => import('./views/jinyunplatform/index')
+    //         }
+    //     ]
+    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -655,160 +659,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/serviceManagement',
-        meta: {
-            title: '服务管理',
-            isMenu: true,
-            icon: 'hosjoy_cloud_service'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'customerManagement',
-                name: 'customerManagement',
-                meta: {
-                    title: '客户管理',
-                    tagName: '客户管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
-            },
-            {
-                path: 'houseKeeperManagement',
-                name: 'houseKeeperManagement',
-                meta: {
-                    title: '管家管理',
-                    tagName: '管家管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/houseKeeperManagement/houseKeeperManagement.vue')
-            },
-            {
-                path: 'orderCenter',
-                name: 'orderCenter',
-                meta: {
-                    title: '订单中心',
-                    tagName: '订单中心',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/order.vue')
-            },
-            {
-                path: 'workOrder',
-                name: 'workOrder',
-                meta: {
-                    title: '工单信息',
-                    tagName: '工单信息',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/workOrder/index.vue')
-            },
-            {
-                path: 'customerRecord',
-                name: 'customerRecord',
-                meta: {
-                    title: '客户档案',
-                    tagName: '客户档案',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerRecord/index.vue')
-            },
-            {
-                path: 'customerRecordDetail',
-                name: 'customerRecordDetail',
-                meta: {
-                    title: '档案详情',
-                    tagName: '档案详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerRecord/detail.vue')
-            },
-            {
-                path: 'customerReport',
-                name: 'customerReport',
-                meta: {
-                    title: '客户报告',
-                    tagName: '客户报告',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerReport/index.vue')
-            },
-            {
-                path: 'customerReportDetail',
-                name: 'customerReportDetail',
-                meta: {
-                    title: '报告详情',
-                    tagName: '报告详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerReport/detail.vue')
-            },
-            {
-                path: 'orderDetails',
-                name: 'serviceManagementOrderDetails',
-                meta: {
-                    title: '有赞订单详情',
-                    tagName: '有赞订单详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
-            },
-            {
-                path: 'orderChannelDetails',
-                name: 'serviceManagementOrderChannelDetails',
-                meta: {
-                    title: '渠道订单详情',
-                    tagName: '渠道订单详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderChannelDetails.vue')
-            },
-            {
-                path: 'orderChannelEdit',
-                name: 'serviceManagementOrderChannelEdit',
-                meta: {
-                    title: '渠道订单修改',
-                    tagName: '渠道订单修改',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderChannelEdit.vue')
-            },
-            {
-                path: 'tags',
-                name: 'serviceManagementTags',
-                meta: {
-                    title: '标签管理',
-                    tagName: '标签管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/tags/tags.vue')
-            },
-            {
-                path: 'channelManagement',
-                name: 'channelManagement',
-                meta: {
-                    title: '渠道管理',
-                    tagName: '渠道管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
-            }
-        ]
-    },
-    {
         path: '/platformCompanyCockpit',
         meta: {
             title: '平台公司驾驶舱',
@@ -844,50 +694,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/jinyun',
-        meta: {
-            title: '金云系统',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'jyindex',
-                name: 'jyindex',
-                meta: {
-                    title: '金云',
-                    tagName: '金云',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            },
-            {
-                path: 'enterpriseCA',
-                name: 'enterpriseCA',
-                meta: {
-                    title: '企业CA',
-                    tagName: '企业CA',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/enterpriseCA')
-            },
-            {
-                path: 'amountImport',
-                name: 'amountImport',
-                meta: {
-                    title: '额度导入',
-                    tagName: '额度导入',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/amountImport')
-            }
-        ]
-    },
-    {
         path: '/appUpdate',
         meta: {
             title: 'App管理',
@@ -909,8 +715,92 @@ const routerMapping = [
                 component: () => import('@/views/appUpdate/index.vue')
             }
         ]
-    }
-
+    },
+    {
+        path: '/comfortCloud',
+        meta: {
+            title: '舒适云概览',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'userOverview',
+                name: 'userOverview',
+                meta: {
+                    title: '用户概览',
+                    tagName: '用户概览',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/userOverview.vue')
+            },
+            {
+                path: 'equipemtOverview',
+                name: 'equipemtOverview',
+                meta: {
+                    title: '设备概览',
+                    tagName: '设备概览',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+            },
+            {
+                path: 'homeOverview',
+                name: 'homeOverview',
+                meta: {
+                    title: '家庭概览',
+                    tagName: '家庭概览',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/homeManage.vue')
+            },
+            {
+                path: 'homedetail',
+                name: 'homedetail',
+                meta: {
+                    title: '家庭详情',
+                    tagName: '家庭详情',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/homedetail.vue')
+            },
+            {
+                path: 'membermanage',
+                name: 'membermanage',
+                meta: {
+                    title: '会员管理',
+                    tagName: '会员管理',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/memberManage.vue')
+            },
+            {
+                path: 'memberdetail',
+                name: 'memberdetail',
+                meta: {
+                    title: '会员登录详情',
+                    tagName: '会员登录详情',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/memberDetail.vue')
+            }
+        ]
+    },
+    JinyunPlatform,
+    ServiceManagement
 ]
 
 const router = new Router({
@@ -959,8 +849,14 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // 开发环境菜单配置
+    let menu = ''
+    if (process.env.NODE_ENV == 'development') {
+        menu = routerMapping
+        // menu = makeMenus(routerMapping, resourceList)
+    } else {
+        menu = makeMenus(routerMapping, resourceList)
+    }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
 
@@ -1013,7 +909,6 @@ router.beforeEach(async (to, from, next) => {
     }
     next()
 })
-
 export default router
 export {
     routerMapping

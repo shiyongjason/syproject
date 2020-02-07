@@ -1,7 +1,7 @@
 <template>
     <el-collapse-item name="2">
         <template slot="title">
-            <p class="title-p">实际控制人评估(必填)</p>
+            <p class="title-p">实际控制人评估</p>
         </template>
         <p class="small-title">个人简介</p>
         <div class="item-wrapper">
@@ -31,13 +31,13 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`" :rules="{ required: true, message: '此项为必填项', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].description`" :rules="rules.description(item, index)">
                             <el-input v-model="item.description" placeholder="请输入内容" maxlength="250"></el-input>
                         </el-form-item>
                     </td>
                     <td v-if="!item.isTitle">
-                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score">
-                            <el-input v-model="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
+                        <el-form-item :prop="`dueOrganizationControllerAssessmentCreateFormList[${index}].score`" :rules="rules.score(item, index)">
+                            <el-input v-model.number="item.score" :placeholder="`满分${item.fullMarks}`" maxlength="2" @change="onChangeScore(item, item.fullMarks)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -57,7 +57,7 @@
 <script>
 import { mapState } from 'vuex'
 import echarts from 'echarts'
-import { IsFixedTwoNumber } from '@/utils/rules'
+import { IsInteger } from '@/utils/rules'
 const weightMap = new Map([
     ['年龄', 0.2],
     ['健康', 0.3],
@@ -100,10 +100,34 @@ export default {
         return {
             chartList: [],
             rules: {
-                score: [
-                    { required: true, message: '此项为必填项', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, trigger: 'blur' }
-                ]
+                description: (item, index) => {
+                    return [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationControllerAssessmentCreateFormList[index].description) {
+                                    return callback(new Error(`${item.assessmentDimension}为必填项`))
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        }
+                    ]
+                },
+                score: (item, index) => {
+                    return [
+                        {
+                            // 这边的验证很复杂，后台传过来的是null，前端置空后是'',验证时可以填0
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationControllerAssessmentCreateFormList[index].score) {
+                                    return callback(new Error(`${item.assessmentDimension}的评分为必填项`))
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        },
+                        { validator: IsInteger, trigger: 'blur', message: '分数请输入自然数' }
+                    ]
+                }
             }
         }
     },

@@ -204,8 +204,6 @@ export default {
         punishmentTypePlus () {
             let newArr = this.punishmentTypeOptions.concat()
             newArr.splice(0, 1)
-            console.log(newArr)
-
             return newArr || []
         },
         /* debtTotal () {

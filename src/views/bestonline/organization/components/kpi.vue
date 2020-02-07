@@ -22,7 +22,7 @@
                     </td>
                     <td>
                         <el-form-item :prop="`dueOrganizationAssessmentCreateFormList[${index}].state`"
-                            :rules="{required: true, message: '此项为必填项！', trigger: 'change'}">
+                            :rules="{required: true, message: '组织尽调评估结论为必填项！', trigger: 'change'}">
                             <el-select v-model="item.state" placeholder="请选择">
                                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>

@@ -191,7 +191,10 @@ export default {
             this.sellData.stockAchievingRateNew = this.sellData.stockAchievingRate ? (parseInt(this.sellData.stockAchievingRate) > 100 ? 100 : parseInt(this.sellData.stockAchievingRate)) : 0
             this.realArr = [parseFloat(this.sellData.overallReach).toFixed(0), parseFloat(this.sellData.stockReach).toFixed(0), parseFloat(this.sellData.incrementReach).toFixed(0)]
             this.targetArr = [parseFloat(this.sellData.overallTarget).toFixed(0), parseFloat(this.sellData.stockTarget).toFixed(0), parseFloat(this.sellData.incrementTarget).toFixed(0)]
-            this.markArr = [parseFloat(this.sellData.overallAchievingRate).toFixed(0), parseFloat(this.sellData.stockAchievingRate).toFixed(0), parseFloat(this.sellData.incrementAchievingRate).toFixed(0)]
+            const indexF = parseFloat(this.sellData.overallAchievingRate).toFixed(0) == 'NaN' ? 0 : parseFloat(this.sellData.overallAchievingRate).toFixed(0)
+            const indexS = parseFloat(this.sellData.stockAchievingRate).toFixed(0) == 'NaN' ? 0 : parseFloat(this.sellData.stockAchievingRate).toFixed(0)
+            const indexT = parseFloat(this.sellData.incrementAchievingRate).toFixed(0) == 'NaN' ? 0 : parseFloat(this.sellData.incrementAchievingRate).toFixed(0)
+            this.markArr = [indexF, indexS, indexT]
             console.log(this.markArr)
             this.drawaddPlat()
         },

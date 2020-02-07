@@ -412,7 +412,6 @@ export default {
         },
         async getDueapprovalconclusion () {
             const { data } = await getDueapprovalconclusion({ applyId: this.applyId })
-            console.log(data)
             this.cooperateTarget = data.data.cooperateTarget
             this.dueBusiness = data.data.dueBusiness
             this.dueFinancial = data.data.dueFinancial
@@ -423,7 +422,6 @@ export default {
             this.caucusConclusionList = data.data.caucusConclusionList
             this.roleConclusionVoList = data.data.roleConclusionVoList
             this.ceoConclusionList = data.data.ceoConclusionList
-            console.log(this.ceoConclusionList)
             if (data.data.dueItemStatics) {
                 Object.keys(data.data.dueItemStatics).forEach(function (key) {
                     data.data.dueItemStatics[key] = (data.data.dueItemStatics[key] * 100).toFixed(2)

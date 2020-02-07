@@ -15,3 +15,15 @@ export const SET_EVENT_INFO = 'SET_EVENT_INFO'
 export const EMPTY_EVENT_PRODUCTS = 'EMPTY_EVENT_PRODUCTS'
 // 列表 hover 埋点数据
 export const LIST_TRACK = 'LIST_TRACK'
+
+// 舒适云数据后台
+// 家庭管理
+
+// 用户概览
+// 实时数据
+export const REAL_REPORT = 'REAL_REPORT'
+export const HOSTORY_REPORT = 'HOSTORY_REPORT'
+// 会员管理
+export const MEMBER_DATA = 'MEMBER_DATA'
+export const MEMBER_DETAIL = 'MEMBER_DETAIL'
+export const FAMILY_DATA = 'FAMILY_DATA'

@@ -41,7 +41,7 @@
             </el-form-item>
         </el-form>
 
-        <div class="jd-bottom" :class="isCollapse?'minLeft':'maxLeft'">
+        <div  class="flex-wrap-row top20 ">
             <el-col :span="2" :offset="6">
                 <el-button type="info" @click.native="onSave(0)" v-if="hosAuthCheck(draftAuthCode)">暂存</el-button>
             </el-col>

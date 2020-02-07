@@ -10,7 +10,7 @@
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <div class="query-col-title">渠道名称：</div>
+                        <div class="query-col-title">获客渠道：</div>
                         <div class="query-col-input">
                             <el-select v-model="searchForm.channelType" clearable style="width: 100%">
                                 <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
