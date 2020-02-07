@@ -144,7 +144,6 @@ export default {
     methods: {
         async findReportDetail (id) {
             const { data } = await findReportDetail(id)
-            console.log(data)
             this.params = data
             this.reportType = data.reportType
             let nums = 0
@@ -175,8 +174,7 @@ export default {
                 })
                 this.params.overallProperties = params
             }
-            const { data } = await updataReportDetail(this.params)
-            console.log(data)
+            await updataReportDetail(this.params)
             Message({ message: '修改成功', type: 'success' })
             this.$router.push('customerReport')
         }

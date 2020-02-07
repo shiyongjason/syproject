@@ -19,3 +19,30 @@ export const rateImport = (params) => axios.post(interfaceUrl + `backend/amount/
 export const getRateList = (params) => axios.get(interfaceUrl + `backend/amount/rate/page`, { params })
 // 额度利率导入复核
 export const rateStatus = (params) => axios.put(interfaceUrl + `backend/amount/rate/status`, params)
+/*
+账户导入
+ */
+// 银行账户分页查询
+export const getBankList = (params) => axios.get(interfaceUrl + `backend/bank-accounts`, { params })
+// 银行账户新增
+export const bankAccount = (params) => axios.post(interfaceUrl + `backend/bank-accounts`, params)
+// 银行账户修改
+export const updataBankAccount = (params) => axios.put(interfaceUrl + `backend/bank-accounts`, params)
+// 根据accountId删除银行账户
+export const deleteBankAccount = (params) => axios.delete(interfaceUrl + `backend/bank-accounts/${params.accountId}`)
+/*
+流程查询
+*/
+// 审批流程分页查询
+export const getProcessesList = (params) => axios.get(interfaceUrl + `backend/processes`, { params })
+// 产品名称列表
+export const getProductsArr = (params) => axios.get(interfaceUrl + `backend/processes/products/name`, { params })
+/*
+人脸识别
+*/
+// Boss后台分页查询服务订单
+export const getRecognitions = (params) => axios.get(interfaceUrl + `backend/face-recognitions/page`, { params })
+// 查询未通过人脸识别认证详情
+export const getRecognitionsDetail = (params) => axios.get(interfaceUrl + `backend/face-recognitions/${params.id}`)
+// 验证
+export const artifVali = (params) => axios.put(interfaceUrl + `backend/face-recognitions/${params.id}/certifie`, params)

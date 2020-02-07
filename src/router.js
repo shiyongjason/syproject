@@ -1,10 +1,19 @@
+/* eslint-disable */
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
 import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
+import axios from 'axios'
+import { B2bUrl } from './api/config'
+import qs from 'qs'
 import jwtDecode from 'jwt-decode'
+import ServiceManagement from './router/catalogue/serviceManagement'
+import B2brouter from './router/B2brouter'
+import Jyrouter from './router/Jyrouter'
+import Bestrouter from './router/Bestrouter'
+import Wisdomrouter from './router/Wisdomrouter'
 Vue.use(Router)
 
 const routerMapping = [
@@ -55,28 +64,29 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/jinyunPlatform',
-        meta: {
-            title: '金云平台',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: '',
-                name: 'jinyunplatform',
-                meta: {
-                    title: '金云平台',
-                    tagName: '金云平台',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            }
-        ]
-    },
+    // 上线无bug待删除的无用代码
+    // {
+    //     path: '/jinyunPlatform',
+    //     meta: {
+    //         title: '金云平台',
+    //         isMenu: true,
+    //         icon: 'hosjoy_stay_online'
+    //     },
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: '',
+    //             name: 'jinyunplatform',
+    //             meta: {
+    //                 title: '金云平台',
+    //                 tagName: '金云平台',
+    //                 isMenu: false,
+    //                 icon: ''
+    //             },
+    //             component: () => import('./views/jinyunplatform/index')
+    //         }
+    //     ]
+    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -144,671 +154,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/wisdom',
-        meta: {
-            title: '好智慧-经营分析',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        // redirect: '/wisdom/' + this.children[0].path,
-        component: Layout,
-        children: [
-            {
-                path: 'manageoverview',
-                name: 'manageoverview',
-                meta: {
-                    title: '经营概览',
-                    tagName: '经营概览',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/manageoverview'
-                },
-                component: () => import('./views/wisdom/manageoverview')
-            },
-            {
-                path: 'branchTarget',
-                name: 'branchTarget',
-                meta: {
-                    title: '分部目标管理',
-                    tagName: '分部目标管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/branchTarget'
-                },
-                component: () => import('./views/wisdom/branchTarget')
-            },
-            {
-                path: 'platformTarget',
-                name: 'platformTarget',
-                meta: {
-                    title: '平台目标管理',
-                    tagName: '平台目标管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platformTarget'
-                },
-                component: () => import('./views/wisdom/platformTarget')
-            },
-
-            {
-                path: 'platcompanyinfo',
-                name: 'platcompanyinfo',
-                meta: {
-                    title: '平台公司基本信息',
-                    tagName: '平台公司基本信息',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platcompanyinfo'
-                },
-                component: () => import('./views/wisdom/platcompanyinfo')
-            },
-
-            {
-                path: 'platformSale',
-                name: 'platformSale',
-                meta: {
-                    title: '平台销售分析',
-                    tagName: '平台销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/platformSale'
-                },
-                component: () => import('./views/wisdom/platformSale')
-            },
-            {
-                path: 'branchSale',
-                name: 'branchSale',
-                meta: {
-                    title: '分部销售分析',
-                    tagName: '分部销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/branchSale'
-                },
-                component: () => import('./views/wisdom/branchSale')
-            },
-            {
-                path: 'categorySale',
-                name: 'categorySale',
-                meta: {
-                    title: '品类销售分析',
-                    tagName: '品类销售分析',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/categorySale'
-                },
-                component: () => import('./views/wisdom/categorySale')
-            },
-            {
-                path: 'profitStatistics',
-                name: 'profitStatistics',
-                meta: {
-                    title: '利润统计',
-                    tagName: '利润统计',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/wisdom/profitStatistics'
-                },
-                component: () => import('./views/wisdom/profitStatistics')
-            }
-        ]
-    },
-    {
-        path: '/bestonline',
-        meta: {
-            title: '尽调管理',
-            isMenu: true,
-            icon: 'hosjoy_jindiao'
-        },
-        // redirect: '/wisdom/' + this.children[0].path,
-        component: Layout,
-        children: [
-            {
-                path: 'application',
-                name: 'application',
-                meta: {
-                    title: '尽调申请',
-                    tagName: '尽调申请',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/apply/index'
-                },
-                component: () => import('./views/bestonline/apply/index')
-            },
-            {
-                path: 'review',
-                name: 'review',
-                meta: {
-                    title: '现场尽调',
-                    tagName: '现场尽调',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/review'
-                },
-                component: () => import('./views/bestonline/review')
-            },
-            {
-                path: 'reviewform',
-                name: 'reviewform',
-                meta: {
-                    title: '修改',
-                    isMenu: false,
-                    icon: '',
-                    component: './views/bestonline/reviewform',
-                    func: (menus, route) => {
-                        const len = menus.length
-                        menus.splice(len - 1, 0, {
-                            path: '/bestonline/review',
-                            meta: {
-                                title: '现场尽调'
-                            }
-                        })
-                    }
-                },
-                component: () => import('./views/bestonline/reviewform')
-            },
-            {
-                path: 'piecevote',
-                name: 'piecevote',
-                meta: {
-                    title: '一项否决配置',
-                    tagName: '一项否决配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/piecevote'
-                },
-                component: () => import('./views/bestonline/piecevote')
-            },
-            {
-                path: 'pointscode',
-                name: 'pointscode',
-                meta: {
-                    title: '评分规则配置',
-                    tagName: '评分规则配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/pointscode'
-                },
-                component: () => import('./views/bestonline/pointscode')
-            },
-            {
-                path: 'standard',
-                name: 'standard',
-                meta: {
-                    title: '标准分数配置',
-                    tagName: '标准分数配置',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/bestonline/standard'
-                },
-                component: () => import('./views/bestonline/standard')
-            },
-            {
-                path: 'applyform',
-                name: 'applyform',
-                meta: {
-                    title: '尽调申请详情',
-                    tagName: '尽调申请详情',
-                    isMenu: false,
-                    icon: '',
-                    component: './views/bestonline/apply/applyForm'
-                },
-                component: () => import('./views/bestonline/apply/applyForm')
-            }
-        ]
-    },
-    {
-        path: '/hmall',
-        meta: {
-            title: 'B2b管理',
-            isMenu: true,
-            icon: 'hosjoy_store'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'category',
-                name: 'category',
-                meta: {
-                    title: '类目管理',
-                    tagName: '类目管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/category/category.vue')
-            },
-            {
-                path: 'brand',
-                name: 'brand',
-                meta: {
-                    title: '品牌管理',
-                    tagName: '品牌管理',
-                    isMenu: true,
-                    icon: '',
-                    component: './views/hmall/brand/brand'
-                },
-                component: () => import('./views/hmall/brand/brand.vue')
-            },
-            // {
-            //     path: 'shopManager',
-            //     name: 'shopManager',
-            //     meta: {
-            //         title: '商品库管理SPU',
-            //         tagName: '商品库管理SPU',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/hmall/shopManager/shopManager.vue')
-            // },
-            {
-                path: 'selectCategory',
-                name: 'selectCategory',
-                meta: {
-                    title: '商品库管理',
-                    tagName: '商品库管理',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopManager/selectCategory.vue')
-            },
-            {
-                path: 'platform',
-                name: 'platform',
-                meta: {
-                    title: '商家功能管理',
-                    tagName: '商家功能管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/platform/platform.vue')
-            },
-            // {
-            //     path: 'shopReviewList',
-            //     name: 'shopReviewList',
-            //     meta: {
-            //         title: '平台公司商品审核列表',
-            //         tagName: '平台公司商品审核列表',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/hmall/shopReview/shopReviewList.vue')
-            // },
-            {
-                path: 'attribute',
-                name: 'attribute',
-                meta: {
-                    title: '参数属性管理',
-                    tagName: '参数属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/attribute/attribute.vue')
-            },
-            {
-                path: 'order',
-                name: 'order',
-                meta: {
-                    title: '订单／收款记录查询',
-                    tagName: '订单／收款记录查询',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/order/order.vue')
-            },
-            {
-                path: 'coupon',
-                name: 'coupon',
-                meta: {
-                    title: '优惠券审核列表',
-                    tagName: '优惠券审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/coupon/coupon.vue')
-            },
-            {
-                path: 'member',
-                name: 'member',
-                meta: {
-                    title: '会员审核列表',
-                    tagName: '会员审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/memberStore/member.vue')
-            },
-            {
-                path: 'memberPull',
-                name: 'memberPull',
-                meta: {
-                    title: '会员拉新管理',
-                    tagName: '会员拉新管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/memberStore/memberPull.vue')
-            },
-            // {
-            //     path: 'publicShop',
-            //     name: 'publicShop',
-            //     meta: {
-            //         title: '共享商品管理',
-            //         tagName: '共享商品管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('./views/hmall/shopManager/publicShop.vue')
-            // },
-            {
-                path: 'activeReview',
-                name: 'activeReview',
-                meta: {
-                    title: '活动审核列表',
-                    tagName: '活动审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/activeReview.vue')
-            },
-            {
-                path: 'wallet',
-                name: 'wallet',
-                meta: {
-                    title: '钱包支付开通情况',
-                    tagName: '钱包支付开通情况',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/walletPay/walletPay.vue')
-            },
-            {
-                path: 'merchantReview',
-                name: 'merchantReview',
-                meta: {
-                    title: '商户审核列表',
-                    tagName: '商户审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/hmall/shopReview/merchantReview.vue')
-            },
-            // 这期不做
-            // {
-            //     path: 'memberManagement',
-            //     name: 'memberManagement',
-            //     meta: {
-            //         title: '会员管理',
-            //         tagName: '会员管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/memberManagement.vue')
-            // },
-            {
-                path: 'brandAreaAudit',
-                name: 'brandAreaAudit',
-                meta: {
-                    title: '品牌区域审核列表',
-                    tagName: '品牌区域审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
-            },
-            {
-                path: 'marketStore',
-                name: 'marketStore',
-                meta: {
-                    title: '商家商品库',
-                    tagName: '商家商品库',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/bazaar/marketStore.vue')
-            },
-            {
-                path: 'spumange',
-                name: 'spumange',
-                meta: {
-                    title: 'SPU列表',
-                    tagName: 'SPU列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/index')
-            },
-            {
-                path: 'spudetail',
-                name: 'spudetail',
-                meta: {
-                    title: 'SPU管理',
-                    tagName: 'SPU管理',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/spudetail')
-            },
-            {
-                path: 'spuauditlist',
-                name: 'spuauditlist',
-                meta: {
-                    title: 'SPU审核列表',
-                    tagName: 'SPU审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/spuauditlist')
-            },
-            {
-                path: 'skuset',
-                name: 'skuset',
-                meta: {
-                    title: 'SKU属性管理',
-                    tagName: 'SKU属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/skuset')
-            },
-            {
-                path: 'eventMange',
-                name: 'eventMange',
-                meta: {
-                    title: '活动管理',
-                    tagName: '活动管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/event/eventManage')
-            },
-            {
-                path: 'eventStatistics',
-                name: 'eventStatistics',
-                meta: {
-                    title: '数据监测',
-                    tagName: '数据监测',
-                    isMenu: false
-                },
-                component: () => import('@/views/hmall/event/eventStatistics')
-            },
-            {
-                path: 'addProducts',
-                name: 'addProducts',
-                meta: {
-                    title: '添加商品',
-                    tagName: '添加商品',
-                    isMenu: false
-                },
-                component: () => import('@/views/hmall/event/addProducts')
-            },
-            {
-                path: 'createEditEvent',
-                name: 'createEditEvent',
-                meta: {
-                    title: '创建/编辑活动',
-                    tagName: '创建/编辑活动',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/event/createEditEvent')
-            }
-        ]
-    },
-    {
-        path: '/serviceManagement',
-        meta: {
-            title: '服务管理',
-            isMenu: true,
-            icon: 'hosjoy_cloud_service'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'customerManagement',
-                name: 'customerManagement',
-                meta: {
-                    title: '客户管理',
-                    tagName: '客户管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerManagement/customer.vue')
-            },
-            {
-                path: 'houseKeeperManagement',
-                name: 'houseKeeperManagement',
-                meta: {
-                    title: '管家管理',
-                    tagName: '管家管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/houseKeeperManagement/houseKeeperManagement.vue')
-            },
-            {
-                path: 'orderCenter',
-                name: 'orderCenter',
-                meta: {
-                    title: '订单中心',
-                    tagName: '订单中心',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/order.vue')
-            },
-            {
-                path: 'workOrder',
-                name: 'workOrder',
-                meta: {
-                    title: '工单信息',
-                    tagName: '工单信息',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/workOrder/index.vue')
-            },
-            {
-                path: 'customerRecord',
-                name: 'customerRecord',
-                meta: {
-                    title: '客户档案',
-                    tagName: '客户档案',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerRecord/index.vue')
-            },
-            {
-                path: 'customerRecordDetail',
-                name: 'customerRecordDetail',
-                meta: {
-                    title: '档案详情',
-                    tagName: '档案详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerRecord/detail.vue')
-            },
-            {
-                path: 'customerReport',
-                name: 'customerReport',
-                meta: {
-                    title: '客户报告',
-                    tagName: '客户报告',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerReport/index.vue')
-            },
-            {
-                path: 'customerReportDetail',
-                name: 'customerReportDetail',
-                meta: {
-                    title: '报告详情',
-                    tagName: '报告详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/customerReport/detail.vue')
-            },
-            {
-                path: 'orderDetails',
-                name: 'serviceManagementOrderDetails',
-                meta: {
-                    title: '有赞订单详情',
-                    tagName: '有赞订单详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderDetails.vue')
-            },
-            {
-                path: 'orderChannelDetails',
-                name: 'serviceManagementOrderChannelDetails',
-                meta: {
-                    title: '渠道订单详情',
-                    tagName: '渠道订单详情',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderChannelDetails.vue')
-            },
-            {
-                path: 'orderChannelEdit',
-                name: 'serviceManagementOrderChannelEdit',
-                meta: {
-                    title: '渠道订单修改',
-                    tagName: '渠道订单修改',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/orderCenter/orderChannelEdit.vue')
-            },
-            {
-                path: 'tags',
-                name: 'serviceManagementTags',
-                meta: {
-                    title: '标签管理',
-                    tagName: '标签管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/tags/tags.vue')
-            },
-            {
-                path: 'channelManagement',
-                name: 'channelManagement',
-                meta: {
-                    title: '渠道管理',
-                    tagName: '渠道管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/serviceManagement/channelManagement/channelManagement.vue')
-            }
-        ]
-    },
-    {
         path: '/platformCompanyCockpit',
         meta: {
             title: '平台公司驾驶舱',
@@ -844,50 +189,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/jinyun',
-        meta: {
-            title: '金云系统',
-            isMenu: true,
-            icon: 'hosjoy_stay_online'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'jyindex',
-                name: 'jyindex',
-                meta: {
-                    title: '金云',
-                    tagName: '金云',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/index')
-            },
-            {
-                path: 'enterpriseCA',
-                name: 'enterpriseCA',
-                meta: {
-                    title: '企业CA',
-                    tagName: '企业CA',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/enterpriseCA')
-            },
-            {
-                path: 'amountImport',
-                name: 'amountImport',
-                meta: {
-                    title: '额度导入',
-                    tagName: '额度导入',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('./views/jinyunplatform/amountImport')
-            }
-        ]
-    },
-    {
         path: '/appUpdate',
         meta: {
             title: 'App管理',
@@ -909,8 +210,35 @@ const routerMapping = [
                 component: () => import('@/views/appUpdate/index.vue')
             }
         ]
-    }
-
+    },
+    {
+        path: '/paymentCentral',
+        meta: {
+            title: '中金支付',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'offlinetransfer',
+                name: 'offlinetransfer',
+                meta: {
+                    title: '线下转账白名单管理',
+                    tagName: '线下转账白名单管理',
+                    parentName: '中金支付',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/paymentCentral/offlineTransfer.vue')
+            }
+        ]
+    },
+    Wisdomrouter,
+    Bestrouter,
+    ServiceManagement,
+    B2brouter,
+    Jyrouter
 ]
 
 const router = new Router({
@@ -933,7 +261,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0;i < data.length;i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -959,11 +287,15 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    const menu = makeMenus(routerMapping, resourceList)
-    // const menu = routerMapping
+    // 开发环境菜单配置
+    let menu = ''
+    if (process.env.NODE_ENV == 'development') {
+        menu = routerMapping
+    } else {
+        menu = makeMenus(routerMapping, resourceList)
+    }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
     router.addRoutes(menu)
-
     if (isMakeIndex) {
         makeIndex(menu, next, query)
     } else {
@@ -1011,9 +343,30 @@ router.beforeEach(async (to, from, next) => {
             user_agent: navigator.userAgent
         })
     }
+    // TODO 获取B2b token 项目路径 hmall（重新获取token）
+    if (to.path.indexOf('hmall') > 0 || to.path.indexOf('paymentCentral') > 0){
+        // 登录token带到请求的头部中，用于校验登录状态
+        const token = sessionStorage.getItem('tokenB2b')
+        if (token) {
+            axios.defaults.headers['Authorization'] = 'Bearer ' + token
+        } else {
+            const newInstance = axios.create({
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            const { data } = await newInstance.post(B2bUrl + 'uaa/oauth/token', qs.stringify({
+                'grant_type': 'client_credentials',
+                'client_id': 'boss',
+                'client_secret': 'boss',
+                'scope': 'boss'
+            }))
+            sessionStorage.setItem('tokenB2b', data.access_token)
+            axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
+        }
+    }
     next()
 })
-
 export default router
 export {
     routerMapping

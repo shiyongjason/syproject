@@ -85,8 +85,8 @@
                         {{item.post}}
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationPostCreateFormList[${index}].proportion`" :rules="{ required: true, message: '请输入正整数', validator: IsPositiveInteger, trigger: 'blur' }">
-                            <el-input placeholder maxlength="25" v-model="item.proportion" @change="onChangeProportion">
+                        <el-form-item :prop="`dueOrganizationPostCreateFormList[${index}].proportion`" :rules="rules.proportion(item, index)">
+                            <el-input placeholder maxlength="25" v-model.number="item.proportion" @change="onChangeProportion">
                                 <template slot="suffix">人</template>
                             </el-input>
                         </el-form-item>
@@ -113,13 +113,13 @@
                         {{item.assessmentDimension}}
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].description`" :rules="{ required: true, message: '请输入描述', trigger: 'blur' }">
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].description`" :rules="rules.description(item, index)">
                             <el-input v-model="item.description" placeholder="请输入" maxlength="25"></el-input>
                         </el-form-item>
                     </td>
                     <td>
-                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`" :rules="{ required: true, message: '请输入正整数', validator: IsPositiveInteger, trigger: 'blur' }">
-                            <el-input v-model="item.score" placeholder="满分40分" maxlength="2" @change="onChangeScore(item)"></el-input>
+                        <el-form-item :prop="`dueOrganizationOrgAssessmentCreateFormList[${index}].score`" :rules="rules.score(item, index)">
+                            <el-input v-model.number="item.score" placeholder="满分40分" maxlength="2" @change="onChangeScore(item)"></el-input>
                         </el-form-item>
                     </td>
                 </tr>
@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import { IsPositiveInteger } from '@/utils/rules'
+import { IsInteger } from '@/utils/rules'
 import { YES_NO_STATUS } from '../../const'
 import { mapState } from 'vuex'
 // import { IsFixedTwoNumber } from '@/utils/rules'
@@ -160,13 +160,61 @@ export default {
     },
     data () {
         return {
-            IsPositiveInteger: IsPositiveInteger,
             options: YES_NO_STATUS,
             defaultOrganizationSenior: {
                 position: '',
                 name: '',
                 positionDuty: '',
                 personnelSituation: ''
+            },
+            rules: {
+                proportion: (item, index) => {
+                    return [
+                        {
+                            // 这边的验证很复杂，后台传过来的是null，前端置空后是'',验证时可以填0
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationPostCreateFormList[index].proportion) {
+                                    if (this.form.dueOrganizationPostCreateFormList[index].proportion !== 0) {
+                                        return callback(new Error(`${item.post}为必填项`))
+                                    }
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        },
+                        { validator: IsInteger, trigger: 'blur', message: '岗位数请输入自然数' }
+                    ]
+                },
+                description: (item, index) => {
+                    return [
+                        {
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationOrgAssessmentCreateFormList[index].description) {
+                                    return callback(new Error(`${item.assessmentDimension}为必填项`))
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        }
+                    ]
+                },
+                score: (item, index) => {
+                    return [
+                        {
+                            // 这边的验证很复杂，后台传过来的是null，前端置空后是'',验证时可以填0
+                            validator: (rule, value, callback) => {
+                                if (!this.form.dueOrganizationOrgAssessmentCreateFormList[index].score) {
+                                    if (this.form.dueOrganizationOrgAssessmentCreateFormList[index].score !== 0) {
+                                        return callback(new Error(`${item.assessmentDimension}的评分为必填项`))
+                                    }
+                                }
+                                return callback()
+                            },
+                            trigger: 'blur'
+                        },
+                        { validator: IsInteger, trigger: 'blur', message: '分数请输入自然数' }
+                    ]
+                }
             }
         }
     },
@@ -232,7 +280,7 @@ export default {
                 return ''
             }
             this.form.dueOrganizationPostCreateFormList = organizationPostList.map(item => {
-                item.percentage = isNaN(total) ? '' : Math.round((item.proportion - 0) / total * 100)
+                item.percentage = isNaN(total) ? '' : total === 0 ? 0 : Math.round((item.proportion - 0) / total * 100)
                 return item
             })
         },

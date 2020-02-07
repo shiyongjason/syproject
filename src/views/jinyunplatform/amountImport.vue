@@ -80,7 +80,7 @@ import { getRateList, rateStatus } from './api/index'
 import { interfaceUrl } from '@/api/config'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
-    name: 'enterpriseCA',
+    name: 'amountImport',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -175,6 +175,15 @@ export default {
         this.onSearch()
     },
     methods: {
+        tracking (event) {
+            this.$store.dispatch('tracking', {
+                type: 9,
+                event,
+                page: 2,
+                page_name: '额度导入',
+                page_path_name: 'amountImport'
+            })
+        },
         handleClick () {
             this.queryParams.statusId = this.activeName
             this.onSearch()
@@ -187,6 +196,7 @@ export default {
                 message: '批量导入成功！',
                 type: 'success'
             })
+            this.tracking(9)
             this.onSearch()
         },
         isError (response) {
@@ -228,6 +238,7 @@ export default {
             })
         },
         onSearch () {
+            this.tracking(2)
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
@@ -258,6 +269,7 @@ export default {
                 reqCustomerDailyImports: this.multiSelect,
                 status: this.status
             }
+            this.tracking(8)
             await rateStatus(params)
             this.resultDialogVisible = false
             this.onSearch()
