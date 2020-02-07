@@ -9,7 +9,7 @@
                     <div>创建时间：{{ comfortInfo.createTime | formatDate}}</div>
                     <div>设备数：{{ comfortInfo.deviceCount}}</div>
                     <div>零科米网关：{{comfortInfo.linkIotId | isNotBlank}}</div>
-                    <div>物联网关：{{comfortInfo.wuLianIotId}}</div>
+                    <div>物联网关：{{comfortInfo.wuLianIotId | isNotBlank}}</div>
                     <div>房间数：{{comfortInfo.roomCount}}</div>
                     <div>家庭地址：{{comfortInfo.address | isNotBlank}}</div>
                     <div></div>
@@ -153,7 +153,6 @@ export default {
             this.activeList = this.roomList[indexTemp]
         },
         goMemberDetail (row) {
-            // todo 跳转到会员详情
             this.$router.push({ path: '/comfortCloud/memberdetail', query: { phone: row.phone } })
         }
     }
