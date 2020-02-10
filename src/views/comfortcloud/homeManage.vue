@@ -2,7 +2,7 @@
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont spanflex">
             <span>家庭概览</span>
-            <span>家庭数量：377个备份 有效家庭：200个</span>
+            <span>家庭数量：{{pagination.familySum}}个 有效家庭：{{pagination.effectSum}}个</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -89,7 +89,9 @@ export default {
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
-                total: 0
+                total: 0,
+                familySum: 0,
+                effectSum: 0
             },
             tableLabel: [
                 { label: '家庭名称', prop: 'homeName' },
@@ -119,7 +121,9 @@ export default {
             this.pagination = {
                 pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
-                total: data.data.totalElements
+                total: data.data.totalElements,
+                familySum: data.data.attachData.totalHomeCount,
+                effectSum: data.data.attachData.effectiveHomeCount
             }
         },
         onSearch () {
