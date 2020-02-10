@@ -80,7 +80,7 @@ export default {
         return {
             queryParams: {
                 pageNumber: 1,
-                pageSize: 100,
+                pageSize: 10,
                 platformType: '',
                 searchNum: ''
             },
