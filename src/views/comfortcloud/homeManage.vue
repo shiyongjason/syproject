@@ -135,11 +135,11 @@ export default {
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.queryParams.pageSize = val
             this.onQuery()
         },
         onEdit (row) {
