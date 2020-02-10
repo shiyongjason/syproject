@@ -32,3 +32,5 @@ export const ACCOUNT_DETAIL = 'ACCOUNT_DETAIL'
 
 // 中金 支付
 export const PAYMENT_WHITE = 'PAYMENT_WHITE'
+
+// B2b 供应商
