@@ -155,7 +155,7 @@ export default {
             this.activeList = this.roomList[indexTemp]
         },
         goMemberDetail (row) {
-            this.$router.push({ path: '/comfortCloud/memberdetail', query: { phone: row.phone } })
+            this.$router.push({ path: '/comfortCloud/membermanage', query: { phone: row.phone } })
         }
     }
 }
