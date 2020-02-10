@@ -698,7 +698,7 @@ const routerMapping = [
         meta: {
             title: 'App管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_set'
         },
         component: Layout,
         children: [
@@ -713,6 +713,29 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/appUpdate/index.vue')
+            }
+        ]
+    },
+    {
+        path: '/fundsData',
+        meta: {
+            title: '好智慧-资金数据',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'standingBook',
+                name: 'standingBook',
+                meta: {
+                    title: '资金借款台账',
+                    tagName: '资金借款台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/Ledger.vue')
             }
         ]
     },
