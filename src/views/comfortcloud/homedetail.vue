@@ -23,8 +23,10 @@
                 </div>
                 <!-- 表格使用老毕的组件 -->
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination"
-                            @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true"
-                            :actionMinWidth='280'>
+                            @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                    <template slot="role" slot-scope="scope">
+                        {{scope.data.row.role === 0 ? '管理员' : '普通成员'}}
+                    </template>
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn" @click="goMemberDetail(scope.data.row)">详情</el-button>
                     </template>
