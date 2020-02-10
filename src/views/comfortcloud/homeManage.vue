@@ -96,7 +96,7 @@ export default {
                 { label: '管理员手机号', prop: 'phone' },
                 { label: '成员数', prop: 'memberCount' },
                 { label: '物联网关', prop: 'wuLianIotId' },
-                { label: '零科米网关', prop: 'linkIotId' },
+                { label: '零颗米网关', prop: 'linkIotId' },
                 { label: '设备数', prop: 'deviceCount' },
                 { label: '房间数', prop: 'roomCount' },
                 { label: '创建时间 ', prop: 'createTime', formatters: 'dateTime' },
