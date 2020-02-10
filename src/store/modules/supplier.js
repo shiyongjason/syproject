@@ -1,24 +1,32 @@
 import * as types from '../mutation-types'
-import { getPaymentWhite } from '@/views/paymentCentral/api'
+import { findSupplierlist, findBrand } from '@/views/hmall/suppliermanage/api'
 const state = {
-    paymentWhite: {}
+    supplierData: {},
+    brandData: []
 }
 
 const getters = {
-    paymentWhite: state => state.paymentWhite
+    supplierData: state => state.supplierData,
+    brandData: state => state.brandData
 }
 
 const mutations = {
-    [types.PAYMENT_WHITE] (state, payload) {
-        state.paymentWhite = payload
+    [types.SUPPLIER_DATA] (state, payload) {
+        state.supplierData = payload
+    },
+    [types.BRAND_DATA] (state, payload) {
+        state.brandData = payload
     }
 }
 
 const actions = {
-    async findPaymentwhite ({ commit }, params) {
-        const { data } = await getPaymentWhite(params)
-        console.log(data)
-        commit(types.PAYMENT_WHITE, data)
+    async findSupplierlist ({ commit }, params) {
+        const { data } = await findSupplierlist(params)
+        commit(types.SUPPLIER_DATA, data)
+    },
+    async findBrand ({ commit }, params) {
+        const { data } = await findBrand(params)
+        commit(types.BRAND_DATA, data)
     }
 }
 export default {

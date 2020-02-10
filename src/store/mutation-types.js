@@ -34,3 +34,5 @@ export const ACCOUNT_DETAIL = 'ACCOUNT_DETAIL'
 export const PAYMENT_WHITE = 'PAYMENT_WHITE'
 
 // B2b 供应商
+export const SUPPLIER_DATA = 'SUPPLIER_DATA'
+export const BRAND_DATA = 'BRAND_DATA'
