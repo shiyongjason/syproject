@@ -321,8 +321,6 @@ export default {
                                 type: 'success'
                             })
                         }
-
-
                         this.loading = false
                         this.dialogVisible = false
                         this.searchList()
