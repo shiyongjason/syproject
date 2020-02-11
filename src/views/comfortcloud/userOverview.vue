@@ -286,7 +286,7 @@ export default {
         margin: 5px;
         align-items: center;
         border: 1px solid #e5e5e5;
-
+        cursor: pointer;
         padding: 10px;
         box-sizing: border-box;
         p {

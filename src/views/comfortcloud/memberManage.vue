@@ -29,7 +29,7 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='280'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="homeCount" slot-scope="scope">
                     <p @click="onShowHome(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
                 </template>
@@ -131,12 +131,11 @@ export default {
         }),
         async onQuery () {
             await this.findMembersituation(this.searchParams)
-            this.membernewData = this.memberData
-            this.tableData = this.membernewData.pageContent
+            this.tableData = this.memberData.pageContent
             this.pagination = {
-                pageNumber: this.membernewData.pageNumber,
-                pageSize: this.membernewData.pageSize,
-                total: this.membernewData.totalElements
+                pageNumber: this.memberData.pageNumber,
+                pageSize: this.memberData.pageSize,
+                total: this.memberData.totalElements
             }
         },
         onSearch () {
