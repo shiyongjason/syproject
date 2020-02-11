@@ -6,14 +6,17 @@
                     <span>企业名称：</span>
                     <span>{{item.companyName}}</span>
                 </div>
-                <div class="con-box">
+                <div class="con-box" v-if="item.merchantAccountType">
                     <span>大B账号类型：</span>
-                    <span><i>{{item.merchantAccountType?item.merchantAccountType:'--'}}</i></span>
+                    <span><i>{{item.merchantAccountType}}</i></span>
                 </div>
-                 <div class="con-box">
+                <div class="con-box" v-if="item.memberAccountType">
                     <span>小b账号类型：</span>
-                    <span><i>{{item.memberAccountType?item.memberAccountType:'--'}}</i></span>
+                    <span><i>{{item.memberAccountType}}</i></span>
                 </div>
+            </div>
+            <div class="con-box" v-if="account.length==0">
+                <div style="display: flex;flex: 1;justify-content: center;">暂无企业</div>
             </div>
         </el-drawer>
     </div>
@@ -50,7 +53,7 @@ export default {
             this.account = this.accountDetail
         }
     },
-    mounted () {}
+    mounted () { }
 }
 </script>
 <style  lang="scss" scoped>
@@ -59,16 +62,22 @@ export default {
     .con-box {
         display: flex;
         margin-bottom: 10px;
-        span{
-            &:first-child{
+        div {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            text-align: center;
+        }
+        span {
+            &:first-child {
                 width: 150px;
                 text-align: right;
             }
-            i{
-                border:1px solid #fdb192 ;
-                background: #fdb192 ;
+            i {
+                border: 1px solid #fdb192;
+                background: #fdb192;
                 font-style: normal;
-                padding:0 6px;
+                padding: 0 6px;
                 font-size: 14px;
                 border-radius: 5px;
             }

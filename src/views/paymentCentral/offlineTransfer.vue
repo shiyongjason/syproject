@@ -24,8 +24,7 @@
                     <div class="query-col-title">状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.isDownload">
-                            <el-option v-for="item in downState" :key="item.key" :label="item.label" 
-                            :value="item.key">
+                            <el-option v-for="item in downState" :key="item.key" :label="item.label" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -56,7 +55,7 @@
     </div>
 </template>
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
     name: 'paymentwhite',
@@ -82,61 +81,61 @@ export default {
                 { label: '状态', prop: 'isDownload' }
             ],
             paginationInfo: {},
-            downState: [{ label: '全部', key: '' }, { label: '是', key: 1 }, {label: '否', key: 0}]
-    }
-},
-computed: {
-        ...mapGetters({
-    paymentWhite: 'paymentWhite'
-})
-},
-mounted() {
-    this.onFindPayment()
-    this.copyParams = { ...this.queryParams }
-},
-methods: {
-        ...mapActions({
-    findPaymentwhite: 'findPaymentwhite'
-}),
-        onCopy(id) {
-        this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
-    },
-    searchList() {
-        this.queryParams.pageNumber = 1
-        this.onFindPayment()
-    },
-    onRest() {
-        this.queryParams = { ...this.copyParams }
-        this.searchList()
-    },
-    handleSizeChange(val) {
-        this.queryParams.pageSize = val
-        this.onFindPayment()
-    },
-    handleCurrentChange(val) {
-        this.queryParams.pageNumber = val.pageNumber
-        this.onFindPayment()
-    },
-    async onFindPayment() {
-        await this.findPaymentwhite(this.queryParams)
-        let paymentList = this.paymentWhite.records
-        this.tableData = paymentList
-        console.log(this.tableData)
-        this.paginationInfo = {
-            total: this.paymentWhite.total,
-            pageNumber: this.paymentWhite.current,
-            pageSize: this.paymentWhite.size
+            downState: [{ label: '全部', key: '' }, { label: '是', key: 1 }, { label: '否', key: 0 }]
         }
     },
-     onImport () {
+    computed: {
+        ...mapGetters({
+            paymentWhite: 'paymentWhite'
+        })
+    },
+    mounted () {
+        this.onFindPayment()
+        this.copyParams = { ...this.queryParams }
+    },
+    methods: {
+        ...mapActions({
+            findPaymentwhite: 'findPaymentwhite'
+        }),
+        onCopy (id) {
+            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+        },
+        searchList () {
+            this.queryParams.pageNumber = 1
+            this.onFindPayment()
+        },
+        onRest () {
+            this.queryParams = { ...this.copyParams }
+            this.searchList()
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.onFindPayment()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.onFindPayment()
+        },
+        async onFindPayment () {
+            await this.findPaymentwhite(this.queryParams)
+            let paymentList = this.paymentWhite.records
+            this.tableData = paymentList
+            console.log(this.tableData)
+            this.paginationInfo = {
+                total: this.paymentWhite.total,
+                pageNumber: this.paymentWhite.current,
+                pageSize: this.paymentWhite.size
+            }
+        },
+        onImport () {
             var url = ''
             for (var key in this.queryParams) {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?' 
-            + url + 'access_token=' + sessionStorage.getItem('tokenB2b')
-        },
-}
+            location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?' +
+                url + 'access_token=' + sessionStorage.getItem('tokenB2b')
+        }
+    }
 }
 </script>

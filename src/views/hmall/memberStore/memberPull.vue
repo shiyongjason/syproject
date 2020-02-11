@@ -2,16 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
+                <div class="query-cont-col" style="width: 400px;">
                     <div class="query-col-title">被邀请人（会员）：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.member" placeholder="请输入被邀请会员的账号和企业名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.member" style="width: 260px;" placeholder="请输入被邀请会员的账号和企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" style="width: 372px;">
                     <div class="query-col-title">邀请人（会员）：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.recommendedMember" placeholder="请输入邀请人的账号和企业名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.recommendedMember" style="width: 240px;" placeholder="请输入邀请人的账号和企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <!-- <div class="query-cont-col">
@@ -51,11 +51,11 @@
                 <!-- <template slot="authenticated" slot-scope="scope">
                     {{scope.data.row.authenticated==1?'是':'否'}}
                 </template> -->
-                 <template slot="memberName" slot-scope="scope">
-                    {{scope.data.row.memberAccount}}{{scope.data.row.memberName}}
+                <template slot="memberName" slot-scope="scope">
+                    {{scope.data.row.memberAccount}}({{scope.data.row.memberName}})
                 </template>
-                 <template slot="recommendName" slot-scope="scope">
-                    {{scope.data.row.recommendedAccount}}{{scope.data.row.recommendedMemberName}}
+                <template slot="recommendName" slot-scope="scope">
+                    {{scope.data.row.recommendedAccount}}({{scope.data.row.recommendedMemberName}})
                 </template>
             </basicTable>
         </div>
@@ -81,9 +81,10 @@ export default {
                 pageSize: 10,
                 recommendedMember: ''
             },
-            tableLabel: [{ label: '会员', prop: 'memberName' },
-            { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
-            { label: '邀请人（会员）', prop: 'recommendName' }],
+            tableLabel: [{ label: '被邀请人（会员）', prop: 'memberName' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '邀请人（会员）', prop: 'recommendName' }
+            ],
             paginationInfo: {},
             tableData: [],
             B2bUrl: B2bUrl
@@ -137,8 +138,7 @@ export default {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' 
-            + url + 'access_token=' + sessionStorage.getItem('token')
+            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' + url + 'access_token=' + sessionStorage.getItem('token')
         },
         async getRecomendboss () {
             const { data } = await getRecomendboss(this.queryParams)
@@ -162,5 +162,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
 </style>

@@ -18,13 +18,13 @@
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true >
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.subsectionName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
-                </div>
+                </div> -->
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
@@ -85,10 +85,15 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用状态：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用状态：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
+            <!-- <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用状态：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用状态：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
+                店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag> -->
+                <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
                 店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
              @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+                <template slot="subsectionName" slot-scope="scope">
+                    {{scope.data.row.subsectionName || '无'}}
+                </template>
                 <template slot="merchantType" slot-scope="scope">
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
                 </template>
@@ -96,13 +101,16 @@
                     {{merchantRole[scope.data.row.merchantRolePermission-1]}}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
-                    {{scope.data.row.isAutoDispatch==0?'否':'是'}}
+                    {{scope.data.row.isAutoDispatch==0?'已关闭':'已开启'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
                     <span :class="scope.data.row.isAuthentication==0?'colorRed':'colorGreen'">{{scope.data.row.isAuthentication==0?'未认证':'已认证'}}</span>
                 </template>
-                  <template slot="isEnabled" slot-scope="scope">
+                <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
+                </template>
+                <template slot="authenticationTime" slot-scope="scope">
+                    {{scope.data.row.authenticationTime | formatDate}}
                 </template>
                 <template slot="action" slot-scope="scope" >
                     <!-- <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button> -->
@@ -163,8 +171,8 @@ export default {
                     } },
                 { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
-                { label: '自动推送至店铺', prop: 'isAutoDispatch' },
-                { label: '状态', prop: 'isEnabled' }
+                { label: '自动推送至店铺', prop: 'isAutoDispatch' }
+                // { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
             drawer: false,
