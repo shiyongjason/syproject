@@ -5,8 +5,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.branchCode" placeholder="全部" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                        <el-select v-model="queryParams.branchName" placeholder="全部" :clearable=true>
+                            <el-option :label="item.organizationName" :value="item.organizationName" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -133,7 +133,7 @@ export default {
                 pageSize: 10,
                 provinceId: '',
                 cityId: '',
-                branchCode: '',
+                branchName: '',
                 supplierName: ''
             },
             copyForm: {},
