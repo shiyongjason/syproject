@@ -39,6 +39,9 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onImport()">
+                            导出
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -54,7 +57,7 @@
                     {{scope.data.row.provinceName}}{{scope.data.row.cityName}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
+                    <el-button type="success" size="mini" plain @click="onEditSupplier(scope.data.row)">编辑</el-button>
                     <el-button type="warning" size="mini" plain @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
@@ -114,9 +117,10 @@
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { addSupplier, deleteSupplier, getSupplier } from './api/index'
+import { addSupplier, deleteSupplier, getSupplierDetail } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { B2bUrl } from '@/api/config'
 export default {
     name: 'supplier',
     data () {
@@ -274,8 +278,24 @@ export default {
             this.$message({
                 message: '删除成！',
                 type: 'success'
-            });
+            })
             this.searchList()
+        },
+        async onEditSupplier (val) {
+            const { data } = await getSupplierDetail(val.id)
+            this.dialogtitle = '编辑供应商'
+            this.dialogVisible = true
+            console.log(data)
+            this.ruleForm = { ...data }
+        },
+        onImport () {
+            var url = ''
+            for (var key in this.queryParams) {
+                url += (key + '=' + this.queryParams[key] + '&')
+            }
+            // console.log(url)
+            location.href = B2bUrl + 'product/api/supplier/export?' +
+                url + 'access_token=' + sessionStorage.getItem('tokenB2b')
         },
         onOperate () {
             this.loading = true
@@ -292,13 +312,14 @@ export default {
                     this.$message({
                         message: '新增供应商成功！',
                         type: 'success'
-                    });
+                    })
                 } else {
                     this.loading = false
                 }
             })
         },
         productCategoryChange (val) {
+            console.log(val)
             this.ruleForm.categoryId = val && val[2]
         },
         handleSizeChange (val) {
