@@ -1,23 +1,23 @@
 import * as types from '../mutation-types'
 import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/comfortcloud/api'
 const state = {
-    memberData: {},
-    memberDetail: {},
+    iotmemberData: {},
+    iotmemberDetail: {},
     familyData: {}
 }
 
 const getters = {
-    memberData: state => state.memberData,
-    memberDetail: state => state.memberDetail,
+    iotmemberData: state => state.iotmemberData,
+    iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData
 }
 
 const mutations = {
     [types.MEMBERS_DATA] (state, payload) {
-        state.memberData = payload
+        state.iotmemberData = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
-        state.memberDetail = payload
+        state.iotmemberDetail = payload
     },
     [types.FAMILY_DATA] (state, payload) {
         state.familyData = payload
