@@ -23,8 +23,10 @@
                 </div>
                 <!-- 表格使用老毕的组件 -->
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination"
-                            @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true"
-                            :actionMinWidth='280'>
+                            @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                    <template slot="role" slot-scope="scope">
+                        {{scope.data.row.role === 0 ? '管理员' : '普通成员'}}
+                    </template>
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn" @click="goMemberDetail(scope.data.row)">详情</el-button>
                     </template>
@@ -37,9 +39,9 @@
                     <p>房屋详情</p>
                 </div>
                 <div class="query-flex">
-                    <div>房屋面积：{{homeDetail.size | isNotBlank}}</div>
+                    <div>房屋面积：{{homeDetail.size + ' m²' | isNotBlank}}</div>
                     <div>家庭人口：{{homeDetail.familyPopulation | isNotBlank}}</div>
-                    <div>所在楼层：{{homeDetail.floor | isNotBlank}}</div>
+                    <div>所在楼层：{{homeDetail.floor + ' 楼' | isNotBlank}}</div>
                     <div>建筑保温层：
                         <template v-if="homeDetail.insulationLayer">
                             {{homeDetail.insulationLayer === 1 ? '无' : '有'}}
@@ -67,17 +69,60 @@
                         <el-tab-pane :label="item.roomName" :name="item.roomName + item.roomId" :key="item.roomId"></el-tab-pane>
                     </template>
                 </el-tabs>
-                <template v-if="this.activeList.devices && this.activeList.devices.length > 0">
-                    <div class="home-wrap" v-for="(item,index) in this.activeList.devices" :key="index">
-                        <p>{{item.type | isNotBlank}}</p>
-                        <div class="home-wrap-flex">
-                            <span>{{item.deviceName}} * {{item.deviceCount}}</span>
-                        </div>
+                <div class="home-wrap">
+                    <p>所有设备</p>
+                    <div class="home-wrap-flex">
+                        <template v-if="this.activeList.devices && this.activeList.devices.length > 0">
+                             <span v-for="(item,index) in this.activeList.devices" :key="index">
+                                {{item.deviceName}} * {{item.deviceCount}}
+                            </span>
+                        </template>
+                        <template v-else>
+                            <p class="no-device">暂无设备</p>
+                        </template>
                     </div>
-                </template>
-                <template v-else>
-                    <p class="no-device">暂无设备</p>
-                </template>
+                </div>
+                <div class="home-wrap">
+                    <p>房间详情</p>
+                    <div class="home-wrap-flex">
+                        <span>房屋面积：
+                            <template v-if="this.activeList.roomSize">
+                                {{this.activeList.roomSize + 'm²'}}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
+                        <span>是否有落地窗：{{this.activeList.window === 0 ? '无': '有'}}</span>
+                    </div>
+                </div>
+                <div class="home-wrap">
+                    <p>智能调温</p>
+                    <div class="home-wrap-flex">
+                        <span>是否启用：
+                            <template v-if="this.activeList.bigSwitch">
+                                {{this.activeList.bigSwitch === 0 ? '未启用' : '已启用'}}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
+                        <span>目标温度：
+                            <template v-if="this.activeList.targetTemperature">
+                                {{this.activeList.targetTemperature + '℃' }}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
+                        <span>模式：
+                            <template v-if="this.activeList">
+                                {{this.activeList.comfortType === 1 ? '制冷': '制热'}}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
+                        <span>目标湿度：
+                            <template v-if="this.activeList.targetHumidity">
+                                {{this.activeList.targetHumidity + '%'}}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -128,7 +173,7 @@ export default {
         },
         async findHomeGeneralDetails () {
             const { data } = await findHomeGeneralDetails(this.$route.query.homeId)
-            this.homeDetail = data
+            this.homeDetail = data.data
         },
         async findHomePopulationDetails () {
             const { data } = await findHomeUserList(this.$route.query.homeId)
@@ -153,7 +198,7 @@ export default {
             this.activeList = this.roomList[indexTemp]
         },
         goMemberDetail (row) {
-            this.$router.push({ path: '/comfortCloud/memberdetail', query: { phone: row.phone } })
+            this.$router.push({ path: '/comfortCloud/membermanage', query: { phone: row.phone } })
         }
     }
 }
