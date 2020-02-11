@@ -43,7 +43,7 @@
         <div class="page-body-cont query-cont">
             <!-- 按钮权限 -->
             <div class="query-cont-col" v-if="hosAuthCheck(reCheckAuth)">
-                <el-button type="primary" class="ml20">新增台账</el-button>
+                <el-button type="primary" class="ml20" @click="dialogVisible = true">新增台账</el-button>
                 <el-button type="primary" class="ml20" @click="onExportTemplate">导入模板导出</el-button>
             </div>
             <div class="query-cont-col">
@@ -64,23 +64,23 @@
                 <el-tab-pane label="敞口" name="敞口"></el-tab-pane>
             </el-tabs>
             <tab :source='activeName' @onClickProduce='onClickProduce' />
-            <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isMultiple='isMultiple && isTab' @update:multiSelection='multiSelection'>
-            </basicTable>
+            <hosJoyTable  v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList" >
+            </hosJoyTable>
         </div>
+        <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/>
     </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import tab from './components/tab.vue'
+import newLedger from './components/dialog/newLedger.vue'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'amountImport',
-    components: {
-        tab: tab
-    },
+    components: { tab, hosJoyTable, newLedger },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -169,18 +169,61 @@ export default {
                 { value: '000', label: '上海' },
                 { value: '002', label: '北京' }
             ],
-            resultDialogVisible: false,
+            dialogVisible: false,
             content: '',
             status: '',
             // 控制权限
             isTab: true,
-            multiSelect: []
+            multiSelect: [],
+            changeTable: true,
+            column: [
+                {
+                    prop: 'misCode',
+                    label: 'MIS编码',
+                    width: '100',
+                    fixed: true
+                },
+                { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '120' },
+                { prop: 'subsectionName', label: '分部', fixed: true },
+                {
+                    label: '销售收入与成本/万',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.expandSell, 1) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'salesIncomeIncludingTax',
+                            label: '销售收入（含税）/万',
+                            width: '150',
+                            displayAs: 'money'
+                        }
+                    ]
+                }
+            ]
         }
     },
     mounted () {
         this.onSearch()
     },
     methods: {
+        handleExpand (scope, expandSellrr, num) {
+            this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
+            if (this.column[scope.$index]._expand) {
+                this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr)
+            } else {
+                this.column[scope.$index].children = this.column[scope.$index].children.slice(0, num)
+                this.changeTable = false
+                this.$nextTick(() => { this.changeTable = true })
+            }
+        },
+        getList () {
+
+        },
+        onClose () {
+            this.dialogVisible = false
+        },
         // 埋点
         tracking (event) {
             this.$store.dispatch('tracking', {
