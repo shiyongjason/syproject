@@ -94,7 +94,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            memberData: 'memberData',
+            memberData: 'iotmemberData',
             familyData: 'familyData'
         }),
         pickerOptionsStart () {
