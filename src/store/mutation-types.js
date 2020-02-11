@@ -43,3 +43,7 @@ export const HOSTORY_REPORT = 'HOSTORY_REPORT'
 export const MEMBERS_DATA = 'MEMBERS_DATA'
 export const MEMBERS_DETAIL = 'MEMBERS_DETAIL'
 export const FAMILY_DATA = 'FAMILY_DATA'
+
+// B2b 供应商
+export const SUPPLIER_DATA = 'SUPPLIER_DATA'
+export const BRAND_DATA = 'BRAND_DATA'
