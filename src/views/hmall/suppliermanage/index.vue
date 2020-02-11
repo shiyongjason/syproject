@@ -73,9 +73,9 @@
                 <el-form-item label="联系方式：" prop="contactDetails">
                     <el-input v-model="ruleForm.contactDetails"></el-input>
                 </el-form-item>
-                <el-form-item label="分部：" prop="branchCode">
-                    <el-select placeholder="全部" v-model="ruleForm.branchCode" :clearable=true>
-                        <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                <el-form-item label="分部：" prop="branchName">
+                    <el-select placeholder="全部" v-model="ruleForm.branchName" :clearable=true>
+                        <el-option :label="item.organizationName" :value="item.organizationName" v-for="item in branchArr" :key="item.organizationName"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="品牌：" prop="brandId">
@@ -117,7 +117,7 @@
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { addSupplier, deleteSupplier, getSupplierDetail } from './api/index'
+import { addSupplier, deleteSupplier, getSupplierDetail, editSupplierDetail } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { B2bUrl } from '@/api/config'
@@ -154,7 +154,7 @@ export default {
             brandList: [],
             categoryIdArr: [],
             ruleForm: {
-                branchCode: '',
+                // branchCode: '',
                 branchName: '',
                 brandId: '',
                 categoryId: '',
@@ -176,7 +176,7 @@ export default {
                 contactDetails: [
                     { required: true, message: '请输入联系方式', trigger: 'blur' }
                 ],
-                branchCode: [
+                branchName: [
                     { required: true, message: '请选择分部', trigger: 'change' }
                 ],
                 brandId: [
@@ -270,7 +270,7 @@ export default {
             this.dialogVisible = true
             this.ruleForm = deepCopy(this.copyForm)
             this.categoryIdArr = []
-            his.$refs.ruleForm.resetFields()
+            this.$refs.ruleForm.resetFields()
             this.dialogtitle = '新增供应商'
         },
         async onDelete (val) {
@@ -287,6 +287,7 @@ export default {
             this.dialogVisible = true
             console.log(data)
             this.ruleForm = { ...data }
+            this.categoryIdArr = data.categoryIdList
         },
         onImport () {
             var url = ''
@@ -299,24 +300,39 @@ export default {
         },
         onOperate () {
             this.loading = true
-            this.$refs['ruleForm'].validate(async (valid) => {
-                if (valid) {
-                    this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
-                    this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
-                    this.ruleForm.cityName = this.cityLists && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
-                    console.log(this.ruleForm)
-                    await addSupplier(this.ruleForm)
-                    this.loading = false
-                    this.dialogVisible = false
-                    this.searchList()
-                    this.$message({
-                        message: '新增供应商成功！',
-                        type: 'success'
-                    })
-                } else {
-                    this.loading = false
-                }
-            })
+            try {
+                this.$refs['ruleForm'].validate(async (valid) => {
+                    if (valid) {
+                        // delete this.ruleForm.branchCode
+                        // this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
+                        this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
+                        this.ruleForm.cityName = this.cityLists && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
+                        console.log(this.ruleForm)
+                        if (this.dialogtitle == '新增供应商') {
+                            await addSupplier(this.ruleForm)
+                            this.$message({
+                                message: '新增供应商成功！',
+                                type: 'success'
+                            })
+                        } else if (this.dialogtitle == '编辑供应商') {
+                            await editSupplierDetail(this.ruleForm)
+                            this.$message({
+                                message: '修改供应商成功！',
+                                type: 'success'
+                            })
+                        }
+
+
+                        this.loading = false
+                        this.dialogVisible = false
+                        this.searchList()
+                    } else {
+                        this.loading = false
+                    }
+                })
+            } catch (error) {
+                this.loading = false
+            }
         },
         productCategoryChange (val) {
             console.log(val)

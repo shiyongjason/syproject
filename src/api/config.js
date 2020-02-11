@@ -22,10 +22,10 @@ switch (env) {
         // fileUploadUrl = 'http://192.168.20.248:30000/'
 
         interfaceUrl = 'https://hbp-gateway-dev.hosjoy.com:4832/'
-        ossUrl = 'http://192.168.20.248:8089/'
+        ossUrl = 'https://hbp-gateway-dev.hosjoy.com:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        ccpBaseUrl = 'https://ccp-gateway-dev.hosjoy.com:4832/'
         B2bUrl = 'https://b2b-gateway-dev.hosjoy.com:4832/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
         break
