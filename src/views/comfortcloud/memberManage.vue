@@ -2,7 +2,7 @@
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont spanflex">
             <span>会员概况 </span>
-            <span>会员数量：{{membernewData.totalElements}}个</span>
+            <span>会员数量：{{memberData.totalElements}}个</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -73,7 +73,6 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            membernewData: [],
             tableLabel: [
                 { label: '昵称', prop: 'nick' },
                 { label: '手机号', prop: 'phone', width: '120px' },
@@ -156,7 +155,6 @@ export default {
         async onShowHome (val) {
             this.dialogVisible = true
             await this.findFamilyDetail(val)
-            console.log(this.familyData)
             this.homeData = this.familyData
         }
     }

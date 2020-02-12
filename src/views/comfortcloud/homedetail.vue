@@ -8,7 +8,7 @@
                     <div>家庭成员数：{{comfortInfo.memberCount | isNotBlank}}</div>
                     <div>创建时间：{{ comfortInfo.createTime | formatDate}}</div>
                     <div>设备数：{{ comfortInfo.deviceCount}}</div>
-                    <div>零科米网关：{{comfortInfo.linkIotId | isNotBlank}}</div>
+                    <div>零颗米网关：{{comfortInfo.linkIotId | isNotBlank}}</div>
                     <div>物联网关：{{comfortInfo.wuLianIotId | isNotBlank}}</div>
                     <div>房间数：{{comfortInfo.roomCount}}</div>
                     <div>家庭地址：{{comfortInfo.address | isNotBlank}}</div>
@@ -25,7 +25,7 @@
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination"
                             @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                     <template slot="role" slot-scope="scope">
-                        {{scope.data.row.role === 0 ? '管理员' : '普通成员'}}
+                        {{scope.data.row.role - 0 ===  0 ? '管理员' : '普通成员'}}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn" @click="goMemberDetail(scope.data.row)">详情</el-button>
@@ -39,9 +39,19 @@
                     <p>房屋详情</p>
                 </div>
                 <div class="query-flex">
-                    <div>房屋面积：{{homeDetail.size + ' m²' | isNotBlank}}</div>
+                    <div>房屋面积：
+                        <template v-if="homeDetail.size">
+                            {{homeDetail.size + ' m²'}}
+                        </template>
+                        <template v-else>-</template>
+                    </div>
                     <div>家庭人口：{{homeDetail.familyPopulation | isNotBlank}}</div>
-                    <div>所在楼层：{{homeDetail.floor + ' 楼' | isNotBlank}}</div>
+                    <div>所在楼层：
+                        <template v-if="homeDetail.floor">
+                            {{homeDetail.floor + ' 楼'}}
+                        </template>
+                        <template v-else>-</template>
+                    </div>
                     <div>建筑保温层：
                         <template v-if="homeDetail.insulationLayer">
                             {{homeDetail.insulationLayer === 1 ? '无' : '有'}}
@@ -91,7 +101,12 @@
                             </template>
                             <template v-else>-</template>
                         </span>
-                        <span>是否有落地窗：{{this.activeList.window === 0 ? '无': '有'}}</span>
+                        <span>是否有落地窗：
+                            <template v-if="this.activeList.window">
+                                {{this.activeList.window === 0 ? '无': '有'}}
+                            </template>
+                            <template v-else>-</template>
+                        </span>
                     </div>
                 </div>
                 <div class="home-wrap">
@@ -110,7 +125,7 @@
                             <template v-else>-</template>
                         </span>
                         <span>模式：
-                            <template v-if="this.activeList">
+                            <template v-if="this.activeList.comfortType">
                                 {{this.activeList.comfortType === 1 ? '制冷': '制热'}}
                             </template>
                             <template v-else>-</template>
