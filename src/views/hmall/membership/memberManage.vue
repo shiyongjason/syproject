@@ -279,11 +279,14 @@ export default {
         async getFindNest () {
             await this.findNest()
             this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.countryId = item.provinceId
                 item.cities.map(value => {
                     value.cities = value.countries
+                    value.countryId = value.cityId
                 })
                 return item
             })
+            console.log(this.options)
         },
         cityChange (val) {
             console.log(val)
