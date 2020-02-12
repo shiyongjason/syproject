@@ -11,3 +11,5 @@ export const addSupplier = (params) => axios.post(B2bUrl + 'product/api/supplier
 export const deleteSupplier = (params) => axios.delete(B2bUrl + `product/api/supplier/${params}`)
 // 详情
 export const getSupplierDetail = (params) => axios.get(B2bUrl + `product/api/supplier/${params}`)
+// 修改
+export const editSupplierDetail = (params) => axios.put(B2bUrl + `product/api/supplier/${params.id}`, params)
