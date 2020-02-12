@@ -279,6 +279,25 @@ export default {
             this.tracking(3)
             const { data } = await getSignsDetail(i.id)
             this.customerForm = data
+            switch (this.customerForm.companyType) {
+                case 1:
+                    this.customerForm.companyTypeN = '借款方'
+                    break
+                case 2:
+                    this.customerForm.companyTypeN = '资金方'
+                    break
+                case 3:
+                    this.customerForm.companyTypeN = '合作方'
+                    break
+                case 4:
+                    this.customerForm.companyTypeN = '组织方'
+                    break
+                case 5:
+                    this.customerForm.companyTypeN = '担保方'
+                    break
+                default:
+                    this.customerForm.companyTypeN = ''
+            }
             this.dialog = true
         },
         async uploadSeal (row) {
