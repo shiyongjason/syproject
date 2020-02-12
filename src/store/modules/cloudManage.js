@@ -29,7 +29,7 @@ const actions = {
         const { data } = await getMembersituation(params)
         commit(types.MEMBERS_DATA, data.data)
     },
-    async findMemberDetail ({ commit }, params) {
+    async findIotMemberDetail ({ commit }, params) {
         const { data } = await getMemberDetail(params)
         commit(types.MEMBERS_DETAIL, data.data)
     },
