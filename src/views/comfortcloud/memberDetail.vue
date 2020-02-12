@@ -102,11 +102,11 @@ export default {
     },
     methods: {
         ...mapActions({
-            findMemberDetail: 'findMemberDetail'
+            findIotMemberDetail: 'findIotMemberDetail'
         }),
         async onQuery () {
             // console.log(this.searchParams)
-            await this.findMemberDetail(this.searchParams)
+            await this.findIotMemberDetail(this.searchParams)
             console.log(this.memberDetail)
             this.tableData = this.memberDetail.pageContent
             this.pagination = {
