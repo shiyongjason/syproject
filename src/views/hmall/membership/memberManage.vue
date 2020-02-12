@@ -90,7 +90,7 @@
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
                 <template slot="addressName" slot-scope="scope">
-                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                    {{scope.data.row.provinceName+scope.data.row.cityName}}{{scope.data.row.countryName?scope.data.row.countryName:''}}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
                     {{scope.data.row.isAutoDispatch==0?'否':'是'}}
