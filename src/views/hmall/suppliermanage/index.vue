@@ -116,7 +116,6 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { addSupplier, deleteSupplier, getSupplierDetail, editSupplierDetail } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
@@ -219,7 +218,7 @@ export default {
                 return province[0].cities
             }
             return []
-        },
+        }
     },
     mounted () {
         this.onFindBranchs()
