@@ -63,9 +63,14 @@
                 <el-tab-pane label="分授信" name="分授信"></el-tab-pane>
                 <el-tab-pane label="敞口" name="敞口"></el-tab-pane>
             </el-tabs>
-            <tab :source='activeName' @onClickProduce='onClickProduce' />
-            <hosJoyTable  v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList" >
-            </hosJoyTable>
+            <el-tabs v-model="produce" type="card" @tab-click="handleClick">
+                <el-tab-pane label="好信用" name="好信用"></el-tab-pane>
+                <el-tab-pane label="供应链" name="供应链"></el-tab-pane>
+                <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane>
+            </el-tabs>   
+            {{activeName}}
+            {{produce}}         
+            <complexTable :tableData='tableData' :pagination='pagination' :source='activeName' @getList='getList'/>
         </div>
         <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/>
     </div>
@@ -75,12 +80,12 @@
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import tab from './components/tab.vue'
+import complexTable from './components/complexTable.vue'
 import newLedger from './components/dialog/newLedger.vue'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'amountImport',
-    components: { tab, hosJoyTable, newLedger },
+    components: { complexTable, newLedger },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -140,11 +145,13 @@ export default {
                 produce: '好信用'
             },
             searchParams: {},
-            tableData: [],
+            tableData: [
+                {}, {}
+            ],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
-                total: 100
+                total: 0
             },
             addTags: {
                 labelName: '',
@@ -262,10 +269,10 @@ export default {
             })
         },
         async onQuery () {
-            console.log(this.activeName + ' '  + this.produce)
+            // console.log(this.activeName + ' '  + this.produce)
             this.searchParams.activeName = this.activeName
             this.searchParams.produce = this.produce
-            console.log(this.searchParams)
+            // console.log(this.searchParams)
             // const { data } = await getRateList(this.queryParams)
             // this.tableData = data.records
             // this.pagination = {
@@ -285,16 +292,13 @@ export default {
             this.$set(this.queryParams, 'ledger', '')
             this.onSearch()
         },
-        onClickProduce (produce) {
-            this.produce = produce
-            this.onSearch()
-        },
-        onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery()
-        },
-        onSizeChange (val) {
-            this.queryParams.pageSize = val
+        getList (val) {
+            console.log(val)
+            this.searchParams = {
+                ...this.searchParams,
+                ...val
+            }
+            console.log(this.searchParams)
             this.onQuery()
         }
     }
