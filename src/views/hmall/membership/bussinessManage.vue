@@ -18,7 +18,7 @@
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true >
-                            <el-option :label="item.subsectionName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
