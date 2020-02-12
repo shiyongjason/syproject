@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store/index'
 import { Message } from 'element-ui'
-import { interfaceUrl } from './config'
+import { interfaceUrl, B2bUrl } from './config'
 
 // const TIME_OUT = 60000 // 连接超时时间
 
@@ -28,10 +28,17 @@ const cancelRequst = (config) => {
 // const CancelToken = axios.CancelToken
 axios.interceptors.request.use(
     (config) => {
-        const token = sessionStorage.getItem('token')
         const refreshToken = sessionStorage.getItem('refreshToken')
-        token && (config.headers['Authorization'] = `Bearer ${token}`)
-        refreshToken && (config.headers['RefreshToken'] = `${refreshToken}`)
+        // 如果是B2b请求 token不一样
+        if (config.url.indexOf(B2bUrl) != -1) {
+            const token = sessionStorage.getItem('tokenB2b')
+            token && (config.headers['Authorization'] = `Bearer ${token}`)
+            refreshToken && (config.headers['Refresh-Token'] = `${refreshToken}`)
+        } else {
+            const token = sessionStorage.getItem('token')
+            token && (config.headers['Authorization'] = `Bearer ${token}`)
+            refreshToken && (config.headers['RefreshToken'] = `${refreshToken}`)
+        }
         // cancelRequst(config) // 在一个请求发送前执行一下取消操作
         // config.cancelToken = new CancelToken(cancelMethod => {
         //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
