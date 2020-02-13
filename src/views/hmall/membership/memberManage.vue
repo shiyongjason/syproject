@@ -83,14 +83,14 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-            @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；
+            </el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
                 <template slot="addressName" slot-scope="scope">
-                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                    {{scope.data.row.provinceName+scope.data.row.cityName}}{{scope.data.row.countryName?scope.data.row.countryName:''}}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
                     {{scope.data.row.isAutoDispatch==0?'否':'是'}}
@@ -143,7 +143,7 @@ export default {
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
-                { label: '认证状态',
+                {                    label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
                         return (
@@ -154,7 +154,7 @@ export default {
                                 </el-tooltip>
                             </span>
                         )
-                    } },
+                    }                },
                 { label: '认证时间', prop: 'authenticationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 { label: '状态', prop: 'isEnabled' }
             ],
@@ -219,6 +219,9 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.optarr = ''
+            this.options = []
+            this.getFindNest()
             this.onFindMlist(1)
         },
         handleSizeChange (val) {
@@ -276,11 +279,14 @@ export default {
         async getFindNest () {
             await this.findNest()
             this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.countryId = item.provinceId
                 item.cities.map(value => {
                     value.cities = value.countries
+                    value.countryId = value.cityId
                 })
                 return item
             })
+            console.log(this.options)
         },
         cityChange (val) {
             console.log(val)
