@@ -1,8 +1,7 @@
 <template>
     <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="40%" :before-close='onCancle'>
         <h3>档案信息：</h3>
-            
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="detailData.remark"></el-input>
+        <el-input v-model="detailData.remark" placeholder="请输入内容"></el-input>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
             <el-button type="primary" @click="onSure">确 定</el-button>
@@ -25,7 +24,7 @@ export default {
     },
     watch: {
         detailData (v) {
-            switch(v.source) {
+            switch (v.source) {
                 case 0:
                     this.title = '好信用—流贷档案信息维护'
                     break
@@ -38,7 +37,7 @@ export default {
             }
         }
     },
-    data() {
+    data () {
         return {
             title: '好信用—流贷档案信息维护',
             remark: ''
@@ -58,8 +57,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-dialog__body{
-    padding: 20px 24px;
+/deep/ .el-dialog__body {
+  padding: 20px 24px;
 }
 </style>
 
