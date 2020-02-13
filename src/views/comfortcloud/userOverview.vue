@@ -133,6 +133,7 @@ export default {
                 this.startDate = moment().subtract(31, 'days').format('YYYY-MM-DD')
                 this.endDate = moment().format('YYYY-MM-DD')
             }
+            this.findHostoryReports()
         },
         async findReports () {
             await this.findRealreport()
