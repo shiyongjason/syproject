@@ -93,12 +93,12 @@
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
                         </el-form-item>
                     </div>
-                     <div class="query-cont-col">
-                          <el-button type="primary" size="small"  @click="onSubmit" icon="el-icon-minus">删除</el-button>
-                     </div>
+                    <div class="query-cont-col">
+                        <el-button type="primary" size="small" @click="onSubmit" icon="el-icon-minus">删除</el-button>
+                    </div>
                 </div>
                 <div>
-                    <el-button type="primary" size="small"  @click="onSubmit" icon="el-icon-plus">下阶段利息</el-button>
+                    <el-button type="primary" size="small" @click="onSubmit" icon="el-icon-plus">下阶段利息</el-button>
                 </div>
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
@@ -181,4 +181,3 @@ h3 {
     margin: 20px auto;
 }
 </style>
-

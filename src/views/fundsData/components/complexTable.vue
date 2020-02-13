@@ -7,6 +7,12 @@
         </div>
         <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')" />
         <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')" />
+        <!-- MIS编码Dialog -->
+        <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" v-if='misDialogVisible' />
+        <!-- 供货商Dialog -->
+        <supplierDialog :detailData='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" v-if="supplierDialogVisible"/>
+        <!-- 年利率Dialog -->
+        <AnnualInterestRateDialog :detailData='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" v-if="AnnualInterestRateDialogVisible" />
     </div>
 </template>
 
@@ -14,9 +20,12 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import remarkDialog from './dialog/remarkDialog.vue'
 import fileInfoDialog from './dialog/fileInfoDialog.vue'
+import misDialog from './dialog/misDialog.vue'
+import supplierDialog from './dialog/supplierDialog.vue'
+import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
 export default {
     name: 'complexTable',
-    components: { hosJoyTable, remarkDialog, fileInfoDialog },
+    components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog },
     props: {
         tableData: {
             type: Array,
@@ -48,6 +57,9 @@ export default {
         return {
             remarkDialogVisible: false,
             fileinfoDialogVisible: false,
+            misDialogVisible: false,
+            supplierDialogVisible: false,
+            AnnualInterestRateDialogVisible: false,
             sizes: [10, 20, 50, 100],
             rowData: {},
             FlowToBorrow: [
@@ -55,17 +67,17 @@ export default {
                     label: '基础信息',
                     children: [
                         { prop: 'netProfitRate', label: '金云系统编号', width: '150' },
+                        { prop: 'netProfitRate', label: '台账编号', width: '150' },
                         {
                             prop: 'netProfitRate',
-                            label: '台账编号',
+                            label: 'MIS编码',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.misDialogVisible = true }}></i></span>
                             }
                         },
-                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
                         { prop: 'netProfitRate', label: '借款单位', width: '150' },
-                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' }
                     ]
                 },
                 {
@@ -76,23 +88,12 @@ export default {
                         )
                     },
                     children: [
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '借款金额',
-                            sort: 1,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                            }
-                        },
+                        { prop: 'netProfitRateLastMonth', label: '借款金额', sort: 1, width: '150' },
                         {
                             prop: 'netProfitRate',
                             label: '还款方式',
                             sort: 3,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                            }
+                            width: '150'
                         },
                         {
                             prop: 'netProfitRate',
@@ -139,7 +140,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                             }
-                        },
+                        }
                     ]
                 },
                 {
@@ -192,7 +193,7 @@ export default {
                         },
                         { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
                         { prop: 'netProfitRate', label: '借款单位', width: '150' },
-                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' }
                     ]
                 },
                 {
@@ -256,7 +257,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
                             }
-                        },
+                        }
                     ]
                 },
                 {
@@ -490,7 +491,7 @@ export default {
                         },
                         { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
                         { prop: 'netProfitRate', label: '借款单位', width: '150' },
-                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' }
                     ]
                 },
                 {
@@ -758,7 +759,7 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.supplierDialogVisible = true }}></i></span>
                     }
                 },
                 {
@@ -767,7 +768,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.AnnualInterestRateDialogVisible = true }}></i></span>
                     }
                 },
                 {
@@ -853,7 +854,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
-                },
+                }
             ],
             // 逾期账目的展开
             FlowOverdueAccounts: [
@@ -883,7 +884,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
-                },
+                }
             ],
             // 分授信
             // 借款账目的展开
@@ -1234,7 +1235,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
-                },
+                }
             ],
             // 敞口还款账目明细
             ExpoRCDetail: [
@@ -1392,7 +1393,7 @@ export default {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 }
-            ],
+            ]
         }
     },
     methods: {
@@ -1424,7 +1425,7 @@ export default {
         },
         onClose (name) {
             this[name] = false
-        },
+        }
     },
     mounted () {
         this.column = this.FlowToBorrow
@@ -1434,8 +1435,8 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.pointer {
-  cursor: pointer;
-  margin-left: 10px;
-  font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 14px;
 }
 </style>
