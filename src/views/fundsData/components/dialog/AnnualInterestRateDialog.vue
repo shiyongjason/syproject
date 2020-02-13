@@ -34,7 +34,7 @@
                                     <el-input v-model.trim="misForm.name" placeholder="请输入宽限期限" max-length='3'></el-input>
                                     <span class="dw">天</span>
                                     <span style="margin-left:25px">宽限日期：</span>
-                                    <el-input v-model.trim="misForm.name" placeholder="请输入借款期限"></el-input>
+                                    <el-input v-model.trim="misForm.x" placeholder="请输入借款期限"></el-input>
                                     <span class="dw">%</span>
                                     <el-radio style="margin:0 5px 0 15px" v-model.trim="radio" label="否"></el-radio>
                                 </el-form-item>
@@ -42,7 +42,7 @@
                             <div class="query-cont-col">
                                 <el-form-item label="宽限期利息：" prop="name">
                                     <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
-                                    <el-input v-model.trim="misForm.name" placeholder="请输入宽限期利息"></el-input>
+                                    <el-input v-isNum="misForm.name" maxlength='20' v-model.trim="misForm.name" placeholder="请输入宽限期利息"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
@@ -86,7 +86,7 @@ export default {
             title: '好信用—流贷还款信息维护',
             radio: '是',
             misForm: {
-                name: ''
+                name: '', x: ''
             },
             rules: {
                 name: [

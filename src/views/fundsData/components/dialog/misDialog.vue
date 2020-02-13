@@ -7,7 +7,7 @@
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="台账编号：" prop="name">
-                                    <el-input v-model.trim="misForm.name" placeholder="请输入台账编号"></el-input>
+                                    <el-input v-isNum:0="misForm.name" v-model.trim="misForm.name" placeholder="请输入台账编号"></el-input>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
@@ -37,7 +37,7 @@
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="onCancle">取 消</el-button>
-                    <el-button type="primary" @click="onSure">保 存</el-button>
+                    <el-button type="primary">保 存</el-button>
                 </span>
             </el-dialog>
         </div>
