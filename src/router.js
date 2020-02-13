@@ -760,6 +760,18 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/fundsData/components/dialog/newGrantdialog.vue')
+            },
+            {
+                path: 'newOpendialog',
+                name: 'newOpendialog',
+                meta: {
+                    title: '敞口台账',
+                    tagName: '敞口台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newOpendialog.vue')
             }
         ]
     },

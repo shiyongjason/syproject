@@ -1,5 +1,5 @@
 <template>
-    <!-- 新增分授信弹窗 -->
+    <!-- 新增敞口弹窗 -->
     <div class="flowbody page-body">
         <div class="page-body-cont query-cont">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
@@ -44,17 +44,22 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款金额：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                        <el-form-item label="保证金比例：" prop="name">
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
+                        </el-form-item>
+                    </div>
+                      <div class="query-cont-col">
+                        <el-form-item label="保证金缴纳：" prop="name">
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金缴纳金额"><template slot="append">元</template></el-input>
+                        </el-form-item>
+                    </div>
+                       <div class="query-cont-col">
+                        <el-form-item label="敞口金额：" prop="name">
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金缴纳金额"><template slot="append">元</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="年利率：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="借款期限： " prop="name">
+                        <el-form-item label="承兑期限： " prop="name">
                             <el-radio v-model.trim="radio" label="月"></el-radio>
                             <el-radio v-model.trim="radio" label="天"></el-radio>
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入借款期限"><template slot="append">{{radio?'月':'天'}}</template></el-input>
@@ -62,12 +67,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="开票日期：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="借款日期：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请选择出票日期"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -103,7 +103,7 @@
                         </el-form-item>
                     </div>
                 </div>
-               <div class="smalltitle">第二次还款：</div>
+               <div class="smalltitle">（未逾期）第二次还款：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="约定还款日期：" prop="name">
@@ -116,7 +116,7 @@
                         </el-form-item>
                     </div>
                 </div>
-                <div class="smalltitle">第三次还款：</div>
+                <div class="smalltitle">（未逾期）第三次还款：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="约定还款日期：" prop="name">
