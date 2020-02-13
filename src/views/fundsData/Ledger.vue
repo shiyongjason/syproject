@@ -41,9 +41,9 @@
             </div>
         </div>
         <div class="page-body-cont query-cont">
-            <!-- 按钮权限 -->
-            <div class="query-cont-col" v-if="hosAuthCheck(reCheckAuth)">
-                <el-button type="primary" class="ml20" @click="dialogVisible = true">新增台账</el-button>
+            <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
+            <div class="query-cont-col" >
+                <el-button type="primary" class="ml20" @click="onLinddialog">新增台账</el-button>
                 <el-button type="primary" class="ml20" @click="onExportTemplate">导入模板导出</el-button>
             </div>
             <div class="query-cont-col">
@@ -72,7 +72,8 @@
             {{produce}}         
             <complexTable :tableData='tableData' :pagination='pagination' :source='activeName' @getList='getList'/>
         </div>
-        <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/>
+        <!-- <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/> -->
+        <newFlowdialog :dialogVisible='dialogVisible' @onClose='onClose'/>
     </div>
 </template>
 
@@ -82,10 +83,11 @@ import { interfaceUrl } from '@/api/config'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import complexTable from './components/complexTable.vue'
 import newLedger from './components/dialog/newLedger.vue'
+import newFlowdialog from './components/dialog/newFlowdialog.vue'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'amountImport',
-    components: { complexTable, newLedger },
+    components: { complexTable, newLedger, newFlowdialog},
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -300,6 +302,9 @@ export default {
             }
             console.log(this.searchParams)
             this.onQuery()
+        },
+        onLinddialog () {
+            this.$router.push({path:'/fundsData/newFlowdialog'})
         }
     }
 }

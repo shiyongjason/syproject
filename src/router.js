@@ -736,6 +736,18 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/fundsData/Ledger.vue')
+            },
+            {
+                path: 'newFlowdialog',
+                name: 'newFlowdialog',
+                meta: {
+                    title: '流贷台账',
+                    tagName: '流贷台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newFlowdialog.vue')
             }
         ]
     },
