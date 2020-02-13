@@ -34,7 +34,7 @@
                         </el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
                         <el-input type="text" maxlength="50" v-model="queryParams.specification" placeholder="请输入商品型号">
@@ -44,10 +44,13 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.onMarket" style="width: 100%">
-                        <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
-                         </el-select>
+                        <el-select v-model="queryParams.onMarket" style="width: 100%">
+                            <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
+                        </el-select>
                     </div>
+                </div>
+                <div class="query-cont-col">
+                    <el-checkbox v-model="queryParams.isOwnOperated" :true-label=true :false-label=false>自营</el-checkbox>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
@@ -127,7 +130,8 @@ export default {
                 brandName: '',
                 categoryId: '',
                 onMarket: '',
-                specification: ''
+                specification: '',
+                isOwnOperated:false 
             },
             paginationData: {
                 pageNumber: 1,
@@ -141,7 +145,7 @@ export default {
         discountFunc (val) {
             const arr = val.map(item => item.discount)
             let result = [arr[0]]
-            for (let i = 1, len = arr.length; i < len; i++) {
+            for (let i = 1, len = arr.length;i < len;i++) {
                 arr[i] !== arr[i - 1] && result.push(arr[i])
             }
             if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
@@ -150,7 +154,7 @@ export default {
         commissionFunc (val) {
             const arr = val.map(item => item.commission)
             let result = [arr[0]]
-            for (let i = 1, len = arr.length; i < len; i++) {
+            for (let i = 1, len = arr.length;i < len;i++) {
                 arr[i] !== arr[i - 1] && result.push(arr[i])
             }
             if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
@@ -202,13 +206,13 @@ export default {
         },
         onImport () {
             window.location = B2bUrl + 'product/api/spu/spu-export?merchantName=' + this.queryParams.merchantName +
-                    '&spuName=' + this.queryParams.spuName +
-                    '&source=' + this.queryParams.source +
-                    '&brandName=' + this.queryParams.brandName +
-                    '&categoryId=' + this.queryParams.categoryId +
-                    '&onMarket=' + this.queryParams.onMarket +
-                     '&specification=' + this.queryParams.specification +
-                    '&access_token=' + sessionStorage.getItem('token')
+                '&spuName=' + this.queryParams.spuName +
+                '&source=' + this.queryParams.source +
+                '&brandName=' + this.queryParams.brandName +
+                '&categoryId=' + this.queryParams.categoryId +
+                '&onMarket=' + this.queryParams.onMarket +
+                '&specification=' + this.queryParams.specification +
+                '&access_token=' + sessionStorage.getItem('token')
         }
     },
     mounted () {
