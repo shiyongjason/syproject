@@ -21,7 +21,7 @@
                             <el-input v-model="ruleForm.name"></el-input>
                         </el-form-item>
                     </div>
-                      <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="金云系统编号：" prop="name">
                             <el-input v-model="ruleForm.name"></el-input>
                         </el-form-item>

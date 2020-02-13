@@ -24,7 +24,7 @@ export default {
     },
     watch: {
         detailData (v) {
-            switch(v.source) {
+            switch (v.source) {
                 case 0:
                     this.title = '好信用—流贷备注信息维护'
                     break
@@ -37,7 +37,7 @@ export default {
             }
         }
     },
-    data() {
+    data () {
         return {
             title: '好信用—流贷备注信息维护',
             remark: ''
@@ -57,8 +57,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/deep/ .el-dialog__body{
-    padding: 20px 24px;
+/deep/ .el-dialog__body {
+  padding: 20px 24px;
 }
 </style>
 

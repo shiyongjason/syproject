@@ -2,11 +2,11 @@
     <div class="page-body">
         {{source}}
         <div class="page-table">
-            <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData"  :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList" >
+            <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
-        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')"/>
-        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')"/>
+        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')" />
+        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')" />
     </div>
 </template>
 
@@ -36,10 +36,10 @@ export default {
         }
     },
     watch: {
-        source(val) {
-            if(val == '流贷') this.$set(this, 'column', this.FlowToBorrow)
-            if(val == '分授信') this.$set(this, 'column', this.PointsCredit)
-            if(val == '敞口') this.$set(this, 'column', this.Exposure)
+        source (val) {
+            if (val == '流贷') this.$set(this, 'column', this.FlowToBorrow)
+            if (val == '分授信') this.$set(this, 'column', this.PointsCredit)
+            if (val == '敞口') this.$set(this, 'column', this.Exposure)
             this.changeTable = false
             this.$nextTick(() => { this.changeTable = true })
         }
@@ -51,701 +51,701 @@ export default {
             sizes: [10, 20, 50, 100],
             rowData: {},
             FlowToBorrow: [
+                {
+                    label: '基础信息',
+                    children: [
+                        { prop: 'netProfitRate', label: '金云系统编号', width: '150' },
                         {
-                            label: '基础信息',
-                            children: [
-                                { prop: 'netProfitRate',  label: '金云系统编号', width: '150' },
-                                { 
-                                    prop: 'netProfitRate',
-                                    label: '台账编号',
-                                    width: '150',
-                                    render: (h, scope) => {
-                                            return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                 },
-                                { prop: 'netProfitRate',  label: 'MIS编码', width: '150' },
-                                { prop: 'netProfitRate',  label: '借款单位', width: '150' },
-                                { prop: 'netProfitRate',  label: '分部', width: '150' },
-                            ]
+                            prop: 'netProfitRate',
+                            label: '台账编号',
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
                         },
-                        {
-                            label: '借款账目',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowBorrowingBooks) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '借款金额',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '还款方式',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '放款日期',
-                                    sort: 7,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '到期日',
-                                    sort: 8,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            label: '还款账目',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowRepaymentAccount) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '最新本金还款日',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '欠收本金',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                            ]
-                        },
-                        {
-                            label: '逾期账目',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowOverdueAccounts) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
+                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
+                        { prop: 'netProfitRate', label: '借款单位', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                    ]
+                },
+                {
+                    label: '借款账目',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowBorrowingBooks) }}></i></span>
+                        )
+                    },
+                    children: [
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '台账档案编号',
-                            width: '200',
+                            label: '借款金额',
+                            sort: 1,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(0, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '备注',
-                            width: '200',
+                            prop: 'netProfitRate',
+                            label: '还款方式',
+                            sort: 3,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(0, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '放款日期',
+                            sort: 7,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '到期日',
+                            sort: 8,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
                             }
                         }
+                    ]
+                },
+                {
+                    label: '还款账目',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowRepaymentAccount) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '最新本金还款日',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '欠收本金',
+                            sort: 3,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                    ]
+                },
+                {
+                    label: '逾期账目',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowOverdueAccounts) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        }
+                    ]
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '台账档案编号',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(0, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '备注',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(0, scope.row) }}></i></span>
+                    }
+                }
             ],
             PointsCredit: [
+                {
+                    label: '基础信息',
+                    children: [
                         {
-                            label: '基础信息',
-                            children: [
-                                { 
-                                    prop: 'netProfitRate',
-                                    label: '台账编号',
-                                    width: '150',
-                                    render: (h, scope) => {
-                                            return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                 },
-                                { prop: 'netProfitRate',  label: 'MIS编码', width: '150' },
-                                { prop: 'netProfitRate',  label: '借款单位', width: '150' },
-                                { prop: 'netProfitRate',  label: '分部', width: '150' },
-                            ]
+                            prop: 'netProfitRate',
+                            label: '台账编号',
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
                         },
-                        {
-                            label: '借款账目',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsBorrowingBooks) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '开票金额',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '开票日期',
-                                    sort: 2,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '供货商名称',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '借款金额',
-                                    sort: 4,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '到期日',
-                                    sort: 7,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '还款方式',
-                                    sort: 8,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                },
-                            ]
-                        },
-                        {
-                            label: '分授信还款账目总计',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRepaymentAccount) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余本金',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余利息',
-                                    sort: 7,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余逾期罚息',
-                                    sort: 10,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            label: '分授信还款账目明细',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRCDetail) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期1',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限还款日',
-                                    sort: 2,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款本金金额',
-                                    sort: 5,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 7,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余利息',
-                                    sort: 8,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 9,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期2',
-                                    sort: 13,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限日期',
-                                    sort: 14,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款本金金额',
-                                    sort: 17,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 19,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 20,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期3',
-                                    sort: 24,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限还款日',
-                                    sort: 25,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款本金金额',
-                                    sort: 28,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 30,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 31,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余逾期罚息',
-                                    sort: 34,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
+                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
+                        { prop: 'netProfitRate', label: '借款单位', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                    ]
+                },
+                {
+                    label: '借款账目',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsBorrowingBooks) }}></i></span>
+                        )
+                    },
+                    children: [
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '台账档案编号',
-                            width: '200',
+                            label: '开票金额',
+                            sort: 1,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(1, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '开票日期',
+                            sort: 2,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '供货商名称',
+                            sort: 3,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '借款金额',
+                            sort: 4,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '到期日',
+                            sort: 7,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '还款方式',
+                            sort: 8,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
+                        },
+                    ]
+                },
+                {
+                    label: '分授信还款账目总计',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRepaymentAccount) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余本金',
+                            sort: 3,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '备注',
-                            width: '200',
+                            label: '剩余利息',
+                            sort: 7,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(1, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余逾期罚息',
+                            sort: 10,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                             }
                         }
+                    ]
+                },
+                {
+                    label: '分授信还款账目明细',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRCDetail) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期1',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限还款日',
+                            sort: 2,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款本金金额',
+                            sort: 5,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 7,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余利息',
+                            sort: 8,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 9,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期2',
+                            sort: 13,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限日期',
+                            sort: 14,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款本金金额',
+                            sort: 17,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 19,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 20,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期3',
+                            sort: 24,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限还款日',
+                            sort: 25,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款本金金额',
+                            sort: 28,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 30,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 31,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余逾期罚息',
+                            sort: 34,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        }
+                    ]
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '台账档案编号',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(1, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '备注',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(1, scope.row) }}></i></span>
+                    }
+                }
             ],
             Exposure: [
+                {
+                    label: '基础信息',
+                    children: [
                         {
-                            label: '基础信息',
-                            children: [
-                                { 
-                                    prop: 'netProfitRate',
-                                    label: '台账编号',
-                                    width: '150',
-                                    render: (h, scope) => {
-                                            return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                 },
-                                { prop: 'netProfitRate',  label: 'MIS编码', width: '150' },
-                                { prop: 'netProfitRate',  label: '借款单位', width: '150' },
-                                { prop: 'netProfitRate',  label: '分部', width: '150' },
-                            ]
+                            prop: 'netProfitRate',
+                            label: '台账编号',
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
                         },
-                        {
-                            label: '借款账目',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoBorrowingBooks) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '开票金额',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '开票日期',
-                                    sort: 2,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '供货商名称',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRate',
-                                    label: '保证金缴纳',
-                                    sort: 5,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            label: '敞口还款账目总计',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRepaymentAccount) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余敞口',
-                                    sort: 3,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余逾期罚息',
-                                    sort: 6,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
-                        {
-                            label: '敞口还款账目明细',
-                            renderHeader: (h, scope) => {
-                                return (
-                                    <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRCDetail) }}></i></span>
-                                )
-                            },
-                            children: [
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期1',
-                                    sort: 1,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限还款日',
-                                    sort: 2,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款金额',
-                                    sort: 5,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 7,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余利息',
-                                    sort: 8,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 9,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期2',
-                                    sort: 13,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限日期',
-                                    sort: 14,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款本金金额',
-                                    sort: 17,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 19,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 20,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '约定还款日期3',
-                                    sort: 24,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '宽限还款日',
-                                    sort: 25,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余还款本金金额',
-                                    sort: 28,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '实收利息',
-                                    sort: 30,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '是否逾期',
-                                    sort: 31,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                },
-                                {
-                                    prop: 'netProfitRateLastMonth',
-                                    label: '剩余逾期罚息',
-                                    sort: 34,
-                                    width: '150',
-                                    render: (h, scope) => {
-                                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                                    }
-                                }
-                            ]
-                        },
+                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
+                        { prop: 'netProfitRate', label: '借款单位', width: '150' },
+                        { prop: 'netProfitRate', label: '分部', width: '150' },
+                    ]
+                },
+                {
+                    label: '借款账目',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoBorrowingBooks) }}></i></span>
+                        )
+                    },
+                    children: [
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '台账档案编号',
-                            width: '200',
+                            label: '开票金额',
+                            sort: 1,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(2, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '备注',
-                            width: '200',
+                            prop: 'netProfitRate',
+                            label: '开票日期',
+                            sort: 2,
+                            width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '供货商名称',
+                            sort: 3,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRate',
+                            label: '保证金缴纳',
+                            sort: 5,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
                             }
                         }
+                    ]
+                },
+                {
+                    label: '敞口还款账目总计',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRepaymentAccount) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余敞口',
+                            sort: 3,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余逾期罚息',
+                            sort: 6,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '敞口还款账目明细',
+                    renderHeader: (h, scope) => {
+                        return (
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRCDetail) }}></i></span>
+                        )
+                    },
+                    children: [
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期1',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限还款日',
+                            sort: 2,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款金额',
+                            sort: 5,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 7,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余利息',
+                            sort: 8,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 9,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期2',
+                            sort: 13,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限日期',
+                            sort: 14,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款本金金额',
+                            sort: 17,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 19,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 20,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '约定还款日期3',
+                            sort: 24,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '宽限还款日',
+                            sort: 25,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余还款本金金额',
+                            sort: 28,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '实收利息',
+                            sort: 30,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 31,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '剩余逾期罚息',
+                            sort: 34,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                            }
+                        }
+                    ]
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '台账档案编号',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '备注',
+                    width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                }
             ],
             column: [],
             changeTable: true,
@@ -1119,7 +1119,7 @@ export default {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
-                
+
                 {
                     prop: 'netProfitRateLastMonth',
                     label: '应缴逾期利息',
@@ -1373,7 +1373,7 @@ export default {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
-                
+
                 {
                     prop: 'netProfitRateLastMonth',
                     label: '应缴逾期利息',
@@ -1426,7 +1426,7 @@ export default {
             this[name] = false
         },
     },
-    mounted() {
+    mounted () {
         this.column = this.FlowToBorrow
     }
 }
@@ -1434,8 +1434,8 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.pointer {
-    cursor: pointer;
-    margin-left: 10px;
-    font-size: 14px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
 }
 </style>
