@@ -5,15 +5,18 @@
             <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData"  :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList" >
             </hosJoyTable>
         </div>
+        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')"/>
+        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')"/>
     </div>
 </template>
 
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-
+import remarkDialog from './dialog/remarkDialog.vue'
+import fileInfoDialog from './dialog/fileInfoDialog.vue'
 export default {
-    name: 'profitStatistics',
-    components: { hosJoyTable },
+    name: 'complexTable',
+    components: { hosJoyTable, remarkDialog, fileInfoDialog },
     props: {
         tableData: {
             type: Array,
@@ -34,24 +37,19 @@ export default {
     },
     watch: {
         source(val) {
-            console.log(val)
-            if(val == '流贷') {
-                this.$set(this, 'column', this.FlowToBorrow)
-            }
-            if(val == '分授信') {
-                this.$set(this, 'column', this.PointsCredit)
-            }
-            if(val == '敞口') {
-                this.$set(this, 'column', this.Exposure)
-            }
-            console.log(this.column)
+            if(val == '流贷') this.$set(this, 'column', this.FlowToBorrow)
+            if(val == '分授信') this.$set(this, 'column', this.PointsCredit)
+            if(val == '敞口') this.$set(this, 'column', this.Exposure)
             this.changeTable = false
             this.$nextTick(() => { this.changeTable = true })
         }
     },
     data: function () {
         return {
+            remarkDialogVisible: false,
+            fileinfoDialogVisible: false,
             sizes: [10, 20, 50, 100],
+            rowData: {},
             FlowToBorrow: [
                         {
                             label: '基础信息',
@@ -168,7 +166,7 @@ export default {
                             label: '台账档案编号',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(0, scope.row) }}></i></span>
                             }
                         },
                         {
@@ -176,7 +174,7 @@ export default {
                             label: '备注',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(0, scope.row) }}></i></span>
                             }
                         }
             ],
@@ -466,7 +464,7 @@ export default {
                             label: '台账档案编号',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(1, scope.row) }}></i></span>
                             }
                         },
                         {
@@ -474,7 +472,7 @@ export default {
                             label: '备注',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(1, scope.row) }}></i></span>
                             }
                         }
             ],
@@ -737,7 +735,7 @@ export default {
                             label: '台账档案编号',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(2, scope.row) }}></i></span>
                             }
                         },
                         {
@@ -745,7 +743,7 @@ export default {
                             label: '备注',
                             width: '200',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
                             }
                         }
             ],
@@ -1413,7 +1411,20 @@ export default {
         },
         async getList (val) {
             this.$emit('getList', val)
-        }
+        },
+        onAddRemark (val, row) {
+            this.rowData = row
+            this.rowData.source = val
+            this.remarkDialogVisible = true // 备注dialog
+        },
+        onFileInfo (val, row) {
+            this.rowData = row
+            this.rowData.source = val
+            this.fileinfoDialogVisible = true // 台账编号dialog
+        },
+        onClose (name) {
+            this[name] = false
+        },
     },
     mounted() {
         this.column = this.FlowToBorrow
