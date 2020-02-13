@@ -2,7 +2,7 @@
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont spanflex">
             <span>会员概况 </span>
-            <span>会员数量：{{memberData.totalElements}}个</span>
+            <span>会员数量：{{memberData.attachData.totalCount}}个</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
