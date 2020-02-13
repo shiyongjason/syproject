@@ -748,6 +748,18 @@ const routerMapping = [
                     icon: ''
                 },
                 component: () => import('@/views/fundsData/components/dialog/newFlowdialog.vue')
+            },
+            {
+                path: 'newGrantdialog',
+                name: 'newGrantdialog',
+                meta: {
+                    title: '分授信台账',
+                    tagName: '分授信台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newGrantdialog.vue')
             }
         ]
     },
