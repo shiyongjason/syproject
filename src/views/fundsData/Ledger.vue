@@ -72,7 +72,7 @@
             {{produce}}         
             <complexTable :tableData='tableData' :pagination='pagination' :source='activeName' @getList='getList'/>
         </div>
-        <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/>
+        <!-- <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/> -->
     </div>
 </template>
 
@@ -81,11 +81,11 @@ import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import complexTable from './components/complexTable.vue'
-import newLedger from './components/dialog/newLedger.vue'
+// import newLedger from './components/dialog/newLedger.vue'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 export default {
     name: 'amountImport',
-    components: { complexTable, newLedger },
+    components: { complexTable },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -146,7 +146,7 @@ export default {
             },
             searchParams: {},
             tableData: [
-                {}, {}
+                {shy: 1}, {shy: 2}
             ],
             pagination: {
                 pageNumber: 1,
@@ -274,7 +274,12 @@ export default {
             this.searchParams.produce = this.produce
             // console.log(this.searchParams)
             // const { data } = await getRateList(this.queryParams)
-            // this.tableData = data.records
+            this.tableData = []
+            this.tableData = [
+                {newShy: 11},
+                {newShy: 22},
+                {newShy: 33}
+            ]
             // this.pagination = {
             //     pageNumber: data.current,
             //     pageSize: data.size,
