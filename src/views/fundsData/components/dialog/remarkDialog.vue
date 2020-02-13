@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
-        <h3>备注：</h3>
+        <h3 style="margin-bottom: 10px;">备注：</h3>
         <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="detailData.remark"></el-input>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
