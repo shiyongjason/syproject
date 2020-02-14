@@ -5,16 +5,20 @@
             <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
-        <!-- MIS编码Dialog -->
+        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')" />
+        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')" />
+        <!-- 台账编号Dialog -->
         <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" v-if='misDialogVisible' />
         <!-- 供货商Dialog -->
         <supplierDialog :detailData='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" v-if="supplierDialogVisible" />
-        <!-- 年利率Dialog -->
+        <!-- 还款方式Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" v-if="AnnualInterestRateDialogVisible" />
-        <!-- 台账档案编号 -->
-        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')" />
-        <!-- 备注 -->
-        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')" />
+        <!-- 开票日期Dialog -敞口 -->
+        <billingDialog :detailData='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" v-if="billingDialogVisible" />
+        <!-- 还款方式Dialog -->
+        <repaymentDialog :detailData='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" v-if="repaymentDialogVisible" />
+        <!-- 开票日期Dialog-分授信Credit -->
+        <pointsCreditBillingDialog :detailData='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" v-if="pointsCreditBillingDialogVisible" />
     </div>
 </template>
 
@@ -25,9 +29,12 @@ import fileInfoDialog from './dialog/fileInfoDialog.vue'
 import misDialog from './dialog/misDialog.vue'
 import supplierDialog from './dialog/supplierDialog.vue'
 import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
+import billingDialog from './dialog/billingDialog.vue'
+import repaymentDialog from './dialog/repaymentDialog.vue'
+import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
 export default {
     name: 'complexTable',
-    components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog },
+    components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog },
     props: {
         tableData: {
             type: Array,
@@ -46,6 +53,7 @@ export default {
             default: function () {
                 return { pageNumber: 1, pageSize: 10, total: 0 }
             }
+
         }
     },
     watch: {
@@ -65,6 +73,9 @@ export default {
             misDialogVisible: false,
             supplierDialogVisible: false,
             AnnualInterestRateDialogVisible: false,
+            billingDialogVisible: false,
+            repaymentDialogVisible: false,
+            pointsCreditBillingDialogVisible: false,
             sizes: [10, 20, 50, 100],
             rowData: {},
             // 流贷
@@ -72,15 +83,17 @@ export default {
                 {
                     label: '基础信息',
                     children: [
+                        { prop: 'netProfitRate', label: '金云系统编号', width: '150' },
                         { prop: 'netProfitRate', label: '台账编号', width: '150' },
                         {
                             prop: 'netProfitRate',
-                            label: 'MIS编码',
+                            label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.misDialogVisible = true }}></i></span>
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷基础信息维护'; this.misDialogVisible = true }}></i></span>
                             }
                         },
+                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
                         { prop: 'netProfitRate', label: '借款单位', width: '150' },
                         { prop: 'netProfitRate', label: '分部', width: '150' }
                     ]
@@ -98,7 +111,10 @@ export default {
                             prop: 'netProfitRate',
                             label: '还款方式',
                             sort: 3,
-                            width: '150'
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷还款信息维护'; this.AnnualInterestRateDialogVisible = true }}></i></span>
+                            }
                         },
                         {
                             prop: 'netProfitRate',
@@ -194,7 +210,7 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—分授信基础信息维护'; this.misDialogVisible = true }}></i></span>
                             }
                         },
                         { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
@@ -225,7 +241,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—分授信借款信息维护'; this.pointsCreditBillingDialogVisible = true }}></i></span>
                             }
                         },
                         {
@@ -261,7 +277,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—分授信还款信息维护'; this.repaymentDialogVisible = true }}></i></span>
                             }
                         }
                     ]
@@ -493,7 +509,7 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口基础信息维护'; this.misDialogVisible = true }}></i></span>
                             }
                         },
                         { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
@@ -509,22 +525,14 @@ export default {
                         )
                     },
                     children: [
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '开票金额',
-                            sort: 1,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
+                        { prop: 'netProfitRateLastMonth', label: '开票金额', sort: 1, width: '150', displayAs: 'money' },
                         {
                             prop: 'netProfitRate',
                             label: '开票日期',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
+                                return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口借款信息维护'; this.billingDialogVisible = true }}></i></span>
                             }
                         },
                         {
@@ -849,18 +857,10 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.supplierDialogVisible = true }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷借款信息维护'; this.supplierDialogVisible = true }}></i></span>
                     }
                 },
-                {
-                    prop: 'netProfitRateLastMonth',
-                    label: '年利率',
-                    sort: 4,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.source = 0; this.AnnualInterestRateDialogVisible = true }}></i></span>
-                    }
-                },
+                { prop: 'netProfitRateLastMonth', label: '年利率', sort: 4, width: '150' },
                 {
                     prop: 'netProfitRateLastMonth',
                     label: '借款期限',
@@ -1275,18 +1275,10 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口还款信息维护'; this.repaymentDialogVisible = true }}></i></span>
                     }
                 },
-                {
-                    prop: 'netProfitRate',
-                    label: '登记人',
-                    sort: 9,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRate == 0 ? 0 : scope.row.netProfitRate ? `${scope.row.netProfitRate}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { console.log('备注') }}></i></span>
-                    }
-                }
+                { prop: 'netProfitRate', label: '登记人', sort: 9, width: '150' }
             ],
             // 敞口还款账目总计的展开
             ExpoRepaymentAccount: [

@@ -60,9 +60,8 @@ export default {
     name: 'supplierDialog',
     data () {
         return {
-            title: '好信用—流贷借款信息维护',
             radio: '月',
-            misForm: {
+            form: {
                 name: ''
             },
             rules: {
@@ -80,22 +79,6 @@ export default {
         detailData: {
             type: Object,
             default: () => ({})
-        }
-    },
-    watch: {
-        detailData (v) {
-            console.log(v)
-            switch (v.source) {
-                case 0:
-                    this.title = '好信用—流贷借款信息维护'
-                    break
-                case 1:
-                    this.title = '好信用—分授信借款信息维护'
-                    break
-                case 2:
-                    this.title = '好信用—敞口借款信息维护'
-                    break
-            }
         }
     },
     methods: {
