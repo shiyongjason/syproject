@@ -11,9 +11,9 @@
         <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" v-if='misDialogVisible' />
         <!-- 供货商Dialog -->
         <supplierDialog :detailData='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" v-if="supplierDialogVisible" />
-        <!-- 还款方式Dialog-流贷 -->
+        <!-- 还款方式Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" v-if="AnnualInterestRateDialogVisible" />
-        <!-- 开票日期Dialog-敞口 -->
+        <!-- 开票日期Dialog -敞口 -->
         <billingDialog :detailData='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" v-if="billingDialogVisible" />
         <!-- 还款方式Dialog -->
         <repaymentDialog :detailData='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" v-if="repaymentDialogVisible" />
@@ -59,6 +59,7 @@ export default {
             if (val == '流贷') this.$set(this, 'column', this.FlowToBorrow)
             if (val == '分授信') this.$set(this, 'column', this.PointsCredit)
             if (val == '敞口') this.$set(this, 'column', this.Exposure)
+            if (val == '还款明细表') this.$set(this, 'column', this.ReimbursementDetail)
             this.changeTable = false
             this.$nextTick(() => { this.changeTable = true })
         }
@@ -75,11 +76,13 @@ export default {
             pointsCreditBillingDialogVisible: false,
             sizes: [10, 20, 50, 100],
             rowData: {},
+            // 流贷
             FlowToBorrow: [
                 {
                     label: '基础信息',
                     children: [
                         { prop: 'netProfitRate', label: '金云系统编号', width: '150' },
+                        { prop: 'netProfitRate', label: '台账编号', width: '150' },
                         {
                             prop: 'netProfitRate',
                             label: '台账编号',
@@ -195,6 +198,7 @@ export default {
                     }
                 }
             ],
+            // 分授信
             PointsCredit: [
                 {
                     label: '基础信息',
@@ -493,6 +497,7 @@ export default {
                     }
                 }
             ],
+            // 敞口
             Exposure: [
                 {
                     label: '基础信息',
@@ -751,6 +756,89 @@ export default {
                     prop: 'netProfitRateLastMonth',
                     label: '备注',
                     width: '200',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                }
+            ],
+            // 还款明细表
+            ReimbursementDetail: [
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '台账编号',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: 'MIS编码',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '平台公司',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '分部',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '登记人',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '还款项目',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '还款时间',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '金额',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '应还款日期',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                    }
+                },
+                {
+                    prop: 'netProfitRateLastMonth',
+                    label: '备注',
+                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
                     }
@@ -1141,7 +1229,7 @@ export default {
                 }
             ],
             // 敞口
-            // 借款账目
+            // 借款账目的展开
             ExpoBorrowingBooks: [
                 {
                     prop: 'netProfitRateLastMonth',
@@ -1190,7 +1278,7 @@ export default {
                 },
                 { prop: 'netProfitRate', label: '登记人', sort: 9, width: '150' }
             ],
-            // 敞口还款账目总计
+            // 敞口还款账目总计的展开
             ExpoRepaymentAccount: [
                 {
                     prop: 'netProfitRateLastMonth',
@@ -1229,7 +1317,7 @@ export default {
                     }
                 }
             ],
-            // 敞口还款账目明细
+            // 敞口还款账目明细的展开
             ExpoRCDetail: [
                 {
                     prop: 'netProfitRateLastMonth',
