@@ -52,10 +52,10 @@
                     {{scope.data.row.authenticated==1?'是':'否'}}
                 </template> -->
                 <template slot="memberName" slot-scope="scope">
-                    {{scope.data.row.memberAccount}}({{scope.data.row.memberName}})
+                    {{scope.data.row.memberAccount}}{{scope.data.row.memberName?'('+scope.data.row.memberName+')':''}}
                 </template>
                 <template slot="recommendName" slot-scope="scope">
-                    {{scope.data.row.recommendedAccount}}({{scope.data.row.recommendedMemberName}})
+                    {{scope.data.row.recommendedAccount}}{{scope.data.row.recommendedMemberName?'('+scope.data.row.recommendedMemberName+')':''}}
                 </template>
             </basicTable>
         </div>
