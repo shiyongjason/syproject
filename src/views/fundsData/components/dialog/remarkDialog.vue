@@ -19,7 +19,7 @@ export default {
         },
         detailData: {
             type: Object,
-            default: {}
+            default: () => ({})
         }
     },
     watch: {
@@ -58,7 +58,6 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
-  padding: 20px 24px;
+    padding: 20px 24px;
 }
 </style>
-
