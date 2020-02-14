@@ -24,8 +24,8 @@ export default {
             path: 'enterpriseCA',
             name: 'enterpriseCA',
             meta: {
-                title: '企业CA',
-                tagName: '企业CA',
+                title: 'CA认证',
+                tagName: 'CA认证',
                 isMenu: true,
                 icon: ''
             },
