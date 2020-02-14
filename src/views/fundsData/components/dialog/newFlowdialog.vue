@@ -6,33 +6,32 @@
                 <div class="dialogtitle">基础信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账编号：" prop="name">
-                            <el-input v-model.trim="ruleForm.name"></el-input>
+                        <el-form-item label="台账编号：" prop="standingBookNo">
+                            <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：" prop="name">
-                            <el-input v-model.trim="ruleForm.name"></el-input>
+                        <el-form-item label="金云系统编号：" prop="jinyunArchiveNo">
+                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="借款单位：" prop="loanCompanyName">
+                            <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="MIS编码：" prop="misCode">
+                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="分部：" prop="subsectionName">
+                            <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入"></el-input>
                         </el-form-item>
                     </div>
                 </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="name">
-                            <el-input v-model.trim="ruleForm.name"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="MIS编码：" prop="name">
-                            <el-input v-model.trim="ruleForm.name"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="name">
-                            <el-input v-model.trim="ruleForm.name"></el-input>
-                        </el-form-item>
-                    </div>
-                </div>
+                <!--抽离-->
                 <div class="dialogtitle">借款信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -68,6 +67,7 @@
                         </el-form-item>
                     </div>
                 </div>
+                <!--抽离-->
                 <div class="dialogtitle">还款信息：</div>
                 <div class="query-cont-col">
                     <el-form-item label="还款方式：" prop="name">
@@ -139,16 +139,75 @@ export default {
     },
     data () {
         return {
-            rules: [],
+            rules: {
+                jinyunArchiveNo: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ]
+            },
             ruleForm: {
-                name: ''
+                name: '',
+                account: {
+                    accountType: '',
+                    jinyunArchiveNo: '',
+                    loanCompanyCode: '',
+                    loanCompanyName: '',
+                    misCode: '',
+                    productType: '',
+                    remark: '',
+                    standingBookArchiveNo: '',
+                    standingBookNo: '',
+                    subsectionCode: '',
+                    subsectionName: ''
+                },
+                loan: {
+                    depositPay: '',
+                    depositProportion: '',
+                    invoiceAmount: '',
+                    invoiceTime: '',
+                    loanAmount: '',
+                    loanDateNum: '',
+                    loanDateType: '',
+                    loanEndTime: '',
+                    loanStartTime: '',
+                    registrant: '',
+                    repaymentType: '',
+                    standingBookId: '',
+                    supplier: '',
+                    yearRate: ''
+                },
+                overdue: {
+                    dateNum: '',
+                    dateType: '',
+                    overDueInterest: '',
+                    planId: '',
+                    sort: '',
+                    startTime: ''
+                },
+                plan: {
+                    capitalAmount: '',
+                    capitalPaid: '',
+                    dealTime: '',
+                    exsitGrace: '',
+                    graceDay: '',
+                    graceInterest: '',
+                    graceInterestAmount: '',
+                    graceInterestPaid: '',
+                    interestAmount: '',
+                    interestPaid: '',
+                    isStepOverInterest: '',
+                    overDueInterest: '',
+                    overDueInterestAmount: '',
+                    overDueInterestPaid: ''
+                }
             }
         }
     },
     methods: {
-        onSure () {
+        onSubmit () {
             // 操作
-            this.onCancle()
+            this.$refs.ruleForm.validate((valid) => {
+
+            })
         },
         onCancle () {
             this.$emit('onClose')
