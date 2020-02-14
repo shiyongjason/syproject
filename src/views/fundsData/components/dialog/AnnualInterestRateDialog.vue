@@ -277,8 +277,6 @@
                 </el-form-item>
             </div>
         </div>
-        </el-form>
-        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
             <el-button type="primary">保 存</el-button>
