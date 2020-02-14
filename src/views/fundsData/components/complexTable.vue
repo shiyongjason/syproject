@@ -38,18 +38,20 @@ export default {
     props: {
         tableData: {
             type: Array,
-            default: []
+            default: function () {
+                return []
+            }
         },
         source: {
             type: String,
-            default: '流贷'
+            default: function () {
+                return '流贷'
+            }
         },
         pagination: {
             type: Object,
-            default: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
+            default: function () {
+                return { pageNumber: 1, pageSize: 10, total: 0 }
             }
 
         }
@@ -1515,8 +1517,8 @@ export default {
 
 <style lang="scss" scoped>
 /deep/.pointer {
-    cursor: pointer;
-    margin-left: 10px;
-    font-size: 14px;
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 14px;
 }
 </style>

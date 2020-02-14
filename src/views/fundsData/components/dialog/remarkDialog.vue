@@ -19,7 +19,7 @@ export default {
         },
         detailData: {
             type: Object,
-            default: {}
+            default: () => ({})
         }
     },
     watch: {
