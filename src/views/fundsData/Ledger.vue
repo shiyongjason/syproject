@@ -19,7 +19,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.branch" clearable>
-                        <el-option v-for="(item,index) in statusIdType" :key="index" :label="item.label" :value="item.value">
+                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.subsectionName" :value="item.subsectionCode">
                         </el-option>
                     </el-select>
                 </div>
@@ -72,66 +72,26 @@
             {{activeName}} {{produce}}
             <complexTable :tableData='tableData' :pagination='pagination' :source='activeName' @getList='getList' />
         </div>
-        <!-- <newLedger :dialogVisible='dialogVisible' @onClose='onClose'/> -->
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { interfaceUrl } from "@/api/config";
-import hosJoyTable from "@/components/HosJoyTable/hosjoy-table";
-import complexTable from "./components/complexTable.vue";
-// import newLedger from './components/dialog/newLedger.vue'
-import {
-    JINYUN_AMOUNT_IMPORT_IMPORT,
-    JINYUN_AMOUNT_IMPORT_RE_CHECK
-} from "@/utils/auth_const";
+import { mapState } from "vuex"
+import { interfaceUrl } from "@/api/config"
+import complexTable from "./components/complexTable.vue"
+import { findBranchListNew } from './api/index.js'
 export default {
-    name: "amountImport",
+    name: "ledger",
     components: { complexTable },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeEnd
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeStart;
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        isMultiple () {
-            return this.hosAuthCheck(this.reCheckAuth)
-        }
-    },
-    watch: {
-        activeName (val) {
-            if (val == "流贷") {
-                this.isTab = true
-            } else {
-                this.isTab = false
-            }
-        }
+        })
     },
     data () {
         return {
             activeName: "流贷",
             produce: "好信用",
-            importAuth: JINYUN_AMOUNT_IMPORT_IMPORT,
-            reCheckAuth: JINYUN_AMOUNT_IMPORT_RE_CHECK,
             interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
@@ -150,120 +110,14 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            addTags: {
-                labelName: "",
-                labelType: "1"
-            },
-            multipleSelection: [],
-            tableLabel: [
-                { label: "客户名称", prop: "customerName" },
-                { label: "MIS编码", prop: "misCode" },
-                { label: "年度最高额（元）", prop: "yearlyQuota", formatters: "money" },
-                {
-                    label: "月度滚动额（元）",
-                    prop: "monthlyQuota",
-                    formatters: 'money'
-                },
-                {
-                    label: "应收账款扣减额（元）",
-                    prop: "accountReceivableQuota",
-                    formatters: 'money'
-                },
-                {
-                    label: "初始实时用信额（元）",
-                    prop: "dailyQuota",
-                    formatters: 'money'
-                },
-                {
-                    label: "实际实时用信额（元）",
-                    prop: "realDailyQuota",
-                    formatters: 'money'
-                },
-                { label: "本月利率(年化）", prop: "dailyInterestRate" },
-                { label: "创建日期", prop: "importDate" },
-                { label: "当前状态", prop: "statusId" }
-            ],
-            statusIdType: [
-                { value: "", label: "请选择分部" },
-                { value: "001", label: "南京" },
-                { value: "000", label: "上海" },
-                { value: "002", label: "北京" }
-            ],
-            dialogVisible: false,
-            content: "",
-            status: "",
-            // 控制权限
-            isTab: true,
-            multiSelect: [],
-            changeTable: true,
-            column: [
-                {
-                    prop: "misCode",
-                    label: "MIS编码",
-                    width: "100",
-                    fixed: true
-                },
-                {
-                    prop: "companyShortName",
-                    label: "平台公司名",
-                    fixed: true,
-                    width: "120"
-                },
-                { prop: "subsectionName", label: "分部", fixed: true },
-                {
-                    label: "销售收入与成本/万",
-                    renderHeader: (h, scope) => {
-                        return (
-                            <span>
-                                {scope.column.label}
-                                <i
-                                    class={
-                                        this.column[scope.$index]._expand
-                                            ? "el-icon-minus pointer"
-                                            : "el-icon-plus pointer"
-                                    }
-                                    onClick={() => {
-                                        this.handleExpand(scope, this.expandSell, 1)
-                                    }}
-                                />
-                            </span>
-                        )
-                    },
-                    children: [
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '销售收入（含税）/万',
-                            width: '150',
-                            displayAs: 'money'
-                        }
-                    ]
-                }
-            ]
+            branchList: []
         }
     },
     mounted () {
         this.onSearch()
+        this.findBranchList()
     },
     methods: {
-        handleExpand (scope, expandSellrr, num) {
-            this.$set(
-                this.column[scope.$index],
-                '_expand',
-                !this.column[scope.$index]._expand
-            )
-            if (this.column[scope.$index]._expand) {
-                this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr)
-            } else {
-                this.column[scope.$index].children = this.column[scope.$index].children.slice(0, num)
-                this.changeTable = false
-                this.$nextTick(() => {
-                    this.changeTable = true
-                })
-            }
-        },
-        onClose () {
-            this.dialogVisible = false
-        },
         // 埋点
         tracking (event) {
             this.$store.dispatch('tracking', {
@@ -273,6 +127,15 @@ export default {
                 page_name: '额度导入',
                 page_path_name: 'amountImport'
             })
+        },
+        // 查询分部（不用做权限，现在是总部在使用）
+        async findBranchList () {
+            const {data} = await findBranchListNew()
+            // console.log(data)
+            this.branchList = data.data
+            this.branchList.unshift(
+                { subsectionCode: "", subsectionName: "请选择分部" }
+            )
         },
         onExportTemplate () {
             // 模板导出
@@ -285,9 +148,6 @@ export default {
         onExportLedger () { }, // 台账导出
         handleClick () {
             this.onSearch()
-        },
-        multiSelection (val) {
-            this.multiSelect = val
         },
         isSuccess (response) {
             this.$message({

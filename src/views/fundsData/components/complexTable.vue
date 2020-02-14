@@ -5,8 +5,10 @@
             <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
-        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="onClose('remarkDialogVisible')" />
-        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="onClose('fileinfoDialogVisible')" />
+        <!-- 备注 -->
+        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" v-if='remarkDialogVisible' />
+        <!-- 资金档案编号 -->
+        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" v-if='fileinfoDialogVisible' />
         <!-- 台账编号Dialog -->
         <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" v-if='misDialogVisible' />
         <!-- 供货商Dialog -->
@@ -83,8 +85,6 @@ export default {
                 {
                     label: '基础信息',
                     children: [
-                        { prop: 'netProfitRate', label: '金云系统编号', width: '150' },
-                        { prop: 'netProfitRate', label: '台账编号', width: '150' },
                         {
                             prop: 'netProfitRate',
                             label: '台账编号',
@@ -188,7 +188,7 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(0, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷档案信息维护'; this.fileinfoDialogVisible = true }}></i></span>
                     }
                 },
                 {
@@ -196,7 +196,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(0, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷备注信息维护'; this.remarkDialogVisible = true  }}></i></span>
                     }
                 }
             ],
@@ -487,7 +487,7 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(1, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—分授信档案信息维护'; this.fileinfoDialogVisible = true }}></i></span>
                     }
                 },
                 {
@@ -495,7 +495,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(1, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—分授信备注信息维护'; this.remarkDialogVisible = true }}></i></span>
                     }
                 }
             ],
@@ -751,7 +751,7 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onFileInfo(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口档案信息维护'; this.fileinfoDialogVisible = true }}></i></span>
                     }
                 },
                 {
@@ -759,7 +759,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口备注信息维护'; this.remarkDialogVisible = true }}></i></span>
                     }
                 }
             ],
@@ -770,7 +770,7 @@ export default {
                     label: '台账编号',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -778,7 +778,7 @@ export default {
                     label: 'MIS编码',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -786,7 +786,7 @@ export default {
                     label: '平台公司',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -794,7 +794,7 @@ export default {
                     label: '分部',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -802,7 +802,7 @@ export default {
                     label: '登记人',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -810,7 +810,7 @@ export default {
                     label: '还款项目',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -818,7 +818,7 @@ export default {
                     label: '还款时间',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -826,7 +826,7 @@ export default {
                     label: '金额',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -834,7 +834,7 @@ export default {
                     label: '应还款日期',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 },
                 {
@@ -842,7 +842,7 @@ export default {
                     label: '备注',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.onAddRemark(2, scope.row) }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => {}}></i></span>
                     }
                 }
             ],
@@ -1494,19 +1494,6 @@ export default {
         },
         async getList (val) {
             this.$emit('getList', val)
-        },
-        onAddRemark (val, row) {
-            this.rowData = row
-            this.rowData.source = val
-            this.remarkDialogVisible = true // 备注dialog
-        },
-        onFileInfo (val, row) {
-            this.rowData = row
-            this.rowData.source = val
-            this.fileinfoDialogVisible = true // 台账编号dialog
-        },
-        onClose (name) {
-            this[name] = false
         }
     },
     mounted () {

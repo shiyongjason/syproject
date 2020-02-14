@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="50%" :before-close='onCancle'>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="50%" :before-close='onCancle'>
         <h3 style="margin-bottom: 10px;">档案信息：</h3>
         <div class="query-cont-col">
             <div class="query-col-title">台账档案编号：</div>
@@ -35,24 +35,8 @@ export default {
             default: () => ({})
         }
     },
-    watch: {
-        detailData (v) {
-            switch (v.source) {
-                case 0:
-                    this.title = '好信用—流贷档案信息维护'
-                    break
-                case 1:
-                    this.title = '好信用—分授信档案信息维护'
-                    break
-                case 2:
-                    this.title = '好信用—敞口档案信息维护'
-                    break
-            }
-        }
-    },
     data () {
         return {
-            title: '好信用—流贷档案信息维护',
             remark: ''
         }
     },
