@@ -2,7 +2,7 @@
     <!-- 新增流贷弹窗 -->
     <div class="flowbody page-body">
         <div class="page-body-cont query-cont">
-            <el-form :model="form" :rules="rules" ref="form" label-width="130px" class="demo-form">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">基础信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -36,34 +36,34 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="供货商名称：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入供货商名"></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入供货商名"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入借款金额"><template slot="append">元</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="年利率：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="放款日期：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入年利率"><template slot="append">%</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款期限： " prop="name">
                             <el-radio v-model.trim="radio" label="月"></el-radio>
                             <el-radio v-model.trim="radio" label="天"></el-radio>
-                            <el-input v-model.trim="form.name" placeholder="请输入借款期限"><template slot="append">{{radio?'月':'天'}}</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入借款期限"><template slot="append">{{radio?'月':'天'}}</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="到期日：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入借款期限"></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入借款期限"></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -85,12 +85,12 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="第一阶段时长：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入逾期时长"><template slot="append">月</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期时长"><template slot="append">月</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="该阶段逾期利率：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -104,12 +104,12 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账档案编号：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入台账档案编号"></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入台账档案编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="金云档案编号：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入金云档案编号"></el-input>
+                            <el-input v-model.trim="ruleForm.name" placeholder="请输入金云档案编号"></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -123,7 +123,6 @@
                     <el-button>取消</el-button>
                 </div>
             </el-form>
-
         </div>
     </div>
 </template>
