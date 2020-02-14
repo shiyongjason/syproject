@@ -14,48 +14,12 @@
                         </el-form-item>
                     </div>
                 </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="name">
-                            <el-input v-model.trim="form.name"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="MIS编码：" prop="name">
-                            <el-input v-model.trim="form.name"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="name">
-                            <el-input v-model.trim="form.name"></el-input>
-                        </el-form-item>
-                    </div>
-                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="onCancle">取 消</el-button>
+                    <el-button type="primary">保 存</el-button>
+                </span>
             </el-form>
         </div>
-        <div class="query-cont-row">
-            <div class="query-cont-col">
-                <el-form-item label="借款单位：" prop="name">
-                    <el-input v-model.trim="misForm.name"></el-input>
-                </el-form-item>
-            </div>
-            <div class="query-cont-col">
-                <el-form-item label="MIS编码：" prop="name">
-                    <el-input v-model.trim="misForm.name"></el-input>
-                </el-form-item>
-            </div>
-            <div class="query-cont-col">
-                <el-form-item label="分部：" prop="name">
-                    <el-input v-model.trim="misForm.name"></el-input>
-                </el-form-item>
-            </div>
-        </div>
-        </el-form>
-        </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary">保 存</el-button>
-        </span>
     </el-dialog>
 </template>
 
