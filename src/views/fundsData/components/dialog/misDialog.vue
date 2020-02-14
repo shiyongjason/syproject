@@ -1,48 +1,43 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
-                <div class="form">
-                    <el-form :model="misForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                        <div class="query-cont-row">
-                            <div class="query-cont-col">
-                                <el-form-item label="台账编号：" prop="name">
-                                    <el-input v-isNum:0="misForm.name" v-model.trim="misForm.name" placeholder="请输入台账编号"></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="金云系统编号：" prop="name">
-                                    <el-input v-model.trim="misForm.name" placeholder="如有请输入，无请忽略"></el-input>
-                                </el-form-item>
-                            </div>
-                        </div>
-                        <div class="query-cont-row">
-                            <div class="query-cont-col">
-                                <el-form-item label="借款单位：" prop="name">
-                                    <el-input v-model.trim="misForm.name"></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="MIS编码：" prop="name">
-                                    <el-input v-model.trim="misForm.name"></el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="分部：" prop="name">
-                                    <el-input v-model.trim="misForm.name"></el-input>
-                                </el-form-item>
-                            </div>
-                        </div>
-                    </el-form>
+    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
+        <div class="form">
+            <el-form :model="misForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+                <div class="query-cont-row">
+                    <div class="query-cont-col">
+                        <el-form-item label="台账编号：" prop="name">
+                            <el-input v-isNum:0="misForm.name" v-model.trim="misForm.name" placeholder="请输入台账编号"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="金云系统编号：" prop="name">
+                            <el-input v-model.trim="misForm.name" placeholder="如有请输入，无请忽略"></el-input>
+                        </el-form-item>
+                    </div>
                 </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="onCancle">取 消</el-button>
-                    <el-button type="primary">保 存</el-button>
-                </span>
-            </el-dialog>
+                <div class="query-cont-row">
+                    <div class="query-cont-col">
+                        <el-form-item label="借款单位：" prop="name">
+                            <el-input v-model.trim="misForm.name"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="MIS编码：" prop="name">
+                            <el-input v-model.trim="misForm.name"></el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="分部：" prop="name">
+                            <el-input v-model.trim="misForm.name"></el-input>
+                        </el-form-item>
+                    </div>
+                </div>
+            </el-form>
         </div>
-    </div>
-
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="onCancle">取 消</el-button>
+            <el-button type="primary">保 存</el-button>
+        </span>
+    </el-dialog>
 </template>
 
 <script>
@@ -97,6 +92,6 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
-    padding: 20px 24px;
+  padding: 20px 24px;
 }
 </style>

@@ -35,9 +35,9 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
-                <div class="query-col-title">
+                <!-- <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="page-body-cont query-cont">
@@ -62,8 +62,9 @@
                 <el-tab-pane label="流贷" name="流贷"></el-tab-pane>
                 <el-tab-pane label="分授信" name="分授信"></el-tab-pane>
                 <el-tab-pane label="敞口" name="敞口"></el-tab-pane>
+                <el-tab-pane label="还款明细表" name="还款明细表"></el-tab-pane>
             </el-tabs>
-            <el-tabs v-model="produce" type="card" @tab-click="handleClick">
+            <el-tabs v-if="activeName != '还款明细表'" v-model="produce" type="card" @tab-click="handleClick">
                 <el-tab-pane label="好信用" name="好信用"></el-tab-pane>
                 <el-tab-pane label="供应链" name="供应链"></el-tab-pane>
                 <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane>
