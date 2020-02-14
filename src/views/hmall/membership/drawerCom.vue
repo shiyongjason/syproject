@@ -83,7 +83,8 @@
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul>
-                            <li v-for="(item,index) in bossDetail.staff" :key=index>{{item.name}} {{item.role}} {{item.phone}}</li>
+                            <li v-for="(item,index) in bossDetail.staff" :key=index>{{item.name}} {{item.phone}}  
+                                <i style="font-style:normal" v-for="(itemb,indexb) in item.role" :key=indexb>{{itemb+(indexb>0?'':',')}}</i></li>
                         </ul>
                     </el-form-item>
                     <el-form-item label="注册时间：" :label-width="formLabelWidth">
