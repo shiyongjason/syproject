@@ -69,7 +69,7 @@ switch (env) {
         B2bUrl = 'https://b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://ccp.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
+        iotUrl = 'https://iot.hosjoy.com'
         break
 }
 export {
