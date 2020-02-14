@@ -185,7 +185,11 @@ export default {
             },
             deep: true,
             immediate: true
-
+        },
+        actionMinWidth: {
+            handler (val) {
+                this.minWidth = val
+            }
         }
     },
     methods: {
