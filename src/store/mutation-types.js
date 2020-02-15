@@ -36,3 +36,14 @@ export const PAYMENT_WHITE = 'PAYMENT_WHITE'
 // B2b 供应商
 export const SUPPLIER_DATA = 'SUPPLIER_DATA'
 export const BRAND_DATA = 'BRAND_DATA'
+// 舒适云数据后台
+// 家庭管理
+
+// 用户概览
+// 实时数据
+export const REAL_REPORT = 'REAL_REPORT'
+export const HOSTORY_REPORT = 'HOSTORY_REPORT'
+// iot会员管理
+export const MEMBERS_DATA = 'MEMBERS_DATA'
+export const MEMBERS_DETAIL = 'MEMBERS_DETAIL'
+export const FAMILY_DATA = 'FAMILY_DATA'
