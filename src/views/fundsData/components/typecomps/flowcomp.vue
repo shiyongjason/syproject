@@ -29,7 +29,7 @@
                 <el-form-item label="借款期限： " prop="loanDateNum">
                     <el-radio v-model.trim="flowform.loanDateType" label="1">月</el-radio>
                     <el-radio v-model.trim="flowform.loanDateType" label="2">天</el-radio>
-                    <el-input v-model.trim="flowform.loanDateNum" placeholder="请输入借款期限"><template slot="append">{{radio?'月':'天'}}</template></el-input>
+                    <el-input v-model.trim="flowform.loanDateNum" placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType?'月':'天'}}</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">

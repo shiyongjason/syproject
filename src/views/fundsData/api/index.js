@@ -8,3 +8,6 @@ export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/que
 
 // 分部列表查询
 export const findBranchListNew = (params) => axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
+
+// 新增各类台账
+export const addAccount = (params) => axios.post(interfaceUrl + '/account',  params )
