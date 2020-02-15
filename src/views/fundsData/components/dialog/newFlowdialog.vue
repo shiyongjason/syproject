@@ -38,19 +38,19 @@
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账档案编号：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入台账档案编号"></el-input>
+                        <el-form-item label="台账档案编号：" prop="standingBookArchiveNo">
+                            <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云档案编号：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入金云档案编号"></el-input>
+                        <el-form-item label="金云档案编号：" prop="jinyunArchiveNo">
+                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号"></el-input>
                         </el-form-item>
                     </div>
                 </div>
                 <div class="dialogtitle">备注：</div>
                 <div class="query-cont-row">
-                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea">
+                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="ruleForm.account.remark">
                     </el-input>
                 </div>
                 <div class="flow-bottom">

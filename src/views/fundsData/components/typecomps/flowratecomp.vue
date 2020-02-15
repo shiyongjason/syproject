@@ -12,12 +12,12 @@
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="第一阶段时长：" prop="name">
-                    <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期时长"><template slot="append">月</template></el-input>
+                    <el-input v-model.trim="flowrateform.name" placeholder="请输入逾期时长"><template slot="append">月</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="该阶段逾期利率：" prop="name">
-                    <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                    <el-input v-model.trim="flowrateform.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -31,6 +31,13 @@
 </template>
 <script>
 export default {
+    name: 'flowrateform',
+    props: {
+        flowrateform: {
+            type: Object,
+            default: {}
+        }
+    },
     data () {
         return {
 
