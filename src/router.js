@@ -322,7 +322,6 @@ const routerMapping = [
     ServiceManagement,
     B2brouter,
     Jyrouter,
-    JinyunPlatform,
     ServiceManagement
 ]
 
