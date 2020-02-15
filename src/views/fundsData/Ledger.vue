@@ -47,7 +47,7 @@
                 <el-button type="primary" class="ml20" @click="onExportTemplate">导入模板导出</el-button>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/amount/rate/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button type="primary" class="ml20">
                         台账导入
                     </el-button>
@@ -76,12 +76,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
-import { interfaceUrl } from "@/api/config"
-import complexTable from "./components/complexTable.vue"
+import { mapState } from 'vuex'
+import { interfaceUrl } from '@/api/config'
+import complexTable from './components/complexTable.vue'
 import { findBranchListNew } from './api/index.js'
 export default {
-    name: "ledger",
+    name: 'ledger',
     components: { complexTable },
     computed: {
         ...mapState({
@@ -90,18 +90,18 @@ export default {
     },
     data () {
         return {
-            activeName: "流贷",
-            produce: "好信用",
+            activeName: '流贷',
+            produce: '好信用',
             interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                misCode: "",
-                customerName: "",
-                branch: "",
-                ledger: "",
-                activeName: "流贷",
-                produce: "好信用"
+                misCode: '',
+                customerName: '',
+                branch: '',
+                ledger: '',
+                activeName: '流贷',
+                produce: '好信用'
             },
             searchParams: {},
             tableData: [{ shy: 1 }, { shy: 2 }],
@@ -130,11 +130,11 @@ export default {
         },
         // 查询分部（不用做权限，现在是总部在使用）
         async findBranchList () {
-            const {data} = await findBranchListNew()
+            const { data } = await findBranchListNew()
             // console.log(data)
             this.branchList = data.data
             this.branchList.unshift(
-                { subsectionCode: "", subsectionName: "请选择分部" }
+                { subsectionCode: '', subsectionName: '请选择分部' }
             )
         },
         onExportTemplate () {
@@ -145,7 +145,10 @@ export default {
             // }
             // location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
         },
-        onExportLedger () { }, // 台账导出
+        // 台账导出
+        onExportLedger () {
+            location.href = interfaceUrl + '/backend/account/export'
+        },
         handleClick () {
             this.onSearch()
         },
@@ -166,8 +169,8 @@ export default {
             // console.log(this.activeName + ' '  + this.produce)
             this.searchParams.activeName = this.activeName
             this.searchParams.produce = this.produce
-            // console.log(this.searchParams)
-            // const { data } = await getRateList(this.queryParams)
+            console.log(this.searchParams)
+            // const { data } = await getRateList(this.searchParams)
             this.tableData = []
             this.tableData = [{ newShy: 11 }, { newShy: 22 }, { newShy: 33 }]
             // this.pagination = {
