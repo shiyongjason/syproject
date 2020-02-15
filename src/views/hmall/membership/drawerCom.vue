@@ -82,9 +82,10 @@
                         {{bossDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
-                        <ul>
-                            <li v-for="(item,index) in bossDetail.staff" :key=index>{{item.name}} {{item.role}} {{item.phone}}</li>
+                        <ul v-if="bossDetail.staff.length>0">
+                            <li v-for="(item,index) in bossDetail.staff" :key=index>{{item.name}} {{item.phone}} <i style="font-style:normal" v-for="(itemb,indexb) in item.role" :key=indexb>{{itemb+(indexb>0?'':',')}}</i></li>
                         </ul>
+                        <p v-if="bossDetail.staff.length==0">-</p>
                     </el-form-item>
                     <el-form-item label="注册时间：" :label-width="formLabelWidth">
                         {{bossDetail.registrationTime | formatterTime}}

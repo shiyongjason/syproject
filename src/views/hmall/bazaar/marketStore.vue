@@ -131,7 +131,7 @@ export default {
                 categoryId: '',
                 onMarket: '',
                 specification: '',
-                isOwnOperated:false 
+                isOwnOperated: false
             },
             paginationData: {
                 pageNumber: 1,
@@ -145,7 +145,7 @@ export default {
         discountFunc (val) {
             const arr = val.map(item => item.discount)
             let result = [arr[0]]
-            for (let i = 1, len = arr.length;i < len;i++) {
+            for (let i = 1, len = arr.length; i < len; i++) {
                 arr[i] !== arr[i - 1] && result.push(arr[i])
             }
             if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
@@ -154,7 +154,7 @@ export default {
         commissionFunc (val) {
             const arr = val.map(item => item.commission)
             let result = [arr[0]]
-            for (let i = 1, len = arr.length;i < len;i++) {
+            for (let i = 1, len = arr.length; i < len; i++) {
                 arr[i] !== arr[i - 1] && result.push(arr[i])
             }
             if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')

@@ -321,7 +321,8 @@ const routerMapping = [
     Bestrouter,
     ServiceManagement,
     B2brouter,
-    Jyrouter
+    Jyrouter,
+    ServiceManagement
 ]
 
 const router = new Router({

@@ -39,10 +39,10 @@ const store = new Vuex.Store({
         membership,
         serviceManagement,
         payment,
+        supplier,
         eventManage,
         userRealreport,
-        cloudmanage,
-        supplier
+        cloudmanage
     }
 })
 
