@@ -7,7 +7,7 @@
                 {{ruleForm}}
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账编号：" prop="standingBookNo">
+                        <el-form-item label="台账编号：" prop="account.standingBookNo">
                             <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
@@ -17,7 +17,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="loanCompanyName">
+                        <el-form-item label="借款单位：" prop="account.loanCompanyName">
                             <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input>
                         </el-form-item>
                     </div>
@@ -27,7 +27,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="subsectionName">
+                        <el-form-item label="分部：" prop="account.subsectionName">
                             <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入"></el-input>
                         </el-form-item>
                     </div>
@@ -81,14 +81,14 @@ export default {
             radio: '',
             textarea: '',
             rules: {
-                jinyunArchiveNo: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                standingBookNo: [
+                'account.standingBookNo': [
                     { required: true, message: '请输入台账档案编号', trigger: 'blur' }
                 ],
-                loanCompanyName: [
+                'account.loanCompanyName': [
                     { required: true, message: '请输入借款单位', trigger: 'blur' }
+                ],
+                'account.subsectionName': [
+                    { required: true, message: '请输入分部名称', trigger: 'blur' }
                 ]
             },
             ruleForm: {

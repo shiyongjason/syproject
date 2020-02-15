@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { interfaceUrl } from '@/api/config'
+// import { interfaceUrl } from '@/api/config'
+let interfaceUrl = 'http://192.168.20.248:60100'
 // 台账列表
 export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account/list`, params)
 
