@@ -8,6 +8,8 @@ import layout from '@/views/layout/store/index.js'
 import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from './modules/fundsData'
+import userRealreport from './modules/userRealreport'
+import cloudmanage from './modules/cloudManage'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -33,7 +35,9 @@ const store = new Vuex.Store({
         layout,
         serviceManagement,
         eventManage,
-        fundsData
+        fundsData,
+        userRealreport,
+        cloudmanage
     }
 })
 
