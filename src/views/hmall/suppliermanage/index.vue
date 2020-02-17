@@ -6,7 +6,7 @@
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.branchName" placeholder="全部" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationName" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item" :value="item" v-for="item in branchArr" :key="item"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -65,17 +65,17 @@
         <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="供应商名称：" prop="supplierName">
-                    <el-input v-model="ruleForm.supplierName"></el-input>
+                    <el-input v-model="ruleForm.supplierName" maxlength='50'></el-input>
                 </el-form-item>
-                <el-form-item label="联系人：" prop="principal">
+                <el-form-item label="联系人：" prop="principal" maxlength='30'>
                     <el-input v-model="ruleForm.principal"></el-input>
                 </el-form-item>
                 <el-form-item label="联系方式：" prop="contactDetails">
-                    <el-input v-model="ruleForm.contactDetails"></el-input>
+                    <el-input v-model="ruleForm.contactDetails" maxlength='11'></el-input>
                 </el-form-item>
                 <el-form-item label="分部：" prop="branchName">
                     <el-select placeholder="全部" v-model="ruleForm.branchName" :clearable=true>
-                        <el-option :label="item.organizationName" :value="item.organizationName" v-for="item in branchArr" :key="item.organizationName"></el-option>
+                        <el-option :label="item" :value="item" v-for="item in branchArr" :key="item"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="品牌：" prop="brandId">
@@ -120,6 +120,7 @@ import { addSupplier, deleteSupplier, getSupplierDetail, editSupplierDetail } fr
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { B2bUrl } from '@/api/config'
+import { PHONE } from '@/rules'
 export default {
     name: 'supplier',
     data () {
@@ -173,7 +174,8 @@ export default {
                     { required: true, message: '请输入联系人', trigger: 'blur' }
                 ],
                 contactDetails: [
-                    { required: true, message: '请输入联系方式', trigger: 'blur' }
+                    { required: true, message: '请输入联系方式', trigger: 'blur' },
+                    { validator: PHONE, trigger: 'blur', whitespace: true }
                 ],
                 branchName: [
                     { required: true, message: '请选择分部', trigger: 'change' }
@@ -201,6 +203,7 @@ export default {
         }),
         ...mapGetters({
             branchList: 'branchList',
+            supplierBranch: 'supplierBranch',
             nestDdata: 'nestDdata',
             supplierData: 'supplierData',
             brandData: 'brandData'
@@ -234,11 +237,12 @@ export default {
             findNest: 'findNest',
             findSupplierlist: 'findSupplierlist',
             findBrand: 'findBrand',
-            findCategoryList: 'findCategoryList'
+            findCategoryList: 'findCategoryList',
+            getBranchlist: 'getBranchlist'
         }),
         async onFindBranchs () {
-            await this.findBranch()
-            this.branchArr = this.branchList
+            await this.getBranchlist()
+            this.branchArr = this.supplierBranch
         },
         async onFindBrand () {
             await this.findBrand()
@@ -272,15 +276,25 @@ export default {
             this.$refs.ruleForm.resetFields()
             this.dialogtitle = '新增供应商'
         },
-        async onDelete (val) {
-            await deleteSupplier(val.id)
-            this.$message({
-                message: '删除成！',
-                type: 'success'
-            })
-            this.searchList()
+        onDelete (val) {
+            this.$confirm('是否删除该记录?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteSupplier(val.id)
+                this.$message({
+                    message: '删除成！',
+                    type: 'success'
+                })
+                this.searchList()
+            }).catch(() => {
+
+            });
+
         },
         async onEditSupplier (val) {
+            this.$refs.ruleForm.resetFields()
             const { data } = await getSupplierDetail(val.id)
             this.dialogtitle = '编辑供应商'
             this.dialogVisible = true
