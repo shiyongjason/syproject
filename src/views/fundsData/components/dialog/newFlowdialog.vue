@@ -4,19 +4,20 @@
         <div class="page-body-cont query-cont">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">基础信息：</div>
+                {{ruleForm}}
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账编号：" prop="standingBookNo">
+                        <el-form-item label="台账编号：" prop="account.standingBookNo">
                             <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：" prop="jinyunArchiveNo">
+                        <el-form-item label="金云系统编号：" >
                             <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="loanCompanyName">
+                        <el-form-item label="借款单位：" prop="account.loanCompanyName">
                             <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input>
                         </el-form-item>
                     </div>
@@ -26,7 +27,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="subsectionName">
+                        <el-form-item label="分部：" prop="account.subsectionName">
                             <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入"></el-input>
                         </el-form-item>
                     </div>
@@ -38,12 +39,12 @@
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账档案编号：" prop="standingBookArchiveNo">
+                        <el-form-item label="台账档案编号：">
                             <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云档案编号：" prop="jinyunArchiveNo">
+                        <el-form-item label="金云档案编号：">
                             <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号"></el-input>
                         </el-form-item>
                     </div>
@@ -65,6 +66,7 @@
 <script>
 import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
+import { addAccount } from '../../api/index'
 export default {
     name: 'flow',
     props: {
@@ -79,19 +81,17 @@ export default {
             radio: '',
             textarea: '',
             rules: {
-                jinyunArchiveNo: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                standingBookNo: [
+                'account.standingBookNo': [
                     { required: true, message: '请输入台账档案编号', trigger: 'blur' }
                 ],
-                loanCompanyName: [
+                'account.loanCompanyName': [
                     { required: true, message: '请输入借款单位', trigger: 'blur' }
+                ],
+                'account.subsectionName': [
+                    { required: true, message: '请输入分部名称', trigger: 'blur' }
                 ]
             },
             ruleForm: {
-                name: '',
-
                 account: {
                     accountType: '',
                     jinyunArchiveNo: '',
@@ -121,14 +121,6 @@ export default {
                     supplier: '',
                     yearRate: ''
                 },
-                overdue: {
-                    dateNum: '',
-                    dateType: '',
-                    overDueInterest: '',
-                    planId: '',
-                    sort: '',
-                    startTime: ''
-                },
                 plan: {
                     capitalAmount: '',
                     capitalPaid: '',
@@ -143,17 +135,30 @@ export default {
                     isStepOverInterest: '',
                     overDueInterest: '',
                     overDueInterestAmount: '',
-                    overDueInterestPaid: ''
+                    overDueInterestPaid: '',
+                    overdueList: [{
+                        dateNum: '',
+                        dateType: '',
+                        overDueInterest: '',
+                        planId: '',
+                        sort: '',
+                        startTime: ''
+                    }],
                 }
             }
         }
     },
+    mounted(){
+        
+    },
     methods: {
         onSubmit () {
             // 操作
-            this.$refs.ruleForm.validate((valid) => {
+            // this.$refs.ruleForm.validate((valid) => {
 
-            })
+            // })
+            console.log(this.ruleForm)
+            addAccount(this.ruleForm)
         },
         onCancle () {
             this.$emit('onClose')
