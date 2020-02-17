@@ -86,16 +86,16 @@ export default {
                     label: '基础信息',
                     children: [
                         {
-                            prop: 'netProfitRate',
+                            prop: 'account.standingBookNo',
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRate}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷基础信息维护'; this.misDialogVisible = true }}></i></span>
+                                return <span>{scope.row.account.standingBookNo}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷基础信息维护'; this.misDialogVisible = true }}></i></span>
                             }
                         },
-                        { prop: 'netProfitRate', label: 'MIS编码', width: '150' },
-                        { prop: 'netProfitRate', label: '借款单位', width: '150' },
-                        { prop: 'netProfitRate', label: '分部', width: '150' }
+                        { prop: 'account.misCode', label: 'MIS编码', width: '150' },
+                        { prop: 'misCode', label: '借款单位', width: '150' },
+                        { prop: 'account.subsectionName', label: '分部', width: '150' }
                     ]
                 },
                 {
