@@ -205,7 +205,7 @@ export default {
                     "subsectionCode": ""
                 }
             }
-            // const {data} = await getAccountList(params)
+            const {data} = await getAccountList(params)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }

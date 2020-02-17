@@ -1,8 +1,11 @@
 import axios from 'axios'
-// import { interfaceUrl } from '@/api/config'
-let interfaceUrl = 'http://192.168.20.248:60100'
+import { interfaceUrl } from '@/api/config'
+// let interfaceUrl = 'https://b2b-gateway-dev.hosjoy.com:4832/'
 // 台账列表
-export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account/list`, params)
+export const getAccountList = (params) => {
+    console.log(params)
+    return axios.get(interfaceUrl + `backend/account/list`, { params })
+}
 
 // 分部列表查询
 export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/queryDeptList', { params })
@@ -11,4 +14,6 @@ export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/que
 export const findBranchListNew = (params) => axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
 
 // 新增各类台账
-export const addAccount = (params) => axios.post(interfaceUrl + '/account',  params )
+export const addAccount = (params) => axios.post(interfaceUrl + '/account', params)
+
+
