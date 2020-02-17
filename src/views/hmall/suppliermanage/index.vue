@@ -62,7 +62,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :close-on-click-modal=false>
+        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="供应商名称：" prop="supplierName">
                     <el-input v-model="ruleForm.supplierName" maxlength='50'></el-input>
@@ -109,7 +109,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onOperate()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
             </span>
         </el-dialog>
@@ -273,7 +273,7 @@ export default {
             this.dialogVisible = true
             this.ruleForm = deepCopy(this.copyForm)
             this.categoryIdArr = []
-            this.$refs.ruleForm.resetFields()
+            // this.$refs.ruleForm.resetFields()
             this.dialogtitle = '新增供应商'
         },
         onDelete (val) {
@@ -294,13 +294,17 @@ export default {
 
         },
         async onEditSupplier (val) {
-            this.$refs.ruleForm.resetFields()
+            // this.$refs.ruleForm.resetFields()
             const { data } = await getSupplierDetail(val.id)
             this.dialogtitle = '编辑供应商'
             this.dialogVisible = true
             console.log(data)
             this.ruleForm = { ...data }
             this.categoryIdArr = data.categoryIdList
+        },
+        handleClose (done) {
+            this.$refs.ruleForm.resetFields()
+            this.dialogVisible = false
         },
         onImport () {
             var url = ''
@@ -328,15 +332,21 @@ export default {
                                 type: 'success'
                             })
                         } else if (this.dialogtitle == '编辑供应商') {
-                            await editSupplierDetail(this.ruleForm)
-                            this.$message({
-                                message: '修改供应商成功！',
-                                type: 'success'
-                            })
+                            try {
+                                await editSupplierDetail(this.ruleForm)
+                                this.$message({
+                                    message: '修改供应商成功！',
+                                    type: 'success'
+                                })
+                                this.loading = false
+                                this.dialogVisible = false
+                                this.searchList()
+                            } catch (error) {
+                                this.loading = false
+                            }
+
                         }
-                        this.loading = false
-                        this.dialogVisible = false
-                        this.searchList()
+
                     } else {
                         this.loading = false
                     }
