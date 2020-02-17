@@ -206,7 +206,6 @@ export default {
                 }
             }
             const {data} = await getAccountList(params)
-            console.log(data)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }

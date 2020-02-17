@@ -1,7 +1,10 @@
 import axios from 'axios'
 import {interfaceUrl, B2bUrl } from '@/api/config'
 // 台账列表
-export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account/list`, params)
+export const getAccountList = (params) => {
+    console.log(params)
+    return axios.get(interfaceUrl + `backend/account/list`, { params })
+}
 
 // 分部列表查询
 export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/queryDeptList', { params })
