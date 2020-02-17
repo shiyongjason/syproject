@@ -21,20 +21,21 @@
             <div class="query-cont-col">
                 <el-form-item label="放款日期：" prop="name">
                     <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
-                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="datetime" placeholder="请选择放款日期">
+                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChnageTime' format="yyyy-MM-dd"  type="datetime" placeholder="请选择放款日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款期限： " prop="loanDateNum">
-                    <el-radio v-model.trim="flowform.loanDateType" label="1">月</el-radio>
-                    <el-radio v-model.trim="flowform.loanDateType" label="2">天</el-radio>
-                    <el-input v-model.trim="flowform.loanDateNum" placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType?'月':'天'}}</template></el-input>
+                    <el-radio v-model.trim="flowform.loanDateType" label=1>月</el-radio>
+                    <el-radio v-model.trim="flowform.loanDateType" label=2>天</el-radio>
+                    <el-input v-model.trim="flowform.loanDateNum" placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="到期日：" prop="loanEndTime">
-                    <el-date-picker v-model="flowform.loanEndTime" type="datetime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd" placeholder="请选择还款日期"></el-date-picker>
+                    {{flowform.loanEndTime}}
+                    <!-- <el-date-picker v-model="flowform.loanEndTime" type="datetime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd" placeholder="请选择还款日期"></el-date-picker> -->
                 </el-form-item>
             </div>
         </div>
@@ -47,6 +48,7 @@
     </div>
 </template>
 <script>
+import moment from 'moment'
 export default {
     name: 'flowform',
     props: {
@@ -83,6 +85,12 @@ export default {
                 }
             }
         },
+    },
+    methods: {
+        onChnageTime (val) {
+            console.log(val)
+            this.flowform.loanEndTime = moment(new Date(val)).subtract(7, 'days').format('YYYY-MM-DD')
+        }
     }
 }
 </script>
