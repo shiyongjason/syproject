@@ -13,3 +13,5 @@ export const deleteSupplier = (params) => axios.delete(B2bUrl + `product/api/sup
 export const getSupplierDetail = (params) => axios.get(B2bUrl + `product/api/supplier/${params}`)
 // 修改
 export const editSupplierDetail = (params) => axios.put(B2bUrl + `product/api/supplier/${params.id}`, params)
+
+export const findBranchlist = (params) => axios.get(B2bUrl + `product/api/supplier/branch-list`, params)

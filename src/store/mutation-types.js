@@ -36,6 +36,7 @@ export const PAYMENT_WHITE = 'PAYMENT_WHITE'
 // B2b 供应商
 export const SUPPLIER_DATA = 'SUPPLIER_DATA'
 export const BRAND_DATA = 'BRAND_DATA'
+export const SUPPLIER_BRACHLIST = 'SUPPLIER_BRACHLIST'
 // 舒适云数据后台
 // 家庭管理
 
