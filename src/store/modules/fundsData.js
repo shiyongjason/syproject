@@ -26,7 +26,7 @@ const actions = {
     async findPlatformslist ({ commit }, params) {
         const { data } = await findPlatformslist()
         commit(types.PLAT_FORMDATA, data.data.pageContent)
-    },
+    }
 }
 export default {
     state,
