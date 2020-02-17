@@ -1,34 +1,25 @@
-import * as types from '../mutation-types'
-import instance from '@/api/axios_new'
+import * as types from '../fundsData-type'
 import axios from 'axios'
+import { findPlatformslist } from '@/views/fundsData/api'
 const state = {
-    skuData: {}
+    platformData: {}
 }
 
 const getters = {
-    eventProducts: state => state.eventProducts,
-    eventInfos: state => state.eventInfos
+    platformData: state => state.platformData
 }
 
 const mutations = {
-    [types.ADD_EVENT_PRODUCTS] (state, payload) {
+    [types.PLAT_FORMDATA] (state, payload) {
         const productArr = state.eventProducts
-        payload && payload.map(item => {
-            productArr.push(item)
-        })
-        // 去重
-        // const newproductArr = productArr.filter(item => item.id)
-        // console.log(newproductArr)
-        state.eventProducts = productArr
-        sessionStorage.setItem('eventProducts', JSON.stringify(state.eventProducts))
-        // state.eventProducts = payload
+        state.platformData = payload
     }
 }
 
 const actions = {
-    async findListSku ({ commit }, params) {
-        const { data } = await instance.get('/product/api/sku', { params })
-        commit(types.SKU_DATA, data)
+    async findPlatformslist ({ commit }, params) {
+        const { data } = await findPlatformslist()
+        commit(types.PLAT_FORMDATA, data)
     },
 }
 export default {

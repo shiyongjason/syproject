@@ -12,7 +12,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：" >
+                        <el-form-item label="金云系统编号：">
                             <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
                         </el-form-item>
                     </div>
@@ -67,14 +67,9 @@
 import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
 import { addAccount } from '../../api/index'
+import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'flow',
-    props: {
-        dialogVisible: {
-            type: Boolean,
-            default: false
-        }
-    },
     components: { flowcomp, flowratecomp },
     data () {
         return {
@@ -148,10 +143,18 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapGetters({
+            platformData: 'platformData'
+        })
+    },
     mounted(){
-        
+this.onFindPlatformslist()
     },
     methods: {
+        ...mapActions({
+            findPlatformslist: 'findPlatformslist'
+        }),
         onSubmit () {
             // 操作
             // this.$refs.ruleForm.validate((valid) => {
@@ -160,8 +163,9 @@ export default {
             console.log(this.ruleForm)
             addAccount(this.ruleForm)
         },
-        onCancle () {
-            this.$emit('onClose')
+        async onFindPlatformslist () {
+            await this.findPlatformslist()
+            this.paltformList = this.platformData
         }
     }
 }
