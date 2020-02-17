@@ -12,4 +12,4 @@ export const findBranchListNew = (params) => axios.get(interfaceUrl + 'rms/subse
 // 新增各类台账
 export const addAccount = (params) => axios.post(interfaceUrl + 'backend/account',  params )
 
-export const findPlatformslist = (params) => axios.get(interfaceUrl + 'rms/companyTarget/queryPageList', { params})
+export const findPlatformslist = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params})

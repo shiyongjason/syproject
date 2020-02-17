@@ -6,7 +6,13 @@ const state = {
 }
 
 const getters = {
-    platformData: state => state.platformData
+    platformData: state => {
+        for (let i of state.platformData) {
+            i.value = i.companyName
+            i.selectCode = i.companyCode
+        }
+        return state.platformData
+    }
 }
 
 const mutations = {
@@ -19,7 +25,7 @@ const mutations = {
 const actions = {
     async findPlatformslist ({ commit }, params) {
         const { data } = await findPlatformslist()
-        commit(types.PLAT_FORMDATA, data)
+        commit(types.PLAT_FORMDATA, data.data.pageContent)
     },
 }
 export default {

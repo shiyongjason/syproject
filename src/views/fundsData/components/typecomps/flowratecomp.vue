@@ -47,7 +47,7 @@ export default {
     watch: {
         flowrateform: {
             handler (newName) {
-                this.newRata = JSON.parse(JSON.stringify(newName.overdueList[0]))
+                // this.newRata = JSON.parse(JSON.stringify(newName.overdueList[0]))
                 console.log(this.newRata)
             },
             // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法，如果设置了false，那么效果和上边例子一样

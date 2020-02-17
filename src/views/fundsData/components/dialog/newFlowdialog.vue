@@ -17,8 +17,9 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="account.loanCompanyName">
-                            <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input>
+                        <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
+                            <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
+                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -28,12 +29,12 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="分部：" prop="account.subsectionName">
-                            <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入"></el-input>
+                            <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入" disabled></el-input>
                         </el-form-item>
                     </div>
                 </div>
                 <!--抽离 还款-->
-                <flowcomp :flowform=ruleForm.loan />
+                <!-- <flowcomp :flowform=ruleForm.loan /> -->
                 <!--抽离 还款利息-->
                 <flowratecomp :flowrateform=ruleForm.plan />
                 <div class="dialogtitle">档案信息：</div>
@@ -64,22 +65,23 @@
 </template>
 
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'flow',
-    components: { flowcomp, flowratecomp },
+    components: { flowcomp, flowratecomp, HAutocomplete },
     data () {
         return {
-            radio: '',
+            paltformList: [],
             textarea: '',
             rules: {
                 'account.standingBookNo': [
                     { required: true, message: '请输入台账档案编号', trigger: 'blur' }
                 ],
-                'account.loanCompanyName': [
+                'loanCompanyName': [
                     { required: true, message: '请输入借款单位', trigger: 'blur' }
                 ],
                 'account.subsectionName': [
@@ -88,12 +90,12 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: '',
+                    accountType: 1,//台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: '',
+                    productType: 1,//1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',
@@ -143,13 +145,21 @@ export default {
             }
         }
     },
+    watch: {
+        'ruleForm.account.loanCompanyName' (val) {
+            this.$nextTick(() => {
+                console.log(val)
+                if (val) this.$refs['loanCompanyName'].clearValidate()
+            })
+        }
+    },
     computed: {
         ...mapGetters({
             platformData: 'platformData'
         })
     },
-    mounted(){
-this.onFindPlatformslist()
+    mounted () {
+        this.onFindPlatformslist()
     },
     methods: {
         ...mapActions({
@@ -157,15 +167,22 @@ this.onFindPlatformslist()
         }),
         onSubmit () {
             // 操作
-            // this.$refs.ruleForm.validate((valid) => {
-
-            // })
-            console.log(this.ruleForm)
-            addAccount(this.ruleForm)
+            this.$refs.ruleForm.validate((valid) => {
+                console.log(this.ruleForm)
+                addAccount(this.ruleForm)
+            })
         },
         async onFindPlatformslist () {
             await this.findPlatformslist()
             this.paltformList = this.platformData
+            console.log(this.paltformList)
+        },
+        backPlat (val) {
+            console.log(val)
+            this.ruleForm.account.loanCompanyCode = val.value ? val.value.selectCode : ''
+            this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
+            this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
+            this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
         }
     }
 }
