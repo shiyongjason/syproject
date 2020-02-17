@@ -27,7 +27,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">台账编号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.ledger" placeholder="请输入台账编号">
+                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookArchiveNo" placeholder="请输入台账编号">
                     </el-input>
                 </div>
             </div>
@@ -79,7 +79,7 @@
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import complexTable from './components/complexTable.vue'
-import { findBranchListNew } from './api/index.js'
+import { getAccountList, findBranchListNew } from './api/index.js'
 export default {
     name: 'ledger',
     components: { complexTable },
@@ -99,7 +99,7 @@ export default {
                 misCode: '',
                 customerName: '',
                 branch: '',
-                ledger: '',
+                standingBookArchiveNo: '',
                 activeName: '流贷',
                 produce: '好信用'
             },
@@ -115,7 +115,7 @@ export default {
     },
     mounted () {
         this.onSearch()
-        this.findBranchList()
+        // this.findBranchList()
     },
     methods: {
         // 埋点
@@ -172,12 +172,40 @@ export default {
             console.log(this.searchParams)
             // const { data } = await getRateList(this.searchParams)
             this.tableData = []
-            this.tableData = [{ newShy: 11 }, { newShy: 22 }, { newShy: 33 }]
+            this.tableData = [
+                {
+                    misCode: 1,
+                    account: {
+                        misCode: 123,
+                        standingBookNo: 'a'
+                    }
+                },
+                {
+                    misCode: 2,
+                    account: {
+                        misCode: 456,
+                        standingBookNo: 'b'
+                    }
+                },
+            ]
             // this.pagination = {
             //     pageNumber: data.current,
             //     pageSize: data.size,
             //     total: data.total
             // }
+            const params = {
+                reqAccountQuery: {
+                    "accountType": "流贷",
+                    "loanCompanyCode": "",
+                    "loanCompanyName": "",
+                    "misCode": "",
+                    "pageNumber": 1,
+                    "pageSize": 10,
+                    "standingBookArchiveNo": "",
+                    "subsectionCode": ""
+                }
+            }
+            // const {data} = await getAccountList(params)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -187,7 +215,7 @@ export default {
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'branch', '')
-            this.$set(this.queryParams, 'ledger', '')
+            this.$set(this.queryParams, 'standingBookArchiveNo', '')
             this.onSearch()
         },
         getList (val) {
