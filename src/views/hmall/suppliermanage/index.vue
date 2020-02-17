@@ -326,11 +326,15 @@ export default {
                         this.ruleForm.cityName = this.cityLists && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
                         console.log(this.ruleForm)
                         if (this.dialogtitle == '新增供应商') {
-                            await addSupplier(this.ruleForm)
-                            this.$message({
-                                message: '新增供应商成功！',
-                                type: 'success'
-                            })
+                            try {
+                                await addSupplier(this.ruleForm)
+                                this.$message({
+                                    message: '新增供应商成功！',
+                                    type: 'success'
+                                })
+                            } catch (error) {
+                                this.loading = false
+                            }
                         } else if (this.dialogtitle == '编辑供应商') {
                             try {
                                 await editSupplierDetail(this.ruleForm)
@@ -338,15 +342,13 @@ export default {
                                     message: '修改供应商成功！',
                                     type: 'success'
                                 })
-                                this.loading = false
-                                this.dialogVisible = false
-                                this.searchList()
                             } catch (error) {
                                 this.loading = false
                             }
-
                         }
-
+                        this.loading = false
+                        this.dialogVisible = false
+                        this.searchList()
                     } else {
                         this.loading = false
                     }
