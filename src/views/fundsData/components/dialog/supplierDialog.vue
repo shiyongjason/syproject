@@ -5,8 +5,8 @@
                 <div class="dialogtitle">借款信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="供货商名称：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入供货商名称" maxlength='30'></el-input>
+                        <el-form-item label="供货商名称：" prop="supplier">
+                            <el-input v-model.trim="form.supplier" placeholder="请输入供货商名称" maxlength='30'></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -62,7 +62,23 @@ export default {
         return {
             radio: '月',
             form: {
-                name: ''
+                name: '',
+                description: '', // 台账借款表
+                accountId: '', // 台账id
+                depositPay: '', // 保证金缴纳
+                depositProportion: '', // 保证金比例
+                id: '', // 主键id
+                invoiceAmount: '', // 开票金额
+                invoiceTime: '', // 开票时间
+                loanAmount: '', // 借款金额（敞口金额）
+                loanDateNum: '', // 借款期限
+                loanDateType: '', // 借款期限类型 1：月 2：天
+                loanEndTime: '', // 借款结束日期,格式为:yyyy-MM-dd HH:mm:ss
+                loanStartTime: '', // 借款开始日期
+                registrant: '', // 登记人
+                repaymentType: '', // 还款类型 1：一次性还款 2：334还款
+                supplier: '', // 供货商
+                yearRate: ''// 年利率
             },
             rules: {
                 name: [
@@ -88,6 +104,9 @@ export default {
         onSure () {
             //
         }
+    },
+    mounted () {
+        console.log('detailData', this.detailData)
     }
 }
 </script>

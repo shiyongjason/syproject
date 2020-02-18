@@ -8,26 +8,21 @@
                             <el-input v-model.trim="form.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：" prop="jinyunArchiveNo">
-                            <el-input v-model.trim="form.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
-                        </el-form-item>
-                    </div>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
-                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
+                            <HAutocomplete :selectArr="paltformList" :selectObj="selectObj" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="MIS编码：" prop="misCode">
-                            <span>222{{form.misCode}}</span>
+                            <span>{{form.misCode}}</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="分部：" prop="misCode">
-                            <span>222{{form.subsectionName}}</span>
+                            <span>{{form.subsectionName}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -35,12 +30,14 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary">保 存</el-button>
+            <el-button type="primary" @click="onSave">保 存</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
+
+import { setAccountBasic } from '../../api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapGetters, mapActions } from 'vuex'
 export default {
@@ -49,6 +46,10 @@ export default {
     data () {
         return {
             paltformList: [],
+            selectObj: {
+                selectName: '',
+                selectCode: ''
+            },
             form: {
                 id: '',
                 accountType: '', // 台账类型 1：流贷2：敞口 3：分授信
@@ -93,10 +94,8 @@ export default {
             this.$emit('onClose')
         },
         async onFindPlatformslist () {
-            console.log('onFindPlatformslist')
             await this.findPlatformslist()
             this.paltformList = this.platformData
-            console.log(this.paltformList)
         },
         backPlat (val) {
             console.log(val)
@@ -104,11 +103,45 @@ export default {
             this.form.loanCompanyName = val.value ? val.value.value : ''
             this.form.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.form.subsectionName = val.value ? val.value.subsectionName : ''
+        },
+        onSave () {
+            console.log(this.form)
+            this.$refs['form'].validate(async (valid, object) => {
+                console.log(object) // object就是未通过校验的字段
+                if (valid) {
+                    // 验证通过
+                    await setAccountBasic(this.form)
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功'
+                    })
+                    this.onCancle()
+                } else {
+                }
+            })
         }
     },
     mounted () {
         this.onFindPlatformslist()
         console.log(this.detailData)
+        this.form = {
+            id: '1229587892565852161',
+            standingBookNo: '测试1',
+            accountType: 1,
+            productType: 1,
+            misCode: 'miscode007',
+            loanCompanyCode: 'e3e6d913-c36f-4fbe-9c62-97908ac7b366',
+            loanCompanyName: '苏州万格连环境科技有限公司',
+            subsectionCode: '12ab6587-57db-446e-87d5-bc1e078fb77a',
+            subsectionName: '苏州分部',
+            standingBookArchiveNo: '台账档案编号007',
+            jinyunArchiveNo: '007',
+            remark: '备注备注备注备注007'
+        }
+        this.selectObj = {
+            selectName: this.form.loanCompanyName,
+            selectCode: this.form.loanCompanyCode
+        }
     }
 }
 </script>
