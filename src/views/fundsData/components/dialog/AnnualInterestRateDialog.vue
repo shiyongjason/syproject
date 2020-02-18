@@ -13,15 +13,15 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="本次还款：" prop="name">
-                            <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入本次还款"></el-input>
+                        <el-form-item label="本次还款：" prop="paidCapital">
+                            <el-input v-isNum="form.paidCapital" maxlength='20' v-model.trim="form.paidCapital" placeholder="请输入本次还款"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="欠收本金：" prop="name">
                             <!-- 欠收本金=借款金额-累计实收借款本金 -->
-                            <span>111</span>
+                            <span>111。。。</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="宽限期利息：" prop="name">
+                        <el-form-item label="累计宽限期实时利息：" prop="name">
                             <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入宽限期利息"></el-input>
                         </el-form-item>
@@ -60,6 +60,7 @@
                     </div>
                     <div class="query-cont-col" style="margin-left: -24px;">
                         <el-form-item label="剩余宽限利息：" prop="name">
+                            <!-- 剩余宽限期利息=宽限期利息-累计缴纳的宽限期利息 -->
                             <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入应收利息"></el-input>
                             <span class="dw">元</span>
@@ -68,7 +69,7 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="应收利息：" prop="name">
+                        <el-form-item label="累计应收利息：" prop="name">
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入应收利息"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -121,12 +122,10 @@
                         </el-form-item>
                     </div>
                 </div>
-                <div style="margin-left:20px;margin-bottom: 20px;">
-                    <el-button type="primary" size="small" icon="el-icon-plus">下阶段利息</el-button>
-                </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="应缴纳逾期罚息：" prop="name">
+                        <el-form-item prop="name" class="yuqi">
+                            <span slot='label' style="width:190px;display: inline-block;">1阶段累计应缴纳逾期罚息：</span>
                             <el-input v-model.trim="form.name" v-isNum='form.name' maxlength='20' placeholder="请输入利息金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -144,11 +143,15 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="剩余逾期罚息：" prop="name">
+                        <el-form-item label="剩余1阶段逾期罚息：" prop="name">
                             <el-input v-model.trim="form.name" v-isNum='form.name' maxlength='20' placeholder="请输入利息金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
+                </div>
+                <div style="margin-left:20px;margin-bottom: 20px;">
+                    <!-- 最多5个 -->
+                    <el-button type="primary" size="small" icon="el-icon-plus">下阶段利息</el-button>
                 </div>
             </el-form>
         </div>
@@ -190,6 +193,27 @@ export default {
         onCancle () {
             this.$emit('onClose')
         }
+    },
+    mounted () {
+        console.log(this.detailData)
+        this.form = {
+            description: '', // 台账还款流水表
+            capitalTime: '', // 实际还本金日期
+            createBy: '', // 创建人
+            createTime: '', // 创建时间
+            deleted: '', // 是否删除 0：否 1：是
+            graceInterestTime: '', // 宽限期利息时间
+            id: '', // 主键id
+            interestTime: '', // 实收利息时间
+            overDueInterestTime: '', // 实付逾期利息时间
+            paidCapital: '', // 实收还款本金
+            paidGraceInterest: '', // 实收宽限期利息
+            paidInterest: '', // 实收的利息
+            paidOverDueInterest: '', // 实付逾期利息
+            planId: '', // 还款计划id
+            updateBy: '', // 修改人
+            updateTime: ''// 修改时间
+        }
     }
 }
 </script>
@@ -197,6 +221,12 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+}
+/deep/.yuqi .el-form-item__label {
+    width: 198px !important;
+}
+/deep/.yuqi .el-form-item__content {
+    width: 298px !important;
 }
 .dialogtitle {
     font-size: 20px;
