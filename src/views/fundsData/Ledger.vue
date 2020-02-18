@@ -197,7 +197,7 @@
                 //     total: data.total
                 // }
                 const params = {
-                    accountType: '3',
+                    accountType: '1',
                     loanCompanyCode: "",
                     loanCompanyName: "",
                     misCode: "",
