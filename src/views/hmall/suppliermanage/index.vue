@@ -107,7 +107,7 @@
                     </el-col>
                     <el-col class="ml10 " :span="1">-</el-col>
                     <el-col :span="8">
-                        <el-form-item prop="cityId">
+                        <el-form-item>
                             <el-select v-model="ruleForm.cityId" placeholder="请选择市" style="width:100%">
                                 <el-option label="请选择" value=""></el-option>
                                 <el-option v-for="(item) in cityLists" :key="item.cityId" :label="item.name"
@@ -199,9 +199,6 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
-                ],
-                cityId: [
-                    { required: true, message: '请选择市', trigger: 'change' }
                 ]
             },
             loading: false

@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-checkbox v-model="queryParams.isOwnOperated" :true-label=true :false-label=false>自营</el-checkbox>
+                    <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
@@ -174,6 +174,7 @@ export default {
             this.$set(this.queryParams, 'onMarket', '')
             this.$set(this.paginationData, 'pageNumber', 1)
             this.$set(this.paginationData, 'pageSize', 10)
+            this.$set(this.queryParams, 'isOwnOperated', false)
             this.onQuery()
         },
         async search () {
@@ -212,7 +213,7 @@ export default {
                 '&categoryId=' + this.queryParams.categoryId +
                 '&onMarket=' + this.queryParams.onMarket +
                 '&specification=' + this.queryParams.specification +
-                '&access_token=' + sessionStorage.getItem('token')
+                '&access_token=' + sessionStorage.getItem('tokenB2b')
         }
     },
     mounted () {
