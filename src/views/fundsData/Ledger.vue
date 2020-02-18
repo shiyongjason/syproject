@@ -216,7 +216,7 @@
                 this.onSearch()
             },
             getList(val) {
-                console.log(val)
+                // console.log(val)
                 this.searchParams = {
                     ...this.searchParams,
                     ...val

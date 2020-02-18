@@ -1,5 +1,4 @@
 import * as types from '../fundsData-type'
-import axios from 'axios'
 import { findPlatformslist } from '@/views/fundsData/api'
 const state = {
     platformData: {}
@@ -17,7 +16,6 @@ const getters = {
 
 const mutations = {
     [types.PLAT_FORMDATA] (state, payload) {
-        const productArr = state.eventProducts
         state.platformData = payload
     }
 }
