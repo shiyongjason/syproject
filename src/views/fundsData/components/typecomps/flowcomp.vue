@@ -6,23 +6,27 @@
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="供货商名称：" prop="supplier">
-                    <el-input v-model.trim="flowform.supplier" placeholder="请输入供货商名"></el-input>
+                    <el-input v-model.trim="flowform.supplier" maxlength="30" show-word-limit placeholder="请输入供货商名">
+                    </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款金额：" prop="loanAmount">
-                    <el-input v-model.trim="flowform.loanAmount" placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                    <el-input v-model.trim="flowform.loanAmount" v-isNum="flowform.loanAmount" maxlength='20'
+                        placeholder="请输入借款金额"><template slot="append">元</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="年利率：" prop="yearRate">
-                    <el-input v-model.trim="flowform.yearRate" placeholder="请输入年利率"><template slot="append">%</template></el-input>
+                    <el-input v-model.trim="flowform.yearRate" v-isNum="flowform.yearRate" maxlength='20' placeholder="请输入年利率"><template slot="append">%</template>
+                    </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="放款日期：" prop="name">
                     <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
-                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="datetime" placeholder="请选择放款日期">
+                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime'
+                        format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="datetime" placeholder="请选择放款日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
@@ -30,7 +34,9 @@
                 <el-form-item label="借款期限： " prop="loanDateNum">
                     <el-radio v-model.trim="flowform.loanDateType" label=1>月</el-radio>
                     <el-radio v-model.trim="flowform.loanDateType" label=2>天</el-radio>
-                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template></el-input>
+                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isNum:0="flowform.loanDateNum" maxlength='5'
+                        placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
+                    </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -55,7 +61,7 @@ export default {
     props: {
         flowform: {
             type: Object,
-            default: {}
+            default: () => {}
         }
     },
     data () {
@@ -85,7 +91,7 @@ export default {
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
-        },
+        }
     },
     watch: {
         'flowform.loanDateType' (val) {

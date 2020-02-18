@@ -1,7 +1,7 @@
 <template>
     <!-- 新增流贷弹窗 -->
     <div class="flowbody page-body">
-        <div class="page-body-cont query-cont">
+        <div class="page-body-cont ">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">基础信息：</div>
                 {{ruleForm}}
@@ -11,15 +11,17 @@
                             <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="query-cont-col">
+                    <!-- <div class="query-cont-col">
                         <el-form-item label="金云系统编号：">
-                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
+                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略">
+                            </el-input>
                         </el-form-item>
-                    </div>
+                    </div> -->
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
                             <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
-                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
+                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat"
+                                :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -29,30 +31,35 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="分部：" prop="account.subsectionName">
-                            <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入" disabled></el-input>
+                            <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入" disabled>
+                            </el-input>
                         </el-form-item>
                     </div>
                 </div>
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
+                <grantcomp :flowform=ruleForm.loan />
                 <!--抽离 还款利息-->
-                <flowratecomp :flowrateform=ruleForm.plan />
+                <!-- <flowratecomp :flowrateform=ruleForm.plan /> -->
+                <grantratecomp :flowrateform=ruleForm.plan />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账档案编号：">
-                            <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号"></el-input>
+                            <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                            </el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="金云档案编号：">
-                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号"></el-input>
+                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号">
+                            </el-input>
                         </el-form-item>
                     </div>
                 </div>
                 <div class="dialogtitle">备注：</div>
                 <div class="query-cont-row">
-                    <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="ruleForm.account.remark">
+                    <el-input type="textarea" :rows="2" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="ruleForm.account.remark">
                     </el-input>
                 </div>
                 <div class="flow-bottom">
@@ -68,11 +75,14 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
+import grantcomp from '../typecomps/grantcomp'
+import grantratecomp from '../typecomps/grantratecomp'
+
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'flow',
-    components: { flowcomp, flowratecomp, HAutocomplete },
+    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, HAutocomplete },
     data () {
         return {
             paltformList: [],
@@ -90,12 +100,12 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 1,//台账类型 1：流贷2：敞口 3：分授信
+                    accountType: 1, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: 1,//1：好信用 2：供应链 3：好橙工
+                    productType: 1, // 1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',
@@ -140,7 +150,7 @@ export default {
                         planId: '',
                         sort: '',
                         startTime: ''
-                    }],
+                    }]
                 }
             }
         }
@@ -168,14 +178,12 @@ export default {
         onSubmit () {
             // 操作
             this.$refs.ruleForm.validate((valid) => {
-                console.log(this.ruleForm)
                 addAccount(this.ruleForm)
             })
         },
         async onFindPlatformslist () {
             await this.findPlatformslist()
             this.paltformList = this.platformData
-            console.log(this.paltformList)
         },
         backPlat (val) {
             console.log(val)

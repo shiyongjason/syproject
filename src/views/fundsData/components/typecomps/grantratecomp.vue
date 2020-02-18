@@ -9,7 +9,38 @@
                 <el-radio v-model.trim="flowrateform.isStepOverInterest" label=1>是</el-radio>
             </el-form-item>
         </div>
-        <template v-if="flowrateform.isStepOverInterest==1">
+        <div v-for="(item,index) in flowrateform.overdueList" :key="index">
+            <div class="smalltitle" >第{{index+1}}次还款：</div>
+            <div class="query-cont-row" >
+                <div class="query-cont-col">
+                    <el-form-item label="约定还款日期：" prop="name">
+                        <el-input v-model.trim="item.startTime" placeholder="请选择约定还款日期"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="query-cont-col">
+                    <el-form-item label="还款金额：" prop="name">
+                        <el-input v-model.trim="item.startTime" placeholder="请输入还款金额"><template
+                                slot="append">元</template>
+                        </el-input>
+                    </el-form-item>
+                </div>
+            </div>
+        </div>
+
+        <h3>逾期</h3>
+        <div class="query-cont-row">
+            <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
+                <el-radio v-model.trim="flowrateform.isStepOverInterest" label=0>否</el-radio>
+                <el-radio v-model.trim="flowrateform.isStepOverInterest" label=1>是</el-radio>
+            </el-form-item>
+        </div>
+        <div class="query-cont-col">
+            <el-form-item label="逾期利率：" prop="overDueInterest">
+                <el-input v-model.trim="flowrateform.overDueInterest" placeholder="请输入逾期利率"><template slot="append">%</template>
+                </el-input>
+            </el-form-item>
+        </div>
+        <!-- <template v-if="flowrateform.isStepOverInterest==1">
             <div class="smalltitle">逾期第一阶段利息：</div>
             <div class="query-cont-row" v-for="(item,index) in flowrateform.overdueList" :key="index">
                 <div class="query-cont-col">
@@ -34,7 +65,7 @@
                 <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus"
                     v-if="flowrateform.overdueList.length<5">下阶段利息</el-button>
             </div>
-        </template>
+        </template> -->
     </div>
 </template>
 <script>
@@ -57,15 +88,7 @@ export default {
                 this.newRata = JSON.parse(JSON.stringify(newName.overdueList[0]))
                 let newObj = { ...this.newRata }
                 this.flowrateform.overdueList = []
-                for (let i = 0; i < 2; i++) {
-                    if (i == 0) {
-                        newObj.dateNum = 3
-                        newObj.overDueInterest = 14
-                    }
-                    if (i == 1) {
-                        newObj.dateNum = 9999
-                        newObj.overDueInterest = 14
-                    }
+                for (let i = 0; i < 3; i++) {
                     this.flowrateform.overdueList.push(newObj)
                 }
                 console.log(this.flowrateform)
