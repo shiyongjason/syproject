@@ -19,7 +19,8 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.branch" clearable>
-                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.subsectionName" :value="item.subsectionCode">
+                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.subsectionName"
+                            :value="item.subsectionCode">
                         </el-option>
                     </el-select>
                 </div>
@@ -27,7 +28,8 @@
             <div class="query-cont-col">
                 <div class="query-col-title">台账编号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookArchiveNo" placeholder="请输入台账编号">
+                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookArchiveNo"
+                        placeholder="请输入台账编号">
                     </el-input>
                 </div>
             </div>
@@ -47,7 +49,8 @@
                 <el-button type="primary" class="ml20" @click="onExportTemplate">导入模板导出</el-button>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'"
+                    :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button type="primary" class="ml20">
                         台账导入
                     </el-button>
@@ -76,175 +79,176 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { interfaceUrl } from '@/api/config'
-import complexTable from './components/complexTable.vue'
-import { getAccountList, findBranchListNew } from './api/index.js'
-export default {
-    name: 'ledger',
-    components: { complexTable },
-    computed: {
-        ...mapState({
-            userInfo: state => state.userInfo
-        })
-    },
-    data () {
-        return {
-            activeName: '流贷',
-            produce: '好信用',
-            interfaceUrl: interfaceUrl,
-            queryParams: {
-                pageNumber: 1,
-                pageSize: 10,
-                misCode: '',
-                customerName: '',
-                branch: '',
-                standingBookArchiveNo: '',
+    import { mapState } from 'vuex'
+    import { interfaceUrl } from '@/api/config'
+    import complexTable from './components/complexTable.vue'
+    import { getAccountList, findBranchListNew } from './api/index.js'
+    export default {
+        name: 'ledger',
+        components: { complexTable },
+        computed: {
+            ...mapState({
+                userInfo: state => state.userInfo
+            })
+        },
+        data() {
+            return {
                 activeName: '流贷',
-                produce: '好信用'
-            },
-            searchParams: {},
-            tableData: [{ shy: 1 }, { shy: 2 }],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
-            branchList: []
-        }
-    },
-    mounted () {
-        this.onSearch()
-        // this.findBranchList()
-    },
-    methods: {
-        // 埋点
-        tracking (event) {
-            this.$store.dispatch('tracking', {
-                type: 9,
-                event,
-                page: 2,
-                page_name: '额度导入',
-                page_path_name: 'amountImport'
-            })
-        },
-        // 查询分部（不用做权限，现在是总部在使用）
-        async findBranchList () {
-            const { data } = await findBranchListNew()
-            // console.log(data)
-            this.branchList = data.data
-            this.branchList.unshift(
-                { subsectionCode: '', subsectionName: '请选择分部' }
-            )
-        },
-        onExportTemplate () {
-            // 模板导出
-            // var url = ''
-            // for (var key in this.queryParams) {
-            //     url += (key + '=' + this.queryParams[key] + '&')
-            // }
-            // location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
-        },
-        // 台账导出
-        onExportLedger () {
-            location.href = interfaceUrl + '/backend/account/export'
-        },
-        handleClick () {
-            this.onSearch()
-        },
-        isSuccess (response) {
-            this.$message({
-                message: '批量导入成功！',
-                type: 'success'
-            })
-            this.onSearch()
-        },
-        isError (response) {
-            this.$message({
-                message: '批量导入失败，' + JSON.parse(response.message).message,
-                type: 'error'
-            })
-        },
-        async onQuery () {
-            // console.log(this.activeName + ' '  + this.produce)
-            this.searchParams.activeName = this.activeName
-            this.searchParams.produce = this.produce
-            console.log(this.searchParams)
-            // const { data } = await getRateList(this.searchParams)
-            this.tableData = []
-            this.tableData = [
-                {
-                    misCode: 1,
-                    account: {
-                        misCode: 123,
-                        standingBookNo: 'a'
-                    }
+                produce: '好信用',
+                interfaceUrl: interfaceUrl,
+                queryParams: {
+                    pageNumber: 1,
+                    pageSize: 10,
+                    misCode: '',
+                    customerName: '',
+                    branch: '',
+                    standingBookArchiveNo: '',
+                    activeName: '流贷',
+                    produce: '好信用'
                 },
-                {
-                    misCode: 2,
-                    account: {
-                        misCode: 456,
-                        standingBookNo: 'b'
-                    }
+                searchParams: {},
+                tableData: [{ shy: 1 }, { shy: 2 }],
+                pagination: {
+                    pageNumber: 1,
+                    pageSize: 10,
+                    total: 0
                 },
-            ]
-            // this.pagination = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     total: data.total
-            // }
-            const params = {
-                reqAccountQuery: {
-                    "accountType": "流贷",
-                    "loanCompanyCode": "",
-                    "loanCompanyName": "",
-                    "misCode": "",
-                    "pageNumber": 1,
-                    "pageSize": 10,
-                    "standingBookArchiveNo": "",
-                    "subsectionCode": ""
+                branchList: []
+            }
+        },
+        mounted() {
+            this.onSearch()
+            // this.findBranchList()
+        },
+        methods: {
+            // 埋点
+            tracking(event) {
+                this.$store.dispatch('tracking', {
+                    type: 9,
+                    event,
+                    page: 2,
+                    page_name: '额度导入',
+                    page_path_name: 'amountImport'
+                })
+            },
+            // 查询分部（不用做权限，现在是总部在使用）
+            async findBranchList() {
+                const { data } = await findBranchListNew()
+                // console.log(data)
+                this.branchList = data.data
+                this.branchList.unshift(
+                    { subsectionCode: '', subsectionName: '请选择分部' }
+                )
+            },
+            onExportTemplate() {
+                // 模板导出
+                // var url = ''
+                // for (var key in this.queryParams) {
+                //     url += (key + '=' + this.queryParams[key] + '&')
+                // }
+                // location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
+            },
+            // 台账导出
+            onExportLedger() {
+                location.href = interfaceUrl + '/backend/account/export'
+            },
+            handleClick() {
+                this.onSearch()
+            },
+            isSuccess(response) {
+                this.$message({
+                    message: '批量导入成功！',
+                    type: 'success'
+                })
+                this.onSearch()
+            },
+            isError(response) {
+                this.$message({
+                    message: '批量导入失败，' + JSON.parse(response.message).message,
+                    type: 'error'
+                })
+            },
+            async onQuery() {
+                // console.log(this.activeName + ' '  + this.produce)
+                this.searchParams.activeName = this.activeName
+                this.searchParams.produce = this.produce
+                console.log(this.searchParams)
+                // const { data } = await getRateList(this.searchParams)
+                this.tableData = []
+                this.tableData = [
+                    {
+                        misCode: 1,
+                        account: {
+                            misCode: 123,
+                            standingBookNo: 'a'
+                        }
+                    },
+                    {
+                        misCode: 2,
+                        account: {
+                            misCode: 456,
+                            standingBookNo: 'b'
+                        }
+                    },
+                ]
+                // this.pagination = {
+                //     pageNumber: data.current,
+                //     pageSize: data.size,
+                //     total: data.total
+                // }
+                const params = {
+                    accountType: '3',
+                    loanCompanyCode: "",
+                    loanCompanyName: "",
+                    misCode: "",
+                    pageNumber: 1,
+                    pageSize: 10,
+                    standingBookArchiveNo: "",
+                    subsectionCode: ""
                 }
+                const { data } = await getAccountList(params)
+            },
+            onSearch() {
+                this.searchParams = { ...this.queryParams }
+                this.onQuery()
+            },
+            onReset() {
+                this.$set(this.queryParams, 'customerName', '')
+                this.$set(this.queryParams, 'misCode', '')
+                this.$set(this.queryParams, 'branch', '')
+                this.$set(this.queryParams, 'standingBookArchiveNo', '')
+                this.onSearch()
+            },
+            getList(val) {
+                console.log(val)
+                this.searchParams = {
+                    ...this.searchParams,
+                    ...val
+                }
+                console.log(this.searchParams)
+                this.onQuery()
+            },
+            onLinddialog() {
+                this.$router.push({ path: '/fundsData/newFlowdialog' })
             }
-            const {data} = await getAccountList(params)
-        },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
-        },
-        onReset () {
-            this.$set(this.queryParams, 'customerName', '')
-            this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'branch', '')
-            this.$set(this.queryParams, 'standingBookArchiveNo', '')
-            this.onSearch()
-        },
-        getList (val) {
-            console.log(val)
-            this.searchParams = {
-                ...this.searchParams,
-                ...val
-            }
-            console.log(this.searchParams)
-            this.onQuery()
-        },
-        onLinddialog () {
-            this.$router.push({ path: '/fundsData/newFlowdialog' })
         }
     }
-}
 </script>
 
 <style lang='scss' scoped>
-.add-tags-dialog {
-  padding-top: 20px;
-}
-/deep/ .el-dialog__body {
-  min-height: 0 !important;
-}
-/deep/ .el-tabs--card > .el-tabs__header {
-  border-bottom: 0;
-}
-/deep/ .el-tabs--card .el-tabs__nav {
-  border-bottom: 1px solid #e4e7ed;
-}
+    .add-tags-dialog {
+        padding-top: 20px;
+    }
+
+    /deep/ .el-dialog__body {
+        min-height: 0 !important;
+    }
+
+    /deep/ .el-tabs--card>.el-tabs__header {
+        border-bottom: 0;
+    }
+
+    /deep/ .el-tabs--card .el-tabs__nav {
+        border-bottom: 1px solid #e4e7ed;
+    }
 </style>

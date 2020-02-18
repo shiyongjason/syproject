@@ -2,8 +2,7 @@ import axios from 'axios'
 import { interfaceUrl, B2bUrl } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => {
-    console.log(params)
-    return axios.get(interfaceUrl + `backend/account/list`, { params })
+    return axios.get(interfaceUrl + `backend/account`, { params })
 }
 
 // 分部列表查询
