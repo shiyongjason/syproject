@@ -6,21 +6,21 @@
             </hosJoyTable>
         </div>
         <!-- 备注 -->
-        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" v-if='remarkDialogVisible' />
+        <remarkDialog :detailData='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" />
         <!-- 资金档案编号 -->
-        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" v-if='fileinfoDialogVisible' />
+        <fileInfoDialog :detailData='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" />
         <!-- 台账编号Dialog -->
-        <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" v-if='misDialogVisible' />
+        <misDialog :detailData='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" />
         <!-- 供货商Dialog -->
-        <supplierDialog :detailData='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" v-if="supplierDialogVisible" />
+        <supplierDialog :detailData='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false"  />
         <!-- 还款方式Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" v-if="AnnualInterestRateDialogVisible" />
+        <AnnualInterestRateDialog :detailData='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false"  />
         <!-- 开票日期Dialog -敞口 -->
-        <billingDialog :detailData='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" v-if="billingDialogVisible" />
+        <billingDialog :detailData='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false"/>
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" v-if="repaymentDialogVisible" />
+        <repaymentDialog :detailData='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" />
         <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" v-if="pointsCreditBillingDialogVisible" />
+        <pointsCreditBillingDialog :detailData='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" />
     </div>
 </template>
 
@@ -196,7 +196,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷备注信息维护'; this.remarkDialogVisible = true  }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷备注信息维护'; this.remarkDialogVisible = true }}></i></span>
                     }
                 }
             ],
