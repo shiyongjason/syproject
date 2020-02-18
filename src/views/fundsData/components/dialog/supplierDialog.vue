@@ -1,23 +1,23 @@
 <template>
-    <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <div class="form">
-            <el-form :model="misForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">借款信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="供货商名称：" prop="name">
-                            <el-input v-model.trim="misForm.name" placeholder="请输入供货商名称"></el-input>
+                            <el-input v-model.trim="form.name" placeholder="请输入供货商名称" maxlength='30'></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="name">
-                            <el-input v-model.trim="misForm.name" placeholder="请输入借款金额"></el-input>
+                            <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入借款金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="年利率：" prop="name">
-                            <el-input v-model.trim="misForm.name" placeholder="请输入年利率"></el-input>
+                            <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入年利率"></el-input>
                             <span class="dw">%</span>
                         </el-form-item>
                     </div>
@@ -25,17 +25,17 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="放款日期：" prop="name">
-                            <el-date-picker v-model="misForm.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
+                            <el-date-picker v-model="form.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款期限： " prop="name">
                             <el-radio style="margin-right:5px" v-model.trim="radio" label="月"></el-radio>
-                            <el-input v-model.trim="misForm.name" placeholder="请输入借款期限"></el-input>
+                            <el-input v-model.trim="form.name" v-isNum:0='form.name' maxlength='3' placeholder="请输入借款期限"></el-input>
                             <span class="dw">月</span>
                             <el-radio style="margin:0 5px 0 10px" v-model.trim="radio" label="天"></el-radio>
-                            <el-input v-model.trim="misForm.name" placeholder="请输入借款期限"></el-input>
+                            <el-input v-model.trim="form.name" v-isNum:0='form.name' maxlength='3' placeholder="请输入借款期限"></el-input>
                             <span class="dw">天</span>
                         </el-form-item>
                     </div>
@@ -91,16 +91,16 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
-  padding: 20px 24px;
+    padding: 20px 24px;
 }
 .dialogtitle {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  line-height: 30px;
-  color: #000;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 30px;
+    color: #000;
 }
 .dw {
-  margin-left: 10px;
+    margin-left: 10px;
 }
 </style>

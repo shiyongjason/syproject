@@ -4,13 +4,13 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="130px" class="demo-form">
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="台账编号：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="请输入台账编号"></el-input>
+                        <el-form-item label="台账编号：" prop="standingBookNo">
+                            <el-input v-model.trim="form.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：" prop="name">
-                            <el-input v-model.trim="form.name" placeholder="如有请输入，无请忽略"></el-input>
+                        <el-form-item label="金云系统编号：" prop="jinyunArchiveNo">
+                            <el-input v-model.trim="form.jinyunArchiveNo" placeholder="如有请输入，无请忽略"></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -20,13 +20,23 @@
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="MIS编码：" prop="misCode">
+                            <span>222{{form.misCode}}</span>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="分部：" prop="misCode">
+                            <span>222{{form.subsectionName}}</span>
+                        </el-form-item>
+                    </div>
                 </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="onCancle">取 消</el-button>
-                    <el-button type="primary">保 存</el-button>
-                </span>
             </el-form>
         </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="onCancle">取 消</el-button>
+            <el-button type="primary">保 存</el-button>
+        </span>
     </el-dialog>
 </template>
 
@@ -40,7 +50,6 @@ export default {
         return {
             paltformList: [],
             form: {
-                name: '',
                 id: '',
                 accountType: '', // 台账类型 1：流贷2：敞口 3：分授信
                 jinyunArchiveNo: '', // 金云档案编号
@@ -55,7 +64,7 @@ export default {
                 standingBookNo: '' // 台账编号
             },
             rules: {
-                name: [
+                standingBookNo: [
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ]
             }
