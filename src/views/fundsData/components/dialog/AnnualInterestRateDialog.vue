@@ -204,6 +204,7 @@ export default {
     margin-bottom: 10px;
     line-height: 30px;
     color: #000;
+    border-bottom: none;
 }
 .ftitle {
     margin-bottom: 15px;
