@@ -3,7 +3,7 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">商家账号：</div>
+                    <div class="query-col-title">会员账号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.adminAccount" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>
