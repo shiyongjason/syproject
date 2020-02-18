@@ -212,7 +212,7 @@ export default {
                 '&categoryId=' + this.queryParams.categoryId +
                 '&onMarket=' + this.queryParams.onMarket +
                 '&specification=' + this.queryParams.specification +
-                '&access_token=' + sessionStorage.getItem('token')
+                '&access_token=' + sessionStorage.getItem('tokenB2b')
         }
     },
     mounted () {
