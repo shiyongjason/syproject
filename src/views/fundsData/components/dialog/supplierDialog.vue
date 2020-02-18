@@ -84,6 +84,9 @@ export default {
     methods: {
         onCancle () {
             this.$emit('onClose')
+        },
+        onSure () {
+            //
         }
     }
 }
@@ -99,6 +102,7 @@ export default {
     margin-bottom: 10px;
     line-height: 30px;
     color: #000;
+    border-bottom: none;
 }
 .dw {
     margin-left: 10px;
