@@ -20,8 +20,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
                             <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
-                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat"
-                                :placeholder="'选择平台公司'" />
+                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -38,10 +37,10 @@
                 </div>
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
-                <grantcomp :flowform=ruleForm.loan />
+                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
                 <!--抽离 还款利息-->
-                <!-- <flowratecomp :flowrateform=ruleForm.plan /> -->
-                <grantratecomp :flowrateform=ruleForm.plan />
+                <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
+                <grantratecomp :flowrateform=ruleForm.planList />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -100,7 +99,7 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 1, // 台账类型 1：流贷2：敞口 3：分授信
+                    accountType: 2, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
@@ -117,48 +116,60 @@ export default {
                     depositProportion: '',
                     invoiceAmount: '',
                     invoiceTime: '',
-                    loanAmount: '',
+                    loanAmount: '', // 借款金额(敞口金额)
                     loanDateNum: '',
                     loanDateType: '',
                     loanEndTime: '',
                     loanStartTime: '',
                     registrant: '',
-                    repaymentType: '',
+                    repaymentType: 1,
                     standingBookId: '',
                     supplier: '',
                     yearRate: ''
                 },
-                plan: {
-                    capitalAmount: '',
-                    capitalPaid: '',
-                    dealTime: '',
-                    exsitGrace: '',
-                    graceDay: '',
-                    graceInterest: '',
-                    graceInterestAmount: '',
-                    graceInterestPaid: '',
-                    interestAmount: '',
-                    interestPaid: '',
-                    isStepOverInterest: '',
+                planList: []
+            },
+            planListItem: {
+                capitalAmount: '',
+                capitalPaid: '',
+                dealTime: '',
+                exsitGrace: '',
+                graceDay: '',
+                graceInterest: '',
+                graceInterestAmount: '',
+                graceInterestPaid: '',
+                interestAmount: '',
+                interestPaid: '',
+                isStepOverInterest: 0, // 默认逾期否
+                overDueInterest: '',
+                overDueInterestAmount: '',
+                overDueInterestPaid: '',
+                overdueList: [{
+                    dateNum: '',
+                    dateType: '',
                     overDueInterest: '',
-                    overDueInterestAmount: '',
-                    overDueInterestPaid: '',
-                    overdueList: [{
-                        dateNum: '',
-                        dateType: '',
-                        overDueInterest: '',
-                        planId: '',
-                        sort: '',
-                        startTime: ''
-                    }]
-                }
-            }
+                    planId: '',
+                    sort: '',
+                    startTime: ''
+                }]
+            },
+            // 还款方式：334 对应 30%，30%，40%
+            repaymenBaseNum: [0.3, 0.3, 0.4]
         }
     },
     watch: {
+        ruleForm: {
+            handler (val) {
+                console.log('ruleForm最新数据', val)
+            },
+            deep: true
+        },
+        'ruleForm.loan.loanAmount' (val) {
+            // 触发自动计算还款计划
+            this.setPlanList()
+        },
         'ruleForm.account.loanCompanyName' (val) {
             this.$nextTick(() => {
-                console.log(val)
                 if (val) this.$refs['loanCompanyName'].clearValidate()
             })
         }
@@ -170,6 +181,7 @@ export default {
     },
     mounted () {
         this.onFindPlatformslist()
+        this.ruleForm.planList.push({ ...this.planListItem })
     },
     methods: {
         ...mapActions({
@@ -191,6 +203,28 @@ export default {
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
+        },
+        onRepaymentTypeChange (val) {
+            this.ruleForm.planList = []
+            this.ruleForm.loan.repaymentType = val
+            if (val === 1) {
+                this.ruleForm.planList.push({ ...this.planListItem })
+            } else if (val === 2) {
+                for (let i = 0; i < 3; i++) {
+                    this.ruleForm.planList.push({ ...this.planListItem })
+                }
+            }
+            this.setPlanList()
+        },
+        /** 自动计算还款计划 */
+        setPlanList () {
+            if (this.ruleForm.loan.repaymentType == 1) {
+                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
+            } else if (this.ruleForm.loan.repaymentType == 2) {
+                for (let i = 0; i < this.repaymenBaseNum.length; i++) {
+                    this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
+                }
+            }
         }
     }
 }

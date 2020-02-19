@@ -2,7 +2,6 @@
     <div>
         <!-- 流贷组件 -->
         <div class="dialogtitle">借款信息：</div>
-        {{flowform}}
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="供货商名称：" prop="supplier">
@@ -32,8 +31,8 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款期限： " prop="loanDateNum">
-                    <el-radio v-model.trim="flowform.loanDateType" label=1>月</el-radio>
-                    <el-radio v-model.trim="flowform.loanDateType" label=2>天</el-radio>
+                    <el-radio v-model.trim="flowform.loanDateType" :label=1>月</el-radio>
+                    <el-radio v-model.trim="flowform.loanDateType" :label=2>天</el-radio>
                     <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isNum:0="flowform.loanDateNum" maxlength='5'
                         placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
                     </el-input>
@@ -49,7 +48,7 @@
         <div class="dialogtitle">还款信息：</div>
         <div class="query-cont-col">
             <el-form-item label="还款方式：" prop="name">
-                <el-radio v-model.trim="flowform.repaymentType" label="1">一次性还款</el-radio>
+                <el-radio v-model.trim="flowform.repaymentType" :label=1>一次性还款</el-radio>
             </el-form-item>
         </div>
     </div>
