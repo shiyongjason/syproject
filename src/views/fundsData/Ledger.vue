@@ -11,7 +11,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司名：</div>
                 <div class="query-col-input">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat"
+                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat"
                         :placeholder="'全部'" :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-    import { mapState } from 'vuex'
+    import { mapState, mapActions } from 'vuex'
     import { interfaceUrl } from '@/api/config'
     import complexTable from './components/complexTable.vue'
     import { getAccountList, findBranchListNew, findPaltList } from './api/index.js'
@@ -89,7 +89,10 @@
         components: { complexTable, HAutocomplete },
         computed: {
             ...mapState({
-                userInfo: state => state.userInfo
+                userInfo: state => state.userInfo,
+                platformData: (state) => {
+                    return state.fundsData.platformData
+                }
             })
         },
         data() {
@@ -116,7 +119,6 @@
                     pageSize: 10,
                     total: 0
                 },
-                platList: [], // 平台公司
                 branchList: [], // 分部
                 removeValue: false
             }
@@ -124,7 +126,8 @@
         mounted() {
             this.onSearch()
             this.findBranchList()
-            this.onFindPaltList()
+            // this.onFindPaltList()
+            this.findPlatformslist()
         },
         methods: {
             // 埋点
@@ -141,19 +144,9 @@
                 this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
                 this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
             },
-            // 查询平台公司
-            async onFindPaltList(subsectionCode) {
-                const params = { subsectionCode }
-                console.log(1)
-                const { data } = await findPaltList(params)
-                console.log(data)
-                this.platList = []
-                for (let i of data.data.pageContent) {
-                        i.value = i.companyShortName
-                        i.selectCode = i.companyCode
-                }
-                this.platList = data.data.pageContent
-            },
+            ...mapActions({
+                findPlatformslist: 'findPlatformslist'
+            }),
             // 查询分部（不用做权限，现在是总部在使用）
             async findBranchList() {
                 const { data } = await findBranchListNew()
@@ -194,9 +187,9 @@
             async onQuery() {
                 this.searchParams.accountType = this.accountType
                 this.searchParams.produce = this.produce
-                console.log(this.searchParams)
+                // console.log(this.searchParams)
                 const { data } = await getAccountList(this.searchParams)
-                console.log(data)
+                // console.log(data)
                 this.pagination = {
                     pageNumber: data.current,
                     pageSize: data.size,
@@ -206,12 +199,12 @@
                 this.tableData = []
                 data.records.map((i) => {
                     let obj = {}
-                    console.log(i)
+                    // console.log(i)
                     if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
                     if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
                     if (i.overdue) Object.keys(i.overdue).forEach(key => obj['overdue_' + key] = i.overdue[key])
                     if (i.plan) Object.keys(i.plan).forEach((key) => obj['plan_' + key] = i.plan[key])
-                    console.log(obj)
+                    // console.log(obj)
                     this.tableData.push(obj)
                 })
             },
@@ -235,7 +228,7 @@
                     ...this.searchParams,
                     ...val
                 }
-                console.log(this.searchParams)
+                // console.log(this.searchParams)
                 this.onQuery()
             },
             onLinddialog() {

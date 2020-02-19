@@ -17,6 +17,8 @@ export const addAccount = (params) => axios.post(interfaceUrl + 'backend/account
 
 export const findPlatformslist = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 
+// 查询台账基础信息
+export const getAccountBasic = (id) => axios.get(interfaceUrl + `backend/account/basic/${id}`, )
 // 修改台账基础信息
 export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/account/basic', params)
 
