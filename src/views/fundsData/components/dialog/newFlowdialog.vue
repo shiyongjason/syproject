@@ -198,7 +198,6 @@ export default {
             this.paltformList = this.platformData
         },
         backPlat (val) {
-            console.log(val)
             this.ruleForm.account.loanCompanyCode = val.value ? val.value.selectCode : ''
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
@@ -219,7 +218,7 @@ export default {
         /** 自动计算还款计划 */
         setPlanList () {
             if (this.ruleForm.loan.repaymentType == 1) {
-                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
+                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
             } else if (this.ruleForm.loan.repaymentType == 2) {
                 for (let i = 0; i < this.repaymenBaseNum.length; i++) {
                     this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''

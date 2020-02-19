@@ -1,25 +1,23 @@
 <template>
     <div v-if="flowrateform.length>0">
-        {{flowrateform}}
         <!-- 流贷组件 -->
         <div v-for="(item,index) in flowrateform" :key="index">
             <div class="smalltitle">第{{index+1}}次还款：</div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-form-item label="约定还款日期：" prop="endTime">
-                         <el-date-picker v-model="item.endTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd"  type="datetime" placeholder="请选择约定还款日期">
-                    </el-date-picker>
+                        <el-date-picker v-model="item.endTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="datetime" placeholder="请选择约定还款日期">
+                        </el-date-picker>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
                     <el-form-item label="还款金额：" prop="capitalAmount">
-                        <el-input v-model.trim="item.capitalAmount" placeholder="请输入还款金额"><template slot="append">元</template>
+                        <el-input v-model.trim="item.capitalAmount" v-isNum="item.capitalAmount" maxlength='20' placeholder="请输入还款金额"><template slot="append">元</template>
                         </el-input>
                     </el-form-item>
                 </div>
             </div>
         </div>
-
         <h3>逾期</h3>
         <div class="query-cont-row">
             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
@@ -29,7 +27,7 @@
         </div>
         <div class="query-cont-col" v-if="flowrateform[0].isStepOverInterest==1">
             <el-form-item label="逾期利率：" prop="overDueInterest">
-                <el-input v-model.trim="flowrateform[0].overDueInterest" placeholder="请输入逾期利率"><template slot="append">%</template>
+                <el-input v-model.trim="flowrateform[0].overdueList[0].overDueInterest" v-isNum="flowrateform[0].overdueList[0].overDueInterest" maxlength='20' placeholder="请输入逾期利率"><template slot="append">%</template>
                 </el-input>
             </el-form-item>
         </div>
@@ -79,20 +77,13 @@ export default {
         // flowrateform (val) {
         //     console.log(1, val)
         // }
-        // flowrateform: {
-        //     handler (newName) {
-        //         console.log(newName)
-        //         this.newRata = JSON.parse(JSON.stringify(newName))
-        //         let newObj = { ...this.newRata }
-        //         // this.flowrateform = []
-        //         for (let i = 0; i < 1; i++) {
-        //             this.flowrateform.push(newObj)
-        //         }
-        //         // console.log(this.flowrateform)
-        //     },
-        //     // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法，如果设置了false，那么效果和上边例子一样
-        //     immediate: true
-        // }
+        flowrateform: {
+            handler (newName) {
+                console.log(newName)
+                newName[0].overdueList[0].overDueInterest = 12
+            },
+            deep: true
+        }
     },
     methods: {
     }

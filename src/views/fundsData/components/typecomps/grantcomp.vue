@@ -6,7 +6,7 @@
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
-                    <el-input v-model.trim="flowform.invoiceAmount" v-isNum="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
+                    <el-input v-model.trim="flowform.invoiceAmount" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
             </div>
@@ -18,18 +18,19 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金比例：" prop="depositProportion">
-                    <el-input v-model.trim="flowform.depositProportion" v-isNum:0="flowform.depositProportion" maxlength='5' placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
+                    <el-input v-model.trim="flowform.depositProportion" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金缴纳：" prop="自动计算">
-                    <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳"><template slot="append">元</template>
-                    </el-input>
+                    <!-- <el-input v-model.trim="" placeholder="请输入保证金缴纳" disabled><template slot="append">元</template> -->
+                    {{depositPay}}
+                    <!-- </el-input> -->
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="敞口金额：" prop="">
-                    <el-input v-model.trim="flowform.loanAmount" placeholder="请输入敞口金额"><template slot="append">元</template>
+                    <el-input v-model.trim="flowform.loanAmount" placeholder="请输入敞口金额" disabled><template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -67,7 +68,7 @@
 <script>
 import moment from 'moment'
 export default {
-    name: 'flowform',
+    name: 'grantform',
     props: {
         flowform: {
             type: Object,
@@ -101,6 +102,15 @@ export default {
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
+        },
+        depositPay: {
+            get: () => {
+                return this.flowform.invoiceAmount * this.flowform.depositProportion
+            },
+            set: (value) => {
+                this.flowform.depositPay = value
+            }
+
         }
     },
     watch: {
