@@ -23,4 +23,4 @@ export const getAccountBasic = (id) => axios.get(interfaceUrl + `backend/account
 export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/account/basic', params)
 
 // 修改贷款信息
-export const setLoan = (params) => axios.post(interfaceUrl + 'backend/account/loan', params)
+export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loan', params)

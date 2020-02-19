@@ -38,7 +38,6 @@
 </template>
 
 <script>
-
     import { getAccountBasic, setAccountBasic } from '../../api/index'
     import HAutocomplete from '@/components/autoComplete/HAutocomplete'
     import { mapGetters } from 'vuex'
@@ -117,30 +116,46 @@
                 })
             }
         },
-        // async mounted () {
-        //     this.onFindPlatformslist()
-        //     console.log(this.detailData)
-        //     // await getAccountBasic()
-        //     this.form = {
-        //         id: '1229587892565852161',
-        //         standingBookNo: '测试1',
-        //         accountType: 1,
-        //         productType: 1,
-        //         misCode: 'miscode007',
-        //         loanCompanyCode: 'e3e6d913-c36f-4fbe-9c62-97908ac7b366',
-        //         loanCompanyName: '苏州万格连环境科技有限公司',
-        //         subsectionCode: '12ab6587-57db-446e-87d5-bc1e078fb77a',
-        //         subsectionName: '苏州分部',
-        //         standingBookArchiveNo: '台账档案编号007',
-        //         jinyunArchiveNo: '007',
-        //         remark: '备注备注备注备注007'
-        //     }
-        //     this.selectObj = {
-        //         selectName: this.form.loanCompanyName,
-        //         selectCode: this.form.loanCompanyCode
-        //     }
-        // }
+        onSave () {
+            console.log(this.form)
+            this.$refs['form'].validate(async (valid, object) => {
+                console.log(object) // object就是未通过校验的字段
+                if (valid) {
+                    // 验证通过
+                    await setAccountBasic(this.form)
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功'
+                    })
+                    this.onCancle()
+                    this.$emit('reload')
+                } else {
+                }
+            })
+        }
     }
+    // mounted () {
+    //     this.onFindPlatformslist()
+    //     console.log('xx', this.detailData)
+    //     this.form = {
+    //         id: this.detailData.account_id,
+    //         standingBookNo: this.detailData.account_standingBookNo,
+    //         accountType: this.detailData.account_accountType,
+    //         productType: this.detailData.account_productType,
+    //         misCode: this.detailData.account_misCode,
+    //         loanCompanyCode: this.detailData.account_loanCompanyCode,
+    //         loanCompanyName: this.detailData.account_loanCompanyName,
+    //         subsectionCode: this.detailData.account_subsectionCode,
+    //         subsectionName: this.detailData.account_subsectionName,
+    //         standingBookArchiveNo: this.detailData.account_standingBookArchiveNo,
+    //         jinyunArchiveNo: this.detailData.account_jinyunArchiveNo,
+    //         remark: this.detailData.account_remark
+    //     }
+    //     this.selectObj = {
+    //         selectName: this.form.loanCompanyName,
+    //         selectCode: this.form.loanCompanyCode
+    //     }
+    // }
 </script>
 
 <style lang="scss" scoped>

@@ -38,6 +38,7 @@
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
                 <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
+                 <!-- <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" /> -->
                 <!--抽离 还款利息-->
                 <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
                 <grantratecomp :flowrateform=ruleForm.planList />
@@ -76,12 +77,12 @@ import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
 import grantcomp from '../typecomps/grantcomp'
 import grantratecomp from '../typecomps/grantratecomp'
-
+import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'flow',
-    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, HAutocomplete },
+    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
     data () {
         return {
             paltformList: [],
@@ -160,7 +161,7 @@ export default {
     watch: {
         ruleForm: {
             handler (val) {
-                console.log('ruleForm最新数据', val)
+                // console.log('ruleForm最新数据', val)
             },
             deep: true
         },
@@ -198,7 +199,6 @@ export default {
             this.paltformList = this.platformData
         },
         backPlat (val) {
-            console.log(val)
             this.ruleForm.account.loanCompanyCode = val.value ? val.value.selectCode : ''
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
@@ -219,7 +219,7 @@ export default {
         /** 自动计算还款计划 */
         setPlanList () {
             if (this.ruleForm.loan.repaymentType == 1) {
-                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
+                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
             } else if (this.ruleForm.loan.repaymentType == 2) {
                 for (let i = 0; i < this.repaymenBaseNum.length; i++) {
                     this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
