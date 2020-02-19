@@ -6,7 +6,7 @@
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
-                    <el-input v-model.trim="flowform.invoiceAmount" :value='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
+                    <el-input v-model.trim="flowform.invoiceAmount"  @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
             </div>
@@ -20,11 +20,13 @@
                 <el-form-item label="保证金比例：" prop="depositProportion">
                     <!-- <el-input v-model.trim="flowform.depositProportion" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input> -->
                     <el-input v-model='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
+                    <!-- <el-input v-model.trim="flowform.depositProportion" v-isNum="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例" @blur="setDepositProportion"><template slot="append">%</template></el-input> -->
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金缴纳：" prop="自动计算">
-                    <el-input v-model.trim="depositPay" placeholder="请输入保证金缴纳" disabled><template slot="append">元</template>
+                    <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳" disabled><template slot="append">元</template>
+                    <!-- <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳" @blur="doCompute"><template slot="append">元</template> -->
                     </el-input>
                     <!-- {{depositPay}} -->
                     <!-- <el-input :value="(flowform.invoiceAmount&&flowform.depositProportion)?flowform.invoiceAmount * (flowform.depositProportion / 100):''"  @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
@@ -105,15 +107,6 @@ export default {
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
-        },
-        depositPay: {
-            get: function () {
-                if (this.flowform.depositProportion == '') return this.flowform.depositPay
-                return this.flowform.invoiceAmount * (this.flowform.depositProportion / 100)
-            },
-            set: function (value) {
-                this.flowform.depositPay = value
-            }
         }
     },
     watch: {
@@ -123,6 +116,9 @@ export default {
         }
     },
     methods: {
+        // doCompute () {
+        //     this.flowform.depositProportion = (this.flowform.depositPay / this.flowform.invoiceAmount) * 100
+        // },
         setDepositProportion (val) {
             // this.flowform.depositProportion = val
             console.log(1, this.flowform.invoiceAmount)
