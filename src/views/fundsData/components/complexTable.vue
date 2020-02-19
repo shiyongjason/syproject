@@ -5,21 +5,21 @@
             </hosJoyTable>
         </div>
         <!-- 台账编号Dialog -->
-        <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" />
+        <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 供货商Dialog -->
-        <supplierDialog :detailData='rowData' v-if='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" />
+        <supplierDialog :detailData='rowData' v-if='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" />
+        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog -敞口 -->
-        <billingDialog :detailData='rowData' v-if='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" />
+        <billingDialog :detailData='rowData' v-if='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" />
+        <repaymentDialog :detailData='rowData' v-if='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" />
+        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 资金档案编号 -->
-        <fileInfoDialog :detailData='rowData' v-if='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" />
+        <fileInfoDialog :detailData='rowData' v-if='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 备注 -->
-        <remarkDialog :detailData='rowData' v-if='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" />
+        <remarkDialog :detailData='rowData' v-if='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
@@ -93,8 +93,8 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—流贷基础信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—流贷基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -120,8 +120,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—流贷还款信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—流贷还款信息维护'
                                     this.AnnualInterestRateDialogVisible = true
                                 }}></i></span>
                             }
@@ -199,8 +199,8 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—流贷档案信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—流贷档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -225,8 +225,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—分授信基础信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—分授信基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -260,8 +260,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_invoiceTime}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—分授信借款信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—分授信借款信息维护'
                                     this.pointsCreditBillingDialogVisible = true
                                 }}></i></span>
                             }
@@ -309,8 +309,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—分授信还款信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—分授信还款信息维护'
                                     this.repaymentDialogVisible = true
                                 }}></i></span>
                             }
@@ -523,8 +523,8 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—分授信档案信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—分授信档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -535,8 +535,8 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark == 0 ? 0 : scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—分授信备注信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—分授信备注信息维护'
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -553,8 +553,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—敞口基础信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—敞口基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -580,8 +580,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_invoiceTime == 0 ? 0 : scope.row.loan_invoiceTime ? `${scope.row.loan_invoiceTime}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—敞口借款信息维护';
+                                    this.rowData = scope.row
+                                    this.rowData.title = '好信用—敞口借款信息维护'
                                     this.billingDialogVisible = true
                                 }}></i></span>
                             }
@@ -803,8 +803,8 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—敞口档案信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—敞口档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -815,8 +815,8 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark == 0 ? 0 : scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—敞口备注信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—敞口备注信息维护'
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
