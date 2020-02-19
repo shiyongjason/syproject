@@ -4,24 +4,23 @@
         <!-- <h3>流贷</h3> -->
         <div class="query-cont-row">
             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
-                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=0>否</el-radio>
-                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=1>是</el-radio>
+                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>
+                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=1 @change="()=>{$emit('stepOver',2)}">是</el-radio>
             </el-form-item>
         </div>
+        {{flowrateform.overdueList}}
         <template v-if="flowrateform.isStepOverInterest==1">
             <div class="smalltitle">逾期第一阶段利息：</div>
             <div class="query-cont-row" v-for="(item,index) in flowrateform.overdueList" :key="index">
                 <div class="query-cont-col">
                     <el-form-item :label="'第' +(index+1)+'阶段时长：'">
-                        <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5'
-                            placeholder="请输入逾期时长"><template slot="append">月</template>
+                        <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5' placeholder="请输入逾期时长"><template slot="append">月</template>
                         </el-input>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
                     <el-form-item label="该阶段逾期利率：">
-                        <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5'
-                            placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                        <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5' placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
@@ -30,8 +29,7 @@
                 </div>
             </div>
             <div>
-                <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus"
-                    v-if="flowrateform.overdueList.length<5">下阶段利息</el-button>
+                <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus" v-if="flowrateform.overdueList.length<5">下阶段利息</el-button>
             </div>
         </template>
     </div>
