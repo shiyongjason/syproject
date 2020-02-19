@@ -1,6 +1,6 @@
 <template>
     <div v-if="flowrateform.length>0">
-        <!-- 流贷组件 -->
+        <!-- 敞口组件 -->
         <div v-for="(item,index) in flowrateform" :key="index">
             <div class="smalltitle">第{{index+1}}次还款：</div>
             <div class="query-cont-row">

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <!-- 敞口组件 -->
-        <div class="dialogtitle">借款信息：</div>
+        <!-- 分授信组件 -->
+        <div class="dialogtitle">(分授信)借款信息：</div>
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
@@ -67,7 +67,7 @@
 <script>
 import moment from 'moment'
 export default {
-    name: 'grantform',
+    name: 'openform',
     props: {
         flowform: {
             type: Object,

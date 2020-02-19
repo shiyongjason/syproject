@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 敞口组件 -->
-        <div class="dialogtitle">借款信息：</div>
+        <div class="dialogtitle">(敞口)借款信息：</div>
         {{flowform}}
         <div class="query-cont-row">
             <div class="query-cont-col">
@@ -56,7 +56,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="到期日：" prop="loanEndTime">
-                    <!-- {{flowform.loanEndTime}} -->
+                    {{flowform.loanEndTime}}
                     <!-- <el-date-picker v-model="flowform.loanEndTime" type="datetime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd" placeholder="请选择还款日期"></el-date-picker> -->
                 </el-form-item>
             </div>
@@ -121,10 +121,8 @@ export default {
         // },
         setDepositProportion (val) {
             // this.flowform.depositProportion = val
-            console.log(1, this.flowform.invoiceAmount)
-            console.log(2, this.flowform.depositProportion)
             this.flowform.depositPay = (this.flowform.invoiceAmount * (this.flowform.depositProportion / 100)).toFixed(2)
-            this.flowform.loanAmount = this.flowform.invoiceAmount - (this.flowform.depositPay ? this.flowform.depositPay : 0)
+            this.flowform.loanAmount = (this.flowform.invoiceAmount - (this.flowform.depositPay ? this.flowform.depositPay : 0)).toFixed(2)
         },
         setDepositPay (val) {
             this.flowform.depositProportion = (val / this.flowform.invoiceAmount) * 100

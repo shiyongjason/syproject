@@ -36,12 +36,15 @@
                     </div>
                 </div>
                 <!--抽离 还款-->
-                <!-- <flowcomp :flowform=ruleForm.loan /> -->
-                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
-                 <!-- <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" /> -->
+                <flowcomp :flowform=ruleForm.loan v-if="changeType(1,1)" />
+                 <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
+                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
+                <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
                 <!--抽离 还款利息-->
-                <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
-                <grantratecomp :flowrateform=ruleForm.planList />
+                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(1,1)" />
+                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
+                <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,2)" />
+                <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,3)" />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -100,12 +103,12 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 2, // 台账类型 1：流贷2：敞口 3：分授信
+                    accountType: 1, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: 1, // 1：好信用 2：供应链 3：好橙工
+                    productType: 2, // 1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',
@@ -188,6 +191,13 @@ export default {
         ...mapActions({
             findPlatformslist: 'findPlatformslist'
         }),
+        changeType (productType, accountType) {
+            if (productType == this.ruleForm.account.productType && accountType == this.ruleForm.account.accountType) {
+                return true
+            } else {
+                return false
+            }
+        },
         onSubmit () {
             // 操作
             this.$refs.ruleForm.validate((valid) => {

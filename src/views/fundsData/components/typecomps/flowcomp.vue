@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 流贷组件 -->
-        <div class="dialogtitle">借款信息：</div>
+        <div class="dialogtitle">(流贷)借款信息：</div>
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="供货商名称：" prop="supplier">
