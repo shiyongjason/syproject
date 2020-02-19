@@ -1577,8 +1577,8 @@
                 const { data } = await getAccountBasic(row.account_id)
                 console.log(data)
                 this.accountData = data
-                // this.accountData.selectName = data.loanCompanyName
-                // this.accountData.selectCode = data.loanCompanyCode
+                this.accountData.selectName = data.loanCompanyName
+                this.accountData.selectCode = data.loanCompanyCode
             }
         },
         mounted() {
