@@ -77,12 +77,11 @@
                     productType: '', // 产品类型 1：好信用 2：供应链 3：好橙工
                     remark: '', // 备注
                     standingBookArchiveNo: '', // 台账档案编号
-                    standingBookNo: '' // 台账编号
+                    standingBookNo: '', // 台账编号
+                    selectName: '',
+                    selectCode: ''
                 })
             }
-        },
-        watch: {
-
         },
         computed: {
             ...mapGetters({
@@ -105,57 +104,19 @@
                     console.log(object) // object就是未通过校验的字段
                     if (valid) {
                         // 验证通过
-                        // await setAccountBasic(this.form)
-                        // this.$message({
-                        //     type: 'success',
-                        //     message: '修改成功'
-                        // })
-                        // this.onCancle()
+                        await setAccountBasic(this.form)
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功'
+                        })
+                        this.onCancle()
+                        this.$emit('reload')
                     } else {
                     }
                 })
             }
-        },
-        onSave () {
-            console.log(this.form)
-            this.$refs['form'].validate(async (valid, object) => {
-                console.log(object) // object就是未通过校验的字段
-                if (valid) {
-                    // 验证通过
-                    await setAccountBasic(this.form)
-                    this.$message({
-                        type: 'success',
-                        message: '修改成功'
-                    })
-                    this.onCancle()
-                    this.$emit('reload')
-                } else {
-                }
-            })
         }
     }
-    // mounted () {
-    //     this.onFindPlatformslist()
-    //     console.log('xx', this.detailData)
-    //     this.form = {
-    //         id: this.detailData.account_id,
-    //         standingBookNo: this.detailData.account_standingBookNo,
-    //         accountType: this.detailData.account_accountType,
-    //         productType: this.detailData.account_productType,
-    //         misCode: this.detailData.account_misCode,
-    //         loanCompanyCode: this.detailData.account_loanCompanyCode,
-    //         loanCompanyName: this.detailData.account_loanCompanyName,
-    //         subsectionCode: this.detailData.account_subsectionCode,
-    //         subsectionName: this.detailData.account_subsectionName,
-    //         standingBookArchiveNo: this.detailData.account_standingBookArchiveNo,
-    //         jinyunArchiveNo: this.detailData.account_jinyunArchiveNo,
-    //         remark: this.detailData.account_remark
-    //     }
-    //     this.selectObj = {
-    //         selectName: this.form.loanCompanyName,
-    //         selectCode: this.form.loanCompanyCode
-    //     }
-    // }
 </script>
 
 <style lang="scss" scoped>
