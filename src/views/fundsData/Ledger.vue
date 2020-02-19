@@ -11,14 +11,14 @@
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司名：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.customerName" placeholder="请输入平台公司名">
-                    </el-input>
+                    <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat"
+                        :placeholder="'全部'" :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.branch" clearable>
+                    <el-select v-model="queryParams.subsectionCode" clearable>
                         <el-option v-for="(item,index) in branchList" :key="index" :label="item.subsectionName"
                             :value="item.subsectionCode">
                         </el-option>
@@ -61,19 +61,19 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane label="流贷" name="流贷"></el-tab-pane>
-                <el-tab-pane label="分授信" name="分授信"></el-tab-pane>
-                <el-tab-pane label="敞口" name="敞口"></el-tab-pane>
-                <el-tab-pane label="还款明细表" name="还款明细表"></el-tab-pane>
+            <el-tabs v-model="accountType" type="card" @tab-click="handleClick">
+                <el-tab-pane label="流贷" name="1"></el-tab-pane>
+                <el-tab-pane label="敞口" name="2"></el-tab-pane>
+                <el-tab-pane label="分授信" name="3"></el-tab-pane>
+                <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
-            <el-tabs v-if="activeName != '还款明细表'" v-model="produce" type="card" @tab-click="handleClick">
+            <el-tabs v-if="accountType != '4'" v-model="produce" type="card" @tab-click="handleClick">
                 <el-tab-pane label="好信用" name="好信用"></el-tab-pane>
                 <el-tab-pane label="供应链" name="供应链"></el-tab-pane>
                 <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane>
             </el-tabs>
-            {{activeName}} {{produce}}
-            <complexTable :tableData='tableData' :pagination='pagination' :source='activeName' @getList='getList' />
+            {{accountType}} {{produce}}
+            <complexTable :tableData='tableData' :pagination='pagination' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -82,10 +82,11 @@
     import { mapState } from 'vuex'
     import { interfaceUrl } from '@/api/config'
     import complexTable from './components/complexTable.vue'
-    import { getAccountList, findBranchListNew } from './api/index.js'
+    import { getAccountList, findBranchListNew, findPaltList } from './api/index.js'
+    import HAutocomplete from '@/components/autoComplete/HAutocomplete'
     export default {
         name: 'ledger',
-        components: { complexTable },
+        components: { complexTable, HAutocomplete },
         computed: {
             ...mapState({
                 userInfo: state => state.userInfo
@@ -93,7 +94,7 @@
         },
         data() {
             return {
-                activeName: '流贷',
+                accountType: '1',
                 produce: '好信用',
                 interfaceUrl: interfaceUrl,
                 queryParams: {
@@ -101,9 +102,11 @@
                     pageSize: 10,
                     misCode: '',
                     customerName: '',
-                    branch: '',
+                    subsectionCode: '',
                     standingBookArchiveNo: '',
-                    activeName: '流贷',
+                    accountType: '1',
+                    loanCompanyCode: '',
+                    loanCompanyName: '',
                     produce: '好信用'
                 },
                 searchParams: {},
@@ -113,12 +116,15 @@
                     pageSize: 10,
                     total: 0
                 },
-                branchList: []
+                platList: [], // 平台公司
+                branchList: [], // 分部
+                removeValue: false
             }
         },
         mounted() {
             this.onSearch()
-            // this.findBranchList()
+            this.findBranchList()
+            this.onFindPaltList()
         },
         methods: {
             // 埋点
@@ -130,6 +136,23 @@
                     page_name: '额度导入',
                     page_path_name: 'amountImport'
                 })
+            },
+            backPlat(value) {
+                this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
+                this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
+            },
+            // 查询平台公司
+            async onFindPaltList(subsectionCode) {
+                const params = { subsectionCode }
+                console.log(1)
+                const { data } = await findPaltList(params)
+                console.log(data)
+                this.platList = []
+                for (let i of data.data.pageContent) {
+                        i.value = i.companyShortName
+                        i.selectCode = i.companyCode
+                }
+                this.platList = data.data.pageContent
             },
             // 查询分部（不用做权限，现在是总部在使用）
             async findBranchList() {
@@ -153,7 +176,7 @@
                 location.href = interfaceUrl + '/backend/account/export'
             },
             handleClick() {
-                this.onSearch()
+                this.onReset()
             },
             isSuccess(response) {
                 this.$message({
@@ -169,22 +192,10 @@
                 })
             },
             async onQuery() {
-                // console.log(this.activeName + ' '  + this.produce)
-                this.searchParams.activeName = this.activeName
+                this.searchParams.accountType = this.accountType
                 this.searchParams.produce = this.produce
                 console.log(this.searchParams)
-                // const { data } = await getRateList(this.searchParams)
-                const params = {
-                    accountType: '1',
-                    loanCompanyCode: "",
-                    loanCompanyName: "",
-                    misCode: "",
-                    pageNumber: 1,
-                    pageSize: 10,
-                    standingBookArchiveNo: "",
-                    subsectionCode: ""
-                }
-                const { data } = await getAccountList(params)
+                const { data } = await getAccountList(this.searchParams)
                 console.log(data)
                 this.pagination = {
                     pageNumber: data.current,
@@ -209,10 +220,13 @@
                 this.onQuery()
             },
             onReset() {
+                this.removeValue = !this.removeValue
                 this.$set(this.queryParams, 'customerName', '')
                 this.$set(this.queryParams, 'misCode', '')
-                this.$set(this.queryParams, 'branch', '')
+                this.$set(this.queryParams, 'subsectionCode', '')
                 this.$set(this.queryParams, 'standingBookArchiveNo', '')
+                this.$set(this.queryParams, 'loanCompanyCode', '')
+                this.$set(this.queryParams, 'loanCompanyName', '')
                 this.onSearch()
             },
             getList(val) {

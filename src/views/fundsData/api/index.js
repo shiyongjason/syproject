@@ -4,7 +4,8 @@ import { interfaceUrl, B2bUrl } from '@/api/config'
 export const getAccountList = (params) => {
     return axios.get(interfaceUrl + `backend/account`, { params })
 }
-
+// 查询平台公司
+export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 // 分部列表查询
 export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/queryDeptList', { params })
 
