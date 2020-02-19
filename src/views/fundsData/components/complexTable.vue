@@ -7,19 +7,19 @@
         <!-- 台账编号Dialog -->
         <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 供货商Dialog -->
-        <supplierDialog :detailData='rowData' v-if='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
+        <supplierDialog :detailData='rowData' v-if='rowData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
+        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog -敞口 -->
-        <billingDialog :detailData='rowData' v-if='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
+        <billingDialog :detailData='rowData' v-if='rowData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' />
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
+        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 资金档案编号 -->
-        <fileInfoDialog :detailData='rowData' v-if='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
+        <fileInfoDialog :detailData='rowData' v-if='rowData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 备注 -->
-        <remarkDialog :detailData='rowData' v-if='rowData' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
+        <remarkDialog :detailData='rowData' v-if='rowData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
