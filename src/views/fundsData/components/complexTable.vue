@@ -9,17 +9,17 @@
         <!-- 资金档案编号 -->
         <fileInfoDialog :detailData='rowData' v-if='rowData' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" />
         <!-- 台账编号Dialog -->
-        <misDialog :detailData='rowData' v-if='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" />
+        <misDialog :detailData='rowData' v-if='rowData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload="getList" />
         <!-- 供货商Dialog -->
-        <supplierDialog :detailData='rowData' v-if='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" />
+        <supplierDialog :detailData='rowData' v-if='rowData' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload="getList" />
         <!-- 还款方式Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" />
+        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload="getList" />
         <!-- 开票日期Dialog -敞口 -->
-        <billingDialog :detailData='rowData' v-if='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" />
+        <billingDialog :detailData='rowData' v-if='rowData' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload="getList" />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" />
+        <repaymentDialog :detailData='rowData' v-if='rowData' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload="getList" />
         <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" />
+        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload="getList" />
     </div>
 </template>
 
@@ -1510,6 +1510,7 @@ export default {
             }
         },
         async getList (val) {
+            console.log('getList')
             this.$emit('getList', val)
         }
     },

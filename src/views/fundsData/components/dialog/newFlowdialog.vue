@@ -37,8 +37,8 @@
                 </div>
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
-                <!-- <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" /> -->
-                 <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
+                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
+                 <!-- <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" /> -->
                 <!--抽离 还款利息-->
                 <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
                 <grantratecomp :flowrateform=ruleForm.planList />

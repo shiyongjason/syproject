@@ -115,6 +115,7 @@ export default {
                         message: '修改成功'
                     })
                     this.onCancle()
+                    this.$emit('reload')
                 } else {
                 }
             })
@@ -122,20 +123,20 @@ export default {
     },
     mounted () {
         this.onFindPlatformslist()
-        console.log(this.detailData)
+        console.log('xx', this.detailData)
         this.form = {
-            id: '1229587892565852161',
-            standingBookNo: '测试1',
-            accountType: 1,
-            productType: 1,
-            misCode: 'miscode007',
-            loanCompanyCode: 'e3e6d913-c36f-4fbe-9c62-97908ac7b366',
-            loanCompanyName: '苏州万格连环境科技有限公司',
-            subsectionCode: '12ab6587-57db-446e-87d5-bc1e078fb77a',
-            subsectionName: '苏州分部',
-            standingBookArchiveNo: '台账档案编号007',
-            jinyunArchiveNo: '007',
-            remark: '备注备注备注备注007'
+            id: this.detailData.account_id,
+            standingBookNo: this.detailData.account_standingBookNo,
+            accountType: this.detailData.account_accountType,
+            productType: this.detailData.account_productType,
+            misCode: this.detailData.account_misCode,
+            loanCompanyCode: this.detailData.account_loanCompanyCode,
+            loanCompanyName: this.detailData.account_loanCompanyName,
+            subsectionCode: this.detailData.account_subsectionCode,
+            subsectionName: this.detailData.account_subsectionName,
+            standingBookArchiveNo: this.detailData.account_standingBookArchiveNo,
+            jinyunArchiveNo: this.detailData.account_jinyunArchiveNo,
+            remark: this.detailData.account_remark
         }
         this.selectObj = {
             selectName: this.form.loanCompanyName,

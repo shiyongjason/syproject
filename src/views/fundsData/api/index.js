@@ -21,4 +21,4 @@ export const findPlatformslist = (params) => axios.get(interfaceUrl + 'develop/d
 export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/account/basic', params)
 
 // 修改贷款信息
-export const setLoan = (params) => axios.post(interfaceUrl + 'backend/account/loan', params)
+export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loan', params)

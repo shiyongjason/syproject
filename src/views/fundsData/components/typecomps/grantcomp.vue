@@ -6,7 +6,7 @@
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
-                    <el-input v-model.trim="flowform.invoiceAmount" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
+                    <el-input v-model.trim="flowform.invoiceAmount" :value='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
             </div>
@@ -18,13 +18,17 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金比例：" prop="depositProportion">
-                    <el-input v-model.trim="flowform.depositProportion" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
+                    <!-- <el-input v-model.trim="flowform.depositProportion" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input> -->
+                    <el-input v-model='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金缴纳：" prop="自动计算">
                     <el-input v-model.trim="depositPay" placeholder="请输入保证金缴纳" disabled><template slot="append">元</template>
-                   </el-input>
+                    </el-input>
+                    <!-- {{depositPay}} -->
+                    <!-- <el-input :value="(flowform.invoiceAmount&&flowform.depositProportion)?flowform.invoiceAmount * (flowform.depositProportion / 100):''"  @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
+                    </el-input> -->
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -50,7 +54,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="到期日：" prop="loanEndTime">
-                    {{flowform.loanEndTime}}
+                    <!-- {{flowform.loanEndTime}} -->
                     <!-- <el-date-picker v-model="flowform.loanEndTime" type="datetime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd" placeholder="请选择还款日期"></el-date-picker> -->
                 </el-form-item>
             </div>
@@ -104,13 +108,12 @@ export default {
         },
         depositPay: {
             get: function () {
-                return this.flowform.invoiceAmount * this.flowform.depositProportion
+                if (this.flowform.depositProportion == '') return this.flowform.depositPay
+                return this.flowform.invoiceAmount * (this.flowform.depositProportion / 100)
             },
             set: function (value) {
-                console.log(1,value)
                 this.flowform.depositPay = value
             }
-
         }
     },
     watch: {
@@ -120,6 +123,17 @@ export default {
         }
     },
     methods: {
+        setDepositProportion (val) {
+            // this.flowform.depositProportion = val
+            console.log(1, this.flowform.invoiceAmount)
+            console.log(2, this.flowform.depositProportion)
+            this.flowform.depositPay = (this.flowform.invoiceAmount * (this.flowform.depositProportion / 100)).toFixed(2)
+            this.flowform.loanAmount = this.flowform.invoiceAmount - (this.flowform.depositPay ? this.flowform.depositPay : 0)
+        },
+        setDepositPay (val) {
+            this.flowform.depositProportion = (val / this.flowform.invoiceAmount) * 100
+            this.flowform.depositPay = val
+        },
         onChooseTime (val) {
             if (this.flowform.loanDateType == 1) {
                 this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')
