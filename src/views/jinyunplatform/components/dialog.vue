@@ -11,7 +11,7 @@
                 <el-col :span="12"><span class="detail-name">操作人身份证号：</span>{{customerForm.operatorIdNumber}}</el-col>
             </el-row>
             <el-row :gutter="10">
-                <el-col :span="12"><span class="detail-name">企业类型：</span>{{customerForm.companyType}}</el-col>
+                <el-col :span="12"><span class="detail-name">企业类型：</span>{{customerForm.companyTypeN}}</el-col>
                 <el-col :span="12"><span class="detail-name">企业名称：</span>{{customerForm.companyName}}</el-col>
             </el-row>
             <el-row :gutter="10">
@@ -19,6 +19,7 @@
                 <el-col :span="12"><span class="detail-name">法人身份证号：</span>{{customerForm.legalIdNumber}}</el-col>
             </el-row>
             <el-row :gutter="10">
+                <el-col :span="12"><span class="detail-name">法人手机号：</span>{{customerForm.legalPhone}}</el-col>
                 <el-col :span="12"><span class="detail-name">组织机构代码：</span>{{customerForm.companyLicenseNumber}}</el-col>
             </el-row>
             <div class="title">印章图片:</div>
