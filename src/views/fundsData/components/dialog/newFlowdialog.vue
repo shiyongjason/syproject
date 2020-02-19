@@ -40,8 +40,8 @@
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
                 <grantcomp :flowform=ruleForm.loan />
                 <!--抽离 还款利息-->
-                <!-- <flowratecomp :flowrateform=ruleForm.plan /> -->
-                <grantratecomp :flowrateform=ruleForm.plan />
+                <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
+                <grantratecomp :flowrateform=ruleForm.planList />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -128,7 +128,7 @@ export default {
                     supplier: '',
                     yearRate: ''
                 },
-                plan: {
+                planList: [{
                     capitalAmount: '',
                     capitalPaid: '',
                     dealTime: '',
@@ -151,7 +151,7 @@ export default {
                         sort: '',
                         startTime: ''
                     }]
-                }
+                }]
             }
         }
     },
