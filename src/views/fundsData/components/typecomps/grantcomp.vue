@@ -27,7 +27,7 @@
                     <!-- <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳"><template slot="append">元</template>
                     </el-input> -->
                     <!-- {{depositPay}} -->
-                    <el-input :value="(flowform.invoiceAmount * (flowform.depositProportion / 100)).toFixed(2)" @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
+                    <el-input :value="(flowform.invoiceAmount&&flowform.depositProportion)?(flowform.invoiceAmount * (flowform.depositProportion / 100)).toFixed(2):''" @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
