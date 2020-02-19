@@ -99,7 +99,7 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 1, // 台账类型 1：流贷2：敞口 3：分授信
+                    accountType: 2, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
@@ -122,7 +122,7 @@ export default {
                     loanEndTime: '',
                     loanStartTime: '',
                     registrant: '',
-                    repaymentType: '1',
+                    repaymentType: 1,
                     standingBookId: '',
                     supplier: '',
                     yearRate: ''
@@ -158,7 +158,6 @@ export default {
     watch: {
         'ruleForm.account.loanCompanyName' (val) {
             this.$nextTick(() => {
-                console.log(val)
                 if (val) this.$refs['loanCompanyName'].clearValidate()
             })
         }
@@ -196,9 +195,9 @@ export default {
         onRepaymentTypeChange (val) {
             this.ruleForm.planList = []
             this.ruleForm.loan.repaymentType = val
-            if (val === '1') {
+            if (val === 1) {
                 this.ruleForm.planList.push({ ...this.planListItem })
-            } else if (val === '2') {
+            } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
                     this.ruleForm.planList.push({ ...this.planListItem })
                 }

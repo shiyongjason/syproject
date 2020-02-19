@@ -6,13 +6,14 @@
             <div class="smalltitle">第{{index+1}}次还款：</div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-form-item label="约定还款日期：" prop="name">
-                        <el-input v-model.trim="item.startTime" placeholder="请选择约定还款日期"></el-input>
+                    <el-form-item label="约定还款日期：" prop="endTime">
+                         <el-date-picker v-model="item.endTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd"  type="datetime" placeholder="请选择约定还款日期">
+                    </el-date-picker>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                    <el-form-item label="还款金额：" prop="name">
-                        <el-input v-model.trim="item.startTime" placeholder="请输入还款金额"><template slot="append">元</template>
+                    <el-form-item label="还款金额：" prop="capitalAmount">
+                        <el-input v-model.trim="item.capitalAmount" placeholder="请输入还款金额"><template slot="append">元</template>
                         </el-input>
                     </el-form-item>
                 </div>
@@ -75,9 +76,9 @@ export default {
         }
     },
     watch: {
-        flowrateform (val) {
-            console.log(1, val)
-        }
+        // flowrateform (val) {
+        //     console.log(1, val)
+        // }
         // flowrateform: {
         //     handler (newName) {
         //         console.log(newName)
@@ -93,19 +94,8 @@ export default {
         //     immediate: true
         // }
     },
-    computed: {
-        adasd () {
-            return this.flowrateform
-        }
-    },
     methods: {
-        onAddrate () {
-            let newObj = { ...this.newRata }
-            this.flowrateform.overdueList.push(newObj)
-        },
-        onDeleteRate (index) {
-            this.flowrateform.overdueList.splice(index, 1)
-        }
+       
     }
 }
 </script>
