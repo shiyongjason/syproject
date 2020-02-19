@@ -223,11 +223,7 @@ export default {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
             } else if (this.ruleForm.loan.repaymentType == 2) {
                 for (let i = 0; i < 3; i++) {
-                    if (i === 2) {
-                        this.ruleForm.planList[i].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]
-                    } else {
-                        this.ruleForm.planList[i].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]
-                    }
+                    this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
                 }
             }
         }
