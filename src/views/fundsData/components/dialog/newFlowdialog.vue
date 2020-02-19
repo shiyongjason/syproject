@@ -221,7 +221,7 @@ export default {
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
             } else if (this.ruleForm.loan.repaymentType == 2) {
-                for (let i = 0; i < 3; i++) {
+                for (let i = 0; i < this.repaymenBaseNum.length; i++) {
                     this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
                 }
             }
