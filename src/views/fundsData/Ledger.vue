@@ -174,28 +174,6 @@
                 this.searchParams.produce = this.produce
                 console.log(this.searchParams)
                 // const { data } = await getRateList(this.searchParams)
-                this.tableData = []
-                this.tableData = [
-                    {
-                        misCode: 1,
-                        account: {
-                            misCode: 123,
-                            standingBookNo: 'a'
-                        }
-                    },
-                    {
-                        misCode: 2,
-                        account: {
-                            misCode: 456,
-                            standingBookNo: 'b'
-                        }
-                    },
-                ]
-                // this.pagination = {
-                //     pageNumber: data.current,
-                //     pageSize: data.size,
-                //     total: data.total
-                // }
                 const params = {
                     accountType: '1',
                     loanCompanyCode: "",
@@ -207,6 +185,24 @@
                     subsectionCode: ""
                 }
                 const { data } = await getAccountList(params)
+                console.log(data)
+                this.pagination = {
+                    pageNumber: data.current,
+                    pageSize: data.size,
+                    total: data.total
+                }
+                // this.tableData = data.records
+                this.tableData = []
+                data.records.map((i) => {
+                    let obj = {}
+                    console.log(i)
+                    if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
+                    if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
+                    if (i.overdue) Object.keys(i.overdue).forEach(key => obj['overdue_' + key] = i.overdue[key])
+                    if (i.plan) Object.keys(i.plan).forEach((key) => obj['plan_' + key] = i.plan[key])
+                    console.log(obj)
+                    this.tableData.push(obj)
+                })
             },
             onSearch() {
                 this.searchParams = { ...this.queryParams }
@@ -220,7 +216,7 @@
                 this.onSearch()
             },
             getList(val) {
-                console.log(val)
+                // console.log(val)
                 this.searchParams = {
                     ...this.searchParams,
                     ...val

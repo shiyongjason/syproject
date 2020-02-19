@@ -17,6 +17,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="年利率：" prop="name">
+                            <!-- 发生第一笔还款后，年利率将无法修改 -->
                             <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入年利率"></el-input>
                             <span class="dw">%</span>
                         </el-form-item>
@@ -25,6 +26,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="放款日期：" prop="name">
+                            <!-- 第一笔还款维护后，变为不可修改 -->
                             <el-date-picker v-model="form.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
                             </el-date-picker>
                         </el-form-item>
@@ -41,7 +43,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="到期日：" prop="name">
-                            <!-- 自动计算，到期日=开票日期+借款期限 -->
+                            <!-- 自动计算，到期日=放款日期+借款期限 -->
                             <span>2020-11-18</span>
                         </el-form-item>
                     </div>

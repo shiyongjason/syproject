@@ -98,7 +98,6 @@ export default {
             this.paltformList = this.platformData
         },
         backPlat (val) {
-            console.log(val)
             this.form.loanCompanyCode = val.value ? val.value.selectCode : ''
             this.form.loanCompanyName = val.value ? val.value.value : ''
             this.form.subsectionCode = val.value ? val.value.subsectionCode : ''
