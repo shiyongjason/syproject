@@ -116,7 +116,7 @@ export default {
                     depositProportion: '',
                     invoiceAmount: '',
                     invoiceTime: '',
-                    loanAmount: '',
+                    loanAmount: '', // 借款金额(敞口金额)
                     loanDateNum: '',
                     loanDateType: '',
                     loanEndTime: '',
@@ -152,10 +152,22 @@ export default {
                     sort: '',
                     startTime: ''
                 }]
-            }
+            },
+            // 还款方式：334 对应 30%，30%，40%
+            repaymenBaseNum: [0.3, 0.3, 0.4]
         }
     },
     watch: {
+        ruleForm: {
+            handler (val) {
+                console.log('ruleForm最新数据', val)
+            },
+            deep: true
+        },
+        'ruleForm.loan.loanAmount' (val) {
+            // 触发自动计算还款计划
+            this.setPlanList()
+        },
         'ruleForm.account.loanCompanyName' (val) {
             this.$nextTick(() => {
                 console.log(val)
@@ -201,6 +213,21 @@ export default {
             } else if (val === '2') {
                 for (let i = 0; i < 3; i++) {
                     this.ruleForm.planList.push({ ...this.planListItem })
+                }
+            }
+            this.setPlanList()
+        },
+        /** 自动计算还款计划 */
+        setPlanList () {
+            if (this.ruleForm.loan.repaymentType == 1) {
+                this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[0]
+            } else if (this.ruleForm.loan.repaymentType == 2) {
+                for (let i = 0; i < 3; i++) {
+                    if (i === 2) {
+                        this.ruleForm.planList[i].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]
+                    } else {
+                        this.ruleForm.planList[i].capitalAmount = this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]
+                    }
                 }
             }
         }

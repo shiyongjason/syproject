@@ -12,7 +12,7 @@
                 </div>
                 <div class="query-cont-col">
                     <el-form-item label="还款金额：" prop="name">
-                        <el-input v-model.trim="item.startTime" placeholder="请输入还款金额"><template slot="append">元</template>
+                        <el-input v-model.trim="item.capitalAmount" placeholder="请输入还款金额"><template slot="append">元</template>
                         </el-input>
                     </el-form-item>
                 </div>
