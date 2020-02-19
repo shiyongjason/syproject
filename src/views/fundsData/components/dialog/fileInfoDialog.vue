@@ -17,7 +17,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSure">确 定</el-button>
+            <el-button type="primary" @click="onSave">确 定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -41,7 +41,7 @@ export default {
         }
     },
     methods: {
-        onSure () {
+        onSave () {
             console.log(this.detailData)
             // 操作
             // this.onCancle ()

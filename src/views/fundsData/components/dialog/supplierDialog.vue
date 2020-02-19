@@ -52,7 +52,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSure">保 存</el-button>
+            <el-button type="primary" @click="onSave">保 存</el-button>
         </span>
     </el-dialog>
 </template>
