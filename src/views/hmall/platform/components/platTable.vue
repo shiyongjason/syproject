@@ -23,8 +23,8 @@
                 <span v-if="!scope.data.row.operational">/</span>
             </template>
             <template slot-scope="scope" slot="action">
-                <el-button class="orangeBtn" @click="open(scope.data.row)" v-if="scope.data.row.status != 1">开启</el-button>
-                <el-button class="orangeBtn" disabled="disabled" v-else>经营数据</el-button>
+                <!-- <el-button class="orangeBtn" @click="open(scope.data.row)" v-if="scope.data.row.status != 1">开启</el-button> -->
+                <el-button class="orangeBtn" disabled="disabled" >经营数据</el-button>
             </template>
         </basicTable>
         <!-- <el-table :data="tableData"
