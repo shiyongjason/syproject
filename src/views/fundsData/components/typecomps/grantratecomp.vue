@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="flowrateform.length>0">
         {{flowrateform}}
         <!-- 流贷组件 -->
         <div v-for="(item,index) in flowrateform" :key="index">
@@ -76,7 +76,7 @@ export default {
     },
     watch: {
         flowrateform (val) {
-            console.log(1,val)
+            console.log(1, val)
         }
         // flowrateform: {
         //     handler (newName) {

@@ -20,8 +20,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
                             <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
-                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat"
-                                :placeholder="'选择平台公司'" />
+                            <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -38,7 +37,7 @@
                 </div>
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
-                <grantcomp :flowform=ruleForm.loan />
+                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
                 <!--抽离 还款利息-->
                 <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
                 <grantratecomp :flowrateform=ruleForm.planList />
@@ -123,34 +122,35 @@ export default {
                     loanEndTime: '',
                     loanStartTime: '',
                     registrant: '',
-                    repaymentType: 1,
+                    repaymentType: '1',
                     standingBookId: '',
                     supplier: '',
                     yearRate: ''
                 },
-                planList: [{
-                    capitalAmount: '',
-                    capitalPaid: '',
-                    dealTime: '',
-                    exsitGrace: '',
-                    graceDay: '',
-                    graceInterest: '',
-                    graceInterestAmount: '',
-                    graceInterestPaid: '',
-                    interestAmount: '',
-                    interestPaid: '',
-                    isStepOverInterest: 0, // 默认逾期否
+                planList: []
+            },
+            planListItem: {
+                capitalAmount: '',
+                capitalPaid: '',
+                dealTime: '',
+                exsitGrace: '',
+                graceDay: '',
+                graceInterest: '',
+                graceInterestAmount: '',
+                graceInterestPaid: '',
+                interestAmount: '',
+                interestPaid: '',
+                isStepOverInterest: 0, // 默认逾期否
+                overDueInterest: '',
+                overDueInterestAmount: '',
+                overDueInterestPaid: '',
+                overdueList: [{
+                    dateNum: '',
+                    dateType: '',
                     overDueInterest: '',
-                    overDueInterestAmount: '',
-                    overDueInterestPaid: '',
-                    overdueList: [{
-                        dateNum: '',
-                        dateType: '',
-                        overDueInterest: '',
-                        planId: '',
-                        sort: '',
-                        startTime: ''
-                    }]
+                    planId: '',
+                    sort: '',
+                    startTime: ''
                 }]
             }
         }
@@ -170,6 +170,7 @@ export default {
     },
     mounted () {
         this.onFindPlatformslist()
+        this.ruleForm.planList.push({ ...this.planListItem })
     },
     methods: {
         ...mapActions({
@@ -191,6 +192,17 @@ export default {
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
+        },
+        onRepaymentTypeChange (val) {
+            this.ruleForm.planList = []
+            this.ruleForm.loan.repaymentType = val
+            if (val === '1') {
+                this.ruleForm.planList.push({ ...this.planListItem })
+            } else if (val === '2') {
+                for (let i = 0; i < 3; i++) {
+                    this.ruleForm.planList.push({ ...this.planListItem })
+                }
+            }
         }
     }
 }
