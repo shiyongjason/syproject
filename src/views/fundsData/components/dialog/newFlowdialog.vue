@@ -37,7 +37,8 @@
                 </div>
                 <!--抽离 还款-->
                 <!-- <flowcomp :flowform=ruleForm.loan /> -->
-                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
+                <!-- <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" /> -->
+                 <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" />
                 <!--抽离 还款利息-->
                 <!-- <flowratecomp :flowrateform=ruleForm.planList[0] /> -->
                 <grantratecomp :flowrateform=ruleForm.planList />
@@ -76,12 +77,12 @@ import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
 import grantcomp from '../typecomps/grantcomp'
 import grantratecomp from '../typecomps/grantratecomp'
-
+import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'flow',
-    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, HAutocomplete },
+    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
     data () {
         return {
             paltformList: [],
@@ -160,7 +161,7 @@ export default {
     watch: {
         ruleForm: {
             handler (val) {
-                console.log('ruleForm最新数据', val)
+                // console.log('ruleForm最新数据', val)
             },
             deep: true
         },

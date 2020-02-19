@@ -1,5 +1,5 @@
 <template>
-    <!-- 新增敞口弹窗 -->
+    <!-- 新分授信口弹窗 -->
     <div class="flowbody page-body">
         <div class="page-body-cont query-cont">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
