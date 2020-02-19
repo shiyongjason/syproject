@@ -37,14 +37,15 @@
                 </div>
                 <!--抽离 还款-->
                 <flowcomp :flowform=ruleForm.loan v-if="changeType(1,1)" />
-                 <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
                 <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
                 <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
                 <!--抽离 还款利息-->
                 <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(1,1)" />
-                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
                 <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,2)" />
                 <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,3)" />
+                <!--供应链抽离 还款-->
+                <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
+                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -108,7 +109,7 @@ export default {
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: 2, // 1：好信用 2：供应链 3：好橙工
+                    productType: 1, // 1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',

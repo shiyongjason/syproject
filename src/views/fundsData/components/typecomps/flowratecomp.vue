@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="flowrateform">
         <!-- 流贷组件 -->
         <!-- <h3>流贷</h3> -->
         <div class="query-cont-row">
@@ -53,24 +53,24 @@ export default {
     watch: {
         flowrateform: {
             handler (newName) {
-                this.newRata = JSON.parse(JSON.stringify(newName.overdueList[0]))
-                let newObj = { ...this.newRata }
-                this.flowrateform.overdueList = []
-                for (let i = 0; i < 2; i++) {
-                    if (i == 0) {
-                        newObj.dateNum = 3
-                        newObj.overDueInterest = 14
-                    }
-                    if (i == 1) {
-                        newObj.dateNum = 9999
-                        newObj.overDueInterest = 14
-                    }
-                    this.flowrateform.overdueList.push(newObj)
-                }
-                console.log(this.flowrateform)
+                // this.newRata = JSON.parse(JSON.stringify(newName.overdueList[0]))
+                // let newObj = { ...this.newRata }
+                // this.flowrateform.overdueList = []
+                // for (let i = 0; i < 2; i++) {
+                //     if (i == 0) {
+                //         newObj.dateNum = 3
+                //         newObj.overDueInterest = 14
+                //     }
+                //     if (i == 1) {
+                //         newObj.dateNum = 9999
+                //         newObj.overDueInterest = 14
+                //     }
+                //     this.flowrateform.overdueList.push(newObj)
+                // }
+                // console.log(this.flowrateform)
             },
             // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法，如果设置了false，那么效果和上边例子一样
-            immediate: true
+            deep: true
         }
     },
     methods: {
