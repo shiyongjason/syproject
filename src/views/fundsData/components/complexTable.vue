@@ -1,6 +1,5 @@
 <template>
     <div class="page-body">
-        {{source}}
         <div class="page-table">
             <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
@@ -47,7 +46,7 @@ export default {
         source: {
             type: String,
             default: function () {
-                return '流贷'
+                return '1'
             }
         },
         pagination: {
@@ -60,10 +59,10 @@ export default {
     },
     watch: {
         source (val) {
-            if (val == '流贷') this.$set(this, 'column', this.FlowToBorrow)
-            if (val == '分授信') this.$set(this, 'column', this.PointsCredit)
-            if (val == '敞口') this.$set(this, 'column', this.Exposure)
-            if (val == '还款明细表') this.$set(this, 'column', this.ReimbursementDetail)
+            if (val == '1') this.$set(this, 'column', this.FlowToBorrow)
+            if (val == '2') this.$set(this, 'column', this.Exposure)
+            if (val == '3') this.$set(this, 'column', this.PointsCredit)
+            if (val == '4') this.$set(this, 'column', this.ReimbursementDetail)
             this.changeTable = false
             this.$nextTick(() => { this.changeTable = true })
         }
