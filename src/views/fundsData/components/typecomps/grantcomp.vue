@@ -24,11 +24,11 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="保证金缴纳：" prop="自动计算">
-                    <!-- <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳"><template slot="append">元</template>
-                    </el-input> -->
-                    <!-- {{depositPay}} -->
-                    <el-input :value="(flowform.invoiceAmount&&flowform.depositProportion)?flowform.invoiceAmount * (flowform.depositProportion / 100):''" @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
+                    <el-input v-model.trim="depositPay" placeholder="请输入保证金缴纳"><template slot="append">元</template>
                     </el-input>
+                    <!-- {{depositPay}} -->
+                    <!-- <el-input :value="(flowform.invoiceAmount&&flowform.depositProportion)?flowform.invoiceAmount * (flowform.depositProportion / 100):''" @input="(val)=>{setDepositPay(val)}" placeholder="请输入保证金缴纳"><template slot="append">元</template>
+                    </el-input> -->
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -108,10 +108,11 @@ export default {
         },
         depositPay: {
             get: function () {
-                if (this.flowform.depositProportion == '') return this.flowform.depositPay
+                if (!this.flowform.invoiceAmount || !this.flowform.depositProportion) return ''
                 return this.flowform.invoiceAmount * (this.flowform.depositProportion / 100)
             },
             set: function (value) {
+                this.flowform.depositProportion = (value / this.flowform.invoiceAmount) * 100
                 this.flowform.depositPay = value
             }
         }
