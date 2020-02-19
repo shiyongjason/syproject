@@ -125,7 +125,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item prop="name" class="yuqi">
-                            <span slot='label' style="width:190px;display: inline-block;">1阶段累计应缴纳逾期罚息：</span>
+                            <span slot='label' style="width:180px;display: inline-block;">1阶段累计应缴纳逾期罚息：</span>
                             <el-input v-model.trim="form.name" v-isNum='form.name' maxlength='20' placeholder="请输入利息金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -223,7 +223,7 @@ export default {
     padding: 20px 24px;
 }
 /deep/.yuqi .el-form-item__label {
-    width: 198px !important;
+    width: 206px !important;
 }
 /deep/.yuqi .el-form-item__content {
     width: 298px !important;

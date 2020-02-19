@@ -1,7 +1,7 @@
 <template>
     <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <div class="form">
-            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+            <el-form :model="form" ref="form" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">借款信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -10,41 +10,41 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款金额：" prop="name">
-                            <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入借款金额"></el-input>
+                        <el-form-item label="借款金额：" prop="loanAmount">
+                            <el-input v-model.trim="form.loanAmount" v-isNum="form.loanAmount" maxlength='20' placeholder="请输入借款金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="年利率：" prop="name">
+                        <el-form-item label="年利率：" prop="yearRate">
                             <!-- 发生第一笔还款后，年利率将无法修改 -->
-                            <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入年利率"></el-input>
+                            <el-input v-model.trim="form.yearRate" v-isNum="form.yearRate" maxlength='20' placeholder="请输入年利率"></el-input>
                             <span class="dw">%</span>
                         </el-form-item>
                     </div>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="放款日期：" prop="name">
+                        <el-form-item label="放款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="form.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
+                            <el-date-picker v-model="form.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款期限： " prop="name">
-                            <el-radio style="margin-right:5px" v-model.trim="radio" label="月"></el-radio>
-                            <el-input v-model.trim="form.name" v-isNum:0='form.name' maxlength='3' placeholder="请输入借款期限"></el-input>
+                        <el-form-item label="借款期限： " prop="loanDateNum">
+                            <el-radio style="margin-right:5px" v-model.trim="loanDateType" label="月"></el-radio>
+                            <el-input v-model.trim="form.loanDateNum" v-isNum:0='form.loanDateNum' maxlength='3' placeholder="请输入借款期限"></el-input>
                             <span class="dw">月</span>
-                            <el-radio style="margin:0 5px 0 10px" v-model.trim="radio" label="天"></el-radio>
-                            <el-input v-model.trim="form.name" v-isNum:0='form.name' maxlength='3' placeholder="请输入借款期限"></el-input>
+                            <el-radio style="margin:0 5px 0 10px" v-model.trim="loanDateType" label="天"></el-radio>
+                            <el-input v-model.trim="form.loanDateNum" v-isNum:0='form.loanDateNum' maxlength='3' placeholder="请输入借款期限"></el-input>
                             <span class="dw">天</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="到期日：" prop="name">
+                        <el-form-item label="到期日：" prop="loanEndTime">
                             <!-- 自动计算，到期日=放款日期+借款期限 -->
-                            <span>2020-11-18</span>
+                            <span>{{form.loanEndTime}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -58,11 +58,12 @@
 </template>
 
 <script>
+import { setLoan } from '../../api'
 export default {
     name: 'supplierDialog',
     data () {
         return {
-            radio: '月',
+            loanDateType: '月',
             form: {
                 name: '',
                 description: '', // 台账借款表
@@ -81,11 +82,6 @@ export default {
                 repaymentType: '', // 还款类型 1：一次性还款 2：334还款
                 supplier: '', // 供货商
                 yearRate: ''// 年利率
-            },
-            rules: {
-                name: [
-                    { required: true, message: '请输入台账编号', trigger: 'blur' }
-                ]
             }
         }
     },
@@ -103,12 +99,18 @@ export default {
         onCancle () {
             this.$emit('onClose')
         },
-        onSure () {
-            //
+        async onSave () {
+            console.log(this.form)
+            await setLoan(this.form)
+            this.$message({
+                type: 'success',
+                message: '修改成功'
+            })
+            this.onCancle()
         }
     },
     mounted () {
-        console.log('detailData', this.detailData)
+        console.log('supplierDialog:::detailData', this.detailData)
     }
 }
 </script>
