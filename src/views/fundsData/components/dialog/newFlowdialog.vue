@@ -104,12 +104,12 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 3, // 台账类型 1：流贷2：敞口 3：分授信
+                    accountType: this.$route.query.accountType, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: 1, // 1：好信用 2：供应链 3：好橙工
+                    productType: this.$route.query.productType, // 1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',
