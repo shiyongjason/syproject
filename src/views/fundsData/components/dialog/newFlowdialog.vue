@@ -123,7 +123,7 @@ export default {
                     loanEndTime: '',
                     loanStartTime: '',
                     registrant: '',
-                    repaymentType: '',
+                    repaymentType: 1,
                     standingBookId: '',
                     supplier: '',
                     yearRate: ''
@@ -139,7 +139,7 @@ export default {
                     graceInterestPaid: '',
                     interestAmount: '',
                     interestPaid: '',
-                    isStepOverInterest: '',
+                    isStepOverInterest: 0, // 默认逾期否
                     overDueInterest: '',
                     overDueInterestAmount: '',
                     overDueInterestPaid: '',
