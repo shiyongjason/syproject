@@ -10,8 +10,8 @@
                     <div class="query-cont-col">
                         <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="onRepaymentTypeChange(2)">334</el-radio>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="onRepaymentTypeChange(1)">一次性还款</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
                         </el-form-item>
                     </div>
                 </div>
@@ -226,7 +226,6 @@ export default {
     },
     mounted () {
         console.log(this.detailData)
-        this.planListItem = { ...this.detailData[0] }
     },
     methods: {
         onCancle () {
@@ -238,16 +237,6 @@ export default {
         },
         onDeleteRate (index) {
             this.detailData[0].overdueList.splice(index, 1)
-        },
-        onRepaymentTypeChange (val) {
-            this.detailData = []
-            if (val === 1) {
-                this.detailData.push({ ...this.planListItem })
-            } else if (val === 2) {
-                for (let i = 0; i < 3; i++) {
-                    this.detailData.push({ ...this.planListItem })
-                }
-            }
         }
     }
 }

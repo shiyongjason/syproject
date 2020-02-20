@@ -13,7 +13,7 @@
         <!-- 开票日期Dialog -敞口 -->
         <billingDialog :detailData='rowData' v-if='rowData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' />
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" />
         <!-- 开票日期Dialog-分授信Credit -->
         <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 资金档案编号 -->
@@ -71,6 +71,7 @@ export default {
     },
     data: function () {
         return {
+            planListItem: {},
             remarkDialogVisible: false,
             fileinfoDialogVisible: false,
             misDialogVisible: false,
@@ -1598,6 +1599,17 @@ export default {
             this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             console.log(this.rowData)
+        },
+        onRepaymentTypeChange (val) {
+            this.planListItem = { ...this.rowData[0] }
+            this.rowData = []
+            if (val === 1) {
+                this.rowData.push({ ...this.planListItem })
+            } else if (val === 2) {
+                for (let i = 0; i < 3; i++) {
+                    this.rowData.push({ ...this.planListItem })
+                }
+            }
         }
     },
     mounted () {
