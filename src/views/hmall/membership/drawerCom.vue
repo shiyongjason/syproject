@@ -94,7 +94,7 @@
                         {{bossDetail.updateTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy}} {{bossDetail.updatePhone}}
+                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
