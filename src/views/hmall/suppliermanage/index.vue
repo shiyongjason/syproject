@@ -327,7 +327,7 @@ export default {
                     // delete this.ruleForm.branchCode
                     // this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
                     this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
-                    this.ruleForm.cityName = this.cityLists && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
+                    this.ruleForm.cityName = this.ruleForm.cityId && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
                     console.log(this.ruleForm)
                     if (this.dialogtitle == '新增供应商') {
                         await addSupplier(this.ruleForm)
