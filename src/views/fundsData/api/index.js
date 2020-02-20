@@ -28,3 +28,5 @@ export const getLoan = (id) => axios.get(interfaceUrl + `backend/account/loan/${
 export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loan', params)
 // 查询还款信息
 export const getRespAccountRepaymentPlan = (accountId) => axios.get(interfaceUrl + `backend/account/plan/${accountId}`)
+// 修改还款信息
+export const setPlan = (params) => axios.put(interfaceUrl + 'backend/account/plan', params)
