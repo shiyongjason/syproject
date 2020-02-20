@@ -198,8 +198,12 @@ export default {
                 // console.log(i)
                 if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
                 if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
-                if (i.overdue) Object.keys(i.overdue).forEach(key => obj['overdue_' + key] = i.overdue[key])
-                if (i.plan) Object.keys(i.plan).forEach((key) => obj['plan_' + key] = i.plan[key])
+                if (i.paymentStatic) Object.keys(i.paymentStatic).forEach(key => obj['paymentStatic' + key] = i.paymentStatic[key])
+                if (i.planList) {
+                    i.planList.map((item, index) => {
+                        Object.keys(item).forEach((key) => obj[`planList_${index}_${key}`] = item[key])
+                    })
+                }
                 // console.log(obj)
                 this.tableData.push(obj)
             })
