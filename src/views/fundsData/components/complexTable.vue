@@ -94,7 +94,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—流贷基础信息维护';
+                                    this.accountData.title = '好信用—流贷基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -201,8 +201,8 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—流贷档案信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—流贷档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -228,7 +228,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—分授信基础信息维护';
+                                    this.accountData.title = '好信用—分授信基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -556,7 +556,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—敞口基础信息维护';
+                                    this.accountData.title = '好信用—敞口基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -1584,7 +1584,8 @@ export default {
         },
         // 还款信息
         async getRespAccountRepaymentPlanData (row) {
-            const { data } = await getRespAccountRepaymentPlan(row.plan_id)
+            console.log(row)
+            const { data } = await getRespAccountRepaymentPlan(row.planList_id)
             this.respAccountRepaymentPlanData = data
         }
     },
