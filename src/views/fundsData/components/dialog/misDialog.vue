@@ -13,7 +13,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
-                            <HAutocomplete :selectArr="platformData" :selectObj.sync="detailData" v-if="paltformList"
+                            <HAutocomplete :selectArr="platformData" :selectObj="detailData" v-if="platformData"
                                 @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
@@ -99,12 +99,12 @@
                 this.detailData.subsectionName = val.value ? val.value.subsectionName : ''
             },
             onSave() {
-                console.log(this.form)
                 this.$refs['form'].validate(async (valid, object) => {
                     console.log(object) // object就是未通过校验的字段
                     if (valid) {
                         // 验证通过
-                        await setAccountBasic(this.form)
+                        console.log(this.detailData)
+                        await setAccountBasic(this.detailData)
                         this.$message({
                             type: 'success',
                             message: '修改成功'

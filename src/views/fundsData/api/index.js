@@ -22,6 +22,8 @@ export const getAccountBasic = (id) => axios.get(interfaceUrl + `backend/account
 // 修改台账基础信息
 export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/account/basic', params)
 
+// 查询贷款信息
+export const getLoan = (id) => axios.get(interfaceUrl + `backend/account/loan/${id}`)
 // 修改贷款信息
 export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loan', params)
 // 查询还款信息
