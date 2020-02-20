@@ -50,7 +50,7 @@
             <div class="query-cont-col">
                 <el-form-item label="开票日期：" prop="">
                     <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
-                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="datetime" placeholder="请选择出票日期">
+                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择出票日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
@@ -93,7 +93,7 @@ export default {
                     // if (endDateVal) {
                     //     return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
                     // }
-                    return time.getTime() <= Date.now() - 8.64e7
+                    return time.getTime() > Date.now()
                 }
             }
         },
