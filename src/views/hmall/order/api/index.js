@@ -4,13 +4,13 @@ import axios from 'axios'
 
 // 订单记录
 export const findOrderList = (params) => {
-    return instance.get(B2bUrl + 'payment/api/boss/payments/receive', {
+    return instance.get(B2bUrl + 'order/api/boss/orders', {
         params
     })
 }
 // 收款记录
 export const findReceivablesList = (params) => {
-    return instance.get(B2bUrl + 'payment/api/boss/payments', {
+    return instance.get(B2bUrl + 'payment/api/boss/payments/receive', {
         params
     })
 }
@@ -28,7 +28,7 @@ export const findProductTotalList = (params) => {
 }
 // 商品统计导出列表
 export const exportTotalList = (params) => {
-    let url = B2bUrl + 'payment/api/boss/payments/receive/export?'
+    let url = B2bUrl + 'order/api/boss/order-products/export?'
     for (let key in params) {
         url += ('&' + key + '=' + params[key])
     }
@@ -36,13 +36,13 @@ export const exportTotalList = (params) => {
 }
 // 收款纪录导出列表
 export const exportTabReceivables = (params) => {
-    let url = B2bUrl + 'payment/api/boss/payments/export?'
+    let url = B2bUrl + 'payment/api/boss/payments/receive/export?'
     for (let key in params) {
         url += ('&' + key + '=' + params[key])
     }
     return url
 }
-// 收款纪录导出列表
+// 订单纪录导出列表
 export const exportTabOrder = (params) => {
     let url = B2bUrl + 'order/api/boss/orders/export?'
     for (let key in params) {
