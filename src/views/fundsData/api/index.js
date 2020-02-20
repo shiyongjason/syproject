@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { interfaceUrl, B2bUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => {
     return axios.get(interfaceUrl + `backend/account`, { params })

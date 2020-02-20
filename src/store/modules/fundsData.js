@@ -16,13 +16,13 @@ const getters = {
 }
 
 const mutations = {
-    [types.PLAT_FORMDATA](state, payload) {
+    [types.PLAT_FORMDATA] (state, payload) {
         state.platformData = payload
     }
 }
 
 const actions = {
-    async findPlatformslist({ commit }, params) {
+    async findPlatformslist ({ commit }, params) {
         const { data } = await findPlatformslist()
         commit(types.PLAT_FORMDATA, data.data.pageContent)
     }

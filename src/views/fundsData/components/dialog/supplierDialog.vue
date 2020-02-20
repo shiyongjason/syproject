@@ -1,6 +1,5 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px"
-        :before-close='onCancle' center>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <div class="form">
             <el-form :model="detailData" ref="form" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">借款信息：</div>
@@ -13,16 +12,14 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="loanAmount">
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount"
-                                maxlength='20' placeholder="请输入借款金额"></el-input>
+                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="年利率：" prop="yearRate">
                             <!-- 发生第一笔还款后，年利率将无法修改 -->
-                            <el-input v-model.trim="detailData.yearRate" v-isNum="detailData.yearRate" maxlength='20'
-                                placeholder="请输入年利率"></el-input>
+                            <el-input v-model.trim="detailData.yearRate" v-isNum="detailData.yearRate" maxlength='20' placeholder="请输入年利率"></el-input>
                             <span class="dw">%</span>
                         </el-form-item>
                     </div>
@@ -31,8 +28,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="放款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd'
-                                placeholder="请选择放款日期">
+                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -40,13 +36,11 @@
                         <el-form-item label="借款期限： " prop="loanDateNum">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label="1" @change='loanDateNumM'>月
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM'
-                                maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'></el-input>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'></el-input>
                             <span class="dw">月</span>
                             <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label="2" @change='loanDateNumD'>天
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD'
-                                maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'></el-input>
+                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'></el-input>
                             <span class="dw">天</span>
                         </el-form-item>
                     </div>
@@ -71,7 +65,7 @@ import moment from 'moment'
 import { setLoan } from '../../api'
 export default {
     name: 'supplierDialog',
-    data() {
+    data () {
         return {
             loanDateType: '月'
         }
@@ -103,10 +97,10 @@ export default {
         }
     },
     methods: {
-        onCancle() {
+        onCancle () {
             this.$emit('onClose')
         },
-        async onSave() {
+        async onSave () {
             console.log(this.detailData)
             await setLoan(this.detailData)
             this.$message({
@@ -131,20 +125,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    /deep/ .el-dialog__body {
-        padding: 20px 24px;
-    }
+/deep/ .el-dialog__body {
+    padding: 20px 24px;
+}
 
-    .dialogtitle {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        line-height: 30px;
-        color: #000;
-        border-bottom: none;
-    }
+.dialogtitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    line-height: 30px;
+    color: #000;
+    border-bottom: none;
+}
 
-    .dw {
-        margin-left: 10px;
-    }
+.dw {
+    margin-left: 10px;
+}
 </style>

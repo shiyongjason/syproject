@@ -78,7 +78,7 @@
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import complexTable from './components/complexTable.vue'
-import { getAccountList, findBranchListNew, findPaltList } from './api/index.js'
+import { getAccountList, findBranchListNew } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'ledger',
@@ -122,7 +122,6 @@ export default {
     mounted () {
         this.onSearch()
         this.findBranchList()
-        // this.onFindPaltList()
         this.findPlatformslist()
     },
     methods: {
@@ -196,11 +195,15 @@ export default {
             data.records.map((i) => {
                 let obj = {}
                 // console.log(i)
+                // eslint-disable-next-line
                 if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
+                // eslint-disable-next-line
                 if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
+                // eslint-disable-next-line
                 if (i.paymentStatic) Object.keys(i.paymentStatic).forEach(key => obj['paymentStatic' + key] = i.paymentStatic[key])
                 if (i.planList) {
                     i.planList.map((item, index) => {
+                        // eslint-disable-next-line
                         Object.keys(item).forEach((key) => obj[`planList_${index}_${key}`] = item[key])
                     })
                 }
