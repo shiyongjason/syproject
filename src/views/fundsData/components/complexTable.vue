@@ -133,10 +133,9 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getRespAccountRepaymentPlanData(scope.row)
-                                    this.rowData = scope.row
-                                    this.rowData.title = '好信用—流贷还款信息维护'
+                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                                    await this.getRespAccountRepaymentPlanData(scope.row)
+                                    this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
                                     this.AnnualInterestRateDialogVisible = true
                                 }}></i></span>
                             }

@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
             <el-form :model="detailData[0]" :rules="rules" ref="ruleForm" label-width="175px" class="demo-ruleForm">
                 <div class="dialogtitle">还款信息：</div>
@@ -140,31 +140,34 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <div class="query-cont-row" v-if="index==1">
-                        <div class="query-cont-col">
-                            <el-form-item label="累计应缴纳逾期罚息:" prop="overdueList.dateNum">
-                                <span>{{detailData[0].overDueInterestAmount}}</span>
-                                <span class="dw">元</span>
-                            </el-form-item>
-                        </div>
-                        <div class="query-cont-col">
-                            <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                                <el-date-picker v-model="detailData[0].overDueInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
-                                </el-date-picker>
-                            </el-form-item>
-                        </div>
-                        <div class="query-cont-col">
-                            <el-form-item label="本次缴纳逾期罚息:" prop="overDueInterestPaid">
-                                <span>{{detailData[0].overDueInterestPaid}}</span>
-                                <span class="dw">元</span>
-                            </el-form-item>
-                        </div>
-                        <div class="query-cont-col">
-                            <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
-                                <span>{{detailData[0].overDueInterestOwe}}</span>
-                                <span class="dw">元</span>
-                            </el-form-item>
-                        </div>
+
+                </div>
+                <div class="query-cont-row">
+                    <div class="query-cont-col">
+                        <el-form-item label="累计应缴纳逾期罚息:" prop="overdueList.dateNum">
+                            <span>{{detailData[0].overDueInterestAmount||'-'}}</span>
+                            <span class="dw">元</span>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
+                            <el-date-picker v-model="detailData[0].overDueInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                            </el-date-picker>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="本次缴纳逾期罚息:" prop="overDueInterestPaid">
+                            <el-input v-isNum="detailData[0].overDueInterestPaid" maxlength='20' v-model.trim="detailData[0].overDueInterestPaid" placeholder="请输入逾期利息">
+                                <template slot="append">元</template>
+                            </el-input>
+                        </el-form-item>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
+                            <!-- 自动计算，剩余逾期罚息=应缴逾期罚息-累计缴纳的逾期罚息 -->
+                            <span>{{detailData[0].overDueInterestOwe||'-'}}</span>
+                            <span class="dw">元</span>
+                        </el-form-item>
                     </div>
                 </div>
             </el-form>
