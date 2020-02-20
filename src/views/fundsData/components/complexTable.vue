@@ -9,7 +9,7 @@
         <!-- 供货商Dialog -->
         <supplierDialog :detailData='rowData' v-if='rowData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -流贷 -->
-        <AnnualInterestRateDialog :detailData='rowData' v-if='rowData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
+        <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog -敞口 -->
         <billingDialog :detailData='rowData' v-if='rowData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
@@ -33,7 +33,7 @@ import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
 import billingDialog from './dialog/billingDialog.vue'
 import repaymentDialog from './dialog/repaymentDialog.vue'
 import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
-import { getAccountBasic } from '../api/index'
+import { getAccountBasic, getRespAccountRepaymentPlan } from '../api/index'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog },
@@ -81,6 +81,7 @@ export default {
             sizes: [10, 20, 50, 100],
             rowData: null,
             accountData: {},
+            respAccountRepaymentPlanData: null,
             // 流贷
             FlowToBorrow: [
                 {
@@ -120,6 +121,7 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                    this.getRespAccountRepaymentPlanData(scope.row)
                                     this.rowData = scope.row
                                     this.rowData.title = '好信用—流贷还款信息维护'
                                     this.AnnualInterestRateDialogVisible = true
@@ -1569,6 +1571,10 @@ export default {
             this.accountData = data
             this.accountData.selectName = data.loanCompanyName
             this.accountData.selectCode = data.loanCompanyCode
+        },
+        async getRespAccountRepaymentPlanData (row) {
+            const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            this.respAccountRepaymentPlanData = data
         }
     },
     mounted () {

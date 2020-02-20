@@ -33,7 +33,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="敞口金额：" prop="loanAmount">
-                            <!-- 第一笔还款维护后，敞口金额输入框去除，变为不可修改 -->
+                            <!-- 第一笔还款维护后，敞口金额输入框去除，变为不可修改，敞口金额=开票金额-保证金缴纳 -->
                             <el-input v-model.trim="form.loanAmount" v-isNum="form.loanAmount" maxlength='20' placeholder="请输入敞口金额"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
