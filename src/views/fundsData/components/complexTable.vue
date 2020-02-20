@@ -1573,7 +1573,7 @@ export default {
             this.accountData.selectCode = data.loanCompanyCode
         },
         async getRespAccountRepaymentPlanData (row) {
-            const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            const { data } = await getRespAccountRepaymentPlan(row.plan_id)
             this.respAccountRepaymentPlanData = data
         }
     },
