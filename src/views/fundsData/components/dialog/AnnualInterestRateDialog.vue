@@ -165,8 +165,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
-                            <!-- 自动计算，剩余逾期罚息=应缴逾期罚息-累计缴纳的逾期罚息 -->
-                            <span>{{detailData[0].overDueInterestOwe||'-'}}</span>
+                            <!-- 剩余逾期罚息=应缴逾期罚息overDueInterestAmount-累计缴纳的逾期罚息overDueInterestPaid -->
+                            <span>{{detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
