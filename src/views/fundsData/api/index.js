@@ -18,7 +18,7 @@ export const addAccount = (params) => axios.post(interfaceUrl + 'backend/account
 export const findPlatformslist = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 
 // 查询台账基础信息
-export const getAccountBasic = (id) => axios.get(interfaceUrl + `backend/account/basic/${id}`, )
+export const getAccountBasic = (id) => axios.get(interfaceUrl + `backend/account/basic/${id}`)
 // 修改台账基础信息
 export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/account/basic', params)
 
@@ -26,3 +26,5 @@ export const setAccountBasic = (params) => axios.post(interfaceUrl + 'backend/ac
 export const getLoan = (id) => axios.get(interfaceUrl + `backend/account/loan/${id}`)
 // 修改贷款信息
 export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loan', params)
+// 查询还款信息
+export const getRespAccountRepaymentPlan = (accountId) => axios.get(interfaceUrl + `backend/account/plan/${accountId}`)

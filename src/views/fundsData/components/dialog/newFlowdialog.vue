@@ -37,14 +37,15 @@
                 </div>
                 <!--抽离 还款-->
                 <flowcomp :flowform=ruleForm.loan v-if="changeType(1,1)" />
-                 <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
                 <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
                 <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
                 <!--抽离 还款利息-->
-                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(1,1)" />
+                <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(1,1)" />
+                <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,2)" />
+                <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,3)" />
+                <!--供应链抽离 还款-->
+                <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
                 <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
-                <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,2)" />
-                <grantratecomp :flowrateform=ruleForm.planList v-if="changeType(1,3)" />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -103,12 +104,12 @@ export default {
             },
             ruleForm: {
                 account: {
-                    accountType: 1, // 台账类型 1：流贷2：敞口 3：分授信
+                    accountType: this.$route.query.accountType, // 台账类型 1：流贷2：敞口 3：分授信
                     jinyunArchiveNo: '',
                     loanCompanyCode: '',
                     loanCompanyName: '',
                     misCode: '',
-                    productType: 2, // 1：好信用 2：供应链 3：好橙工
+                    productType: this.$route.query.productType, // 1：好信用 2：供应链 3：好橙工
                     remark: '',
                     standingBookArchiveNo: '',
                     standingBookNo: '',
@@ -185,6 +186,7 @@ export default {
     },
     mounted () {
         this.onFindPlatformslist()
+        this.planListItem.overdueList[0].overDueInterest = 12
         this.ruleForm.planList.push({ ...this.planListItem })
     },
     methods: {
@@ -213,6 +215,24 @@ export default {
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
+        },
+        onStepOver (val) {
+            console.log(22222)
+            let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
+            let newObj = { ...newRata }
+            this.ruleForm.planList[0].overdueList = []
+            if (val === 2) {
+                for (var i = 0; i < 2; i++) {
+                    this.ruleForm.planList[0].overdueList.push(newObj)
+                }
+                this.ruleForm.planList[0].overdueList[0].dateNum = 3
+                this.ruleForm.planList[0].overdueList[0].overDueInterest = 14
+                this.ruleForm.planList[0].overdueList[1].dateNum = 9999
+                this.ruleForm.planList[0].overdueList[1].overDueInterest = 14
+            } else if (val === 1) {
+                this.ruleForm.planList[0].overdueList.push(newObj)
+                this.ruleForm.planList[0].overdueList[0].overDueInterest = 12
+            }
         },
         onRepaymentTypeChange (val) {
             this.ruleForm.planList = []

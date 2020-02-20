@@ -1,19 +1,19 @@
 <template>
     <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
-            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
+            <el-form :model="form.planList[0]" :rules="rules" ref="ruleForm" label-width="175px" class="demo-ruleForm">
                 <div class="dialogtitle">还款信息：</div>
                 <div class="ftitle">
                     <b>还款方式：</b>一次性还款</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="本次还本金时间：" prop="name">
-                            <el-date-picker v-model="form.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                        <el-form-item label="本次还本金时间：" prop="endTime">
+                            <el-date-picker v-model="form.planList[0].endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="本次还款：" prop="paidCapital">
+                        <el-form-item label="本次还本金金额：" prop="paidCapital">
                             <el-input v-isNum="form.paidCapital" maxlength='20' v-model.trim="form.paidCapital" placeholder="请输入本次还款"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -69,24 +69,24 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-form-item label="累计应收利息：" prop="name">
+                        <el-form-item label="累计应收正常利息：" prop="name">
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入应收利息"></el-input>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col" style="margin-left:-25px">
-                        <el-form-item label="本次还利息时间：" prop="name">
+                        <el-form-item label="本次还正常利息时间：" prop="name">
                             <el-date-picker v-model="form.name" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="本次收取利息：" prop="name">
+                        <el-form-item label="本次收取正常利息：" prop="name">
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入本次收取利息"></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="剩余利息：" prop="name">
+                        <el-form-item label="剩余正常利息：" prop="name">
                             <!-- 默认自动计算,剩余利息=应收利息-累计实收利息,2、支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
                             <el-input v-isNum="form.name" maxlength='20' v-model.trim="form.name" placeholder="请输入剩余利息"></el-input>
                             <span class="dw">月</span>
@@ -170,7 +170,35 @@ export default {
             radio: '是',
             radio2: '1',
             form: {
-                name: '', x: ''
+                planList: [
+                    {
+                        id: '',
+                        loanId: '',
+                        capitalAmount: '',
+                        capitalPaid: '',
+                        endTime: '',
+                        exsitGrace: '', // 是否存在宽限期 0：否 1：是
+                        graceDay: '',
+                        graceInterest: '',
+                        graceInterestAmount: '',
+                        graceInterestPaid: '',
+                        interestAmount: '',
+                        interestPaid: '',
+                        isStepOverInterest: 0, // 默认逾期否，0：否 1：是
+                        overDueInterest: '',
+                        overDueInterestAmount: '',
+                        overDueInterestPaid: '',
+                        overdueList: [{
+                            dateNum: '',
+                            dateType: '',
+                            overDueInterest: '',
+                            planId: '',
+                            sort: '',
+                            startTime: ''
+                        }],
+                        startTime: ''
+                    }
+                ]
             },
             rules: {
                 name: [
@@ -185,8 +213,49 @@ export default {
             default: false
         },
         detailData: {
-            type: Object,
-            default: () => ({})
+            type: Array,
+            default: () => {
+                return [
+                    {
+                        'capitalAmount': '',
+                        'capitalOwe': '',
+                        'capitalPaid': '',
+                        'capitalTime': '',
+                        'endTime': '',
+                        'exsitGrace': '',
+                        'graceDay': '',
+                        'graceInterest': '',
+                        'graceInterestAmount': '',
+                        'graceInterestOwe': '',
+                        'graceInterestPaid': '',
+                        'graceInterestTime': '',
+                        'id': '',
+                        'interestAmount': '',
+                        'interestOwe': '',
+                        'interestPaid': '',
+                        'interestTime': '',
+                        'isStepOverInterest': '',
+                        'loanId': '',
+                        'overDueInterest': '',
+                        'overDueInterestAmount': '',
+                        'overDueInterestOwe': '',
+                        'overDueInterestPaid': '',
+                        'overDueInterestTime': '',
+                        'overdueList': [
+                            {
+                                'dateNum': '',
+                                'dateType': '',
+                                'id': '',
+                                'overDueInterest': '',
+                                'planId': '',
+                                'sort': '',
+                                'startTime': ''
+                            }
+                        ],
+                        'startTime': ''
+                    }
+                ]
+            }
         }
     },
     methods: {
@@ -196,24 +265,6 @@ export default {
     },
     mounted () {
         console.log(this.detailData)
-        this.form = {
-            description: '', // 台账还款流水表
-            capitalTime: '', // 实际还本金日期
-            createBy: '', // 创建人
-            createTime: '', // 创建时间
-            deleted: '', // 是否删除 0：否 1：是
-            graceInterestTime: '', // 宽限期利息时间
-            id: '', // 主键id
-            interestTime: '', // 实收利息时间
-            overDueInterestTime: '', // 实付逾期利息时间
-            paidCapital: '', // 实收还款本金
-            paidGraceInterest: '', // 实收宽限期利息
-            paidInterest: '', // 实收的利息
-            paidOverDueInterest: '', // 实付逾期利息
-            planId: '', // 还款计划id
-            updateBy: '', // 修改人
-            updateTime: ''// 修改时间
-        }
     }
 }
 </script>
