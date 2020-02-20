@@ -8,7 +8,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金时间：" prop="thisPaidCapitalTime">
-                            <el-date-picker v-model="detailData[0].thisPaidCapitalTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                            <el-date-picker v-model="detailData[0].thisPaidCapitalTime" type="date" value-format='yyyy-MM-dd' placeholder="请输入本次还本金时间">
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -151,14 +151,14 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                            <el-date-picker v-model="detailData[0].overDueInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                        <el-form-item label="本次还罚息时间：" prop="thisPaidOverDueInterestTime">
+                            <el-date-picker v-model="detailData[0].thisPaidOverDueInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="本次缴纳逾期罚息:" prop="overDueInterestPaid">
-                            <el-input v-isNum="detailData[0].overDueInterestPaid" maxlength='20' v-model.trim="detailData[0].overDueInterestPaid" placeholder="请输入逾期利息">
+                        <el-form-item label="本次缴纳逾期罚息:" prop="thisPaidOverDueInterest">
+                            <el-input v-isNum="detailData[0].thisPaidOverDueInterest" maxlength='20' v-model.trim="detailData[0].thisPaidOverDueInterest" placeholder="请输入逾期利息">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -265,6 +265,18 @@ export default {
     },
     mounted () {
         console.log('detailData', this.detailData)
+        let obj = {
+            'dateNum': '',
+            'dateType': '',
+            'id': '',
+            'overDueInterest': '',
+            'planId': '',
+            'sort': '',
+            'startTime': ''
+        }
+        if (this.detailData[0].overdueList.length < 2) {
+            this.detailData[0].overdueList.push(obj)
+        }
     }
 }
 </script>
