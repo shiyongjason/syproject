@@ -1348,8 +1348,7 @@ export default {
                         return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer'
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
-                                this.rowData = scope.row
-                                this.rowData.title = '好信用—敞口还款信息维护222222'
+                                // this.rowData.title = '好信用—敞口还款信息维护222222'
                                 this.repaymentDialogVisible = true
                             }}></i></span>
                     }
