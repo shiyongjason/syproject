@@ -15,8 +15,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId"
-                                v-for="item in proviceList">
+                            <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId" v-for="item in proviceList">
                             </el-option>
                         </el-select>
                     </div>
@@ -24,8 +23,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.cityId" placeholder="请选择市">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name"
-                                :value="item.cityId">
+                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                             </el-option>
                         </el-select>
                     </div>
@@ -41,6 +39,7 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                         <el-button type="primary" class="ml20" @click="onImport()">
                             导出
                         </el-button>
@@ -54,9 +53,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
-                @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
-                :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="provinceName" slot-scope="scope">
                     {{scope.data.row.provinceName}}{{scope.data.row.cityName}}
                 </template>
@@ -66,8 +63,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :before-close="handleClose"
-            :close-on-click-modal=false>
+        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="供应商名称：" prop="supplierName">
                     <el-input v-model="ruleForm.supplierName" maxlength='50' show-word-limit></el-input>
@@ -90,17 +86,14 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="品类：" prop="categoryId">
-                    <el-cascader :options="categoryList" v-model="categoryIdArr" clearable
-                        @change="productCategoryChange"></el-cascader>
+                    <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                 </el-form-item>
                 <el-form-item label="区域：" required class="">
                     <el-col :span="8">
                         <el-form-item prop="provinceId">
-                            <el-select placeholder="请选择省" v-model="ruleForm.provinceId" @change="onChangeList(2)"
-                                style="width:100% !important">
+                            <el-select placeholder="请选择省" v-model="ruleForm.provinceId" @change="onChangeList(2)" style="width:100% !important">
                                 <el-option label="请选择" value=""></el-option>
-                                <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId"
-                                    v-for="item in rproviceList">
+                                <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId" v-for="item in rproviceList">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -110,8 +103,7 @@
                         <el-form-item>
                             <el-select v-model="ruleForm.cityId" placeholder="请选择市" style="width:100%">
                                 <el-option label="请选择" value=""></el-option>
-                                <el-option v-for="(item) in cityLists" :key="item.cityId" :label="item.name"
-                                    :value="item.cityId">
+                                <el-option v-for="(item) in cityLists" :key="item.cityId" :label="item.name" :value="item.cityId">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -147,6 +139,7 @@ export default {
                 branchName: '',
                 supplierName: ''
             },
+            copyParams: {},
             copyForm: {},
             tableData: [],
             paginationInfo: {},
@@ -238,6 +231,7 @@ export default {
         this.onFindBrand()
         this.onFindCategoryList()
         this.copyForm = deepCopy(this.ruleForm)
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
         ...mapActions({
@@ -248,6 +242,10 @@ export default {
             findCategoryList: 'findCategoryList',
             getBranchlist: 'getBranchlist'
         }),
+        onReset () {
+            this.queryParams = deepCopy(this.copyParams)
+            this.getSupplier()
+        },
         async onFindBranchs () {
             await this.getBranchlist()
             this.branchArr = this.supplierBranch
