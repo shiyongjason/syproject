@@ -48,12 +48,12 @@
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金比例"><template slot="append">%</template></el-input>
                         </el-form-item>
                     </div>
-                      <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="保证金缴纳：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金缴纳金额"><template slot="append">元</template></el-input>
                         </el-form-item>
                     </div>
-                       <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="敞口金额：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入保证金缴纳金额"><template slot="append">元</template></el-input>
                         </el-form-item>
@@ -97,20 +97,20 @@
                             <el-input v-model.trim="ruleForm.name" placeholder="请选择约定还款日期"></el-input>
                         </el-form-item>
                     </div>
-                     <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="还款金额：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入还款金额"><template slot="append">元</template></el-input>
                         </el-form-item>
                     </div>
                 </div>
-               <div class="smalltitle">（未逾期）第二次还款：</div>
+                <div class="smalltitle">（未逾期）第二次还款：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="约定还款日期：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请选择约定还款日期"></el-input>
                         </el-form-item>
                     </div>
-                     <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="还款金额：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入还款金额"><template slot="append">元</template></el-input>
                         </el-form-item>
@@ -123,7 +123,7 @@
                             <el-input v-model.trim="ruleForm.name" placeholder="请选择约定还款日期"></el-input>
                         </el-form-item>
                     </div>
-                     <div class="query-cont-col">
+                    <div class="query-cont-col">
                         <el-form-item label="还款金额：" prop="name">
                             <el-input v-model.trim="ruleForm.name" placeholder="请输入还款金额"><template slot="append">元</template></el-input>
                         </el-form-item>
@@ -137,10 +137,10 @@
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                        <el-form-item label="逾期利率：" prop="name">
-                            <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
-                        </el-form-item>
-                    </div>
+                    <el-form-item label="逾期利率：" prop="name">
+                        <el-input v-model.trim="ruleForm.name" placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                    </el-form-item>
+                </div>
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -222,4 +222,3 @@ h3 {
     margin: 20px auto;
 }
 </style>
-
