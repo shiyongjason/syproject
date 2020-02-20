@@ -96,7 +96,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—流贷基础信息维护';
+                                    this.accountData.title = '好信用—流贷基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -215,8 +215,8 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.rowData = scope.row;
-                            this.rowData.title = '好信用—流贷档案信息维护';
+                            this.rowData = scope.row
+                            this.rowData.title = '好信用—流贷档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -242,7 +242,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—分授信基础信息维护';
+                                    this.accountData.title = '好信用—分授信基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -570,7 +570,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—敞口基础信息维护';
+                                    this.accountData.title = '好信用—敞口基础信息维护'
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -1356,7 +1356,13 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—敞口还款信息维护'; this.repaymentDialogVisible = true }}></i></span>
+                        return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer'
+                            onClick={() => {
+                                this.getGrantPaymetPlanData(scope.row)
+                                this.rowData = scope.row
+                                this.rowData.title = '好信用—敞口还款信息维护222222'
+                                this.repaymentDialogVisible = true
+                            }}></i></span>
                     }
                 },
                 { prop: 'loan_registrant', label: '登记人', sort: 9, width: '150' }
@@ -1605,8 +1611,19 @@ export default {
         },
         // 还款信息
         async getRespAccountRepaymentPlanData (row) {
-            const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            console.log(row)
+            const { data } = await getRespAccountRepaymentPlan(row.planList_id)
             this.respAccountRepaymentPlanData = data
+        },
+        // 敞口还款
+        async getGrantPaymetPlanData (row) {
+            console.log(row)
+            const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            this.rowData = [...data]
+            // this.rowData.title = '好信用—敞口还款信息维护3333'
+            this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
+            this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
+            console.log(this.rowData)
         }
     },
     mounted () {

@@ -1,16 +1,17 @@
 <template>
     <!-- <div class="page-body">
         <div class="page-body-cont query-cont"> -->
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
+            {{detailData}}
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
                 <!-- <div class="dialogtitle">还款方式：</div> -->
                 <div class="query-cont-row" style="height: 40px;">
                     <div class="query-cont-col">
-                        <el-form-item prop="name">
+                        <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio v-model.trim="radiox" label="1">334</el-radio>
-                            <el-radio v-model.trim="radiox" label="0">一次性还款</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2>334</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1>一次性还款</el-radio>
                         </el-form-item>
                     </div>
                 </div>
@@ -164,15 +165,23 @@ export default {
             }
         }
     },
+    watch: {
+        detailData (val) {
+            // this.form = { ...val }
+        }
+    },
     props: {
         dialogVisible: {
             type: Boolean,
             default: false
         },
         detailData: {
-            type: Object,
-            default: () => ({})
+            type: Array,
+            default: () => []
         }
+    },
+    mounted () {
+        console.log(this.form)
     },
     methods: {
         onCancle () {
