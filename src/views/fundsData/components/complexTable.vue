@@ -6,8 +6,8 @@
         </div>
         <!-- 台账编号Dialog -->
         <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
-        <!-- 供货商Dialog -->
-        <supplierDialog :detailData='rowData' v-if='rowData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
+        <!-- 借款金额Dialog -->
+        <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 开票日期Dialog -敞口 -->
@@ -34,6 +34,7 @@ import billingDialog from './dialog/billingDialog.vue'
 import repaymentDialog from './dialog/repaymentDialog.vue'
 import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan } from '../api/index'
+import moment from 'moment'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog },
@@ -81,6 +82,7 @@ export default {
             sizes: [10, 20, 50, 100],
             rowData: null,
             accountData: {},
+            loanData: {},
             respAccountRepaymentPlanData: null,
             // 流贷
             FlowToBorrow: [
@@ -112,7 +114,19 @@ export default {
                         )
                     },
                     children: [
-                        { prop: 'loan_loanAmount', label: '借款金额', sort: 1, width: '150' },
+                        { 
+                            prop: 'loan_loanAmount',
+                            label: '借款金额',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_supplier ? scope.row.loan_supplier : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                    this.getLoan(scope.row)
+                                    this.loanData.title = '好信用—流贷借款信息维护';
+                                    this.supplierDialogVisible = true
+                                }}></i></span>
+                            }
+                        },
                         {
                             prop: 'loan_repaymentType',
                             label: '还款方式',
@@ -916,10 +930,7 @@ export default {
                     prop: 'loan_supplier',
                     label: '供货商名称',
                     sort: 2,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_supplier ? scope.row.loan_supplier : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷借款信息维护'; this.supplierDialogVisible = true }}></i></span>
-                    }
+                    width: '150'
                 },
                 { prop: 'loan_yearRate', label: '年利率', sort: 4, width: '150' },
                 {
@@ -1575,12 +1586,22 @@ export default {
         },
         // 借款信息
         async getLoan (row) {
-            console.log(row)
-            // const { data } = await getLoan(row.account_id)
-            // console.log(data)
-            // this.accountData = data
-            // this.$set(this.accountData, 'selectName', data.loanCompanyName)
-            // this.$set(this.accountData, 'selectCode', data.loanCompanyCode)
+            const { data } = await getLoan(row.loan_id)
+            console.log(data)
+            this.loanData = {
+                ...this.loanData,
+                ...data,
+                loanDateNumM: '',
+                loanDateNumD: ''
+            }
+            if (data.loanDateType == 1) {
+                this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
+                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+            }
+            if (data.loanDateType == 2) {
+                this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
+                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+            }
         },
         // 还款信息
         async getRespAccountRepaymentPlanData (row) {

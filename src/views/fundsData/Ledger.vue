@@ -66,7 +66,7 @@
             <el-tabs v-if="accountType != '4'" v-model="produce" type="card" @tab-click="handleClick">
                 <el-tab-pane label="好信用" name="好信用"></el-tab-pane>
                 <el-tab-pane label="供应链" name="供应链"></el-tab-pane>
-                <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane>
+                <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
             </el-tabs>
             {{accountType}} {{produce}}
             <complexTable :tableData='tableData' :pagination='pagination' :source='accountType' @getList='getList' />
