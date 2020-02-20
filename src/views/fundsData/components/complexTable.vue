@@ -33,7 +33,7 @@ import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
 import billingDialog from './dialog/billingDialog.vue'
 import repaymentDialog from './dialog/repaymentDialog.vue'
 import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
-import { getAccountBasic } from '../api/index'
+import { getAccountBasic, getLoan } from '../api/index'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog },
@@ -93,8 +93,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—流贷基础信息维护';
+                                    this.accountData.title = '好信用—流贷基础信息维护';
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -199,6 +198,7 @@ export default {
                     width: '200',
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
                             this.rowData = scope.row;
                             this.rowData.title = '好信用—流贷档案信息维护';
                             this.fileinfoDialogVisible = true
@@ -225,8 +225,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—分授信基础信息维护';
+                                    this.getAccount(scope.row)
+                                    this.accountData.title = '好信用—分授信基础信息维护';
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -553,8 +553,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row;
-                                    this.rowData.title = '好信用—敞口基础信息维护';
+                                    this.getAccount(scope.row)
+                                    this.accountData.title = '好信用—敞口基础信息维护';
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -1563,13 +1563,24 @@ export default {
         async getList (val) {
             this.$emit('getList', val)
         },
+        // 基本信息
         async getAccount (row) {
             const { data } = await getAccountBasic(row.account_id)
             console.log(data)
-            this.accountData = data
-            this.accountData.selectName = data.loanCompanyName
-            this.accountData.selectCode = data.loanCompanyCode
-        }
+            this.accountData = { ...this.accountData, ...data }
+            this.$set(this.accountData, 'selectName', data.loanCompanyName)
+            this.$set(this.accountData, 'selectCode', data.loanCompanyCode)
+        },
+        // 借款信息
+        async getLoan (row) {
+            console.log(row)
+            // const { data } = await getLoan(row.account_id)
+            // console.log(data)
+            // this.accountData = data
+            // this.$set(this.accountData, 'selectName', data.loanCompanyName)
+            // this.$set(this.accountData, 'selectCode', data.loanCompanyCode)
+        },
+        // 还款信息
     },
     mounted () {
         this.column = this.FlowToBorrow
