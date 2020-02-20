@@ -114,7 +114,7 @@ export default {
                         )
                     },
                     children: [
-                        { 
+                        {
                             prop: 'loan_loanAmount',
                             label: '借款金额',
                             sort: 1,
@@ -122,7 +122,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_supplier ? scope.row.loan_supplier : '-'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
-                                    this.loanData.title = '好信用—流贷借款信息维护';
+                                    this.loanData.title = '好信用—流贷借款信息维护'
                                     this.supplierDialogVisible = true
                                 }}></i></span>
                             }
@@ -1612,7 +1612,7 @@ export default {
         // 还款信息
         async getRespAccountRepaymentPlanData (row) {
             console.log(row)
-            const { data } = await getRespAccountRepaymentPlan(row.planList_id)
+            const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
         },
         // 敞口还款
