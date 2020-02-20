@@ -170,21 +170,21 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'plan_capitalTime',
+                            prop: 'planList_0_capitalTime',
                             label: '最新本金还款日',
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.plan_capitalTime == 0 ? 0 : scope.row.plan_capitalTime ? `${scope.row.plan_capitalTime}` : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalTime == 0 ? 0 : scope.row.planList_0_capitalTime ? `${scope.row.planList_0_capitalTime}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'plan_capitalOwe',
+                            prop: 'planList_0_capitalOwe',
                             label: '欠收本金',
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.plan_capitalOwe == 0 ? 0 : scope.row.plan_capitalOwe ? `${scope.row.plan_capitalOwe}` : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
                             }
                         }
                     ]
@@ -342,30 +342,30 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'plan_capitalOwe',
+                            prop: 'paymentStatic_capitalOwe',
                             label: '剩余本金',
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.plan_capitalOwe == 0 ? 0 : scope.row.plan_capitalOwe ? `${scope.row.plan_capitalOwe}` : '-'}</span>
+                                return <span>{scope.row.paymentStatic_capitalOwe == 0 ? 0 : scope.row.paymentStatic_capitalOwe ? `${scope.row.paymentStatic_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'plan_interestOwe',
+                            prop: 'paymentStatic_interestOwe',
                             label: '剩余利息',
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.plan_interestOwe == 0 ? 0 : scope.row.plan_interestOwe ? `${scope.row.plan_interestOwe}` : '-'}</span>
+                                return <span>{scope.row.paymentStatic_interestOwe == 0 ? 0 : scope.row.paymentStatic_interestOwe ? `${scope.row.paymentStatic_interestOwe}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'plan_overDueInterestOwe',
+                            prop: 'paymentStatic_overDueInterestOwe',
                             label: '剩余逾期罚息',
                             sort: 10,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.plan_overDueInterestOwe == 0 ? 0 : scope.row.plan_overDueInterestOwe ? `${scope.row.plan_overDueInterestOwe}` : '-'}</span>
+                                return <span>{scope.row.paymentStatic_overDueInterestOwe == 0 ? 0 : scope.row.paymentStatic_overDueInterestOwe ? `${scope.row.paymentStatic_overDueInterestOwe}` : '-'}</span>
                             }
                         }
                     ]
@@ -379,12 +379,12 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_endTime',
                             label: '约定还款日期1',
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime == 0 ? 0 : scope.row.planList_0_endTime ? `${scope.row.planList_0_endTime}` : '-'}</span>
                             }
                         },
                         {
@@ -393,34 +393,34 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_capitalOwe',
                             label: '剩余还款本金金额',
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
+                            prop: 'planList_0_interestPaid',
+                            label: '累计正常实收利息',
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_interestPaid == 0 ? 0 : scope.row.planList_0_interestPaid ? `${scope.row.planList_0_interestPaid}%` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '剩余利息',
+                            prop: 'planList_0_interestOwe',
+                            label: '剩余正常利息',
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_interestOwe == 0 ? 0 : scope.row.planList_0_interestOwe ? `${scope.row.planList_0_interestOwe}%` : '-'}</span>
                             }
                         },
                         {
@@ -433,99 +433,108 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_endTime',
                             label: '约定还款日期2',
                             sort: 13,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '宽限日期',
-                            sort: 14,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '剩余还款本金金额',
-                            sort: 17,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
-                            sort: 19,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '是否逾期',
-                            sort: 20,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '约定还款日期3',
-                            sort: 24,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime == 0 ? 0 : scope.row.planList_1_endTime ? `${scope.row.planList_1_endTime}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
                             label: '宽限还款日',
-                            sort: 25,
+                            sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_capitalOwe',
                             label: '剩余还款本金金额',
-                            sort: 28,
+                            sort: 17,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_capitalOwe == 0 ? 0 : scope.row.planList_1_capitalOwe ? `${scope.row.planList_1_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
-                            sort: 30,
+                            prop: 'planList_1_interestPaid',
+                            label: '累计正常实收利息',
+                            sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_interestPaid == 0 ? 0 : scope.row.planList_1_interestPaid ? `${scope.row.planList_1_interestPaid}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_interestOwe',
+                            label: '剩余正常利息',
+                            sort: 20,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_1_interestOwe == 0 ? 0 : scope.row.planList_1_interestOwe ? `${scope.row.planList_1_interestOwe}%` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
                             label: '是否逾期',
-                            sort: 31,
+                            sort: 21,
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                             }
                         },
                         {
+                            prop: 'planList_2_endTime',
+                            label: '约定还款日期3',
+                            sort: 25,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_2_endTime == 0 ? 0 : scope.row.planList_2_endTime ? `${scope.row.planList_2_endTime}` : '-'}</span>
+                            }
+                        },
+                        {
                             prop: 'netProfitRateLastMonth',
-                            label: '剩余逾期罚息',
-                            sort: 34,
+                            label: '宽限还款日',
+                            sort: 26,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_capitalOwe',
+                            label: '剩余还款本金金额',
+                            sort: 29,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_2_capitalOwe == 0 ? 0 : scope.row.planList_2_capitalOwe ? `${scope.row.planList_2_capitalOwe}` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_interestPaid',
+                            label: '累计正常实收利息',
+                            sort: 31,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_2_interestPaid == 0 ? 0 : scope.row.planList_2_interestPaid ? `${scope.row.planList_2_interestPaid}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_interestOwe',
+                            label: '剩余正常利息',
+                            sort: 32,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_2_interestOwe == 0 ? 0 : scope.row.planList_2_interestOwe ? `${scope.row.planList_2_interestOwe}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'netProfitRateLastMonth',
+                            label: '是否逾期',
+                            sort: 33,
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
@@ -631,21 +640,21 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'paymentStatic_capitalOwe',
                             label: '剩余敞口',
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.paymentStatic_capitalOwe == 0 ? 0 : scope.row.paymentStatic_capitalOwe ? `${scope.row.paymentStatic_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'loan_overDueInterestOwe',
+                            prop: 'paymentStatic_overDueInterestOwe',
                             label: '剩余逾期罚息',
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_overDueInterestOwe == 0 ? 0 : scope.row.loan_overDueInterestOwe ? `${scope.row.loan_overDueInterestOwe}` : '-'}</span>
+                                return <span>{scope.row.paymentStatic_overDueInterestOwe == 0 ? 0 : scope.row.paymentStatic_overDueInterestOwe ? `${scope.row.paymentStatic_overDueInterestOwe}` : '-'}</span>
                             }
                         }
                     ]
@@ -659,156 +668,111 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_endTime',
                             label: '约定还款日期1',
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime == 0 ? 0 : scope.row.planList_0_endTime ? `${scope.row.planList_0_endTime}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '宽限还款日',
+                            label: '宽限到期日',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_capitalOwe',
                             label: '剩余还款金额',
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
-                            sort: 7,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '剩余利息',
-                            sort: 8,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
                             label: '是否逾期',
-                            sort: 9,
+                            sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_endTime',
                             label: '约定还款日期2',
-                            sort: 13,
+                            sort: 10,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime == 0 ? 0 : scope.row.planList_1_endTime ? `${scope.row.planList_1_endTime}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '宽限日期',
+                            label: '宽限到期日',
+                            sort: 11,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_capitalOwe',
+                            label: '剩余还款金额',
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_capitalOwe == 0 ? 0 : scope.row.planList_1_capitalOwe ? `${scope.row.planList_1_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '剩余还款本金金额',
-                            sort: 17,
+                            label: '是否逾期',
+                            sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
+                            prop: 'planList_2_endTime',
+                            label: '约定还款日期3',
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime == 0 ? 0 : scope.row.planList_2_endTime ? `${scope.row.planList_2_endTime}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
-                            label: '是否逾期',
+                            label: '宽限到期日',
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
-                            label: '约定还款日期3',
-                            sort: 24,
+                            prop: 'planList_2_capitalOwe',
+                            label: '剩余还款金额',
+                            sort: 23,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '宽限还款日',
-                            sort: 25,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '剩余还款本金金额',
-                            sort: 28,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '实收利息',
-                            sort: 30,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_2_capitalOwe == 0 ? 0 : scope.row.planList_2_capitalOwe ? `${scope.row.planList_2_capitalOwe}` : '-'}</span>
                             }
                         },
                         {
                             prop: 'netProfitRateLastMonth',
                             label: '是否逾期',
-                            sort: 31,
+                            sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'netProfitRateLastMonth',
-                            label: '剩余逾期罚息',
-                            sort: 34,
-                            width: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                             }
                         }
                     ]
@@ -944,7 +908,7 @@ export default {
                 },
                 {
                     prop: 'netProfitRateLastMonth',
-                    label: '应收利息合计',
+                    label: '应收利息（正常+宽限）',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
@@ -964,16 +928,16 @@ export default {
             // 还款账目的展开
             FlowRepaymentAccount: [
                 {
-                    prop: 'plan_capitalPaid',
+                    prop: 'planList_0_capitalPaid',
                     label: '累计实收借款本金',
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_capitalPaid == 0 ? 0 : scope.row.plan_capitalPaid ? `${scope.row.plan_capitalPaid}` : '-'}</span>
+                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_graceInterestTime',
+                    prop: 'plan_graceInterestTime', // 待改
                     label: '宽限还款日',
                     sort: 4,
                     width: '150',
@@ -982,69 +946,69 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_interestAmount',
-                    label: '累计应收利息',
+                    prop: 'planList_0_graceInterestAmount',
+                    label: '累计应收正常利息',
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestAmount == 0 ? 0 : scope.row.plan_interestAmount ? `${scope.row.plan_interestAmount}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestAmount == 0 ? 0 : scope.row.planList_0_graceInterestAmount ? `${scope.row.planList_0_graceInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_interestTime',
-                    label: '最新利息还款日',
+                    prop: 'planList_0_graceInterestTime',
+                    label: '最新正常利息还款日',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestTime == 0 ? 0 : scope.row.plan_interestTime ? `${scope.row.plan_interestTime}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestTime == 0 ? 0 : scope.row.planList_0_graceInterestTime ? `${scope.row.planList_0_graceInterestTime}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_interestPaid',
-                    label: '累计实收利息',
+                    prop: 'planList_0_graceInterestPaid',
+                    label: '累计实收正常利息',
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestPaid == 0 ? 0 : scope.row.plan_interestPaid ? `${scope.row.plan_interestPaid}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestPaid == 0 ? 0 : scope.row.planList_0_graceInterestPaid ? `${scope.row.planList_0_graceInterestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_interestOwe',
-                    label: '欠收利息',
+                    prop: 'planList_0_graceInterestOwe',
+                    label: '欠收正常利息',
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestOwe == 0 ? 0 : scope.row.plan_interestOwe ? `${scope.row.plan_interestOwe}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestOwe == 0 ? 0 : scope.row.planList_0_graceInterestOwe ? `${scope.row.planList_0_graceInterestOwe}` : '-'}</span>
                     }
                 }
             ],
             // 逾期账目的展开
             FlowOverdueAccounts: [
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestAmount',
                     label: '应收逾期罚息',
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}元` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestPaid',
                     label: '累计实收逾期罚息',
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}元` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestOwe',
                     label: '欠收逾期罚息',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}元` : '-'}</span>
                     }
                 }
             ],
@@ -1082,26 +1046,26 @@ export default {
             // 分授信还款账目总计
             PointsRepaymentAccount: [
                 {
-                    prop: 'plan_capitalTime',
+                    prop: 'paymentStatic_capitalTime',
                     label: '最新本金还款时间',
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_capitalTime == 0 ? 0 : scope.row.plan_capitalTime ? `${scope.row.plan_capitalTime}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime == 0 ? 0 : scope.row.paymentStatic_capitalTime ? `${scope.row.paymentStatic_capitalTime}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_capitalPaid',
+                    prop: 'paymentStatic_capitalPaid',
                     label: '累计已还本金',
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_capitalPaid == 0 ? 0 : scope.row.plan_capitalPaid ? `${scope.row.plan_capitalPaid}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalPaid == 0 ? 0 : scope.row.paymentStatic_capitalPaid ? `${scope.row.paymentStatic_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
                     prop: 'plan_interestAmount',
-                    label: '应收利息',
+                    label: '应收利息（正常+宽限）',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
@@ -1109,205 +1073,206 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_interestTime',
-                    label: '最新利息还款时间',
+                    prop: 'paymentStatic_interestTime',
+                    label: '最新正常利息还款时间',
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestTime == 0 ? 0 : scope.row.plan_interestTime ? `${scope.row.plan_interestTime}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_interestTime == 0 ? 0 : scope.row.paymentStatic_interestTime ? `${scope.row.paymentStatic_interestTime}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_interestPaid',
-                    label: '累计实收利息',
+                    prop: 'paymentStatic_interestPaid',
+                    label: '累计实收正常利息',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestPaid == 0 ? 0 : scope.row.plan_interestPaid ? `${scope.row.plan_interestPaid}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_interestPaid == 0 ? 0 : scope.row.paymentStatic_interestPaid ? `${scope.row.paymentStatic_interestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_overDueInterestAmount',
+                    prop: 'paymentStatic_overDueInterestAmount',
                     label: '累计应收逾期罚息',
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_overDueInterestAmount == 0 ? 0 : scope.row.plan_overDueInterestAmount ? `${scope.row.plan_overDueInterestAmount}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_overDueInterestAmount == 0 ? 0 : scope.row.paymentStatic_overDueInterestAmount ? `${scope.row.paymentStatic_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'plan_overDueInterestPaid',
+                    prop: 'paymentStatic_overDueInterestPaid',
                     label: '累计实收逾期罚息',
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_overDueInterestPaid == 0 ? 0 : scope.row.plan_overDueInterestPaid ? `${scope.row.plan_overDueInterestPaid}` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'plan_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 10,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.plan_overDueInterestOwe == 0 ? 0 : scope.row.plan_overDueInterestOwe ? `${scope.row.plan_overDueInterestOwe}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_overDueInterestPaid == 0 ? 0 : scope.row.paymentStatic_overDueInterestPaid ? `${scope.row.paymentStatic_overDueInterestPaid}` : '-'}</span>
                     }
                 }
             ],
             // 分授信还款账目明细
             PointsRCDetail: [
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_capitalAmount',
                     label: '约定还款本金金额',
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_capitalAmount == 0 ? 0 : scope.row.planList_0_capitalAmount ? `${scope.row.planList_0_capitalAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_capitalPaid',
                     label: '累计还款本金金额',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
+                    prop: 'planList_0_interestAmount',
+                    label: '应收正常利息',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_interestAmount == 0 ? 0 : scope.row.planList_0_interestAmount ? `${scope.row.planList_0_interestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾罚利息',
+                    prop: 'planList_0_overDueInterestAmount',
+                    label: '应缴逾期罚息',
                     sort: 10,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestPaid',
                     label: '实缴逾期罚息',
                     sort: 11,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestOwe',
                     label: '剩余逾期罚息',
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}` : '-'}</span>
                     }
                 },
+                // 约定还款日2
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_1_capitalAmount',
                     label: '约定还款本金金额',
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_capitalAmount == 0 ? 0 : scope.row.planList_1_capitalAmount ? `${scope.row.planList_1_capitalAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_1_capitalPaid',
                     label: '累计还款本金金额',
                     sort: 16,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_capitalPaid == 0 ? 0 : scope.row.planList_1_capitalPaid ? `${scope.row.planList_1_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
+                    prop: 'planList_1_interestAmount',
+                    label: '应收正常利息',
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_interestAmount == 0 ? 0 : scope.row.planList_1_interestAmount ? `${scope.row.planList_1_interestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾期利息',
-                    sort: 21,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'netProfitRateLastMonth',
-                    label: '实缴逾期罚息',
+                    prop: 'planList_1_overDueInterestAmount',
+                    label: '应缴逾期罚息',
                     sort: 22,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_overDueInterestAmount == 0 ? 0 : scope.row.planList_1_overDueInterestAmount ? `${scope.row.planList_1_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '剩余逾期罚息',
+                    prop: 'planList_1_overDueInterestPaid',
+                    label: '实缴逾期罚息',
                     sort: 23,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_overDueInterestPaid == 0 ? 0 : scope.row.planList_1_overDueInterestPaid ? `${scope.row.planList_1_overDueInterestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '约定还款本金金额',
-                    sort: 26,
+                    prop: 'planList_1_overDueInterestOwe',
+                    label: '剩余逾期罚息',
+                    sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_overDueInterestOwe == 0 ? 0 : scope.row.planList_1_overDueInterestOwe ? `${scope.row.planList_1_overDueInterestOwe}` : '-'}</span>
                     }
                 },
+                // 约定还款日3
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '累计还款本金金额',
+                    prop: 'planList_2_capitalAmount',
+                    label: '约定还款本金金额',
                     sort: 27,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_capitalAmount == 0 ? 0 : scope.row.planList_2_capitalAmount ? `${scope.row.planList_2_capitalAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
-                    sort: 29,
+                    prop: 'planList_2_capitalPaid',
+                    label: '累计还款本金金额',
+                    sort: 28,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_capitalPaid == 0 ? 0 : scope.row.planList_2_capitalPaid ? `${scope.row.planList_2_capitalPaid}` : '-'}</span>
                     }
                 },
-
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾期利息',
-                    sort: 32,
+                    prop: 'planList_2_interestAmount',
+                    label: '应收正常利息',
+                    sort: 30,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_interestAmount == 0 ? 0 : scope.row.planList_2_interestAmount ? `${scope.row.planList_2_interestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_2_overDueInterestAmount',
+                    label: '应缴逾期罚息',
+                    sort: 34,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_2_overDueInterestAmount == 0 ? 0 : scope.row.planList_2_overDueInterestAmount ? `${scope.row.planList_2_overDueInterestAmount}` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'planList_2_overDueInterestPaid',
                     label: '实缴逾期罚息',
-                    sort: 33,
+                    sort: 35,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_overDueInterestPaid == 0 ? 0 : scope.row.planList_2_overDueInterestPaid ? `${scope.row.planList_2_overDueInterestPaid}` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'planList_2_overDueInterestOwe',
+                    label: '剩余逾期罚息',
+                    sort: 36,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_2_overDueInterestOwe == 0 ? 0 : scope.row.planList_2_overDueInterestOwe ? `${scope.row.planList_2_overDueInterestOwe}` : '-'}</span>
                     }
                 }
             ],
@@ -1370,196 +1335,206 @@ export default {
             // 敞口还款账目总计的展开
             ExpoRepaymentAccount: [
                 {
-                    prop: 'loan_capitalTime',
+                    prop: 'paymentStatic_capitalTime',
                     label: '最新还款时间',
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime == 0 ? 0 : scope.row.paymentStatic_capitalTime ? `${scope.row.paymentStatic_capitalTime}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'loan_capitalPaid',
+                    prop: 'paymentStatic_capitalPaid',
                     label: '累计已还敞口本金',
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_capitalPaid == 0 ? 0 : scope.row.loan_capitalPaid ? `${scope.row.loan_capitalPaid}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalPaid == 0 ? 0 : scope.row.paymentStatic_capitalPaid ? `${scope.row.paymentStatic_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'loan_overDueInterestAmount',
+                    prop: 'paymentStatic_overDueInterestAmount',
                     label: '累计应收逾期罚息',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_overDueInterestAmount == 0 ? 0 : scope.row.loan_overDueInterestAmount ? `${scope.row.loan_overDueInterestAmount}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_overDueInterestAmount == 0 ? 0 : scope.row.paymentStatic_overDueInterestAmount ? `${scope.row.paymentStatic_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'loan_overDueInterestPaid',
+                    prop: 'paymentStatic_overDueInterestPaid',
                     label: '累计实收逾期罚息',
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_overDueInterestPaid == 0 ? 0 : scope.row.loan_overDueInterestPaid ? `${scope.row.loan_overDueInterestPaid}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_overDueInterestPaid == 0 ? 0 : scope.row.paymentStatic_overDueInterestPaid ? `${scope.row.paymentStatic_overDueInterestPaid}` : '-'}</span>
                     }
                 }
             ],
             // 敞口还款账目明细的展开
             ExpoRCDetail: [
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '约定还款本金金额',
+                    prop: 'planList_0_capitalAmount',
+                    label: '约定还款金额',
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_capitalAmount == 0 ? 0 : scope.row.planList_0_capitalAmount ? `${scope.row.planList_0_capitalAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '累计实际还款金额',
+                    prop: 'planList_0_capitalPaid',
+                    label: '累计实际还款本金金额',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
+                    label: '是否逾期',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾罚利息',
-                    sort: 10,
+                    prop: 'planList_0_overDueInterestAmount',
+                    label: '应缴逾期罚息',
+                    sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestPaid',
                     label: '实缴逾期罚息',
-                    sort: 11,
+                    sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_overDueInterestOwe',
                     label: '剩余逾期罚息',
+                    sort: 9,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}` : '-'}</span>
+                    }
+                },
+                // 约定日期2
+                {
+                    prop: 'planList_1_capitalAmount',
+                    label: '约定还款金额',
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_capitalAmount == 0 ? 0 : scope.row.planList_1_capitalAmount ? `${scope.row.planList_1_capitalAmount}` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'planList_1_capitalPaid',
+                    label: '累计实际还款本金金额',
+                    sort: 13,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_1_capitalPaid == 0 ? 0 : scope.row.planList_1_capitalPaid ? `${scope.row.planList_1_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateLastMonth',
-                    label: '约定还款本金金额',
+                    label: '是否逾期',
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '累计还款本金金额',
+                    prop: 'planList_1_overDueInterestAmount',
+                    label: '应缴逾期罚息',
                     sort: 16,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_overDueInterestAmount == 0 ? 0 : scope.row.planList_1_overDueInterestAmount ? `${scope.row.planList_1_overDueInterestAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
+                    prop: 'planList_1_overDueInterestPaid',
+                    label: '实缴逾期罚息',
+                    sort: 17,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_1_overDueInterestPaid == 0 ? 0 : scope.row.planList_1_overDueInterestPaid ? `${scope.row.planList_1_overDueInterestPaid}` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'planList_1_overDueInterestOwe',
+                    label: '剩余逾期罚息',
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_1_overDueInterestOwe == 0 ? 0 : scope.row.planList_1_overDueInterestOwe ? `${scope.row.planList_1_overDueInterestOwe}` : '-'}</span>
                     }
                 },
+                // 约定日期3
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾期利息',
+                    prop: 'planList_2_capitalAmount',
+                    label: '约定还款金额',
                     sort: 21,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_capitalAmount == 0 ? 0 : scope.row.planList_2_capitalAmount ? `${scope.row.planList_2_capitalAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '实缴逾期罚息',
+                    prop: 'planList_2_capitalPaid',
+                    label: '累计实际还款本金金额',
                     sort: 22,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_capitalPaid == 0 ? 0 : scope.row.planList_2_capitalPaid ? `${scope.row.planList_2_capitalPaid}` : '-'}</span>
                     }
                 },
                 {
                     prop: 'netProfitRateLastMonth',
-                    label: '剩余逾期罚息',
-                    sort: 23,
+                    label: '是否逾期',
+                    sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '约定还款本金金额',
+                    prop: 'planList_2_overDueInterestAmount',
+                    label: '应缴逾期罚息',
+                    sort: 25,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.planList_2_overDueInterestAmount == 0 ? 0 : scope.row.planList_2_overDueInterestAmount ? `${scope.row.planList_2_overDueInterestAmount}` : '-'}</span>
+                    }
+                },
+                {
+                    prop: 'planList_2_overDueInterestPaid',
+                    label: '实缴逾期罚息',
                     sort: 26,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_overDueInterestPaid == 0 ? 0 : scope.row.planList_2_overDueInterestPaid ? `${scope.row.planList_2_overDueInterestPaid}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
-                    label: '累计还款本金金额',
+                    prop: 'planList_2_overDueInterestOwe',
+                    label: '剩余逾期罚息',
                     sort: 27,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应收利息',
-                    sort: 29,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                    }
-                },
-
-                {
-                    prop: 'netProfitRateLastMonth',
-                    label: '应缴逾期利息',
-                    sort: 32,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'netProfitRateLastMonth',
-                    label: '实缴逾期罚息',
-                    sort: 33,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_2_overDueInterestOwe == 0 ? 0 : scope.row.planList_2_overDueInterestOwe ? `${scope.row.planList_2_overDueInterestOwe}` : '-'}</span>
                     }
                 }
             ]
