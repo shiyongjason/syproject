@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import flowcomp from '../typecomps/flowcomp'
 import flowratecomp from '../typecomps/flowratecomp'
@@ -159,7 +160,8 @@ export default {
                 }]
             },
             // 还款方式：334 对应 30%，30%，40%
-            repaymenBaseNum: [0.3, 0.3, 0.4]
+            repaymenBaseNum: [0.3, 0.3, 0.4],
+            repaymenDays: [2, 1, 0]
         }
     },
     watch: {
@@ -168,6 +170,10 @@ export default {
                 // console.log('ruleForm最新数据', val)
             },
             deep: true
+        },
+        'ruleForm.loan.loanEndTime' (val) {
+            // 触发自动计算还款计划
+            this.setPlanList()
         },
         'ruleForm.loan.loanAmount' (val) {
             // 触发自动计算还款计划
@@ -221,14 +227,17 @@ export default {
             let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
             let newObj = { ...newRata }
             this.ruleForm.planList[0].overdueList = []
+            let rateArr = [3, 9999]
             if (val === 2) {
                 for (var i = 0; i < 2; i++) {
+                    newObj.dateNum = rateArr[i]
                     this.ruleForm.planList[0].overdueList.push(newObj)
+                    // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
+                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
                 }
-                this.ruleForm.planList[0].overdueList[0].dateNum = 3
-                this.ruleForm.planList[0].overdueList[0].overDueInterest = 14
-                this.ruleForm.planList[0].overdueList[1].dateNum = 9999
-                this.ruleForm.planList[0].overdueList[1].overDueInterest = 14
+
+                // this.ruleForm.planList[0].overdueList[1].dateNum = 9999
+                // this.ruleForm.planList[0].overdueList[1].overDueInterest = 14
             } else if (val === 1) {
                 this.ruleForm.planList[0].overdueList.push(newObj)
                 this.ruleForm.planList[0].overdueList[0].overDueInterest = 12
@@ -246,13 +255,17 @@ export default {
             }
             this.setPlanList()
         },
-        /** 自动计算还款计划 */
+        /** 自动计算还款计划和日期 */
         setPlanList () {
+            console.log(this.ruleForm.loan.loanEndTime, this.ruleForm.planList[0].endTime)
+            //  moment().subtract(7, 'days').format('YYYY-MM-DD')
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
+                this.$set(this.ruleForm.planList[0], 'endTime', this.ruleForm.loan.loanEndTime)
             } else if (this.ruleForm.loan.repaymentType == 2) {
                 for (let i = 0; i < this.repaymenBaseNum.length; i++) {
                     this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
+                    this.ruleForm.planList[i].endTime = this.ruleForm.loan.loanEndTime && moment(this.ruleForm.loan.loanEndTime, 'YYYY-MM-DD').subtract(this.repaymenDays[i], 'months').format('YYYY-MM-DD')
                 }
             }
         }

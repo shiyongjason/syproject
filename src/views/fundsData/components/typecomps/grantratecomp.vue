@@ -6,8 +6,9 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-form-item label="约定还款日期：" prop="endTime">
-                        <el-date-picker v-model="item.endTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="datetime" placeholder="请选择约定还款日期">
-                        </el-date-picker>
+                        <!-- <el-date-picker v-model="" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="datetime" placeholder="请选择约定还款日期">
+                        </el-date-picker> -->
+                        {{item.endTime}}
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
@@ -68,7 +69,14 @@ export default {
     },
     data () {
         return {
-            newRata: {}
+            newRata: {
+                dateNum: '',
+                dateType: '',
+                overDueInterest: '',
+                planId: '',
+                sort: '',
+                startTime: ''
+            }
         }
     },
     watch: {
@@ -86,10 +94,10 @@ export default {
     methods: {
         onAddrate () {
             let newObj = { ...this.newRata }
-            this.flowrateform.overdueList.push(newObj)
+            this.flowrateform[0].overdueList.push(newObj)
         },
         onDeleteRate (index) {
-            this.flowrateform.overdueList.splice(index, 1)
+            this.flowrateform[0].overdueList.splice(index, 1)
         }
     }
 }
