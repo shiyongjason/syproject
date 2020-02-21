@@ -21,12 +21,6 @@
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
         <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
-        <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
-        <!-- 资金档案编号 -->
-        <fileInfoDialog :detailData='rowData' v-if='rowData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
-        <!-- 备注 -->
-        <remarkDialog :detailData='rowData' v-if='rowData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
