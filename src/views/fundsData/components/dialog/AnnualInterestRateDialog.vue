@@ -21,8 +21,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="欠收本金：" prop="capitalOwe">
-                            <!-- 欠收本金=借款金额-累计实收借款本金 -->
-                            <span>{{detailData[0].capitalAmount-detailData[0].capitalPaid||'-'}}</span>
+                            <!-- 欠收本金=借款金额-累计实收借款本金-本次还本金金额 -->
+                            <span>{{detailData[0].capitalAmount-detailData[0].capitalPaid-detailData[0].thisPaidCapital||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -50,6 +50,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="累计宽限期实时利息：" prop="graceInterestAmount">
+                            <!-- 实时从接口获取 -->
                             <span>{{detailData[0].graceInterestAmount||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -70,7 +71,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="剩余宽限利息：" prop="graceInterestOwe">
-                            <span>{{detailData[0].graceInterestAmount-detailData[0].graceInterestPaid||'-'}}</span>
+                            <!-- 剩余宽限期利息=累计宽限期实时利息-累计缴纳的宽限期利息-本次收取宽限利息 -->
+                            <span>{{detailData[0].graceInterestAmount-detailData[0].graceInterestPaid-detailData[0].thisPaidGraceInterest||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -78,6 +80,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="累计应收正常利息：" prop="interestAmount">
+                            <!-- 实时自动计算 -->
                             <span>{{detailData[0].interestAmount||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
@@ -95,8 +98,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="剩余正常利息：" prop="interestOwe">
-                            <!-- 自动计算，剩余正常利息=累计应收正常利息interestAmount-累计缴纳的实收正常利息interestPaid -->
-                            <span>{{detailData[0].interestAmount-detailData[0].interestPaid||'-'}}</span>
+                            <!-- 自动计算，剩余正常利息=累计应收正常利息interestAmount-累计缴纳的实收正常利息interestPaid-本次收取正常利息 -->
+                            <span>{{detailData[0].interestAmount-detailData[0].interestPaid-detailData[0].thisPaidInterest||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
