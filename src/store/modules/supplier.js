@@ -3,12 +3,18 @@ import { findSupplierlist, findBrand, findBranchlist } from '@/views/hmall/suppl
 const state = {
     supplierData: {},
     brandData: [],
-    supplierBranch:[]
+    supplierBranch: []
 }
 
 const getters = {
     supplierData: state => state.supplierData,
-    brandData: state => state.brandData,
+    brandData: state => {
+        state.brandData && state.brandData.map(item => {
+            item.value = item.brandName
+            item.selectCode = item.id
+        })
+        return state.brandData
+    },
     supplierBranch: state => state.supplierBranch
 }
 

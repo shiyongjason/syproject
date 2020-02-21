@@ -54,17 +54,17 @@ export default {
             },
             component: () => import('@/views/hmall/shopManager/selectCategory.vue')
         },
-        {
-            path: 'platform',
-            name: 'platform',
-            meta: {
-                title: '商家功能管理',
-                tagName: '商家功能管理',
-                isMenu: true,
-                icon: ''
-            },
-            component: () => import('@/views/hmall/platform/platform.vue')
-        },
+        // {
+        //     path: 'platform',
+        //     name: 'platform',
+        //     meta: {
+        //         title: '商家功能管理',
+        //         tagName: '商家功能管理',
+        //         isMenu: true,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/hmall/platform/platform.vue')
+        // },
         // {
         //     path: 'shopReviewList',
         //     name: 'shopReviewList',
