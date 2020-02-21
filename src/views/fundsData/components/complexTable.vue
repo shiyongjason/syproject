@@ -13,7 +13,8 @@
         <!-- 开票日期Dialog -敞口 -->
         <billingDialog :detailData='rowData' v-if='rowData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" />
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList'
+         @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver"/>
         <!-- 开票日期Dialog-分授信Credit -->
         <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 资金档案编号 -->
@@ -72,6 +73,7 @@ export default {
     data: function () {
         return {
             planListItem: {},
+            copyGrantdata: [],
             remarkDialogVisible: false,
             fileinfoDialogVisible: false,
             misDialogVisible: false,
@@ -1591,13 +1593,12 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             // this.rowData.title = '好信用—敞口还款信息维护3333'
             this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
-            console.log(this.rowData)
+            this.copyGrantdata = [...this.rowData]
         },
         onRepaymentTypeChange (val) {
             this.planListItem = { ...this.rowData[0] }
@@ -1606,10 +1607,26 @@ export default {
                 this.rowData.push({ ...this.planListItem })
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
-                    this.rowData.push({ ...this.planListItem })
+                    this.rowData.push({ ...this.copyGrantdata[i] })
+                    this.$set(this.rowData[0], 'repaymentType', val)
                 }
             }
-        }
+        },
+        onStepOver (val) {
+            let newRata = JSON.parse(JSON.stringify(this.rowData.overdueList[0]))
+            let newObj = { ...newRata }
+            this.ruleForm.planList[0].overdueList = []
+            let rateArr = [3, 9999]
+            if (val === 2) {
+                for (var i = 0; i < 2; i++) {
+                    this.ruleForm.planList[0].overdueList.push(this.copyGrantdata[0].overdueList[i])
+                    // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
+                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
+                }
+            } else if (val === 1) {
+                this.ruleForm.planList[0].overdueList.push(newObj)
+            }
+        },
     },
     mounted () {
         this.column = this.FlowToBorrow

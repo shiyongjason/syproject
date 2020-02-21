@@ -4,7 +4,6 @@
         <div class="page-body-cont ">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <div class="dialogtitle">基础信息：</div>
-                {{ruleForm}}
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账编号：" prop="account.standingBookNo">
