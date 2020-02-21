@@ -42,18 +42,22 @@
         <div class="page-body-cont query-cont">
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="onLinddialog">新增台账</el-button>
-                <el-button type="primary" class="ml20" @click="onExportTemplate">导入模板导出</el-button>
+                <el-button type="primary" class="ml20" @click="onExportLedger">借款模板导出</el-button>
+                <el-button type="primary" class="ml20" @click="onExportTemplate">还款明细表模板导出</el-button>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
                     <el-button type="primary" class="ml20">
-                        台账导入
+                        借款信息导入
                     </el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="onExportLedger">台账导出</el-button>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/repay/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
+                    <el-button type="primary" class="ml20">
+                        还款明细表信息导入
+                    </el-button>
+                </el-upload>
             </div>
         </div>
         <div class="page-body-cont">
@@ -63,12 +67,17 @@
                 <el-tab-pane label="分授信" name="3"></el-tab-pane>
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
-            <el-tabs v-if="accountType != '4'" v-model="produce" type="card" @tab-click="handleClick">
-                <el-tab-pane label="好信用" name="好信用"></el-tab-pane>
-                <el-tab-pane label="供应链" name="供应链"></el-tab-pane>
-                <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
-            </el-tabs>
-            {{accountType}} {{produce}}
+            <template v-if="accountType != '4'">
+                <el-tabs v-model="produce" type="card" @tab-click="handleClick">
+                    <el-tab-pane label="好信用" name="1"></el-tab-pane>
+                    <el-tab-pane label="供应链" name="2"></el-tab-pane>
+                    <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
+                </el-tabs>
+                <el-button type="primary" class="ml20" @click="onLinddialog">
+                    {{accountType == 1 ? '新增流贷-' : accountType == 2 ? '新增敞口-' : accountType == 3 ? '新增分授信-' : '待开发'}}
+                    {{produce == 1 ? '好信用台账' : produce == 2 ? '供应链台账' : ''}}
+                </el-button>
+            </template>
             <complexTable :tableData='tableData' :pagination='pagination' :source='accountType' @getList='getList' />
         </div>
     </div>
@@ -78,7 +87,7 @@
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import complexTable from './components/complexTable.vue'
-import { getAccountList, findBranchListNew } from './api/index.js'
+import { getAccountList, getRepaymentList, findBranchListNew } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'ledger',
@@ -93,8 +102,8 @@ export default {
     },
     data () {
         return {
-            accountType: '1',
-            produce: '好信用',
+            accountType: '1', // 1：流贷 2：敞口 3：分授信 4：还款明细表
+            produce: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
@@ -106,7 +115,7 @@ export default {
                 accountType: '1',
                 loanCompanyCode: '',
                 loanCompanyName: '',
-                produce: '好信用'
+                produce: '1'
             },
             searchParams: {},
             tableData: [{ shy: 1 }, { shy: 2 }],
@@ -161,7 +170,8 @@ export default {
         },
         // 台账导出
         onExportLedger () {
-            location.href = interfaceUrl + '/backend/account/export'
+            window.location.href = interfaceUrl + 'backend/account/export'
+            // location.href = interfaceUrl + '/backend/account/export'
         },
         handleClick () {
             this.onReset()
@@ -182,19 +192,25 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.produce = this.produce
-            // console.log(this.searchParams)
+            console.log(this.searchParams)
+            if (this.accountType == 4) {
+                const { data } = await getRepaymentList({
+                    ...this.searchParams,
+                    standingBookNo: this.searchParams.standingBookArchiveNo
+                })
+                console.log(data)
+                this.tableData = data.records
+                return
+            }
             const { data } = await getAccountList(this.searchParams)
-            // console.log(data)
             this.pagination = {
                 pageNumber: data.current,
                 pageSize: data.size,
                 total: data.total
             }
-            // this.tableData = data.records
             this.tableData = []
             data.records.map((i) => {
                 let obj = {}
-                // console.log(i)
                 // eslint-disable-next-line
                 if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
                 // eslint-disable-next-line
@@ -207,7 +223,6 @@ export default {
                         Object.keys(item).forEach((key) => obj[`planList_${index}_${key}`] = item[key])
                     })
                 }
-                // console.log(obj)
                 this.tableData.push(obj)
             })
         },
@@ -235,9 +250,7 @@ export default {
             this.onQuery()
         },
         onLinddialog () {
-            // 1：好信用 2：供应链 3：好橙工
-            let produce = this.produce == '好信用' ? 1 : this.produce == '供应链' ? 2 : 3
-            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: produce } })
+            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.produce } })
         }
     }
 }

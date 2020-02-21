@@ -7,9 +7,9 @@
         <!-- 基本信息Dialog -台账编号 -->
         <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -资金档案编号 -->
-        <fileInfoDialog :detailData='rowData' v-if='rowData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
+        <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
-        <remarkDialog :detailData='rowData' v-if='rowData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
+        <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
 
         <!-- 借款Dialog -流贷 -->
         <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
@@ -96,7 +96,7 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
+                                return <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
                                     this.accountData.title = '好信用—流贷基础信息维护'
                                     this.misDialogVisible = true
@@ -135,7 +135,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                                return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer' onClick={async () => {
                                     await this.getRespAccountRepaymentPlanData(scope.row)
                                     this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
                                     this.AnnualInterestRateDialogVisible = true
@@ -148,7 +148,7 @@ export default {
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime == 0 ? 0 : scope.row.loan_loanStartTime ? `${scope.row.loan_loanStartTime}` : '-'}</span>
+                                return <span>{scope.row.loan_loanStartTime}</span>
                             }
                         },
                         {
@@ -157,7 +157,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime == 0 ? 0 : scope.row.loan_loanEndTime ? `${scope.row.loan_loanEndTime}` : '-'}</span>
+                                return <span>{scope.row.loan_loanEndTime}</span>
                             }
                         }
                     ]
@@ -176,7 +176,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalTime == 0 ? 0 : scope.row.planList_0_capitalTime ? `${scope.row.planList_0_capitalTime}` : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalTime}</span>
                             }
                         },
                         {
@@ -214,10 +214,9 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.rowData = scope.row
-                            this.rowData.title = '好信用—流贷档案信息维护'
+                            this.accountData.title = '好信用—流贷档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -227,7 +226,11 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark == 0 ? 0 : scope.row.account_remark ? `${scope.row.account_remark}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { this.rowData = scope.row; this.rowData.title = '好信用—流贷备注信息维护'; this.remarkDialogVisible = true }}></i></span>
+                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '好信用—流贷备注信息维护'
+                            this.remarkDialogVisible = true
+                        }}></i></span>
                     }
                 }
             ],
@@ -548,9 +551,9 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row
-                            this.rowData.title = '好信用—分授信档案信息维护'
+                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '好信用—分授信档案信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -560,9 +563,9 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark == 0 ? 0 : scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row
-                            this.rowData.title = '好信用—分授信备注信息维护'
+                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '好信用—分授信备注信息维护'
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -779,9 +782,9 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo == 0 ? 0 : scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row
-                            this.rowData.title = '好信用—敞口档案信息维护'
+                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '好信用—敞口基础信息维护'
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -791,9 +794,9 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark == 0 ? 0 : scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.rowData = scope.row
-                            this.rowData.title = '好信用—敞口备注信息维护'
+                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '好信用—敞口备注信息维护'
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -802,11 +805,11 @@ export default {
             // 还款明细表
             ReimbursementDetail: [
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'standingBookNo',
                     label: '台账编号',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.standingBookNo ? `${scope.row.standingBookNo}` : '-'}</span>
                     }
                 },
                 {
@@ -814,23 +817,23 @@ export default {
                     label: 'MIS编码',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'loanCompanyName',
                     label: '平台公司',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.loanCompanyName ? `${scope.row.loanCompanyName}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'subsectionName',
                     label: '分部',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.subsectionName ? `${scope.row.subsectionName}` : '-'}</span>
                     }
                 },
                 {
@@ -838,7 +841,7 @@ export default {
                     label: '登记人',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
                 {
@@ -846,39 +849,39 @@ export default {
                     label: '还款项目',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'paidTime',
                     label: '还款时间',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.paidTime}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'paidAmount',
                     label: '金额',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.paidAmount == 0 ? 0 : scope.row.paidAmount ? `${scope.row.paidAmount}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'endTime',
                     label: '应还款日期',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.endTime}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'remark',
                     label: '备注',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.remark ? `${scope.row.remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
                     }
                 }
             ],
@@ -900,7 +903,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanDateNum == 0 ? 0 : scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
+                        return <span>{scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
                     }
                 },
                 {
@@ -918,7 +921,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_registrant == 0 ? 0 : scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
+                        return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
                     }
                 }
             ],
@@ -957,7 +960,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestTime == 0 ? 0 : scope.row.planList_0_graceInterestTime ? `${scope.row.planList_0_graceInterestTime}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestTime}</span>
                     }
                 },
                 {
@@ -1018,7 +1021,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_yearRate == 0 ? 0 : scope.row.loan_yearRate ? `${scope.row.loan_yearRate}` : '-'}</span>
+                        return <span>{scope.row.loan_yearRate == 0 ? 0 : scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
                     }
                 },
                 {
@@ -1027,7 +1030,7 @@ export default {
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanDateNum == 0 ? 0 : scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
+                        return <span>{scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
                     }
                 },
                 {
@@ -1036,7 +1039,7 @@ export default {
                     sort: 10,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_registrant == 0 ? 0 : scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
+                        return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
                     }
                 }
             ],
@@ -1048,7 +1051,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime == 0 ? 0 : scope.row.paymentStatic_capitalTime ? `${scope.row.paymentStatic_capitalTime}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime}</span>
                     }
                 },
                 {
@@ -1075,7 +1078,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_interestTime == 0 ? 0 : scope.row.paymentStatic_interestTime ? `${scope.row.paymentStatic_interestTime}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_interestTime}</span>
                     }
                 },
                 {
@@ -1282,7 +1285,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_depositProportion == 0 ? 0 : scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}` : '-'}</span>
+                        return <span>{scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}` : '-'}</span>
                     }
                 },
                 {
@@ -1304,7 +1307,7 @@ export default {
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
                     }
                 },
                 {
@@ -1313,7 +1316,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanEndTime == 0 ? 0 : scope.row.loan_loanEndTime ? `${scope.row.loan_loanEndTime}` : '-'}</span>
+                        return <span>{scope.row.loan_loanEndTime}</span>
                     }
                 },
                 {
@@ -1322,7 +1325,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer'
+                        return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer'
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
                                 // this.rowData.title = '好信用—敞口还款信息维护222222'
@@ -1340,7 +1343,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime == 0 ? 0 : scope.row.paymentStatic_capitalTime ? `${scope.row.paymentStatic_capitalTime}` : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime}</span>
                     }
                 },
                 {
