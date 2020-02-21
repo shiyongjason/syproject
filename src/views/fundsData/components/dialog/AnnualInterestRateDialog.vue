@@ -39,7 +39,7 @@
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px">宽限期利率：</span>
-                                <el-input v-model.trim="detailData[0].graceDay" v-isNum="detailData[0].graceDay" maxlength='20' placeholder="请输入宽限期利率" @blur="dealCount(detailData[0])">
+                                <el-input v-model.trim="detailData[0].graceInterest" v-isNum="detailData[0].graceInterest" maxlength='20' placeholder="请输入宽限期利率" @blur="dealCount(detailData[0])">
                                     <template slot="append">%</template>
                                 </el-input>
                             </template>
