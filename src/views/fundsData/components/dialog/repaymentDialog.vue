@@ -34,7 +34,7 @@
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px" v-if="item.exsitGrace==1">宽限期利率：</span>
-                                <el-input v-model.trim="item.xgraceInterest" v-isNum:0="item.xgraceInterest" maxlength='3' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
+                                <el-input v-model.trim="item.graceInterest" v-isNum:0="item.graceInterest" maxlength='3' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
                                     <template slot="append">%</template>
                                 </el-input>
                             </el-form-item>
@@ -101,12 +101,12 @@
                     <div class="query-cont-row" style="margin-top:10px">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="name">
-                                <el-radio v-model.trim="detailData[0].isStepOverInterest" @change="()=>{$emit('stepOver',2)}" :label=1>是</el-radio>
-                                <el-radio v-model.trim="detailData[0].isStepOverInterest" @change="()=>{$emit('stepOver',1)}" :label=0>否</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',2)}" :label=1>是</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1)}" :label=0>否</el-radio>
                             </el-form-item>
                         </div>
                     </div>
-                    <div v-if="detailData[0].isStepOverInterest==0">
+                    <div v-if="item.isStepOverInterest==0">
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="逾期利率：" prop="overDueInterest">
@@ -145,7 +145,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="detailData[0].isStepOverInterest==1">
+                    <div v-if="item.isStepOverInterest==1">
                         <div class="" v-for="(item,index) in item.overdueList" :key="index">
                              <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
                               <div class="query-cont-row">

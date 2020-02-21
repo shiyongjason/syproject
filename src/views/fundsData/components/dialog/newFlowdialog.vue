@@ -228,13 +228,15 @@ export default {
             this.ruleForm.planList[0].overdueList = []
             let rateArr = [3, 9999]
             if (val === 2) {
-                for (var i = 0; i < 2; i++) {
-                    newObj.dateNum = rateArr[i]
+                for (let i = 0; i < 2; i++) {
+                    // newObj.dateNum = rateArr[i]
+                    console.log(rateArr[i])
                     this.ruleForm.planList[0].overdueList.push(newObj)
+                    //    this.$set(this.ruleForm.planList[0], 'endTime', this.ruleForm.loan.loanEndTime)
                     // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
-                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
+                    // this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
                 }
-
+                // this.ruleForm.planList[0].overdueList && this.ruleForm.planList[0].overdueList.map((item, index) => item.dateNum = rateArr[index])
                 // this.ruleForm.planList[0].overdueList[1].dateNum = 9999
                 // this.ruleForm.planList[0].overdueList[1].overDueInterest = 14
             } else if (val === 1) {

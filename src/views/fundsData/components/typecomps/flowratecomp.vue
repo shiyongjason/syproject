@@ -17,7 +17,7 @@
             </div>
         </div>
         <template v-if="flowrateform.isStepOverInterest==1">
-            <div class="" v-for="(item,index) in flowrateform.overdueList" :key="index">
+            <div class="" v-for="(item,index) in flowrateform.overdueList" :key="item.id">
                 <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">

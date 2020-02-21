@@ -16,18 +16,18 @@
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="借款金额：" prop="depositProportion">
-                    <el-input v-model.trim="flowform.depositProportion" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                <el-form-item label="借款金额：" prop="loanAmount">
+                    <el-input v-model.trim="flowform.loanAmount" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入借款金额"><template slot="append">元</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="年利率" prop="年利率">
-                    <el-input v-model.trim="flowform.yearRate" placeholder="请输入年利率" v-isNum:2="flowform.depositProportion" maxlength='20'><template slot="append">%</template>
+                <el-form-item label="年利率" prop="yearRate">
+                    <el-input v-model.trim="flowform.yearRate" placeholder="请输入年利率" v-isNum:2="flowform.yearRate" maxlength='20'><template slot="append">%</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="开票日期：" prop="">
+                <el-form-item label="开票日期：" prop="invoiceTime">
                     <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
                     <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择出票日期">
                     </el-date-picker>
