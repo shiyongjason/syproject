@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { interfaceUrl } from '@/api/config'
 // 台账列表
-export const getAccountList = (params) => {
-    return axios.get(interfaceUrl + `backend/account`, { params })
-}
+export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account`, { params })
+// 还款明细表
+export const getRepaymentList = (params) => axios.get(interfaceUrl + 'backend/account/repayment/page', { params })
 // 查询平台公司
 export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 // 分部列表查询

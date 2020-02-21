@@ -4,14 +4,14 @@
         <div class="query-cont-col">
             <div class="query-col-title">台账档案编号：</div>
             <div class="query-col-input">
-                <el-input type="text" maxlength="20" v-model="detailData.remark" placeholder="请输入台账档案编号">
+                <el-input type="text" maxlength="20" v-model="detailData.standingBookArchiveNo" placeholder="请输入台账档案编号">
                 </el-input>
             </div>
         </div>
         <div class="query-cont-col">
             <div class="query-col-title">金云档案编号：</div>
             <div class="query-col-input">
-                <el-input type="text" maxlength="20" v-model="detailData.remark" placeholder="请输入金云档案编号">
+                <el-input type="text" maxlength="20" v-model="detailData.jinyunArchiveNo" placeholder="请输入金云档案编号">
                 </el-input>
             </div>
         </div>
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { setAccountBasic } from '../../api/index'
 export default {
     name: 'remarkDialog',
     props: {
@@ -32,19 +33,34 @@ export default {
         },
         detailData: {
             type: Object,
-            default: () => ({})
-        }
-    },
-    data () {
-        return {
-            remark: ''
+            default: () => ({
+                id: '',
+                accountType: '', // 台账类型 1：流贷2：敞口 3：分授信
+                jinyunArchiveNo: '', // 金云档案编号
+                loanCompanyCode: '', // 借款单位编号
+                loanCompanyName: '', // 借款单位名称
+                subsectionCode: '', // 分部编码
+                subsectionName: '', // 分部名称
+                misCode: '', // mis编码
+                productType: '', // 产品类型 1：好信用 2：供应链 3：好橙工
+                remark: '', // 备注
+                standingBookArchiveNo: '', // 台账档案编号
+                standingBookNo: '', // 台账编号
+                selectName: '',
+                selectCode: ''
+            })
         }
     },
     methods: {
-        onSave () {
+        async onSave () {
             console.log(this.detailData)
-            // 操作
-            // this.onCancle ()
+            await setAccountBasic(this.detailData)
+            this.$message({
+                type: 'success',
+                message: '修改成功'
+            })
+            this.onCancle()
+            this.$emit('reload')
         },
         onCancle () {
             this.$emit('onClose')
@@ -55,6 +71,6 @@ export default {
 
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
-  padding: 20px 24px;
+    padding: 20px 24px;
 }
 </style>
