@@ -258,11 +258,11 @@ export default {
             /* res格式: {
                 "graceInterestAmount": '', // 宽限期利息
                 "interestAmount": '', // 利息
-                "overDueInterestList": [] // 逾期利息集合
+                "overDueInterestAmount": '' // 逾期利息
             } */
             query.graceInterestAmount = res.graceInterestAmount
             query.interestAmount = res.interestAmount
-            // "overDueInterestList": [] // 逾期利息集合 这个我也不知道。
+            query.overDueInterestList = res.overDueInterestList
         },
         onCancle () {
             this.$emit('onClose')

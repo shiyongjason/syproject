@@ -15,7 +15,7 @@ export const setCountMixin = {
                 'overDueInterestCountList': [
                     {
                         'overDueInterest': '', // 逾期利率
-                        'overDueInterestTime': '' // 逾期时间
+                        'dateNum': '' // 逾期日期（月份）
                     }
                 ],
                 'planId': '' // 还款计划id，就是还款列表planList里面的id
@@ -34,21 +34,24 @@ export const setCountMixin = {
                 'interest': row.graceInterest, // 利率
                 'interestTime': row.thisPaidGraceInterestTime, // 利息归还时间
                 // 逾期利率计算集合
-                'overDueInterestCountList': [
-                    {
-                        'overDueInterest': '', // 逾期利率
-                        'overDueInterestTime': '' // 逾期时间
-                    }
-                ],
+                'overDueInterestCountList': [],
                 'planId': row.id // 还款计划id，就是还款列表planList里面的id
             }
-
+            if (row.overdueList.length > 0) {
+                row.overdueList.forEach((item) => {
+                    let obj = {
+                        overDueInterest: item.overDueInterest,
+                        overDueInterestTime: item.dateNum
+                    }
+                    this.setCountParams.overDueInterestCountList.push(obj)
+                })
+            }
             console.log('this.setCountParams: ', this.setCountParams)
             const { data } = await setCount(this.setCountParams)
             /* data格式: {
                 "graceInterestAmount": '', // 宽限期利息
                 "interestAmount": '', // 利息
-                "overDueInterestList": [] // 逾期利息集合
+                "overDueInterestAmount": '' // 逾期利息
             } */
             return data
         }
