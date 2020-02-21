@@ -3,7 +3,6 @@
         <div class="page-body-cont query-cont"> -->
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
-            {{detailData}}
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
                 <!-- <div class="dialogtitle">还款方式：</div> -->
                 <div class="query-cont-row" style="height: 40px;">
@@ -101,8 +100,8 @@
                     <div class="query-cont-row" style="margin-top:10px">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="name">
-                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',2)}" :label=1>是</el-radio>
-                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1)}" :label=0>否</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1,item)}" :label=0>否</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',2,item)}" :label=1>是</el-radio>
                             </el-form-item>
                         </div>
                     </div>

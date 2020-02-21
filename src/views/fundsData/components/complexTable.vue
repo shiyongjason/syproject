@@ -1622,19 +1622,21 @@ export default {
                 }
             }
         },
-        onStepOver (val) {
-            let newRata = JSON.parse(JSON.stringify(this.rowData.overdueList[0]))
+        onStepOver (val, item) {
+            let newRowData = { ...item }
+            let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
-            this.ruleForm.planList[0].overdueList = []
-            let rateArr = [3, 9999]
-            if (val === 2) {
+            item.overdueList = []
+            let rateArr = [3, 99999] // 默认时长
+            const profit = [16, 20] // 默认逾期利率
+            if (val == 2) {
                 for (var i = 0; i < 2; i++) {
-                    this.ruleForm.planList[0].overdueList.push(this.copyGrantdata[0].overdueList[i])
-                    // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
-                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
+                    newObj.dateNum = rateArr[i]
+                    item.overdueList.push({ ...newObj })
+                    item.overdueList[i].overDueInterest = profit[i]
                 }
-            } else if (val === 1) {
-                this.ruleForm.planList[0].overdueList.push(newObj)
+            } else if (val == 1) {
+                item.overdueList.push(newObj)
             }
         }
     },
