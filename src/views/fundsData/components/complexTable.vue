@@ -199,12 +199,12 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -389,12 +389,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_graceTime',
                             label: '宽限还款日',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime}</span>
                             }
                         },
                         {
@@ -425,12 +425,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -443,12 +443,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_graceTime',
                             label: '宽限还款日',
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime}</span>
                             }
                         },
                         {
@@ -479,12 +479,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
                             sort: 21,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -497,12 +497,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_graceTime',
                             label: '宽限还款日',
                             sort: 26,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime}</span>
                             }
                         },
                         {
@@ -533,12 +533,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
                             sort: 33,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -670,16 +670,16 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime == 0 ? 0 : scope.row.planList_0_endTime ? `${scope.row.planList_0_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_graceTime',
                             label: '宽限到期日',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime}</span>
                             }
                         },
                         {
@@ -692,12 +692,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -710,12 +710,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_graceTime',
                             label: '宽限到期日',
                             sort: 11,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime}</span>
                             }
                         },
                         {
@@ -728,12 +728,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
                             sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -742,16 +742,16 @@ export default {
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime == 0 ? 0 : scope.row.planList_2_endTime ? `${scope.row.planList_2_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_graceTime',
                             label: '宽限到期日',
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime}</span>
                             }
                         },
                         {
@@ -764,12 +764,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
                             sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -904,12 +904,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_totalInterest',
                     label: '应收利息（正常+宽限）',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
                     }
                 },
                 {
@@ -934,12 +934,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_graceInterestTime', // 待改
+                    prop: 'planList_0_graceTime',
                     label: '宽限还款日',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_graceInterestTime == 0 ? 0 : scope.row.plan_graceInterestTime ? `${scope.row.plan_graceInterestTime}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceTime}</span>
                     }
                 },
                 {
@@ -1061,12 +1061,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_interestAmount',
+                    prop: 'planList_0_totalInterest',
                     label: '应收利息（正常+宽限）',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestAmount == 0 ? 0 : scope.row.plan_interestAmount ? `${scope.row.plan_interestAmount}` : '-'}</span>
+                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
                     }
                 },
                 {
@@ -1392,12 +1392,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_isOverDue',
                     label: '是否逾期',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1447,12 +1447,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_1_isOverDue',
                     label: '是否逾期',
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1502,12 +1502,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_2_isOverDue',
                     label: '是否逾期',
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {

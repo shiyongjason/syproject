@@ -158,7 +158,7 @@ export default {
             this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
         },
-        async datePickerChange (val) {
+        datePickerChange (val) {
             if (!this.detailData.invoiceTime) {
                 this.detailData.loanEndTimeInvoice = '-'
                 return false
@@ -166,16 +166,14 @@ export default {
             // 月
             if (this.detailData.loanDateType == 1) {
                 // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss'))
-                this.detailData.loanEndTimeInvoice = await moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
             }
-            console.log(val) // 选择的时机
-            console.log(this.detailData.loanDateNum) // 增加的时间
-            console.log(this.detailData.loanEndTimeInvoice) // 到期日
             // 天
             if (this.detailData.loanDateType == 2) {
-                this.detailData.loanEndTimeInvoice = await moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
                 // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss'))
             }
+            this.$forceUpdate()
         }
     }
 }

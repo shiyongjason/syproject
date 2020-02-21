@@ -154,6 +154,7 @@ export default {
             if (this.detailData.loanDateType == 2) {
                 this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss'))
             }
+            this.$forceUpdate()
         }
     }
 }
