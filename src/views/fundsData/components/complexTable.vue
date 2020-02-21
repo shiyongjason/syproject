@@ -20,7 +20,9 @@
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' />
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" />
+        <!-- 开票日期Dialog-分授信Credit -->
+        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
@@ -72,6 +74,7 @@ export default {
     },
     data: function () {
         return {
+            planListItem: {},
             remarkDialogVisible: false,
             fileinfoDialogVisible: false,
             misDialogVisible: false,
@@ -134,10 +137,9 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getRespAccountRepaymentPlanData(scope.row)
-                                    this.rowData = scope.row
-                                    this.rowData.title = '好信用—流贷还款信息维护'
+                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                                    await this.getRespAccountRepaymentPlanData(scope.row)
+                                    this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
                                     this.AnnualInterestRateDialogVisible = true
                                 }}></i></span>
                             }
@@ -1599,6 +1601,17 @@ export default {
             this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             console.log(this.rowData)
+        },
+        onRepaymentTypeChange (val) {
+            this.planListItem = { ...this.rowData[0] }
+            this.rowData = []
+            if (val === 1) {
+                this.rowData.push({ ...this.planListItem })
+            } else if (val === 2) {
+                for (let i = 0; i < 3; i++) {
+                    this.rowData.push({ ...this.planListItem })
+                }
+            }
         }
     },
     mounted () {
