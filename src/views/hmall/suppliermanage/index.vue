@@ -79,11 +79,12 @@
                         <el-option :label="item" :value="item" v-for="item in branchArr" :key="item"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="品牌：" prop="brandId">
-                    <el-select placeholder="全部" v-model="ruleForm.brandId" :clearable=true>
+                <el-form-item label="品牌：" prop="brandId" ref="brandId">
+                    <!-- <el-select placeholder="全部" v-model="ruleForm.brandId" :clearable=true>
                         <el-option :label="item.brandName" :value="item.id" v-for="item in brandList" :key="item.id">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                    <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="backPlat" :selectObj='selectObj' :remove-value='removeValue' :placeholder="'全部'"></HAutocomplete>
                 </el-form-item>
                 <el-form-item label="品类：" prop="categoryId">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
@@ -119,6 +120,7 @@
     </div>
 </template>
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { addSupplier, deleteSupplier, getSupplierDetail, editSupplierDetail } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
@@ -128,6 +130,7 @@ export default {
     name: 'supplier',
     data () {
         return {
+            removeValue: false,
             branchArr: [],
             proviceList: [],
             rproviceList: [],
@@ -194,9 +197,14 @@ export default {
                     { required: true, message: '请选择省', trigger: 'change' }
                 ]
             },
-            loading: false
+            loading: false,
+            selectObj: {
+                selectCode: '',
+                selectName: ''
+            }
         }
     },
+    components: { HAutocomplete },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
@@ -222,6 +230,13 @@ export default {
                 return province[0].cities
             }
             return []
+        }
+    },
+    watch: {
+        'ruleForm.brandId' (val) {
+            this.$nextTick(() => {
+                if (val.length > 0) this.$refs['brandId'].clearValidate()
+            })
         }
     },
     mounted () {
@@ -253,6 +268,9 @@ export default {
         async onFindBrand () {
             await this.findBrand()
             this.brandList = this.brandData
+        },
+        backPlat (value) {
+            this.ruleForm.brandId = value.value.selectCode ? value.value.selectCode : ''
         },
         async getFindNest () {
             await this.findNest()
@@ -305,10 +323,13 @@ export default {
             this.dialogVisible = true
             console.log(data)
             this.ruleForm = { ...data }
+            this.selectObj.selectCode = this.ruleForm.brandId
+            this.selectObj.selectName = this.ruleForm.brandName
             this.categoryIdArr = data.categoryIdList
         },
         handleClose (done) {
             this.$refs.ruleForm.resetFields()
+            this.removeValue = true
             this.dialogVisible = false
         },
         onImport () {
