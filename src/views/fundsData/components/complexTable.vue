@@ -21,8 +21,6 @@
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
         <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" />
-        <!-- 开票日期Dialog-分授信Credit -->
-        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
@@ -1579,11 +1577,13 @@ export default {
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
-                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
-                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
             }
         },
         // 还款信息

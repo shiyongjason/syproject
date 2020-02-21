@@ -50,7 +50,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期">
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange">
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -62,9 +62,9 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="到期日：" prop="loanEndTime">
+                        <el-form-item label="到期日：">
                             <!-- 自动计算，到期日=开票日期+借款期限 -->
-                            <span>{{detailData.loanEndTime|formatDate('YYYY-MM-DD')}}</span>
+                            <span>{{detailData.loanEndTimeInvoice}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -124,6 +124,7 @@ export default {
         },
         async onSave () {
             console.log(this.detailData)
+            this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
             await setLoan(this.detailData)
             this.$message({
                 type: 'success',
@@ -133,12 +134,26 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTime = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD HH:mm:ss')
             this.detailData.loanDateNum = +this.detailData.loanDateNumM
         },
         loanDateNumD () {
-            this.detailData.loanEndTime = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
             this.detailData.loanDateNum = +this.detailData.loanDateNumD
+        },
+        datePickerChange (val) {
+            if (!this.detailData.invoiceTime) {
+                this.detailData.loanEndTimeInvoice = '-'
+                return false
+            }
+            // 月
+            if (this.detailData.loanDateType == 1) {
+                this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss'))
+            }
+            // 天
+            if (this.detailData.loanDateType == 2) {
+                this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss'))
+            }
         }
     }
 }
