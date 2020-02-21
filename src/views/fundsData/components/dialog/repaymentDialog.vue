@@ -30,11 +30,11 @@
                                 <el-radio style="margin-right:5px" v-model.trim="item.exsitGrace" :label=0>否</el-radio>
                                 <span style="margin-left:15px" v-if="item.exsitGrace==1">宽限日期：</span>
                                 <!-- 仅允许输入非负整数，最多允许输入3位 -->
-                                <el-input placeholder="请输入宽限期限" v-model.trim="item.graceDay" v-isNum:0='item.graceDay' maxlength='3' v-if="item.exsitGrace==1">
+                                <el-input placeholder="请输入宽限期限" v-model.trim="item.graceDay" v-isNum:0='item.graceDay' maxlength='3' @blur="dealCount(item)" v-if="item.exsitGrace==1">
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px" v-if="item.exsitGrace==1">宽限期利率：</span>
-                                <el-input v-model.trim="form.x" v-isNum:0="form.name" maxlength='3' placeholder="请输入宽限期利率" v-if="item.exsitGrace==1">
+                                <el-input v-model.trim="item.xgraceInterest" v-isNum:0="item.xgraceInterest" maxlength='3' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
                                     <template slot="append">%</template>
                                 </el-input>
                             </el-form-item>
@@ -63,9 +63,9 @@
                         </div>
 
                         <div class="query-cont-col">
-                            <el-form-item label="剩余本金金额：" prop="name">
+                            <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
                                 <!-- 剩余还款金额=约定还款金额-累计还款本金金额 -->
-                                <span>{{item.capitalAmount-item.thisPaidCapital}}</span>
+                                <span>{{item.capitalAmount-(item.thisPaidCapital?item.thisPaidCapital:0)}}</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                                 <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                {{item.graceInterestAmount-item.graceInterestPaid}}
+                                {{item.graceInterestAmount-(item.graceInterestPaid?item.graceInterestPaid:0)}}
                             </el-form-item>
                         </div>
                     </div>
@@ -146,8 +146,9 @@
                         </div>
                     </div>
                     <div v-if="detailData[0].isStepOverInterest==1">
-                        <div class="smalltitle">逾期第一阶段利息：</div>
-                        <div class="query-cont-row" v-for="(item,index) in item.overdueList" :key="index">
+                        <div class="" v-for="(item,index) in item.overdueList" :key="index">
+                             <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
+                              <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item :label="'第' +(index+1)+'阶段时长：'">
                                     <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5' placeholder="请输入逾期时长"><template slot="append">月</template>
@@ -158,6 +159,7 @@
                                 <el-form-item label="该阶段逾期利率：">
                                     <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5' placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
                                 </el-form-item>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -179,8 +181,10 @@
 
 <script>
 import { setPlan } from './../../api'
+import { setCountMixin } from '../../mixins/setCount'
 export default {
     name: 'repaymentDialog',
+    mixins: [setCountMixin],
     data () {
         return {
             radio: '月',
@@ -221,6 +225,18 @@ export default {
         console.log(this.detailData)
     },
     methods: {
+        async dealCount (query) {
+            const res = await this.onCount(query)
+            console.log('res: ', res)
+            /* res格式: {
+                "graceInterestAmount": '', // 宽限期利息
+                "interestAmount": '', // 利息
+                "overDueInterestList": [] // 逾期利息集合
+            } */
+            query.graceInterestAmount = res.graceInterestAmount
+            query.interestAmount = res.interestAmount
+            // "overDueInterestList": [] // 逾期利息集合 这个我也不知道。
+        },
         onCancle () {
             this.$emit('onClose')
         },
