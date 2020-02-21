@@ -222,24 +222,19 @@ export default {
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
         },
         onStepOver (val) {
-            console.log(22222)
             let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
-            let newObj = { ...newRata }
             this.ruleForm.planList[0].overdueList = []
-            let rateArr = [3, 9999]
+            let rateArr = [3, 99999] // 默认时长
+            const profit = [16, 20] // 默认逾期利率
             if (val === 2) {
                 for (var i = 0; i < 2; i++) {
-                    newObj.dateNum = rateArr[i]
-                    this.ruleForm.planList[0].overdueList.push(newObj)
-                    // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
-                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
+                    newRata.dateNum = rateArr[i]
+                    this.ruleForm.planList[0].overdueList.push({ ...newRata })
+                    this.ruleForm.planList[0].overdueList[i].overDueInterest = profit[i]
                 }
-
-                // this.ruleForm.planList[0].overdueList[1].dateNum = 9999
-                // this.ruleForm.planList[0].overdueList[1].overDueInterest = 14
             } else if (val === 1) {
-                this.ruleForm.planList[0].overdueList.push(newObj)
-                this.ruleForm.planList[0].overdueList[0].overDueInterest = 12
+                this.ruleForm.planList[0].overdueList.push(newRata)
+                this.ruleForm.planList[0].overdueList[0].overDueInterest = profit[0]
             }
         },
         onRepaymentTypeChange (val) {
