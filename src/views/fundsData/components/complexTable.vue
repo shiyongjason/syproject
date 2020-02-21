@@ -1573,7 +1573,7 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            console.log(data)
+            // console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,
@@ -1589,6 +1589,10 @@ export default {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
                 this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
                 this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+            }
+            if (!data.loanDateType) {
+                this.loanData.loanEndTimeLoan = '-'
+                this.loanData.loanEndTimeInvoice = '-'
             }
         },
         // 还款信息

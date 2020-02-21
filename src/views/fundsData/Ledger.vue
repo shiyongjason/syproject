@@ -68,14 +68,14 @@
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
             <template v-if="accountType != '4'">
-                <el-tabs v-model="produce" type="card" @tab-click="handleClick">
+                <el-tabs v-model="productType" type="card" @tab-click="handleClick">
                     <el-tab-pane label="好信用" name="1"></el-tab-pane>
                     <el-tab-pane label="供应链" name="2"></el-tab-pane>
                     <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
                 </el-tabs>
                 <el-button type="primary" class="ml20" @click="onLinddialog">
                     {{accountType == 1 ? '新增流贷-' : accountType == 2 ? '新增敞口-' : accountType == 3 ? '新增分授信-' : '待开发'}}
-                    {{produce == 1 ? '好信用台账' : produce == 2 ? '供应链台账' : ''}}
+                    {{productType == 1 ? '好信用台账' : productType == 2 ? '供应链台账' : ''}}
                 </el-button>
             </template>
             <complexTable :tableData='tableData' :pagination='pagination' :source='accountType' @getList='getList' />
@@ -103,7 +103,7 @@ export default {
     data () {
         return {
             accountType: '1', // 1：流贷 2：敞口 3：分授信 4：还款明细表
-            produce: '1', // 1：好信用 2：供应链 3：好橙工
+            productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
             queryParams: {
                 pageNumber: 1,
@@ -115,7 +115,7 @@ export default {
                 accountType: '1',
                 loanCompanyCode: '',
                 loanCompanyName: '',
-                produce: '1'
+                productType: '1'
             },
             searchParams: {},
             tableData: [{ shy: 1 }, { shy: 2 }],
@@ -191,7 +191,7 @@ export default {
         },
         async onQuery () {
             this.searchParams.accountType = this.accountType
-            this.searchParams.produce = this.produce
+            this.searchParams.productType = this.productType
             console.log(this.searchParams)
             if (this.accountType == 4) {
                 const { data } = await getRepaymentList({
@@ -250,7 +250,7 @@ export default {
             this.onQuery()
         },
         onLinddialog () {
-            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.produce } })
+            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         }
     }
 }
