@@ -4,14 +4,21 @@
             <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
-        <!-- 台账编号Dialog -->
+        <!-- 基本信息Dialog -台账编号 -->
         <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
-        <!-- 借款金额Dialog -->
+        <!-- 基本信息Dialog -资金档案编号 -->
+        <fileInfoDialog :detailData='rowData' v-if='rowData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
+        <!-- 基本信息Dialog -备注 -->
+        <remarkDialog :detailData='rowData' v-if='rowData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
+
+        <!-- 借款Dialog -流贷 -->
         <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
-        <!-- 还款方式Dialog -流贷 -->
+        <!-- 借款Dialog -分授信 -->
+        <pointsCreditBillingDialog :detailData='loanData' v-if='loanData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
+        <!-- 借款Dialog -敞口 -->
+        <billingDialog :detailData='loanData' v-if='loanData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
+        <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
-        <!-- 开票日期Dialog -敞口 -->
-        <billingDialog :detailData='rowData' v-if='rowData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
         <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList'
          @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver"/>
@@ -123,7 +130,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_supplier ? scope.row.loan_supplier : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
                                     this.loanData.title = '好信用—流贷借款信息维护'
                                     this.supplierDialogVisible = true
@@ -200,12 +207,12 @@ export default {
                     },
                     children: [
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -277,11 +284,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row
-                                    this.rowData.title = '好信用—分授信借款信息维护'
-                                    this.pointsCreditBillingDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_invoiceTime}</span>
                             }
                         },
                         {
@@ -308,7 +311,11 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}</span>
+                                return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                    this.getLoan(scope.row)
+                                    this.loanData.title = '好信用—分授信借款信息维护'
+                                    this.pointsCreditBillingDialogVisible = true
+                                }}></i></span>
                             }
                         },
                         {
@@ -390,12 +397,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_graceTime',
                             label: '宽限还款日',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime}</span>
                             }
                         },
                         {
@@ -426,12 +433,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -444,12 +451,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_graceTime',
                             label: '宽限还款日',
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime}</span>
                             }
                         },
                         {
@@ -480,12 +487,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
                             sort: 21,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -498,12 +505,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_graceTime',
                             label: '宽限还款日',
                             sort: 26,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime}</span>
                             }
                         },
                         {
@@ -534,12 +541,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
                             sort: 33,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -606,11 +613,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime == 0 ? 0 : scope.row.loan_invoiceTime ? `${scope.row.loan_invoiceTime}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row
-                                    this.rowData.title = '好信用—敞口借款信息维护'
-                                    this.billingDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_invoiceTime == 0 ? 0 : scope.row.loan_invoiceTime ? `${scope.row.loan_invoiceTime}` : '-'}</span>
                             }
                         },
                         {
@@ -675,16 +678,16 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime == 0 ? 0 : scope.row.planList_0_endTime ? `${scope.row.planList_0_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_graceTime',
                             label: '宽限到期日',
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime}</span>
                             }
                         },
                         {
@@ -697,12 +700,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -715,12 +718,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_graceTime',
                             label: '宽限到期日',
                             sort: 11,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime}</span>
                             }
                         },
                         {
@@ -733,12 +736,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
                             sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -747,16 +750,16 @@ export default {
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime == 0 ? 0 : scope.row.planList_2_endTime ? `${scope.row.planList_2_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime}</span>
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_graceTime',
                             label: '宽限到期日',
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime}</span>
                             }
                         },
                         {
@@ -769,12 +772,12 @@ export default {
                             }
                         },
                         {
-                            prop: 'netProfitRateLastMonth',
+                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
                             sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -909,12 +912,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_totalInterest',
                     label: '应收利息（正常+宽限）',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
                     }
                 },
                 {
@@ -939,12 +942,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_graceInterestTime', // 待改
+                    prop: 'planList_0_graceTime',
                     label: '宽限还款日',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_graceInterestTime == 0 ? 0 : scope.row.plan_graceInterestTime ? `${scope.row.plan_graceInterestTime}` : '-'}</span>
+                        return <span>{scope.row.planList_0_graceTime}</span>
                     }
                 },
                 {
@@ -1066,12 +1069,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'plan_interestAmount',
+                    prop: 'planList_0_totalInterest',
                     label: '应收利息（正常+宽限）',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.plan_interestAmount == 0 ? 0 : scope.row.plan_interestAmount ? `${scope.row.plan_interestAmount}` : '-'}</span>
+                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
                     }
                 },
                 {
@@ -1296,7 +1299,11 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}</span>
+                        return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getLoan(scope.row)
+                            this.loanData.title = '好信用—敞口借款信息维护'
+                            this.billingDialogVisible = true
+                        }}></i></span>
                     }
                 },
                 {
@@ -1393,12 +1400,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_0_isOverDue',
                     label: '是否逾期',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1448,12 +1455,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_1_isOverDue',
                     label: '是否逾期',
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1503,12 +1510,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'planList_2_isOverDue',
                     label: '是否逾期',
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}` : '-'}</span>
+                        return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1578,11 +1585,13 @@ export default {
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
-                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
-                this.loanData.loanEndTime = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
             }
         },
         // 还款信息
@@ -1626,7 +1635,7 @@ export default {
             } else if (val === 1) {
                 this.ruleForm.planList[0].overdueList.push(newObj)
             }
-        },
+        }
     },
     mounted () {
         this.column = this.FlowToBorrow
