@@ -41,7 +41,7 @@ export const setCountMixin = {
                 row.overdueList.forEach((item) => {
                     let obj = {
                         overDueInterest: item.overDueInterest,
-                        overDueInterestTime: item.dateNum
+                        dateNum: item.dateNum
                     }
                     this.setCountParams.overDueInterestCountList.push(obj)
                 })
