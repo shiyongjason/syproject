@@ -254,12 +254,6 @@ export default {
     methods: {
         async dealCount (query) {
             const res = await this.onCount(query)
-            console.log('res: ', res)
-            /* res格式: {
-                "graceInterestAmount": '', // 宽限期利息
-                "interestAmount": '', // 利息
-                "overDueInterestAmount": '' // 逾期利息
-            } */
             query.graceInterestAmount = res.graceInterestAmount
             query.interestAmount = res.interestAmount
             query.overDueInterestList = res.overDueInterestList

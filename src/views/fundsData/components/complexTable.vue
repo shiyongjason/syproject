@@ -1644,6 +1644,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.page-table {
+    width: calc(100% - 1px);
+    margin: 0 auto;
+}
 /deep/.pointer {
     cursor: pointer;
     margin-left: 10px;
