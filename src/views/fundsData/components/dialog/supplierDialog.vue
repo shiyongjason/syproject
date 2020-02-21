@@ -33,15 +33,17 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="借款期限： " prop="loanDateNum">
+                        <el-form-item label="借款期限： ">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label="1" @change='loanDateNumM'>月
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'></el-input>
-                            <span class="dw">月</span>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'>
+                                <template slot="append">月</template>
+                            </el-input>
                             <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label="2" @change='loanDateNumD'>天
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'></el-input>
-                            <span class="dw">天</span>
+                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'>
+                                <template slot="append">天</template>
+                            </el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -102,6 +104,7 @@ export default {
         },
         async onSave () {
             console.log(this.detailData)
+            if (this.detailData.loanDateNum === '') this.detailData.loanDateNum = 0
             await setLoan(this.detailData)
             this.$message({
                 type: 'success',
