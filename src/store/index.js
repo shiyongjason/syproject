@@ -40,7 +40,6 @@ const store = new Vuex.Store({
         serviceManagement,
         payment,
         supplier,
-        eventManage,
         userRealreport,
         cloudmanage
     }
