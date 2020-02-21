@@ -20,8 +20,7 @@
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList'
-         @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver"/>
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
         <!-- 开票日期Dialog-分授信Credit -->
         <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 资金档案编号 -->
@@ -146,6 +145,7 @@ export default {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}%` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                                     await this.getRespAccountRepaymentPlanData(scope.row)
                                     this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
+                                    this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
                                     this.AnnualInterestRateDialogVisible = true
                                 }}></i></span>
                             }
