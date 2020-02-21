@@ -20,7 +20,13 @@
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款方式Dialog -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" />
+        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
+        <!-- 开票日期Dialog-分授信Credit -->
+        <pointsCreditBillingDialog :detailData='rowData' v-if='rowData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
+        <!-- 资金档案编号 -->
+        <fileInfoDialog :detailData='rowData' v-if='rowData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
+        <!-- 备注 -->
+        <remarkDialog :detailData='rowData' v-if='rowData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
     </div>
 </template>
 
@@ -73,6 +79,7 @@ export default {
     data: function () {
         return {
             planListItem: {},
+            copyGrantdata: [],
             remarkDialogVisible: false,
             fileinfoDialogVisible: false,
             misDialogVisible: false,
@@ -138,6 +145,7 @@ export default {
                                 return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer' onClick={async () => {
                                     await this.getRespAccountRepaymentPlanData(scope.row)
                                     this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
+                                    this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
                                     this.AnnualInterestRateDialogVisible = true
                                 }}></i></span>
                             }
@@ -1597,13 +1605,12 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             // this.rowData.title = '好信用—敞口还款信息维护3333'
             this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
-            console.log(this.rowData)
+            this.copyGrantdata = [...this.rowData]
         },
         onRepaymentTypeChange (val) {
             this.planListItem = { ...this.rowData[0] }
@@ -1612,8 +1619,24 @@ export default {
                 this.rowData.push({ ...this.planListItem })
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
-                    this.rowData.push({ ...this.planListItem })
+                    this.rowData.push({ ...this.copyGrantdata[i] })
+                    this.$set(this.rowData[0], 'repaymentType', val)
                 }
+            }
+        },
+        onStepOver (val) {
+            let newRata = JSON.parse(JSON.stringify(this.rowData.overdueList[0]))
+            let newObj = { ...newRata }
+            this.ruleForm.planList[0].overdueList = []
+            let rateArr = [3, 9999]
+            if (val === 2) {
+                for (var i = 0; i < 2; i++) {
+                    this.ruleForm.planList[0].overdueList.push(this.copyGrantdata[0].overdueList[i])
+                    // this.ruleForm.planList[0].overdueList[i].dateNum = rateArr[i]
+                    this.ruleForm.planList[0].overdueList[i].overDueInterest = 14
+                }
+            } else if (val === 1) {
+                this.ruleForm.planList[0].overdueList.push(newObj)
             }
         }
     },

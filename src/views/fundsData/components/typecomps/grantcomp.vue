@@ -2,7 +2,6 @@
     <div>
         <!-- 敞口组件 -->
         <div class="dialogtitle">(敞口)借款信息：</div>
-        {{flowform}}
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">

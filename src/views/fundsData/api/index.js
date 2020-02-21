@@ -30,3 +30,5 @@ export const setLoan = (params) => axios.put(interfaceUrl + 'backend/account/loa
 export const getRespAccountRepaymentPlan = (accountId) => axios.get(interfaceUrl + `backend/account/plan/${accountId}`)
 // 修改还款信息
 export const setPlan = (params) => axios.put(interfaceUrl + 'backend/account/plan', params)
+// 利率计算
+export const setCount = (params) => axios.post(interfaceUrl + 'backend/account/interest/count', params)

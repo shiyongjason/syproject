@@ -35,11 +35,11 @@
                             <template v-if="detailData[0].exsitGrace">
                                 <span style="margin-left:15px">宽限日期：</span>
                                 <!-- 仅允许输入非负整数，最多允许输入3位 -->
-                                <el-input placeholder="请输入宽限期限" v-model.trim="detailData[0].graceDay" v-isNum:0='detailData[0].graceDay' maxlength='3'>
+                                <el-input placeholder="请输入宽限期限" v-model.trim="detailData[0].graceDay" v-isNum:0='detailData[0].graceDay' maxlength='3' @blur="dealCount(detailData[0])">
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px">宽限期利率：</span>
-                                <el-input v-model.trim="detailData[0].graceDay" v-isNum="detailData[0].graceDay" maxlength='20' placeholder="请输入宽限期利率">
+                                <el-input v-model.trim="detailData[0].graceInterest" v-isNum="detailData[0].graceInterest" maxlength='20' placeholder="请输入宽限期利率" @blur="dealCount(detailData[0])">
                                     <template slot="append">%</template>
                                 </el-input>
                             </template>
@@ -168,8 +168,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
-                            <!-- 剩余逾期罚息=应缴逾期罚息overDueInterestAmount-累计缴纳的逾期罚息overDueInterestPaid -->
-                            <span>{{detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid||'-'}}</span>
+                            <!-- 剩余逾期罚息=应缴逾期罚息overDueInterestAmount-累计缴纳的逾期罚息overDueInterestPaid-本次缴纳逾期罚息 -->
+                            <span>{{detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid-detailData[0].thisPaidOverDueInterest||'-'}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -185,8 +185,10 @@
 
 <script>
 import { setPlan } from '../../api'
+import { setCountMixin } from '../../mixins/setCount'
 export default {
     name: 'AnnualInterestRateDialog',
+    mixins: [setCountMixin],
     data () {
         return {
             radio: '是',
@@ -250,6 +252,18 @@ export default {
         }
     },
     methods: {
+        async dealCount (query) {
+            const res = await this.onCount(query)
+            console.log('res: ', res)
+            /* res格式: {
+                "graceInterestAmount": '', // 宽限期利息
+                "interestAmount": '', // 利息
+                "overDueInterestAmount": '' // 逾期利息
+            } */
+            query.graceInterestAmount = res.graceInterestAmount
+            query.interestAmount = res.interestAmount
+            query.overDueInterestList = res.overDueInterestList
+        },
         onCancle () {
             this.$emit('onClose')
         },
