@@ -150,7 +150,7 @@ export default {
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime}</span>
+                                return <span>{scope.row.loan_loanStartTime ? scope.row.loan_loanStartTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -159,7 +159,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime}</span>
+                                return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
                             }
                         }
                     ]
@@ -178,7 +178,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalTime}</span>
+                                return <span>{scope.row.planList_0_capitalTime ? scope.row.planList_0_capitalTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -281,7 +281,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime}</span>
+                                return <span>{scope.row.loan_invoiceTime ? scope.row.loan_invoiceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -299,7 +299,7 @@ export default {
                             sort: 4,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime == 0 ? 0 : scope.row.loan_loanStartTime ? `${scope.row.loan_loanStartTime}` : '-'}</span>
+                                return <span>{scope.row.loan_loanStartTime ? scope.row.loan_loanStartTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -321,7 +321,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime == 0 ? 0 : scope.row.loan_loanEndTime ? `${scope.row.loan_loanEndTime}` : '-'}</span>
+                                return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -390,7 +390,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime == 0 ? 0 : scope.row.planList_0_endTime ? `${scope.row.planList_0_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime ? scope.row.planList_0_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -399,7 +399,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_graceTime}</span>
+                                return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -444,7 +444,7 @@ export default {
                             sort: 13,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_endTime == 0 ? 0 : scope.row.planList_1_endTime ? `${scope.row.planList_1_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime ? scope.row.planList_1_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -453,7 +453,7 @@ export default {
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_graceTime}</span>
+                                return <span>{scope.row.planList_1_graceTime ? scope.row.planList_1_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -498,7 +498,7 @@ export default {
                             sort: 25,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime == 0 ? 0 : scope.row.planList_2_endTime ? `${scope.row.planList_2_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime ? scope.row.planList_2_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -507,7 +507,7 @@ export default {
                             sort: 26,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_graceTime}</span>
+                                return <span>{scope.row.planList_2_graceTime ? scope.row.planList_2_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -610,7 +610,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime == 0 ? 0 : scope.row.loan_invoiceTime ? `${scope.row.loan_invoiceTime}` : '-'}</span>
+                                return <span>{scope.row.loan_invoiceTime ? scope.row.loan_invoiceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -675,7 +675,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime}</span>
+                                return <span>{scope.row.planList_0_endTime ? scope.row.planList_0_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -684,7 +684,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_graceTime}</span>
+                                return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -711,7 +711,7 @@ export default {
                             sort: 10,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_endTime == 0 ? 0 : scope.row.planList_1_endTime ? `${scope.row.planList_1_endTime}` : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime ? scope.row.planList_1_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -720,7 +720,7 @@ export default {
                             sort: 11,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_graceTime}</span>
+                                return <span>{scope.row.planList_1_graceTime ? scope.row.planList_1_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -747,7 +747,7 @@ export default {
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime}</span>
+                                return <span>{scope.row.planList_2_endTime ? scope.row.planList_2_endTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -756,7 +756,7 @@ export default {
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_graceTime}</span>
+                                return <span>{scope.row.planList_2_graceTime ? scope.row.planList_2_graceTime.split(' ')[0] : '-'}</span>
                             }
                         },
                         {
@@ -809,23 +809,21 @@ export default {
                 {
                     prop: 'standingBookNo',
                     label: '台账编号',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.standingBookNo ? `${scope.row.standingBookNo}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'misCode',
                     label: 'MIS编码',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.misCode ? `${scope.row.misCode}` : '-'}</span>
                     }
                 },
                 {
                     prop: 'loanCompanyName',
                     label: '平台公司',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.loanCompanyName ? `${scope.row.loanCompanyName}` : '-'}</span>
                     }
@@ -839,19 +837,19 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'registrant',
                     label: '登记人',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.registrant ? `${scope.row.registrant}` : '-'}</span>
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'accountType',
                     label: '还款项目',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth == 0 ? 0 : scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>{scope.row.accountType == 1 ? '流贷' : scope.row.accountType == 2 ? '敞口' : scope.row.accountType == 3 ? '分授信' : '-'}</span>
                     }
                 },
                 {
@@ -859,7 +857,7 @@ export default {
                     label: '还款时间',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paidTime}</span>
+                        return <span>{scope.row.paidTime ? scope.row.paidTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -875,7 +873,7 @@ export default {
                     label: '应还款日期',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.endTime}</span>
+                        return <span>{scope.row.endTime ? scope.row.endTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -944,7 +942,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceTime}</span>
+                        return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -962,7 +960,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestTime}</span>
+                        return <span>{scope.row.planList_0_graceInterestTime ? scope.row.planList_0_graceInterestTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -1053,7 +1051,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime ? scope.row.paymentStatic_capitalTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -1080,7 +1078,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_interestTime}</span>
+                        return <span>{scope.row.paymentStatic_interestTime ? scope.row.paymentStatic_interestTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -1318,7 +1316,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanEndTime}</span>
+                        return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -1345,7 +1343,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime ? scope.row.paymentStatic_capitalTime.split(' ')[0] : '-'}</span>
                     }
                 },
                 {
@@ -1625,7 +1623,7 @@ export default {
             }
         },
         onStepOver (val, item) {
-            let newRowData = { ...item }
+            // let newRowData = { ...item }
             let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
             item.overdueList = []
