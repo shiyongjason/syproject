@@ -94,8 +94,8 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <div class="endline">逾期</div>
-                    <div class="query-cont-row" style="margin-top:10px">
+                    <div class="endline" v-if="item.overdueList.length>0">逾期</div>
+                    <div class="query-cont-row" style="margin-top:10px"  v-if="item.overdueList.length>0">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="name">
                                 <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1,item)}" :label=0>否</el-radio>

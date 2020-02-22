@@ -1652,6 +1652,8 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
+            console.log(row)
+            this.loanAmount = row.loan_loanAmount
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             if (row.account_accountType == 2) {
@@ -1667,6 +1669,8 @@ export default {
             this.planListItem = { ...this.rowData[0] }
             this.rowData = []
             if (val === 1) {
+                this.planListItem.id = ''
+                this.planListItem.capitalAmount = this.loanAmount
                 this.rowData.push({ ...this.planListItem })
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
@@ -1676,6 +1680,9 @@ export default {
             }
         },
         onStepOver (val, item) {
+            // if (this.rowData[0].overdueList.length = 0) {
+            //     this.rowData[0].overdueList.push({})
+            // }
             let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
             item.overdueList = []
