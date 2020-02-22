@@ -97,16 +97,10 @@ export default {
             this.detailData.subsectionName = val.value ? val.value.subsectionName : ''
         },
         onSave () {
-            this.$refs['form'].validate(async (valid, object) => {
-                console.log(object) // object就是未通过校验的字段
+            this.$refs['form'].validate(async (valid, error) => {
                 if (valid) {
-                    // 验证通过
-                    console.log(this.detailData)
                     await setAccountBasic(this.detailData)
-                    this.$message({
-                        type: 'success',
-                        message: '修改成功'
-                    })
+                    this.$message({ type: 'success', message: '修改成功' })
                     this.onCancle()
                     this.$emit('reload')
                 } else {

@@ -275,7 +275,7 @@ export default {
         }
     },
     mounted () {
-        console.log('detailData', this.detailData)
+        // console.log('detailData', this.detailData)
         let obj = {
             'dateNum': '',
             'dateType': '',

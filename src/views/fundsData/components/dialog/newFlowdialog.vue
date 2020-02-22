@@ -210,13 +210,15 @@ export default {
         },
         onSubmit () {
             // 操作
-            this.$refs.ruleForm.validate((valid) => {
+            this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    addAccount(this.ruleForm)
+                    this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
+                    await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
                         type: 'success'
                     })
+                    clearCache('newFlowdialog')
                     this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/fundsData/standingBook')
                 }

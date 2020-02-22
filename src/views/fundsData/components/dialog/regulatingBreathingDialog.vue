@@ -47,13 +47,8 @@ export default {
     },
     methods: {
         async onSure () {
-            console.log(this.detailData)
-            // 操作
             await setLoan(this.detailData)
-            this.$message({
-                type: 'success',
-                message: '修改成功'
-            })
+            this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')
         },

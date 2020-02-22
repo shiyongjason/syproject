@@ -105,7 +105,6 @@ export default {
             this.$emit('onClose')
         },
         async onSave () {
-            console.log(this.detailData)
             this.detailData.loanEndTime = this.detailData.loanEndTimeLoan
             if (this.detailData.loanDateNum === '') this.detailData.loanDateNum = 0
             await setLoan(this.detailData)
@@ -117,12 +116,10 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            console.log('月')
             this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD HH:mm:ss')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
         },
         loanDateNumD () {
-            console.log('天')
             this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
         },

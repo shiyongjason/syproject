@@ -53,12 +53,8 @@ export default {
     },
     methods: {
         async onSave () {
-            console.log(this.detailData)
             await setAccountBasic(this.detailData)
-            this.$message({
-                type: 'success',
-                message: '修改成功'
-            })
+            this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')
         },

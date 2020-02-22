@@ -1612,8 +1612,8 @@ export default {
         },
         // 基本信息
         async getAccount (row) {
-            const { data } = await getAccountBasic(row.account_id)
-            console.log(data)
+            const account_id = row.account_id || row.accountId
+            const { data } = await getAccountBasic(account_id)
             this.accountData = { ...this.accountData, ...data }
             this.$set(this.accountData, 'selectName', data.loanCompanyName)
             this.$set(this.accountData, 'selectCode', data.loanCompanyCode)

@@ -123,13 +123,9 @@ export default {
             this.$emit('onClose')
         },
         async onSave () {
-            console.log(this.detailData)
             this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
             await setLoan(this.detailData)
-            this.$message({
-                type: 'success',
-                message: '修改成功'
-            })
+            this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')
         },

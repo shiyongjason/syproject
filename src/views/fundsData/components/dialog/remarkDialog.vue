@@ -40,7 +40,6 @@ export default {
     },
     methods: {
         async onSure () {
-            console.log(this.detailData)
             await setAccountBasic(this.detailData)
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()

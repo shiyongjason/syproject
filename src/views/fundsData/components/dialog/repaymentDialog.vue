@@ -214,9 +214,6 @@ export default {
             default: () => []
         }
     },
-    mounted () {
-        console.log(this.detailData)
-    },
     methods: {
         async dealCount (query) {
             const res = await this.onCount(query)
@@ -241,7 +238,6 @@ export default {
             this.detailData[0].overdueList.splice(index, 1)
         },
         async onSaveplan () {
-            console.log(this.detailData)
             await setPlan({ planList: this.detailData })
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
