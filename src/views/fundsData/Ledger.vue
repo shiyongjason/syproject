@@ -18,7 +18,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" clearable>
-                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.subsectionName" :value="item.subsectionCode">
+                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.organizationName" :value="item.organizationCode">
                         </el-option>
                     </el-select>
                 </div>
@@ -87,7 +87,7 @@
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import complexTable from './components/complexTable.vue'
-import { getAccountList, getRepaymentList, findBranchListNew } from './api/index.js'
+import { getAccountList, getRepaymentList, findDepList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'ledger',
@@ -153,11 +153,11 @@ export default {
         }),
         // 查询分部（不用做权限，现在是总部在使用）
         async findBranchList () {
-            const { data } = await findBranchListNew()
-            // console.log(data)
+            const { data } = await findDepList()
+            console.log(data)
             this.branchList = data.data
             this.branchList.unshift(
-                { subsectionCode: '', subsectionName: '请选择分部' }
+                { organizationCode: '', organizationName: '请选择分部' }
             )
         },
         onExportTemplate () {

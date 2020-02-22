@@ -10,9 +10,9 @@
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
         <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
-        <!-- 基本信息Dialog -手动调息 -->
-        <regulatingBreathingDialog :detailData='accountData' v-if='accountData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
 
+        <!-- 借款Dialog -手动调息 -->
+        <regulatingBreathingDialog :detailData='loanData' v-if='loanData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -流贷 -->
         <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -分授信 -->
@@ -217,12 +217,12 @@ export default {
                     ]
                 },
                 {
-                    prop: 'account_shy',
+                    prop: 'loan_manualInterest',
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getAccount(scope.row)
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getLoan(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -564,12 +564,12 @@ export default {
                     ]
                 },
                 {
-                    prop: 'account_shy',
+                    prop: 'loan_manualInterest',
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getAccount(scope.row)
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getLoan(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -806,12 +806,12 @@ export default {
                     ]
                 },
                 {
-                    prop: 'account_shy',
+                    prop: 'loan_manualInterest',
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getAccount(scope.row)
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getLoan(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -1607,7 +1607,7 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            // console.log(data)
+            console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,

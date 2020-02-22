@@ -1,16 +1,15 @@
 import axios from 'axios'
-import { interfaceUrl } from '@/api/config'
+import { interfaceUrl,  } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account`, { params })
 // 还款明细表
 export const getRepaymentList = (params) => axios.get(interfaceUrl + 'backend/account/repayment/page', { params })
 // 查询平台公司
 export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
-// 分部列表查询
-export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/queryDeptList', { params })
-
-// 分部列表查询
-export const findBranchListNew = (params) => axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
+// 发展在线 分部查询
+export const findDepList = (params) => axios.get(ossUrl + 'api/httpH5/3107', { params })
+// // 好智慧 分部列表查询 （此处无用）
+// export const findBranchListNew = (params) => axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
 
 // 新增各类台账
 export const addAccount = (params) => axios.post(interfaceUrl + 'backend/account', params)
