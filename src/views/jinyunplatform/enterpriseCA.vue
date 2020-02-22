@@ -62,15 +62,9 @@
                 <div v-show="activeName == 'personage'">
                     <p style="margin: 20px 0;text-indent: 1em;">该个人用户CA认证账户联动以下已CA认证的企业，若注销该个人用户CA认证，对应的企业CA认证也将删除:</p>
                     <el-table :data="personRelevenceData" border style="width: 100%">
-                        <el-table-column
-                            prop="companyName"
-                            label="企业名称"
-                            :show-overflow-tooltip="true">
+                        <el-table-column prop="companyName" label="企业名称" :show-overflow-tooltip="true">
                         </el-table-column>
-                        <el-table-column
-                            prop="companySignatureId"
-                            label="企业账号ID"
-                            :show-overflow-tooltip="true">
+                        <el-table-column prop="companySignatureId" label="企业账号ID" :show-overflow-tooltip="true">
                         </el-table-column>
                     </el-table>
                 </div>
@@ -243,7 +237,7 @@ export default {
             const params = {
                 ...this.queryParams,
                 customerName: this.queryParams.companyName,
-                createDate:  this.queryParams.personageCreateDate
+                createDate: this.queryParams.personageCreateDate
             }
             const { data } = await getSignPersonList(params)
             this.tableData = data.records
@@ -374,7 +368,7 @@ export default {
 /deep/ .el-dialog__body {
     min-height: 256px;
 }
-/deep/ .el-table__row .cell{
+/deep/ .el-table__row .cell {
     white-space: nowrap;
 }
 .add-tags-dialog {
