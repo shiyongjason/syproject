@@ -64,14 +64,14 @@
                         <div class="query-cont-col">
                             <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
                                 <!-- 剩余还款金额=约定还款金额-累计还款本金金额 -->
-                                <span>{{item.capitalAmount-(item.capitalPaid?item.capitalPaid:0)-(item.thisPaidCapital?item.thisPaidCapital:0)}}</span>
+                                <span>{{(item.capitalAmount||0)-(item.capitalPaid?item.capitalPaid:0)-(item.thisPaidCapital?item.thisPaidCapital:0)}}元</span>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="累计实时宽限期利息：" prop="name">
-                                {{item.graceInterestAmount}}
+                                {{item.graceInterestAmount||0}}元
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
@@ -92,7 +92,7 @@
                                 <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                {{item.graceInterestAmount-(item.graceInterestPaid?item.graceInterestPaid:0)}}
+                                {{(item.graceInterestAmount||0)-(item.graceInterestPaid?item.graceInterestPaid:0)}}元
                             </el-form-item>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                                     <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                    {{item.overDueInterestAmount-(item.overDueInterestPaid?item.overDueInterestPaid:0)}}
+                                    {{(item.overDueInterestAmount||0)-(item.overDueInterestPaid?item.overDueInterestPaid:0)}}元
                                 </el-form-item>
                             </div>
                         </div>

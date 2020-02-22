@@ -741,8 +741,8 @@ const routerMapping = [
                 path: 'newFlowdialog',
                 name: 'newFlowdialog',
                 meta: {
-                    title: '流贷台账',
-                    tagName: '流贷台账',
+                    title: '新增台账',
+                    tagName: '新增台账',
                     parentName: '好智慧-资金数据',
                     isMenu: false,
                     icon: ''

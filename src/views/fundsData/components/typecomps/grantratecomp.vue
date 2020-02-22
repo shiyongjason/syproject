@@ -13,7 +13,7 @@
                 </div>
                 <div class="query-cont-col">
                     <el-form-item label="还款金额：" prop="capitalAmount">
-                        <el-input v-model.trim="item.capitalAmount" v-isNum="item.capitalAmount" maxlength='20' placeholder="请输入还款金额"><template slot="append">元</template>
+                        <el-input disabled v-model.trim="item.capitalAmount" v-isNum="item.capitalAmount" maxlength='20' placeholder="请输入还款金额"><template slot="append">元</template>
                         </el-input>
                     </el-form-item>
                 </div>
