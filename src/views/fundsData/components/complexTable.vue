@@ -922,19 +922,19 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.endTime ? moment(scope.row.endTime).format('YYYY-MM-DD') : '-'}</span>
                     }
-                },
-                {
-                    prop: 'remark',
-                    label: '备注',
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.remark ? `${scope.row.remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getAccount(scope.row)
-                            this.accountData.title = '备注信息维护'
-                            this.remarkDialogVisible = true
-                        }}></i></span>
-                    }
                 }
+                // {
+                //     prop: 'remark',
+                //     label: '备注',
+                //     width: '150',
+                //     render: (h, scope) => {
+                //         return <span>{scope.row.remark ? `${scope.row.remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                //             this.getAccount(scope.row)
+                //             this.accountData.title = '备注信息维护'
+                //             this.remarkDialogVisible = true
+                //         }}></i></span>
+                //     }
+                // }
             ],
             column: [],
             changeTable: true,
@@ -1612,8 +1612,8 @@ export default {
         },
         // 基本信息
         async getAccount (row) {
-            const account_id = row.account_id || row.accountId
-            const { data } = await getAccountBasic(account_id)
+            const accountId = row.account_id || row.accountId
+            const { data } = await getAccountBasic(accountId)
             this.accountData = { ...this.accountData, ...data }
             this.$set(this.accountData, 'selectName', data.loanCompanyName)
             this.$set(this.accountData, 'selectCode', data.loanCompanyCode)
