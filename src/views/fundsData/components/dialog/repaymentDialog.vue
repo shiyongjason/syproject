@@ -1,6 +1,4 @@
 <template>
-    <!-- <div class="page-body">
-        <div class="page-body-cont query-cont"> -->
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
@@ -163,7 +161,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- 分割线 -->
                 <div class="fgx"></div>
             </el-form>
@@ -173,9 +170,6 @@
             <el-button type="primary" @click="onSaveplan()">保 存</el-button>
         </span>
     </el-dialog>
-    <!-- </div>
-    </div> -->
-
 </template>
 
 <script>
@@ -246,9 +240,12 @@ export default {
         onDeleteRate (index) {
             this.detailData[0].overdueList.splice(index, 1)
         },
-        onSaveplan () {
+        async onSaveplan () {
             console.log(this.detailData)
-            setPlan({ planList: this.detailData })
+            await setPlan({ planList: this.detailData })
+            this.$message({ type: 'success', message: '修改成功' })
+            this.onCancle()
+            this.$emit('reload')
         }
     }
 }

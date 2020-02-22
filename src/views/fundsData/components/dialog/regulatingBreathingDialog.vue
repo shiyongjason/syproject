@@ -1,7 +1,12 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
-        <h3 style="margin-bottom: 10px;">备注：</h3>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="detailData.remark"></el-input>
+    <el-dialog title="手动调息" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
+        <div class="query-cont-col">
+            <div class="query-col-title">手动调息金额：</div>
+            <div class="query-col-input">
+                <el-input type="text" maxlength="20" v-model="detailData.shy" placeholder="请输入手动调息金额">
+                </el-input>
+            </div>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
             <el-button type="primary" @click="onSure">确 定</el-button>
@@ -12,7 +17,7 @@
 <script>
 import { setAccountBasic } from '../../api/index'
 export default {
-    name: 'remarkDialog',
+    name: 'regulatingBreathingDialog',
     props: {
         dialogVisible: {
             type: Boolean,
@@ -41,8 +46,12 @@ export default {
     methods: {
         async onSure () {
             console.log(this.detailData)
+            // 操作
             await setAccountBasic(this.detailData)
-            this.$message({ type: 'success', message: '修改成功' })
+            this.$message({
+                type: 'success',
+                message: '修改成功'
+            })
             this.onCancle()
             this.$emit('reload')
         },

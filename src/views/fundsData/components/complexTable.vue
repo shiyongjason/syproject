@@ -10,6 +10,8 @@
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
         <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
+        <!-- 基本信息Dialog -手动调息 -->
+        <regulatingBreathingDialog :detailData='accountData' v-if='accountData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
 
         <!-- 借款Dialog -流贷 -->
         <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
@@ -17,9 +19,10 @@
         <pointsCreditBillingDialog :detailData='loanData' v-if='loanData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -敞口 -->
         <billingDialog :detailData='loanData' v-if='loanData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
+        
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
-        <!-- 还款方式Dialog -->
+        <!-- 还款Dialog -敞口&&分授信 -->
         <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
     </div>
 </template>
@@ -34,11 +37,12 @@ import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
 import billingDialog from './dialog/billingDialog.vue'
 import repaymentDialog from './dialog/repaymentDialog.vue'
 import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
+import regulatingBreathingDialog from './dialog/regulatingBreathingDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan } from '../api/index'
 import moment from 'moment'
 export default {
     name: 'complexTable',
-    components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog },
+    components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
     props: {
         tableData: {
             type: Array,
@@ -82,11 +86,12 @@ export default {
             billingDialogVisible: false,
             repaymentDialogVisible: false,
             pointsCreditBillingDialogVisible: false,
+            regulatingBreathingDialogVisible: false,
             sizes: [10, 20, 50, 100],
-            rowData: null,
-            accountData: {},
-            loanData: {},
-            respAccountRepaymentPlanData: null,
+            accountData: {}, // 基本信息数据
+            loanData: {}, // 借款信息数据
+            rowData: null, // 敞口分授信还款信息数据
+            respAccountRepaymentPlanData: null, // 流贷还款信息数据
             // 流贷
             FlowToBorrow: [
                 {
@@ -212,6 +217,17 @@ export default {
                     ]
                 },
                 {
+                    prop: 'account_shy',
+                    label: '手动调息',
+                    width: '100',
+                    render: (h, scope) => {
+                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.regulatingBreathingDialogVisible = true
+                        }}></i></span>
+                    }
+                },
+                {
                     prop: 'account_standingBookArchiveNo',
                     label: '台账档案编号',
                     width: '200',
@@ -332,7 +348,6 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getGrantPaymetPlanData(scope.row)
-                                    // this.rowData[0].title = '好信用—分授信还款信息维护'
                                     this.repaymentDialogVisible = true
                                 }}></i></span>
                             }
@@ -547,6 +562,17 @@ export default {
                             }
                         }
                     ]
+                },
+                {
+                    prop: 'account_shy',
+                    label: '手动调息',
+                    width: '100',
+                    render: (h, scope) => {
+                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.regulatingBreathingDialogVisible = true
+                        }}></i></span>
+                    }
                 },
                 {
                     prop: 'account_standingBookArchiveNo',
@@ -778,6 +804,17 @@ export default {
                             }
                         }
                     ]
+                },
+                {
+                    prop: 'account_shy',
+                    label: '手动调息',
+                    width: '100',
+                    render: (h, scope) => {
+                        return <span>{scope.row.account_shy ? `${scope.row.account_shy}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.regulatingBreathingDialogVisible = true
+                        }}></i></span>
+                    }
                 },
                 {
                     prop: 'account_standingBookArchiveNo',
@@ -1328,7 +1365,6 @@ export default {
                         return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer'
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
-                                // this.rowData.title = '好信用—敞口还款信息维护222222'
                                 this.repaymentDialogVisible = true
                             }}></i></span>
                     }
@@ -1593,17 +1629,17 @@ export default {
                 this.loanData.loanEndTimeInvoice = '-'
             }
         },
-        // 还款信息
+        // 流贷还款信息
         async getRespAccountRepaymentPlanData (row) {
             console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
+            console.log(this.respAccountRepaymentPlanData)
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
-            // this.rowData.title = '好信用—敞口还款信息维护3333'
             if (row.account_accountType == 2) {
                 this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护')
             } else if (row.account_accountType == 3) {
