@@ -230,6 +230,7 @@ export default {
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
+            this.ruleForm.account.misCode = val.value ? val.value.misCode : ''
         },
         onStepOver (val) {
             let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
