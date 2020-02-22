@@ -84,7 +84,6 @@ import grantratecomp from '../typecomps/grantratecomp'
 import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
-import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'newFlowdialog',
     components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
@@ -218,7 +217,6 @@ export default {
                         message: '新增台账成功！',
                         type: 'success'
                     })
-                    clearCache('newFlowdialog')
                     this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/fundsData/standingBook')
                 }
@@ -276,16 +274,6 @@ export default {
                 }
             }
         }
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('newFlowdialog')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'standingBook') {
-            clearCache('newFlowdialog')
-        }
-        next()
     }
 }
 </script>
