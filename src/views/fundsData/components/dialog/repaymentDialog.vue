@@ -13,6 +13,7 @@
                     </div>
                 </div>
                 <div v-for="(item,index) in detailData" :key="index">
+                    <div class="ftitle" v-if="item.overdueList.length==0">未逾期</div>
                     <div class="ftitle">第{{index+1}}次性还款：</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
