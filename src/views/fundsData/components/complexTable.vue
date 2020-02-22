@@ -1603,11 +1603,13 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
+            console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             // this.rowData.title = '好信用—敞口还款信息维护3333'
             this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
+            this.$set(this.rowData[0], 'account_id', row.account_id)
             this.copyGrantdata = [...this.rowData]
         },
         onRepaymentTypeChange (val) {
