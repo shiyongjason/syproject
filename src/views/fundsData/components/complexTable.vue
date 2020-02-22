@@ -177,9 +177,10 @@ export default {
                             label: '最新本金还款日',
                             sort: 1,
                             width: '150',
-                            render: (h, scope) => {
+                            displayAs: 'YYYY-MM-DD'
+                            /* render: (h, scope) => {
                                 return <span>{scope.row.planList_0_capitalTime ? moment(scope.row.planList_0_capitalTime).format('YYYY-MM-DD') : '-'}</span>
-                            }
+                            } */
                         },
                         {
                             prop: 'planList_0_capitalOwe',
