@@ -84,8 +84,9 @@ import grantratecomp from '../typecomps/grantratecomp'
 import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
 import { mapGetters, mapActions } from 'vuex'
+import { clearCache, newCache } from '@/utils/index'
 export default {
-    name: 'flow',
+    name: 'newFlowdialog',
     components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
     data () {
         return {
@@ -272,6 +273,16 @@ export default {
                 }
             }
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('newFlowdialog')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'standingBook') {
+            clearCache('newFlowdialog')
+        }
+        next()
     }
 }
 </script>

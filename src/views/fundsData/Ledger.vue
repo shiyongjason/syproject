@@ -86,11 +86,12 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
+import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import { getAccountList, getRepaymentList, findDepList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
-    name: 'ledger',
+    name: 'standingBook',
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
@@ -153,8 +154,7 @@ export default {
         }),
         // 查询分部（不用做权限，现在是总部在使用）
         async findBranchList () {
-            const { data } = await findDepList()
-            console.log(data)
+            const { data } = await findDepList({ organizationType: 1 })
             this.branchList = data.data
             this.branchList.unshift(
                 { organizationCode: '', organizationName: '请选择分部' }
@@ -192,13 +192,11 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
-            console.log(this.searchParams)
             if (this.accountType == 4) {
                 const { data } = await getRepaymentList({
                     ...this.searchParams,
                     standingBookNo: this.searchParams.standingBookArchiveNo
                 })
-                console.log(data)
                 this.pagination = {
                     pageNumber: data.current,
                     pageSize: data.size,
@@ -246,17 +244,25 @@ export default {
             this.onSearch()
         },
         getList (val) {
-            // console.log(val)
             this.searchParams = {
                 ...this.searchParams,
                 ...val
             }
-            // console.log(this.searchParams)
             this.onQuery()
         },
         onLinddialog () {
             this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('standingBook')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'newFlowdialog') {
+            clearCache('standingBook')
+        }
+        next()
     }
 }
 </script>

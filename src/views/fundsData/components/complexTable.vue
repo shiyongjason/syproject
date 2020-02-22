@@ -246,7 +246,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 8) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = '好信用—流贷备注信息维护'
                             this.remarkDialogVisible = true
@@ -258,6 +258,8 @@ export default {
             PointsCredit: [
                 {
                     label: '基础信息',
+                    width: '600',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -593,7 +595,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = '好信用—分授信备注信息维护'
                             this.remarkDialogVisible = true
@@ -605,6 +607,8 @@ export default {
             Exposure: [
                 {
                     label: '基础信息',
+                    width: '600',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -835,7 +839,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = '好信用—敞口备注信息维护'
                             this.remarkDialogVisible = true
@@ -848,6 +852,8 @@ export default {
                 {
                     prop: 'standingBookNo',
                     label: '台账编号',
+                    showOverflowTooltip: true,
+                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.standingBookNo ? `${scope.row.standingBookNo}` : '-'}</span>
                     }
@@ -863,6 +869,8 @@ export default {
                 {
                     prop: 'loanCompanyName',
                     label: '平台公司',
+                    width: '150',
+                    showOverflowTooltip: true,
                     render: (h, scope) => {
                         return <span>{scope.row.loanCompanyName ? `${scope.row.loanCompanyName}` : '-'}</span>
                     }
@@ -871,6 +879,7 @@ export default {
                     prop: 'subsectionName',
                     label: '分部',
                     width: '150',
+                    showOverflowTooltip: true,
                     render: (h, scope) => {
                         return <span>{scope.row.subsectionName ? `${scope.row.subsectionName}` : '-'}</span>
                     }
@@ -878,7 +887,6 @@ export default {
                 {
                     prop: 'registrant',
                     label: '登记人',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.registrant ? `${scope.row.registrant}` : '-'}</span>
                     }
@@ -920,7 +928,11 @@ export default {
                     label: '备注',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.remark ? `${scope.row.remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => { }}></i></span>
+                        return <span>{scope.row.remark ? `${scope.row.remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                            this.getAccount(scope.row)
+                            this.accountData.title = '备注信息维护'
+                            this.remarkDialogVisible = true
+                        }}></i></span>
                     }
                 }
             ],
@@ -1695,5 +1707,10 @@ export default {
     cursor: pointer;
     margin-left: 10px;
     font-size: 14px;
+}
+// // 滚动条的滑块
+/deep/ .el-table__body-wrapper::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-color: rgba(33, 37, 43, 0.26);
 }
 </style>
