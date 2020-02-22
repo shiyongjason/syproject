@@ -199,6 +199,11 @@ export default {
                     standingBookNo: this.searchParams.standingBookArchiveNo
                 })
                 console.log(data)
+                this.pagination = {
+                    pageNumber: data.current,
+                    pageSize: data.size,
+                    total: data.total
+                }
                 this.tableData = data.records
                 return
             }

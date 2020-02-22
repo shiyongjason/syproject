@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
+            <hosJoyTable max-height='150' v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
@@ -244,7 +244,7 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? `${scope.row.account_remark}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 8) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = '好信用—流贷备注信息维护'
                             this.remarkDialogVisible = true
