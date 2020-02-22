@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- 敞口组件 -->
-        <div class="dialogtitle">(敞口)借款信息：</div>
+        <div class="dialogtitle">借款信息：</div>
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">

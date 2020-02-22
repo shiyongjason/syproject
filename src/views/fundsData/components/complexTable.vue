@@ -142,7 +142,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer' onClick={async () => {
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={async () => {
                                     await this.getRespAccountRepaymentPlanData(scope.row)
                                     this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
                                     this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
@@ -350,7 +350,7 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getGrantPaymetPlanData(scope.row)
                                     this.repaymentDialogVisible = true
                                 }}></i></span>
@@ -1376,7 +1376,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType}<i class='el-icon-edit pointer'
+                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer'
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
@@ -1631,12 +1631,12 @@ export default {
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
                 this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
-                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss') : '-'
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
                 this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
-                this.loanData.loanEndTimeInvoice = moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
+                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss') : '-'
             }
             if (!data.loanDateType) {
                 this.loanData.loanEndTimeLoan = '-'

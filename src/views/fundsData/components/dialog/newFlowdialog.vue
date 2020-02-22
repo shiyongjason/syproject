@@ -44,7 +44,7 @@
                 <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,3)" />
                 <!--供应链抽离 还款-->
                 <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
-                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
+                <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(2,1)" />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -231,6 +231,7 @@ export default {
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
             this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
+            this.ruleForm.account.misCode = val.value ? val.value.misCode : ''
         },
         onStepOver (val) {
             let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
