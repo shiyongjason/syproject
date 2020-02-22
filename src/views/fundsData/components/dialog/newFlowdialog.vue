@@ -17,7 +17,7 @@
                         </el-form-item>
                     </div> -->
                     <div class="query-cont-col">
-                        <el-form-item label="借款单位：" prop="loanCompanyName" ref="loanCompanyName">
+                        <el-form-item label="借款单位：" prop="account.loanCompanyName" ref="loanCompanyName">
                             <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
@@ -95,8 +95,8 @@ export default {
                 'account.standingBookNo': [
                     { required: true, message: '请输入台账档案编号', trigger: 'blur' }
                 ],
-                'loanCompanyName': [
-                    { required: true, message: '请输入借款单位', trigger: 'blur' }
+                'account.loanCompanyName': [
+                    { required: true, message: '请输入借款单位' }
                 ],
                 'account.subsectionName': [
                     { required: true, message: '请输入分部名称', trigger: 'blur' }
@@ -178,8 +178,9 @@ export default {
             // 触发自动计算还款计划
             this.setPlanList()
         },
-        'ruleForm.account.loanCompanyName' (val) {
+        'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
+                console.log(val)
                 if (val) this.$refs['loanCompanyName'].clearValidate()
             })
         }
@@ -196,7 +197,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findPlatformslist: 'findPlatformslist'
+            findPlatformslist: 'findPlatformslist',
+            setNewTags: 'setNewTags'
         }),
         changeType (productType, accountType) {
             if (productType == this.ruleForm.account.productType && accountType == this.ruleForm.account.accountType) {
@@ -208,7 +210,15 @@ export default {
         onSubmit () {
             // 操作
             this.$refs.ruleForm.validate((valid) => {
-                addAccount(this.ruleForm)
+                if (valid) {
+                    addAccount(this.ruleForm)
+                    this.$message({
+                        message: '新增台账成功！',
+                        type: 'success'
+                    })
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
+                    this.$router.push('/fundsData/standingBook')
+                }
             })
         },
         async onFindPlatformslist () {
@@ -251,14 +261,13 @@ export default {
         },
         /** 自动计算还款计划和日期 */
         setPlanList () {
-            console.log(this.ruleForm.loan.loanEndTime, this.ruleForm.planList[0].endTime)
             //  moment().subtract(7, 'days').format('YYYY-MM-DD')
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
                 this.$set(this.ruleForm.planList[0], 'endTime', this.ruleForm.loan.loanEndTime)
             } else if (this.ruleForm.loan.repaymentType == 2) {
                 for (let i = 0; i < this.repaymenBaseNum.length; i++) {
-                    this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]) || ''
+                    this.ruleForm.planList[i].capitalAmount = (this.ruleForm.loan.loanAmount * this.repaymenBaseNum[i]).toFixed(2) || ''
                     this.ruleForm.planList[i].endTime = this.ruleForm.loan.loanEndTime && moment(this.ruleForm.loan.loanEndTime, 'YYYY-MM-DD').subtract(this.repaymenDays[i], 'months').format('YYYY-MM-DD')
                 }
             }

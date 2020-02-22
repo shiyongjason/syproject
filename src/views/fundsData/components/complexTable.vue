@@ -331,8 +331,8 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 0 ? 0 : scope.row.loan_repaymentType ? `${scope.row.loan_repaymentType}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.rowData = scope.row
-                                    this.rowData.title = '好信用—分授信还款信息维护'
+                                    this.getGrantPaymetPlanData(scope.row)
+                                    // this.rowData[0].title = '好信用—分授信还款信息维护'
                                     this.repaymentDialogVisible = true
                                 }}></i></span>
                             }
@@ -1601,11 +1601,14 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             // this.rowData.title = '好信用—敞口还款信息维护3333'
-            this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护3333')
+            if (row.account_accountType == 2) {
+                this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护')
+            } else if (row.account_accountType == 3) {
+                this.$set(this.rowData[0], 'title', '好信用—分授信还款信息维护')
+            }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'account_id', row.account_id)
             this.copyGrantdata = [...this.rowData]
@@ -1617,13 +1620,12 @@ export default {
                 this.rowData.push({ ...this.planListItem })
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
-                    this.rowData.push({ ...this.copyGrantdata[i] })
+                    this.rowData.push({ ...(this.copyGrantdata[i] ? this.copyGrantdata[i] : this.copyGrantdata[0]) })
                     this.$set(this.rowData[0], 'repaymentType', val)
                 }
             }
         },
         onStepOver (val, item) {
-            // let newRowData = { ...item }
             let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
             item.overdueList = []
