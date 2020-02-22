@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable max-height='150' v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
+            <hosJoyTable v-if="changeTable" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList">
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
@@ -95,6 +95,8 @@ export default {
             FlowToBorrow: [
                 {
                     label: '基础信息',
+                    width: '600',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
