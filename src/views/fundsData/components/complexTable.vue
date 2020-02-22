@@ -150,7 +150,7 @@ export default {
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime ? scope.row.loan_loanStartTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_loanStartTime ? moment(scope.row.loan_loanStartTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -159,7 +159,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         }
                     ]
@@ -178,7 +178,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalTime ? scope.row.planList_0_capitalTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_0_capitalTime ? moment(scope.row.planList_0_capitalTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -281,7 +281,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime ? scope.row.loan_invoiceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_invoiceTime ? moment(scope.row.loan_invoiceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -299,7 +299,7 @@ export default {
                             sort: 4,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime ? scope.row.loan_loanStartTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_loanStartTime ? moment(scope.row.loan_loanStartTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -321,7 +321,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -390,7 +390,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime ? scope.row.planList_0_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime ? moment(scope.row.planList_0_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -399,7 +399,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime ? moment(scope.row.planList_0_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -444,7 +444,7 @@ export default {
                             sort: 13,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_endTime ? scope.row.planList_1_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime ? moment(scope.row.planList_1_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -453,7 +453,7 @@ export default {
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_graceTime ? scope.row.planList_1_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime ? moment(scope.row.planList_1_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -498,7 +498,7 @@ export default {
                             sort: 25,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime ? scope.row.planList_2_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime ? moment(scope.row.planList_2_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -507,7 +507,7 @@ export default {
                             sort: 26,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_graceTime ? scope.row.planList_2_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime ? moment(scope.row.planList_2_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -610,7 +610,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime ? scope.row.loan_invoiceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.loan_invoiceTime ? moment(scope.row.loan_invoiceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -675,7 +675,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_endTime ? scope.row.planList_0_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_0_endTime ? moment(scope.row.planList_0_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -684,7 +684,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_0_graceTime ? moment(scope.row.planList_0_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -711,7 +711,7 @@ export default {
                             sort: 10,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_endTime ? scope.row.planList_1_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_1_endTime ? moment(scope.row.planList_1_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -720,7 +720,7 @@ export default {
                             sort: 11,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_graceTime ? scope.row.planList_1_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_1_graceTime ? moment(scope.row.planList_1_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -747,7 +747,7 @@ export default {
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_endTime ? scope.row.planList_2_endTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_2_endTime ? moment(scope.row.planList_2_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -756,7 +756,7 @@ export default {
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_graceTime ? scope.row.planList_2_graceTime.split(' ')[0] : '-'}</span>
+                                return <span>{scope.row.planList_2_graceTime ? moment(scope.row.planList_2_graceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -857,7 +857,7 @@ export default {
                     label: '还款时间',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paidTime ? scope.row.paidTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.paidTime ? moment(scope.row.paidTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -873,7 +873,7 @@ export default {
                     label: '应还款日期',
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.endTime ? scope.row.endTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.endTime ? moment(scope.row.endTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -942,7 +942,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceTime ? scope.row.planList_0_graceTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.planList_0_graceTime ? moment(scope.row.planList_0_graceTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -960,7 +960,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestTime ? scope.row.planList_0_graceInterestTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.planList_0_graceInterestTime ? moment(scope.row.planList_0_graceInterestTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -1051,7 +1051,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime ? scope.row.paymentStatic_capitalTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -1078,7 +1078,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_interestTime ? scope.row.paymentStatic_interestTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.paymentStatic_interestTime ? moment(scope.row.paymentStatic_interestTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -1316,7 +1316,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanEndTime ? scope.row.loan_loanEndTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -1343,7 +1343,7 @@ export default {
                     sort: 1,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime ? scope.row.paymentStatic_capitalTime.split(' ')[0] : '-'}</span>
+                        return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
