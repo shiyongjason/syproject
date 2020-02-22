@@ -44,7 +44,7 @@
                 <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,3)" />
                 <!--供应链抽离 还款-->
                 <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
-                <flowratecomp :flowrateform=ruleForm.planList[0] v-if="changeType(2,1)" />
+                <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(2,1)" />
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
