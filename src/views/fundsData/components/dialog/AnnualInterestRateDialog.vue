@@ -21,8 +21,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="欠收本金：" prop="capitalOwe">
-                            <!-- 欠收本金=借款金额-累计实收借款本金-本次还本金金额 -->
-                            <span>{{detailData[0].capitalAmount-detailData[0].capitalPaid-detailData[0].thisPaidCapital||'-'}}</span>
+                            <!-- 欠收本金=借款金额capitalAmount-累计实收借款本金capitalPaid-本次还本金金额thisPaidCapital -->
+                            <span>{{(detailData[0].capitalAmount-detailData[0].capitalPaid-(detailData[0].thisPaidCapital||0))||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -51,7 +51,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="累计宽限期实时利息：" prop="graceInterestAmount">
                             <!-- 实时从接口获取 -->
-                            <span>{{detailData[0].graceInterestAmount||'-'}}</span>
+                            <span>{{detailData[0].graceInterestAmount||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -72,7 +72,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="剩余宽限利息：" prop="graceInterestOwe">
                             <!-- 剩余宽限期利息=累计宽限期实时利息-累计缴纳的宽限期利息-本次收取宽限利息 -->
-                            <span>{{detailData[0].graceInterestAmount-detailData[0].graceInterestPaid-detailData[0].thisPaidGraceInterest||'-'}}</span>
+                            <span>{{(detailData[0].graceInterestAmount-detailData[0].graceInterestPaid-(detailData[0].thisPaidGraceInterest||0))||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -81,7 +81,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="累计应收正常利息：" prop="interestAmount">
                             <!-- 实时自动计算 -->
-                            <span>{{detailData[0].interestAmount||'-'}}</span>
+                            <span>{{detailData[0].interestAmount||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -99,7 +99,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="剩余正常利息：" prop="interestOwe">
                             <!-- 自动计算，剩余正常利息=累计应收正常利息interestAmount-累计缴纳的实收正常利息interestPaid-本次收取正常利息 -->
-                            <span>{{detailData[0].interestAmount-detailData[0].interestPaid-detailData[0].thisPaidInterest||'-'}}</span>
+                            <span>{{(detailData[0].interestAmount-detailData[0].interestPaid-(detailData[0].thisPaidInterest||0))||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -149,7 +149,7 @@
                 <div class="query-cont-row" v-if="detailData[0].isStepOverInterest">
                     <div class="query-cont-col">
                         <el-form-item label="累计应缴纳逾期罚息:" prop="overdueList.dateNum">
-                            <span>{{detailData[0].overDueInterestAmount||'-'}}</span>
+                            <span>{{detailData[0].overDueInterestAmount||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -169,7 +169,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
                             <!-- 剩余逾期罚息=应缴逾期罚息overDueInterestAmount-累计缴纳的逾期罚息overDueInterestPaid-本次缴纳逾期罚息 -->
-                            <span>{{detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid-detailData[0].thisPaidOverDueInterest||'-'}}</span>
+                            <span>{{(detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid-(detailData[0].thisPaidOverDueInterest||0))||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
