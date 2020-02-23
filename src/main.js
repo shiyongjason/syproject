@@ -13,13 +13,11 @@ import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
 import moment from 'moment'
 import '@/utils/validate/index.js'
-moment.locale('zh-cn')
 Vue.config.productionTip = false
 moment.locale('zh-cn')
 Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
-
 // table公共组件
 Vue.component(
     'basicTable', basicTable

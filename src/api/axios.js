@@ -12,6 +12,7 @@ const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 }) */
 axios.defaults.baseURL = interfaceUrl
 // axios.defaults.timeout = TIME_OUT
+axios.defaults.headers['AccessKeyId'] = '5ksbfewexbfc'
 const requestArr = []
 /** 声明一个数组用于存储每个请求的取消函数和标识(请求如果还在pending，同个请求就被取消) */
 const cancelRequst = (config) => {
@@ -68,6 +69,7 @@ axios.interceptors.response.use(
         return response
     },
     (error) => {
+        console.log(error)
         if (axios.isCancel(error)) {
             console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)

@@ -5,6 +5,10 @@ function isNum (str, float = 1000000000) {
     if (str.length > 1 && str.charAt(0) === '0' && str.charAt(1) !== '.') {
         return ''
     }
+    // float == 0仅允许输入非负整数
+    if (float == 0 && str.indexOf('.') > -1) {
+        return str.split('.')[0]
+    }
     const i = str.indexOf('.')
     let arr
     if (i !== -1) {
@@ -16,6 +20,7 @@ function isNum (str, float = 1000000000) {
     let newStr = str.replace(reg, '')
     newStr = float === 0 ? str.slice(0, str.length) : newStr
     const newStrFlot = arr && arr[1].replace(reg, '')
+
     return float !== 0 && i !== -1 ? newStr + '.' + newStrFlot.slice(0, float) : newStr
 }
 
