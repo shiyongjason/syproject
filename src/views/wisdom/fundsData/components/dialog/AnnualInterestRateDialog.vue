@@ -14,7 +14,8 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金金额：" prop="thisPaidCapital">
-                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款" :disabled='!detailData[0].thisPaidCapitalTime&&!detailData[0].thisPaidGraceInterestTime&&!detailData[0].thisPaidInterestTime'>
+                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款"
+                                :disabled='!(detailData[0].thisPaidCapitalTime&&detailData[0].thisPaidGraceInterestTime&&detailData[0].thisPaidInterestTime&&(detailData[0].isStepOverInterest==0?false:detailData[0].thisPaidOverDueInterestTime))'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -64,7 +65,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
                             <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
-                            <el-input v-isNum="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入应收利息">
+                            <el-input v-isNegative="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入应收利息">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
