@@ -139,7 +139,7 @@ export default {
             this.$forceUpdate()
         },
         onChangeTime (val) {
-            return moment(val, 'YYYY-MM-DD')
+            return moment(val).format('YYYY-MM-DD')
         }
     }
 }
