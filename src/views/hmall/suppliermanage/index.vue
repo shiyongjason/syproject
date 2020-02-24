@@ -15,8 +15,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId"
-                                v-for="item in proviceList">
+                            <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId" v-for="item in proviceList">
                             </el-option>
                         </el-select>
                     </div>
@@ -24,8 +23,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.cityId" placeholder="请选择市">
                             <el-option label="请选择" value=""></el-option>
-                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name"
-                                :value="item.cityId">
+                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                             </el-option>
                         </el-select>
                     </div>
@@ -41,6 +39,7 @@
                         <el-button type="primary" class="ml20" @click="searchList()">
                             查询
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                         <el-button type="primary" class="ml20" @click="onImport()">
                             导出
                         </el-button>
@@ -54,9 +53,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
-                @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
-                :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="provinceName" slot-scope="scope">
                     {{scope.data.row.provinceName}}{{scope.data.row.cityName}}
                 </template>
@@ -66,8 +63,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :before-close="handleClose"
-            :close-on-click-modal=false>
+        <el-dialog :title="dialogtitle" :visible.sync="dialogVisible" width="40%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="110px" class="demo-ruleForm">
                 <el-form-item label="供应商名称：" prop="supplierName">
                     <el-input v-model="ruleForm.supplierName" maxlength='50' show-word-limit></el-input>
@@ -83,35 +79,32 @@
                         <el-option :label="item" :value="item" v-for="item in branchArr" :key="item"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="品牌：" prop="brandId">
-                    <el-select placeholder="全部" v-model="ruleForm.brandId" :clearable=true>
+                <el-form-item label="品牌：" prop="brandId" ref="brandId">
+                    <!-- <el-select placeholder="全部" v-model="ruleForm.brandId" :clearable=true>
                         <el-option :label="item.brandName" :value="item.id" v-for="item in brandList" :key="item.id">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                    <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="backPlat" :selectObj='selectObj' :remove-value='removeValue' :placeholder="'全部'"></HAutocomplete>
                 </el-form-item>
                 <el-form-item label="品类：" prop="categoryId">
-                    <el-cascader :options="categoryList" v-model="categoryIdArr" clearable
-                        @change="productCategoryChange"></el-cascader>
+                    <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                 </el-form-item>
                 <el-form-item label="区域：" required class="">
                     <el-col :span="8">
                         <el-form-item prop="provinceId">
-                            <el-select placeholder="请选择省" v-model="ruleForm.provinceId" @change="onChangeList(2)"
-                                style="width:100% !important">
+                            <el-select placeholder="请选择省" v-model="ruleForm.provinceId" @change="onChangeList(2)" style="width:100% !important">
                                 <el-option label="请选择" value=""></el-option>
-                                <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId"
-                                    v-for="item in rproviceList">
+                                <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId" v-for="item in rproviceList">
                                 </el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col class="ml10 " :span="1">-</el-col>
                     <el-col :span="8">
-                        <el-form-item prop="cityId">
+                        <el-form-item>
                             <el-select v-model="ruleForm.cityId" placeholder="请选择市" style="width:100%">
                                 <el-option label="请选择" value=""></el-option>
-                                <el-option v-for="(item) in cityLists" :key="item.cityId" :label="item.name"
-                                    :value="item.cityId">
+                                <el-option v-for="(item) in cityLists" :key="item.cityId" :label="item.name" :value="item.cityId">
                                 </el-option>
                             </el-select>
                         </el-form-item>
@@ -127,6 +120,7 @@
     </div>
 </template>
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { addSupplier, deleteSupplier, getSupplierDetail, editSupplierDetail } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
@@ -136,6 +130,7 @@ export default {
     name: 'supplier',
     data () {
         return {
+            removeValue: false,
             branchArr: [],
             proviceList: [],
             rproviceList: [],
@@ -147,6 +142,7 @@ export default {
                 branchName: '',
                 supplierName: ''
             },
+            copyParams: {},
             copyForm: {},
             tableData: [],
             paginationInfo: {},
@@ -199,14 +195,16 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
-                ],
-                cityId: [
-                    { required: true, message: '请选择市', trigger: 'change' }
                 ]
             },
-            loading: false
+            loading: false,
+            selectObj: {
+                selectCode: '',
+                selectName: ''
+            }
         }
     },
+    components: { HAutocomplete },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
@@ -234,6 +232,13 @@ export default {
             return []
         }
     },
+    watch: {
+        'ruleForm.brandId' (val) {
+            this.$nextTick(() => {
+                if (val.length > 0) this.$refs['brandId'].clearValidate()
+            })
+        }
+    },
     mounted () {
         this.onFindBranchs()
         this.getFindNest()
@@ -241,6 +246,7 @@ export default {
         this.onFindBrand()
         this.onFindCategoryList()
         this.copyForm = deepCopy(this.ruleForm)
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
         ...mapActions({
@@ -251,6 +257,10 @@ export default {
             findCategoryList: 'findCategoryList',
             getBranchlist: 'getBranchlist'
         }),
+        onReset () {
+            this.queryParams = deepCopy(this.copyParams)
+            this.getSupplier()
+        },
         async onFindBranchs () {
             await this.getBranchlist()
             this.branchArr = this.supplierBranch
@@ -258,6 +268,9 @@ export default {
         async onFindBrand () {
             await this.findBrand()
             this.brandList = this.brandData
+        },
+        backPlat (value) {
+            this.ruleForm.brandId = value.value.selectCode ? value.value.selectCode : ''
         },
         async getFindNest () {
             await this.findNest()
@@ -310,10 +323,13 @@ export default {
             this.dialogVisible = true
             console.log(data)
             this.ruleForm = { ...data }
+            this.selectObj.selectCode = this.ruleForm.brandId
+            this.selectObj.selectName = this.ruleForm.brandName
             this.categoryIdArr = data.categoryIdList
         },
         handleClose (done) {
             this.$refs.ruleForm.resetFields()
+            this.removeValue = true
             this.dialogVisible = false
         },
         onImport () {
@@ -332,7 +348,7 @@ export default {
                     // delete this.ruleForm.branchCode
                     // this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
                     this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
-                    this.ruleForm.cityName = this.cityLists && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
+                    this.ruleForm.cityName = this.ruleForm.cityId && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
                     console.log(this.ruleForm)
                     if (this.dialogtitle == '新增供应商') {
                         await addSupplier(this.ruleForm)
