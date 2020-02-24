@@ -41,7 +41,7 @@
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款金额：" prop="capitalAmount">
-                                <el-input v-model.trim="item.capitalAmount" disabled v-isNum="item.capitalAmount" maxlength='20' placeholder="请输入还款金额">
+                                <el-input v-model.trim="item.capitalAmount" disabled v-isNegative="item.capitalAmount" maxlength='20' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次本金还款金额：" prop="thisPaidCapital">
-                                <el-input v-model.trim="item.thisPaidCapital" v-isNum="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
+                                <el-input v-model.trim="item.thisPaidCapital" v-isNegative="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNum="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -96,7 +96,7 @@
                         </div>
                     </div>
                     <div class="endline" v-if="item.overdueList.length>0">逾期</div>
-                    <div class="query-cont-row" style="margin-top:10px"  v-if="item.overdueList.length>0">
+                    <div class="query-cont-row" style="margin-top:10px" v-if="item.overdueList.length>0">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="name">
                                 <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1,item)}" :label=0>否</el-radio>
@@ -128,7 +128,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNum="item.thisPaidOverDueInterest" maxlength='20' placeholder="请输入利息金额">
+                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' placeholder="请输入利息金额">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -145,19 +145,19 @@
                     </div>
                     <div v-if="item.isStepOverInterest==1">
                         <div class="" v-for="(item,index) in item.overdueList" :key="index">
-                             <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
-                              <div class="query-cont-row">
-                            <div class="query-cont-col">
-                                <el-form-item :label="'第' +(index+1)+'阶段时长：'">
-                                    <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5' placeholder="请输入逾期时长"><template slot="append">月</template>
-                                    </el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="该阶段逾期利率：">
-                                    <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5' placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
-                                </el-form-item>
-                            </div>
+                            <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
+                            <div class="query-cont-row">
+                                <div class="query-cont-col">
+                                    <el-form-item :label="'第' +(index+1)+'阶段时长：'">
+                                        <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5' placeholder="请输入逾期时长"><template slot="append">月</template>
+                                        </el-input>
+                                    </el-form-item>
+                                </div>
+                                <div class="query-cont-col">
+                                    <el-form-item label="该阶段逾期利率：">
+                                        <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5' placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                                    </el-form-item>
+                                </div>
                             </div>
                         </div>
                     </div>
