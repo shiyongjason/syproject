@@ -5,7 +5,7 @@
         <div class="query-cont-row">
             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
                 <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>
-                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=1 @change="()=>{$emit('stepOver',2)}">是111</el-radio>
+                <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=1 @change="()=>{$emit('stepOver',2)}">是</el-radio>
             </el-form-item>
         </div>
         <div class="query-cont-row" v-if="flowrateform.isStepOverInterest==0">
