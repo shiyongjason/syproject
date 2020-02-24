@@ -213,7 +213,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -454,7 +454,7 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -508,7 +508,7 @@ export default {
                             sort: 21,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -562,7 +562,7 @@ export default {
                             sort: 33,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -734,7 +734,7 @@ export default {
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -770,7 +770,7 @@ export default {
                             sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -806,7 +806,7 @@ export default {
                             sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -1442,7 +1442,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1497,7 +1497,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1552,7 +1552,7 @@ export default {
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1698,6 +1698,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.red {
+    color: red;
+}
 .page-table {
     width: calc(100% - 1px);
     margin: 0 auto;

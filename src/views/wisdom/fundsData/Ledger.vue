@@ -45,15 +45,15 @@
                 <!-- <el-button type="primary" @click="onExportTemplate">还款明细表模板导出</el-button> -->
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
-                    <el-button type="primary" class='m0'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                    <el-button type="primary" class='m0' :loading='loading'>
                         借款信息导入
                     </el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/repay/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
-                    <el-button type="primary" class="m0">
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                    <el-button type="primary" class="m0" :loading='loading'>
                         还款明细表信息导入
                     </el-button>
                 </el-upload>
@@ -125,7 +125,9 @@ export default {
                 total: 0
             },
             branchList: [], // 分部
-            removeValue: false
+            removeValue: false,
+            accept: '.xlsx,.xls',
+            loading: false
         }
     },
     mounted () {
@@ -180,6 +182,7 @@ export default {
                 message: '批量导入成功！',
                 type: 'success'
             })
+            this.loading = false
             this.onSearch()
         },
         isError (response) {
@@ -187,6 +190,23 @@ export default {
                 message: '批量导入失败，' + JSON.parse(response.message).message,
                 type: 'error'
             })
+            this.loading = false
+        },
+        handleUpload (file) {
+            // TODO: 目前只有一个文件,待优化
+            if (file.size / (1024 * 1024) > 100) {
+                this.$message({
+                    message: '附件要保持100M以内',
+                    type: 'warning'
+                })
+                return false
+            }
+            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+            if (this.accept.lastIndexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                return false
+            }
+            this.loading = true
         },
         async onQuery () {
             this.searchParams.accountType = this.accountType
@@ -284,5 +304,8 @@ export default {
 }
 .m0 {
     margin: 0;
+}
+/deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+    border-bottom-color: #ff7a45;
 }
 </style>
