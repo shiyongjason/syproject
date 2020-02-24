@@ -4,31 +4,31 @@
             <template slot-scope="scope" slot="orderNo">
                 <span :class="scope.data.row.isSplit==1?'isLink':''">{{scope.data.row.orderNo}}</span>
             </template>
-            <template slot-scope="scope" slot="couponCode" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.couponCode}}
+            <template slot-scope="scope" slot="couponCode" v-if="scope.data.row.respOrderDiscountInfo">
+                {{scope.data.row.respOrderDiscountInfo.couponCode ? scope.data.row.respOrderDiscountInfo.couponCode : '-'}}
             </template>
-            <template slot-scope="scope" slot="couponSnNo" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.couponSnNo}}
+            <template slot-scope="scope" slot="couponSnNo" v-if="scope.data.row.respOrderDiscountInfo">
+                {{scope.data.row.respOrderDiscountInfo.couponSnNo ? scope.data.row.respOrderDiscountInfo.couponSnNo : '-'}}
             </template>
-            <template slot-scope="scope" slot="couponType" v-if="scope.data.row.orderDiscountInfoDTO">
-                <span v-if="scope.data.row.orderDiscountInfoDTO.couponType === 1">满减</span>
-                <span v-if="scope.data.row.orderDiscountInfoDTO.couponType === 2">无门槛</span>
-                <span v-if="scope.data.row.orderDiscountInfoDTO.couponType === 3">折扣</span>
+            <template slot-scope="scope" slot="couponType" v-if="scope.data.row.respOrderDiscountInfo">
+                <span v-if="scope.data.row.respOrderDiscountInfo.couponType === 1">满减</span>
+                <span v-else-if="scope.data.row.respOrderDiscountInfo.couponType === 2">无门槛</span>
+                <span v-else-if="scope.data.row.respOrderDiscountInfo.couponType === 3">折扣</span>
+                <span v-else>-</span>
             </template>
-            <template slot-scope="scope" slot="couponAmount" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.couponAmount}}
+            <template slot-scope="scope" slot="couponAmount" v-if="scope.data.row.respOrderDiscountInfo">
+                {{scope.data.row.respOrderDiscountInfo.couponAmount == 0 ? '-' : scope.data.row.respOrderDiscountInfo.couponAmount}}
             </template>
-            <template slot-scope="scope" slot="activityCode" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.activityCode}}
+            <template slot-scope="scope" slot="activityCode" v-if="scope.data.row.respOrderDiscountInfo">
+                {{scope.data.row.respOrderDiscountInfo.activityCode ? scope.data.row.respOrderDiscountInfo.activityCode : '-'}}
             </template>
-            <template slot-scope="scope" slot="activityType" v-if="scope.data.row.orderDiscountInfoDTO">
-                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===0">-</span>
-                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===1">满减活动</span>
-                <span v-if="scope.data.row.orderDiscountInfoDTO.activityType===2">折扣活动</span>
-                <!--{{scope.data.row.orderDiscountInfoDTO.activityType==1?'满减活动':'折扣活动'}}-->
+            <template slot-scope="scope" slot="activityType" v-if="scope.data.row.respOrderDiscountInfo">
+                <span v-if="scope.data.row.respOrderDiscountInfo.activityType===0">-</span>
+                <span v-if="scope.data.row.respOrderDiscountInfo.activityType===1">满减活动</span>
+                <span v-if="scope.data.row.respOrderDiscountInfo.activityType===2">折扣活动</span>
             </template>
-            <template slot-scope="scope" slot="activityAmount" v-if="scope.data.row.orderDiscountInfoDTO">
-                {{scope.data.row.orderDiscountInfoDTO.activityAmount}}
+            <template slot-scope="scope" slot="activityAmount" v-if="scope.data.row.respOrderDiscountInfo">
+                {{scope.data.row.respOrderDiscountInfo.activityAmount == 0 ? '-' : scope.data.row.respOrderDiscountInfo.activityAmount}}
             </template>
             <template slot-scope="scope" slot="orderType">
                 {{scope.data.row.orderType==0?'普通订单':'组合订单'}}
@@ -88,7 +88,7 @@ export default {
         return {
             tableLabel: [
                 { label: '订单编号', prop: 'orderNo', width: '150' },
-                { label: '拆分订单编号', prop: 'childOrderNo', width: '100' },
+                // { label: '拆分订单编号', prop: 'childOrderNo', width: '100' },
                 { label: '订单金额', prop: 'totalAmount' },
                 { label: '优惠劵编号', prop: 'couponCode' },
                 { label: '优惠券流水号', prop: 'couponSnNo' },
