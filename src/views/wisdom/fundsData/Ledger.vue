@@ -231,7 +231,7 @@ export default {
                 total: data.total
             }
             this.tableData = []
-            data.records.map((i) => {
+            data && data.records.map((i) => {
                 let obj = {}
                 // eslint-disable-next-line
                 if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
