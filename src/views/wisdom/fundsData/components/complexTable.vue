@@ -141,12 +141,14 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={async () => {
-                                    await this.getRespAccountRepaymentPlanData(scope.row)
-                                    this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
-                                    this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
-                                    this.AnnualInterestRateDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    onClick={async () => {
+                                        await this.getRespAccountRepaymentPlanData(scope.row)
+                                        this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
+                                        this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
+                                        this.AnnualInterestRateDialogVisible = true
+                                    }}></i></span>
                             }
                         },
                         {
@@ -349,10 +351,12 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getGrantPaymetPlanData(scope.row)
-                                    this.repaymentDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    onClick={() => {
+                                        this.getGrantPaymetPlanData(scope.row)
+                                        this.repaymentDialogVisible = true
+                                    }}></i></span>
                             }
                         }
                     ]
@@ -1367,7 +1371,8 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer'
+                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                            class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
@@ -1612,7 +1617,7 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            console.log(data)
+            // console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,
@@ -1633,6 +1638,7 @@ export default {
                 this.loanData.loanEndTimeLoan = '-'
                 this.loanData.loanEndTimeInvoice = '-'
             }
+            console.log(this.loanData)
         },
         // 流贷还款信息
         async getRespAccountRepaymentPlanData (row) {
@@ -1699,6 +1705,9 @@ export default {
 <style lang="scss" scoped>
 .red {
     color: red;
+}
+/deep/ .cell .hidden {
+    display: none !important;
 }
 .page-table {
     width: calc(100% - 1px);
