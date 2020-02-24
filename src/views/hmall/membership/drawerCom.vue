@@ -76,10 +76,10 @@
                         </el-form-item>
                     </template> -->
                     <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                        <template v-if="bossDetail.isAuthentication">
-                            {{bossDetail.isAuthentication==0?'未认证':'已认证'}}
+                        {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
+                        <template v-if="bossDetail.authenticationTime">
+                            {{bossDetail.authenticationTime | formatterTime}}
                         </template>
-                        {{bossDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="员工：" :label-width="formLabelWidth">
                         <ul v-if="bossDetail.staff.length>0">
