@@ -141,12 +141,14 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={async () => {
-                                    await this.getRespAccountRepaymentPlanData(scope.row)
-                                    this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
-                                    this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
-                                    this.AnnualInterestRateDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    onClick={async () => {
+                                        await this.getRespAccountRepaymentPlanData(scope.row)
+                                        this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
+                                        this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
+                                        this.AnnualInterestRateDialogVisible = true
+                                    }}></i></span>
                             }
                         },
                         {
@@ -212,7 +214,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -349,10 +351,12 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getGrantPaymetPlanData(scope.row)
-                                    this.repaymentDialogVisible = true
-                                }}></i></span>
+                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    onClick={() => {
+                                        this.getGrantPaymetPlanData(scope.row)
+                                        this.repaymentDialogVisible = true
+                                    }}></i></span>
                             }
                         }
                     ]
@@ -453,7 +457,7 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -507,7 +511,7 @@ export default {
                             sort: 21,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -561,7 +565,7 @@ export default {
                             sort: 33,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -733,7 +737,7 @@ export default {
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -769,7 +773,7 @@ export default {
                             sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                             }
                         },
                         {
@@ -805,7 +809,7 @@ export default {
                             sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                             }
                         }
                     ]
@@ -1367,7 +1371,8 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i class='el-icon-edit pointer'
+                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                            class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
@@ -1441,7 +1446,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1496,7 +1501,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1551,7 +1556,7 @@ export default {
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
+                        return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
                     }
                 },
                 {
@@ -1612,7 +1617,7 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            console.log(data)
+            // console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,
@@ -1633,6 +1638,7 @@ export default {
                 this.loanData.loanEndTimeLoan = '-'
                 this.loanData.loanEndTimeInvoice = '-'
             }
+            console.log(this.loanData)
         },
         // 流贷还款信息
         async getRespAccountRepaymentPlanData (row) {
@@ -1698,6 +1704,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.red {
+    color: red;
+}
+/deep/ .cell .hidden {
+    display: none !important;
+}
 .page-table {
     width: calc(100% - 1px);
     margin: 0 auto;

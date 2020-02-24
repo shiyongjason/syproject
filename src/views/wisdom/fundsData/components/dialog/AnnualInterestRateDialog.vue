@@ -15,7 +15,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金金额：" prop="thisPaidCapital">
                             <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款"
-                                :disabled='!(detailData[0].thisPaidCapitalTime&&detailData[0].thisPaidGraceInterestTime&&detailData[0].thisPaidInterestTime&&(detailData[0].isStepOverInterest==0?false:detailData[0].thisPaidOverDueInterestTime))'>
+                                :disabled='!(detailData[0].thisPaidCapitalTime&&detailData[0].thisPaidGraceInterestTime&&detailData[0].thisPaidInterestTime&&(detailData[0].isStepOverInterest==0?true:detailData[0].thisPaidOverDueInterestTime))'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>

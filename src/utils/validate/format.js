@@ -1,7 +1,7 @@
 function numValidate (str, float, regular) {
     if (!str) return
     str = str.toString()
-    // 如果第一位是0，第二位不是点
+    // 如果第一位是0，第二位不是点  01 02...
     if (str.length > 1 && str.charAt(0) === '0' && str.charAt(1) !== '.') {
         return ''
     }
@@ -29,7 +29,13 @@ function isNum (str, float = 1000000000) {
 }
 function isNegative (str, float = 1000000000) {
     const regular = /[^\-?\d.]/g
-    return numValidate(str, float, regular)
+    let res = numValidate(str, float, regular)
+    let t = res.charAt(0)
+    // 如果第一位是负号，则允许添加
+    if (t == '-') {
+        res = '-' + res
+    }
+    return res
 }
 
 function isNotInputTxt (str) {
