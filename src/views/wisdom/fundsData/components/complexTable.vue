@@ -1651,6 +1651,7 @@ export default {
                 this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护')
             } else if (row.account_accountType == 3) {
                 this.$set(this.rowData[0], 'title', '好信用—分授信还款信息维护')
+                this.$set(this.rowData[0], 'account_accountType', 3)
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'account_id', row.account_id)
