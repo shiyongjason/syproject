@@ -230,7 +230,7 @@ const routerMapping = [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/fundsData/Ledger.vue')
+                component: () => import('@/views/wisdom/fundsData/Ledger.vue')
             },
             {
                 path: 'newFlowdialog',
@@ -242,32 +242,9 @@ const routerMapping = [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/fundsData/components/dialog/newFlowdialog.vue')
-            },
-            {
-                path: 'newGrantdialog',
-                name: 'newGrantdialog',
-                meta: {
-                    title: '分授信台账',
-                    tagName: '分授信台账',
-                    parentName: '好智慧-资金数据',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/fundsData/components/dialog/newGrantdialog.vue')
-            },
-            {
-                path: 'newOpendialog',
-                name: 'newOpendialog',
-                meta: {
-                    title: '敞口台账',
-                    tagName: '敞口台账',
-                    parentName: '好智慧-资金数据',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/fundsData/components/dialog/newOpendialog.vue')
-            }]
+                component: () => import('@/views/wisdom/fundsData/components/dialog/newFlowdialog.vue')
+            }
+        ]
     },
     {
         path: '/paymentCentral',
