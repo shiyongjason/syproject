@@ -145,13 +145,11 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            console.log('月')
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
         },
         loanDateNumD () {
-            console.log('天')
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
         },
         datePickerChange (val) {
@@ -161,13 +159,13 @@ export default {
             }
             // 月
             if (this.detailData.loanDateType == 1) {
-                // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss'))
-                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
+                // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD'))
+                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD')
             }
             // 天
             if (this.detailData.loanDateType == 2) {
-                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
-                // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss'))
+                this.detailData.loanEndTimeInvoice = moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD')
+                // this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD'))
             }
             this.$forceUpdate()
         }
