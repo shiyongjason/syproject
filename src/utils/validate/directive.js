@@ -22,7 +22,7 @@ export default {
                 element.addEventListener('keyup', () => {
                     element.value = isNum(element.value, binding.arg)
                     if (isNaN(element.value)) element.value = ''
-                    vnode.data.model.callback(element.value)
+                    vnode.data.model && vnode.data.model.callback(element.value)
                 })
             }
         })

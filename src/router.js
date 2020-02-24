@@ -193,7 +193,7 @@ const routerMapping = [
         meta: {
             title: 'App管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_set'
         },
         component: Layout,
         children: [
@@ -210,6 +210,64 @@ const routerMapping = [
                 component: () => import('@/views/appUpdate/index.vue')
             }
         ]
+    },
+    {
+        path: '/fundsData',
+        meta: {
+            title: '好智慧-资金数据',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'standingBook',
+                name: 'standingBook',
+                meta: {
+                    title: '资金借款台账',
+                    tagName: '资金借款台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/Ledger.vue')
+            },
+            {
+                path: 'newFlowdialog',
+                name: 'newFlowdialog',
+                meta: {
+                    title: '新增台账',
+                    tagName: '新增台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newFlowdialog.vue')
+            },
+            {
+                path: 'newGrantdialog',
+                name: 'newGrantdialog',
+                meta: {
+                    title: '分授信台账',
+                    tagName: '分授信台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newGrantdialog.vue')
+            },
+            {
+                path: 'newOpendialog',
+                name: 'newOpendialog',
+                meta: {
+                    title: '敞口台账',
+                    tagName: '敞口台账',
+                    parentName: '好智慧-资金数据',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/fundsData/components/dialog/newOpendialog.vue')
+            }]
     },
     {
         path: '/paymentCentral',
@@ -242,79 +300,78 @@ const routerMapping = [
             icon: 'hosjoy_operation'
         },
         component: Layout,
-        children: [
-            {
-                path: 'userOverview',
-                name: 'userOverview',
-                meta: {
-                    title: '用户概览',
-                    tagName: '用户概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/userOverview.vue')
+        children: [{
+            path: 'userOverview',
+            name: 'userOverview',
+            meta: {
+                title: '用户概览',
+                tagName: '用户概览',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'equipemtOverview',
-                name: 'equipemtOverview',
-                meta: {
-                    title: '设备概览',
-                    tagName: '设备概览',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+            component: () => import('@/views/comfortcloud/userOverview.vue')
+        },
+        {
+            path: 'equipemtOverview',
+            name: 'equipemtOverview',
+            meta: {
+                title: '设备概览',
+                tagName: '设备概览',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
             },
-            {
-                path: 'homeOverview',
-                name: 'homeOverview',
-                meta: {
-                    title: '家庭概览',
-                    tagName: '家庭概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homeManage.vue')
+            component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+        },
+        {
+            path: 'homeOverview',
+            name: 'homeOverview',
+            meta: {
+                title: '家庭概览',
+                tagName: '家庭概览',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'homedetail',
-                name: 'homedetail',
-                meta: {
-                    title: '家庭详情',
-                    tagName: '家庭详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homedetail.vue')
+            component: () => import('@/views/comfortcloud/homeManage.vue')
+        },
+        {
+            path: 'homedetail',
+            name: 'homedetail',
+            meta: {
+                title: '家庭详情',
+                tagName: '家庭详情',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
             },
-            {
-                path: 'membermanage',
-                name: 'membermanage',
-                meta: {
-                    title: '会员管理',
-                    tagName: '会员管理',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberManage.vue')
+            component: () => import('@/views/comfortcloud/homedetail.vue')
+        },
+        {
+            path: 'membermanage',
+            name: 'membermanage',
+            meta: {
+                title: '会员管理',
+                tagName: '会员管理',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'memberdetail',
-                name: 'memberdetail',
-                meta: {
-                    title: '会员登录详情',
-                    tagName: '会员登录详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberDetail.vue')
-            }
+            component: () => import('@/views/comfortcloud/memberManage.vue')
+        },
+        {
+            path: 'memberdetail',
+            name: 'memberdetail',
+            meta: {
+                title: '会员登录详情',
+                tagName: '会员登录详情',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/memberDetail.vue')
+        }
         ]
     },
     Wisdomrouter,
@@ -344,7 +401,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0;i < data.length;i++) {
+        for (let i = 0; i < data.length; i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
