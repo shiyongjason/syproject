@@ -96,7 +96,7 @@ export default {
                 {
                     label: '基础信息',
                     width: '600',
-                    fixed: true,
+                    // fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -259,7 +259,7 @@ export default {
                 {
                     label: '基础信息',
                     width: '600',
-                    fixed: true,
+                    // fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -608,7 +608,7 @@ export default {
                 {
                     label: '基础信息',
                     width: '600',
-                    fixed: true,
+                    // fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -853,7 +853,6 @@ export default {
                     prop: 'standingBookNo',
                     label: '台账编号',
                     showOverflowTooltip: true,
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.standingBookNo ? `${scope.row.standingBookNo}` : '-'}</span>
                     }
@@ -861,7 +860,6 @@ export default {
                 {
                     prop: 'misCode',
                     label: 'MIS编码',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.misCode ? `${scope.row.misCode}` : '-'}</span>
                     }
@@ -869,7 +867,6 @@ export default {
                 {
                     prop: 'loanCompanyName',
                     label: '平台公司',
-                    width: '150',
                     showOverflowTooltip: true,
                     render: (h, scope) => {
                         return <span>{scope.row.loanCompanyName ? `${scope.row.loanCompanyName}` : '-'}</span>
@@ -878,7 +875,6 @@ export default {
                 {
                     prop: 'subsectionName',
                     label: '分部',
-                    width: '150',
                     showOverflowTooltip: true,
                     render: (h, scope) => {
                         return <span>{scope.row.subsectionName ? `${scope.row.subsectionName}` : '-'}</span>
@@ -894,7 +890,6 @@ export default {
                 {
                     prop: 'accountType',
                     label: '还款项目',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.accountType == 1 ? '流贷' : scope.row.accountType == 2 ? '敞口' : scope.row.accountType == 3 ? '分授信' : '-'}</span>
                     }
@@ -902,7 +897,6 @@ export default {
                 {
                     prop: 'paidTime',
                     label: '还款时间',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.paidTime ? moment(scope.row.paidTime).format('YYYY-MM-DD') : '-'}</span>
                     }
@@ -910,7 +904,6 @@ export default {
                 {
                     prop: 'paidAmount',
                     label: '金额',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.paidAmount == 0 ? 0 : scope.row.paidAmount ? `${scope.row.paidAmount}` : '-'}</span>
                     }
@@ -918,7 +911,6 @@ export default {
                 {
                     prop: 'endTime',
                     label: '应还款日期',
-                    width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.endTime ? moment(scope.row.endTime).format('YYYY-MM-DD') : '-'}</span>
                     }
@@ -1630,13 +1622,13 @@ export default {
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss')
-                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss') : '-'
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD') : '-'
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss')
-                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss') : '-'
+                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD') : '-'
             }
             if (!data.loanDateType) {
                 this.loanData.loanEndTimeLoan = '-'
