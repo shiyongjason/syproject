@@ -2,12 +2,12 @@
     <div class="smart-equip">
         <div class="echart-tab">
             <div class="echart-tab-fl">
-                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5"> 智能主机</span>
+                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5" :key=index> 智能主机</span>
             </div>
         </div>
         <div class="smart-time">
             <div>
-              <h3>总运行时长:242100.6小时</h3>
+                <h3>总运行时长:242100.6小时</h3>
             </div>
             <div class="echart-time">
                 <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="开始日期">
@@ -70,7 +70,7 @@ export default {
                 if (x > color.length - 1) {
                     x = color.length - 1
                 }
-                var data = {
+                var dataL = {
                     name: charts.names[i],
                     type: 'line',
                     color: color[x] + ')',
@@ -93,7 +93,7 @@ export default {
                     yAxisIndex: 0,
                     data: charts.value[i]
                 }
-                lineY.push(data)
+                lineY.push(dataL)
             }
             console.log(lineY)
             var option = {
@@ -225,9 +225,9 @@ export default {
         flex: 1;
     }
 }
-.smart-time{
+.smart-time {
     display: flex;
-    div{
+    div {
         display: flex;
         flex: 1;
         align-items: center;

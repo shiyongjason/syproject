@@ -172,6 +172,7 @@ export default {
             this.$set(this.queryParams, 'source', '')
             this.$set(this.queryParams, 'categoryId', '')
             this.$set(this.queryParams, 'onMarket', '')
+            this.$set(this.queryParams, 'specification', '')
             this.$set(this.paginationData, 'pageNumber', 1)
             this.$set(this.paginationData, 'pageSize', 10)
             this.$set(this.queryParams, 'isOwnOperated', false)
