@@ -24,7 +24,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="MIS编码：" prop="misCode">
-                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略"></el-input>
+                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略" disabled></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="flow-bottom">
                     <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                    <el-button>取消</el-button>
+                    <el-button @click="onCancel">取消</el-button>
                 </div>
             </el-form>
         </div>
@@ -180,7 +180,6 @@ export default {
         },
         'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
-                console.log(val)
                 if (val) this.$refs['loanCompanyName'].clearValidate()
             })
         }
@@ -273,6 +272,10 @@ export default {
                     this.ruleForm.planList[i].endTime = this.ruleForm.loan.loanEndTime && moment(this.ruleForm.loan.loanEndTime, 'YYYY-MM-DD').subtract(this.repaymenDays[i], 'months').format('YYYY-MM-DD')
                 }
             }
+        },
+        onCancel () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/fundsData/standingBook')
         }
     }
 }
@@ -289,13 +292,7 @@ h3 {
     margin-bottom: 10px;
     line-height: 30px;
 }
-.flowbody {
-    .query-cont-col {
-        margin-bottom: 19px;
-    }
-}
 .smalltitle {
-    color: #f00;
     line-height: 30px;
 }
 .flow-bottom {

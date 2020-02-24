@@ -54,7 +54,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次本金还款金额：" prop="thisPaidCapital">
-                                <el-input v-model.trim="item.thisPaidCapital" v-isNum="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
+                                <el-input v-model.trim="item.thisPaidCapital" :disabled='!item.thisPaidCapitalTime' v-isNum="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
