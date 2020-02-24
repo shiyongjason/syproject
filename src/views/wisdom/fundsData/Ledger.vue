@@ -37,46 +37,44 @@
                 <!-- <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div> -->
-            </div>
-        </div>
-        <div class="page-body-cont query-cont">
+            </div><br>
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="onExportLedger">借款模板导出</el-button>
+                <el-button type="primary" class="m0" @click="onExportLedger">借款模板导出</el-button>
                 <!-- 无接口 暂时注释 -->
-                <!-- <el-button type="primary" class="ml20" @click="onExportTemplate">还款明细表模板导出</el-button> -->
+                <!-- <el-button type="primary" @click="onExportTemplate">还款明细表模板导出</el-button> -->
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
-                    <el-button type="primary" class="ml20">
+                    <el-button type="primary" class='m0'>
                         借款信息导入
                     </el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/repay/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
-                    <el-button type="primary" class="ml20">
+                    <el-button type="primary" class="m0">
                         还款明细表信息导入
                     </el-button>
                 </el-upload>
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tabs v-model="accountType" type="card" @tab-click="handleClick">
+            <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
                 <el-tab-pane label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane label="分授信" name="3"></el-tab-pane>
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
             <template v-if="accountType != '4'">
-                <el-tabs v-model="productType" type="card" @tab-click="handleClick">
+                <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
                     <el-tab-pane label="好信用" name="1"></el-tab-pane>
                     <el-tab-pane label="供应链" name="2"></el-tab-pane>
                     <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
                 </el-tabs>
-                <el-button type="primary" class="ml20" @click="onLinddialog">
-                    {{accountType == 1 ? '新增流贷-' : accountType == 2 ? '新增敞口-' : accountType == 3 ? '新增分授信-' : '待开发'}}
-                    {{productType == 1 ? '好信用台账' : productType == 2 ? '供应链台账' : ''}}
+                <el-button type="primary" @click="onLinddialog">
+                    {{productType == 1 ? '新增好信用-' : productType == 2 ? '新增供应链-' : ''}}
+                    {{accountType == 1 ? '流贷台账' : accountType == 2 ? '敞口台账' : accountType == 3 ? '分授信台账' : '待开发'}}
                 </el-button>
             </template>
             <complexTable :tableData='tableData' :pagination='pagination' :source='accountType' @getList='getList' />
@@ -173,7 +171,8 @@ export default {
         onExportLedger () {
             window.location.href = interfaceUrl + 'backend/account/export'
         },
-        handleClick () {
+        handleClick (i) {
+            if (i == 1) this.productType = '1'
             this.onReset()
         },
         isSuccess (response) {
@@ -282,5 +281,8 @@ export default {
 
 /deep/ .el-tabs--card .el-tabs__nav {
     border-bottom: 1px solid #e4e7ed;
+}
+.m0 {
+    margin: 0;
 }
 </style>
