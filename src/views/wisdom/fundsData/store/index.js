@@ -1,4 +1,6 @@
-import * as types from '../fundsData-type'
+
+// 资金台账 store
+import * as types from './const'
 import { findPlatformslist } from '@/views/wisdom/fundsData/api'
 const state = {
     platformData: []
