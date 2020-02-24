@@ -1,5 +1,5 @@
 import * as types from '../fundsData-type'
-import { findPlatformslist } from '@/views/fundsData/api'
+import { findPlatformslist } from '@/views/wisdom/fundsData/api'
 const state = {
     platformData: []
 }

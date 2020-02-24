@@ -43,7 +43,8 @@
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
             <div class="query-cont-col">
                 <el-button type="primary" class="ml20" @click="onExportLedger">借款模板导出</el-button>
-                <el-button type="primary" class="ml20" @click="onExportTemplate">还款明细表模板导出</el-button>
+                <!-- 无接口 暂时注释 -->
+                <!-- <el-button type="primary" class="ml20" @click="onExportTemplate">还款明细表模板导出</el-button> -->
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" auto-upload>
@@ -171,7 +172,6 @@ export default {
         // 台账导出
         onExportLedger () {
             window.location.href = interfaceUrl + 'backend/account/export'
-            // location.href = interfaceUrl + '/backend/account/export'
         },
         handleClick () {
             this.onReset()
