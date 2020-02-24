@@ -12,7 +12,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="loanAmount">
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
+                            <el-input v-model.trim="detailData.loanAmount" v-isNegative="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -51,7 +51,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="到期日：">
                             <!-- 自动计算，到期日=放款日期+借款期限 -->
-                            <span>{{detailData.loanEndTimeLoan}}</span>
+                            <span>{{onChangeTime(detailData.loanEndTimeLoan)}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -137,6 +137,9 @@ export default {
                 this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD'))
             }
             this.$forceUpdate()
+        },
+        onChangeTime (val) {
+            return moment(val).format('YYYY-MM-DD')
         }
     }
 }

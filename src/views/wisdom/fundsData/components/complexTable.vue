@@ -10,7 +10,6 @@
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
         <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
-
         <!-- 借款Dialog -手动调息 -->
         <regulatingBreathingDialog :detailData='loanData' v-if='loanData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -流贷 -->
