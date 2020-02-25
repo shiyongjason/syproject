@@ -182,7 +182,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSave">保 存</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>
@@ -201,7 +201,8 @@ export default {
                 name: [
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ]
-            }
+            },
+            loading: false
         }
     },
     props: {
@@ -266,7 +267,9 @@ export default {
     },
     methods: {
         async dealCount (query) {
+            this.loading = true
             const res = await this.onCount(query)
+            this.loading = false
             query.graceInterestAmount = res.graceInterestAmount
             query.interestAmount = res.interestAmount
             query.overDueInterestList = res.overDueInterestList

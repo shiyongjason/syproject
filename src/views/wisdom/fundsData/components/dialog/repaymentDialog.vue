@@ -18,7 +18,7 @@
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款日期：" prop="endTime">
-                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd'  :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
@@ -198,7 +198,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSaveplan()">保 存</el-button>
+            <el-button type="primary" @click="onSaveplan()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
         </span>
     </el-dialog>
 </template>
@@ -213,6 +213,7 @@ export default {
         return {
             radio: '月',
             radiox: '1',
+            loading: false,
             form: {
                 name: '',
                 x: ''
@@ -278,10 +279,16 @@ export default {
             this.detailData[0].overdueList.splice(index, 1)
         },
         async onSaveplan () {
-            await setPlan({ planList: this.detailData })
-            this.$message({ type: 'success', message: '修改成功' })
-            this.onCancle()
-            this.$emit('reload')
+            this.loading = true
+            try {
+                await setPlan({ planList: this.detailData })
+                this.$message({ type: 'success', message: '修改成功' })
+                this.onCancle()
+                this.$emit('reload')
+                this.loading = false
+            } catch (error) {
+                this.loading = false
+            }
         }
     },
     mounted () {

@@ -30,7 +30,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSave">保 存</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>
@@ -86,6 +86,11 @@ export default {
             platformData: 'platformData'
         })
     },
+    data () {
+        return {
+            loading: false
+        }
+    },
     methods: {
         onCancle () {
             this.$emit('onClose')
@@ -99,7 +104,9 @@ export default {
         onSave () {
             this.$refs['form'].validate(async (valid, error) => {
                 if (valid) {
+                    this.loading = true
                     await setAccountBasic(this.detailData)
+                    this.loading = false
                     this.$message({ type: 'success', message: '修改成功' })
                     this.onCancle()
                     this.$emit('reload')
