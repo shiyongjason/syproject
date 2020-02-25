@@ -107,6 +107,7 @@ export default {
         async onSave () {
             this.detailData.loanEndTime = this.detailData.loanEndTimeLoan
             if (this.detailData.loanDateNum === '') this.detailData.loanDateNum = 0
+            if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
             await setLoan(this.detailData)
             this.$message({
                 type: 'success',

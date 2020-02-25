@@ -140,6 +140,7 @@ export default {
         },
         async onSave () {
             this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
+            if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
             await setLoan(this.detailData)
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
