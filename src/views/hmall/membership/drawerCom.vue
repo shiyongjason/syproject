@@ -47,7 +47,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="countryId">
-                                <el-select v-model="bossDetail.countryId" placeholder="请选择区">
+                                <el-select v-model="bossDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                                     </el-option>
@@ -313,6 +313,9 @@ export default {
             }
         },
         onSaveDetail () {
+            this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)[0].name
+            this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId)[0].name
+            this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId)[0].name
             const params = { ...this.bossDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
@@ -351,8 +354,13 @@ export default {
             if (val === 1) {
                 this.bossDetail.countryId = ''
                 this.bossDetail.cityId = ''
+                // 获取中文
+                // this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId).name
             } else if (val === 2) {
                 this.bossDetail.countryId = ''
+                // this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId).name
+            } else if (val === 3) {
+                // this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId).name
             }
         },
         async getFindNest () {
