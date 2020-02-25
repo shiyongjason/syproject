@@ -32,13 +32,8 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="支付方式">
-                <template slot-scope="scope">
-                    <!--1账期支付，2线下支付，3钱包支付-->
-                    <span v-if="scope.row.paymentMethod === 1">账期支付</span>
-                    <span v-if="scope.row.paymentMethod === 2">线下支付</span>
-                    <span v-if="scope.row.paymentMethod === 3">钱包支付</span>
-                </template>
+                label="支付方式"
+                prop="paymentMethodDesc">
             </el-table-column>
             <el-table-column
                 align="center"
@@ -47,11 +42,8 @@
             </el-table-column>
             <el-table-column
                 align="center"
-                label="收款状态">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.paymentStatus === 1">支付成功</span>
-                    <span v-else-if="scope.row.paymentStatus === 2">退回成功</span>
-                </template>
+                label="收款状态"
+                prop="statusDesc">
             </el-table-column>
         </el-table>
         <div class="page clearfix" style="text-align: center;margin-top: 20px">
