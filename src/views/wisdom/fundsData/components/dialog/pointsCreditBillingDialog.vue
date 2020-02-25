@@ -64,7 +64,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="到期日：">
                             <!-- 自动计算，到期日=借款日期+借款期限 -->
-                            <span>{{detailData.loanEndTimeInvoice}}</span>
+                            <span>{{detailData.loanEndTimeLoan}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -123,34 +123,34 @@ export default {
             this.$emit('onClose')
         },
         async onSave () {
-            this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
+            this.detailData.loanEndTime = this.detailData.loanEndTimeLoan
             await setLoan(this.detailData)
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumM
             this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumD
             this.$forceUpdate()
         },
         datePickerChange (val) {
             if (!this.detailData.loanStartTime) {
-                this.detailData.loanEndTimeInvoice = '-'
+                this.detailData.loanEndTimeLoan = '-'
                 return false
             }
             // 月
             if (this.detailData.loanDateType == 1) {
-                this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD'))
+                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD'))
             }
             // 天
             if (this.detailData.loanDateType == 2) {
-                this.$set(this.detailData, 'loanEndTimeInvoice', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD'))
+                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD'))
             }
             this.$forceUpdate()
         }
