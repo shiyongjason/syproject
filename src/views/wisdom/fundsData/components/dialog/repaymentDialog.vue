@@ -18,7 +18,7 @@
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款日期：" prop="endTime">
-                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还本金时间：" prop="thisPaidCapitalTime">
-                                <el-date-picker v-model="item.thisPaidCapitalTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择还本金时间">
+                                <el-date-picker v-model="item.thisPaidCapitalTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择还本金时间">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还宽限利息时间：" prop="thisPaidGraceInterestTime">
-                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
@@ -104,7 +104,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次还正常利息时间：" prop="thisPaidInterestTime">
-                                    <el-date-picker v-model="item.thisPaidInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                    <el-date-picker v-model="item.thisPaidInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
@@ -152,7 +152,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                                    <el-date-picker v-model="item.overDueInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择还罚息时间">
+                                    <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择还罚息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
@@ -198,7 +198,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSaveplan()">保 存</el-button>
+            <el-button type="primary" @click="onSaveplan()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
         </span>
     </el-dialog>
 </template>
@@ -213,6 +213,7 @@ export default {
         return {
             radio: '月',
             radiox: '1',
+            loading: false,
             form: {
                 name: '',
                 x: ''
@@ -245,6 +246,15 @@ export default {
             default: () => []
         }
     },
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    return time.getTime() > Date.now()
+                }
+            }
+        }
+    },
     methods: {
         async dealCount (query) {
             const res = await this.onCount(query)
@@ -269,14 +279,20 @@ export default {
             this.detailData[0].overdueList.splice(index, 1)
         },
         async onSaveplan () {
-            await setPlan({ planList: this.detailData })
-            this.$message({ type: 'success', message: '修改成功' })
-            this.onCancle()
-            this.$emit('reload')
+            this.loading = true
+            try {
+                await setPlan({ planList: this.detailData })
+                this.$message({ type: 'success', message: '修改成功' })
+                this.onCancle()
+                this.$emit('reload')
+                this.loading = false
+            } catch (error) {
+                this.loading = false
+            }
         }
     },
     mounted () {
-        this.detailData.map(async (item,index) => {
+        this.detailData.map(async (item, index) => {
             await this.dealCount(item)
         })
     }
