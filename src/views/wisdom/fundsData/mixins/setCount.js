@@ -31,7 +31,11 @@ export const setCountMixin = {
                 'overDueInterestCountList': [],
                 'planId': row.id // 还款计划id，就是还款列表planList里面的id
             }
-            if (row.overdueList.length > 0 && row.isStepOverInterest == 1) {
+            if (row.isStepOverInterest == 0) {
+                this.setCountParams.overDueInterestCountList.push({
+                    overDueInterest: row.overDueInterest
+                })
+            } else if (row.overdueList.length > 0 && row.isStepOverInterest == 1) {
                 row.overdueList.forEach((item) => {
                     let obj = {
                         overDueInterest: item.overDueInterest,

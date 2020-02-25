@@ -83,7 +83,7 @@ import grantcomp from '../typecomps/grantcomp'
 import grantratecomp from '../typecomps/grantratecomp'
 import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'newFlowdialog',
     components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
@@ -187,11 +187,14 @@ export default {
     computed: {
         ...mapGetters({
             platformData: 'platformData'
+        }),
+        ...mapState({
+            userInfo: state => state.userInfo
         })
     },
     mounted () {
         this.onFindPlatformslist()
-        this.planListItem.overdueList[0].overDueInterest = 12
+        this.planListItem.overDueInterest = 12
         this.ruleForm.planList.push({ ...this.planListItem })
     },
     methods: {
@@ -211,6 +214,7 @@ export default {
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
+                    this.ruleForm.loan.registrant = this.userInfo.jobNumber // Boss登记人
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
