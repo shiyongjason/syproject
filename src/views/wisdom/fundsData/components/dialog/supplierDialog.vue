@@ -71,7 +71,8 @@ export default {
     name: 'supplierDialog',
     data () {
         return {
-            loanDateType: '月'
+            loanDateType: '月',
+            loading: false
         }
     },
     props: {
@@ -98,11 +99,6 @@ export default {
                 supplier: '', // 供货商
                 yearRate: ''// 年利率
             })
-        }
-    },
-    data () {
-        return {
-            loading: false
         }
     },
     methods: {
