@@ -898,7 +898,7 @@ export default {
                     prop: 'accountType',
                     label: '还款项目',
                     render: (h, scope) => {
-                        return <span>{scope.row.accountType == 1 ? '流贷' : scope.row.accountType == 2 ? '敞口' : scope.row.accountType == 3 ? '分授信' : '-'}</span>
+                        return <span>{scope.row.type == 1 ? '本金' : scope.row.type == 2 ? '利息' : scope.row.type == 3 ? '宽限期利息' : '逾期利息'}</span>
                     }
                 },
                 {
