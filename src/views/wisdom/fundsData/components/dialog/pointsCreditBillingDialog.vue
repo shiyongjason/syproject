@@ -72,7 +72,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSave">保 存</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>
@@ -118,14 +118,21 @@ export default {
             })
         }
     },
+    data () {
+        return {
+            loading: false
+        }
+    },
     methods: {
         onCancle () {
             this.$emit('onClose')
         },
         async onSave () {
+            this.loading = true
             this.detailData.loanEndTime = this.detailData.loanEndTimeLoan
             if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
             await setLoan(this.detailData)
+            this.loading = false
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')

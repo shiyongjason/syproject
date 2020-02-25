@@ -916,10 +916,10 @@ export default {
                     }
                 },
                 {
-                    prop: 'endTime',
+                    prop: 'shouldRepayTime',
                     label: '应还款日期',
                     render: (h, scope) => {
-                        return <span>{scope.row.endTime ? moment(scope.row.endTime).format('YYYY-MM-DD') : '-'}</span>
+                        return <span>{scope.row.shouldRepayTime ? moment(scope.row.shouldRepayTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 }
                 // {
