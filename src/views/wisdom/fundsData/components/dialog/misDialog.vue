@@ -53,7 +53,8 @@ export default {
                 standingBookNo: [
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ]
-            }
+            },
+            loading: false
         }
     },
     props: {
@@ -85,11 +86,6 @@ export default {
         ...mapGetters({
             platformData: 'platformData'
         })
-    },
-    data () {
-        return {
-            loading: false
-        }
     },
     methods: {
         onCancle () {
