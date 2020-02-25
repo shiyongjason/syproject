@@ -29,13 +29,7 @@ function isNum (str, float = 1000000000) {
 }
 function isNegative (str, float = 1000000000) {
     const regular = /[^\-?\d.]/g
-    let res = numValidate(str, float, regular)
-    let t = res.charAt(0)
-    // 如果第一位是负号，则允许添加
-    if (t == '-') {
-        res = '-' + res
-    }
-    return res
+    return numValidate(str, float, regular)
 }
 
 function isNotInputTxt (str) {

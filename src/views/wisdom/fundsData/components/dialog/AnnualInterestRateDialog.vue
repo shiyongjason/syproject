@@ -14,7 +14,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金金额：" prop="thisPaidCapital">
-                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款" :disabled='!(detailData[0].thisPaidCapitalTime&&detailData[0].thisPaidGraceInterestTime&&detailData[0].thisPaidInterestTime&&(detailData[0].isStepOverInterest==0?true:detailData[0].thisPaidOverDueInterestTime))'>
+                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款" :disabled='!detailData[0].thisPaidCapitalTime'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -64,7 +64,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
                             <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
-                            <el-input v-isNegative="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入应收利息">
+                            <el-input v-isNegative="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入应收利息" :disabled="!detailData[0].thisPaidGraceInterestTime">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -93,7 +93,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                            <el-input v-isNegative="detailData[0].thisPaidInterest" maxlength='20' v-model.trim="detailData[0].thisPaidInterest" placeholder="请输入本次收取利息">
+                            <el-input v-isNegative="detailData[0].thisPaidInterest" maxlength='20' v-model.trim="detailData[0].thisPaidInterest" placeholder="请输入本次收取利息" :disabled="!detailData[0].thisPaidInterestTime">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -163,7 +163,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次缴纳逾期罚息:" prop="thisPaidOverDueInterest">
-                                <el-input v-isNegative="detailData[0].thisPaidOverDueInterest" maxlength='20' v-model.trim="detailData[0].thisPaidOverDueInterest" placeholder="请输入逾期利息">
+                                <el-input v-isNegative="detailData[0].thisPaidOverDueInterest" maxlength='20' v-model.trim="detailData[0].thisPaidOverDueInterest" placeholder="请输入逾期利息" :disabled="!detailData[0].thisPaidOverDueInterestTime">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
