@@ -177,9 +177,15 @@
                                     <el-select v-model="queryParamsReceivables.paymentMethod" placeholder="全部" :clearable=true>
                                         <!--1账期支付，2线下支付，3钱包支付-->
                                         <el-option label="全部" :value="''"></el-option>
+                                        <el-option label="网银支付" :value="30"></el-option>
+                                        <el-option label="快捷支付" :value="20"></el-option>
+                                        <el-option label="微信支付" :value="40"></el-option>
+                                        <el-option label="微信小程序支付" :value="41"></el-option>
+                                        <el-option label="微信小程序支付（非中金）" :value="42"></el-option>
+                                        <el-option label="支付宝网页" :value="50"></el-option>
                                         <el-option label="账期支付" :value="1"></el-option>
                                         <el-option label="线下支付" :value="2"></el-option>
-                                        <el-option label="钱包支付" :value="3"></el-option>
+                                        <el-option label="余额支付" :value="10"></el-option>
                                     </el-select>
                                 </div>
                             </div>

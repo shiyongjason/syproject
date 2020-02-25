@@ -81,7 +81,7 @@ export default {
                 { label: '状态', prop: 'isDownload' }
             ],
             paginationInfo: {},
-            downState: [{ label: '全部', key: '' }, { label: '是', key: 1 }, { label: '否', key: 0 }]
+            downState: [{ label: '全部', key: '' }, { label: '已导出', key: 1 }, { label: '未导出', key: 0 }]
         }
     },
     computed: {
