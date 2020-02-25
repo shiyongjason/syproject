@@ -31,7 +31,7 @@
         <div class="query-cont-row">
             <div class="query-cont-col" v-if="flowrateform[0].isStepOverInterest==0">
                 <el-form-item label="逾期利率：" prop="overDueInterest">
-                    <el-input v-model.trim="flowrateform[0].overdueList[0].overDueInterest" v-isNum="flowrateform[0].overdueList[0].overDueInterest" maxlength='20' placeholder="请输入逾期利率"><template slot="append">%</template>
+                    <el-input v-model.trim="flowrateform[0].overDueInterest" v-isNum="flowrateform[0].overDueInterest" maxlength='20' placeholder="请输入逾期利率"><template slot="append">%</template>
                     </el-input>
                 </el-form-item>
             </div>

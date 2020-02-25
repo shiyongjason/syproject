@@ -33,13 +33,14 @@ export const setCountMixin = {
             }
             if (row.isStepOverInterest == 0) {
                 this.setCountParams.overDueInterestCountList.push({
-                    overDueInterest: row.overDueInterest
+                    overDueInterest: row.overDueInterest,
+                    dateNum: 999
                 })
             } else if (row.overdueList.length > 0 && row.isStepOverInterest == 1) {
                 row.overdueList.forEach((item) => {
                     let obj = {
-                        overDueInterest: item.overDueInterest,
-                        dateNum: item.dateNum
+                        overDueInterest: +item.overDueInterest,
+                        dateNum: +item.dateNum
                     }
                     this.setCountParams.overDueInterestCountList.push(obj)
                 })

@@ -13,7 +13,6 @@
                     </div>
                 </div>
                 <div v-for="(item,index) in detailData" :key="index">
-                    <div class="ftitle" v-if="item.overdueList.length==0">未逾期</div>
                     <div class="ftitle">第{{index+1}}次性还款：</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
@@ -129,8 +128,8 @@
                     <div class="query-cont-row" style="margin-top:10px" v-if="item.overdueList.length>0">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="name">
-                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',1,item)}" :label=0>否</el-radio>
-                                <el-radio v-model.trim="item.isStepOverInterest" @change="()=>{$emit('stepOver',2,item)}" :label=1>是</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="onChange(1, item)" :label=0>否</el-radio>
+                                <el-radio v-model.trim="item.isStepOverInterest" @change="onChange(2, item)" :label=1>是</el-radio>
                             </el-form-item>
                         </div>
                     </div>
@@ -138,7 +137,7 @@
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="逾期利率：" prop="overDueInterest">
-                                    <el-input v-model.trim="item.overdueList[0].overDueInterest" v-isNum="item.overdueList[0].dateNum" maxlength='20' placeholder="请输入逾期利息">
+                                    <el-input v-model.trim="item.overDueInterest" v-isNum="item.dateNum" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
@@ -146,18 +145,19 @@
                         </div>
                     </div>
                     <div v-if="item.isStepOverInterest==1">
-                        <div class="" v-for="(item,index) in item.overdueList" :key="index">
+                        <div class="" v-for="(i,index) in item.overdueList" :key="index">
                             <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
                             <div class="query-cont-row">
                                 <div class="query-cont-col">
                                     <el-form-item :label="'第' +(index+1)+'阶段时长：'">
-                                        <el-input v-model.trim="item.dateNum" v-isNum:0="item.dateNum" maxlength='5' placeholder="请输入逾期时长"><template slot="append">月</template>
+                                        <el-input v-model.trim="i.dateNum" v-isNum:0="i.dateNum" maxlength='5' placeholder="请输入逾期时长" @blur="dealCount(item)">
+                                            <template slot="append">月</template>
                                         </el-input>
                                     </el-form-item>
                                 </div>
                                 <div class="query-cont-col">
                                     <el-form-item label="该阶段逾期利率：">
-                                        <el-input v-model.trim="item.overDueInterest" v-isNum:0="item.overDueInterest" maxlength='5' placeholder="请输入逾期利息"><template slot="append">%</template></el-input>
+                                        <el-input v-model.trim="i.overDueInterest" v-isNum:0="i.overDueInterest" maxlength='5' placeholder="请输入逾期利息" @blur="dealCount(item)"><template slot="append">%</template></el-input>
                                     </el-form-item>
                                 </div>
                             </div>
@@ -191,6 +191,7 @@
                             </el-form-item>
                         </div>
                     </div>
+                    <div class="ftitle" v-if="item.overdueList.length==0">未逾期</div>
                 </div>
                 <!-- 分割线 -->
                 <div class="fgx"></div>
@@ -257,16 +258,23 @@ export default {
     },
     methods: {
         async dealCount (query) {
+            console.log(query)
             const res = await this.onCount(query)
-            console.log('res: ', res)
             /* res格式: {
                 "graceInterestAmount": '', // 宽限期利息
                 "interestAmount": '', // 利息
-                "overDueInterestList": [] // 逾期利息集合
+                "overDueInterestList": '' // 逾期利息
             } */
             query.graceInterestAmount = res.graceInterestAmount
             query.interestAmount = res.interestAmount
-            // "overDueInterestList": [] // 逾期利息集合 这个我也不知道。
+            this.$set(query, 'overDueInterestAmount', res.overDueInterestAmount)
+            // query.overDueInterestAmount = res.overDueInterestAmount
+            console.log(query)
+            this.$forceUpdate()
+        },
+        onChange (val, item) {
+            this.dealCount(item)
+            this.$emit('stepOver', val, item)
         },
         onCancle () {
             this.$emit('onClose')
