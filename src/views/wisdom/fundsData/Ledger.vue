@@ -273,6 +273,9 @@ export default {
             this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         }
     },
+    activated () {
+        this.onQuery()
+    },
     beforeRouteEnter (to, from, next) {
         newCache('standingBook')
         next()

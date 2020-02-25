@@ -50,20 +50,20 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange">
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="放款日期：" prop="loanStartTime">
+                        <el-form-item label="借款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择出票日期">
+                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择出票日期" @change="datePickerChange">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="到期日：">
-                            <!-- 自动计算，到期日=开票日期+借款期限 -->
+                            <!-- 自动计算，到期日=借款日期+借款期限 -->
                             <span>{{detailData.loanEndTimeInvoice}}</span>
                         </el-form-item>
                     </div>
@@ -130,15 +130,17 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumM
+            this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeInvoice = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumD
+            this.$forceUpdate()
         },
         datePickerChange (val) {
-            if (!this.detailData.invoiceTime) {
+            if (!this.detailData.loanStartTime) {
                 this.detailData.loanEndTimeInvoice = '-'
                 return false
             }

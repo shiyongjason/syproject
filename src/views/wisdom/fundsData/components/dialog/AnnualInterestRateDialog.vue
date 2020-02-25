@@ -149,7 +149,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="query-cont-row" v-if="detailData[0].isStepOverInterest">
+                    <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="累计应缴纳逾期罚息:" prop="overdueList.dateNum">
                                 <span>{{detailData[0].overDueInterestAmount||0}}</span>
@@ -279,7 +279,7 @@ export default {
             this.$emit('reload')
         }
     },
-    mounted () {
+    async mounted () {
         // console.log('detailData', this.detailData)
         let obj = {
             'dateNum': '',
@@ -293,6 +293,7 @@ export default {
         if (this.detailData[0].overdueList.length < 2) {
             this.detailData[0].overdueList.push(obj)
         }
+        await this.dealCount(this.detailData[0])
     }
 }
 </script>

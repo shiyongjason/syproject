@@ -142,7 +142,9 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    class={
+                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate
+                                            ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
                                         this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
@@ -352,7 +354,9 @@ export default {
                             width: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                                    class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    class={
+                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate
+                                            ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={() => {
                                         this.getGrantPaymetPlanData(scope.row)
                                         this.repaymentDialogVisible = true
@@ -1372,7 +1376,9 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                            class={scope.row.loan_id ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                            class={
+                                scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime
+                                    ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                             onClick={() => {
                                 this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
@@ -1642,7 +1648,6 @@ export default {
         },
         // 流贷还款信息
         async getRespAccountRepaymentPlanData (row) {
-            console.log(row)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
             console.log(this.respAccountRepaymentPlanData)

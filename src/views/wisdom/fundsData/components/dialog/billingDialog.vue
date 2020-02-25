@@ -29,7 +29,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="保证金缴纳：" prop="depositPay">
                             <!-- 第一笔还款维护后，保证金缴纳金额输入框去除，变为不可修改 -->
-                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute">
+                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute" :disabled='true'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -37,7 +37,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="敞口金额：" prop="loanAmount">
                             <!-- 第一笔还款维护后，敞口金额输入框去除，变为不可修改，敞口金额=开票金额-保证金缴纳 -->
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额">
+                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额" :disabled='true'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -124,6 +124,7 @@ export default {
         setVal () {
             if (this.detailData.depositProportion) {
                 this.detailData.depositPay = (this.detailData.invoiceAmount * (this.detailData.depositProportion / 100)).toFixed(2)
+                this.detailData.loanAmount = this.detailData.invoiceAmount - this.detailData.depositPay
             }
         },
         doCompute () {
@@ -147,10 +148,12 @@ export default {
         loanDateNumM () {
             this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
+            this.$forceUpdate()
         },
         loanDateNumD () {
             this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
+            this.$forceUpdate()
         },
         datePickerChange (val) {
             if (!this.detailData.invoiceTime) {

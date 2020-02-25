@@ -118,10 +118,12 @@ export default {
         loanDateNumM () {
             this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
+            this.$forceUpdate()
         },
         loanDateNumD () {
             this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
+            this.$forceUpdate()
         },
         datePickerChange (val) {
             if (!this.detailData.loanStartTime) {

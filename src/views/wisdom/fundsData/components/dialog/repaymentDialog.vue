@@ -244,6 +244,11 @@ export default {
             this.onCancle()
             this.$emit('reload')
         }
+    },
+    mounted () {
+        this.detailData.map(async (item,index) => {
+            await this.dealCount(item)
+        })
     }
 }
 </script>
