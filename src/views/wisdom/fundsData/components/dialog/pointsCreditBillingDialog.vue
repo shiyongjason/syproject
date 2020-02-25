@@ -89,7 +89,8 @@ export default {
                 name: [
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ]
-            }
+            },
+            loading: false
         }
     },
     props: {
@@ -116,11 +117,6 @@ export default {
                 supplier: '', // 供货商
                 yearRate: ''// 年利率
             })
-        }
-    },
-    data () {
-        return {
-            loading: false
         }
     },
     methods: {

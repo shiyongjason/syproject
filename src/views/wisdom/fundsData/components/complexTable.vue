@@ -1352,7 +1352,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}` : '-'}</span>
+                        return <span>{scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}%` : '-'}</span>
                     }
                 },
                 {
