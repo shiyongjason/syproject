@@ -144,34 +144,6 @@
                                 </el-form-item>
                             </div>
                         </div>
-                        <div class="query-cont-row">
-                            <div class="query-cont-col">
-                                <el-form-item label="应缴纳逾期罚息：" prop="overDueInterestAmount">
-                                    {{item.overDueInterestAmount}} 元
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                                    <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择还罚息时间">
-                                    </el-date-picker>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' placeholder="请输入利息金额">
-                                        <template slot="append">元</template>
-                                    </el-input>
-                                </el-form-item>
-                            </div>
-                            <div class="query-cont-col">
-                                <el-form-item label="剩余逾期罚息：" prop="name">
-                                    <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
-                                    <template slot="append">元</template>
-                                </el-input> -->
-                                    {{(item.overDueInterestAmount||0)-(item.overDueInterestPaid?item.overDueInterestPaid:0)}}元
-                                </el-form-item>
-                            </div>
-                        </div>
                     </div>
                     <div v-if="item.isStepOverInterest==1">
                         <div class="" v-for="(item,index) in item.overdueList" :key="index">
@@ -189,6 +161,34 @@
                                     </el-form-item>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <el-form-item label="应缴纳逾期罚息：" prop="overDueInterestAmount">
+                                {{item.overDueInterestAmount}} 元
+                            </el-form-item>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
+                                <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择还罚息时间">
+                                </el-date-picker>
+                            </el-form-item>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
+                                <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' placeholder="请输入利息金额">
+                                    <template slot="append">元</template>
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-form-item label="剩余逾期罚息：" prop="name">
+                                <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
+                                    <template slot="append">元</template>
+                                </el-input> -->
+                                {{(item.overDueInterestAmount||0)-(item.overDueInterestPaid?item.overDueInterestPaid:0)}}元
+                            </el-form-item>
                         </div>
                     </div>
                 </div>
