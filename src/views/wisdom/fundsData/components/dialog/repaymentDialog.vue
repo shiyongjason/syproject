@@ -95,6 +95,36 @@
                             </el-form-item>
                         </div>
                     </div>
+                    <div v-if="item.account_accountType==3">
+                        <div class="query-cont-row">
+                            <div class="query-cont-col">
+                                <el-form-item label="累计应收正常利息：" prop="name">
+                                    {{item.interestAmount||0}}元
+                                </el-form-item>
+                            </div>
+                            <div class="query-cont-col">
+                                <el-form-item label="本次还正常利息时间：" prop="thisPaidInterestTime">
+                                    <el-date-picker v-model="item.thisPaidInterestTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                    </el-date-picker>
+                                </el-form-item>
+                            </div>
+                            <div class="query-cont-col">
+                                <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
+                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
+                                        <template slot="append">元</template>
+                                    </el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="query-cont-col">
+                                <el-form-item label="剩余正常利息：" prop="name">
+                                    <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
+                                    <template slot="append">元</template>
+                                </el-input> -->
+                                    {{(item.interestAmount||0)-(item.interestPaid?item.interestPaid:0)}}元
+                                </el-form-item>
+                            </div>
+                        </div>
+                    </div>
                     <div class="endline" v-if="item.overdueList.length>0">逾期</div>
                     <div class="query-cont-row" style="margin-top:10px" v-if="item.overdueList.length>0">
                         <div class="query-cont-col">
@@ -188,9 +218,9 @@ export default {
                 x: ''
             },
             rules: {
-                name: [
-                    { required: true, message: '请输入台账编号', trigger: 'blur' }
-                ]
+                // name: [
+                //     { required: true, message: '请输入台账编号', trigger: 'blur' }
+                // ]
             },
             newRata: {
                 dateNum: '',
