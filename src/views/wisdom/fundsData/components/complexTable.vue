@@ -38,9 +38,15 @@ import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
 import regulatingBreathingDialog from './dialog/regulatingBreathingDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan } from '../api/index'
 import moment from 'moment'
+import { mapState } from 'vuex'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
     props: {
         tableData: {
             type: Array,
@@ -946,14 +952,25 @@ export default {
                     sort: 2,
                     width: '150'
                 },
-                { prop: 'loan_yearRate', label: '年利率', sort: 4, width: '150' },
+                {
+                    prop: 'loan_yearRate',
+                    label: '年利率',
+                    sort: 4,
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
+                    }
+                },
                 {
                     prop: 'loan_loanDateNum',
                     label: '借款期限',
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
+                        return <span>
+                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                            {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                        </span>
                     }
                 },
                 {
@@ -1071,7 +1088,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_yearRate == 0 ? 0 : scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
+                        return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
                     }
                 },
                 {
@@ -1628,7 +1645,8 @@ export default {
                 ...this.loanData,
                 ...data,
                 loanDateNumM: '',
-                loanDateNumD: ''
+                loanDateNumD: '',
+                registrant: this.userInfo.jobNumber
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
