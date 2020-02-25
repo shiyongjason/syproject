@@ -251,6 +251,7 @@ export default {
                 this.ruleForm.planList[0].overdueList.push(newRata)
                 this.ruleForm.planList[0].overdueList[0].overDueInterest = profit[0]
             }
+            console.log(this.ruleForm.planList)
         },
         onRepaymentTypeChange (val) {
             this.ruleForm.planList = []
