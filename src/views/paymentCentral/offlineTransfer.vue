@@ -47,7 +47,7 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="isDownload" slot-scope="scope">
-                    {{scope.data.row.isDownload==1?'是':'否'}}
+                    {{scope.data.row.isDownload==1?'已导出':'未导出'}}
                 </template>
             </basicTable>
         </div>
