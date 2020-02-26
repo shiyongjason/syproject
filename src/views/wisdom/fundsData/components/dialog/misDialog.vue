@@ -54,7 +54,7 @@ export default {
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ],
                 loanCompanyName: [
-                    { required: true, message: '请输入借款单位', trigger: 'blur' }
+                    { required: true, message: '请输入借款单位' }
                 ],
                 misCode: [
                     { required: true, message: '请输入misCode', trigger: 'blur' }

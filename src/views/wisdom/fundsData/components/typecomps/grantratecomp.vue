@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <!-- <h3>逾期</h3>
+        <h3>逾期</h3>
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
@@ -52,15 +52,15 @@
                         </el-form-item>
                     </div>
                 </div>
-                < <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <el-button type="primary" size="small" @click="onDeleteRate(index)" icon="el-icon-minus">删除
                     </el-button>
-                </div> 
+                </div>  -->
             </div>
-            <div>
+            <!-- <div>
                  <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus" v-if="flowrateform[0].overdueList.length<5">下阶段利息</el-button>
-            </div>
-        </template> -->
+            </div> -->
+        </template>
     </div>
 </template>
 <script>

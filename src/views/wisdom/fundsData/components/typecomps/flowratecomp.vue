@@ -1,7 +1,6 @@
 <template>
     <div v-if="flowrateform">
         <!-- 流贷组件 -->
-        <!-- <h3>流贷</h3> -->
         <div class="query-cont-row">
             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
                 <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>

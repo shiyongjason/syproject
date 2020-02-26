@@ -7,7 +7,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账编号：" prop="account.standingBookNo">
-                            <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
+                            <el-input max-length='20' v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                     <!-- <div class="query-cont-col">
@@ -18,7 +18,6 @@
                     </div> -->
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="account.loanCompanyName" ref="loanCompanyName">
-                            <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
@@ -49,7 +48,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账档案编号：">
-                            <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                            <el-input max-length='20' v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
                             </el-input>
                         </el-form-item>
                     </div>
@@ -148,18 +147,28 @@ export default {
                 graceInterestPaid: '',
                 interestAmount: '',
                 interestPaid: '',
-                isStepOverInterest: 0, // 默认逾期否
+                isStepOverInterest: 1, // 默认逾期是
                 overDueInterest: '',
                 overDueInterestAmount: '',
                 overDueInterestPaid: '',
-                overdueList: [{
-                    dateNum: '',
-                    dateType: '',
-                    overDueInterest: '',
-                    planId: '',
-                    sort: '',
-                    startTime: ''
-                }]
+                overdueList: [
+                    {
+                        dateNum: '3',
+                        dateType: '',
+                        overDueInterest: '16',
+                        planId: '',
+                        sort: '',
+                        startTime: ''
+                    },
+                    {
+                        dateNum: '99999',
+                        dateType: '',
+                        overDueInterest: '20',
+                        planId: '',
+                        sort: '',
+                        startTime: ''
+                    }
+                ]
             },
             // 还款方式：334 对应 30%，30%，40%
             repaymenBaseNum: [0.3, 0.3, 0.4],
