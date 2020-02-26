@@ -263,6 +263,7 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'companyName', '')
             this.$set(this.queryParams, 'createDate', '')
+            this.$set(this.queryParams, 'personageCreateDate', '')
             this.onSearch()
         },
         onCurrentChange (val) {
