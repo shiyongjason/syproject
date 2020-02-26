@@ -47,13 +47,13 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还本金时间：" prop="thisPaidCapitalTime">
-                                <el-date-picker v-model="item.thisPaidCapitalTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择还本金时间">
+                                <el-date-picker v-model="item.thisPaidCapitalTime" @blur="dealCount(item)" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择还本金时间">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次本金还款金额：" prop="thisPaidCapital">
-                                <el-input v-model.trim="item.thisPaidCapital" :disabled='!item.thisPaidCapitalTime' v-isNegative="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
+                                <el-input v-model.trim="item.thisPaidCapital" @blur="dealCount(item)" :disabled='!item.thisPaidCapitalTime' v-isNegative="item.thisPaidCapital" maxlength='20' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
