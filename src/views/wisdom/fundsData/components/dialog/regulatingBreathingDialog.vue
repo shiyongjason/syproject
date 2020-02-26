@@ -3,7 +3,7 @@
         <div class="query-cont-col">
             <div class="query-col-title">手动调息金额：</div>
             <div class="query-col-input">
-                <el-input type="text" maxlength="10" v-model="detailData.manualInterest" placeholder="请输入手动调息金额">
+                <el-input type="text" maxlength="20" v-model="detailData.manualInterest" v-isNegative="detailData.manualInterest" placeholder="请输入手动调息金额">
                 </el-input>
             </div>
         </div>
