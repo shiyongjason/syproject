@@ -238,7 +238,7 @@ export default {
                 // eslint-disable-next-line
                 if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
                 // eslint-disable-next-line
-                if (i.paymentStatic) Object.keys(i.paymentStatic).forEach(key => obj['paymentStatic' + key] = i.paymentStatic[key])
+                if (i.paymentStatic) Object.keys(i.paymentStatic).forEach(key => obj['paymentStatic_' + key] = i.paymentStatic[key])
                 if (i.planList) {
                     i.planList.map((item, index) => {
                         // eslint-disable-next-line

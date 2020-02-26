@@ -39,6 +39,7 @@ import regulatingBreathingDialog from './dialog/regulatingBreathingDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan } from '../api/index'
 import moment from 'moment'
 import { mapState } from 'vuex'
+import filters from '@/utils/filters.js'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
@@ -134,7 +135,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
                                     this.loanData.title = '好信用—流贷借款信息维护'
                                     this.supplierDialogVisible = true
@@ -198,12 +199,12 @@ export default {
                             } */
                         },
                         {
-                            prop: 'planList_0_capitalOwe',
+                            prop: 'paymentStatic_capitalOwe',
                             label: '欠收本金',
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_capitalOwe)}</span>
                             }
                         }
                     ]
@@ -222,7 +223,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -301,7 +302,7 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceAmount == 0 ? 0 : scope.row.loan_invoiceAmount ? `${scope.row.loan_invoiceAmount}` : '-'}</span>
+                                return <span>{filters.money(scope.row.loan_invoiceAmount)}</span>
                             }
                         },
                         {
@@ -337,7 +338,7 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                                return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
                                     this.loanData.title = '好信用—分授信借款信息维护'
                                     this.pointsCreditBillingDialogVisible = true
@@ -385,7 +386,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.paymentStatic_capitalOwe == 0 ? 0 : scope.row.paymentStatic_capitalOwe ? `${scope.row.paymentStatic_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_capitalOwe)}</span>
                             }
                         },
                         {
@@ -394,7 +395,7 @@ export default {
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.paymentStatic_interestOwe == 0 ? 0 : scope.row.paymentStatic_interestOwe ? `${scope.row.paymentStatic_interestOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_interestOwe)}</span>
                             }
                         },
                         {
@@ -403,7 +404,7 @@ export default {
                             sort: 10,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.paymentStatic_overDueInterestOwe == 0 ? 0 : scope.row.paymentStatic_overDueInterestOwe ? `${scope.row.paymentStatic_overDueInterestOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
                         }
                     ]
@@ -440,7 +441,7 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_0_capitalOwe)}</span>
                             }
                         },
                         {
@@ -449,7 +450,7 @@ export default {
                             sort: 7,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_interestPaid == 0 ? 0 : scope.row.planList_0_interestPaid ? `${scope.row.planList_0_interestPaid}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_0_interestPaid)}</span>
                             }
                         },
                         {
@@ -458,7 +459,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_interestOwe == 0 ? 0 : scope.row.planList_0_interestOwe ? `${scope.row.planList_0_interestOwe}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_0_interestOwe)}</span>
                             }
                         },
                         {
@@ -467,7 +468,7 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -494,7 +495,7 @@ export default {
                             sort: 17,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_capitalOwe == 0 ? 0 : scope.row.planList_1_capitalOwe ? `${scope.row.planList_1_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_1_capitalOwe)}</span>
                             }
                         },
                         {
@@ -503,7 +504,7 @@ export default {
                             sort: 19,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_interestPaid == 0 ? 0 : scope.row.planList_1_interestPaid ? `${scope.row.planList_1_interestPaid}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_1_interestPaid)}</span>
                             }
                         },
                         {
@@ -512,7 +513,7 @@ export default {
                             sort: 20,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_interestOwe == 0 ? 0 : scope.row.planList_1_interestOwe ? `${scope.row.planList_1_interestOwe}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_1_interestOwe)}</span>
                             }
                         },
                         {
@@ -521,7 +522,7 @@ export default {
                             sort: 21,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? 'red' : ''}>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -548,7 +549,7 @@ export default {
                             sort: 29,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_capitalOwe == 0 ? 0 : scope.row.planList_2_capitalOwe ? `${scope.row.planList_2_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_2_capitalOwe)}</span>
                             }
                         },
                         {
@@ -557,7 +558,7 @@ export default {
                             sort: 31,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_interestPaid == 0 ? 0 : scope.row.planList_2_interestPaid ? `${scope.row.planList_2_interestPaid}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_2_interestPaid)}</span>
                             }
                         },
                         {
@@ -566,7 +567,7 @@ export default {
                             sort: 32,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_interestOwe == 0 ? 0 : scope.row.planList_2_interestOwe ? `${scope.row.planList_2_interestOwe}%` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_2_interestOwe)}</span>
                             }
                         },
                         {
@@ -575,7 +576,7 @@ export default {
                             sort: 33,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -655,7 +656,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_invoiceTime ? moment(scope.row.loan_invoiceTime).format('YYYY-MM-DD') : '-'}</span>
+                                return <span>{filters.money(scope.row.loan_invoiceTime)}</span>
                             }
                         },
                         {
@@ -673,7 +674,7 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_depositPay == 0 ? 0 : scope.row.loan_depositPay ? `${scope.row.loan_depositPay}` : '-'}</span>
+                                return <span>{filters.money(scope.row.loan_depositPay)}</span>
                             }
                         }
                     ]
@@ -692,7 +693,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.paymentStatic_capitalOwe == 0 ? 0 : scope.row.paymentStatic_capitalOwe ? `${scope.row.paymentStatic_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_capitalOwe)}</span>
                             }
                         },
                         {
@@ -701,7 +702,7 @@ export default {
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.paymentStatic_overDueInterestOwe == 0 ? 0 : scope.row.paymentStatic_overDueInterestOwe ? `${scope.row.paymentStatic_overDueInterestOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
                         }
                     ]
@@ -738,7 +739,7 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalOwe == 0 ? 0 : scope.row.planList_0_capitalOwe ? `${scope.row.planList_0_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_0_capitalOwe)}</span>
                             }
                         },
                         {
@@ -747,7 +748,7 @@ export default {
                             sort: 6,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -774,7 +775,7 @@ export default {
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_1_capitalOwe == 0 ? 0 : scope.row.planList_1_capitalOwe ? `${scope.row.planList_1_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_1_capitalOwe)}</span>
                             }
                         },
                         {
@@ -783,7 +784,7 @@ export default {
                             sort: 15,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_1_isOverDue ? 'red' : ''}>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
@@ -810,7 +811,7 @@ export default {
                             sort: 23,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.planList_2_capitalOwe == 0 ? 0 : scope.row.planList_2_capitalOwe ? `${scope.row.planList_2_capitalOwe}` : '-'}</span>
+                                return <span>{filters.money(scope.row.planList_2_capitalOwe)}</span>
                             }
                         },
                         {
@@ -819,7 +820,7 @@ export default {
                             sort: 24,
                             width: '150',
                             render: (h, scope) => {
-                                return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
+                                return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         }
                     ]
@@ -918,7 +919,7 @@ export default {
                     prop: 'paidAmount',
                     label: '金额',
                     render: (h, scope) => {
-                        return <span>{scope.row.paidAmount == 0 ? 0 : scope.row.paidAmount ? `${scope.row.paidAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paidAmount)}</span>
                     }
                 },
                 {
@@ -979,7 +980,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_totalInterest)}</span>
                     }
                 },
                 {
@@ -1000,7 +1001,7 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1013,12 +1014,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_0_graceInterestAmount',
+                    prop: 'paymentStatic_interestAmount',
                     label: '累计应收正常利息',
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestAmount == 0 ? 0 : scope.row.planList_0_graceInterestAmount ? `${scope.row.planList_0_graceInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_interestAmount)}</span>
                     }
                 },
                 {
@@ -1031,51 +1032,51 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_0_graceInterestPaid',
+                    prop: 'paymentStatic_interestPaid',
                     label: '累计实收正常利息',
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestPaid == 0 ? 0 : scope.row.planList_0_graceInterestPaid ? `${scope.row.planList_0_graceInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_interestPaid)}</span>
                     }
                 },
                 {
-                    prop: 'planList_0_graceInterestOwe',
+                    prop: 'paymentStatic_interestOwe',
                     label: '欠收正常利息',
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestOwe == 0 ? 0 : scope.row.planList_0_graceInterestOwe ? `${scope.row.planList_0_graceInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_interestOwe)}</span>
                     }
                 }
             ],
             // 逾期账目的展开
             FlowOverdueAccounts: [
                 {
-                    prop: 'planList_0_overDueInterestAmount',
+                    prop: 'paymentStatic_overDueInterestAmount',
                     label: '应收逾期罚息',
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}元` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestAmount)}</span>
                     }
                 },
                 {
-                    prop: 'planList_0_overDueInterestPaid',
+                    prop: 'paymentStatic_overDueInterestPaid',
                     label: '累计实收逾期罚息',
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}元` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestPaid)}</span>
                     }
                 },
                 {
-                    prop: 'planList_0_overDueInterestOwe',
+                    prop: 'paymentStatic_overDueInterestOwe',
                     label: '欠收逾期罚息',
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}元` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestOwe)}</span>
                     }
                 }
             ],
@@ -1127,7 +1128,7 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalPaid == 0 ? 0 : scope.row.paymentStatic_capitalPaid ? `${scope.row.paymentStatic_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1136,7 +1137,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_totalInterest == 0 ? 0 : scope.row.planList_0_totalInterest ? `${scope.row.planList_0_totalInterest}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_totalInterest)}</span>
                     }
                 },
                 {
@@ -1154,7 +1155,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_interestPaid == 0 ? 0 : scope.row.paymentStatic_interestPaid ? `${scope.row.paymentStatic_interestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_interestPaid)}</span>
                     }
                 },
                 {
@@ -1163,7 +1164,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_overDueInterestAmount == 0 ? 0 : scope.row.paymentStatic_overDueInterestAmount ? `${scope.row.paymentStatic_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1172,7 +1173,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_overDueInterestPaid == 0 ? 0 : scope.row.paymentStatic_overDueInterestPaid ? `${scope.row.paymentStatic_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestPaid)}</span>
                     }
                 }
             ],
@@ -1184,7 +1185,7 @@ export default {
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_capitalAmount == 0 ? 0 : scope.row.planList_0_capitalAmount ? `${scope.row.planList_0_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1193,7 +1194,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1202,7 +1203,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_interestAmount == 0 ? 0 : scope.row.planList_0_interestAmount ? `${scope.row.planList_0_interestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_interestAmount)}</span>
                     }
                 },
                 {
@@ -1211,7 +1212,7 @@ export default {
                     sort: 10,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1220,7 +1221,7 @@ export default {
                     sort: 11,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1229,7 +1230,7 @@ export default {
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定还款日2
@@ -1239,7 +1240,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_capitalAmount == 0 ? 0 : scope.row.planList_1_capitalAmount ? `${scope.row.planList_1_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(planList_1_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1248,7 +1249,7 @@ export default {
                     sort: 16,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_capitalPaid == 0 ? 0 : scope.row.planList_1_capitalPaid ? `${scope.row.planList_1_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1257,7 +1258,7 @@ export default {
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_interestAmount == 0 ? 0 : scope.row.planList_1_interestAmount ? `${scope.row.planList_1_interestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_interestAmount)}</span>
                     }
                 },
                 {
@@ -1266,7 +1267,7 @@ export default {
                     sort: 22,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestAmount == 0 ? 0 : scope.row.planList_1_overDueInterestAmount ? `${scope.row.planList_1_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1275,7 +1276,7 @@ export default {
                     sort: 23,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestPaid == 0 ? 0 : scope.row.planList_1_overDueInterestPaid ? `${scope.row.planList_1_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1284,7 +1285,7 @@ export default {
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestOwe == 0 ? 0 : scope.row.planList_1_overDueInterestOwe ? `${scope.row.planList_1_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定还款日3
@@ -1294,7 +1295,7 @@ export default {
                     sort: 27,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_capitalAmount == 0 ? 0 : scope.row.planList_2_capitalAmount ? `${scope.row.planList_2_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1303,7 +1304,7 @@ export default {
                     sort: 28,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_capitalPaid == 0 ? 0 : scope.row.planList_2_capitalPaid ? `${scope.row.planList_2_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1312,7 +1313,7 @@ export default {
                     sort: 30,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_interestAmount == 0 ? 0 : scope.row.planList_2_interestAmount ? `${scope.row.planList_2_interestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_interestAmount)}</span>
                     }
                 },
                 {
@@ -1321,7 +1322,7 @@ export default {
                     sort: 34,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestAmount == 0 ? 0 : scope.row.planList_2_overDueInterestAmount ? `${scope.row.planList_2_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1330,7 +1331,7 @@ export default {
                     sort: 35,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestPaid == 0 ? 0 : scope.row.planList_2_overDueInterestPaid ? `${scope.row.planList_2_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1339,7 +1340,7 @@ export default {
                     sort: 36,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestOwe == 0 ? 0 : scope.row.planList_2_overDueInterestOwe ? `${scope.row.planList_2_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestOwe)}</span>
                     }
                 }
             ],
@@ -1361,7 +1362,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanAmount == 0 ? 0 : scope.row.loan_loanAmount ? `${scope.row.loan_loanAmount}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
                             this.loanData.title = '好信用—敞口借款信息维护'
                             this.billingDialogVisible = true
@@ -1369,12 +1370,15 @@ export default {
                     }
                 },
                 {
-                    prop: 'netProfitRateLastMonth',
+                    prop: 'loan_loanDateNum',
                     label: '承兑期限',
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.netProfitRateLastMonth ? `${scope.row.netProfitRateLastMonth}%` : '-'}</span>
+                        return <span>
+                        {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                        {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                        </span>
                     }
                 },
                 {
@@ -1421,7 +1425,7 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalPaid == 0 ? 0 : scope.row.paymentStatic_capitalPaid ? `${scope.row.paymentStatic_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1430,7 +1434,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_overDueInterestAmount == 0 ? 0 : scope.row.paymentStatic_overDueInterestAmount ? `${scope.row.paymentStatic_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1439,7 +1443,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_overDueInterestPaid == 0 ? 0 : scope.row.paymentStatic_overDueInterestPaid ? `${scope.row.paymentStatic_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.paymentStatic_overDueInterestPaid)}</span>
                     }
                 }
             ],
@@ -1451,7 +1455,7 @@ export default {
                     sort: 3,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_capitalAmount == 0 ? 0 : scope.row.planList_0_capitalAmount ? `${scope.row.planList_0_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1460,7 +1464,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_capitalPaid == 0 ? 0 : scope.row.planList_0_capitalPaid ? `${scope.row.planList_0_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1469,7 +1473,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span class={scope.row.planList_0_isOverDue ? '' : 'red'}>{scope.row.planList_0_isOverDue ? '否' : '是'}</span>
+                        return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1478,7 +1482,7 @@ export default {
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestAmount == 0 ? 0 : scope.row.planList_0_overDueInterestAmount ? `${scope.row.planList_0_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1487,7 +1491,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestPaid == 0 ? 0 : scope.row.planList_0_overDueInterestPaid ? `${scope.row.planList_0_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1496,7 +1500,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_overDueInterestOwe == 0 ? 0 : scope.row.planList_0_overDueInterestOwe ? `${scope.row.planList_0_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_0_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定日期2
@@ -1506,7 +1510,7 @@ export default {
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_capitalAmount == 0 ? 0 : scope.row.planList_1_capitalAmount ? `${scope.row.planList_1_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1515,7 +1519,7 @@ export default {
                     sort: 13,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_capitalPaid == 0 ? 0 : scope.row.planList_1_capitalPaid ? `${scope.row.planList_1_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1524,7 +1528,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span class={scope.row.planList_1_isOverDue ? '' : 'red'}>{scope.row.planList_1_isOverDue ? '否' : '是'}</span>
+                        return <span class={scope.row.planList_1_isOverDue ? 'red' : ''}>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1533,7 +1537,7 @@ export default {
                     sort: 16,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestAmount == 0 ? 0 : scope.row.planList_1_overDueInterestAmount ? `${scope.row.planList_1_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1542,7 +1546,7 @@ export default {
                     sort: 17,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestPaid == 0 ? 0 : scope.row.planList_1_overDueInterestPaid ? `${scope.row.planList_1_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1551,7 +1555,7 @@ export default {
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_1_overDueInterestOwe == 0 ? 0 : scope.row.planList_1_overDueInterestOwe ? `${scope.row.planList_1_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_1_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定日期3
@@ -1561,7 +1565,7 @@ export default {
                     sort: 21,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_capitalAmount == 0 ? 0 : scope.row.planList_2_capitalAmount ? `${scope.row.planList_2_capitalAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_capitalAmount)}</span>
                     }
                 },
                 {
@@ -1570,7 +1574,7 @@ export default {
                     sort: 22,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_capitalPaid == 0 ? 0 : scope.row.planList_2_capitalPaid ? `${scope.row.planList_2_capitalPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1579,7 +1583,7 @@ export default {
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span class={scope.row.planList_2_isOverDue ? '' : 'red'}>{scope.row.planList_2_isOverDue ? '否' : '是'}</span>
+                        return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1588,7 +1592,7 @@ export default {
                     sort: 25,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestAmount == 0 ? 0 : scope.row.planList_2_overDueInterestAmount ? `${scope.row.planList_2_overDueInterestAmount}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestAmount)}</span>
                     }
                 },
                 {
@@ -1597,7 +1601,7 @@ export default {
                     sort: 26,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestPaid == 0 ? 0 : scope.row.planList_2_overDueInterestPaid ? `${scope.row.planList_2_overDueInterestPaid}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestPaid)}</span>
                     }
                 },
                 {
@@ -1606,7 +1610,7 @@ export default {
                     sort: 27,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_2_overDueInterestOwe == 0 ? 0 : scope.row.planList_2_overDueInterestOwe ? `${scope.row.planList_2_overDueInterestOwe}` : '-'}</span>
+                        return <span>{filters.money(scope.row.planList_2_overDueInterestOwe)}</span>
                     }
                 }
             ]
