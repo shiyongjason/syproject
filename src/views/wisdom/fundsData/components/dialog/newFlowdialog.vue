@@ -23,8 +23,8 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="MIS编码：" prop="misCode">
-                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略" disabled></el-input>
+                        <el-form-item label="MIS编码：" prop="account.misCode" ref="misCode">
+                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="自动带入" disabled></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -100,6 +100,9 @@ export default {
                 ],
                 'account.subsectionName': [
                     { required: true, message: '请输入分部名称', trigger: 'blur' }
+                ],
+                'account.misCode': [
+                    { required: true, message: '请输入MIS编码', trigger: 'blur' }
                 ]
             },
             ruleForm: {
@@ -186,6 +189,11 @@ export default {
         'ruleForm.account.subsectionName' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['subsectionName'].clearValidate()
+            })
+        },
+        'ruleForm.account.misCode' (val) {
+            this.$nextTick(() => {
+                if (val) this.$refs['misCode'].clearValidate()
             })
         }
     },
