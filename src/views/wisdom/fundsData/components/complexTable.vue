@@ -1650,7 +1650,7 @@ export default {
                 ...data,
                 loanDateNumM: '',
                 loanDateNumD: '',
-                registrant: this.userInfo.jobNumber
+                registrant: this.userInfo.employeeName
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
