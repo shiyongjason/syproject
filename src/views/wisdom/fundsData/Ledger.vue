@@ -40,7 +40,8 @@
             </div><br>
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
             <div class="query-cont-col">
-                <el-button type="primary" class="m0" @click="onExportLedger">借款模板导出</el-button>
+                <a href="./static/test.xlsx" download="资金台账-借款信息.xlsx">借款模板导出</a>
+                <!-- <el-button type="primary" class="m0" @click="onExportLedger">借款模板导出</el-button> -->
                 <!-- 无接口 暂时注释 -->
                 <!-- <el-button type="primary" @click="onExportTemplate">还款明细表模板导出</el-button> -->
             </div>
