@@ -1,4 +1,4 @@
-function numValidate (str, float, regular) {
+function numValidate (str, float, regular, regular2) {
     if (!str) return
     str = str.toString()
     // 如果第一位是0，第二位不是点  01 02...
@@ -12,7 +12,7 @@ function numValidate (str, float, regular) {
     const i = str.indexOf('.')
     let arr
     if (i !== -1) {
-        str = str.replace(regular, '')
+        str = str.replace(regular2, '')
         arr = str.split('.')
         str = arr[0]
     }
@@ -25,11 +25,13 @@ function numValidate (str, float, regular) {
 }
 function isNum (str, float = 1000000000) {
     const regular = /[^0-9]*/g
-    return numValidate(str, float, regular)
+    const regular2 = /[^\d^\\.]+/g
+    return numValidate(str, float, regular, regular2)
 }
 function isNegative (str, float = 1000000000) {
     const regular = /[^\-?\d.]/g
-    return numValidate(str, float, regular)
+    const regular2 = /[^\d^\\.\\-]+/g
+    return numValidate(str, float, regular, regular2)
 }
 
 function isNotInputTxt (str) {
