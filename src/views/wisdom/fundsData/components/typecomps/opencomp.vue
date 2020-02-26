@@ -6,6 +6,7 @@
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
                     <el-input v-model.trim="flowform.invoiceAmount" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
+                        <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
