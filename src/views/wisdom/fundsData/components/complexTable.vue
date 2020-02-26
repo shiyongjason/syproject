@@ -905,7 +905,14 @@ export default {
                     prop: 'accountType',
                     label: '还款项目',
                     render: (h, scope) => {
-                        return <span>{scope.row.type == 1 ? '本金' : scope.row.type == 2 ? '利息' : scope.row.type == 3 ? '宽限期利息' : '逾期利息'}</span>
+                        return <span>{
+                            accountType == 1 ? // 流贷
+                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') :
+                            accountType == 2 ? // 敞口
+                            (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还逾期罚息' : scope.row.type == 3 ? '还宽限期利息' : '-') :
+                            accountType == 3 ? // 分授信
+                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') : '-'
+                        }</span>
                     }
                 },
                 {
