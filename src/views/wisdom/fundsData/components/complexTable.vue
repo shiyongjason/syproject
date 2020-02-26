@@ -1673,7 +1673,7 @@ export default {
         // 敞口还款
         async getGrantPaymetPlanData (row) {
             console.log(row)
-            this.loanAmount = row.loan_loanAmount
+            this.loanAmount = row.paymentStaticcapitalAmount
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             if (row.account_accountType == 2) {
@@ -1684,18 +1684,50 @@ export default {
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'account_id', row.account_id)
+            // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
         },
         onRepaymentTypeChange (val) {
-            this.planListItem = { ...this.rowData[0] }
             this.rowData = []
+            let repaymenBaseNum = [0.3, 0.3, 0.4]
+            let repaymenDays = [2, 1, 0]
+            // if (val === 1) {
+            //     this.planListItem.id = ''
+            //     // this.planListItem.capitalAmount = this.loanAmount
+            //     this.rowData.push({ ...this.planListItem })
+            // } else if (val === 2) {
+            //     console.log(111111, this.copyGrantdata)
+            //     for (let i = 0; i < 3; i++) {
+            //         if (this.copyGrantdata.length == 1) {
+            //             this.rowData.push({ ...this.copyGrantdata[0] })
+            //         } else {
+            //             this.copyGrantdata[i].capitalAmount = this.copyGrantdata[i].capitalAmount * repaymenBaseNum[i]
+            //             this.rowData.push({ ...(this.copyGrantdata[i]) })
+            //         }
+            //         this.rowData.push({ ...(this.copyGrantdata[i] ? (this.copyGrantdata[i]) : this.copyGrantdata[0]) })
+            //         this.$set(this.rowData[0], 'repaymentType', val)
+            //     }
+            // }
+            if (this.copyGrantdata.length == 1) {
+                this.planListItem = { ...this.copyGrantdata[0] }
+            } else {
+                this.planListItem = { ...this.copyGrantdata[2] }
+            }
+            this.planListItem.id = ''
             if (val === 1) {
-                this.planListItem.id = ''
                 this.planListItem.capitalAmount = this.loanAmount
                 this.rowData.push({ ...this.planListItem })
+                this.$set(this.rowData[0], 'repaymentType', val)
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
-                    this.rowData.push({ ...(this.copyGrantdata[i] ? this.copyGrantdata[i] : this.copyGrantdata[0]) })
+                    if (this.copyGrantdata.length == 1) {
+                        this.rowData.push({ ...this.planListItem })
+                        this.rowData[i].capitalAmount = (this.rowData[i].capitalAmount * repaymenBaseNum[i]).toFixed(2)
+                        this.rowData[i].endTime = this.rowData[i].endTime && moment(this.rowData[i].endTime, 'YYYY-MM-DD').subtract(repaymenDays[i], 'months').format('YYYY-MM-DD')
+                    } else {
+                        this.rowData.push({ ...(this.copyGrantdata[i]) })
+                    }
+                    // this.rowData.push({ ...(this.copyGrantdata[i]) })
                     this.$set(this.rowData[0], 'repaymentType', val)
                 }
             }
