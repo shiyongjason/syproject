@@ -9,7 +9,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSure">确 定</el-button>
+            <el-button type="primary" @click="onSure" :loading='loading'>确 定</el-button>
         </span>
     </el-dialog>
 </template>
@@ -45,9 +45,16 @@ export default {
             })
         }
     },
+    data () {
+        return {
+            loading: false
+        }
+    },
     methods: {
         async onSure () {
+            this.loading = true
             await setLoan(this.detailData)
+            this.loading = false
             this.$message({ type: 'success', message: '修改成功' })
             this.onCancle()
             this.$emit('reload')

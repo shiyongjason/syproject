@@ -24,7 +24,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="MIS编码：" prop="misCode">
-                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略"></el-input>
+                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略" disabled></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
@@ -67,7 +67,7 @@
                 </div>
                 <div class="flow-bottom">
                     <el-button type="primary" @click="onSubmit">立即创建</el-button>
-                    <el-button>取消</el-button>
+                    <el-button @click="onCancel">取消</el-button>
                 </div>
             </el-form>
         </div>
@@ -83,7 +83,7 @@ import grantcomp from '../typecomps/grantcomp'
 import grantratecomp from '../typecomps/grantratecomp'
 import opencomp from '../typecomps/opencomp'
 import { addAccount } from '../../api/index'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'newFlowdialog',
     components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
@@ -180,7 +180,6 @@ export default {
         },
         'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
-                console.log(val)
                 if (val) this.$refs['loanCompanyName'].clearValidate()
             })
         }
@@ -188,11 +187,14 @@ export default {
     computed: {
         ...mapGetters({
             platformData: 'platformData'
+        }),
+        ...mapState({
+            userInfo: state => state.userInfo
         })
     },
     mounted () {
         this.onFindPlatformslist()
-        this.planListItem.overdueList[0].overDueInterest = 12
+        this.planListItem.overDueInterest = 12
         this.ruleForm.planList.push({ ...this.planListItem })
     },
     methods: {
@@ -212,6 +214,7 @@ export default {
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
+                    this.ruleForm.loan.registrant = this.userInfo.jobNumber // Boss登记人
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
@@ -248,6 +251,7 @@ export default {
                 this.ruleForm.planList[0].overdueList.push(newRata)
                 this.ruleForm.planList[0].overdueList[0].overDueInterest = profit[0]
             }
+            console.log(this.ruleForm.planList)
         },
         onRepaymentTypeChange (val) {
             this.ruleForm.planList = []
@@ -273,6 +277,10 @@ export default {
                     this.ruleForm.planList[i].endTime = this.ruleForm.loan.loanEndTime && moment(this.ruleForm.loan.loanEndTime, 'YYYY-MM-DD').subtract(this.repaymenDays[i], 'months').format('YYYY-MM-DD')
                 }
             }
+        },
+        onCancel () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/fundsData/standingBook')
         }
     }
 }
@@ -289,13 +297,7 @@ h3 {
     margin-bottom: 10px;
     line-height: 30px;
 }
-.flowbody {
-    .query-cont-col {
-        margin-bottom: 19px;
-    }
-}
 .smalltitle {
-    color: #f00;
     line-height: 30px;
 }
 .flow-bottom {

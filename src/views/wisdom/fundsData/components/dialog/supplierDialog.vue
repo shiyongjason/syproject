@@ -12,7 +12,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="loanAmount">
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
+                            <el-input v-model.trim="detailData.loanAmount" v-isNegative="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -59,7 +59,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSave">保 存</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>
@@ -71,7 +71,8 @@ export default {
     name: 'supplierDialog',
     data () {
         return {
-            loanDateType: '月'
+            loanDateType: '月',
+            loading: false
         }
     },
     props: {
@@ -105,9 +106,12 @@ export default {
             this.$emit('onClose')
         },
         async onSave () {
+            this.loading = true
             this.detailData.loanEndTime = this.detailData.loanEndTimeLoan
             if (this.detailData.loanDateNum === '') this.detailData.loanDateNum = 0
+            if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
             await setLoan(this.detailData)
+            this.loading = false
             this.$message({
                 type: 'success',
                 message: '修改成功'
@@ -116,12 +120,14 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
+            this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD HH:mm:ss')
+            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
+            this.$forceUpdate()
         },
         datePickerChange (val) {
             if (!this.detailData.loanStartTime) {
@@ -130,11 +136,11 @@ export default {
             }
             // 月
             if (this.detailData.loanDateType == 1) {
-                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD HH:mm:ss'))
+                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'M').format('YYYY-MM-DD'))
             }
             // 天
             if (this.detailData.loanDateType == 2) {
-                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD HH:mm:ss'))
+                this.$set(this.detailData, 'loanEndTimeLoan', moment(val).add(this.detailData.loanDateNum, 'd').format('YYYY-MM-DD'))
             }
             this.$forceUpdate()
         }
