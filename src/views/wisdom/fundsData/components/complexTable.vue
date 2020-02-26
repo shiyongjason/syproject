@@ -5,7 +5,7 @@
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
-        <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
+        <misDialog :detailData='accountData' v-if='accountData&&misDialogVisible' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -资金档案编号 -->
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
@@ -1376,8 +1376,8 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return <span>
-                        {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                        {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                            {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
                         </span>
                     }
                 },
