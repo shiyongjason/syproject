@@ -39,6 +39,10 @@ export default {
                     element.value = isNegative(element.value, binding.arg)
                     if (element.value == 'undefined') element.value = ''
                     if (element.value == '-.' || element.value == '--' || element.value == '.-') element.value = '-'
+                    if (element.value.indexOf('-') > -1) {
+                        let arr = element.value.split('-')
+                        if (arr.length > 2) element.value = ''
+                    }
                     vnode.data.model && vnode.data.model.callback(element.value)
                 })
             }
