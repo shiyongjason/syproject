@@ -38,7 +38,7 @@ export default {
                 element.addEventListener('keyup', () => {
                     element.value = isNegative(element.value, binding.arg)
                     if (element.value == 'undefined') element.value = ''
-                    if (element.value == '-.' || element.value == '--') element.value = '-'
+                    if (element.value == '-.' || element.value == '--' || element.value == '.-') element.value = '-'
                     vnode.data.model && vnode.data.model.callback(element.value)
                 })
             }
