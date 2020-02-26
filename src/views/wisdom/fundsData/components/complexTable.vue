@@ -325,7 +325,7 @@ export default {
                         },
                         {
                             prop: 'loan_loanStartTime',
-                            label: '放款日期',
+                            label: '借款日期',
                             sort: 4,
                             width: '150',
                             render: (h, scope) => {
