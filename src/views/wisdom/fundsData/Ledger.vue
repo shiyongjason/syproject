@@ -40,10 +40,14 @@
             </div><br>
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
             <div class="query-cont-col">
-                <a href="./static/test.xlsx" download="资金台账-借款信息.xlsx">借款模板导出</a>
-                <!-- <el-button type="primary" class="m0" @click="onExportLedger">借款模板导出</el-button> -->
-                <!-- 无接口 暂时注释 -->
-                <!-- <el-button type="primary" @click="onExportTemplate">还款明细表模板导出</el-button> -->
+                <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
+                    还款明细表模板导出
+                </a>
+            </div>
+            <div class="query-cont-col">
+                <a class="downloadExcel" href="/excelTemplate/资金台账-借款信息导入模板.xlsx" download="资金台账-借款信息导入模板.xlsx">
+                    借款模板导出
+                </a>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
@@ -161,18 +165,6 @@ export default {
             this.branchList.unshift(
                 { organizationCode: '', organizationName: '请选择分部' }
             )
-        },
-        onExportTemplate () {
-            // 模板导出
-            // var url = ''
-            // for (var key in this.queryParams) {
-            //     url += (key + '=' + this.queryParams[key] + '&')
-            // }
-            // location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
-        },
-        // 台账导出
-        onExportLedger () {
-            window.location.href = interfaceUrl + 'backend/account/export'
         },
         handleClick (i) {
             if (i == 1) this.productType = '1'
@@ -294,7 +286,12 @@ export default {
 .add-tags-dialog {
     padding-top: 20px;
 }
-
+.downloadExcel{
+    padding: 12px 20px;
+    border-radius: 4px;
+    background-color: #FF7A45;
+    color: #fff;
+}
 /deep/ .el-dialog__body {
     min-height: 0 !important;
 }
