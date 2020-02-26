@@ -79,7 +79,7 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getSignSelector, signCa } from '../api/index'
-import { PHONE, checkIdCard } from '@/utils/rules'
+import { PHONE, checkIdCard, Email } from '@/utils/rules'
 export default {
     name: 'caApply',
     data () {
@@ -104,7 +104,8 @@ export default {
                     { validator: PHONE, trigger: 'blur' }
                 ],
                 operatorEmail: [
-                    { required: true, message: '请输入操作人邮箱', trigger: 'blur' }
+                    { required: true, message: '请输入操作人邮箱', trigger: 'blur' },
+                    { validator: Email, trigger: 'blur' }
                 ],
                 operatorIdNumber: [
                     { required: true, message: '请输入操作人身份证号', trigger: 'blur' },
