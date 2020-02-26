@@ -28,7 +28,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="account.subsectionName">
+                        <el-form-item label="分部：" prop="account.subsectionName" ref="subsectionName">
                             <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入" disabled>
                             </el-input>
                         </el-form-item>
@@ -93,7 +93,7 @@ export default {
             textarea: '',
             rules: {
                 'account.standingBookNo': [
-                    { required: true, message: '请输入台账档案编号', trigger: 'blur' }
+                    { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ],
                 'account.loanCompanyName': [
                     { required: true, message: '请输入借款单位' }
@@ -181,6 +181,11 @@ export default {
         'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['loanCompanyName'].clearValidate()
+            })
+        },
+        'ruleForm.account.subsectionName' (val) {
+            this.$nextTick(() => {
+                if (val) this.$refs['subsectionName'].clearValidate()
             })
         }
     },
