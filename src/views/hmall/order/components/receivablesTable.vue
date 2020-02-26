@@ -34,6 +34,9 @@
                 align="center"
                 label="支付方式"
                 prop="paymentMethodDesc">
+                <template slot-scope="scope">
+                    {{ paymethodMap.get(scope.row.paymentMethod) }}
+                </template>
             </el-table-column>
             <el-table-column
                 align="center"
@@ -82,6 +85,21 @@ export default {
                     pageNumber: 1
                 }
             }
+        }
+    },
+    data () {
+        return {
+            paymethodMap: new Map([
+                [20, '快捷支付'],
+                [30, '网银支付'],
+                [40, '微信支付'],
+                [41, '微信支付（小程序）'],
+                [42, '微信支付（小程序）'],
+                [50, '支付宝支付'],
+                [1, '账期支付'],
+                [2, '公司转账'],
+                [10, '余额支付']
+            ])
         }
     },
     methods: {
