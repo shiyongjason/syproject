@@ -23,8 +23,8 @@ export const setCountMixin = {
         async onCount (row) {
             this.setCountParams = {
                 'accountId': this.detailData[0].account_id, // 台账id，基础信息的id
-                'capitalPaid': row.capitalPaid, // 本次本金归还金额
-                'capitalTime': row.capitalTime, // 本金归还时间
+                'capitalPaid': +row.thisPaidCapital || +row.capitalPaid, // 本次本金归还金额
+                'capitalTime': row.thisPaidCapitalTime || row.capitalTime, // 本金归还时间
                 'graceDay': row.graceDay || 0, // 宽限期时间
                 'graceInterest': row.graceInterest, // 宽限期利率
                 // 逾期利率计算集合
