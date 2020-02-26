@@ -96,6 +96,7 @@ export default {
             this.detailData.loanCompanyName = val.value ? val.value.value : ''
             this.detailData.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.detailData.subsectionName = val.value ? val.value.subsectionName : ''
+            this.detailData.misCode = val.value ? val.value.misCode : ''
         },
         onSave () {
             this.$refs['form'].validate(async (valid, error) => {
