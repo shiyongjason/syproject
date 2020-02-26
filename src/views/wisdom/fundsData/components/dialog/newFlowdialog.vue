@@ -175,10 +175,12 @@ export default {
         },
         'ruleForm.loan.loanEndTime' (val) {
             // 触发自动计算还款计划
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
             this.setPlanList()
         },
         'ruleForm.loan.loanAmount' (val) {
             // 触发自动计算还款计划
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
             this.setPlanList()
         },
         'ruleForm.account.loanCompanyCode' (val) {
@@ -267,6 +269,7 @@ export default {
             console.log(this.ruleForm.planList)
         },
         onRepaymentTypeChange (val) {
+            console.log(val)
             this.ruleForm.planList = []
             this.ruleForm.loan.repaymentType = val
             if (val === 1) {
