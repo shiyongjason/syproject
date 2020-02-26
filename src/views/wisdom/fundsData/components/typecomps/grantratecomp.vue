@@ -19,18 +19,22 @@
                 </div>
             </div>
         </div>
-        <h3>逾期</h3>
+        <!-- <h3>逾期</h3>
         <div class="query-cont-row">
-            <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
-                <el-radio v-model.trim="flowrateform[0].isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>
-                <el-radio v-model.trim="flowrateform[0].isStepOverInterest" :label=1 @change="()=>{$emit('stepOver',2)}">是</el-radio>
-            </el-form-item>
+            <div class="query-cont-col">
+                <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
+                    <el-radio v-model.trim="flowrateform[0].isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>
+                    <el-radio v-model.trim="flowrateform[0].isStepOverInterest" :label=1 @change="()=>{$emit('stepOver',2)}">是</el-radio>
+                </el-form-item>
+            </div>
         </div>
-        <div class="query-cont-col" v-if="flowrateform[0].isStepOverInterest==0">
-            <el-form-item label="逾期利率：" prop="overDueInterest">
-                <el-input v-model.trim="flowrateform[0].overdueList[0].overDueInterest" v-isNum="flowrateform[0].overdueList[0].overDueInterest" maxlength='20' placeholder="请输入逾期利率"><template slot="append">%</template>
-                </el-input>
-            </el-form-item>
+        <div class="query-cont-row">
+            <div class="query-cont-col" v-if="flowrateform[0].isStepOverInterest==0">
+                <el-form-item label="逾期利率：" prop="overDueInterest">
+                    <el-input v-model.trim="flowrateform[0].overDueInterest" v-isNum="flowrateform[0].overDueInterest" maxlength='20' placeholder="请输入逾期利率"><template slot="append">%</template>
+                    </el-input>
+                </el-form-item>
+            </div>
         </div>
         <template v-if="flowrateform[0].isStepOverInterest==1">
             <div class="" v-for="(item,index) in flowrateform[0].overdueList" :key="item.id">
@@ -48,15 +52,15 @@
                         </el-form-item>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
+                < <div class="query-cont-col">
                     <el-button type="primary" size="small" @click="onDeleteRate(index)" icon="el-icon-minus">删除
                     </el-button>
-                </div> -->
+                </div> 
             </div>
             <div>
-                <!-- <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus" v-if="flowrateform[0].overdueList.length<5">下阶段利息</el-button> -->
+                 <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus" v-if="flowrateform[0].overdueList.length<5">下阶段利息</el-button>
             </div>
-        </template>
+        </template> -->
     </div>
 </template>
 <script>
