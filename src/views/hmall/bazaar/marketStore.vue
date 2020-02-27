@@ -34,7 +34,7 @@
                         </el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
                         <el-input type="text" maxlength="50" v-model="queryParams.specification" placeholder="请输入商品型号">
@@ -44,10 +44,13 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.onMarket" style="width: 100%">
-                        <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
-                         </el-select>
+                        <el-select v-model="queryParams.onMarket" style="width: 100%">
+                            <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
+                        </el-select>
                     </div>
+                </div>
+                <div class="query-cont-col">
+                    <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
@@ -127,7 +130,8 @@ export default {
                 brandName: '',
                 categoryId: '',
                 onMarket: '',
-                specification: ''
+                specification: '',
+                isOwnOperated: false
             },
             paginationData: {
                 pageNumber: 1,
@@ -168,8 +172,10 @@ export default {
             this.$set(this.queryParams, 'source', '')
             this.$set(this.queryParams, 'categoryId', '')
             this.$set(this.queryParams, 'onMarket', '')
+            this.$set(this.queryParams, 'specification', '')
             this.$set(this.paginationData, 'pageNumber', 1)
             this.$set(this.paginationData, 'pageSize', 10)
+            this.$set(this.queryParams, 'isOwnOperated', false)
             this.onQuery()
         },
         async search () {
@@ -202,13 +208,14 @@ export default {
         },
         onImport () {
             window.location = B2bUrl + 'product/api/spu/spu-export?merchantName=' + this.queryParams.merchantName +
-                    '&spuName=' + this.queryParams.spuName +
-                    '&source=' + this.queryParams.source +
-                    '&brandName=' + this.queryParams.brandName +
-                    '&categoryId=' + this.queryParams.categoryId +
-                    '&onMarket=' + this.queryParams.onMarket +
-                     '&specification=' + this.queryParams.specification +
-                    '&access_token=' + sessionStorage.getItem('token')
+                '&spuName=' + this.queryParams.spuName +
+                '&source=' + this.queryParams.source +
+                '&brandName=' + this.queryParams.brandName +
+                '&categoryId=' + this.queryParams.categoryId +
+                '&onMarket=' + this.queryParams.onMarket +
+                '&specification=' + this.queryParams.specification +
+                '&isOwnOperated=' + this.queryParams.isOwnOperated +
+                '&access_token=' + sessionStorage.getItem('tokenB2b')
         }
     },
     mounted () {

@@ -1,3 +1,4 @@
+// B2B 特价活动
 export const DEMO = 'DEMO'
 // 活动商品数据
 export const ADD_EVENT_PRODUCTS = 'ADD_EVENT_PRODUCTS'
@@ -16,6 +17,26 @@ export const EMPTY_EVENT_PRODUCTS = 'EMPTY_EVENT_PRODUCTS'
 // 列表 hover 埋点数据
 export const LIST_TRACK = 'LIST_TRACK'
 
+// B2b 会员账号体系
+export const NEST_DATA = 'NEST_DATA'
+export const MERCHT_DATA = 'MERCHT_DATA'
+export const MERCHT_DETAIL = 'MERCHT_DETAIL'
+export const MERCHT_STATIC = 'MERCHT_STATIC'
+export const BRANCH_LIST = 'BRANCH_LIST'
+export const MEMBER_DATA = 'MEMBER_DATA'
+export const MEMBER_DETAIL = 'MEMBER_DETAIL'
+export const MEMBER_STATIC = 'MEMBER_STATIC'
+export const MERCHT_LIST = 'MERCHT_LIST'
+export const ACCOUNT_DATA = 'ACCOUNT_DATA'
+export const ACCOUNT_DETAIL = 'ACCOUNT_DETAIL'
+
+// 中金 支付
+export const PAYMENT_WHITE = 'PAYMENT_WHITE'
+
+// B2b 供应商
+export const SUPPLIER_DATA = 'SUPPLIER_DATA'
+export const BRAND_DATA = 'BRAND_DATA'
+export const SUPPLIER_BRACHLIST = 'SUPPLIER_BRACHLIST'
 // 舒适云数据后台
 // 家庭管理
 
