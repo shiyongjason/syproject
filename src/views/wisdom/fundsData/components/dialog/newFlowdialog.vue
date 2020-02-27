@@ -35,8 +35,8 @@
                 </div>
                 <!--抽离 还款-->
                 <flowcomp :flowform=ruleForm.loan v-if="changeType(1,1)" />
-                <grantcomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
-                <opencomp :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
+                <grantcomp ref="opencomp" :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
+                <opencomp ref="opencomp" :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
                 <!--抽离 还款利息-->
                 <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(1,1)" />
                 <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,2)" />
@@ -183,14 +183,13 @@ export default {
             deep: true
         },
         'ruleForm.loan.loanEndTime' (val) {
+            console.log('watch loanEndTime', val)
             // 触发自动计算还款计划
-            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
-            this.setPlanList()
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType, false)
         },
         'ruleForm.loan.loanAmount' (val) {
             // 触发自动计算还款计划
-            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
-            this.setPlanList()
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType, false)
         },
         'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
@@ -238,7 +237,7 @@ export default {
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
-                    this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人 
+                    this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
@@ -277,21 +276,29 @@ export default {
             }
             console.log(this.ruleForm.planList)
         },
-        onRepaymentTypeChange (val) {
+        onRepaymentTypeChange (val, boolean = true) {
             console.log(val)
             this.ruleForm.planList = []
-            this.ruleForm.loan.repaymentType = val
+            this.ruleForm.loan.repaymentTsype = val
             if (val === 1) {
+                if (boolean) this.ruleForm.loan.loanDateNum = ''
+                if (boolean) this.ruleForm.loan.loanDateType = ''
+                if (this.ruleForm.loan.loanEndTime && boolean) this.ruleForm.loan.loanEndTime = ''
                 this.ruleForm.planList.push({ ...this.planListItem })
             } else if (val === 2) {
                 for (let i = 0; i < 3; i++) {
                     this.ruleForm.planList.push({ ...this.planListItem })
                 }
+                // 还款方式选择334的时候，借款期限默认选中月。默认显示6，不可修改。
+                this.ruleForm.loan.loanDateType = 1
+                this.ruleForm.loan.loanDateNum = 6
             }
+            this.$refs['opencomp'].onChooseTime(this.ruleForm.loan.loanStartTime)
             this.setPlanList()
         },
         /** 自动计算还款计划和日期 */
         setPlanList () {
+            console.log('this.ruleForm.loan.loanEndTime', this.ruleForm.loan.loanEndTime)
             //  moment().subtract(7, 'days').format('YYYY-MM-DD')
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
