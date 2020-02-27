@@ -59,11 +59,15 @@ export default {
     methods: {
         async onSave () {
             this.loading = true
-            await setAccountBasic(this.detailData)
-            this.loading = false
-            this.$message({ type: 'success', message: '修改成功' })
-            this.onCancle()
-            this.$emit('reload')
+            try {
+                await setAccountBasic(this.detailData)
+                this.loading = false
+                this.$message({ type: 'success', message: '修改成功' })
+                this.onCancle()
+                this.$emit('reload')
+            } catch (error) {
+                this.loading = false
+            }
         },
         onCancle () {
             this.$emit('onClose')
