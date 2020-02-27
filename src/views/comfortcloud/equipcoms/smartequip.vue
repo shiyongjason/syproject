@@ -122,12 +122,12 @@ export default {
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
-            for (var i = 0;i < charts.names.length;i++) {
+            for (var i = 0; i < charts.names.length; i++) {
                 var x = i
                 if (x > color.length - 1) {
                     x = color.length - 1
                 }
-                var data = {
+                var dataL = {
                     name: charts.names[i],
                     type: 'line',
                     color: color[x] + ')',
@@ -150,7 +150,7 @@ export default {
                     yAxisIndex: 0,
                     data: charts.value[i]
                 }
-                lineY.push(data)
+                lineY.push(dataL)
             }
             console.log(lineY)
             // lineY[0].markLine = {
