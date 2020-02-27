@@ -101,7 +101,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="剩余正常利息：" prop="interestOwe">
                             <!-- 自动计算，剩余正常利息=累计应收正常利息interestAmount-累计缴纳的实收正常利息interestPaid-本次收取正常利息 -->
-                            <span>{{(detailData[0].interestAmount-detailData[0].interestPaid-(detailData[0].thisPaidInterest||0)).toFixed(2)||0}}</span>
+                            <span>{{((detailData[0].interestAmount||0)-(detailData[0].interestPaid||0)-(detailData[0].thisPaidInterest||0)).toFixed(2)||0}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -268,9 +268,9 @@ export default {
     methods: {
         async dealCount (query) {
             const res = await this.onCount(query)
-            query.graceInterestAmount = res.graceInterestAmount
-            query.interestAmount = res.interestAmount
-            query.overDueInterestAmount = res.overDueInterestAmount
+            query.graceInterestAmount = res.graceInterestAmount || 0
+            query.interestAmount = res.interestAmount || 0
+            query.overDueInterestAmount = res.overDueInterestAmount || 0
         },
         onCancle () {
             this.$emit('onClose')

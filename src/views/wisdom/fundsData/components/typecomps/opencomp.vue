@@ -36,9 +36,9 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款期限：" prop="loanDateNum">
-                    <el-radio v-model.trim="flowform.loanDateType" label=1>月</el-radio>
-                    <el-radio v-model.trim="flowform.loanDateType" label=2>天</el-radio>
-                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isNum:0="flowform.loanDateNum" maxlength='5' placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
+                    <el-radio v-model.trim="flowform.loanDateType" :label=1 @change="loanDateTypeChange">月</el-radio>
+                    <el-radio v-model.trim="flowform.loanDateType" :label=2 @change="loanDateTypeChange" :disabled="flowform.repaymentType===2">天</el-radio>
+                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
                     </el-input>
                 </el-form-item>
             </div>
@@ -114,14 +114,13 @@ export default {
 
         }
     },
-    watch: {
-        'flowform.loanDateType' (val) {
+    methods: {
+        loanDateTypeChange () {
             this.flowform.loanDateNum = ''
             this.flowform.loanEndTime = ''
-        }
-    },
-    methods: {
+        },
         onChooseTime (val) {
+            console.log('onChooseTime (val): ', val)
             if (this.flowform.loanDateType == 1) {
                 this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')
             }

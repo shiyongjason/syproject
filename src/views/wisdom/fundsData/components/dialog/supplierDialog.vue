@@ -30,7 +30,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="放款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择放款日期" @change="datePickerChange">
+                            <el-date-picker v-model="detailData.loanStartTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择放款日期" @change="datePickerChange">
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -38,12 +38,12 @@
                         <el-form-item label="借款期限： ">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label="1" @change='loanDateNumM'>月
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0='detailData.loanDateNumM' maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'>
                                 <template slot="append">月</template>
                             </el-input>
                             <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label="2" @change='loanDateNumD'>天
                             </el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD' maxlength='3' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'>
+                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0='detailData.loanDateNumD' maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'>
                                 <template slot="append">天</template>
                             </el-input>
                         </el-form-item>
@@ -101,6 +101,19 @@ export default {
             })
         }
     },
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    // let endDateVal = this.flowform.loanEndTime
+                    // if (endDateVal) {
+                    //     return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
+                    // }
+                    return time.getTime() > Date.now()
+                }
+            }
+        }
+    },
     methods: {
         onCancle () {
             this.$emit('onClose')
@@ -120,12 +133,12 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = this.detailData.loanStartTime && moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
             this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = this.detailData.loanStartTime && moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
             this.$forceUpdate()
         },

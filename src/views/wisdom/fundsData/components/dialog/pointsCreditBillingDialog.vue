@@ -50,14 +50,14 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期">
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择开票日期">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="借款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="detailData.loanStartTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择出票日期" @change="datePickerChange">
+                            <el-date-picker v-model="detailData.loanStartTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择出票日期" @change="datePickerChange">
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -117,6 +117,19 @@ export default {
                 supplier: '', // 供货商
                 yearRate: ''// 年利率
             })
+        }
+    },
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    // let endDateVal = this.flowform.loanEndTime
+                    // if (endDateVal) {
+                    //     return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
+                    // }
+                    return time.getTime() > Date.now()
+                }
+            }
         }
     },
     methods: {
