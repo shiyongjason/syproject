@@ -21,7 +21,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="借款金额：" prop="loanAmount">
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
+                            <el-input v-model.trim="detailData.loanAmount" v-isNum:2="detailData.loanAmount" maxlength='20' placeholder="请输入借款金额">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
