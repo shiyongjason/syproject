@@ -13,8 +13,9 @@ export default {
         /**
          * @description 只能输入数字,可限制后几位（小数）
          * @param 0 1 2...
-         * @example  <el-input v-model="form.a" v-isNum:2="form.a"></el-input>
-         *
+         * @example  <el-input v-model="form.a" v-isNum:2="form.a"></el-input> 允许输入2位小数
+         * @example  <el-input v-model="form.a" v-isNum="form.a"></el-input> 只允许输入数字,小数位不限制
+         * @example  <el-input v-model="form.a" v-isNum:0="form.a"></el-input> 只允许输入数字
          */
         Vue.directive('isNum', {
             bind (el, binding, vnode) {
@@ -29,8 +30,9 @@ export default {
         /**
          * @description 只能输入数字(可以负数),可限制后几位（小数）
          * @param 0 1 2...
-         * @example  <el-input v-model="form.a" v-isNegative:2="form.a"></el-input>
-         *
+         * @example  <el-input v-model="form.a" v-isNegative:2="form.a"></el-input> 允许输入2位小数
+         * @example  <el-input v-model="form.a" v-isNegative="form.a"></el-input> 只允许输入数字,小数位不限制
+         * @example  <el-input v-model="form.a" v-isNegative:0="form.a"></el-input> 只允许输入数字
          */
         Vue.directive('isNegative', {
             bind (el, binding, vnode) {
