@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
@@ -99,11 +99,11 @@ export default {
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            platformData: (state) => {
-                return state.fundsData.platformData
-            }
-        })
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            platformData: 'platformData'
+        }),
     },
     data () {
         return {
@@ -286,10 +286,10 @@ export default {
 .add-tags-dialog {
     padding-top: 20px;
 }
-.downloadExcel{
+.downloadExcel {
     padding: 12px 20px;
     border-radius: 4px;
-    background-color: #FF7A45;
+    background-color: #ff7a45;
     color: #fff;
 }
 /deep/ .el-dialog__body {
