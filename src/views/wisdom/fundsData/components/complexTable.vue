@@ -1658,12 +1658,12 @@ export default {
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeLoan = data.loanStartTime && moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD')
                 this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD') : '-'
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeLoan = data.loanStartTime && moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD')
                 this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD') : '-'
             }
             if (!data.loanDateType) {
