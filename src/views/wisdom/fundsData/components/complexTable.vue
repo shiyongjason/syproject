@@ -61,6 +61,12 @@ export default {
                 return '1'
             }
         },
+        productType: {
+            type: String,
+            default: function () {
+                return '1'
+            }
+        },
         pagination: {
             type: Object,
             default: function () {
@@ -77,7 +83,11 @@ export default {
             if (val == '4') this.$set(this, 'column', this.ReimbursementDetail)
             this.changeTable = false
             this.$nextTick(() => { this.changeTable = true })
-        }
+        },
+        productType (val) {
+            if (val == '1') this.product = '好信用'
+            if (val == '2') this.product = '供应链'
+        },
     },
     data: function () {
         return {
@@ -92,6 +102,7 @@ export default {
             repaymentDialogVisible: false,
             pointsCreditBillingDialogVisible: false,
             regulatingBreathingDialogVisible: false,
+            product: '好信用',
             sizes: [10, 20, 50, 100],
             accountData: {}, // 基本信息数据
             loanData: {}, // 借款信息数据
@@ -111,7 +122,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—流贷基础信息维护'
+                                    this.accountData.title = `${this.product}-流贷基础信息维护`
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -137,7 +148,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
-                                    this.loanData.title = '好信用—流贷借款信息维护'
+                                    this.loanData.title = `${this.product}—流贷借款信息维护`
                                     this.supplierDialogVisible = true
                                 }}></i></span>
                             }
@@ -154,7 +165,7 @@ export default {
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
-                                        this.respAccountRepaymentPlanData[0].title = '好信用—流贷还款信息维护'
+                                        this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护`
                                         this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
                                         this.AnnualInterestRateDialogVisible = true
                                     }}></i></span>
@@ -246,7 +257,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—流贷档案信息维护'
+                            this.accountData.title = `${this.product}-流贷档案信息维护`
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -258,7 +269,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—流贷备注信息维护'
+                            this.accountData.title = `${this.product}-流贷备注信息维护`
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -278,7 +289,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—分授信基础信息维护'
+                                    this.accountData.title = `${this.product}-分授信基础信息维护`
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -340,7 +351,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
-                                    this.loanData.title = '好信用—分授信借款信息维护'
+                                    this.loanData.title = `${this.product}-分授信借款信息维护`
                                     this.pointsCreditBillingDialogVisible = true
                                 }}></i></span>
                             }
@@ -599,7 +610,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—分授信档案信息维护'
+                            this.accountData.title = `${this.product}-分授信档案信息维护`
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -611,7 +622,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—分授信备注信息维护'
+                            this.accountData.title = `${this.product}-分授信备注信息维护`
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -631,7 +642,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getAccount(scope.row)
-                                    this.accountData.title = '好信用—敞口基础信息维护'
+                                    this.accountData.title = `${this.product}-敞口基础信息维护`
                                     this.misDialogVisible = true
                                 }}></i></span>
                             }
@@ -843,7 +854,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—敞口基础信息维护'
+                            this.accountData.title = `${this.product}-敞口基础信息维护`
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -855,7 +866,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = '好信用—敞口备注信息维护'
+                            this.accountData.title = `${this.product}-敞口备注信息维护`
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -1368,7 +1379,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{filters.money(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
-                            this.loanData.title = '好信用—敞口借款信息维护'
+                            this.loanData.title = `${this.product}-敞口借款信息维护`
                             this.billingDialogVisible = true
                         }}></i></span>
                     }
@@ -1685,9 +1696,9 @@ export default {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
             if (row.account_accountType == 2) {
-                this.$set(this.rowData[0], 'title', '好信用—敞口还款信息维护')
+                this.$set(this.rowData[0], 'title', `${this.product}-敞口还款信息维护`)
             } else if (row.account_accountType == 3) {
-                this.$set(this.rowData[0], 'title', '好信用—分授信还款信息维护')
+                this.$set(this.rowData[0], 'title', `${this.product}-分授信还款信息维护`)
                 this.$set(this.rowData[0], 'account_accountType', 3)
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
