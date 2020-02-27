@@ -7,6 +7,9 @@ import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
 import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
+import membership from './modules/membership'
+import payment from './modules/payment'
+import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
 import cloudmanage from './modules/cloudManage'
 Vue.use(Vuex)
@@ -32,8 +35,11 @@ const store = new Vuex.Store({
         dueDiligence,
         hmall,
         layout,
-        serviceManagement,
         eventManage,
+        membership,
+        serviceManagement,
+        payment,
+        supplier,
         userRealreport,
         cloudmanage
     }
