@@ -1658,19 +1658,19 @@ export default {
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = data.loanStartTime && moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeLoan = data.loanStartTime ? moment(data.loanStartTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD') : '-'
                 this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'M').format('YYYY-MM-DD') : '-'
             }
             if (data.loanDateType == 2) {
                 this.$set(this.loanData, 'loanDateNumD', data.loanDateNum)
-                this.loanData.loanEndTimeLoan = data.loanStartTime && moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD')
+                this.loanData.loanEndTimeLoan = data.loanStartTime ? moment(data.loanStartTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD') : '-'
                 this.loanData.loanEndTimeInvoice = data.invoiceTime ? moment(data.invoiceTime).add(data.loanDateNum, 'd').format('YYYY-MM-DD') : '-'
             }
             if (!data.loanDateType) {
                 this.loanData.loanEndTimeLoan = '-'
                 this.loanData.loanEndTimeInvoice = '-'
             }
-            console.log(this.loanData)
+            // console.log(this.loanData)
         },
         // 流贷还款信息
         async getRespAccountRepaymentPlanData (row) {
