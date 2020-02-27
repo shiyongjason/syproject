@@ -1027,12 +1027,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_0_graceInterestTime',
+                    prop: 'planList_0_interestTime',
                     label: '最新正常利息还款日',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestTime ? moment(scope.row.planList_0_graceInterestTime).format('YYYY-MM-DD') : '-'}</span>
+                        return <span>{scope.row.planList_0_interestTime ? moment(scope.row.planList_0_interestTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
