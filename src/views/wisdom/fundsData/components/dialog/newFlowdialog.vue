@@ -238,7 +238,7 @@ export default {
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
-                    this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人 
+                    this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
