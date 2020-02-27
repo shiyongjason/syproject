@@ -318,7 +318,7 @@ const routerMapping = [
         ]
     },
     ServiceManagement,
-    Wisdomrouter,
+    ...Wisdomrouter,
     Bestrouter,
     ServiceManagement,
     B2brouter,
