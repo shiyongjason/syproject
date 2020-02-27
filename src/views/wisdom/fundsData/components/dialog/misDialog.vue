@@ -17,12 +17,12 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="MIS编码：" prop="misCode">
-                            <span>{{detailData.misCode}}</span>
+                            <span class="w150">{{detailData.misCode}}</span>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="misCode">
-                            <span>{{detailData.subsectionName}}</span>
+                        <el-form-item label="分部：" prop="subsectionName">
+                            <span class="w150">{{detailData.subsectionName}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -52,6 +52,15 @@ export default {
             rules: {
                 standingBookNo: [
                     { required: true, message: '请输入台账编号', trigger: 'blur' }
+                ],
+                loanCompanyName: [
+                    { required: true, message: '请输入借款单位' }
+                ],
+                misCode: [
+                    { required: true, message: '请输入misCode', trigger: 'blur' }
+                ],
+                subsectionName: [
+                    { required: true, message: '请输入分部', trigger: 'blur' }
                 ]
             },
             loading: false
@@ -96,6 +105,7 @@ export default {
             this.detailData.loanCompanyName = val.value ? val.value.value : ''
             this.detailData.subsectionCode = val.value ? val.value.subsectionCode : ''
             this.detailData.subsectionName = val.value ? val.value.subsectionName : ''
+            this.detailData.misCode = val.value ? val.value.misCode : ''
         },
         onSave () {
             this.$refs['form'].validate(async (valid, error) => {
@@ -117,5 +127,9 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+}
+.w150{
+    width: 150px;
+    display: inline-block;
 }
 </style>

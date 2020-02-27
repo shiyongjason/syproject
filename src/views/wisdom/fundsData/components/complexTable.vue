@@ -5,7 +5,7 @@
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
-        <misDialog :detailData='accountData' v-if='accountData' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
+        <misDialog :detailData='accountData' v-if='accountData&&misDialogVisible' :dialogVisible='misDialogVisible' @onClose="misDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -资金档案编号 -->
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
@@ -325,7 +325,7 @@ export default {
                         },
                         {
                             prop: 'loan_loanStartTime',
-                            label: '放款日期',
+                            label: '借款日期',
                             sort: 4,
                             width: '150',
                             render: (h, scope) => {
@@ -656,7 +656,7 @@ export default {
                             sort: 2,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.money(scope.row.loan_invoiceTime)}</span>
+                                return <span>{scope.row.loan_invoiceTime ? moment(scope.row.loan_invoiceTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
@@ -905,7 +905,14 @@ export default {
                     prop: 'accountType',
                     label: '还款项目',
                     render: (h, scope) => {
-                        return <span>{scope.row.type == 1 ? '本金' : scope.row.type == 2 ? '利息' : scope.row.type == 3 ? '宽限期利息' : '逾期利息'}</span>
+                        return <span>{
+                            scope.row.accountType == 1 ? // 流贷
+                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') :
+                            scope.row.accountType == 2 ? // 敞口
+                            (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还逾期罚息' : scope.row.type == 3 ? '还宽限期利息' : '-') :
+                            scope.row.accountType == 3 ? // 分授信
+                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') : '-'
+                        }</span>
                     }
                 },
                 {
@@ -1376,8 +1383,8 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return <span>
-                        {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                        {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                            {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
                         </span>
                     }
                 },
@@ -1650,7 +1657,7 @@ export default {
                 ...data,
                 loanDateNumM: '',
                 loanDateNumD: '',
-                registrant: this.userInfo.jobNumber
+                registrant: this.userInfo.employeeName
             }
             if (data.loanDateType == 1) {
                 this.$set(this.loanData, 'loanDateNumM', data.loanDateNum)

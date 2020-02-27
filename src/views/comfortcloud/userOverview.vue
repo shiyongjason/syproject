@@ -150,8 +150,7 @@ export default {
             this.drawLine()
         },
         drawLine () {
-            var m = new Map([['totalUser', '累计用户数'], ['totalNewUser', '注册用户数'], ['totalActiveUser', '活跃用户']
-                , ['totalStartUser', '启动次数'], ['totalUsingTime', '使用时长']])
+            var m = new Map([['totalUser', '累计用户数'], ['totalNewUser', '注册用户数'], ['totalActiveUser', '活跃用户'], ['totalStartUser', '启动次数'], ['totalUsingTime', '使用时长']])
             // 基于准备好的dom，初始化echarts实例
             this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
@@ -171,7 +170,7 @@ export default {
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
-            for (var i = 0;i < charts.names.length;i++) {
+            for (var i = 0; i < charts.names.length; i++) {
                 var x = i
                 if (x > color.length - 1) {
                     x = color.length - 1
@@ -323,9 +322,9 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    h3{
+    h3 {
         border: none;
-        font-weight: 400
+        font-weight: 400;
     }
 }
 .el-tooltip__popper {
