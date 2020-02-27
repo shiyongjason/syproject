@@ -26,7 +26,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">台账编号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookArchiveNo" placeholder="请输入台账编号" clearable>
+                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookNo" placeholder="请输入台账编号" clearable>
                     </el-input>
                 </div>
             </div>
@@ -116,7 +116,7 @@ export default {
                 misCode: '',
                 customerName: '',
                 subsectionCode: '',
-                standingBookArchiveNo: '',
+                standingBookNo: '',
                 accountType: '1',
                 loanCompanyCode: '',
                 loanCompanyName: '',
@@ -206,8 +206,7 @@ export default {
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
                 const { data } = await getRepaymentList({
-                    ...this.searchParams,
-                    standingBookNo: this.searchParams.standingBookArchiveNo
+                    ...this.searchParams
                 })
                 this.pagination = {
                     pageNumber: data.current,
@@ -250,7 +249,7 @@ export default {
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'standingBookArchiveNo', '')
+            this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')
             this.onSearch()
