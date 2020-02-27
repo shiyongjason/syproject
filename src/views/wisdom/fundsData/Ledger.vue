@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
+                    <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
                     </el-input>
                 </div>
             </div>
