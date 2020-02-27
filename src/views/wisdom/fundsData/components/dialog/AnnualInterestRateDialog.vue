@@ -268,9 +268,9 @@ export default {
     methods: {
         async dealCount (query) {
             const res = await this.onCount(query)
-            query.graceInterestAmount = res.graceInterestAmount
-            query.interestAmount = res.interestAmount
-            query.overDueInterestAmount = res.overDueInterestAmount
+            query.graceInterestAmount = res.graceInterestAmount || 0
+            query.interestAmount = res.interestAmount || 0
+            query.overDueInterestAmount = res.overDueInterestAmount || 0
         },
         onCancle () {
             this.$emit('onClose')

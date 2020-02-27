@@ -265,12 +265,9 @@ export default {
                 "interestAmount": '', // 利息
                 "overDueInterestList": '' // 逾期利息
             } */
-            query.graceInterestAmount = res.graceInterestAmount
-            query.interestAmount = res.interestAmount
-            this.$set(query, 'overDueInterestAmount', res.overDueInterestAmount)
-            // query.overDueInterestAmount = res.overDueInterestAmount
-            console.log(query)
-            this.$forceUpdate()
+            query.graceInterestAmount = res.graceInterestAmount || 0
+            query.interestAmount = res.interestAmount || 0
+            query.overDueInterestAmount = res.overDueInterestAmount || 0
         },
         onChange (val, item) {
             this.dealCount(item)
