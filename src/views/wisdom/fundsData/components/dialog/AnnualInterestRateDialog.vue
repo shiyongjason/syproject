@@ -189,6 +189,7 @@
 
 <script>
 import { setPlan } from '../../api'
+import { mapState } from 'vuex'
 import { setCountMixin } from '../../mixins/setCount'
 export default {
     name: 'AnnualInterestRateDialog',
@@ -263,7 +264,10 @@ export default {
                     return time.getTime() > Date.now()
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         async dealCount (query) {
@@ -278,6 +282,7 @@ export default {
         async onSave () {
             this.loading = true
             let form = {
+                createBy: this.userInfo.employeeName,
                 planList: [...this.detailData]
             }
             await setPlan(form)
