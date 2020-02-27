@@ -1,7 +1,7 @@
 <template>
     <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
         <h3 style="margin-bottom: 10px;">备注：</h3>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="detailData.remark"></el-input>
+        <el-input type="textarea" :rows="2" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="detailData.remark"></el-input>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
             <el-button type="primary" @click="onSure" :loading='loading'>确 定</el-button>
