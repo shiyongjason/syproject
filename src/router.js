@@ -212,41 +212,6 @@ const routerMapping = [
         ]
     },
     {
-        path: '/fundsData',
-        meta: {
-            title: '好智慧-资金数据',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'standingBook',
-                name: 'standingBook',
-                meta: {
-                    title: '资金借款台账',
-                    tagName: '资金借款台账',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsData/Ledger.vue')
-            },
-            {
-                path: 'newFlowdialog',
-                name: 'newFlowdialog',
-                meta: {
-                    title: '新增台账',
-                    tagName: '新增台账',
-                    parentName: '好智慧-资金数据',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsData/components/dialog/newFlowdialog.vue')
-            }
-        ]
-    },
-    {
         path: '/paymentCentral',
         meta: {
             title: '中金支付',
@@ -352,6 +317,8 @@ const routerMapping = [
         ]
     },
     Wisdomrouter,
+    ServiceManagement,
+    ...Wisdomrouter,
     Bestrouter,
     ServiceManagement,
     B2brouter,

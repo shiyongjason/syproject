@@ -7,7 +7,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账编号：" prop="account.standingBookNo">
-                            <el-input v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
+                            <el-input max-length='20' v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                     <!-- <div class="query-cont-col">
@@ -18,17 +18,16 @@
                     </div> -->
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="account.loanCompanyName" ref="loanCompanyName">
-                            <!-- <el-input v-model.trim="ruleForm.account.loanCompanyName" placeholder="请输入平台公司名"></el-input> -->
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="MIS编码：" prop="misCode">
-                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="如有请输入，无请忽略" disabled></el-input>
+                        <el-form-item label="MIS编码：" prop="account.misCode" ref="misCode">
+                            <el-input v-model.trim="ruleForm.account.misCode" placeholder="自动带入" disabled></el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="分部：" prop="account.subsectionName">
+                        <el-form-item label="分部：" prop="account.subsectionName" ref="subsectionName">
                             <el-input v-model.trim="ruleForm.account.subsectionName" placeholder="自动带入" disabled>
                             </el-input>
                         </el-form-item>
@@ -49,7 +48,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账档案编号：">
-                            <el-input v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                            <el-input max-length='20' v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
                             </el-input>
                         </el-form-item>
                     </div>
@@ -93,13 +92,16 @@ export default {
             textarea: '',
             rules: {
                 'account.standingBookNo': [
-                    { required: true, message: '请输入台账档案编号', trigger: 'blur' }
+                    { required: true, message: '请输入台账编号', trigger: 'blur' }
                 ],
                 'account.loanCompanyName': [
                     { required: true, message: '请输入借款单位' }
                 ],
                 'account.subsectionName': [
                     { required: true, message: '请输入分部名称', trigger: 'blur' }
+                ],
+                'account.misCode': [
+                    { required: true, message: '请输入MIS编码', trigger: 'blur' }
                 ]
             },
             ruleForm: {
@@ -145,18 +147,28 @@ export default {
                 graceInterestPaid: '',
                 interestAmount: '',
                 interestPaid: '',
-                isStepOverInterest: 0, // 默认逾期否
+                isStepOverInterest: 1, // 默认逾期是
                 overDueInterest: '',
                 overDueInterestAmount: '',
                 overDueInterestPaid: '',
-                overdueList: [{
-                    dateNum: '',
-                    dateType: '',
-                    overDueInterest: '',
-                    planId: '',
-                    sort: '',
-                    startTime: ''
-                }]
+                overdueList: [
+                    {
+                        dateNum: '3',
+                        dateType: '',
+                        overDueInterest: '16',
+                        planId: '',
+                        sort: '',
+                        startTime: ''
+                    },
+                    {
+                        dateNum: '99999',
+                        dateType: '',
+                        overDueInterest: '20',
+                        planId: '',
+                        sort: '',
+                        startTime: ''
+                    }
+                ]
             },
             // 还款方式：334 对应 30%，30%，40%
             repaymenBaseNum: [0.3, 0.3, 0.4],
@@ -172,15 +184,27 @@ export default {
         },
         'ruleForm.loan.loanEndTime' (val) {
             // 触发自动计算还款计划
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
             this.setPlanList()
         },
         'ruleForm.loan.loanAmount' (val) {
             // 触发自动计算还款计划
+            this.onRepaymentTypeChange(this.ruleForm.loan.repaymentType)
             this.setPlanList()
         },
         'ruleForm.account.loanCompanyCode' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['loanCompanyName'].clearValidate()
+            })
+        },
+        'ruleForm.account.subsectionName' (val) {
+            this.$nextTick(() => {
+                if (val) this.$refs['subsectionName'].clearValidate()
+            })
+        },
+        'ruleForm.account.misCode' (val) {
+            this.$nextTick(() => {
+                if (val) this.$refs['misCode'].clearValidate()
             })
         }
     },
@@ -214,7 +238,7 @@ export default {
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
-                    this.ruleForm.loan.registrant = this.userInfo.jobNumber // Boss登记人
+                    this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人 
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
@@ -254,6 +278,7 @@ export default {
             console.log(this.ruleForm.planList)
         },
         onRepaymentTypeChange (val) {
+            console.log(val)
             this.ruleForm.planList = []
             this.ruleForm.loan.repaymentType = val
             if (val === 1) {

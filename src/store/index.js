@@ -10,6 +10,9 @@ import eventManage from './modules/eventManage'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
+import membership from './modules/membership'
+import payment from './modules/payment'
+import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
 import cloudmanage from './modules/cloudManage'
 import supplier from './modules/supplier'
@@ -37,11 +40,11 @@ const store = new Vuex.Store({
         hmall,
         layout,
         eventManage,
+        fundsData,
         membership,
         serviceManagement,
         payment,
         supplier,
-        fundsData,
         userRealreport,
         cloudmanage
     }
