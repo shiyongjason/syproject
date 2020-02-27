@@ -11,7 +11,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司名：</div>
                 <div class="query-col-input">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'全部'" :remove-value='removeValue'></HAutocomplete>
+                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">

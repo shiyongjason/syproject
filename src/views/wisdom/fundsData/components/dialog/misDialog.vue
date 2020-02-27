@@ -5,7 +5,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账编号：" prop="standingBookNo">
-                            <el-input v-model.trim="detailData.standingBookNo" placeholder="请输入台账编号"></el-input>
+                            <el-input maxlength='20' v-model.trim="detailData.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
                 </div>
