@@ -906,12 +906,9 @@ export default {
                     label: '还款项目',
                     render: (h, scope) => {
                         return <span>{
-                            scope.row.accountType == 1 ? // 流贷
-                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') :
-                            scope.row.accountType == 2 ? // 敞口
-                            (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还逾期罚息' : scope.row.type == 3 ? '还宽限期利息' : '-') :
-                            scope.row.accountType == 3 ? // 分授信
-                            (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') : '-'
+                            scope.row.accountType == 1 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息')
+                                : scope.row.accountType == 2 ? (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还逾期罚息' : scope.row.type == 3 ? '还宽限期利息' : '-')
+                                    : scope.row.accountType == 3 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') : '-'
                         }</span>
                     }
                 },
@@ -1030,12 +1027,12 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_0_graceInterestTime',
+                    prop: 'planList_0_interestTime',
                     label: '最新正常利息还款日',
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceInterestTime ? moment(scope.row.planList_0_graceInterestTime).format('YYYY-MM-DD') : '-'}</span>
+                        return <span>{scope.row.planList_0_interestTime ? moment(scope.row.planList_0_interestTime).format('YYYY-MM-DD') : '-'}</span>
                     }
                 },
                 {
@@ -1247,7 +1244,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.money(planList_1_capitalAmount)}</span>
+                        return <span>{filters.money(scope.row.planList_1_capitalAmount)}</span>
                     }
                 },
                 {
