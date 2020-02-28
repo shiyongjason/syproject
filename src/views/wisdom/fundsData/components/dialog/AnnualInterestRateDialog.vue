@@ -106,7 +106,7 @@
                         </el-form-item>
                     </div>
                 </div>
-                <template v-if="detailData[0].overdueList[0]&&detailData[0].overdueList[0].id">
+                <template v-if="!detailData[0].isOverDue">
                     <div class="dialogtitle">逾期</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
