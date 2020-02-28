@@ -906,10 +906,10 @@ export default {
                     }
                 },
                 {
-                    prop: 'registrant',
+                    prop: 'createBy',
                     label: '登记人',
                     render: (h, scope) => {
-                        return <span>{scope.row.registrant ? `${scope.row.registrant}` : '-'}</span>
+                        return <span>{scope.row.createBy ? `${scope.row.createBy}` : '-'}</span>
                     }
                 },
                 {

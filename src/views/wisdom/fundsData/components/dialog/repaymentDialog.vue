@@ -206,6 +206,7 @@
 
 <script>
 import { setPlan } from './../../api'
+import { mapState } from 'vuex'
 import { setCountMixin } from '../../mixins/setCount'
 export default {
     name: 'repaymentDialog',
@@ -254,7 +255,10 @@ export default {
                     return time.getTime() > Date.now()
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         async dealCount (query) {
@@ -286,7 +290,10 @@ export default {
         async onSaveplan () {
             this.loading = true
             try {
-                await setPlan({ planList: this.detailData })
+                await setPlan({
+                    planList: this.detailData,
+                    createBy: this.userInfo.employeeName
+                })
                 this.$message({ type: 'success', message: '修改成功' })
                 this.onCancle()
                 this.$emit('reload')
