@@ -90,7 +90,7 @@
                                 <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                {{(item.graceInterestAmount||0)-(item.graceInterestPaid?item.graceInterestPaid:0)}}元
+                                {{(item.graceInterestAmount||0)-(item.thisPaidGraceInterest||0)}}元
                             </el-form-item>
                         </div>
                     </div>
@@ -189,7 +189,7 @@
                                     <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                    {{(item.overDueInterestAmount||0)-(item.overDueInterestPaid?item.overDueInterestPaid:0)}}元
+                                    {{(item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest?item.thisPaidOverDueInterest:0)}}元
                                 </el-form-item>
                             </div>
                         </div>
