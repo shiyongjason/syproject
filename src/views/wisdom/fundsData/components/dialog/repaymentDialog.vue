@@ -137,7 +137,7 @@
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="逾期利率：" prop="overDueInterest">
-                                    <el-input v-model.trim="item.overDueInterest" v-isNum="item.dateNum" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)">
+                                    <el-input v-model.trim="item.overDueInterest" v-isNum:2="item.dateNum" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
@@ -157,7 +157,7 @@
                                 </div>
                                 <div class="query-cont-col">
                                     <el-form-item label="该阶段逾期利率：">
-                                        <el-input v-model.trim="i.overDueInterest" v-isNum:0="i.overDueInterest" maxlength='5' placeholder="请输入逾期利息" @blur="dealCount(item)"><template slot="append">%</template></el-input>
+                                        <el-input v-model.trim="i.overDueInterest" v-isNum:2="i.overDueInterest" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)"><template slot="append">%</template></el-input>
                                     </el-form-item>
                                 </div>
                             </div>
