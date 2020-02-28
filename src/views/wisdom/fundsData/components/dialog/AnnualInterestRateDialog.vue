@@ -112,7 +112,7 @@
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
                                 <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="0" @change="dealCount(detailData[0])">否</el-radio>
-                                <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="1" @change="dealCount(detailData[0])">是</el-radio>
+                                <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="1" @change="onChange">是</el-radio>
                             </el-form-item>
                         </div>
                     </div>
@@ -275,6 +275,16 @@ export default {
             query.graceInterestAmount = res.graceInterestAmount || 0
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
+        },
+        // 逾期阶梯切换,没有值就取默认值
+        onChange () {
+            console.log(this.detailData)
+            const overdueList = [
+                { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
+                { dateNum: '99999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+            ]
+            if (this.detailData[0].overdueList.length != 2) this.$set(this.detailData[0], 'overdueList', overdueList)
+            this.dealCount(this.detailData[0])
         },
         onCancle () {
             this.$emit('onClose')
