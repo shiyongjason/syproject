@@ -171,7 +171,7 @@
                         <div class="query-cont-col">
                             <el-form-item label="剩余逾期罚息:" prop="overDueInterestOwe">
                                 <!-- 剩余逾期罚息=应缴逾期罚息overDueInterestAmount-累计缴纳的逾期罚息overDueInterestPaid-本次缴纳逾期罚息 -->
-                                <span>{{(detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid-(detailData[0].thisPaidOverDueInterest||0))||0}}</span>
+                                <span>{{(detailData[0].overDueInterestAmount-detailData[0].overDueInterestPaid-(detailData[0].thisPaidOverDueInterest||0)).toFixed(2)||0}}</span>
                                 <span class="dw">元</span>
                             </el-form-item>
                         </div>
@@ -281,7 +281,7 @@ export default {
             console.log(this.detailData)
             const overdueList = [
                 { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
-                { dateNum: '99999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+                { dateNum: '99', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
             ]
             if (this.detailData[0].overdueList.length != 2) this.$set(this.detailData[0], 'overdueList', overdueList)
             this.dealCount(this.detailData[0])
