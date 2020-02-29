@@ -80,7 +80,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -90,7 +90,7 @@
                                 <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                {{(item.graceInterestAmount||0)-(item.graceInterestPaid?item.graceInterestPaid:0)}}元
+                                {{(item.graceInterestAmount||0)-(item.thisPaidGraceInterest||0)}}元
                             </el-form-item>
                         </div>
                     </div>
