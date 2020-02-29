@@ -87,7 +87,7 @@ export default {
         productType (val) {
             if (val == '1') this.product = '好信用'
             if (val == '2') this.product = '供应链'
-        },
+        }
     },
     data: function () {
         return {
