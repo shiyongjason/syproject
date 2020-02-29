@@ -106,13 +106,13 @@
                         </el-form-item>
                     </div>
                 </div>
-                <template v-if="detailData[0].overdueList[0]&&detailData[0].overdueList[0].id">
+                <template v-if="!detailData[0].isOverDue">
                     <div class="dialogtitle">逾期</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
                                 <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="0" @change="dealCount(detailData[0])">否</el-radio>
-                                <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="1" @change="dealCount(detailData[0])">是</el-radio>
+                                <el-radio v-model.trim="detailData[0].isStepOverInterest" :label="1" @change="onChange">是</el-radio>
                             </el-form-item>
                         </div>
                     </div>
@@ -120,7 +120,7 @@
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="逾期利率：" prop="overDueInterest">
-                                    <el-input v-model.trim="detailData[0].overDueInterest" v-isNum:0='detailData[0].overDueInterest' maxlength='5' placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
+                                    <el-input v-model.trim="detailData[0].overDueInterest" v-isNum:2='detailData[0].overDueInterest' maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
@@ -141,7 +141,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="该阶段逾期利率：" prop="overdueList.overDueInterest">
-                                    <el-input v-isNum="item.overDueInterest" maxlength='20' v-model.trim="item.overDueInterest" placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
+                                    <el-input v-isNum:2="item.overDueInterest" maxlength='20' v-model.trim="item.overDueInterest" placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
@@ -189,6 +189,7 @@
 
 <script>
 import { setPlan } from '../../api'
+import { mapState } from 'vuex'
 import { setCountMixin } from '../../mixins/setCount'
 export default {
     name: 'AnnualInterestRateDialog',
@@ -263,7 +264,10 @@ export default {
                     return time.getTime() > Date.now()
                 }
             }
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         async dealCount (query) {
@@ -272,12 +276,23 @@ export default {
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
         },
+        // 逾期阶梯切换,没有值就取默认值
+        onChange () {
+            console.log(this.detailData)
+            const overdueList = [
+                { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
+                { dateNum: '99999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+            ]
+            if (this.detailData[0].overdueList.length != 2) this.$set(this.detailData[0], 'overdueList', overdueList)
+            this.dealCount(this.detailData[0])
+        },
         onCancle () {
             this.$emit('onClose')
         },
         async onSave () {
             this.loading = true
             let form = {
+                createBy: this.userInfo.employeeName,
                 planList: [...this.detailData]
             }
             await setPlan(form)

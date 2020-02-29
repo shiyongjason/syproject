@@ -23,8 +23,8 @@ export const setCountMixin = {
         async onCount (row) {
             this.setCountParams = {
                 'accountId': this.detailData[0].account_id, // 台账id，基础信息的id
-                'capitalPaid': +row.thisPaidCapital || +row.capitalPaid, // 本次本金归还金额
-                'capitalTime': row.thisPaidCapitalTime || row.capitalTime, // 本金归还时间
+                'capitalPaid': +row.thisPaidCapital || 0, // 本次本金归还金额
+                'capitalTime': row.thisPaidCapitalTime || null, // 本金归还时间
                 'graceDay': row.graceDay || 0, // 宽限期时间
                 'graceInterest': row.graceInterest, // 宽限期利率
                 // 逾期利率计算集合
@@ -34,7 +34,7 @@ export const setCountMixin = {
             if (row.isStepOverInterest == 0) {
                 this.setCountParams.overDueInterestCountList.push({
                     overDueInterest: row.overDueInterest,
-                    dateNum: 999
+                    dateNum: 9999
                 })
             } else if (row.overdueList.length > 0 && row.isStepOverInterest == 1) {
                 row.overdueList.forEach((item) => {
