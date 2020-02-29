@@ -166,7 +166,7 @@ export default {
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
                                         this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护`
-                                        this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
+                                        this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                                         this.AnnualInterestRateDialogVisible = true
                                     }}></i></span>
                             }
@@ -1695,11 +1695,10 @@ export default {
         async getRespAccountRepaymentPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
-            console.log(this.respAccountRepaymentPlanData)
+            // console.log(this.respAccountRepaymentPlanData)
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            console.log(row)
             this.loanAmount = row.paymentStaticcapitalAmount
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
