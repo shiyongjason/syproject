@@ -1766,7 +1766,7 @@ export default {
             let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
             item.overdueList = []
-            let rateArr = [3, 99999] // 默认时长
+            let rateArr = [3, 99] // 默认时长
             const profit = [16, 20] // 默认逾期利率
             if (val == 2) {
                 for (var i = 0; i < 2; i++) {

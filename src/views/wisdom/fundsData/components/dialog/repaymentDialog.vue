@@ -189,7 +189,7 @@
                                     <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                    {{(item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest||0)}}元
+                                    {{((item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
                                 </el-form-item>
                             </div>
                         </div>
