@@ -17,7 +17,7 @@
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款日期：" prop="endTime">
-                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期" :disabled='true'>
                                 </el-date-picker>
                             </el-form-item>
                         </div>
