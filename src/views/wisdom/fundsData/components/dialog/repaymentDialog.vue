@@ -80,7 +80,7 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -109,7 +109,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' placeholder="请输入应收利息">
+                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidInterestTime" placeholder="请输入应收利息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -179,7 +179,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' placeholder="请输入利息金额">
+                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' :disabled="!item.overDueInterestTime" placeholder="请输入利息金额">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -189,7 +189,7 @@
                                     <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                    {{(item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest?item.thisPaidOverDueInterest:0)}}元
+                                    {{((item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
                                 </el-form-item>
                             </div>
                         </div>
