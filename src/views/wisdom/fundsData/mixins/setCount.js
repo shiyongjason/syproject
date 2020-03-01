@@ -45,7 +45,10 @@ export const setCountMixin = {
                     this.setCountParams.overDueInterestCountList.push(obj)
                 })
             }
-            console.log('this.setCountParams: ', this.setCountParams)
+            if (!row.exsitGrace) {
+                this.setCountParams.graceDay = 0
+                this.setCountParams.graceInterest = 0
+            }
             const { data } = await setCount(this.setCountParams)
             /* data格式: {
                 "graceInterestAmount": '', // 宽限期利息

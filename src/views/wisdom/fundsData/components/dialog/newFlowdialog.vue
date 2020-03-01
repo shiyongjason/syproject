@@ -161,7 +161,7 @@ export default {
                         startTime: ''
                     },
                     {
-                        dateNum: '99',
+                        dateNum: '999',
                         dateType: '',
                         overDueInterest: '20',
                         planId: '',
@@ -262,7 +262,7 @@ export default {
         onStepOver (val) {
             let newRata = JSON.parse(JSON.stringify(this.planListItem.overdueList[0]))
             this.ruleForm.planList[0].overdueList = []
-            let rateArr = [3, 99] // 默认时长
+            let rateArr = [3, 999] // 默认时长
             const profit = [16, 20] // 默认逾期利率
             if (val === 2) {
                 for (var i = 0; i < 2; i++) {
