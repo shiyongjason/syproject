@@ -281,7 +281,7 @@ export default {
             console.log(this.detailData)
             const overdueList = [
                 { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
-                { dateNum: '99', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+                { dateNum: '999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
             ]
             if (this.detailData[0].overdueList.length != 2) this.$set(this.detailData[0], 'overdueList', overdueList)
             this.dealCount(this.detailData[0])

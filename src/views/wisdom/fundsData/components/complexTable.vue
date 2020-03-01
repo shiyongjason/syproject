@@ -87,7 +87,7 @@ export default {
         productType (val) {
             if (val == '1') this.product = '好信用'
             if (val == '2') this.product = '供应链'
-        },
+        }
     },
     data: function () {
         return {
@@ -166,7 +166,7 @@ export default {
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
                                         this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护`
-                                        this.respAccountRepaymentPlanData[0].account_id = scope.row.account_id
+                                        this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                                         this.AnnualInterestRateDialogVisible = true
                                     }}></i></span>
                             }
@@ -1695,11 +1695,10 @@ export default {
         async getRespAccountRepaymentPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.respAccountRepaymentPlanData = data
-            console.log(this.respAccountRepaymentPlanData)
+            // console.log(this.respAccountRepaymentPlanData)
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            console.log(row)
             this.loanAmount = row.paymentStaticcapitalAmount
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             this.rowData = [...data]
@@ -1766,7 +1765,7 @@ export default {
             let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
             let newObj = { ...newRata }
             item.overdueList = []
-            let rateArr = [3, 99] // 默认时长
+            let rateArr = [3, 999] // 默认时长
             const profit = [16, 20] // 默认逾期利率
             if (val == 2) {
                 for (var i = 0; i < 2; i++) {
