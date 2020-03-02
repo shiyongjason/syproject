@@ -62,7 +62,7 @@
                         <div class="query-cont-col">
                             <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
                                 <!-- 剩余还款金额=约定还款金额-累计还款本金金额 -->
-                                <span>{{(item.capitalAmount||0)-(item.capitalPaid?item.capitalPaid:0)-(item.thisPaidCapital?item.thisPaidCapital:0)}}元</span>
+                                <span>{{((item.capitalAmount||0)-(item.capitalPaid?item.capitalPaid:0)-(item.thisPaidCapital?item.thisPaidCapital:0)).toFixed(2)}}元</span>
                             </el-form-item>
                         </div>
                     </div>
