@@ -331,7 +331,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_supplier == 0 ? 0 : scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
+                                return <span>{scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
                             }
                         },
                         {
@@ -684,7 +684,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_supplier == 0 ? 0 : scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
+                                return <span>{scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
                             }
                         },
                         {
@@ -1709,7 +1709,7 @@ export default {
                 this.$set(this.rowData[0], 'account_accountType', 3)
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
-            this.$set(this.rowData[0], 'account_id', row.account_id)
+            this.$set(this.rowData[0], 'accountId', row.account_id)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
         },
