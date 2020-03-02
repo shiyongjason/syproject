@@ -334,6 +334,9 @@ export default {
 /deep/.yuqi .el-form-item__content {
     width: 298px !important;
 }
+/deep/.el-form .el-input{
+    width: 250px;
+}
 .dialogtitle {
     font-size: 20px;
     font-weight: 600;

@@ -16,8 +16,6 @@
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
                             <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
                             <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
-                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio> -->
-                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio> -->
                         </el-form-item>
                     </div>
                 </div>
@@ -294,11 +292,9 @@ export default {
             if (val == 2) this.detailData[0].repaymentType = 1
             this.innerVisible = true
         },
-        onSureCut () {
-            console.log('调接口')
+        async onSureCut () {
+            await this.$emit('repaymentTypeChange',this.detailData[0].accountId)
             this.innerVisible = false
-            // let val = 
-            // this.$emit('repaymentTypeChange',val)
         },
         onCancle () {
             this.$emit('onClose')
@@ -330,13 +326,13 @@ export default {
             })
         }
     },
-    mounted () {
-        console.log('mounted')
-        this.detailData.map(async (item, index) => {
-            console.log(item)
-            await this.dealCount(item)
-        })
-    }
+    // mounted () {
+    //     console.log('mounted')
+    //     this.detailData.map(async (item, index) => {
+    //         console.log(item)
+    //         await this.dealCount(item)
+    //     })
+    // }
 }
 </script>
 
@@ -344,6 +340,9 @@ export default {
 /deep/ .el-dialog__body {
     padding: 20px 24px;
     min-height: auto;
+}
+/deep/.el-form .el-input{
+    width: 250px;
 }
 .dialogtitle {
     font-size: 20px;

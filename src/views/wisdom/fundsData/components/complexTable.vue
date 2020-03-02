@@ -36,7 +36,7 @@ import billingDialog from './dialog/billingDialog.vue'
 import repaymentDialog from './dialog/repaymentDialog.vue'
 import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
 import regulatingBreathingDialog from './dialog/regulatingBreathingDialog.vue'
-import { getAccountBasic, getLoan, getRespAccountRepaymentPlan } from '../api/index'
+import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanType } from '../api/index'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
@@ -1723,37 +1723,19 @@ export default {
             //     await this.$refs.repayment.dealCount(item)
             // })
         },
-        async onRepaymentTypeChange (val) {
-            this.rowData = []
-            let repaymenBaseNum = [0.3, 0.3, 0.4]
-            let repaymenDays = [2, 1, 0]
-            if (this.copyGrantdata.length == 1) { // 查询是一次性
-                this.planListItem = { ...this.copyGrantdata[0] }
-            } else { // 查询是334
-                this.planListItem = { ...this.copyGrantdata[2] }
+        async onRepaymentTypeChange (id) {
+            const { data } = await transformPlanType(id)
+            // console.log(data)
+            if (data.length == 1) {
+                data[0].repaymentType = 1
+            } else {
+                data.map((val) => {
+                    val.repaymentType = 2
+                })
             }
-            // 清空阶梯逾期id和planId
-            this.planListItem.overdueList = this.overdueList
-            this.planListItem.id = ''
-            if (val === 1) { // 点击一次性还款
-                this.planListItem.capitalAmount = this.loanAmount
-                this.rowData.push({ ...this.planListItem })
-                this.$set(this.rowData[0], 'repaymentType', val)
-            } else if (val === 2) { // 点击334还款
-                for (let i = 0; i < 3; i++) {
-                    if (this.copyGrantdata.length == 1) {
-                        this.rowData.push({ ...this.planListItem })
-                        this.rowData[i].capitalAmount = (this.rowData[i].capitalAmount * repaymenBaseNum[i]).toFixed(2)
-                        this.rowData[i].endTime = this.rowData[i].endTime && moment(this.rowData[i].endTime, 'YYYY-MM-DD').subtract(repaymenDays[i], 'months').format('YYYY-MM-DD')
-                    } else {
-                        this.rowData.push({ ...(this.copyGrantdata[i]) })
-                    }
-                }
-                this.$set(this.rowData[0], 'repaymentType', val)
-            }
+            data[0].accountId = this.rowData[0].accountId
+            this.rowData = data
             // console.log(this.rowData)
-            this.$forceUpdate()
-            await this.$refs.repayment.setPlan(this.rowData)
             this.getList()
         },
         onStepOver (val, item) {

@@ -31,3 +31,5 @@ export const getRespAccountRepaymentPlan = (accountId) => axios.get(interfaceUrl
 export const setPlan = (params) => axios.put(interfaceUrl + 'backend/account/plan', params)
 // 利率计算
 export const setCount = (params) => axios.post(interfaceUrl + 'backend/account/interest/count', params)
+// 切换台账支付类型
+export const transformPlanType = (accountId) => axios.get(interfaceUrl + `backend/account/plan/account-type/${accountId}`)
