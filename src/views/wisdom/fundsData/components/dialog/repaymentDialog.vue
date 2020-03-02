@@ -1,5 +1,12 @@
 <template>
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+        <el-dialog width="30%" title="确认切换" :visible.sync="innerVisible" append-to-body>
+            <span>切换后，所有还款数据（含明细表内该笔台账关联的所有还款明细）均会被清空且无法恢复</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="innerVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSureCut">确 定</el-button>
+            </span>
+        </el-dialog>
         <div class="form">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
                 <!-- <div class="dialogtitle">还款方式：</div> -->
@@ -7,8 +14,10 @@
                     <div class="query-cont-col">
                         <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
-                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
+                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio> -->
+                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio> -->
                         </el-form-item>
                     </div>
                 </div>
@@ -219,6 +228,7 @@ export default {
             radio: '月',
             radiox: '1',
             loading: false,
+            innerVisible: false,
             form: {
                 name: '',
                 x: ''
@@ -279,6 +289,17 @@ export default {
             this.dealCount(item)
             this.$emit('stepOver', val, item)
         },
+        capitalPaidChange (val) {
+            if (val == 1) this.detailData[0].repaymentType = 2
+            if (val == 2) this.detailData[0].repaymentType = 1
+            this.innerVisible = true
+        },
+        onSureCut () {
+            console.log('调接口')
+            this.innerVisible = false
+            // let val = 
+            // this.$emit('repaymentTypeChange',val)
+        },
         onCancle () {
             this.$emit('onClose')
         },
@@ -292,10 +313,7 @@ export default {
         async onSaveplan () {
             this.loading = true
             try {
-                await setPlan({
-                    planList: this.detailData,
-                    createBy: this.userInfo.employeeName
-                })
+                await this.setPlan(this.detailData)
                 this.$message({ type: 'success', message: '修改成功' })
                 this.onCancle()
                 this.$emit('reload')
@@ -303,10 +321,19 @@ export default {
             } catch (error) {
                 this.loading = false
             }
+        },
+        async setPlan (planList) {
+            console.log(planList)
+            await setPlan({
+                planList,
+                createBy: this.userInfo.employeeName
+            })
         }
     },
     mounted () {
+        console.log('mounted')
         this.detailData.map(async (item, index) => {
+            console.log(item)
             await this.dealCount(item)
         })
     }
@@ -316,6 +343,7 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+    min-height: auto;
 }
 .dialogtitle {
     font-size: 20px;

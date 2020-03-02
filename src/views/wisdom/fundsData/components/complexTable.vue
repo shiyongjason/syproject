@@ -21,7 +21,7 @@
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -敞口&&分授信 -->
-        <repaymentDialog :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
+        <repaymentDialog ref="repayment" :detailData='rowData' v-if='rowData&&repaymentDialogVisible' :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false" @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver" />
     </div>
 </template>
 
@@ -45,7 +45,8 @@ export default {
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            overdueList: state => state.fundsData.overdueList
         })
     },
     props: {
@@ -375,8 +376,8 @@ export default {
                                     class={
                                         scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                    onClick={() => {
-                                        this.getGrantPaymetPlanData(scope.row)
+                                    onClick={async () => {
+                                        await this.getGrantPaymetPlanData(scope.row)
                                         this.repaymentDialogVisible = true
                                     }}></i></span>
                             }
@@ -1423,8 +1424,8 @@ export default {
                             class={
                                 scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
                                     ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                            onClick={() => {
-                                this.getGrantPaymetPlanData(scope.row)
+                            onClick={async () => {
+                                await this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
                             }}></i></span>
                     }
@@ -1699,8 +1700,11 @@ export default {
         },
         // 敞口还款
         async getGrantPaymetPlanData (row) {
-            this.loanAmount = row.paymentStaticcapitalAmount
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
+            console.log(data)
+            this.loanAmount = data.reduce((val, item, index) => {
+                return val + item.capitalAmount
+            }, 0)
             this.rowData = [...data]
             if (row.account_accountType == 2) {
                 this.$set(this.rowData[0], 'title', `${this.product}-敞口还款信息维护`)
@@ -1711,19 +1715,25 @@ export default {
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
+            console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
+            // this.rowData.map(async (item, index) => {
+            //     console.log(this.$refs)
+            //     await this.$refs.repayment.dealCount(item)
+            // })
         },
-        onRepaymentTypeChange (val) {
+        async onRepaymentTypeChange (val) {
             this.rowData = []
             let repaymenBaseNum = [0.3, 0.3, 0.4]
             let repaymenDays = [2, 1, 0]
-            console.log(this.copyGrantdata)
             if (this.copyGrantdata.length == 1) { // 查询是一次性
                 this.planListItem = { ...this.copyGrantdata[0] }
             } else { // 查询是334
                 this.planListItem = { ...this.copyGrantdata[2] }
             }
+            // 清空阶梯逾期id和planId
+            this.planListItem.overdueList = this.overdueList
             this.planListItem.id = ''
             if (val === 1) { // 点击一次性还款
                 this.planListItem.capitalAmount = this.loanAmount
@@ -1738,11 +1748,13 @@ export default {
                     } else {
                         this.rowData.push({ ...(this.copyGrantdata[i]) })
                     }
-                    // this.rowData.push({ ...(this.copyGrantdata[i]) })
                 }
                 this.$set(this.rowData[0], 'repaymentType', val)
             }
-            console.log(this.rowData)
+            // console.log(this.rowData)
+            this.$forceUpdate()
+            await this.$refs.repayment.setPlan(this.rowData)
+            this.getList()
         },
         onStepOver (val, item) {
             // if (this.rowData[0].overdueList.length = 0) {
