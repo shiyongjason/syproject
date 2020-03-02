@@ -7,8 +7,8 @@
                     <div class="query-cont-col">
                         <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
                         </el-form-item>
                     </div>
                 </div>
@@ -265,7 +265,6 @@ export default {
     },
     methods: {
         async dealCount (query) {
-            console.log(query)
             const res = await this.onCount(query)
             /* res格式: {
                 "graceInterestAmount": '', // 宽限期利息
