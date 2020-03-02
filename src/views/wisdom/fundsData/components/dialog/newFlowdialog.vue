@@ -274,10 +274,8 @@ export default {
                 this.ruleForm.planList[0].overdueList.push(newRata)
                 this.ruleForm.planList[0].overdueList[0].overDueInterest = profit[0]
             }
-            console.log(this.ruleForm.planList)
         },
         onRepaymentTypeChange (val, boolean = true) {
-            console.log(val)
             this.ruleForm.planList = []
             this.ruleForm.loan.repaymentTsype = val
             if (val === 1) {
@@ -298,7 +296,6 @@ export default {
         },
         /** 自动计算还款计划和日期 */
         setPlanList () {
-            console.log('this.ruleForm.loan.loanEndTime', this.ruleForm.loan.loanEndTime)
             //  moment().subtract(7, 'days').format('YYYY-MM-DD')
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount

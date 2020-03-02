@@ -108,7 +108,6 @@ export default {
                 return this.flowform.invoiceAmount * this.flowform.depositProportion
             },
             set: function (value) {
-                console.log(1, value)
                 this.flowform.depositPay = value
             }
 
@@ -120,7 +119,6 @@ export default {
             this.flowform.loanEndTime = ''
         },
         onChooseTime (val) {
-            console.log('onChooseTime (val): ', val)
             if (this.flowform.loanDateType == 1) {
                 this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')
             }

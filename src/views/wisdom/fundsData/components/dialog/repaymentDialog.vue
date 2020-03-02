@@ -1,5 +1,12 @@
 <template>
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+        <el-dialog width="30%" title="确认切换" :visible.sync="innerVisible" append-to-body>
+            <span>切换后，所有还款数据（含明细表内该笔台账关联的所有还款明细）均会被清空且无法恢复</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="innerVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSureCut">确 定</el-button>
+            </span>
+        </el-dialog>
         <div class="form">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
                 <!-- <div class="dialogtitle">还款方式：</div> -->
@@ -7,8 +14,10 @@
                     <div class="query-cont-col">
                         <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
-                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
+                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
+                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio> -->
+                            <!-- <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio> -->
                         </el-form-item>
                     </div>
                 </div>
@@ -103,13 +112,13 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次还正常利息时间：" prop="thisPaidInterestTime">
-                                    <el-date-picker v-model="item.thisPaidInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                    <el-date-picker v-model="item.thisPaidInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还正常利息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidInterestTime" placeholder="请输入应收利息">
+                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidInterestTime" placeholder="请输入本次收取正常利息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -139,7 +148,7 @@
                             <div class="query-cont-row">
                                 <div class="query-cont-col">
                                     <el-form-item label="逾期利率：" prop="overDueInterest">
-                                        <el-input v-model.trim="item.overDueInterest" v-isNum:2="item.dateNum" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)">
+                                        <el-input v-model.trim="item.overDueInterest" v-isNum:2="item.dateNum" maxlength='20' placeholder="请输入逾期利率" @blur="dealCount(item)">
                                             <template slot="append">%</template>
                                         </el-input>
                                     </el-form-item>
@@ -159,7 +168,7 @@
                                     </div>
                                     <div class="query-cont-col">
                                         <el-form-item label="该阶段逾期利率：">
-                                            <el-input v-model.trim="i.overDueInterest" v-isNum:2="i.overDueInterest" maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(item)"><template slot="append">%</template></el-input>
+                                            <el-input v-model.trim="i.overDueInterest" v-isNum:2="i.overDueInterest" maxlength='20' placeholder="请输入逾期利率" @blur="dealCount(item)"><template slot="append">%</template></el-input>
                                         </el-form-item>
                                     </div>
                                 </div>
@@ -173,13 +182,13 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                                    <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择还罚息时间">
+                                    <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还罚息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' :disabled="!item.overDueInterestTime" placeholder="请输入利息金额">
+                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' :disabled="!item.overDueInterestTime" placeholder="请输入本次缴纳逾期罚息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -219,6 +228,7 @@ export default {
             radio: '月',
             radiox: '1',
             loading: false,
+            innerVisible: false,
             form: {
                 name: '',
                 x: ''
@@ -265,7 +275,6 @@ export default {
     },
     methods: {
         async dealCount (query) {
-            console.log(query)
             const res = await this.onCount(query)
             /* res格式: {
                 "graceInterestAmount": '', // 宽限期利息
@@ -280,6 +289,17 @@ export default {
             this.dealCount(item)
             this.$emit('stepOver', val, item)
         },
+        capitalPaidChange (val) {
+            if (val == 1) this.detailData[0].repaymentType = 2
+            if (val == 2) this.detailData[0].repaymentType = 1
+            this.innerVisible = true
+        },
+        onSureCut () {
+            console.log('调接口')
+            this.innerVisible = false
+            // let val = 
+            // this.$emit('repaymentTypeChange',val)
+        },
         onCancle () {
             this.$emit('onClose')
         },
@@ -293,10 +313,7 @@ export default {
         async onSaveplan () {
             this.loading = true
             try {
-                await setPlan({
-                    planList: this.detailData,
-                    createBy: this.userInfo.employeeName
-                })
+                await this.setPlan(this.detailData)
                 this.$message({ type: 'success', message: '修改成功' })
                 this.onCancle()
                 this.$emit('reload')
@@ -304,10 +321,19 @@ export default {
             } catch (error) {
                 this.loading = false
             }
+        },
+        async setPlan (planList) {
+            console.log(planList)
+            await setPlan({
+                planList,
+                createBy: this.userInfo.employeeName
+            })
         }
     },
     mounted () {
+        console.log('mounted')
         this.detailData.map(async (item, index) => {
+            console.log(item)
             await this.dealCount(item)
         })
     }
@@ -317,6 +343,7 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+    min-height: auto;
 }
 .dialogtitle {
     font-size: 20px;

@@ -3,7 +3,11 @@
 import * as types from './const'
 import { findPlatformslist } from '@/views/wisdom/fundsData/api'
 const state = {
-    platformData: []
+    platformData: [],
+    overdueList: [
+        { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
+        { dateNum: '999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+    ]
 }
 
 const getters = {

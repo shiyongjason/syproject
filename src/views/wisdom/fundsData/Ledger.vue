@@ -67,8 +67,8 @@
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
                 <el-tab-pane label="流贷" name="1"></el-tab-pane>
-                <el-tab-pane label="敞口"  name="2"></el-tab-pane>
-                <el-tab-pane label="分授信"  name="3"></el-tab-pane>
+                <el-tab-pane label="敞口" name="2"></el-tab-pane>
+                <el-tab-pane label="分授信" name="3"></el-tab-pane>
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
             <template v-if="accountType != '4'">

@@ -14,7 +14,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金金额：" prop="thisPaidCapital">
-                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还款" :disabled='!detailData[0].thisPaidCapitalTime' @blur="dealCount(detailData[0])">
+                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='20' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还本金金额" :disabled='!detailData[0].thisPaidCapitalTime' @blur="dealCount(detailData[0])">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -57,14 +57,14 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还宽限利息时间：" prop="thisPaidGraceInterestTime">
-                            <el-date-picker v-model="detailData[0].thisPaidGraceInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                            <el-date-picker v-model="detailData[0].thisPaidGraceInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还宽限利息时间">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
                             <!-- 支持修改，修改规则同通用样式，仅允许输入数字，允许输入俩位小数，含小数点最多20位 -->
-                            <el-input v-isNegative="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入应收利息" :disabled="!detailData[0].thisPaidGraceInterestTime">
+                            <el-input v-isNegative="detailData[0].thisPaidGraceInterest" maxlength='20' v-model.trim="detailData[0].thisPaidGraceInterest" placeholder="请输入本次收取宽限利息" :disabled="!detailData[0].thisPaidGraceInterestTime">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -87,13 +87,13 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还正常利息时间：" prop="thisPaidInterestTime">
-                            <el-date-picker v-model="detailData[0].thisPaidInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                            <el-date-picker v-model="detailData[0].thisPaidInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还正常利息时间">
                             </el-date-picker>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                            <el-input v-isNegative="detailData[0].thisPaidInterest" maxlength='20' v-model.trim="detailData[0].thisPaidInterest" placeholder="请输入本次收取利息" :disabled="!detailData[0].thisPaidInterestTime">
+                            <el-input v-isNegative="detailData[0].thisPaidInterest" maxlength='20' v-model.trim="detailData[0].thisPaidInterest" placeholder="请输入本次收取正常利息" :disabled="!detailData[0].thisPaidInterestTime">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -120,7 +120,7 @@
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="逾期利率：" prop="overDueInterest">
-                                    <el-input v-model.trim="detailData[0].overDueInterest" v-isNum:2='detailData[0].overDueInterest' maxlength='20' placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
+                                    <el-input v-model.trim="detailData[0].overDueInterest" v-isNum:2='detailData[0].overDueInterest' maxlength='20' placeholder="请输入逾期利率" @blur="dealCount(detailData[0])">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
@@ -141,7 +141,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="该阶段逾期利率：" prop="overdueList.overDueInterest">
-                                    <el-input v-isNum:2="item.overDueInterest" maxlength='20' v-model.trim="item.overDueInterest" placeholder="请输入逾期利息" @blur="dealCount(detailData[0])">
+                                    <el-input v-isNum:2="item.overDueInterest" maxlength='20' v-model.trim="item.overDueInterest" placeholder="请输入逾期利率" @blur="dealCount(detailData[0])">
                                         <template slot="append">%</template>
                                     </el-input>
                                 </el-form-item>
