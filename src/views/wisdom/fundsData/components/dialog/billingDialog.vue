@@ -29,7 +29,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="保证金缴纳：" prop="depositPay">
                             <!-- 第一笔还款维护后，保证金缴纳金额输入框去除，变为不可修改 -->
-                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute" :disabled='true'>
+                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute" :disabled='!detailData.invoiceAmount'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -37,7 +37,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="敞口金额：" prop="loanAmount">
                             <!-- 第一笔还款维护后，敞口金额输入框去除，变为不可修改，敞口金额=开票金额-保证金缴纳 -->
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额" :disabled='true'>
+                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额" :disabled='!detailData.invoiceAmount'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -129,7 +129,7 @@ export default {
             }
         },
         doCompute () {
-            this.detailData.depositProportion = (this.detailData.depositPay / this.detailData.invoiceAmount) * 100
+            this.detailData.loanAmount = this.detailData.invoiceAmount - this.detailData.depositPay
         },
         setDepositProportion (val) {
             // this.form.depositProportion = val
