@@ -1710,6 +1710,7 @@ export default {
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
+            this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
         },
@@ -1717,34 +1718,18 @@ export default {
             this.rowData = []
             let repaymenBaseNum = [0.3, 0.3, 0.4]
             let repaymenDays = [2, 1, 0]
-            // if (val === 1) {
-            //     this.planListItem.id = ''
-            //     // this.planListItem.capitalAmount = this.loanAmount
-            //     this.rowData.push({ ...this.planListItem })
-            // } else if (val === 2) {
-            //     console.log(111111, this.copyGrantdata)
-            //     for (let i = 0; i < 3; i++) {
-            //         if (this.copyGrantdata.length == 1) {
-            //             this.rowData.push({ ...this.copyGrantdata[0] })
-            //         } else {
-            //             this.copyGrantdata[i].capitalAmount = this.copyGrantdata[i].capitalAmount * repaymenBaseNum[i]
-            //             this.rowData.push({ ...(this.copyGrantdata[i]) })
-            //         }
-            //         this.rowData.push({ ...(this.copyGrantdata[i] ? (this.copyGrantdata[i]) : this.copyGrantdata[0]) })
-            //         this.$set(this.rowData[0], 'repaymentType', val)
-            //     }
-            // }
-            if (this.copyGrantdata.length == 1) {
+            console.log(this.copyGrantdata)
+            if (this.copyGrantdata.length == 1) { // 查询是一次性
                 this.planListItem = { ...this.copyGrantdata[0] }
-            } else {
+            } else { // 查询是334
                 this.planListItem = { ...this.copyGrantdata[2] }
             }
             this.planListItem.id = ''
-            if (val === 1) {
+            if (val === 1) { // 点击一次性还款
                 this.planListItem.capitalAmount = this.loanAmount
                 this.rowData.push({ ...this.planListItem })
                 this.$set(this.rowData[0], 'repaymentType', val)
-            } else if (val === 2) {
+            } else if (val === 2) { // 点击334还款
                 for (let i = 0; i < 3; i++) {
                     if (this.copyGrantdata.length == 1) {
                         this.rowData.push({ ...this.planListItem })
@@ -1754,9 +1739,10 @@ export default {
                         this.rowData.push({ ...(this.copyGrantdata[i]) })
                     }
                     // this.rowData.push({ ...(this.copyGrantdata[i]) })
-                    this.$set(this.rowData[0], 'repaymentType', val)
                 }
+                this.$set(this.rowData[0], 'repaymentType', val)
             }
+            console.log(this.rowData)
         },
         onStepOver (val, item) {
             // if (this.rowData[0].overdueList.length = 0) {
