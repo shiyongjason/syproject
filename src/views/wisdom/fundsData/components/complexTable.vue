@@ -1709,7 +1709,7 @@ export default {
                 this.$set(this.rowData[0], 'account_accountType', 3)
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
-            this.$set(this.rowData[0], 'account_id', row.account_id)
+            this.$set(this.rowData[0], 'accountId', row.account_id)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
         },
