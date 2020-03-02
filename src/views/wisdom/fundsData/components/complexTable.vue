@@ -331,7 +331,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_supplier == 0 ? 0 : scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
+                                return <span>{scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
                             }
                         },
                         {
@@ -684,7 +684,7 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_supplier == 0 ? 0 : scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
+                                return <span>{scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
                             }
                         },
                         {
