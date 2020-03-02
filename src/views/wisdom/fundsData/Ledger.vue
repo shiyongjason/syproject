@@ -103,7 +103,7 @@ export default {
         }),
         ...mapGetters({
             platformData: 'platformData'
-        }),
+        })
     },
     data () {
         return {
