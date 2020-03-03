@@ -179,8 +179,8 @@
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="本次还罚息时间：" prop="overDueInterestTime">
-                                    <el-date-picker v-model="item.overDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还罚息时间">
+                                <el-form-item label="本次还罚息时间：" prop="thisPaidOverDueInterestTime">
+                                    <el-date-picker v-model="item.thisPaidOverDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还罚息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
