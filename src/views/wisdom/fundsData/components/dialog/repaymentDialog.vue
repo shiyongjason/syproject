@@ -14,8 +14,8 @@
                     <div class="query-cont-col">
                         <el-form-item prop="repaymentType">
                             <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
-                            <el-radio :disabled='!!detailData[0].capitalPaid' v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
+                            <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
                         </el-form-item>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                             </el-form-item>
                         </div>
                     </div>
-                    <div v-if="item.account_accountType==3">
+                    <div v-if="detailData[0].account_accountType==3">
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-form-item label="累计应收正常利息：" prop="name">
@@ -116,7 +116,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidInterestTime" placeholder="请输入本次收取正常利息">
+                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidInterest" maxlength='20' :disabled="!item.thisPaidInterestTime" placeholder="请输入本次收取正常利息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
@@ -126,7 +126,7 @@
                                     <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
                                     <template slot="append">元</template>
                                 </el-input> -->
-                                    {{((item.interestAmount||0)-(item.interestPaid?item.interestPaid:0)).toFixed(2)}}元
+                                    {{((item.interestAmount||0)-(item.thisPaidInterest?item.thisPaidInterest:0)).toFixed(2)}}元
                                 </el-form-item>
                             </div>
                         </div>
