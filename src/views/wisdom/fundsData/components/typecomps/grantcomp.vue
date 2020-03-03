@@ -42,7 +42,7 @@
                 <el-form-item label="承兑期限：" prop="loanDateNum">
                     <el-radio v-model.trim="flowform.loanDateType" :label=1 @change="loanDateTypeChange">月</el-radio>
                     <el-radio v-model.trim="flowform.loanDateType" :label=2 @change="loanDateTypeChange" :disabled="flowform.repaymentType===2">天</el-radio>
-                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isNum:0="flowform.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
+                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isPositiveInt="flowform.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
                     </el-input>
                 </el-form-item>
             </div>

@@ -1161,7 +1161,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_totalInterest)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}</span>
                     }
                 },
                 {

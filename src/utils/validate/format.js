@@ -37,9 +37,24 @@ function isNegative (str, float = 1000000000) {
 function isNotInputTxt (str) {
     return str.replace(/[^\d^]+/g, '')
 }
+// 正整数
+function isPositiveInt (str) {
+    const regular = /[^0-9]*/g
+    if (!str) return
+    if (str == 0) {
+        return ''
+    }
+    str = str.toString()
+    // 仅允许输入整数
+    if (str.indexOf('.') > -1) {
+        return str.split('.')[0]
+    }
+    return str.replace(regular, '')
+}
 
 export {
     isNum,
     isNegative,
-    isNotInputTxt
+    isNotInputTxt,
+    isPositiveInt
 }
