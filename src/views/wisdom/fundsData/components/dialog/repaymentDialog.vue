@@ -293,7 +293,7 @@ export default {
             this.innerVisible = true
         },
         async onSureCut () {
-            await this.$emit('repaymentTypeChange',this.detailData[0].accountId)
+            await this.$emit('repaymentTypeChange',this.detailData[0])
             this.innerVisible = false
         },
         onCancle () {
