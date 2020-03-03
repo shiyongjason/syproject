@@ -283,9 +283,9 @@ export default {
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
         },
-        onChange (val, item) {
+        async onChange (val, item) {
+            await this.$emit('stepOver', val, item)
             this.dealCount(item)
-            this.$emit('stepOver', val, item)
         },
         capitalPaidChange (val) {
             if (val == 1) this.detailData[0].repaymentType = 2

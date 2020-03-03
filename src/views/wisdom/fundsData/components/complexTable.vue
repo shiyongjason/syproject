@@ -1739,22 +1739,10 @@ export default {
             this.getList()
         },
         onStepOver (val, item) {
-            // if (this.rowData[0].overdueList.length = 0) {
-            //     this.rowData[0].overdueList.push({})
-            // }
-            let newRata = JSON.parse(JSON.stringify(this.rowData[0].overdueList[0]))
-            let newObj = { ...newRata }
-            item.overdueList = []
-            let rateArr = [3, 999] // 默认时长
-            const profit = [16, 20] // 默认逾期利率
-            if (val == 2) {
-                for (var i = 0; i < 2; i++) {
-                    newObj.dateNum = rateArr[i]
-                    item.overdueList.push({ ...newObj })
-                    item.overdueList[i].overDueInterest = profit[i]
-                }
+            if (val == 2 && item.overdueList.length < 2) {
+                item.overdueList = this.overdueList
             } else if (val == 1) {
-                item.overdueList.push(newObj)
+                item.overDueInterest = 12
             }
         }
     },
