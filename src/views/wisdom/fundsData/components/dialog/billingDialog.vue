@@ -46,11 +46,11 @@
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="承兑期限：" prop="loanDateNum">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment'>月</el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment' @blur='loanDateNumM'>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment' @blur='loanDateNumM'>
                                 <template slot="append">月</template>
                             </el-input>
                             <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label=2 @change='loanDateNumD' :disabled='detailData.isRepayment'>日</el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2 || detailData.isRepayment' @blur='loanDateNumD'>
+                            <el-input v-model.trim="detailData.loanDateNumD" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2 || detailData.isRepayment' @blur='loanDateNumD'>
                                 <template slot="append">天</template>
                             </el-input>
                         </el-form-item>
