@@ -1,5 +1,11 @@
 import { setCount } from '../api'
+import { mapState } from 'vuex'
 export const setCountMixin = {
+    computed: {
+        ...mapState({
+            overdueList: state => state.fundsData.overdueList
+        })
+    },
     data () {
         return {
             setCountParams: {
@@ -44,6 +50,8 @@ export const setCountMixin = {
                     }
                     this.setCountParams.overDueInterestCountList.push(obj)
                 })
+            } else {
+                this.setCountParams.overDueInterestCountList = this.overdueList
             }
             if (!row.exsitGrace) {
                 this.setCountParams.graceDay = 0
