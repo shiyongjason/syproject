@@ -30,8 +30,8 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="是否存在宽限期：" prop="exsitGrace">
-                            <el-radio style="margin-right:5px" v-model.trim="detailData[0].exsitGrace" :label="1">是</el-radio>
-                            <el-radio style="margin:0 5px 0 15px" v-model.trim="detailData[0].exsitGrace" :label="0">否</el-radio>
+                            <el-radio style="margin-right:5px" v-model.trim="detailData[0].exsitGrace" @change="dealCount(detailData[0])" :label="1">是</el-radio>
+                            <el-radio style="margin:0 5px 0 15px" v-model.trim="detailData[0].exsitGrace" @change="dealCount(detailData[0])" :label="0">否</el-radio>
                             <template v-if="detailData[0].exsitGrace">
                                 <span style="margin-left:15px">宽限日期：</span>
                                 <!-- 仅允许输入非负整数，最多允许输入3位 -->
