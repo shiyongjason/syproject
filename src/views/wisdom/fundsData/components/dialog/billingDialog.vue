@@ -6,14 +6,14 @@
                     <div class="query-cont-col">
                         <el-form-item label="开票金额：" prop="invoiceAmount">
                             <!-- 第一笔还款维护后，开票金额输入框去除，变为不可修改 -->
-                            <el-input v-model.trim="detailData.invoiceAmount" v-isNum="detailData.name" maxlength='20' placeholder="请输入开票金额" @blur="setVal">
+                            <el-input v-model.trim="detailData.invoiceAmount" v-isNum="detailData.name" maxlength='20' placeholder="请输入开票金额" @blur="setVal" :disabled='detailData.isRepayment'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="供货商名称：" prop="supplier">
-                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='30'></el-input>
+                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='30' :disabled='detailData.isRepayment'></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="保证金比例：" prop="depositProportion">
                             <!-- 第一笔还款维护后，保证金比例输入框去除，变为不可修改 -->
-                            <el-input v-model.trim="detailData.depositProportion" v-isNum="detailData.depositProportion" maxlength='20' placeholder="请输入保证金比例" @blur="setDepositProportion">
+                            <el-input v-model.trim="detailData.depositProportion" v-isNum="detailData.depositProportion" maxlength='20' placeholder="请输入保证金比例" @blur="setDepositProportion" :disabled='detailData.isRepayment'>
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -29,7 +29,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="保证金缴纳：" prop="depositPay">
                             <!-- 第一笔还款维护后，保证金缴纳金额输入框去除，变为不可修改 -->
-                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute" :disabled='!detailData.invoiceAmount'>
+                            <el-input v-model.trim="detailData.depositPay" v-isNum="detailData.depositPay" maxlength='20' placeholder="请输入保证金缴纳金额" @blur="doCompute" :disabled='!detailData.invoiceAmount || detailData.isRepayment'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -37,7 +37,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="敞口金额：" prop="loanAmount">
                             <!-- 第一笔还款维护后，敞口金额输入框去除，变为不可修改，敞口金额=开票金额-保证金缴纳 -->
-                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额" :disabled='!detailData.invoiceAmount'>
+                            <el-input v-model.trim="detailData.loanAmount" v-isNum="detailData.loanAmount" maxlength='20' placeholder="请输入敞口金额" :disabled='!detailData.invoiceAmount || detailData.isRepayment'>
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -45,12 +45,12 @@
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="承兑期限：" prop="loanDateNum">
-                            <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM'>月</el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1' @blur='loanDateNumM'>
+                            <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment'>月</el-radio>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment' @blur='loanDateNumM'>
                                 <template slot="append">月</template>
                             </el-input>
-                            <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label=2 @change='loanDateNumD'>日</el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2' @blur='loanDateNumD'>
+                            <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label=2 @change='loanDateNumD' :disabled='detailData.isRepayment'>日</el-radio>
+                            <el-input v-model.trim="detailData.loanDateNumD" v-isNum:0="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2 || detailData.isRepayment' @blur='loanDateNumD'>
                                 <template slot="append">天</template>
                             </el-input>
                         </el-form-item>
@@ -60,7 +60,7 @@
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange">
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange" :disabled='detailData.isRepayment'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -75,7 +75,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSave" :loading='loading'>保 存</el-button>
+            <el-button v-if='!detailData.isRepayment' type="primary" @click="onSave" :loading='loading'>保 存</el-button>
         </span>
     </el-dialog>
 </template>

@@ -1492,15 +1492,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_0_isOverDue',
-                    label: '是否逾期',
-                    sort: 6,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
-                    }
-                },
-                {
                     prop: 'planList_0_overDueInterestAmount',
                     label: '应缴逾期罚息',
                     sort: 7,
@@ -1547,15 +1538,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'planList_1_isOverDue',
-                    label: '是否逾期',
-                    sort: 15,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span class={scope.row.planList_1_isOverDue ? 'red' : ''}>{scope.row.planList_1_isOverDue ? '是' : '否'}</span>
-                    }
-                },
-                {
                     prop: 'planList_1_overDueInterestAmount',
                     label: '应缴逾期罚息',
                     sort: 16,
@@ -1599,15 +1581,6 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_isOverDue',
-                    label: '是否逾期',
-                    sort: 24,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                     }
                 },
                 {
@@ -1723,8 +1696,8 @@ export default {
             //     await this.$refs.repayment.dealCount(item)
             // })
         },
-        async onRepaymentTypeChange (id) {
-            const { data } = await transformPlanType(id)
+        async onRepaymentTypeChange (item) {
+            const { data } = await transformPlanType(item.accountId)
             // console.log(data)
             if (data.length == 1) {
                 data[0].repaymentType = 1
@@ -1734,6 +1707,7 @@ export default {
                 })
             }
             data[0].accountId = this.rowData[0].accountId
+            data[0].account_accountType = item.account_accountType
             this.rowData = data
             // console.log(this.rowData)
             this.getList()
