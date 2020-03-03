@@ -293,7 +293,7 @@ export default {
             this.innerVisible = true
         },
         async onSureCut () {
-            await this.$emit('repaymentTypeChange',this.detailData[0].accountId)
+            await this.$emit('repaymentTypeChange', this.detailData[0])
             this.innerVisible = false
         },
         onCancle () {
@@ -325,14 +325,7 @@ export default {
                 createBy: this.userInfo.employeeName
             })
         }
-    },
-    // mounted () {
-    //     console.log('mounted')
-    //     this.detailData.map(async (item, index) => {
-    //         console.log(item)
-    //         await this.dealCount(item)
-    //     })
-    // }
+    }
 }
 </script>
 
@@ -341,7 +334,7 @@ export default {
     padding: 20px 24px;
     min-height: auto;
 }
-/deep/.el-form .el-input{
+/deep/.el-form .el-input {
     width: 250px;
 }
 .dialogtitle {
