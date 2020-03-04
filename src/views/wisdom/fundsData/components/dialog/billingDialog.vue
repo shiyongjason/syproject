@@ -60,7 +60,7 @@
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange" :disabled='detailData.isRepayment || detailData.repaymentType == 2'>
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange" :disabled='detailData.isRepayment'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
