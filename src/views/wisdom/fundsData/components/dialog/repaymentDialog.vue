@@ -38,7 +38,7 @@
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px" v-if="item.exsitGrace==1">宽限期利率：</span>
-                                <el-input v-model.trim="item.graceInterest" v-isNum:0="item.graceInterest" maxlength='3' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
+                                <el-input v-model.trim="item.graceInterest" v-isNum:2="item.graceInterest" maxlength='20' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
                                     <template slot="append">%</template>
                                 </el-input>
                             </el-form-item>
