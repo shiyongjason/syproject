@@ -45,11 +45,11 @@
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="承兑期限：" prop="loanDateNum">
-                            <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment'>月</el-radio>
-                            <el-input v-model.trim="detailData.loanDateNumM" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment' @blur='loanDateNumM'>
+                            <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment || detailData.repaymentType == 2'>月</el-radio>
+                            <el-input v-model.trim="detailData.loanDateNumM" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment || detailData.repaymentType == 2' @blur='loanDateNumM'>
                                 <template slot="append">月</template>
                             </el-input>
-                            <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label=2 @change='loanDateNumD' :disabled='detailData.isRepayment'>日</el-radio>
+                            <el-radio style="margin:0 5px 0 10px" v-model.trim="detailData.loanDateType" :label=2 @change='loanDateNumD' :disabled='detailData.isRepayment || detailData.repaymentType == 2'>日</el-radio>
                             <el-input v-model.trim="detailData.loanDateNumD" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 2 || detailData.isRepayment' @blur='loanDateNumD'>
                                 <template slot="append">天</template>
                             </el-input>
@@ -60,7 +60,7 @@
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
                         <el-form-item label="开票日期：" prop="invoiceTime">
-                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange" :disabled='detailData.isRepayment'>
+                            <el-date-picker v-model="detailData.invoiceTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择开票日期" @change="datePickerChange" :disabled='detailData.isRepayment || detailData.repaymentType == 2'>
                             </el-date-picker>
                         </el-form-item>
                     </div>

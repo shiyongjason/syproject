@@ -1644,7 +1644,6 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            // console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,
