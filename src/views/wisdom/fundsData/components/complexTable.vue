@@ -1644,7 +1644,6 @@ export default {
         // 借款信息
         async getLoan (row) {
             const { data } = await getLoan(row.loan_id)
-            // console.log(data)
             this.loanData = {
                 ...this.loanData,
                 ...data,
@@ -1694,10 +1693,6 @@ export default {
             console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
-            // this.rowData.map(async (item, index) => {
-            //     console.log(this.$refs)
-            //     await this.$refs.repayment.dealCount(item)
-            // })
         },
         async onRepaymentTypeChange (item) {
             const { data } = await transformPlanType(item.accountId)
