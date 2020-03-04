@@ -276,6 +276,7 @@ export default {
             query.graceInterestAmount = res.graceInterestAmount || 0
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
+            this.$forceUpdate()
         },
         async onChange (val, item) {
             await this.$emit('stepOver', val, item)

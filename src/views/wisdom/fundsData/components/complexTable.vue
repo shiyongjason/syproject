@@ -1693,10 +1693,6 @@ export default {
             console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
-            // this.rowData.map(async (item, index) => {
-            //     console.log(this.$refs)
-            //     await this.$refs.repayment.dealCount(item)
-            // })
         },
         async onRepaymentTypeChange (item) {
             const { data } = await transformPlanType(item.accountId)
