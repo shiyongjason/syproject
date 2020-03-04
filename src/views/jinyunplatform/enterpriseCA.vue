@@ -348,17 +348,21 @@ export default {
                 this.personRelevenceData = data
             }
             if (this.activeName == 'enterprise') {
-                const newMsg = signInfo({ signId: row.companySignatureId, type: 1 })
-                if (newMsg) {
-                    this.$message.warning(newMsg)
+                const { data } = await signInfo({ signId: row.companySignatureId, type: 1 })
+                if (data.length > 0) {
+                    this.$message.warning(data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！')
                     return false
                 }
                 this.title = '企业CA认证注销'
                 this.logoutName = row.companyName
             } else {
-                const newMsg = await signInfo({ signId: row.companySignatureId, type: 2 })
-                if (newMsg) {
-                    this.$message.warning(newMsg)
+                const { data } = await signInfo({ signId: row.signatureSupplierSignerId, type: 2 })
+                if (data.length > 0) {
+                    let comArr = ''
+                    data && data.map((val) => {
+                        comArr += val.companyName + ','
+                    })
+                    this.$message.warning(comArr + '有未签约的用信合同，CA认证暂时无法注销！')
                     return false
                 }
                 this.title = '个人CA认证注销'

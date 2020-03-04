@@ -56,9 +56,7 @@ export const getRecognitionsDetail = (params) => axios.get(interfaceUrl + `backe
 export const artifVali = (params) => axios.put(interfaceUrl + `backend/face-recognitions/${params.id}/certifie`, params)
 
 // 注销判断操作
-export const signInfo = (params) => {
-    axios.get(interfaceUrl + `backend/signs/${params.signId}/information`, { params })
-}
+export const signInfo = (params) => axios.get(interfaceUrl + `backend/signs/get/${params.signId}/list`, { params })
 
 // 修改个人新增
 export const editSign = (params) => axios.put(interfaceUrl + `backend/signs`, params)
