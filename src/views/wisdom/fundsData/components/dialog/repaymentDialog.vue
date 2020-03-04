@@ -186,7 +186,7 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' :disabled="!item.overDueInterestTime" placeholder="请输入本次缴纳逾期罚息">
+                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='20' :disabled="!item.thisPaidOverDueInterestTime" placeholder="请输入本次缴纳逾期罚息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>

@@ -926,9 +926,9 @@ export default {
                     label: '还款项目',
                     render: (h, scope) => {
                         return <span>{
-                            scope.row.accountType == 1 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息')
-                                : scope.row.accountType == 2 ? (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息')
-                                    : scope.row.accountType == 3 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还逾期罚息' : '还宽限期利息') : '-'
+                            scope.row.accountType == 1 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还宽限期利息' : '还逾期罚息')
+                                : scope.row.accountType == 2 ? (scope.row.type == 1 ? '还敞口本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还宽限期利息' : '还逾期罚息')
+                                    : scope.row.accountType == 3 ? (scope.row.type == 1 ? '还借款本金' : scope.row.type == 2 ? '还借款利息' : scope.row.type == 3 ? '还宽限期利息' : '还逾期罚息') : '-'
                         }</span>
                     }
                 },
