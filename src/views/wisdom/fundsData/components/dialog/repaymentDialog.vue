@@ -81,13 +81,13 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还宽限利息时间：" prop="thisPaidGraceInterestTime">
-                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择本次还宽限利息时间：">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入应收利息">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入本次收取宽限利息：">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
