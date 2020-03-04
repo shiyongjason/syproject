@@ -68,8 +68,8 @@
 
                         <div class="query-cont-col">
                             <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
-                                <!-- 剩余还款金额=约定还款金额-累计还款本金金额 -->
-                                <span>{{((item.capitalAmount||0)-(item.capitalPaid?item.capitalPaid:0)-(item.thisPaidCapital?item.thisPaidCapital:0)).toFixed(2)}}元</span>
+                                <!-- 欠还本金-本次还本金 -->
+                                <span>{{((item.capitalOwe||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -94,10 +94,8 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="剩余宽限利息：" prop="name">
-                                <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
-                                    <template slot="append">元</template>
-                                </el-input> -->
-                                {{((item.graceInterestAmount||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
+                                <!-- 欠付宽限期利息-本次还宽限期利息 -->
+                                {{((item.graceInterestOwe||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
                             </el-form-item>
                         </div>
                     </div>
@@ -123,10 +121,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余正常利息：" prop="name">
-                                    <!-- <el-input v-model.trim="form.name" v-isNum="form.name" maxlength='20' placeholder="请输入应收利息">
-                                    <template slot="append">元</template>
-                                </el-input> -->
-                                    {{((item.interestAmount||0)-(item.thisPaidInterest?item.thisPaidInterest:0)).toFixed(2)}}元
+                                    <!-- 欠还利息-本次还利息 -->
+                                    {{((item.interestOwe||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
                                 </el-form-item>
                             </div>
                         </div>
@@ -193,10 +189,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余逾期罚息：" prop="name">
-                                    <!-- <el-input v-model.trim="detailData[0].overdueList[0].dateNum" v-isNum="form.name" maxlength='20' placeholder="请输入利息金额">
-                                    <template slot="append">元</template>
-                                </el-input> -->
-                                    {{((item.overDueInterestAmount||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
+                                    <!-- 欠付逾期利息-本次还逾期 -->
+                                    {{((item.overDueInterestOwe||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
                                 </el-form-item>
                             </div>
                         </div>
