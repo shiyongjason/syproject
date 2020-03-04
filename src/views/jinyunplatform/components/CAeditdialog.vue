@@ -84,6 +84,7 @@
 
 <script>
 import { PHONE, checkIdCard } from '@/utils/rules'
+import { editSign } from '../api/index'
 export default {
     name: 'CAeditdialog',
     props: {
@@ -122,8 +123,18 @@ export default {
         onSubmit () {
             this.loading = true
             try {
-                this.loading = false
-                this.$emit('onSearcqyery')
+                this.$refs['customerForm'].validate(async (valid) => {
+                    if (valid) {
+                        await editSign({ legalIdNumber: this.customerForm.legalIdNumber,
+                            legalName: this.customerForm.legalName,
+                            legalPhone: this.customerForm.legalPhone,
+                            id: this.customerForm.id })
+                        this.$message.success('修改成功！')
+                    }
+                    this.loading = false
+                    this.$emit('onSearcqyery')
+                    this.$emit('onCancel')
+                })
             } catch (error) {
                 this.loading = false
             }

@@ -83,7 +83,7 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/CAapply'
-import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signImage, logoutConmanyCA, logoutPersonCA } from './api/index'
+import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signImage, logoutConmanyCA, logoutPersonCA, signInfo } from './api/index'
 import CaDialog from './components/CAdialog'
 import CaeditDialog from './components/CAeditdialog'
 import { interfaceUrl } from '@/api/config'
@@ -348,9 +348,19 @@ export default {
                 this.personRelevenceData = data
             }
             if (this.activeName == 'enterprise') {
+                const newMsg = signInfo({ signId: row.companySignatureId, type: 1 })
+                if (newMsg) {
+                    this.$message.warning(newMsg)
+                    return false
+                }
                 this.title = '企业CA认证注销'
                 this.logoutName = row.companyName
             } else {
+                const newMsg = await signInfo({ signId: row.companySignatureId, type: 2 })
+                if (newMsg) {
+                    this.$message.warning(newMsg)
+                    return false
+                }
                 this.title = '个人CA认证注销'
                 this.logoutName = row.customerName
             }
