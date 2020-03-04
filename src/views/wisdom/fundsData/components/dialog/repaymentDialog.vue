@@ -38,7 +38,7 @@
                                     <template slot="append">天</template>
                                 </el-input>
                                 <span style="margin-left:25px" v-if="item.exsitGrace==1">宽限期利率：</span>
-                                <el-input v-model.trim="item.graceInterest" v-isNum:0="item.graceInterest" maxlength='3' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
+                                <el-input v-model.trim="item.graceInterest" v-isNum:2="item.graceInterest" maxlength='20' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
                                     <template slot="append">%</template>
                                 </el-input>
                             </el-form-item>
@@ -68,8 +68,8 @@
 
                         <div class="query-cont-col">
                             <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
-                                <!-- 欠还本金-本次还本金 -->
-                                <span>{{((item.capitalOwe||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
+                                <!-- 本金-已还-本次还本金 -->
+                                <span>{{((item.capitalAmount||0)-(item.capitalPaid||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -81,21 +81,21 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还宽限利息时间：" prop="thisPaidGraceInterestTime">
-                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择本次还宽限利息时间：">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入应收利息">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='20' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入本次收取宽限利息：">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="剩余宽限利息：" prop="name">
-                                <!-- 欠付宽限期利息-本次还宽限期利息 -->
-                                {{((item.graceInterestOwe||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
+                                <!-- 总宽限期利息-已还-本次还宽限期利息 -->
+                                {{((item.graceInterestAmount||0)-(item.graceInterestPaid||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
                             </el-form-item>
                         </div>
                     </div>
@@ -121,8 +121,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余正常利息：" prop="name">
-                                    <!-- 欠还利息-本次还利息 -->
-                                    {{((item.interestOwe||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
+                                    <!-- 总利息-已还-本次还利息 -->
+                                    {{((item.interestAmount||0)-(item.interestPaid||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
                                 </el-form-item>
                             </div>
                         </div>
@@ -189,8 +189,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余逾期罚息：" prop="name">
-                                    <!-- 欠付逾期利息-本次还逾期 -->
-                                    {{((item.overDueInterestOwe||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
+                                    <!-- 总逾期利息-已还-本次还逾期 -->
+                                    {{((item.overDueInterestAmount||0)-(item.overDueInterestPaid||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
                                 </el-form-item>
                             </div>
                         </div>
@@ -276,6 +276,7 @@ export default {
             query.graceInterestAmount = res.graceInterestAmount || 0
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
+            this.$forceUpdate()
         },
         async onChange (val, item) {
             await this.$emit('stepOver', val, item)
