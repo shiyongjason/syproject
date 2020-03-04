@@ -57,7 +57,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="借款日期：" prop="loanStartTime">
                             <!-- 第一笔还款维护后，变为不可修改 -->
-                            <el-date-picker v-model="detailData.loanStartTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择出票日期" @change="datePickerChange" :disabled='detailData.isRepayment'>
+                            <el-date-picker v-model="detailData.loanStartTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择借款日期" @change="datePickerChange" :disabled='detailData.isRepayment'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
