@@ -994,7 +994,7 @@ export default {
                     render: (h, scope) => {
                         return <span>
                             {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                            {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
                         </span>
                     }
                 },
@@ -1122,7 +1122,10 @@ export default {
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}</span>
+                        return <span>
+                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                        </span>
                     }
                 },
                 {
@@ -1401,7 +1404,7 @@ export default {
                     render: (h, scope) => {
                         return <span>
                             {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                            {scope.row.loan_loanDateType == 1 ? '月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
                         </span>
                     }
                 },
