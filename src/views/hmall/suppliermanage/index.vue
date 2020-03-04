@@ -294,10 +294,13 @@ export default {
             else this.ruleForm.cityId = ''
         },
         onAddsupplier () {
+            this.removeValue = false
             this.dialogVisible = true
-            this.ruleForm = deepCopy(this.copyForm)
+            this.ruleForm = { ...this.copyForm }
             this.categoryIdArr = []
-            // this.$refs.ruleForm.resetFields()
+            this.$nextTick(() => {
+                this.$refs['brandId'].clearValidate()
+            })
             this.dialogtitle = '新增供应商'
         },
         onDelete (val) {
@@ -328,6 +331,7 @@ export default {
             this.categoryIdArr = data.categoryIdList
         },
         handleClose (done) {
+            this.ruleForm = { ...this.copyForm }
             this.$refs.ruleForm.resetFields()
             this.removeValue = true
             this.dialogVisible = false
@@ -349,7 +353,6 @@ export default {
                     // this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
                     this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
                     this.ruleForm.cityName = this.ruleForm.cityId && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
-                    console.log(this.ruleForm)
                     if (this.dialogtitle == '新增供应商') {
                         await addSupplier(this.ruleForm)
                         this.$message({
@@ -380,7 +383,6 @@ export default {
             this.getSupplier()
         },
         handleCurrentChange (val) {
-            console.log(val)
             this.queryParams.pageNumber = val.pageNumber
             this.getSupplier()
         },
