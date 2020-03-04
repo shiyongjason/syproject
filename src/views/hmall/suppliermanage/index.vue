@@ -308,7 +308,7 @@ export default {
             }).then(async () => {
                 await deleteSupplier(val.id)
                 this.$message({
-                    message: '删除成！',
+                    message: '删除成功！',
                     type: 'success'
                 })
                 this.searchList()
