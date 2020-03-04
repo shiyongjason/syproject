@@ -68,8 +68,8 @@
 
                         <div class="query-cont-col">
                             <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
-                                <!-- 欠还本金-本次还本金 -->
-                                <span>{{((item.capitalOwe||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
+                                <!-- 本金-已还-本次还本金 -->
+                                <span>{{((item.capitalAmount||0)-(item.capitalPaid||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
                             </el-form-item>
                         </div>
                     </div>
@@ -94,8 +94,8 @@
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="剩余宽限利息：" prop="name">
-                                <!-- 欠付宽限期利息-本次还宽限期利息 -->
-                                {{((item.graceInterestOwe||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
+                                <!-- 总宽限期利息-已还-本次还宽限期利息 -->
+                                {{((item.graceInterestAmount||0)-(item.graceInterestPaid||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
                             </el-form-item>
                         </div>
                     </div>
@@ -121,8 +121,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余正常利息：" prop="name">
-                                    <!-- 欠还利息-本次还利息 -->
-                                    {{((item.interestOwe||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
+                                    <!-- 总利息-已还-本次还利息 -->
+                                    {{((item.interestAmount||0)-(item.interestPaid||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
                                 </el-form-item>
                             </div>
                         </div>
@@ -189,8 +189,8 @@
                             </div>
                             <div class="query-cont-col">
                                 <el-form-item label="剩余逾期罚息：" prop="name">
-                                    <!-- 欠付逾期利息-本次还逾期 -->
-                                    {{((item.overDueInterestOwe||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
+                                    <!-- 总逾期利息-已还-本次还逾期 -->
+                                    {{((item.overDueInterestAmount||0)-(item.overDueInterestPaid||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
                                 </el-form-item>
                             </div>
                         </div>
