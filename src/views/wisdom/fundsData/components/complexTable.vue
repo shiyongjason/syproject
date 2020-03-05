@@ -1673,7 +1673,7 @@ export default {
             this.respAccountRepaymentPlanData = data
             // console.log(this.respAccountRepaymentPlanData)
         },
-        // 敞口还款
+        // 敞口和分授信还款
         async getGrantPaymetPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             console.log(data)
@@ -1693,6 +1693,7 @@ export default {
             console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
+            // 是否需要增加计息---
         },
         async onRepaymentTypeChange (item) {
             const { data } = await transformPlanType(item.accountId)
