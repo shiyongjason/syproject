@@ -45,7 +45,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="开票日期：" prop="">
-                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择出票日期">
+                    <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择出票日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
@@ -90,7 +90,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.flowform.loanStartTime
+                    let beginDateVal = this.flowform.invoiceTime
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
                     }
@@ -112,10 +112,10 @@ export default {
         },
         onChooseTime (val) {
             if (this.flowform.loanDateType == 1) {
-                this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')
+                this.flowform.loanEndTime = this.flowform.invoiceTime && moment(this.flowform.invoiceTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')
             }
             if (this.flowform.loanDateType == 2) {
-                this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'days').format('YYYY-MM-DD')
+                this.flowform.loanEndTime = this.flowform.invoiceTime && moment(this.flowform.invoiceTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'days').format('YYYY-MM-DD')
             }
         },
         loanDateTypeChange () {
