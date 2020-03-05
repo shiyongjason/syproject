@@ -236,7 +236,8 @@ export default {
             // 操作
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
+                    if (!this.ruleForm.loan.loanStartTime) this.ruleForm.loan.loanStartTime = this.ruleForm.loan.invoiceTime
+                    if (!this.ruleForm.loan.invoiceTime) this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
                     this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人
                     await addAccount(this.ruleForm)
                     this.$message({

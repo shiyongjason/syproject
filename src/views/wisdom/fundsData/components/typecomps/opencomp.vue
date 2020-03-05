@@ -29,7 +29,6 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="开票日期：" prop="invoiceTime">
-                    <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
                     <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择出票日期">
                     </el-date-picker>
                 </el-form-item>
@@ -44,7 +43,6 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款日期：" prop="">
-                    <!-- <el-input v-model.trim="flowform.name" placeholder="请输入年利率"><template slot="append">%</template></el-input> -->
                     <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择借款日期">
                     </el-date-picker>
                 </el-form-item>
@@ -52,7 +50,6 @@
             <div class="query-cont-col">
                 <el-form-item label="到期日：" prop="loanEndTime">
                     {{flowform.loanEndTime}}
-                    <!-- <el-date-picker v-model="flowform.loanEndTime" type="datetime" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd" placeholder="请选择还款日期"></el-date-picker> -->
                 </el-form-item>
             </div>
         </div>
