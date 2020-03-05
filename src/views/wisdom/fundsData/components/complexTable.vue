@@ -1696,7 +1696,11 @@ export default {
             // 是否需要增加计息---
         },
         async onRepaymentTypeChange (item) {
-            const { data } = await transformPlanType(item.accountId)
+            const params = {
+                accountId: item.accountId,
+                registrant: this.userInfo.employeeName
+            }
+            const { data } = await transformPlanType(params)
             // console.log(data)
             if (data.length == 1) {
                 data[0].repaymentType = 1
