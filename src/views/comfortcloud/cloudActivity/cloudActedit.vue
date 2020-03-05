@@ -6,13 +6,13 @@
                     <h3>活动管理</h3>
                 </div>
                 <el-form-item label="活动标题：">
-                    <el-input v-model="cloudForm.name"></el-input>
+                    <el-input v-model="cloudForm.name" show-word-limit placeholder="请输入活动标题" maxlength='50'></el-input>
                 </el-form-item>
                 <el-form-item prop="logoUrl" label="列表图片：">
                     <!--logoUrl-->
-                    <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
+                    <SingleUpload sizeLimit='3M' :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
-                        尺寸300x100,2m以内，支持jpg、jpeg、png`
+                        尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB
                     </div>
                 </el-form-item>
                 <el-form-item label="生效时间：">
@@ -34,19 +34,20 @@
             </el-form>
         </div>
         <el-dialog title="上传视频" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
-            <div style="text-align:center;margin-top:20px">
-                <el-upload class="upload-demo" drag :on-success="handleSuccess" :on-error="handleError" :before-upload="handleUpload" v-bind="videoUpload">
-                    <i class="el-icon-upload"></i>
-                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+            <div style="display:flex;margin:20px auto;height:100px;justify-content: center;" >
+                 <SingleUpload sizeLimit='10M' :upload="videoUpload" :imageUrl="videoimageUrl" ref="video" @back-event="videoUrl" :imgW="200" :imgH="100" />
             </div>
+            <p style="text-align:center">仅支持 MP4 格式, 大小不超过10 MB</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onInsertVideo">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'cloudEdit',
     data () {
@@ -74,7 +75,9 @@ export default {
                 'undo', // 撤销
                 'redo' // 重复
             ],
-            dialogVisible: false
+            dialogVisible: false,
+            uploadedUrl: '',
+            videoimageUrl: ''
         }
     },
     computed: {
@@ -102,7 +105,6 @@ export default {
         imageUrl () {
             return this.cloudForm.logoUrl
         },
-        /* TODO 富文本编辑器 */
         uploadImgServer () {
             return interfaceUrl + 'tms/files/upload-list'
         },
@@ -125,34 +127,33 @@ export default {
     mounted () {
     },
     methods: {
+        ...mapActions({ setNewTags: 'setNewTags' }),
         readUrl (val) {
             this.cloudForm.imageUrl = val.imageUrl
         },
+        videoUrl (val) {
+            this.$message.success('视频上传成功')
+            this.uploadedUrl = val.imageUrl
+            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/share_icon.png'
+        },
         onAddvideo () {
+            this.uploadedUrl = ''
+            this.videoimageUrl = ''
             this.dialogVisible = true
         },
         handleClose () {
             // console.log(this.$refs.editors.editor)
-            this.$refs.editors.onInsertUrl('<p>123</p>')
             this.dialogVisible = false
         },
-        handleSuccess (file) {
-            this.fileprogress = false
-            // TODO：由于后端业务错误返回200，通过code判断异常
-            if (file.code !== 200) {
-                this.$confirm(file.message, '提示信息').catch(() => { })
-            } else {
-                this.uploadedUrl = file.data.accessUrl
-            }
+        onInsertVideo () {
+            this.$refs.editors.onInsertUrl(`<p><video src="${this.uploadedUrl}"  poster="" controls="controls" width="450" height="300" style="border:1px solid #f5f5f5;"></video></p>`)
+            this.dialogVisible = false
         },
-        handleError () {
-            this.$confirm('服务端异常', '提示信息').catch(() => { })
-        },
-        handleUpload () {
-
+        onBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/comfortCloud/cloudList')
         }
     }
-
 }
 </script>
 <style lang="scss" scoped>
@@ -174,6 +175,15 @@ export default {
     margin-top: 20px;
 }
 /deep/.el-dialog__wrapper {
-    z-index: 999999 !important;
+    // z-index: 99999 !important;
+}
+.el-picker-panel {
+    z-index: 99999 !important;
+}
+/deep/.w-e-text-container{
+    z-index: 99 !important
+}
+/deep/.w-e-menu{
+     z-index: 99 !important;
 }
 </style>

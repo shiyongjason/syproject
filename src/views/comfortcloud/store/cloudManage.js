@@ -1,4 +1,4 @@
-import * as types from '../mutation-types'
+import * as types from '../../../store/mutation-types'
 import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/comfortcloud/api'
 const state = {
     iotmemberData: {},
