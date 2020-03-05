@@ -64,7 +64,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="到期日：">
                             <!-- 自动计算，到期日=借款日期+借款期限 -->
-                            <span>{{detailData.loanEndTimeLoan}}</span>
+                            <span>{{detailData.loanEndTimeLoan || '-'}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -147,12 +147,12 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = this.detailData.loanStartTime && moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumM
             this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeLoan = moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeLoan = this.detailData.loanStartTime && moment(this.detailData.loanStartTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = +this.detailData.loanDateNumD
             this.$forceUpdate()
         },
