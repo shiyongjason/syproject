@@ -155,7 +155,7 @@ export default {
             this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime &&  moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime && moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
             this.$forceUpdate()
         },
