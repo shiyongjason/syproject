@@ -84,7 +84,8 @@
                         <el-option :label="item.brandName" :value="item.id" v-for="item in brandList" :key="item.id">
                         </el-option>
                     </el-select> -->
-                    <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="backPlat" :selectObj='selectObj' :remove-value='removeValue' :placeholder="'全部'"></HAutocomplete>
+                    <!-- <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue' /> -->
+                    <HAutocomplete :remove-value='removeValue' :selectArr="brandList" v-if="brandList" @back-event="backPlat" :selectObj='selectObj' :placeholder="'全部'" />
                 </el-form-item>
                 <el-form-item label="品类：" prop="categoryId">
                     <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
@@ -130,7 +131,7 @@ export default {
     name: 'supplier',
     data () {
         return {
-            removeValue: false,
+            removeValue: true,
             branchArr: [],
             proviceList: [],
             rproviceList: [],
@@ -294,10 +295,16 @@ export default {
             else this.ruleForm.cityId = ''
         },
         onAddsupplier () {
-            this.dialogVisible = true
-            this.ruleForm = deepCopy(this.copyForm)
+            this.removeValue = true
+            this.ruleForm = { ...this.copyForm }
             this.categoryIdArr = []
-            // this.$refs.ruleForm.resetFields()
+            this.dialogVisible = true
+            this.selectObj.selectCode = ''
+            this.selectObj.selectName = ''
+            this.$nextTick(() => {
+                this.$refs['brandId'].clearValidate()
+                this.$refs.ruleForm.resetFields()
+            })
             this.dialogtitle = '新增供应商'
         },
         onDelete (val) {
@@ -308,7 +315,7 @@ export default {
             }).then(async () => {
                 await deleteSupplier(val.id)
                 this.$message({
-                    message: '删除成！',
+                    message: '删除成功！',
                     type: 'success'
                 })
                 this.searchList()
@@ -328,6 +335,7 @@ export default {
             this.categoryIdArr = data.categoryIdList
         },
         handleClose (done) {
+            this.ruleForm = { ...this.copyForm }
             this.$refs.ruleForm.resetFields()
             this.removeValue = true
             this.dialogVisible = false
@@ -349,7 +357,6 @@ export default {
                     // this.ruleForm.branchName = this.branchArr && this.branchArr.filter(item => item.organizationCode == this.ruleForm.branchCode)[0].organizationName
                     this.ruleForm.provinceName = this.rproviceList && this.rproviceList.filter(item => item.provinceId == this.ruleForm.provinceId)[0].name
                     this.ruleForm.cityName = this.ruleForm.cityId && this.cityLists.filter(item => item.cityId == this.ruleForm.cityId)[0].name
-                    console.log(this.ruleForm)
                     if (this.dialogtitle == '新增供应商') {
                         await addSupplier(this.ruleForm)
                         this.$message({
@@ -380,7 +387,6 @@ export default {
             this.getSupplier()
         },
         handleCurrentChange (val) {
-            console.log(val)
             this.queryParams.pageNumber = val.pageNumber
             this.getSupplier()
         },
