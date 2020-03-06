@@ -18,7 +18,6 @@ moment.locale('zh-cn')
 Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
-
 // table公共组件
 Vue.component(
     'basicTable', basicTable
