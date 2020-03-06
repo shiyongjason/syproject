@@ -11,4 +11,10 @@
     color: #000000;
     font-weight:400;
 }
+.el-popper[x-placement^=bottom]{
+    margin-top: 0 !important;
+}
+.el-autocomplete-suggestion{
+    margin-top: 0 !important;
+}
 </style>
