@@ -14,6 +14,7 @@ export const pagination = {
     },
     methods: {
         handleSizeChange (val) {
+            this.queryParams.pageNumber = 1
             this.queryParams.pageSize = val
             this.getList()
         },
