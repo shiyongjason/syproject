@@ -8,7 +8,7 @@
                     <el-form-item label="约定还款日期：" prop="endTime">
                         <!-- <el-date-picker v-model="" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="datetime" placeholder="请选择约定还款日期">
                         </el-date-picker> -->
-                        {{item.endTime}}
+                        {{item.endTime || '-'}}
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
