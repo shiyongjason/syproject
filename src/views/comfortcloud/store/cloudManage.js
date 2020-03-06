@@ -3,13 +3,15 @@ import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/co
 const state = {
     iotmemberData: {},
     iotmemberDetail: {},
-    familyData: {}
+    familyData: {},
+    iotActivitydetial: {}
 }
 
 const getters = {
     iotmemberData: state => state.iotmemberData,
     iotmemberDetail: state => state.iotmemberDetail,
-    familyData: state => state.familyData
+    familyData: state => state.familyData,
+    iotActivitydetial: state => state.iotActivitydetial
 }
 
 const mutations = {

@@ -1,41 +1,40 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="cloudForm" label-width="110px">
+            <el-form ref="cloudForm" :model="cloudForm" :rules="rules" label-width="110px">
                 <div class="page-body-title">
                     <h3>活动管理</h3>
                 </div>
-                <el-form-item label="活动标题：">
-                    <el-input v-model="cloudForm.name" show-word-limit placeholder="请输入活动标题" maxlength='50'></el-input>
+                <el-form-item label="活动标题：" prop="title">
+                    <el-input v-model.trim="cloudForm.title" show-word-limit placeholder="请输入活动标题" maxlength='50'></el-input>
                 </el-form-item>
-                <el-form-item prop="logoUrl" label="列表图片：">
+                <el-form-item label="列表图片：" prop="picture" ref="picture">
                     <!--logoUrl-->
-                    <SingleUpload sizeLimit='3M' :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
+                    <SingleUpload sizeLimit='3M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
                         尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB
                     </div>
                 </el-form-item>
-                <el-form-item label="生效时间：">
-                    <el-date-picker type="datetime" v-model="cloudForm.endDate" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
+                <el-form-item label="生效时间：" prop="effectiveTime">
+                    <el-date-picker type="datetime" v-model="cloudForm.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </el-form-item>
                 <div class="page-body-title">
                     <h3>活动详情</h3>
                 </div>
-                <el-form-item>
+                <el-form-item label="详情：" prop="detail">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor ref="editors" v-model="cloudForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor ref="editors" v-model="cloudForm.detail" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onAudit(1)">确定</el-button>
-                    <!-- <el-button type="primary" @click="onAudit(2)">确定且下一个</el-button> -->
+                    <el-button type="primary" @click="onSaveact()">确定</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
             </el-form>
         </div>
         <el-dialog title="上传视频" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
-            <div style="display:flex;margin:20px auto;height:100px;justify-content: center;" >
-                 <SingleUpload sizeLimit='10M' :upload="videoUpload" :imageUrl="videoimageUrl" ref="video" @back-event="videoUrl" :imgW="200" :imgH="100" />
+            <div style="display:flex;margin:20px auto;height:100px;justify-content: center;">
+                <SingleUpload sizeLimit='10M' :upload="videoUpload" :imageUrl="videoimageUrl" ref="video" @back-event="videoUrl" :imgW="200" :imgH="100" />
             </div>
             <p style="text-align:center">仅支持 MP4 格式, 大小不超过10 MB</p>
             <span slot="footer" class="dialog-footer">
@@ -47,13 +46,17 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
+import { saveActdetail } from '../api'
 import { mapState, mapActions } from 'vuex'
 export default {
     name: 'cloudEdit',
     data () {
         return {
             cloudForm: {
-                name: ''
+                detail: '',
+                effectiveTime: '',
+                picture: '',
+                title: ''
             },
             menus: [
                 'head', // 标题
@@ -77,7 +80,21 @@ export default {
             ],
             dialogVisible: false,
             uploadedUrl: '',
-            videoimageUrl: ''
+            videoimageUrl: '',
+            rules: {
+                title: [
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                ],
+                picture: [
+                    { required: true, message: '请选择列表图片' }
+                ],
+                effectiveTime: [
+                    { required: true, message: '请选择生效时间', trigger: 'blur' }
+                ],
+                detail: [
+                    { required: true, message: '请输入活动详情', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -124,12 +141,20 @@ export default {
             }
         }
     },
+    watch: {
+        'cloudForm.picture' (val) {
+            console.log(1, val)
+            this.$nextTick(() => {
+                if (val) this.$refs['picture'].clearValidate()
+            })
+        }
+    },
     mounted () {
     },
     methods: {
         ...mapActions({ setNewTags: 'setNewTags' }),
         readUrl (val) {
-            this.cloudForm.imageUrl = val.imageUrl
+            this.cloudForm.picture = val.imageUrl
         },
         videoUrl (val) {
             this.$message.success('视频上传成功')
@@ -152,6 +177,16 @@ export default {
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/comfortCloud/cloudList')
+        },
+        onSaveact () {
+            this.$refs['cloudForm'].validate(async (valid) => {
+                if (valid) {
+                    await saveActdetail(this.cloudForm)
+                    this.$message.success('活动保存成功')
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
+                    this.$router.push('/comfortCloud/cloudList')
+                }
+            })
         }
     }
 }
@@ -180,10 +215,10 @@ export default {
 .el-picker-panel {
     z-index: 99999 !important;
 }
-/deep/.w-e-text-container{
-    z-index: 99 !important
+/deep/.w-e-text-container {
+    z-index: 99 !important;
 }
-/deep/.w-e-menu{
-     z-index: 99 !important;
+/deep/.w-e-menu {
+    z-index: 99 !important;
 }
 </style>
