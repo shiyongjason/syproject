@@ -92,17 +92,19 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
-import { getAccountList, getRepaymentList, findDepList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'standingBook',
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.fundsData.pagination,
+            branchList: state => state.fundsData.branchList
         }),
         ...mapGetters({
-            platformData: 'platformData'
+            platformData: 'platformData',
+            tableData: 'tableData'
         })
     },
     data () {
@@ -123,13 +125,6 @@ export default {
                 productType: '1'
             },
             searchParams: {},
-            tableData: [{ shy: 1 }, { shy: 2 }],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
-            branchList: [], // 分部
             removeValue: false,
             accept: '.xlsx,.xls',
             loading: false
@@ -141,30 +136,25 @@ export default {
         this.findPlatformslist()
     },
     methods: {
+        ...mapActions({
+            findPlatformslist: 'findPlatformslist',
+            getAccountList: 'getAccountList',
+            getRepaymentList: 'getRepaymentList',
+            findBranchList: 'findBranchList'
+        }),
         // 埋点
-        tracking (event) {
-            this.$store.dispatch('tracking', {
-                type: 9,
-                event,
-                page: 2,
-                page_name: '额度导入',
-                page_path_name: 'amountImport'
-            })
-        },
+        // tracking (event) {
+        //     this.$store.dispatch('tracking', {
+        //         type: 9,
+        //         event,
+        //         page: 2,
+        //         page_name: '额度导入',
+        //         page_path_name: 'amountImport'
+        //     })
+        // },
         backPlat (value) {
             this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
             this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
-        },
-        ...mapActions({
-            findPlatformslist: 'findPlatformslist'
-        }),
-        // 查询分部（不用做权限，现在是总部在使用）
-        async findBranchList () {
-            const { data } = await findDepList({ organizationType: 1 })
-            this.branchList = data.data
-            this.branchList.unshift(
-                { organizationCode: '', organizationName: '请选择分部' }
-            )
         },
         handleClick (i) {
             if (i == 1) this.productType = '1'
@@ -205,40 +195,10 @@ export default {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
-                const { data } = await getRepaymentList({
-                    ...this.searchParams
-                })
-                this.pagination = {
-                    pageNumber: data.current,
-                    pageSize: data.size,
-                    total: data.total
-                }
-                this.tableData = data.records
+                this.getRepaymentList(this.searchParams)
                 return
             }
-            const { data } = await getAccountList(this.searchParams)
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
-            this.tableData = []
-            data && data.records.map((i) => {
-                let obj = {}
-                // eslint-disable-next-line
-                if (i.account) Object.keys(i.account).forEach(key => obj['account_' + key] = i.account[key])
-                // eslint-disable-next-line
-                if (i.loan) Object.keys(i.loan).forEach(key => obj['loan_' + key] = i.loan[key])
-                // eslint-disable-next-line
-                if (i.paymentStatic) Object.keys(i.paymentStatic).forEach(key => obj['paymentStatic_' + key] = i.paymentStatic[key])
-                if (i.planList) {
-                    i.planList.map((item, index) => {
-                        // eslint-disable-next-line
-                        Object.keys(item).forEach((key) => obj[`planList_${index}_${key}`] = item[key])
-                    })
-                }
-                this.tableData.push(obj)
-            })
+            this.getAccountList(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
