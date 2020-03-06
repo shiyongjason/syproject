@@ -64,29 +64,6 @@ const routerMapping = [
             }
         ]
     },
-    // 上线无bug待删除的无用代码
-    // {
-    //     path: '/jinyunPlatform',
-    //     meta: {
-    //         title: '金云平台',
-    //         isMenu: true,
-    //         icon: 'hosjoy_stay_online'
-    //     },
-    //     component: Layout,
-    //     children: [
-    //         {
-    //             path: '',
-    //             name: 'jinyunplatform',
-    //             meta: {
-    //                 title: '金云平台',
-    //                 tagName: '金云平台',
-    //                 isMenu: false,
-    //                 icon: ''
-    //             },
-    //             component: () => import('./views/jinyunplatform/index')
-    //         }
-    //     ]
-    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',

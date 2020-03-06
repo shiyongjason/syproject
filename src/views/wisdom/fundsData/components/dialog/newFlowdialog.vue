@@ -147,7 +147,7 @@ export default {
                 graceInterestPaid: '',
                 interestAmount: '',
                 interestPaid: '',
-                isStepOverInterest: 1, // 默认逾期是
+                isStepOverInterest: '', // 逾期 0否1是
                 overDueInterest: '',
                 overDueInterestAmount: '',
                 overDueInterestPaid: '',
@@ -216,6 +216,11 @@ export default {
         })
     },
     mounted () {
+        if (this.$route.query.accountType == 1) {
+            this.planListItem.isStepOverInterest = 1 // 流贷默认是是
+        } else {
+            this.planListItem.isStepOverInterest = 0 // 其他默认是否
+        }
         this.onFindPlatformslist()
         this.planListItem.overDueInterest = 12
         this.ruleForm.planList.push({ ...this.planListItem })

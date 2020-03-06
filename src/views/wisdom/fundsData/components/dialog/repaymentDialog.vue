@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <!-- isOverDue false逾期 true未逾期 -->
-                    <template v-if="!item.isOverDue">
+                    <template v-if="item.isOverDue">
                         <div class="endline">逾期</div>
                         <div class="query-cont-row" style="margin-top:10px">
                             <div class="query-cont-col">
