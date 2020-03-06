@@ -5,10 +5,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title">订单来源：</div>
                 <div class="query-col-input">
-                    <template v-if="details.source === '1'">有赞</template>
+                    <template v-for="item in channelType">
+                        <span v-if="details.source == item.code" :key="item.code">{{item.name}}</span>
+                    </template>
+                    <!-- <template v-if="details.source === '1'">有赞</template>
                     <template v-if="details.source === '2'">孩子王</template>
                     <template v-if="details.source === '3'">考拉买菜</template>
-                    <template v-if="details.source === '4'">大众点评</template>
+                    <template v-if="details.source === '4'">大众点评</template> -->
                 </div>
             </div>
             <div class="query-cont-col">
@@ -29,7 +32,7 @@
                     {{details.buyerRemark}}
                 </div>
             </div>
-            <br/>
+            <br />
             <div class="query-cont-col">
                 <div class="query-col-title">备注（卖家）：</div>
                 <div class="query-col-input">
@@ -80,6 +83,7 @@
 
 <script>
 import { findChannelOrderDetails, updateChannelOrderDetails } from './api/index'
+import { findChannelDict } from '../common/dictApi'
 import { mapState, mapMutations } from 'vuex'
 
 export default {
@@ -91,7 +95,8 @@ export default {
     },
     data () {
         return {
-            details: {}
+            details: {},
+            channelType: []
         }
     },
     methods: {
@@ -139,6 +144,10 @@ export default {
                 }
             })
             this.tagUpdate(this.tagsList)
+        },
+        async findChannelDict () {
+            const { data } = await findChannelDict()
+            this.channelType = data
         }
     },
     mounted () {
@@ -147,54 +156,55 @@ export default {
             this.channelId = temp
         }
         this.findChannelOrderDetails()
+        this.findChannelDict()
     }
 }
 </script>
 
 <style scoped lang="scss">
-    .title {
-        padding: 12px 0 18px 0;
-        font-weight: bold;
-        font-size: 16px;
-    }
-    .query-cont-col {
-        width: 220px;
-    }
-    .flex-wrap-title{
-        white-space:nowrap;
-    }
-    table {
-        border-collapse: collapse;
-    }
+.title {
+    padding: 12px 0 18px 0;
+    font-weight: bold;
+    font-size: 16px;
+}
+.query-cont-col {
+    width: 220px;
+}
+.flex-wrap-title {
+    white-space: nowrap;
+}
+table {
+    border-collapse: collapse;
+}
 
-    th {
-        font-size: 12px;
-        color: #000000;
-        background: #f2f2f4;
-        text-align: center;
-        padding: 8px 12px;
-        font-weight: 400;
-        border: 1px solid #EBEEF5;
-    }
+th {
+    font-size: 12px;
+    color: #000000;
+    background: #f2f2f4;
+    text-align: center;
+    padding: 8px 12px;
+    font-weight: 400;
+    border: 1px solid #ebeef5;
+}
 
-    td {
-        width: 200px;
-        border: 1px solid #EBEEF5;
-        padding: 8px 12px;
-        font-size: 12px;
-        text-align: center;
-    }
+td {
+    width: 200px;
+    border: 1px solid #ebeef5;
+    padding: 8px 12px;
+    font-size: 12px;
+    text-align: center;
+}
 
-    .btn-group {
-        padding: 20px 12px;
-        max-width: 800px;
-        text-align: center;
-    }
-    .goods-mdm {
-        line-height: 100%;
-        text-align: center;
-        width: 100%;
-        outline: none;
-        padding: 5px 0;
-    }
+.btn-group {
+    padding: 20px 12px;
+    max-width: 800px;
+    text-align: center;
+}
+.goods-mdm {
+    line-height: 100%;
+    text-align: center;
+    width: 100%;
+    outline: none;
+    padding: 5px 0;
+}
 </style>
