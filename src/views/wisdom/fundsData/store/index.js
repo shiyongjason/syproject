@@ -48,11 +48,11 @@ const mutations = {
     },
     [types.STANDINGB_BOOK] (state, payload) {
         state.pagination = {
-            pageNumber: payload.current,
-            pageSize: payload.size,
-            total: payload.total
+            pageNumber: payload.current || 1,
+            pageSize: payload.size || 10,
+            total: payload.total || 0
         }
-        state.tableData = payload.records
+        state.tableData = payload.records || []
     },
     [types.REPAYMENT_SCHEDULE] (state, payload) {
         state.pagination = {
