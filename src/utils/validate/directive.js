@@ -39,6 +39,7 @@ export default {
                 const element = el.getElementsByTagName('input')[0]
                 element.addEventListener('keyup', () => {
                     element.value = isNegative(element.value, binding.arg)
+                    if (element.value.indexOf('-') > -1 && element.value.indexOf('-') != 0) element.value = element.value.substring(0, element.value.indexOf('-'))
                     if (element.value == 'undefined') element.value = ''
                     if (element.value == '-.' || element.value == '--' || element.value == '.-') element.value = '-'
                     if (element.value.indexOf('-') > -1) {
