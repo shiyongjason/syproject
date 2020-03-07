@@ -1,4 +1,4 @@
-import { isNum, isNotInputTxt } from './format'
+import { isNum, isNotInputTxt, isNegative, isPositiveInt } from './format'
 /*
     自定义指令中传递的三个参数:el: 指令所绑定的元素，可以用来直接操作DOM。binding:  一个对象，包含指令的很多信息。vnode: Vue编译生成的虚拟节点。
     自定义指令有五个生命周期（也叫钩子函数），分别是 bind,inserted,update,componentUpdated,unbind
@@ -13,8 +13,9 @@ export default {
         /**
          * @description 只能输入数字,可限制后几位（小数）
          * @param 0 1 2...
-         * @example  <el-input v-model="form.a" v-isNum:2="form.a"></el-input>
-         *
+         * @example  <el-input v-model="form.a" v-isNum:2="form.a"></el-input> 允许输入2位小数
+         * @example  <el-input v-model="form.a" v-isNum="form.a"></el-input> 只允许输入数字,小数位不限制
+         * @example  <el-input v-model="form.a" v-isNum:0="form.a"></el-input> 只允许输入数字
          */
         Vue.directive('isNum', {
             bind (el, binding, vnode) {
@@ -22,7 +23,30 @@ export default {
                 element.addEventListener('keyup', () => {
                     element.value = isNum(element.value, binding.arg)
                     if (isNaN(element.value)) element.value = ''
-                    vnode.data.model.callback(element.value)
+                    vnode.data.model && vnode.data.model.callback(element.value)
+                })
+            }
+        })
+        /**
+         * @description 只能输入数字(可以负数),可限制后几位（小数）
+         * @param 0 1 2...
+         * @example  <el-input v-model="form.a" v-isNegative:2="form.a"></el-input> 允许输入2位小数
+         * @example  <el-input v-model="form.a" v-isNegative="form.a"></el-input> 只允许输入数字,小数位不限制
+         * @example  <el-input v-model="form.a" v-isNegative:0="form.a"></el-input> 只允许输入数字
+         */
+        Vue.directive('isNegative', {
+            bind (el, binding, vnode) {
+                const element = el.getElementsByTagName('input')[0]
+                element.addEventListener('keyup', () => {
+                    element.value = isNegative(element.value, binding.arg)
+                    if (element.value.indexOf('-') > -1 && element.value.indexOf('-') != 0) element.value = element.value.substring(0, element.value.indexOf('-'))
+                    if (element.value == 'undefined') element.value = ''
+                    if (element.value == '-.' || element.value == '--' || element.value == '.-') element.value = '-'
+                    if (element.value.indexOf('-') > -1) {
+                        let arr = element.value.split('-')
+                        if (arr.length > 2) element.value = ''
+                    }
+                    vnode.data.model && vnode.data.model.callback(element.value)
                 })
             }
         })
@@ -38,6 +62,20 @@ export default {
                     element.value = isNotInputTxt(element.value, binding.arg)
                     if (isNaN(element.value)) element.value = ''
                     vnode.data.model.callback(element.value)
+                })
+            }
+        })
+        /**
+         * @description 只能输入正整数
+         * @example  <el-input v-model="form.a" v-isPositiveInt="form.a"></el-input> 只允许输入正整数
+         */
+        Vue.directive('isPositiveInt', {
+            bind (el, binding, vnode) {
+                const element = el.getElementsByTagName('input')[0]
+                element.addEventListener('keyup', () => {
+                    element.value = isPositiveInt(element.value, binding.arg)
+                    if (isNaN(element.value)) element.value = ''
+                    vnode.data.model && vnode.data.model.callback(element.value)
                 })
             }
         })
