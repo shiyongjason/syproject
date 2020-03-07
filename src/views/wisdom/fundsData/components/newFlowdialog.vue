@@ -10,12 +10,6 @@
                             <el-input maxlength='20' v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
-                    <!-- <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：">
-                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略">
-                            </el-input>
-                        </el-form-item>
-                    </div> -->
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="account.loanCompanyName" ref="loanCompanyName">
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
@@ -76,12 +70,12 @@
 <script>
 import moment from 'moment'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import flowcomp from '../typecomps/flowcomp'
-import flowratecomp from '../typecomps/flowratecomp'
-import grantcomp from '../typecomps/grantcomp'
-import grantratecomp from '../typecomps/grantratecomp'
-import opencomp from '../typecomps/opencomp'
-import { addAccount } from '../../api/index'
+import flowcomp from './typecomps/flowcomp'
+import flowratecomp from './typecomps/flowratecomp'
+import grantcomp from './typecomps/grantcomp'
+import grantratecomp from './typecomps/grantratecomp'
+import opencomp from './typecomps/opencomp'
+import { addAccount } from './../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'newFlowdialog',

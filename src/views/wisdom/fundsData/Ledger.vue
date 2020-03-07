@@ -75,12 +75,9 @@
                 <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
                     <el-tab-pane label="好信用" name="1"></el-tab-pane>
                     <el-tab-pane label="供应链" v-if="accountType == 1" name="2"></el-tab-pane>
-                    <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
+                    <el-tab-pane label="好橙工" v-if="accountType !=3" name="3"></el-tab-pane>
                 </el-tabs>
-                <el-button type="primary" @click="onLinddialog">
-                    {{productType == 1 ? '新增好信用-' : productType == 2 ? '新增供应链-' : ''}}
-                    {{accountType == 1 ? '流贷台账' : accountType == 2 ? '敞口台账' : accountType == 3 ? '分授信台账' : '待开发'}}
-                </el-button>
+                <el-button type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </template>
             <complexTable :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
@@ -93,6 +90,7 @@ import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import * as type from './const'
 export default {
     name: 'standingBook',
     components: { complexTable, HAutocomplete },
@@ -105,7 +103,10 @@ export default {
         ...mapGetters({
             platformData: 'platformData',
             tableData: 'tableData'
-        })
+        }),
+        accountName () {
+            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
+        }
     },
     data () {
         return {
