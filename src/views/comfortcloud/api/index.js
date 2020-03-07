@@ -49,5 +49,13 @@ export function editActdetail (params) {
 }
 
 export function getActdetail (params) {
-    return axios.post(iotUrl + `/api/activity-center`, params)
+    return axios.get(iotUrl + `/api/activity-center/${params}`)
+}
+
+export function deleteActivity (params) {
+    return axios.delete(iotUrl + `/api/activity-center/${params}`)
+}
+
+export function getCloudActlist (params) {
+    return axios.get(iotUrl + `/api/activity-center`, { params })
 }

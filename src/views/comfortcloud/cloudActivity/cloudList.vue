@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">活动标题：</div>
                 <div class="query-col-input">
-                    <el-input v-model="queryParams.phone" placeholder="请输入活动标题" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.title" placeholder="请输入活动标题" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -24,25 +24,26 @@
                     {{scope.data.row.wx_openid?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">登录详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
+                    <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { deleteActivity } from '../api'
+import { clearCache, newCache } from '@/utils/index'
 export default {
-    name: 'membermanage',
+    name: 'cloudlist',
     data () {
         return {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone,
-                endTime: '',
-                startTime: ''
+                title: '',
+                deleted: 1
             },
             searchParams: {},
             tableData: [],
@@ -52,9 +53,9 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '活动标题', prop: 'nick' },
-                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '生效时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '活动标题', prop: 'title' },
+                { label: '创建时间', prop: 'createTime' },
+                { label: '生效时间', prop: 'effectiveTime' },
                 { label: '状态', prop: 'homeCount' }
             ]
         }
@@ -64,8 +65,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            memberData: 'iotmemberData',
-            familyData: 'familyData'
+            cloudActicitylist: 'cloudActicitylist'
         }),
         pickerOptionsStart () {
             return {
@@ -96,16 +96,15 @@ export default {
     },
     methods: {
         ...mapActions({
-            findMembersituation: 'findMembersituation',
-            findFamilyDetail: 'findFamilyDetail'
+            findcloudActList: 'findcloudActList'
         }),
         async onQuery () {
-            await this.findMembersituation(this.searchParams)
-            this.tableData = this.memberData.pageContent
+            await this.findcloudActList(this.searchParams)
+            this.tableData = this.cloudActicitylist.records
             this.pagination = {
-                pageNumber: this.memberData.pageNumber,
-                pageSize: this.memberData.pageSize,
-                total: this.memberData.totalElements
+                pageNumber: this.cloudActicitylist.current,
+                pageSize: this.cloudActicitylist.size,
+                total: this.cloudActicitylist.total
             }
         },
         onSearch () {
@@ -120,8 +119,35 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
+        async onDeleteAct (val) {
+            this.$confirm('是否删除该活动?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteActivity(val.id)
+                this.$message({
+                    message: '删除成！',
+                    type: 'success'
+                })
+                this.onQuery()
+            })
+        },
         onAddcloud (val) {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { } })
+        },
+        onEdit (val) {
+            this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
+        },
+        beforeRouteEnter (to, from, next) {
+            newCache('cloudlist')
+            next()
+        },
+        beforeRouteLeave (to, from, next) {
+            if (to.name != 'cloudEdit') {
+                clearCache('cloudlist')
+            }
+            next()
         }
     }
 }

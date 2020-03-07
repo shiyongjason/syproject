@@ -46,8 +46,8 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveActdetail } from '../api'
-import { mapState, mapActions } from 'vuex'
+import { saveActdetail, editActdetail } from '../api'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'cloudEdit',
     data () {
@@ -101,6 +101,9 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
+        ...mapGetters({
+            cloudActivitydetail: 'cloudActivitydetail'
+        }),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -150,9 +153,17 @@ export default {
         }
     },
     mounted () {
+        if (this.$route.query.id) {
+            this.getActivityDetail(this.$route.query.id)
+        }
     },
     methods: {
-        ...mapActions({ setNewTags: 'setNewTags' }),
+        ...mapActions(
+            {
+                setNewTags: 'setNewTags',
+                findcloudActDetail: 'findcloudActDetail'
+            }
+        ),
         readUrl (val) {
             this.cloudForm.picture = val.imageUrl
         },
@@ -178,11 +189,22 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/comfortCloud/cloudList')
         },
+        async getActivityDetail (id) {
+            await this.findcloudActDetail(id)
+            this.cloudForm = { ...this.cloudActivitydetail }
+            console.log(this.cloudActivitydetail)
+        },
         onSaveact () {
             this.$refs['cloudForm'].validate(async (valid) => {
                 if (valid) {
-                    await saveActdetail(this.cloudForm)
-                    this.$message.success('活动保存成功')
+                    if (this.$route.query.id) {
+                        await editActdetail(this.cloudForm)
+                        this.$message.success('活动修改成功')
+                    } else {
+                        await saveActdetail(this.cloudForm)
+                        this.$message.success('活动保存成功')
+                    }
+
                     this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/comfortCloud/cloudList')
                 }

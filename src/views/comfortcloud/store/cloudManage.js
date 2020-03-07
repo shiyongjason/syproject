@@ -1,17 +1,21 @@
 import * as types from '../../../store/mutation-types'
-import { getMembersituation, getMemberDetail, getFamilyDetail } from '@/views/comfortcloud/api'
+import * as cloud from './cloudTypes'
+import { getMembersituation, getMemberDetail, getFamilyDetail, getActdetail, getCloudActlist } from '@/views/comfortcloud/api'
 const state = {
     iotmemberData: {},
     iotmemberDetail: {},
     familyData: {},
-    iotActivitydetial: {}
+    cloudActivitydetail: {},
+    cloudActicitylist: {}
 }
 
 const getters = {
     iotmemberData: state => state.iotmemberData,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
-    iotActivitydetial: state => state.iotActivitydetial
+    cloudActivitydetail: state => state.cloudActivitydetail,
+    cloudActicitylist: state => state.cloudActicitylist
+
 }
 
 const mutations = {
@@ -23,6 +27,12 @@ const mutations = {
     },
     [types.FAMILY_DATA] (state, payload) {
         state.familyData = payload
+    },
+    [cloud.CLOUD_ACTDETAIL] (state, payload) {
+        state.cloudActivitydetail = payload
+    },
+    [cloud.CLOUD_ACTLIST] (state, payload) {
+        state.cloudActicitylist = payload
     }
 }
 
@@ -38,6 +48,14 @@ const actions = {
     async findFamilyDetail ({ commit }, params) {
         const { data } = await getFamilyDetail(params)
         commit(types.FAMILY_DATA, data.data)
+    },
+    async findcloudActDetail ({ commit }, params) {
+        const { data } = await getActdetail(params)
+        commit(cloud.CLOUD_ACTDETAIL, data.data)
+    },
+    async findcloudActList ({ commit }, params) {
+        const { data } = await getCloudActlist(params)
+        commit(cloud.CLOUD_ACTLIST, data.data)
     }
 }
 export default {
