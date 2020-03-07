@@ -188,9 +188,9 @@
 </template>
 
 <script>
-import { setPlan } from '../../api'
+import { setPlan } from '../../../api'
 import { mapState } from 'vuex'
-import { setCountMixin } from '../../mixins/setCount'
+import { setCountMixin } from '../../../mixins/setCount'
 export default {
     name: 'AnnualInterestRateDialog',
     mixins: [setCountMixin],

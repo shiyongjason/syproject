@@ -82,7 +82,7 @@
 
 <script>
 import moment from 'moment'
-import { setLoan } from '../../api'
+import { setLoan } from '../../../api'
 export default {
     name: 'billingDialog',
     data () {

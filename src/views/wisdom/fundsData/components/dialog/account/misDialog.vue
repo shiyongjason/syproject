@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { setAccountBasic } from '../../api/index'
+import { setAccountBasic } from '../../../api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapGetters } from 'vuex'
 export default {
