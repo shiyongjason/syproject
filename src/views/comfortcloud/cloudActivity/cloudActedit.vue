@@ -238,7 +238,7 @@ export default {
     z-index: 99999 !important;
 }
 /deep/.w-e-text-container {
-    z-index: 99 !important;
+    z-index: 40 !important;
 }
 /deep/.w-e-menu {
     z-index: 99 !important;

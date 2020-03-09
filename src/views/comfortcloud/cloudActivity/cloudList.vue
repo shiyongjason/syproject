@@ -17,7 +17,7 @@
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="title" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row.title)" class="colred">{{scope.data.row.title}}</p>
+                    <p @click="onShowHome(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
                 </template>
                 <template slot="effectived" slot-scope="scope">
                     <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'已失效'}}</span>
@@ -34,6 +34,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { deleteActivity } from '../api'
 import { clearCache, newCache } from '@/utils/index'
+import { iotUrl } from '@/api/config'
 export default {
     name: 'cloudlist',
     data () {
@@ -149,7 +150,9 @@ export default {
             next()
         },
         onShowHome (val) {
-
+            window.open(iotUrl + '/iot/actionCenter/?id=' + val.id)
+            // console.log(iotUrl + '/iot/actionCenter/?id=' + val.id)
+            // window.location = iotUrl + '/iot/activityCenter/?id=' + val.id
         }
     }
 }
