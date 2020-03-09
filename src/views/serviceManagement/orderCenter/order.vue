@@ -1,6 +1,6 @@
 <template>
     <div class="order page-body">
-        <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm" :channelType="channelType"/>
+        <searchForm @search='onSearch' @onClear="onClear" v-model="searchForm" :channelType="channelType" @clearParams="clearParams"/>
         <order-table @search='noParamsSearch' :tableData='list' @search-event="onChangeStauts" :channelType="channelType"/>
         <div class="pages">
             <el-pagination background layout="total, sizes, prev, pager, next, jumper" :current-page="queryParams.pageNumber" :page-sizes="page.sizes" :page-size="queryParams.pageSize" :total="page.total" @size-change="handleSizeChange" @current-change="handleCurrentChange"></el-pagination>
@@ -26,12 +26,16 @@ export default {
         return {
             list: [],
             searchForm: {
-                searchKey: 'orderNo'
+                searchKey: 'orderNo',
+                searchValue: ''
             },
             channelType: []
         }
     },
     methods: {
+        clearParams () {
+            this.searchForm.searchValue = ''
+        },
         onChangeStauts (value) {
             if (value.status - 0 === 5) {
                 this.queryParams.noWorkOrder = true
