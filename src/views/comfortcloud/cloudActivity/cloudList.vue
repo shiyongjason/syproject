@@ -15,13 +15,12 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="homeCount" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
+                <template slot="title" slot-scope="scope">
+                    <p @click="onShowHome(scope.data.row.title)" class="colred">{{scope.data.row.title}}</p>
                 </template>
-                <template slot="wx_openid" slot-scope="scope">
-                    {{scope.data.row.wx_openid?'是':'否'}}
+                <template slot="effectived" slot-scope="scope">
+                    <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'已失效'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
@@ -56,7 +55,7 @@ export default {
                 { label: '活动标题', prop: 'title' },
                 { label: '创建时间', prop: 'createTime' },
                 { label: '生效时间', prop: 'effectiveTime' },
-                { label: '状态', prop: 'homeCount' }
+                { label: '状态', prop: 'effectived' }
             ]
         }
     },
@@ -134,7 +133,7 @@ export default {
             })
         },
         onAddcloud (val) {
-            this.$router.push({ path: '/comfortcloud/cloudActedit', query: { } })
+            this.$router.push({ path: '/comfortcloud/cloudActedit', query: {} })
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
@@ -148,6 +147,9 @@ export default {
                 clearCache('cloudlist')
             }
             next()
+        },
+        onShowHome (val) {
+
         }
     }
 }
