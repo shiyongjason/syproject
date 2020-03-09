@@ -122,7 +122,7 @@ export default {
     methods: {
         onRrestFrom () {
             this.$nextTick(() => {
-                this.$refs['customerForm'].resetFields()
+                this.$refs['customerForm'].clearValidate()
             })
         },
         onCancel () {
