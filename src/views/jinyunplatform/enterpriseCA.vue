@@ -37,12 +37,13 @@
             </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='actionMinWidth'>
                 <template slot="action" slot-scope="scope">
-                    <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="onupdate(scope.data.row)">查看信息</el-button>
+                    <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="onupdate(scope.data.row,'look')">查看信息</el-button>
                     <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="uploadSeal(scope.data.row)">上传印章图片</el-button>
                     <el-button class="orangeBtn" @click="logOut(scope.data.row)">注销</el-button>
+                    <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="onupdate(scope.data.row,'edit')">修改信息</el-button>
                 </template>
             </basicTable>
-            <CaDialog :dialog='dialog' :customerForm='customerForm' @onCancel='dialog = false'></CaDialog>
+            <CaDialog :dialog="dialog" :customerForm='customerForm' @onCancel="dialog = false"></CaDialog>
             <el-dialog title="上传印章图片" :visible.sync="dialogPicture" width='25%'>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">印章：</div>
@@ -74,6 +75,7 @@
                     <el-button @click="dialogVisible = false">取 消</el-button>
                 </span>
             </el-dialog>
+            <CaeditDialog :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery"></CaeditDialog>
         </div>
     </div>
 </template>
@@ -81,8 +83,9 @@
 <script>
 import { mapState } from 'vuex'
 import apply from './components/CAapply'
-import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signImage, logoutConmanyCA, logoutPersonCA } from './api/index'
-import CaDialog from './components/dialog'
+import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signImage, logoutConmanyCA, logoutPersonCA, signInfo } from './api/index'
+import CaDialog from './components/CAdialog'
+import CaeditDialog from './components/CAeditdialog'
 import { interfaceUrl } from '@/api/config'
 export default {
     name: 'enterpriseCA',
@@ -129,13 +132,14 @@ export default {
     },
     components: {
         apply: apply,
-        CaDialog: CaDialog
+        CaDialog: CaDialog,
+        CaeditDialog
     },
     data () {
         return {
             activeName: 'enterprise',
             tableName: '企业名称',
-            actionMinWidth: 400,
+            actionMinWidth: 0,
             title: '企业CA认证注销',
             personRelevenceData: [],
             logoutName: '',
@@ -187,6 +191,7 @@ export default {
             },
             multipleSelection: [],
             dialog: false,
+            editdialog: false,
             customerForm: {},
             dialogPicture: false,
             imageUrl: '',
@@ -209,7 +214,7 @@ export default {
             })
         },
         async onQuery () {
-            this.actionMinWidth = 400
+            this.actionMinWidth = 450
             this.tableLabel = this.tableLabelCompany
             const { data } = await getSignList(this.queryParams)
             // console.log(data)
@@ -270,7 +275,7 @@ export default {
             if (this.activeName == 'enterprise') this.onQuery()
             if (this.activeName == 'personage') this.onQueryPerson()
         },
-        async onupdate (i) {
+        async onupdate (i, type) {
             this.tracking(3)
             const { data } = await getSignsDetail(i.id)
             this.customerForm = data
@@ -293,7 +298,11 @@ export default {
                 default:
                     this.customerForm.companyTypeN = ''
             }
-            this.dialog = true
+            if (type == 'edit') {
+                this.editdialog = true
+            } else {
+                this.dialog = true
+            }
         },
         async uploadSeal (row) {
             this.tracking(4)
@@ -339,9 +348,23 @@ export default {
                 this.personRelevenceData = data
             }
             if (this.activeName == 'enterprise') {
+                const { data } = await signInfo({ signId: row.companySignatureId, type: 1 })
+                if (data.length > 0) {
+                    this.$message.warning(data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！')
+                    return false
+                }
                 this.title = '企业CA认证注销'
                 this.logoutName = row.companyName
             } else {
+                const { data } = await signInfo({ signId: row.signatureSupplierSignerId, type: 2 })
+                if (data.length > 0) {
+                    let comArr = ''
+                    data && data.map((val) => {
+                        comArr += val.companyName + ','
+                    })
+                    this.$message.warning(comArr + '有未签约的用信合同，CA认证暂时无法注销！')
+                    return false
+                }
                 this.title = '个人CA认证注销'
                 this.logoutName = row.customerName
             }
