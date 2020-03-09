@@ -139,7 +139,7 @@ export default {
         return {
             activeName: 'enterprise',
             tableName: '企业名称',
-            actionMinWidth: 400,
+            actionMinWidth: 0,
             title: '企业CA认证注销',
             personRelevenceData: [],
             logoutName: '',
@@ -214,7 +214,7 @@ export default {
             })
         },
         async onQuery () {
-            this.actionMinWidth = 400
+            this.actionMinWidth = 450
             this.tableLabel = this.tableLabelCompany
             const { data } = await getSignList(this.queryParams)
             // console.log(data)
