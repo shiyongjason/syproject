@@ -66,12 +66,13 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
+                <el-tab-pane label="台账汇总表" name="0"></el-tab-pane>
                 <el-tab-pane label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane label="分授信" name="3"></el-tab-pane>
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
-            <template v-if="accountType != '4'">
+            <template v-if="accountType == '1'||accountType == '2'||accountType == '3'">
                 <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
                     <el-tab-pane label="好信用" name="1"></el-tab-pane>
                     <el-tab-pane label="供应链" v-if="accountType == 1" name="2"></el-tab-pane>
@@ -110,7 +111,7 @@ export default {
     },
     data () {
         return {
-            accountType: '1', // 1：流贷 2：敞口 3：分授信 4：还款明细表
+            accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
             queryParams: {
@@ -141,7 +142,8 @@ export default {
             findPlatformslist: 'findPlatformslist',
             getAccountList: 'getAccountList',
             getRepaymentList: 'getRepaymentList',
-            findBranchList: 'findBranchList'
+            findBranchList: 'findBranchList',
+            findSummaryList: 'findSummaryList'
         }),
         // 埋点
         // tracking (event) {
@@ -197,6 +199,10 @@ export default {
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
+                return
+            }
+            if (this.accountType == 0) {
+                this.findSummaryList(this.searchParams)
                 return
             }
             this.getAccountList(this.searchParams)

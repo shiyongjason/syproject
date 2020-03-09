@@ -1,7 +1,7 @@
 
 // 资金台账 store
 import * as types from './const'
-import { findPlatformslist, getAccountList, getRepaymentList, findDepList } from '@/views/wisdom/fundsData/api'
+import { findPlatformslist, getAccountList, getRepaymentList, findDepList, getSummaryList } from '@/views/wisdom/fundsData/api'
 const state = {
     platformData: [],
     // 阶梯逾期默认值
@@ -65,6 +65,15 @@ const mutations = {
     [types.GET_BRANCH] (state, payload) {
         payload.unshift({ organizationCode: '', organizationName: '请选择分部' })
         state.branchList = payload
+    },
+    [types.GET_SUMMARY] (state, payload) {
+        if (!payload) return
+        state.pagination = {
+            pageNumber: payload.current,
+            pageSize: payload.size,
+            total: payload.total
+        }
+        state.tableData = payload.records
     }
 }
 
@@ -85,7 +94,12 @@ const actions = {
         // 查询分部（不用做权限，现在是总部在使用）
         const { data } = await findDepList({ organizationType: 1 })
         commit(types.GET_BRANCH, data.data)
+    },
+    async findSummaryList ({ commit }, params) {
+        const { data } = await getSummaryList(params)
+        commit(types.GET_SUMMARY, data.data)
     }
+
 }
 export default {
     state,
