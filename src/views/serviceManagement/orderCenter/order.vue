@@ -26,8 +26,7 @@ export default {
         return {
             list: [],
             searchForm: {
-                searchKey: 'orderNo',
-                mobile: ''
+                searchKey: 'orderNo'
             },
             channelType: []
         }

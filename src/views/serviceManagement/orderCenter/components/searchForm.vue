@@ -6,15 +6,18 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">订单搜索：</div>
                         <div class="query-col-input">
-                            <el-select v-model="value.searchKey">
+                            <el-select v-model="value.searchKey" @change="clearSearchValue">
                                 <el-option label="订单号" value="orderNo"></el-option>
                                 <el-option label="外部订单号" value="channelOrderNo"></el-option>
                                 <el-option label="姓名" value="userName"></el-option>
                                 <el-option label="手机号" value="mobile"></el-option>
+                                <el-option label="mis关联id" value="id"></el-option>
                             </el-select>
                         </div>
                         <div class="m-l">
-                            <el-input v-model="value.searchValue" style="width:250px" clearable
+                            <el-input v-if="value.searchKey === 'id' " v-model="value.searchValue" style="width:250px" key="a" clearable v-isNum:0="value.a"
+                                      :placeholder="getPlaceholderText" :maxlength="inputLength"></el-input>
+                            <el-input v-else v-model="value.searchValue" style="width:250px" clearable type="text" key="b"
                                       :placeholder="getPlaceholderText" :maxlength="inputLength"/>
                         </div>
                     </div>
@@ -98,7 +101,8 @@ export default {
                 orderNo: '订单号',
                 channelOrderNo: '外部订单号',
                 userName: '姓名',
-                mobile: '手机号'
+                mobile: '手机号',
+                id: 'mis关联id'
             },
             interfaceUrl: interfaceUrl,
             dialog: false,
@@ -144,6 +148,9 @@ export default {
         }
     },
     methods: {
+        clearSearchValue () {
+            this.value.searchValue = ''
+        },
         downloadTemplate () {
             location.href = interfaceUrl + 'service/api/orders/template/export'
         },
