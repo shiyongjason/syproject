@@ -297,7 +297,6 @@ const routerMapping = [
     ServiceManagement,
     ...Wisdomrouter,
     Bestrouter,
-    ServiceManagement,
     B2brouter,
     Jyrouter
 ]
