@@ -116,7 +116,15 @@ export default {
             }
         }
     },
+    mounted () {
+
+    },
     methods: {
+        onRrestFrom () {
+            this.$nextTick(() => {
+                this.$refs['customerForm'].resetFields()
+            })
+        },
         onCancel () {
             this.$emit('onCancel')
         },
@@ -125,15 +133,17 @@ export default {
             try {
                 this.$refs['customerForm'].validate(async (valid) => {
                     if (valid) {
-                        await editSign({ legalIdNumber: this.customerForm.legalIdNumber,
+                        await editSign({
+                            legalIdNumber: this.customerForm.legalIdNumber,
                             legalName: this.customerForm.legalName,
                             legalPhone: this.customerForm.legalPhone,
-                            id: this.customerForm.id })
+                            id: this.customerForm.id
+                        })
                         this.$message.success('修改成功！')
+                        this.$emit('onSearcqyery')
+                        this.$emit('onCancel')
                     }
                     this.loading = false
-                    this.$emit('onSearcqyery')
-                    this.$emit('onCancel')
                 })
             } catch (error) {
                 this.loading = false

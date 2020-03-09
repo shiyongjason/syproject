@@ -75,7 +75,7 @@
                     <el-button @click="dialogVisible = false">取 消</el-button>
                 </span>
             </el-dialog>
-            <CaeditDialog :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery"></CaeditDialog>
+            <CaeditDialog ref="CaeditDialog" :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery"></CaeditDialog>
         </div>
     </div>
 </template>
@@ -300,6 +300,7 @@ export default {
             }
             if (type == 'edit') {
                 this.editdialog = true
+                this.$refs.CaeditDialog.onRrestFrom()
             } else {
                 this.dialog = true
             }
