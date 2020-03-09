@@ -72,7 +72,7 @@
                 <p style="text-align: center;margin-top: 10px;">是否确认注销{{logoutName}}的CA认证？</p>
                  <p style="margin: 20px 0;text-indent: 1em;color:red">{{htmltext}}</p>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" :loading="loading" @click="onSureLogOut" :disabled="htmltext">确认注销</el-button>
+                    <el-button type="primary" :loading="loading" @click="onSureLogOut" :disabled="!!htmltext">确认注销</el-button>
                     <el-button @click="dialogVisible = false">取 消</el-button>
                 </span>
             </el-dialog>
@@ -280,7 +280,7 @@ export default {
         async onupdate (i, type) {
             this.tracking(3)
             const { data } = await getSignsDetail(i.id)
-            this.customerForm = data
+            this.customerForm = { ...data }
             switch (this.customerForm.companyType) {
                 case 1:
                     this.customerForm.companyTypeN = '借款方'
@@ -301,7 +301,11 @@ export default {
                     this.customerForm.companyTypeN = ''
             }
             if (type == 'edit') {
+                console.log(data)
                 this.editdialog = true
+                this.$set(this.customerForm, 'legalIdNumber', data.legalIdNumber)
+                this.$set(this.customerForm, 'legalName', data.legalName)
+                this.$set(this.customerForm, 'legalPhone', data.legalPhone)
                 this.$refs.CaeditDialog.onRrestFrom()
             } else {
                 this.dialog = true
@@ -346,6 +350,7 @@ export default {
         },
         async logOut (row) {
             this.row = row
+            this.htmltext = ''
             if (this.activeName == 'personage') {
                 const { data } = await getPersonRelevence(row.signatureSupplierSignerId)
                 this.personRelevenceData = data
