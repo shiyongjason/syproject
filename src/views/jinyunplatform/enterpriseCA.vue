@@ -70,8 +70,9 @@
                     </el-table>
                 </div>
                 <p style="text-align: center;margin-top: 10px;">是否确认注销{{logoutName}}的CA认证？</p>
+                 <p style="margin: 20px 0;text-indent: 1em;color:red">{{htmltext}}</p>
                 <span slot="footer" class="dialog-footer">
-                    <el-button type="primary" :loading="loading" @click="onSureLogOut">确认注销</el-button>
+                    <el-button type="primary" :loading="loading" @click="onSureLogOut" :disabled="htmltext">确认注销</el-button>
                     <el-button @click="dialogVisible = false">取 消</el-button>
                 </span>
             </el-dialog>
@@ -197,7 +198,8 @@ export default {
             imageUrl: '',
             uploadImg: {
                 alias: ''
-            }
+            },
+            htmltext: ''
         }
     },
     mounted () {
@@ -351,8 +353,9 @@ export default {
             if (this.activeName == 'enterprise') {
                 const { data } = await signInfo({ signId: row.companySignatureId, type: 1 })
                 if (data.length > 0) {
-                    this.$message.warning(data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！')
-                    return false
+                    // this.$message.warning(data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！')
+                    // return false
+                    this.htmltext = data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！'
                 }
                 this.title = '企业CA认证注销'
                 this.logoutName = row.companyName
@@ -363,8 +366,7 @@ export default {
                     data && data.map((val) => {
                         comArr += val.companyName + ','
                     })
-                    this.$message.warning(comArr + '有未签约的用信合同，CA认证暂时无法注销！')
-                    return false
+                    this.htmltext = comArr + '有未签约的用信合同，CA认证暂时无法注销！'
                 }
                 this.title = '个人CA认证注销'
                 this.logoutName = row.customerName
