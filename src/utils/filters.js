@@ -40,6 +40,15 @@ const money = function (val, int) {
     }
     return '-'
 }
+// 资金台账金额格式
+const fundMoney = function (val, int) {
+    if (val) {
+        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return res
+    } else {
+        return 0
+    }
+}
 const formatDateDuration = function (time) {
     if (!time) return '-'
     let tempTime = ''
@@ -63,5 +72,6 @@ export default {
     formatterDate,
     formatDateDuration,
     money,
-    isNotBlank
+    isNotBlank,
+    fundMoney
 }
