@@ -17,7 +17,7 @@
                         <div class="m-l">
                             <el-input v-if="value.searchKey === 'id' " v-model="value.searchValue" style="width:250px" key="a" clearable v-isNum:0="value.a"
                                       :placeholder="getPlaceholderText" :maxlength="inputLength"></el-input>
-                            <el-input v-else v-model="value.searchValue" style="width:250px" clearable type="text" key="b"
+                            <el-input v-else v-model="value.searchValue" style="width:250px" clearable key="b"
                                       :placeholder="getPlaceholderText" :maxlength="inputLength"/>
                         </div>
                     </div>
@@ -149,7 +149,7 @@ export default {
     },
     methods: {
         clearSearchValue () {
-            this.value.searchValue = ''
+            this.$emit('clearParams')
         },
         downloadTemplate () {
             location.href = interfaceUrl + 'service/api/orders/template/export'
