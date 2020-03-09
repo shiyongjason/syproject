@@ -134,8 +134,8 @@
                                     订单来源：
                                 </div>
                                 <div class="query-cont-input">
-                                    <el-select v-model="queryParams.orderType">
-                                        <el-option v-for="item in orderList" :key="item.value" :label="item.name" :value="item.value">
+                                    <el-select v-model="queryParams.source">
+                                        <el-option v-for="item in sourceList" :key="item.value" :label="item.name" :value="item.value">
                                         </el-option>
                                     </el-select>
                                 </div>
@@ -318,7 +318,7 @@
 import orderTable from './components/orderTable'
 import receivablesTable from './components/receivablesTable'
 import productTotalTable from './components/productTotalTable'
-import { ORDER_TYPE, COUPON_TYPE } from './const.js'
+import { ORDER_TYPE, COUPON_TYPE, SOURCE_LIST } from './const.js'
 import { mapState } from 'vuex'
 import {
     findBrandsList, findOrderList,
@@ -423,6 +423,7 @@ export default {
         return {
             couponList: COUPON_TYPE,
             orderList: ORDER_TYPE,
+            sourceList: SOURCE_LIST,
             activeName: '',
             queryParams: {
                 activityCode: '',
@@ -438,6 +439,7 @@ export default {
                 orderStatus: '',
                 orderTimeEnd: '',
                 orderTimeStart: '',
+                source: '',
                 // misTimeStart: '',
                 // misTimeEnd: '',
                 current: 1,
