@@ -60,8 +60,8 @@ export default {
             } else {
                 await logoutPersonCA(this.row.signatureSupplierSignerId)
             }
-            // this.onSearch()
-            this.dialogVisible = false
+            this.$emit('onSearch')
+            this.onCancel()
             this.loading = false
         }
     }

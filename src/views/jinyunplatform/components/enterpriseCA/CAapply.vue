@@ -161,6 +161,7 @@ export default {
             }
         },
         onSubmit (formName) {
+            this.$emit('onSearch')
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
                     this.$store.dispatch('tracking', {
