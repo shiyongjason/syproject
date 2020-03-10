@@ -78,7 +78,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getSignSelector, signCa } from '../api/index'
+import { getSignSelector, signCa } from '../../api/index'
 import { PHONE, checkIdCard, Email } from '@/utils/rules'
 export default {
     name: 'caApply',
@@ -160,12 +160,6 @@ export default {
                 return callback()
             }
         },
-        onQuery () {
-            this.$emit('onSearch')
-        },
-        async signCa () {
-            await signCa(this.ruleForm)
-        },
         onSubmit (formName) {
             this.$refs[formName].validate(async (valid) => {
                 if (valid) {
@@ -176,8 +170,8 @@ export default {
                         page_name: '企业CA',
                         page_path_name: 'enterpriseCA'
                     })
-                    await this.signCa()
-                    this.onQuery()
+                    await signCa(this.ruleForm)
+                    this.$emit('onSearch')
                 } else {
                     console.log('error submit!!')
                     return false
