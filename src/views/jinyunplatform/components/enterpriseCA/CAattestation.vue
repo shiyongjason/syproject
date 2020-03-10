@@ -52,7 +52,7 @@
         </basicTable>
         <CaDialog :dialog="dialog" :customerForm='customerForm' @onCancel="dialog = false" />
         <CAstamp :dialog="dialogPicture" :uploadImg="uploadImg" @onCancel="dialogPicture = false" @onSearch='onSearch' />
-        <CAlogOut :dialog="dialogVisible" :activeName='activeName' :CAlogOutData='CAlogOutData' @onCancel="dialogVisible = false" />
+        <CAlogOut :dialog="dialogVisible" :activeName='activeName' :CAlogOutData='CAlogOutData' @onCancel="dialogVisible = false" @onSearch='onSearch' />
         <CaeditDialog ref="CaeditDialog" :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery" />
     </div>
 </template>

@@ -1,8 +1,7 @@
 <template>
     <div class="tags-wrapper page-body">
-        <apply />
-        <!-- <apply @onSearch='onSearch' /> -->
-        <attestation />
+        <apply @onSearch='onSearch' />
+        <attestation ref="attestation" />
     </div>
 </template>
 
@@ -10,7 +9,6 @@
 import { mapState } from 'vuex'
 import apply from './components/enterpriseCA/CAapply'
 import attestation from './components/enterpriseCA/CAattestation'
-
 export default {
     name: 'enterpriseCA',
     components: { apply, attestation },
@@ -19,17 +17,10 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    data () {
-        return {
-
-
-        }
-    },
-    mounted () {
-
-    },
     methods: {
-
+        onSearch () {
+            this.$refs.attestation.onSearch()
+        }
     }
 }
 </script>
