@@ -14,6 +14,7 @@ import B2brouter from './router/B2brouter'
 import Jyrouter from './router/Jyrouter'
 import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
+import Cloudrouter from './router/Cloudrouter'
 Vue.use(Router)
 
 const routerMapping = [
@@ -64,29 +65,6 @@ const routerMapping = [
             }
         ]
     },
-    // 上线无bug待删除的无用代码
-    // {
-    //     path: '/jinyunPlatform',
-    //     meta: {
-    //         title: '金云平台',
-    //         isMenu: true,
-    //         icon: 'hosjoy_stay_online'
-    //     },
-    //     component: Layout,
-    //     children: [
-    //         {
-    //             path: '',
-    //             name: 'jinyunplatform',
-    //             meta: {
-    //                 title: '金云平台',
-    //                 tagName: '金云平台',
-    //                 isMenu: false,
-    //                 icon: ''
-    //             },
-    //             component: () => import('./views/jinyunplatform/index')
-    //         }
-    //     ]
-    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -193,7 +171,7 @@ const routerMapping = [
         meta: {
             title: 'App管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_set'
         },
         component: Layout,
         children: [
@@ -234,94 +212,12 @@ const routerMapping = [
             }
         ]
     },
-    {
-        path: '/comfortCloud',
-        meta: {
-            title: '舒适云概览',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'userOverview',
-                name: 'userOverview',
-                meta: {
-                    title: '用户概览',
-                    tagName: '用户概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/userOverview.vue')
-            },
-            {
-                path: 'equipemtOverview',
-                name: 'equipemtOverview',
-                meta: {
-                    title: '设备概览',
-                    tagName: '设备概览',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/equipemtOverview.vue')
-            },
-            {
-                path: 'homeOverview',
-                name: 'homeOverview',
-                meta: {
-                    title: '家庭概览',
-                    tagName: '家庭概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homeManage.vue')
-            },
-            {
-                path: 'homedetail',
-                name: 'homedetail',
-                meta: {
-                    title: '家庭详情',
-                    tagName: '家庭详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homedetail.vue')
-            },
-            {
-                path: 'membermanage',
-                name: 'membermanage',
-                meta: {
-                    title: '会员管理',
-                    tagName: '会员管理',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberManage.vue')
-            },
-            {
-                path: 'memberdetail',
-                name: 'memberdetail',
-                meta: {
-                    title: '会员登录详情',
-                    tagName: '会员登录详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberDetail.vue')
-            }
-        ]
-    },
     Wisdomrouter,
     Bestrouter,
     ServiceManagement,
     B2brouter,
-    Jyrouter
+    Jyrouter,
+    Cloudrouter
 ]
 
 const router = new Router({

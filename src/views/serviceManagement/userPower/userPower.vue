@@ -189,10 +189,12 @@ export default {
             this.$set(this.queryParamsTrace, 'orderNo', this.propsParams.orderNo)
             // this.queryParamsTrace.orderNo = this.propsParams.orderNo
         }
-        if (this.propsParams.mobile && this.propsParams.source) {
+        if (this.propsParams.mobile) {
             this.queryParams.mobile = this.propsParams.mobile
-            this.queryParams.channelType = this.propsParams.source - 0
-            this.queryParamsTrace.channelType = this.propsParams.source - 0
+            if (this.propsParams.source) {
+                this.queryParams.channelType = this.propsParams.source - 0
+                this.queryParamsTrace.channelType = this.propsParams.source - 0
+            }
             this.onQuery()
         }
     },
