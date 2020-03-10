@@ -146,7 +146,6 @@ export default {
     },
     watch: {
         'cloudForm.picture' (val) {
-            console.log(1, val)
             this.$nextTick(() => {
                 if (val) this.$refs['picture'].clearValidate()
             })
