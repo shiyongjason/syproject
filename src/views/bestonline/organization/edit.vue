@@ -26,7 +26,7 @@ import KPI from './components/kpi.vue'
 import Controller from './components/controller.vue'
 import Organization from './components/organization.vue'
 import MotivationRisk from './components/motivationRisk.vue'
-import { IsPositiveInteger } from '@/utils/rules'
+import { IsPositiveInteger, IsFixedTwoNumber } from '@/utils/rules'
 import { kpiValidProps, controllerValidProps, organizationValidProps, motivationRiskValidProps } from './const.js'
 import { AUTH_BESTONLINE_REVIEW_ORGANIZATION_DRAFT, AUTH_BESTONLINE_REVIEW_ORGANIZATION_COMMIT } from '@/utils/auth_const'
 export default {
@@ -75,7 +75,8 @@ export default {
                 ],
                 averageSalaryOnJob: [
                     // TODO: 这个校验要看看怎么做
-                    { required: true, message: '请输入在职人员平均薪资', trigger: 'blur' }
+                    { required: true, message: '请输入在职人员平均薪资', trigger: 'blur' },
+                    { validator: IsFixedTwoNumber, message: '在职人员平均薪资为正实数', trigger: 'blur' }
                 ],
                 socialSecurityNum: [
                     { required: true, message: '请输入缴纳社保人数', trigger: 'blur' },

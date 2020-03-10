@@ -42,7 +42,7 @@
                     </template>
                 </el-table-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center" :min-width="minWidth">
+            <el-table-column label="操作" v-if="isAction" align="center"  :fixed="isfiexd" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
@@ -145,6 +145,10 @@ export default {
         rowClassName: {
             type: Function,
             default: () => ''
+        },
+        isfiexd: {
+            type: String,
+            default: 'right'
         }
     },
     computed: {
@@ -185,7 +189,11 @@ export default {
             },
             deep: true,
             immediate: true
-
+        },
+        actionMinWidth: {
+            handler (val) {
+                this.minWidth = val
+            }
         }
     },
     methods: {
