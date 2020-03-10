@@ -49,7 +49,7 @@ import { interfaceUrl } from '@/api/config'
 import { saveActdetail, editActdetail } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
-    name: 'cloudEdit',
+    name: 'cloudActedit',
     data () {
         return {
             cloudForm: {

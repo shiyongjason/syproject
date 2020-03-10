@@ -83,7 +83,7 @@ export default {
         },
         {
             path: 'cloudList',
-            name: 'cloudList',
+            name: 'cloudlist',
             meta: {
                 title: '运营管理',
                 tagName: '运营管理',

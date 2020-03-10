@@ -94,6 +94,16 @@ export default {
         // this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
+    beforeRouteEnter (to, from, next) {
+        newCache('cloudlist')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'cloudActedit') {
+            clearCache('cloudlist')
+        }
+        next()
+    },
     methods: {
         ...mapActions({
             findcloudActList: 'findcloudActList'
@@ -138,16 +148,6 @@ export default {
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
-        },
-        beforeRouteEnter (to, from, next) {
-            newCache('cloudlist')
-            next()
-        },
-        beforeRouteLeave (to, from, next) {
-            if (to.name != 'cloudEdit') {
-                clearCache('cloudlist')
-            }
-            next()
         },
         onShowHome (val) {
             window.open(iotUrl + '/iot/actionCenter/?id=' + val.id)
