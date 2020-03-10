@@ -64,29 +64,6 @@ const routerMapping = [
             }
         ]
     },
-    // 上线无bug待删除的无用代码
-    // {
-    //     path: '/jinyunPlatform',
-    //     meta: {
-    //         title: '金云平台',
-    //         isMenu: true,
-    //         icon: 'hosjoy_stay_online'
-    //     },
-    //     component: Layout,
-    //     children: [
-    //         {
-    //             path: '',
-    //             name: 'jinyunplatform',
-    //             meta: {
-    //                 title: '金云平台',
-    //                 tagName: '金云平台',
-    //                 isMenu: false,
-    //                 icon: ''
-    //             },
-    //             component: () => import('./views/jinyunplatform/index')
-    //         }
-    //     ]
-    // },
     {
         path: '/oldsystem',
         name: 'oldsystem',
@@ -193,7 +170,7 @@ const routerMapping = [
         meta: {
             title: 'App管理',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_set'
         },
         component: Layout,
         children: [
@@ -242,84 +219,84 @@ const routerMapping = [
             icon: 'hosjoy_operation'
         },
         component: Layout,
-        children: [
-            {
-                path: 'userOverview',
-                name: 'userOverview',
-                meta: {
-                    title: '用户概览',
-                    tagName: '用户概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/userOverview.vue')
+        children: [{
+            path: 'userOverview',
+            name: 'userOverview',
+            meta: {
+                title: '用户概览',
+                tagName: '用户概览',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'equipemtOverview',
-                name: 'equipemtOverview',
-                meta: {
-                    title: '设备概览',
-                    tagName: '设备概览',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+            component: () => import('@/views/comfortcloud/userOverview.vue')
+        },
+        {
+            path: 'equipemtOverview',
+            name: 'equipemtOverview',
+            meta: {
+                title: '设备概览',
+                tagName: '设备概览',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
             },
-            {
-                path: 'homeOverview',
-                name: 'homeOverview',
-                meta: {
-                    title: '家庭概览',
-                    tagName: '家庭概览',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homeManage.vue')
+            component: () => import('@/views/comfortcloud/equipemtOverview.vue')
+        },
+        {
+            path: 'homeOverview',
+            name: 'homeOverview',
+            meta: {
+                title: '家庭概览',
+                tagName: '家庭概览',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'homedetail',
-                name: 'homedetail',
-                meta: {
-                    title: '家庭详情',
-                    tagName: '家庭详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/homedetail.vue')
+            component: () => import('@/views/comfortcloud/homeManage.vue')
+        },
+        {
+            path: 'homedetail',
+            name: 'homedetail',
+            meta: {
+                title: '家庭详情',
+                tagName: '家庭详情',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
             },
-            {
-                path: 'membermanage',
-                name: 'membermanage',
-                meta: {
-                    title: '会员管理',
-                    tagName: '会员管理',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberManage.vue')
+            component: () => import('@/views/comfortcloud/homedetail.vue')
+        },
+        {
+            path: 'membermanage',
+            name: 'membermanage',
+            meta: {
+                title: '会员管理',
+                tagName: '会员管理',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
             },
-            {
-                path: 'memberdetail',
-                name: 'memberdetail',
-                meta: {
-                    title: '会员登录详情',
-                    tagName: '会员登录详情',
-                    parentName: '舒适云概览',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/memberDetail.vue')
-            }
+            component: () => import('@/views/comfortcloud/memberManage.vue')
+        },
+        {
+            path: 'memberdetail',
+            name: 'memberdetail',
+            meta: {
+                title: '会员登录详情',
+                tagName: '会员登录详情',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/memberDetail.vue')
+        }
         ]
     },
     Wisdomrouter,
-    Bestrouter,
     ServiceManagement,
+    ...Wisdomrouter,
+    Bestrouter,
     B2brouter,
     Jyrouter
 ]
@@ -344,7 +321,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0;i < data.length;i++) {
+        for (let i = 0; i < data.length; i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -370,7 +347,6 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    // 开发环境菜单配置
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
         menu = routerMapping

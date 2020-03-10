@@ -21,3 +21,7 @@ export function createTagWidthUser (params) {
 export function findUserDetailsTagList (params) {
     return axios.get(`/service/api/labels/get-label-name-message`, { params })
 }
+// 2.3version 获取用户列表
+export function findUserList (params) {
+    return axios.post(`/service/api/users/customer`, params)
+}

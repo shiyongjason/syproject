@@ -20,7 +20,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属商家：" :label-width="formLabelWidth" v-if="type==='member'">
-                        <HAutocomplete :placeholder="'输入商家'" @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30  @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
@@ -435,5 +435,17 @@ export default {
 /deep/ .el-tabs__item.is-active {
     background: transparent;
     color: #000;
+}
+
+/deep/.el-autocomplete {
+    width: 300px;
+    .el-input {
+        width: 300px !important;
+    }
+}
+/deep/.el-form .el-input {
+}
+.el-form-item__content .el-input {
+    width: 200px !important;
 }
 </style>
