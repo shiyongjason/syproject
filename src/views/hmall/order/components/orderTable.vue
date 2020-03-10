@@ -33,6 +33,9 @@
             <template slot-scope="scope" slot="orderType">
                 {{scope.data.row.orderType==0?'普通订单':'组合订单'}}
             </template>
+               <template slot-scope="scope" slot="source">
+                {{scope.data.row.source==1?'APP':scope.data.row.source==2?'小程序':'-'}}
+            </template>
             <template slot-scope="scope" slot="orderStatus">
                 <!--1:待审核, 2:待付款, 3:待发货, 4:已完成, 5:已关闭-->
                 <p v-if="scope.data.row.isSplit==0&&scope.data.row.isParentOrder==1&&scope.data.row.orderStatus==3&&scope.data.row.orderType==1">
@@ -99,6 +102,7 @@ export default {
                 { label: '活动优惠金额', prop: 'activityAmount' },
                 { label: '订单类型', prop: 'orderType' },
                 { label: '订单状态', prop: 'orderStatus' },
+                { label: '订单来源', prop: 'source' },
                 { label: '分部', prop: 'branchName' },
                 { label: '平台公司名称', prop: 'merchantName' },
                 { label: '会员店名称', prop: 'memberName' },
