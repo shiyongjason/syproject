@@ -212,11 +212,12 @@ const routerMapping = [
             }
         ]
     },
-    Wisdomrouter,
+    ...Wisdomrouter,
     Bestrouter,
     B2brouter,
     Jyrouter,
-    Cloudrouter
+    Cloudrouter,
+    ServiceManagement
 ]
 
 const router = new Router({
