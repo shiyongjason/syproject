@@ -10,9 +10,10 @@
                 </el-form-item>
                 <el-form-item label="列表图片：" prop="picture" ref="picture">
                     <!--logoUrl-->
-                    <SingleUpload sizeLimit='3M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
-                        尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB
+                        <!-- 尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB -->
+                        大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
