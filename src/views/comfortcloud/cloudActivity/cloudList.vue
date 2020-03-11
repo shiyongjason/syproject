@@ -105,7 +105,7 @@ export default {
         next()
     },
     activated () {
-        this.onSearch()
+        this.onQuery()
     },
     methods: {
         ...mapActions({
