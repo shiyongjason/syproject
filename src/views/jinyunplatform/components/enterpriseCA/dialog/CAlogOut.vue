@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="activeName == 'enterprise' ?'企业' :'个人' + 'CA认证注销'" :visible.sync="dialog" :close-on-click-modal="false" width="30%">
+    <el-dialog :title="(activeName == 'enterprise' ?'企业' : '个人') + 'CA认证注销'" :visible.sync="dialog" :close-on-click-modal="false" width="30%">
         <div v-show="activeName == 'personage'">
             <p style="margin: 20px 0;text-indent: 1em;">该个人用户CA认证账户联动以下已CA认证的企业，若注销该个人用户CA认证，对应的企业CA认证也将删除:</p>
             <el-table :data="CAlogOutData.personRelevenceData" border style="width: 100%">
@@ -20,7 +20,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { signImage } from '../../../api/index'
+import { signImage, logoutConmanyCA, logoutPersonCA } from '../../../api/index'
 export default {
     name: 'CAdialog',
     computed: {
@@ -55,14 +55,20 @@ export default {
         },
         async onSureLogOut () {
             this.loading = true
-            if (this.activeName == 'enterprise') {
-                await logoutConmanyCA(this.row.companySignatureId)
-            } else {
-                await logoutPersonCA(this.row.signatureSupplierSignerId)
+            try {
+                if (this.activeName == 'enterprise') {
+                    await logoutConmanyCA(this.CAlogOutData.id)
+                } else {
+                    await logoutPersonCA(this.CAlogOutData.id)
+                }
+                this.loading = false
+                this.onCancel()
+                this.$emit('onSearch')
+            } catch {
+                this.loading = false
+                this.onCancel()
+                this.$emit('onSearch')
             }
-            this.$emit('onSearch')
-            this.onCancel()
-            this.loading = false
         }
     }
 }

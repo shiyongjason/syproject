@@ -127,7 +127,8 @@ export default {
             CAlogOutData: {
                 htmltext: '',
                 logoutName: '',
-                personRelevenceData: []
+                personRelevenceData: [],
+                id: ''
             }
         }
     },
@@ -265,6 +266,7 @@ export default {
                 this.CAlogOutData.personRelevenceData = data
             }
             if (this.activeName == 'enterprise') {
+                this.CAlogOutData.id = row.companySignatureId
                 const { data } = await signInfo({ signId: row.companySignatureId, type: 1 })
                 if (data.length > 0) {
                     // this.$message.warning(data[0].companyName + ',有未签约的用信合同，CA认证暂时无法注销！')
@@ -273,6 +275,7 @@ export default {
                 }
                 this.CAlogOutData.logoutName = row.companyName
             } else {
+                this.CAlogOutData.id = row.signatureSupplierSignerId
                 const { data } = await signInfo({ signId: row.signatureSupplierSignerId, type: 2 })
                 if (data.length > 0) {
                     let comArr = ''
