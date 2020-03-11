@@ -20,7 +20,7 @@
                     <p @click="onShowHome(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
                 </template>
                 <template slot="effectived" slot-scope="scope">
-                    <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'已失效'}}</span>
+                    <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'未生效'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
@@ -133,18 +133,33 @@ export default {
             this.onQuery()
         },
         async onDeleteAct (val) {
-            this.$confirm('是否删除该活动?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
-                await deleteActivity(val.id)
-                this.$message({
-                    message: '删除成！',
-                    type: 'success'
+            if (val.effectived == 1) {
+                this.$confirm('该活动还在生效中，删除后客户端无法查询，是否继续删除？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await deleteActivity(val.id)
+                    this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    })
+                    this.onQuery()
                 })
-                this.onQuery()
-            })
+            } else {
+                this.$confirm('该活动还未生效，是否继续删除？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    await deleteActivity(val.id)
+                    this.$message({
+                        message: '删除成功！',
+                        type: 'success'
+                    })
+                    this.onQuery()
+                })
+            }
         },
         onAddcloud (val) {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: {} })
