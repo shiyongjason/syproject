@@ -31,3 +31,18 @@ export const ORDER_TYPE = [
         value: 1
     }
 ]
+
+export const SOURCE_LIST = [
+    {
+        name: '全部',
+        value: ''
+    },
+    {
+        name: 'APP',
+        value: 1
+    },
+    {
+        name: '小程序',
+        value: 2
+    }
+]
