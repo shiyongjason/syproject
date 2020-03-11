@@ -43,6 +43,9 @@ const getters = {
 }
 
 const mutations = {
+    cleartableData (state) {
+        state.tableData = []
+    },
     [types.PLAT_FORMDATA] (state, payload) {
         state.platformData = payload
     },
@@ -56,11 +59,11 @@ const mutations = {
     },
     [types.REPAYMENT_SCHEDULE] (state, payload) {
         state.pagination = {
-            pageNumber: payload.current,
-            pageSize: payload.size,
-            total: payload.total
+            pageNumber: payload.current || 1,
+            pageSize: payload.size || 10,
+            total: payload.total || 0
         }
-        state.tableData = payload.records
+        state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
         payload.unshift({ organizationCode: '', organizationName: '请选择分部' })
@@ -69,11 +72,11 @@ const mutations = {
     [types.GET_SUMMARY] (state, payload) {
         if (!payload) return
         state.pagination = {
-            pageNumber: payload.current,
-            pageSize: payload.size,
-            total: payload.total
+            pageNumber: payload.current || 1,
+            pageSize: payload.size || 10,
+            total: payload.total || 0
         }
-        state.tableData = payload.records
+        state.tableData = payload.records || []
     }
 }
 
@@ -97,11 +100,12 @@ const actions = {
     },
     async findSummaryList ({ commit }, params) {
         const { data } = await getSummaryList(params)
-        commit(types.GET_SUMMARY, data.data)
+        commit(types.GET_SUMMARY, data)
     }
 
 }
 export default {
+    namespaced: true,
     state,
     getters,
     actions,

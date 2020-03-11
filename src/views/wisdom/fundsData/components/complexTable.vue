@@ -110,6 +110,7 @@ export default {
             loanData: {}, // 借款信息数据
             rowData: null, // 敞口分授信还款信息数据
             respAccountRepaymentPlanData: null, // 流贷还款信息数据
+            // 台账汇总表
             TotalColumn: [
                 { prop: 'misCode', label: 'MIS编码', width: '150' },
                 { prop: 'loanCompanyName', label: '平台公司', width: '150' },
@@ -117,45 +118,173 @@ export default {
                 {
                     label: '好信用-流贷',
                     children: [
-                        { prop: 'hxyLiquidityLoansAmount', label: '累计借款金额', width: '150', displayAs: 'money' },
-                        { prop: 'hxyLiquidityLoansPrincipalPaid', label: '累计还款本金', width: '150', displayAs: 'money' },
-                        { prop: 'hxyLiquidityLoansOwedPrincipal', label: '本金余额', width: '150', displayAs: 'money' }
+                        {
+                            prop: 'hxyLiquidityLoansAmount',
+                            label: '累计借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyLiquidityLoansPrincipalPaid',
+                            label: '累计还款本金',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansPrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyLiquidityLoansOwedPrincipal',
+                            label: '本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
                     label: '好信用-敞口',
                     children: [
-                        { prop: 'hxyExposureAmount', label: '累计敞口借款金额', width: '150', displayAs: 'money' },
-                        { prop: 'hxyExposurePrincipalPaid', label: '累计归还敞口', width: '150', displayAs: 'money' },
-                        { prop: 'hxyExposureOwedPrincipal', label: '剩余敞口', width: '150', displayAs: 'money' }
+                        {
+                            prop: 'hxyExposureAmount',
+                            label: '累计敞口借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposureAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyExposurePrincipalPaid',
+                            label: '累计归还敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposurePrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyExposureOwedPrincipal',
+                            label: '剩余敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposureOwedPrincipal)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
                     label: '好信用-分授信',
                     children: [
-                        { prop: 'hxySeparateCreditAmount', label: '累计借款金额', width: '150', displayAs: 'money' },
-                        { prop: 'hxySeparateCreditPrincipalPaid', label: '累计还款金额', width: '150', displayAs: 'money' },
-                        { prop: 'hxySeparateCreditOwedPrincipal', label: '本金余额', width: '150', displayAs: 'money' }
+                        {
+                            prop: 'hxySeparateCreditAmount',
+                            label: '累计借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxySeparateCreditPrincipalPaid',
+                            label: '累计还款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditPrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxySeparateCreditOwedPrincipal',
+                            label: '本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditOwedPrincipal)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
                     label: '供应链-流贷',
                     children: [
-                        { prop: 'supplyChainLiquidityLoansOwedPrincipal', label: '供应链本金余额', width: '150', displayAs: 'money' }
+                        {
+                            prop: 'supplyChainLiquidityLoansOwedPrincipal',
+                            label: '供应链本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.supplyChainLiquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
                     label: '好橙工',
                     children: [
-                        { prop: 'hcgOwedPrincipal', label: '好橙工本金余额', width: '150', displayAs: 'money' },
-                        { prop: 'hcgRemainingExposure', label: '好橙工剩余敞口', width: '150', displayAs: 'money' }
+                        {
+                            prop: 'hcgOwedPrincipal',
+                            label: '好橙工本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hcgOwedPrincipal)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hcgRemainingExposure',
+                            label: '好橙工剩余敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hcgRemainingExposure)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
                     label: '流贷、敞口余额合计',
                     children: [
-                        { prop: 'liquidityLoansOwedPrincipal', label: '流贷余额合计', width: '150', displayAs: 'money' },
-                        { prop: 'remainingExposure', label: '敞口余额合计', width: '150', displayAs: 'money' }
+                        {
+                     
+                     
+                     prop: 'liquidityLoansOwedPrincipal',
+                            label: '流贷余额合计',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.liquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'remainingExposure',
+                            label: '敞口余额合计',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.remainingExposure)}</span>
+                                )
+                            }
+                        }
                     ]
                 },
                 {
@@ -163,7 +292,7 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return (
-                            <span>{filters.fundMoney(scope.row.liquidityLoansOwedPrincipal + scope.row.remainingExposure)}</span>
+                            <span>{filters.fundMoney(scope.row.balanceTotal)}</span>
                         )
                     }
                 }

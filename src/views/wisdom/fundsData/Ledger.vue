@@ -86,7 +86,8 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
@@ -97,14 +98,10 @@ export default {
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            pagination: state => state.fundsData.pagination,
-            branchList: state => state.fundsData.branchList
+            pagination: state => state.pagination,
+            branchList: state => state.branchList
         }),
-        ...mapGetters({
-            platformData: 'platformData',
-            tableData: 'tableData'
-        }),
+        ...mapGetters(['platformData', 'tableData']),
         accountName () {
             return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
         }
@@ -138,13 +135,13 @@ export default {
         this.findPlatformslist()
     },
     methods: {
-        ...mapActions({
-            findPlatformslist: 'findPlatformslist',
-            getAccountList: 'getAccountList',
-            getRepaymentList: 'getRepaymentList',
-            findBranchList: 'findBranchList',
-            findSummaryList: 'findSummaryList'
-        }),
+        ...mapActions([
+            'findPlatformslist',
+            'getAccountList',
+            'getRepaymentList',
+            'findBranchList',
+            'findSummaryList'
+        ]),
         // 埋点
         // tracking (event) {
         //     this.$store.dispatch('tracking', {
@@ -160,7 +157,11 @@ export default {
             this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
         },
         handleClick (i) {
-            if (i == 1) this.productType = '1'
+            if (i == 1) {
+                this.productType = '1'
+                // console.log(this.$store.state.userInfo)
+                this.$store.commit('fundsData/cleartableData')
+            }
             this.onReset()
         },
         isSuccess (response) {
