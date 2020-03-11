@@ -150,7 +150,7 @@ export default {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
         },
         onShowHome (val) {
-            window.open(iotUrl + '/iot/actionCenter/?id=' + val.id)
+            window.open(iotUrl + '/iot/actionDetail/?articleId=' + val.id)
             // console.log(iotUrl + '/iot/actionCenter/?id=' + val.id)
             // window.location = iotUrl + '/iot/activityCenter/?id=' + val.id
         }
