@@ -6,7 +6,7 @@
                     <h3>活动管理</h3>
                 </div>
                 <el-form-item label="活动标题：" prop="title">
-                    <el-input v-model.trim="cloudForm.title" show-word-limit placeholder="请输入活动标题" maxlength='50'></el-input>
+                    <el-input v-model.trim="cloudForm.title" show-word-limit placeholder="请输入活动标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="列表图片：" prop="picture" ref="picture">
                     <!--logoUrl-->
@@ -191,7 +191,6 @@ export default {
         async getActivityDetail (id) {
             await this.findcloudActDetail(id)
             this.cloudForm = { ...this.cloudActivitydetail }
-            console.log(this.cloudActivitydetail)
         },
         onSaveact () {
             this.$refs['cloudForm'].validate(async (valid) => {
@@ -232,6 +231,9 @@ export default {
 }
 /deep/.el-dialog__wrapper {
     // z-index: 99999 !important;
+}
+/deep/.newTitle {
+    width: 500px!important;
 }
 .el-picker-panel {
     z-index: 99999 !important;
