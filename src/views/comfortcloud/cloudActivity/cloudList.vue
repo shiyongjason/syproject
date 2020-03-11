@@ -104,6 +104,9 @@ export default {
         }
         next()
     },
+    activated () {
+        this.onSearch()
+    },
     methods: {
         ...mapActions({
             findcloudActList: 'findcloudActList'
