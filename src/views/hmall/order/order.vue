@@ -131,6 +131,17 @@
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
+                                    订单来源：
+                                </div>
+                                <div class="query-cont-input">
+                                    <el-select v-model="queryParams.source">
+                                        <el-option v-for="item in sourceList" :key="item.value" :label="item.name" :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                            <div class="query-cont-col">
+                                <div class="query-col-title">
                                     <el-button type="primary" class="ml20" @click="onQueryOrder">
                                         搜索
                                     </el-button>
@@ -215,13 +226,13 @@
                     </el-tab-pane>
                     <el-tab-pane label="商品统计" name="third">
                         <div class="page-body-cont query-cont">
-                          <div class="query-cont-col">
+                            <div class="query-cont-col">
                                 <div class="query-col-title">SPU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.spuCode" maxlength="50" placeholder="请输入商品SPU"></el-input>
                                 </div>
                             </div>
-                              <div class="query-cont-col">
+                            <div class="query-cont-col">
                                 <div class="query-col-title">SKU编码：</div>
                                 <div class="query-col-input">
                                     <el-input type="text" v-model="queryParamsProductTotal.skuCode" maxlength="50" placeholder="请输入商品SkU">
@@ -275,21 +286,12 @@
                             <div class="query-cont-col">
                                 <div class="query-col-title">城市：</div>
                                 <div class="query-col-title">
-                                     <el-cascader
-                                        placeholder="试试搜索： 南京"
-                                        :options="options"
-                                        v-model="optarr"
-                                        :clearable=true
-                                        :collapse-tags = true
-                                        :show-all-levels = "true"
-                                         @change="cityChange"
-                                        :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}"
-                                        filterable>
+                                    <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'cityId',label:'name',children:'cities'}" filterable>
                                     </el-cascader>
                                 </div>
                             </div>
                             <div class="query-cont-col">
-                                 <el-checkbox v-model="queryParamsProductTotal.isShareGoods">只看共享商品</el-checkbox>
+                                <el-checkbox v-model="queryParamsProductTotal.isShareGoods">只看共享商品</el-checkbox>
                             </div>
                             <div class="query-cont-col">
                                 <div class="query-col-title">
@@ -316,7 +318,7 @@
 import orderTable from './components/orderTable'
 import receivablesTable from './components/receivablesTable'
 import productTotalTable from './components/productTotalTable'
-import { ORDER_TYPE, COUPON_TYPE } from './const.js'
+import { ORDER_TYPE, COUPON_TYPE, SOURCE_LIST } from './const.js'
 import { mapState } from 'vuex'
 import {
     findBrandsList, findOrderList,
@@ -421,6 +423,7 @@ export default {
         return {
             couponList: COUPON_TYPE,
             orderList: ORDER_TYPE,
+            sourceList: SOURCE_LIST,
             activeName: '',
             queryParams: {
                 activityCode: '',
@@ -436,6 +439,7 @@ export default {
                 orderStatus: '',
                 orderTimeEnd: '',
                 orderTimeStart: '',
+                source: '',
                 // misTimeStart: '',
                 // misTimeEnd: '',
                 current: 1,
@@ -688,7 +692,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/deep/ .el-table__expand-icon{
+/deep/ .el-table__expand-icon {
     position: absolute;
     top: 14px;
     right: 1px;
