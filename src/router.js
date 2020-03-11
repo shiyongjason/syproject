@@ -214,7 +214,6 @@ const routerMapping = [
     },
     Wisdomrouter,
     Bestrouter,
-    ServiceManagement,
     B2brouter,
     Jyrouter,
     Cloudrouter
