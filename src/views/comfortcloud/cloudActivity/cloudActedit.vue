@@ -210,6 +210,8 @@ export default {
                         this.setNewTags((this.$route.fullPath).split('?')[0])
                         this.$router.push('/comfortCloud/cloudList')
                         this.loading = false
+                    } else {
+                        this.loading = false
                     }
                 })
             } catch (error) {
@@ -251,5 +253,8 @@ export default {
 }
 /deep/.w-e-menu {
     z-index: 99 !important;
+}
+/deep/.editor-wrap{
+    margin-bottom: 23px  !important;
 }
 </style>
