@@ -28,7 +28,7 @@
                     <RichEditor ref="editors" v-model="cloudForm.detail" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onSaveact()">确定</el-button>
+                    <el-button type="primary" @click="onSaveact()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
             </el-form>
@@ -95,7 +95,8 @@ export default {
                 detail: [
                     { required: true, message: '请输入活动详情', trigger: 'blur' }
                 ]
-            }
+            },
+            loading: false
         }
     },
     computed: {
@@ -194,20 +195,26 @@ export default {
             this.cloudForm = { ...this.cloudActivitydetail }
         },
         onSaveact () {
-            this.$refs['cloudForm'].validate(async (valid) => {
-                if (valid) {
-                    if (this.$route.query.id) {
-                        await editActdetail(this.cloudForm)
-                        this.$message.success('活动修改成功')
-                    } else {
-                        await saveActdetail(this.cloudForm)
-                        this.$message.success('活动保存成功')
-                    }
+            this.loading = true
+            try {
+                this.$refs['cloudForm'].validate(async (valid) => {
+                    if (valid) {
+                        if (this.$route.query.id) {
+                            await editActdetail(this.cloudForm)
+                            this.$message.success('活动修改成功')
+                        } else {
+                            await saveActdetail(this.cloudForm)
+                            this.$message.success('活动保存成功')
+                        }
 
-                    this.setNewTags((this.$route.fullPath).split('?')[0])
-                    this.$router.push('/comfortCloud/cloudList')
-                }
-            })
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/comfortCloud/cloudList')
+                        this.loading = false
+                    }
+                })
+            } catch (error) {
+                this.loading = false
+            }
         }
     }
 }
