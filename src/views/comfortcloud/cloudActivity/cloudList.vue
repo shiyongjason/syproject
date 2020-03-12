@@ -43,7 +43,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 title: '',
-                deleted: 1
+                deleted: 1,
+                source: 1
             },
             searchParams: {},
             tableData: [],
