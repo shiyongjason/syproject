@@ -1,5 +1,5 @@
 <template>
-    <el-dialog class="customeredit" :title="getTitle" :visible.sync="dialog" :close-on-click-modal="false" :before-close="onCancel">
+    <el-dialog class="customeredit" title="企业CA认证信息详情" :visible.sync="dialog" :close-on-click-modal="false" :before-close="onCancel">
         <div class="detail">
             <div class="title">基本信息</div>
             <el-row :gutter="10">
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-    name: 'dialog',
+    name: 'CAdialog',
     props: {
         dialog: {
             type: Boolean,
@@ -52,7 +52,7 @@ export default {
     },
     data () {
         return {
-            getTitle: '企业CA认证信息详情'
+
         }
     },
     methods: {
