@@ -264,9 +264,7 @@ export default {
                     label: '流贷、敞口余额合计',
                     children: [
                         {
-                     
-                     
-                     prop: 'liquidityLoansOwedPrincipal',
+                            prop: 'liquidityLoansOwedPrincipal',
                             label: '流贷余额合计',
                             width: '150',
                             render: (h, scope) => {
