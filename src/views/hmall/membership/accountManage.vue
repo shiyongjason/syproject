@@ -81,7 +81,8 @@ export default {
             ],
             tableData: [],
             drawer: false,
-            options: [{ key: '', value: '全部' }, { key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' }, { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }]
+            options: [{ key: '', value: '全部' }, { key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' },
+                { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }, { key: 7, value: '微信小程序' }]
         }
     },
     components: {
