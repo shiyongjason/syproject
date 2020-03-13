@@ -49,7 +49,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getRecognitions, getRecognitionsDetail, artifVali } from './api/index'
 import { tableLabelBsnCustomer } from './const.js'
 export default {
     name: 'faceRecognition',
