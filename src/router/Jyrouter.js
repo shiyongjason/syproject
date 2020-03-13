@@ -63,6 +63,28 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/jinyunplatform/faceRecognition')
+        },
+        {
+            path: 'businessCustomer',
+            name: 'businessCustomer',
+            meta: {
+                title: '企业客户',
+                tagName: '企业客户',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/jinyunplatform/businessCustomer')
+        },
+        {
+            path: 'addBusinessCustomer',
+            name: 'addBusinessCustomer',
+            meta: {
+                title: '企业客户',
+                tagName: '企业客户',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/jinyunplatform/pages/addBusinessCustomer')
         }
     ]
 }
