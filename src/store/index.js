@@ -13,6 +13,7 @@ import payment from './modules/payment'
 import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
 import cloudmanage from './modules/cloudManage'
+import developmodule from '@/views/wisdom/store/developmodule'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -27,7 +28,8 @@ const store = new Vuex.Store({
         'menuList': [],
         'isCollapse': false,
         'cachedInclude': [],
-        'cachedExclude': []
+        'cachedExclude': [],
+        'devDepList': []
     },
     mutations,
     actions: actions,
@@ -43,7 +45,8 @@ const store = new Vuex.Store({
         payment,
         supplier,
         userRealreport,
-        cloudmanage
+        cloudmanage,
+        developmodule
     }
 })
 

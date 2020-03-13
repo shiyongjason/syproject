@@ -189,3 +189,8 @@ export const statisticsExport = (params) => {
 export const total = (params) => {
     return axios.get(interfaceUrl + 'rms/platform/profit-statistics/total', { params })
 }
+
+// 公司类型
+export const getCompanyType = (params) => {
+    return axios.get(ossUrl + 'api/httpH5/4710', { params })
+}

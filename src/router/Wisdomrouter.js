@@ -143,6 +143,30 @@ export default [
                     component: '@/views/wisdom/profitStatistics'
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
+            },
+            {
+                path: 'developlist',
+                name: 'developlist',
+                meta: {
+                    title: '发展在线',
+                    tagName: '发展在线',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/developList'
+                },
+                component: () => import('@/views/wisdom/developOline/developList')
+            },
+            {
+                path: 'addplatfrom',
+                name: 'addplatfrom',
+                meta: {
+                    title: '添加/编辑平台公司',
+                    tagName: '编辑平台公司',
+                    isMenu: false,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/addPlatfrom'
+                },
+                component: () => import('@/views/wisdom/developOline/addPlatfrom')
             }
         ]
     }
