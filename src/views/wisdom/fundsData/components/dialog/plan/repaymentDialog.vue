@@ -1,4 +1,5 @@
 <template>
+    <!-- 敞口分授信 -->
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <el-dialog width="30%" title="确认切换" :visible.sync="innerVisible" append-to-body>
             <span>切换后，所有还款数据（含明细表内该笔台账关联的所有还款明细）均会被清空且无法恢复</span>
@@ -20,7 +21,7 @@
                     </div>
                 </div>
                 <div v-for="(item,index) in detailData" :key="index">
-                    <div class="ftitle">第{{index+1}}次性还款：</div>
+                    <div class="ftitle">第{{index+1}}次还款：</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款日期：" prop="endTime">
