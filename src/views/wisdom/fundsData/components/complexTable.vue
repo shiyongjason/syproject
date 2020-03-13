@@ -27,15 +27,15 @@
 
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import remarkDialog from './dialog/remarkDialog.vue'
-import fileInfoDialog from './dialog/fileInfoDialog.vue'
-import misDialog from './dialog/misDialog.vue'
-import supplierDialog from './dialog/supplierDialog.vue'
-import AnnualInterestRateDialog from './dialog/AnnualInterestRateDialog.vue'
-import billingDialog from './dialog/billingDialog.vue'
-import repaymentDialog from './dialog/repaymentDialog.vue'
-import pointsCreditBillingDialog from './dialog/pointsCreditBillingDialog.vue'
-import regulatingBreathingDialog from './dialog/regulatingBreathingDialog.vue'
+import misDialog from './dialog/account/misDialog.vue'
+import fileInfoDialog from './dialog/account/fileInfoDialog.vue'
+import remarkDialog from './dialog/account/remarkDialog.vue'
+import supplierDialog from './dialog/loan/supplierDialog.vue'
+import billingDialog from './dialog/loan/billingDialog.vue'
+import pointsCreditBillingDialog from './dialog/loan/pointsCreditBillingDialog.vue'
+import regulatingBreathingDialog from './dialog/loan/regulatingBreathingDialog.vue'
+import AnnualInterestRateDialog from './dialog/plan/AnnualInterestRateDialog.vue'
+import repaymentDialog from './dialog/plan/repaymentDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanType } from '../api/index'
 import moment from 'moment'
 import { mapState } from 'vuex'
@@ -78,6 +78,7 @@ export default {
     },
     watch: {
         source (val) {
+            if (val == '0') this.$set(this, 'column', this.TotalColumn)
             if (val == '1') this.$set(this, 'column', this.FlowToBorrow)
             if (val == '2') this.$set(this, 'column', this.Exposure)
             if (val == '3') this.$set(this, 'column', this.PointsCredit)
@@ -109,6 +110,191 @@ export default {
             loanData: {}, // 借款信息数据
             rowData: null, // 敞口分授信还款信息数据
             respAccountRepaymentPlanData: null, // 流贷还款信息数据
+            // 台账汇总表
+            TotalColumn: [
+                { prop: 'misCode', label: 'MIS编码', width: '150' },
+                { prop: 'loanCompanyName', label: '平台公司', width: '150' },
+                { prop: 'subsectionName', label: '分部', width: '150' },
+                {
+                    label: '好信用-流贷',
+                    children: [
+                        {
+                            prop: 'hxyLiquidityLoansAmount',
+                            label: '累计借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyLiquidityLoansPrincipalPaid',
+                            label: '累计还款本金',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansPrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyLiquidityLoansOwedPrincipal',
+                            label: '本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyLiquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '好信用-敞口',
+                    children: [
+                        {
+                            prop: 'hxyExposureAmount',
+                            label: '累计敞口借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposureAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyExposurePrincipalPaid',
+                            label: '累计归还敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposurePrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxyExposureOwedPrincipal',
+                            label: '剩余敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxyExposureOwedPrincipal)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '好信用-分授信',
+                    children: [
+                        {
+                            prop: 'hxySeparateCreditAmount',
+                            label: '累计借款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditAmount)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxySeparateCreditPrincipalPaid',
+                            label: '累计还款金额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditPrincipalPaid)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hxySeparateCreditOwedPrincipal',
+                            label: '本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hxySeparateCreditOwedPrincipal)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '供应链-流贷',
+                    children: [
+                        {
+                            prop: 'supplyChainLiquidityLoansOwedPrincipal',
+                            label: '供应链本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.supplyChainLiquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '好橙工',
+                    children: [
+                        {
+                            prop: 'hcgOwedPrincipal',
+                            label: '好橙工本金余额',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hcgOwedPrincipal)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'hcgRemainingExposure',
+                            label: '好橙工剩余敞口',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.hcgRemainingExposure)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '流贷、敞口余额合计',
+                    children: [
+                        {
+                            prop: 'liquidityLoansOwedPrincipal',
+                            label: '流贷余额合计',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.liquidityLoansOwedPrincipal)}</span>
+                                )
+                            }
+                        },
+                        {
+                            prop: 'remainingExposure',
+                            label: '敞口余额合计',
+                            width: '150',
+                            render: (h, scope) => {
+                                return (
+                                    <span>{filters.fundMoney(scope.row.remainingExposure)}</span>
+                                )
+                            }
+                        }
+                    ]
+                },
+                {
+                    label: '余额总计',
+                    width: '150',
+                    render: (h, scope) => {
+                        return (
+                            <span>{filters.fundMoney(scope.row.balanceTotal)}</span>
+                        )
+                    }
+                }
+            ],
             // 流贷
             FlowToBorrow: [
                 {
@@ -1673,7 +1859,7 @@ export default {
             this.respAccountRepaymentPlanData = data
             // console.log(this.respAccountRepaymentPlanData)
         },
-        // 敞口还款
+        // 敞口和分授信还款
         async getGrantPaymetPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             console.log(data)
@@ -1693,9 +1879,14 @@ export default {
             console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
+            // 是否需要增加计息---
         },
         async onRepaymentTypeChange (item) {
-            const { data } = await transformPlanType(item.accountId)
+            const params = {
+                accountId: item.accountId,
+                registrant: this.userInfo.employeeName
+            }
+            const { data } = await transformPlanType(params)
             // console.log(data)
             if (data.length == 1) {
                 data[0].repaymentType = 1
@@ -1719,7 +1910,8 @@ export default {
         }
     },
     mounted () {
-        this.column = this.FlowToBorrow
+        // this.column = this.FlowToBorrow
+        this.column = this.TotalColumn
     }
 }
 </script>

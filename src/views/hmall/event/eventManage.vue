@@ -72,7 +72,6 @@
                         <div slot="content" v-if="scope.data.row.pvdata">截止到{{scope.data.row.pvdata.expiryDate}}<br>累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付金额：{{scope.data.row.pvdata.totalMoney}}</div>
                         <el-button type="info" size="mini" v-show="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
                     </el-tooltip>
-
                 </template>
             </basicTable>
         </div>

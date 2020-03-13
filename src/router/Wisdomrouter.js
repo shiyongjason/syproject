@@ -32,7 +32,7 @@ export default [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundsData/components/dialog/newFlowdialog.vue')
+                component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
             }
         ]
     },

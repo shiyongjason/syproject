@@ -32,4 +32,6 @@ export const setPlan = (params) => axios.put(interfaceUrl + 'backend/account/pla
 // 利率计算
 export const setCount = (params) => axios.post(interfaceUrl + 'backend/account/interest/count', params)
 // 切换台账支付类型
-export const transformPlanType = (accountId) => axios.get(interfaceUrl + `backend/account/plan/account-type/${accountId}`)
+export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/account/plan/account-type`, { params })
+// 台账汇总表
+export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/account/summary`, { params })

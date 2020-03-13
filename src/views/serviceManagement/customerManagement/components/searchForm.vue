@@ -9,15 +9,16 @@
                             <el-input v-model="searchForm.name" placeholder="请输入姓名" clearable maxlength='20' />
                         </div>
                     </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">获客渠道：</div>
-                        <div class="query-col-input">
-                            <el-select v-model="searchForm.channelType" clearable style="width: 100%">
-                                <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
+<!--                    2.3version 移除-->
+<!--                    <div class="query-cont-col">-->
+<!--                        <div class="query-col-title">获客渠道：</div>-->
+<!--                        <div class="query-col-input">-->
+<!--                            <el-select v-model="searchForm.channelType" clearable style="width: 100%">-->
+<!--                                <el-option v-for="(item,index) in channelType" :key="index" :label="item.label" :value="item.value">-->
+<!--                                </el-option>-->
+<!--                            </el-select>-->
+<!--                        </div>-->
+<!--                    </div>-->
                     <div class="query-cont-col">
                         <div class="query-col-title">手机号：</div>
                         <div class="query-col-input">
@@ -38,9 +39,6 @@
                         <el-button type="primary" @click="search('form')">
                             搜索
                         </el-button>
-                        <!--<el-button type="primary" @click="$emit('add')">-->
-                            <!--新增客户-->
-                        <!--</el-button>-->
                     </div>
                 </el-form>
             </div>
@@ -51,7 +49,7 @@
 <script>
 export default {
     name: 'searchForm',
-    props: ['value', 'channelType'],
+    props: ['value'],
     data () {
         return {}
     },
@@ -63,9 +61,6 @@ export default {
             set (val) {
                 this.$emit('input', val)
             }
-        },
-        channelTypes () {
-            return this.getTypes('channelType')
         },
         pickerOptionsStart () {
             return {

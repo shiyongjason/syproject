@@ -67,7 +67,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="到期日：" prop="name">
                             <!-- 自动计算，到期日=开票日期+借款期限 -->
-                            <span>{{detailData.loanEndTimeInvoice}}</span>
+                            <span>{{detailData.loanEndTimeInvoice || '-'}}</span>
                         </el-form-item>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
 
 <script>
 import moment from 'moment'
-import { setLoan } from '../../api'
+import { setLoan } from '../../../api'
 export default {
     name: 'billingDialog',
     data () {
@@ -150,12 +150,12 @@ export default {
             this.$emit('reload')
         },
         loanDateNumM () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime && moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
             this.$forceUpdate()
         },
         loanDateNumD () {
-            this.detailData.loanEndTimeInvoice = moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
+            this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime && moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
             this.$forceUpdate()
         },

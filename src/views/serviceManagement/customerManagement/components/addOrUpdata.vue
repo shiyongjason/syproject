@@ -76,7 +76,7 @@
             <div class="detail">
                 <div class="title">基本信息</div>
                 <el-row :gutter="10">
-                    <el-col :span="11"><span class="detail-name">渠道名称：</span>{{getTypes('channelType',customerForm.channelType)}}</el-col>
+                    <el-col :span="11"><span class="detail-name">渠道名称：</span>{{channelName(customerForm.channelType)}}</el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="11"><span class="detail-name">姓名：</span>{{customerForm.name}}</el-col>
@@ -216,9 +216,12 @@ export default {
                 _this.lastTime = now
             }
         },
-        getTypes (obj, key) {
-            let query = key + 1
-            return this[obj][query].label
+        channelName (id) {
+            let tempName = ''
+            this.channelType.forEach(value => {
+                if (value.code === id) tempName = value.name
+            })
+            return tempName
         },
         onSubmitForm (formName) {
             this.$refs[formName].validate(async valid => {
