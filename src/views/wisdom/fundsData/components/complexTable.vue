@@ -89,6 +89,7 @@ export default {
         productType (val) {
             if (val == '1') this.product = '好信用'
             if (val == '2') this.product = '供应链'
+            if (val == '3') this.product = '好橙工'
         }
     },
     data: function () {
