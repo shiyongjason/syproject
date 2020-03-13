@@ -13,6 +13,7 @@ import payment from './modules/payment'
 import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
 import cloudmanage from './modules/cloudManage'
+import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -43,7 +44,8 @@ const store = new Vuex.Store({
         payment,
         supplier,
         userRealreport,
-        cloudmanage
+        cloudmanage,
+        jinyunplatform
     }
 })
 
