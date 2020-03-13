@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { setLoan } from '../../api'
+import { setLoan } from '../../../api'
 export default {
     name: 'regulatingBreathingDialog',
     props: {

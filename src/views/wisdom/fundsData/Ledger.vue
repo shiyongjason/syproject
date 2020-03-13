@@ -66,21 +66,19 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
+                <el-tab-pane label="台账汇总表" name="0"></el-tab-pane>
                 <el-tab-pane label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane label="分授信" name="3"></el-tab-pane>
                 <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
-            <template v-if="accountType != '4'">
+            <template v-if="accountType == '1'||accountType == '2'||accountType == '3'">
                 <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
                     <el-tab-pane label="好信用" name="1"></el-tab-pane>
                     <el-tab-pane label="供应链" v-if="accountType == 1" name="2"></el-tab-pane>
-                    <!-- <el-tab-pane label="好橙工" name="好橙工"></el-tab-pane> -->
+                    <el-tab-pane label="好橙工" v-if="accountType !=3" name="3"></el-tab-pane>
                 </el-tabs>
-                <el-button type="primary" @click="onLinddialog">
-                    {{productType == 1 ? '新增好信用-' : productType == 2 ? '新增供应链-' : ''}}
-                    {{accountType == 1 ? '流贷台账' : accountType == 2 ? '敞口台账' : accountType == 3 ? '分授信台账' : '待开发'}}
-                </el-button>
+                <el-button type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </template>
             <complexTable :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
@@ -88,28 +86,29 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import * as type from './const'
+import { createNamespacedHelpers } from 'vuex'
+const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'standingBook',
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            pagination: state => state.fundsData.pagination,
-            branchList: state => state.fundsData.branchList
+            pagination: state => state.pagination,
+            branchList: state => state.branchList
         }),
-        ...mapGetters({
-            platformData: 'platformData',
-            tableData: 'tableData'
-        })
+        ...mapGetters(['platformData', 'tableData']),
+        accountName () {
+            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
+        }
     },
     data () {
         return {
-            accountType: '1', // 1：流贷 2：敞口 3：分授信 4：还款明细表
+            accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
             queryParams: {
@@ -136,12 +135,13 @@ export default {
         this.findPlatformslist()
     },
     methods: {
-        ...mapActions({
-            findPlatformslist: 'findPlatformslist',
-            getAccountList: 'getAccountList',
-            getRepaymentList: 'getRepaymentList',
-            findBranchList: 'findBranchList'
-        }),
+        ...mapActions([
+            'findPlatformslist',
+            'getAccountList',
+            'getRepaymentList',
+            'findBranchList',
+            'findSummaryList'
+        ]),
         // 埋点
         // tracking (event) {
         //     this.$store.dispatch('tracking', {
@@ -157,7 +157,11 @@ export default {
             this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
         },
         handleClick (i) {
-            if (i == 1) this.productType = '1'
+            if (i == 1) {
+                this.productType = '1'
+                // console.log(this.$store.state.userInfo)
+                this.$store.commit('fundsData/cleartableData')
+            }
             this.onReset()
         },
         isSuccess (response) {
@@ -196,6 +200,10 @@ export default {
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
+                return
+            }
+            if (this.accountType == 0) {
+                this.findSummaryList(this.searchParams)
                 return
             }
             this.getAccountList(this.searchParams)
