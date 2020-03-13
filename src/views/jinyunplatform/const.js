@@ -1,4 +1,4 @@
-/* 
+/*
     CA认证
     企业CA tableLabel
 */
@@ -19,7 +19,7 @@ export const tableLabelCompany = [
     { label: '法人身份证号', prop: 'legalIdNumber' },
     { label: '验证状态', prop: 'status' }
 ]
-/* 
+/*
     CA认证
     个人CA tableLabel
 */
@@ -30,7 +30,7 @@ export const tableLabelPerson = [
     { label: '个人身份证号', prop: 'idNumber' },
     { label: '创建日期', prop: 'createDate', formatters: 'date' }
 ]
-/* 
+/*
     企业客户
     企业客户列表 tableLabel
 */

@@ -1,6 +1,6 @@
 
 // 金云系统 store
-import * as types from './const'
+// import * as types from './const'
 const state = {
     shy: '123'
 }
@@ -12,6 +12,7 @@ const mutations = {}
 const actions = {}
 
 export default {
+    namespace: true,
     state,
     getters,
     actions,
