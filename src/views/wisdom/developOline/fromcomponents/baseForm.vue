@@ -74,17 +74,19 @@
             </el-form-item>
             <el-form-item label="新营业执照：">
                 <SingleUpload :upload="uploadInfo" :imageUrl="oneimageUrl" ref="uploadImg" @back-event="onereadUrl" />
+                <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="新开户许可证：">
                 <SingleUpload :upload="uploadInfo" :imageUrl="twoimageUrl" ref="uploadImg" @back-event="tworeadUrl" />
+                  <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="公司类型：" prop="companyArr">
-                <el-checkbox-group v-model.trim="baseForm.companyArr">
+                <el-checkbox-group v-model="baseForm.companyArr">
                     <el-checkbox :label="item.dictInfoKey" v-for="(item) in companyTypeList" :key="item.dictInfoKey">{{item.dictInfoValue}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="主营系统：" prop="systemArr">
-                <el-checkbox-group v-model.trim="baseForm.systemArr">
+                <el-checkbox-group v-model="baseForm.systemArr">
                     <el-checkbox :label="item.dictInfoKey" v-for="(item) in mainSystemList" :key="item.dictInfoKey">{{item.dictInfoValue}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
@@ -238,7 +240,7 @@ export default {
                 data: {
 
                 },
-                accept: 'image/jpeg, image/jpg, image/png'
+                accept: 'image/jpeg, image/jpg, image/png, image/gif'
             }
         }
     },
@@ -285,12 +287,18 @@ export default {
             }
         },
         onSaveBaseFrom () {
+            this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
+            this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
+            this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
+            this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
             this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
                     await getCheckField({ 'misCode': this.baseForm.misCode,
                         'companyShortName': this.baseForm.companyShortName })
                     this.$emit('backnext')
                 }
+                // this.$emit('backnext')
             })
         }
     }

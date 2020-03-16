@@ -10,8 +10,9 @@
             <baseForm v-if="active==1" @backnext=nextActive :baseForm=formData ref="baseform"></baseForm>
             <otherForm v-if="active==2" @backnext=nextActive :otherForm=formData.developOtherInfoCreateForm ref="otherform"></otherForm>
             <signForm v-if="active==3" @backnext=nextActive :signForm=formData.developSignInfoCreateForm ref="signform"></signForm>
-            <accountForm v-if="active==4" @backnext=nextActive :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
-            <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+            <accountForm v-if="active==4"  @backadd=onAddDevelopinof :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
+            <el-button style="margin-top: 12px;" @click="next" v-if="active!=4">下一步</el-button>
+            <el-button style="margin-top: 12px;" @click="next" v-if="active==4">保存</el-button>
         </div>
     </div>
 </template>
@@ -20,10 +21,13 @@ import baseForm from './fromcomponents/baseForm'
 import otherForm from './fromcomponents/otherForm'
 import signForm from './fromcomponents/signForm'
 import accountForm from './fromcomponents/accountForm'
+import { addDevelopinfo } from '../api/index'
+import { mapActions } from 'vuex'
 export default {
     name: 'addPlatform',
     data () {
         return {
+            userDate: JSON.parse(sessionStorage.getItem('user_Data')),
             active: 1,
             formData: {
                 // 基本表单数据参数
@@ -87,7 +91,7 @@ export default {
                     signScale: '', // 签约规模/万万产生上线时间当天及之后不可修改
                     oldCompanyScale: '', // 老公司规模/万
                     salesVolume: '', // 销售规模增长
-                    profitGrowth: '3%', // 利润增长
+                    profitGrowth: '3', // 利润增长
                     ourRegisteredFund: '', // 我方注册资金
                     remittanceTime: '',
                     onlineTime: '',
@@ -132,6 +136,9 @@ export default {
         accountForm
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         next () {
             if (this.active == 1) {
                 this.$refs.baseform.onSaveBaseFrom()
@@ -142,12 +149,26 @@ export default {
             } else if (this.active == 4) {
                 this.$refs.accountform.onSaveaccountFrom()
             }
-            // 特殊处理 %
-            this.formData.developSignInfoCreateForm.profitGrowth = this.formData.developSignInfoCreateForm.profitGrowth ? this.formData.developSignInfoCreateForm.profitGrowth + '%' : 0
-            console.log(this.formData)
         },
         nextActive () {
             this.active++
+        },
+        async onAddDevelopinof () {
+            delete this.formData.companyArr
+            delete this.formData.systemArr
+            this.formData.createUser = this.userDate.name
+            this.formData.createUid = this.userDate.uid
+            this.formData.developOtherInfoCreateForm.createUser = this.userDate.name
+            this.formData.developOtherInfoCreateForm.createUid = this.userDate.uid
+            this.formData.developSignInfoCreateForm.createUser = this.userDate.name
+            this.formData.developSignInfoCreateForm.createUid = this.userDate.uid
+            this.formData.developAccountInfoCreateForm.createUser = this.userDate.name
+            this.formData.developAccountInfoCreateForm.createUid = this.userDate.uid
+
+            console.log(this.formData)
+            await addDevelopinfo(this.formData)
+            this.$message.success('平台公司添加成功！')
+            this.setNewTags((this.$route.fullPath).split('?')[0])
         }
     }
 }

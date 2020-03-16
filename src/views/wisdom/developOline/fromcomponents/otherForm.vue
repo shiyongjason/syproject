@@ -91,7 +91,7 @@ export default {
         })
     },
     mounted () {
-        this.otherForm.companyCode = this.userInfo.oldDeptCode
+        // this.otherForm.companyCode = this.userInfo.oldDeptCode
     },
     methods: {
         ...mapActions({
@@ -106,9 +106,8 @@ export default {
         onSaveotherFrom () {
             this.$refs.otherForm.validate((valid) => {
                 if (valid) {
-
+                    this.$emit('backnext')
                 }
-                this.$emit('backnext')
             })
         }
     }

@@ -96,13 +96,13 @@ export default {
         })
     },
     mounted () {
-        this.accountForm.companyCode = this.userInfo.oldDeptCode
+        // this.accountForm.companyCode = this.userInfo.oldDeptCode
     },
     methods: {
         onSaveaccountFrom () {
             this.$refs.accountForm.validate((valid) => {
                 if (valid) {
-                    this.$emit('backnext')
+                    this.$emit('backadd')
                 }
             })
         }

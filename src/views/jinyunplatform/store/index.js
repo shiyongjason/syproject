@@ -51,7 +51,7 @@ const getters = {
             }
         })
         return state.tableData
-    },
+    }
 }
 
 const mutations = {

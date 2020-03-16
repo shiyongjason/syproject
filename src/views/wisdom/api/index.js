@@ -197,5 +197,9 @@ export const getCompanyType = (params) => {
 
 // 发展在线 基础信息校验
 export const getCheckField = (params) => {
-    return axios.post(ossUrl + 'develop/developbasicinfo/checkField', params)
+    return axios.post(interfaceUrl + 'develop/developbasicinfo/checkField', params)
+}
+// 发展在线 新增
+export const addDevelopinfo = (params) => {
+    return axios.post(interfaceUrl + 'develop/developbasicinfo/add', params)
 }

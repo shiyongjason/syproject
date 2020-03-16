@@ -100,7 +100,7 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getRecognitions, getRecognitionsDetail, artifVali } from './api/index'
+import { getRecognitionsDetail, artifVali } from './api/index'
 import { tableLabelFaceRecognition } from './const'
 export default {
     name: 'faceRecognition',
@@ -110,7 +110,7 @@ export default {
             pagination: state => state.jinyunplatform.pagination
         }),
         ...mapGetters({
-            tableData: 'jinyunplatform/tableLabelFaceRecognition',
+            tableData: 'jinyunplatform/tableLabelFaceRecognition'
         })
     },
     data () {

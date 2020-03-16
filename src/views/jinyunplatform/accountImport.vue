@@ -75,7 +75,7 @@ export default {
             pagination: state => state.jinyunplatform.pagination
         }),
         ...mapGetters({
-            tableData: 'jinyunplatform/tableLabelAccountImport',
+            tableData: 'jinyunplatform/tableLabelAccountImport'
         })
     },
     components: { apply },

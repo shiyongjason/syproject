@@ -88,7 +88,7 @@ export default {
             pagination: state => state.jinyunplatform.pagination
         }),
         ...mapGetters({
-            tableData: 'jinyunplatform/tableLabelAmountImport',
+            tableData: 'jinyunplatform/tableLabelAmountImport'
         }),
         pickerOptionsStart () {
             return {

@@ -53,7 +53,6 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getProductsArr } from './api/index'
 import { tableLabelProcessManage } from './const'
 export default {
     name: 'processManage',
@@ -64,7 +63,7 @@ export default {
             productsArr: state => state.jinyunplatform.productsArr
         }),
         ...mapGetters({
-            tableData: 'jinyunplatform/tableLabelProcessManage',
+            tableData: 'jinyunplatform/tableLabelProcessManage'
         })
     },
     data () {
@@ -95,7 +94,7 @@ export default {
     methods: {
         ...mapActions({
             getProcessesList: 'jinyunplatform/getProcessesList',
-            getProductsArr: 'jinyunplatform/getProductsArr',
+            getProductsArr: 'jinyunplatform/getProductsArr'
         }),
         async onQuery () {
             this.getProcessesList(this.queryParams)
