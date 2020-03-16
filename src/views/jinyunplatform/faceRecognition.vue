@@ -101,6 +101,7 @@
 <script>
 import { mapState } from 'vuex'
 import { getRecognitions, getRecognitionsDetail, artifVali } from './api/index'
+import { tableLabelFaceRecognition } from './const'
 export default {
     name: 'faceRecognition',
     computed: {
@@ -110,14 +111,7 @@ export default {
     },
     data () {
         return {
-            tableLabel: [
-                { label: '用户唯一标识', prop: 'customerId' },
-                { label: '姓名', prop: 'name' },
-                { label: '身份证号', prop: 'number' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' },
-                { label: '身份证认证结果', prop: 'idCardVerificationN' },
-                { label: '人脸识别认证结果', prop: 'faceVerificationN' }
-            ],
+            tableLabel: tableLabelFaceRecognition,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -132,24 +126,7 @@ export default {
                 total: 0
             },
             dialogPicture: false,
-            formFace: {},
-            rules: {
-                customerName: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                customerId: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                accountName: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                bankName: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ],
-                accountNumber: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
-                ]
-            }
+            formFace: {}
         }
     },
     mounted () {
@@ -189,8 +166,6 @@ export default {
             this.$set(this.queryParams, 'name', '')
             this.onSearch()
         },
-        async createTags () { },
-        async cancel () { },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.onQuery()

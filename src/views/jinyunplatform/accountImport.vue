@@ -64,8 +64,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import apply from './components/accountApply'
+import apply from './components/accountImport/accountApply'
 import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
+import { tableLabelAccountImport } from './const'
 export default {
     name: 'accountImport',
     computed: {
@@ -78,15 +79,7 @@ export default {
     },
     data () {
         return {
-            tableLabel: [
-                { label: '账户编号', prop: 'accountId' },
-                { label: '客户名称', prop: 'customerName' },
-                { label: '客户号', prop: 'customerId' },
-                { label: '账户名称', prop: 'accountName' },
-                { label: '开户银行', prop: 'bankName' },
-                { label: '银行账号', prop: 'accountNumber' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
-            ],
+            tableLabel: tableLabelAccountImport,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,

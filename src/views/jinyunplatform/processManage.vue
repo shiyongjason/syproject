@@ -5,7 +5,6 @@
                 <h3>审批流程查询</h3>
             </div>
             <div class="padd20">
-                <!-- 有空改一下 -->
                 <div class="query-cont-col">
                     <div class="query-col-title">客户名称：</div>
                     <div class="query-col-input">
@@ -55,6 +54,7 @@
 <script>
 import { mapState } from 'vuex'
 import { getProcessesList, getProductsArr } from './api/index'
+import { tableLabelProcessManage } from './const'
 export default {
     name: 'processManage',
     computed: {
@@ -64,12 +64,7 @@ export default {
     },
     data () {
         return {
-            tableLabel: [
-                { label: '任务标题', prop: 'taskTitle' },
-                { label: '任务内容', prop: 'taskContent' },
-                { label: '待审批人员', prop: 'approver' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
-            ],
+            tableLabel: tableLabelProcessManage,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
