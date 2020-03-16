@@ -27,7 +27,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.createTime" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
@@ -90,30 +90,6 @@ export default {
         ...mapGetters({
             tableData: 'jinyunplatform/tableLabelAmountImport'
         }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeEnd
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() > new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeStart
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        },
         isMultiple () {
             return this.hosAuthCheck(this.reCheckAuth)
         }
