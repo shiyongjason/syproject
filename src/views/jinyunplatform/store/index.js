@@ -1,7 +1,7 @@
 
 // 金云系统 store
 import * as types from './const'
-import { getRecognitions, getProcessesList, getBankList, getRateList, getProductsArr } from '../api/index'
+import { getRecognitions, getProcessesList, getBankList, getRateList, getSignList, getSignPersonList, getProductsArr } from '../api/index'
 const state = {
     pagination: {
         pageNumber: 1,
@@ -15,7 +15,7 @@ const state = {
 const getters = {
     // 人脸识别列表
     tableLabelFaceRecognition: state => {
-        state.tableData.map((i) => {
+        state.tableData.map(i => {
             i.idCardVerificationN = i.idCardVerification ? '通过' : '失败'
             i.faceVerificationN = i.faceVerification ? '通过' : '失败'
         })
@@ -27,7 +27,7 @@ const getters = {
     tableLabelAccountImport: state => state.tableData,
     // 额度导入列表
     tableLabelAmountImport: state => {
-        state.tableData.map((i) => {
+        state.tableData.map(i => {
             if (i.statusId == '000') i.statusId = '生效'
             if (i.statusId == '001') i.statusId = '待生效'
             if (i.statusId == '002') i.statusId = '失效'
@@ -52,6 +52,22 @@ const getters = {
         })
         return state.tableData
     },
+    // CA认证企业
+    tableLabelCACompany: state => {
+        state.tableData.map(i => {
+            if (i.companyType == 1) i.companyType = '借款方'
+            if (i.companyType == 2) i.companyType = '资金方'
+            if (i.companyType == 3) i.companyType = '合作方'
+            if (i.companyType == 4) i.companyType = '组织方'
+            if (i.companyType == 5) i.companyType = '担保方'
+            if (i.companyDocumentType == 1) i.companyDocumentType = '统一社会信用代码证'
+            if (i.status == 1) i.status = '认证成功'
+            if (i.status == 2) i.status = '认证失败'
+        })
+        return state.tableData
+    },
+    // CA认证个人
+    tableLabelCAPerson: state => state.tableData
 }
 
 const mutations = {
@@ -99,6 +115,14 @@ const actions = {
     async getRateList ({ commit }, params) {
         this.commit('jinyunplatform/cleartableData')
         const { data } = await getRateList(params)
+        commit(types.GET_TABLE_LIST, data)
+    },
+    async getSignList ({ commit }, params) {
+        const { data } = await getSignList(params)
+        commit(types.GET_TABLE_LIST, data)
+    },
+    async getSignPersonList ({ commit }, params) {
+        const { data } = await getSignPersonList(params)
         commit(types.GET_TABLE_LIST, data)
     }
 }
