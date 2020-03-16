@@ -196,9 +196,9 @@ export default {
         },
         onSaveact () {
             this.loading = true
-            try {
-                this.$refs['cloudForm'].validate(async (valid) => {
-                    if (valid) {
+            this.$refs['cloudForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
                         if (this.$route.query.id) {
                             await editActdetail(this.cloudForm)
                             this.$message.success('活动修改成功')
@@ -206,17 +206,16 @@ export default {
                             await saveActdetail(this.cloudForm)
                             this.$message.success('活动保存成功')
                         }
-
                         this.setNewTags((this.$route.fullPath).split('?')[0])
                         this.$router.push('/comfortCloud/cloudList')
                         this.loading = false
-                    } else {
+                    } catch (error) {
                         this.loading = false
                     }
-                })
-            } catch (error) {
-                this.loading = false
-            }
+                } else {
+                    this.loading = false
+                }
+            })
         }
     }
 }
