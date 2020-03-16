@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, logoutConmanyCA, logoutPersonCA, signInfo } from '../../api/index'
+import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signInfo } from '../../api/index'
 import CaDialog from './dialog/CAdialog'
 import CaeditDialog from './dialog/CAeditdialog'
 import CAstamp from './dialog/CAstamp'

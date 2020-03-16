@@ -20,7 +20,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { signImage, logoutConmanyCA, logoutPersonCA } from '../../../api/index'
+import { logoutConmanyCA, logoutPersonCA } from '../../../api/index'
 export default {
     name: 'CAdialog',
     computed: {
