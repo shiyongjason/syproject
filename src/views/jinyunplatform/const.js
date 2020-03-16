@@ -44,3 +44,54 @@ export const tableLabelBsnCustomer = [
     { label: '是否还在经营', prop: 'test' },
     { label: '创建时间', prop: 'test' }
 ]
+/*
+    额度导入
+    额度导入列表 tableLabel
+*/
+export const tableLabelAmountImport = [
+    { label: '客户名称', prop: 'customerName' },
+    { label: 'MIS编码', prop: 'misCode' },
+    { label: '年度最高额（元）', prop: 'yearlyQuota', formatters: 'money' },
+    { label: '月度滚动额（元）', prop: 'monthlyQuota', formatters: 'money' },
+    { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota', formatters: 'money' },
+    { label: '初始实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
+    { label: '实际实时用信额（元）', prop: 'realDailyQuota', formatters: 'money' },
+    { label: '本月利率(年化）', prop: 'dailyInterestRate' },
+    { label: '创建日期', prop: 'importDate' },
+    { label: '当前状态', prop: 'statusId' }
+]
+/*
+    账户导入
+    银行账户列表 tableLabel
+*/
+export const tableLabelAccountImport = [
+    { label: '账户编号', prop: 'accountId' },
+    { label: '客户名称', prop: 'customerName' },
+    { label: '客户号', prop: 'customerId' },
+    { label: '账户名称', prop: 'accountName' },
+    { label: '开户银行', prop: 'bankName' },
+    { label: '银行账号', prop: 'accountNumber' },
+    { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
+]
+/*
+    流程在线
+    审批流程列表 tableLabel
+*/
+export const tableLabelProcessManage = [
+    { label: '任务标题', prop: 'taskTitle' },
+    { label: '任务内容', prop: 'taskContent' },
+    { label: '待审批人员', prop: 'approver' },
+    { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
+]
+/*
+    人脸识别
+    人脸识别验证列表 tableLabel
+*/
+export const tableLabelFaceRecognition = [
+    { label: '用户唯一标识', prop: 'customerId' },
+    { label: '姓名', prop: 'name' },
+    { label: '身份证号', prop: 'number' },
+    { label: '创建日期', prop: 'createTime', formatters: 'dateTime' },
+    { label: '身份证认证结果', prop: 'idCardVerificationN' },
+    { label: '人脸识别认证结果', prop: 'faceVerificationN' }
+]
