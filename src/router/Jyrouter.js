@@ -64,27 +64,28 @@ export default {
             },
             component: () => import('@/views/jinyunplatform/faceRecognition')
         },
-        {
-            path: 'businessCustomer',
-            name: 'businessCustomer',
-            meta: {
-                title: '企业客户',
-                tagName: '企业客户',
-                isMenu: true,
-                icon: ''
-            },
-            component: () => import('@/views/jinyunplatform/businessCustomer')
-        },
-        {
-            path: 'addBusinessCustomer',
-            name: 'addBusinessCustomer',
-            meta: {
-                title: '企业客户',
-                tagName: '企业客户',
-                isMenu: false,
-                icon: ''
-            },
-            component: () => import('@/views/jinyunplatform/pages/addBusinessCustomer')
-        }
+        // 后台改动太大，暂时不做，或许下一期做或者下下期暂定
+        // {
+        //     path: 'businessCustomer',
+        //     name: 'businessCustomer',
+        //     meta: {
+        //         title: '企业客户',
+        //         tagName: '企业客户',
+        //         isMenu: true,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/jinyunplatform/businessCustomer')
+        // },
+        // {
+        //     path: 'addBusinessCustomer',
+        //     name: 'addBusinessCustomer',
+        //     meta: {
+        //         title: '企业客户',
+        //         tagName: '企业客户',
+        //         isMenu: false,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/jinyunplatform/pages/addBusinessCustomer')
+        // }
     ]
 }
