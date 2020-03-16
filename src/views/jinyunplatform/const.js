@@ -44,3 +44,19 @@ export const tableLabelBsnCustomer = [
     { label: '是否还在经营', prop: 'test' },
     { label: '创建时间', prop: 'test' }
 ]
+/*
+    额度导入
+    额度导入列表 tableLabel
+*/
+export const tableLabelAmountImport = [
+    { label: '客户名称', prop: 'customerName' },
+    { label: 'MIS编码', prop: 'misCode' },
+    { label: '年度最高额（元）', prop: 'yearlyQuota', formatters: 'money' },
+    { label: '月度滚动额（元）', prop: 'monthlyQuota', formatters: 'money' },
+    { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota', formatters: 'money' },
+    { label: '初始实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
+    { label: '实际实时用信额（元）', prop: 'realDailyQuota', formatters: 'money' },
+    { label: '本月利率(年化）', prop: 'dailyInterestRate' },
+    { label: '创建日期', prop: 'importDate' },
+    { label: '当前状态', prop: 'statusId' }
+]

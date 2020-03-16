@@ -79,6 +79,7 @@ import { mapState } from 'vuex'
 import { getRateList, rateStatus } from './api/index'
 import { interfaceUrl } from '@/api/config'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
+import { tableLabelAmountImport } from './const.js'
 export default {
     name: 'amountImport',
     computed: {
@@ -138,31 +139,15 @@ export default {
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
-                total: 100
+                total: 0
             },
-            addTags: {
-                labelName: '',
-                labelType: '1'
-            },
-            multipleSelection: [],
-            tableLabel: [
-                { label: '客户名称', prop: 'customerName' },
-                { label: 'MIS编码', prop: 'misCode' },
-                { label: '年度最高额（元）', prop: 'yearlyQuota', formatters: 'money' },
-                { label: '月度滚动额（元）', prop: 'monthlyQuota', formatters: 'money' },
-                { label: '应收账款扣减额（元）', prop: 'accountReceivableQuota', formatters: 'money' },
-                { label: '初始实时用信额（元）', prop: 'dailyQuota', formatters: 'money' },
-                { label: '实际实时用信额（元）', prop: 'realDailyQuota', formatters: 'money' },
-                { label: '本月利率(年化）', prop: 'dailyInterestRate' },
-                { label: '创建日期', prop: 'importDate' },
-                { label: '当前状态', prop: 'statusId' }
-            ],
-            statusIdType: [
-                { value: '', label: '请选择' },
-                { value: '001', label: '待生效' },
-                { value: '000', label: '生效' },
-                { value: '002', label: '失效' }
-            ],
+            tableLabel: tableLabelAmountImport,
+            // statusIdType: [
+            //     { value: '', label: '请选择' },
+            //     { value: '001', label: '待生效' },
+            //     { value: '000', label: '生效' },
+            //     { value: '002', label: '失效' }
+            // ],
             resultDialogVisible: false,
             content: '',
             status: '',
