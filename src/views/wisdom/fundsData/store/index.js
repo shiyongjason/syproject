@@ -43,8 +43,14 @@ const getters = {
 }
 
 const mutations = {
+    // table格式化
     cleartableData (state) {
         state.tableData = []
+        state.pagination = {
+            pageNumber: 1,
+            pageSize: 10,
+            total: 0
+        }
     },
     [types.PLAT_FORMDATA] (state, payload) {
         state.platformData = payload
@@ -58,12 +64,12 @@ const mutations = {
         state.tableData = payload.records || []
     },
     [types.REPAYMENT_SCHEDULE] (state, payload) {
-        state.pagination = {
-            pageNumber: payload.current || 1,
-            pageSize: payload.size || 10,
-            total: payload.total || 0
-        }
-        state.tableData = payload.records || []
+        // state.pagination = {
+        //     pageNumber: payload.current || 1,
+        //     pageSize: payload.size || 10,
+        //     total: payload.total || 0
+        // }
+        // state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
         payload.unshift({ organizationCode: '', organizationName: '请选择分部' })
