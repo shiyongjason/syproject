@@ -55,7 +55,7 @@ export default {
         },
         readUrl (val) {
             this.uploadImg.imageUrl = val.imageUrl
-        },
+        }
     }
 }
 </script>
