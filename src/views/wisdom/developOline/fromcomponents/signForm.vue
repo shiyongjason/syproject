@@ -89,10 +89,10 @@
             <el-row>
                 <el-form-item label="新法人身份证照片：" prop="">
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="fontimageUrl" ref="uploadImg" @back-event="fontreadUrl" />
                     </el-col>
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="backimageUrl" ref="uploadImg" @back-event="backreadUrl" />
                     </el-col>
                     <el-col :span="7">
                         上传正反面，尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG
@@ -118,12 +118,12 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="签约规模/万：" prop="signScale">
-                        <el-input placeholder="请输入签约规模/万" v-model="signForm.signScale" maxlength='9' class="deveInput"></el-input>
+                        <el-input placeholder="请输入签约规模/万" v-model="signForm.signScale" v-isNum='signForm.signScale' maxlength='9' class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="老公司规模/万：" prop="oldCompanyScale">
-                        <el-input placeholder="请输入老公司规模/万" v-model="signForm.oldCompanyScale" maxlength='9' class="deveInput"></el-input>
+                        <el-input placeholder="请输入老公司规模/万" v-model="signForm.oldCompanyScale" v-isNum='signForm.oldCompanyScale' maxlength='9' class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -139,14 +139,16 @@
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="利润增长(%)：" prop="profitGrowth">
-                        <el-input placeholder="请输入利润增长" v-model="signForm.profitGrowth" class="deveInput"></el-input>
+                        <el-input placeholder="请输入利润增长" v-model="signForm.profitGrowth" v-isNum="signForm.profitGrowth"  maxlength="5"  class="deveInput">
+                              <template slot="append">%</template>
+                        </el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="我方注册资金/万：" prop="ourRegisteredFund">
-                        <el-input placeholder="请输入我方注册资金" v-model="signForm.ourRegisteredFund" class="deveInput"></el-input>
+                        <el-input placeholder="请输入我方注册资金"  v-model="signForm.ourRegisteredFund" v-isNum='signForm.ourRegisteredFund' maxlength="9" class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
@@ -177,7 +179,6 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
-import { FORMAT_LIST } from '../../store/const'
 export default {
     props: {
         signForm: {
@@ -187,8 +188,8 @@ export default {
     },
     data () {
         return {
-            companyData: [],
-            formatList: FORMAT_LIST,
+            fontimageUrl: '',
+            backimageUrl: '',
             baseRules: {
                 signerName: [
                     { required: true, message: '请输入签约人姓名', trigger: 'blur' }
@@ -248,20 +249,6 @@ export default {
             nestDdata: 'nestDdata',
             dictInfoType: 'developmodule/dictInfoType'
         }),
-        cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.signForm.provinceCode)
-            if (province.length > 0) {
-                return province[0].cities
-            }
-            return []
-        },
-        areaList () {
-            const city = this.cityList.filter(item => item.cityId == this.signForm.cityCode)
-            if (city.length > 0) {
-                return city[0].countries
-            }
-            return []
-        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -273,10 +260,7 @@ export default {
         }
     },
     mounted () {
-        this.onFinddevlist()
-        this.onFindNest()
-        this.onFindCompanyType()
-        this.onFindSystemType()
+        this.signForm.companyCode = this.userInfo.oldDeptCode
     },
     methods: {
         ...mapActions({
@@ -296,22 +280,17 @@ export default {
             await this.findCompanyType({ 'dictCateName': 'main_system' })
             this.mainSystemList = this.dictInfoType.data
         },
-        async onFindNest () {
-            await this.findNest()
-            this.proviceList = this.nestDdata
+        fontreadUrl (val) {
+            this.signForm.newCorporateIdcardFrontUrl = val.imageUrl
         },
-        readUrl (val) {
-            this.uploadImg.imageUrl = val.imageUrl
-        },
-        onChangeNest (val) {
-
+        backreadUrl (val) {
+            this.signForm.newCorporateIdcardBackUrl = val.imageUrl
         },
         onSaveSignFrom () {
             this.$refs.signForm.validate((valid) => {
                 if (valid) {
-
+                    this.$emit('backnext')
                 }
-                // this.$emit('backnext')
             })
         }
     }

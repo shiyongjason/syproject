@@ -73,10 +73,10 @@
                 <el-input v-model.trim="baseForm.newBusinessLicenseNo" placeholder="请输入营业执照号" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="新营业执照：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                <SingleUpload :upload="uploadInfo" :imageUrl="oneimageUrl" ref="uploadImg" @back-event="onereadUrl" />
             </el-form-item>
             <el-form-item label="新开户许可证：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                <SingleUpload :upload="uploadInfo" :imageUrl="twoimageUrl" ref="uploadImg" @back-event="tworeadUrl" />
             </el-form-item>
             <el-form-item label="公司类型：" prop="companyArr">
                 <el-checkbox-group v-model.trim="baseForm.companyArr">
@@ -114,7 +114,7 @@
                 <el-col class="line" :span="1">-</el-col>
                 <el-col :span="4">
                     <el-form-item prop="controllerId">
-                        <el-input v-model.trim="baseForm.controllerId" placeholder="身份证号" maxlength="11"></el-input>
+                        <el-input v-model.trim="baseForm.controllerId" placeholder="身份证号" maxlength="18"></el-input>
                     </el-form-item>
                 </el-col>
             </el-form-item>
@@ -132,6 +132,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
+import { getCheckField } from '../../api/index'
 export default {
     props: {
         baseForm: {
@@ -185,7 +186,7 @@ export default {
                     { required: true, message: '请输入实际控制人姓名', trigger: 'blur' }
                 ],
                 mainFormat: [
-                    { required: true, message: '请选择主要业态', trigger: 'click' }
+                    { required: true, message: '请选择主要业态', trigger: 'change' }
                 ],
                 controllerId: [
                     { required: true, message: '请输入身份证', trigger: 'blur' },
@@ -204,7 +205,8 @@ export default {
             companyTypeList: [],
             mainSystemList: [],
             radio: '',
-            imageUrl: ''
+            oneimageUrl: '',
+            twoimageUrl: ''
         }
     },
     computed: {
@@ -268,18 +270,27 @@ export default {
             await this.findNest()
             this.proviceList = this.nestDdata
         },
-        readUrl (val) {
-            this.uploadImg.imageUrl = val.imageUrl
+        onereadUrl (val) {
+            this.baseForm.newBusinessLicenseUrl = val.imageUrl
+        },
+        tworeadUrl (val) {
+            this.baseForm.newAccountOpeningPermit = val.imageUrl
         },
         onChangeNest (val) {
-
+            if (val == 1) {
+                this.baseForm.cityCode = ''
+                this.baseForm.areaCode = ''
+            } else {
+                this.baseForm.areaCode = ''
+            }
         },
         onSaveBaseFrom () {
-            this.$refs.baseForm.validate((valid) => {
+            this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
-
+                    await getCheckField({ 'misCode': this.baseForm.misCode,
+                        'companyShortName': this.baseForm.companyShortName })
+                    this.$emit('backnext')
                 }
-                this.$emit('backnext')
             })
         }
     }
