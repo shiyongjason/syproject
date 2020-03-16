@@ -1,18 +1,35 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont ">
-            <el-steps :active="active" simple>
+            <el-steps :active="active" simple v-if="type=='add'">
                 <el-step title="基本信息" icon="el-icon-edit"></el-step>
                 <el-step title="其他信息" icon="el-icon-edit"></el-step>
                 <el-step title="签约信息" icon="el-icon-edit"></el-step>
                 <el-step title="账户信息" icon="el-icon-edit"></el-step>
             </el-steps>
+            <el-tabs type="card" v-model="activeName" @tab-click="handleClick" v-if="type=='edit'">
+                <el-tab-pane name="1">
+                    <span slot="label"><i class="el-icon-edit"></i> 基本信息 </span>
+                </el-tab-pane>
+                <el-tab-pane name="2">
+                    <span slot="label"><i class="el-icon-edit"></i> 其他信息 </span>
+                </el-tab-pane>
+                <el-tab-pane name="3">
+                    <span slot="label"><i class="el-icon-edit"></i> 签约信息 </span>
+                </el-tab-pane>
+                <el-tab-pane name="4">
+                    <span slot="label"><i class="el-icon-edit"></i> 账户信息 </span>
+                </el-tab-pane>
+            </el-tabs>
             <baseForm v-if="active==1" @backnext=nextActive :baseForm=formData ref="baseform"></baseForm>
             <otherForm v-if="active==2" @backnext=nextActive :otherForm=formData.developOtherInfoCreateForm ref="otherform"></otherForm>
             <signForm v-if="active==3" @backnext=nextActive :signForm=formData.developSignInfoCreateForm ref="signform"></signForm>
-            <accountForm v-if="active==4"  @backadd=onAddDevelopinof :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
-            <el-button style="margin-top: 12px;" @click="next" v-if="active!=4">下一步</el-button>
-            <el-button style="margin-top: 12px;" @click="next" v-if="active==4">保存</el-button>
+            <accountForm v-if="active==4" @backadd=onAddDevelopinof :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
+            <div v-if="type=='add'">
+                <el-button style="margin-top: 12px;" @click="next" v-if="active!=4">下一步</el-button>
+                <el-button style="margin-top: 12px;" @click="next" v-if="active==4" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -21,7 +38,7 @@ import baseForm from './fromcomponents/baseForm'
 import otherForm from './fromcomponents/otherForm'
 import signForm from './fromcomponents/signForm'
 import accountForm from './fromcomponents/accountForm'
-import { addDevelopinfo } from '../api/index'
+import { addDevelopinfo, getDevelopbasic } from '../api/index'
 import { mapActions } from 'vuex'
 export default {
     name: 'addPlatform',
@@ -29,6 +46,8 @@ export default {
         return {
             userDate: JSON.parse(sessionStorage.getItem('user_Data')),
             active: 1,
+            activeName: '1',
+            type: this.$route.query.type,
             formData: {
                 // 基本表单数据参数
                 systemArr: [],
@@ -135,10 +154,19 @@ export default {
         signForm,
         accountForm
     },
+    mounted () {
+        if (this.type == 'edit') {
+            this.onGetdevelopbasicinfo()
+        }
+    },
     methods: {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        handleClick (tab, event) {
+            this.active = parseInt(tab.name)
+            console.log(this.active)
+        },
         next () {
             if (this.active == 1) {
                 this.$refs.baseform.onSaveBaseFrom()
@@ -164,14 +192,27 @@ export default {
             this.formData.developSignInfoCreateForm.createUid = this.userDate.uid
             this.formData.developAccountInfoCreateForm.createUser = this.userDate.name
             this.formData.developAccountInfoCreateForm.createUid = this.userDate.uid
-
-            console.log(this.formData)
             await addDevelopinfo(this.formData)
             this.$message.success('平台公司添加成功！')
             this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/wisdom/developlist')
+        },
+        async onGetdevelopbasicinfo () {
+            const { data } = await getDevelopbasic({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            this.formData = { ...data.data }
+            this.formData.companyArr = this.formData.companyType.split(',')
+            this.formData.systemArr = this.formData.mainSystem.split(',')
+            console.log(this.formData)
         }
     }
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .el-tabs--border-card > .el-tabs__content {
+    padding: 0;
+}
+/deep/.el-tabs--border-card > .el-tabs__header .el-tabs__item {
+    width: 25%;
+    text-align: center;
+}
 </style>

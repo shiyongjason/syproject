@@ -122,11 +122,12 @@
             </el-form-item>
             <el-form-item label="是否测试机构：">
                 <el-radio-group v-model.trim="baseForm.isTest">
-                    <el-radio label='1'>是</el-radio>
-                    <el-radio label='0'>否</el-radio>
+                    <el-radio :label=1>是</el-radio>
+                    <el-radio :label=0>否</el-radio>
                 </el-radio-group>
             </el-form-item>
         </el-form>
+          <el-button style="margin-top: 12px;" @click="onSavebasic" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
@@ -134,7 +135,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
-import { getCheckField } from '../../api/index'
+import { getCheckField, updateDevelopbasic } from '../../api/index'
 export default {
     props: {
         baseForm: {
@@ -144,6 +145,8 @@ export default {
     },
     data () {
         return {
+            loading: false,
+            type: this.$route.query.type,
             companyData: [],
             formatList: FORMAT_LIST,
             baseRules: {
@@ -254,7 +257,8 @@ export default {
         ...mapActions({
             getDevdeplist: 'getDevdeplist',
             findNest: 'findNest',
-            findCompanyType: 'developmodule/findCompanyType'
+            findCompanyType: 'developmodule/findCompanyType',
+            setNewTags: 'setNewTags'
         }),
         async onFinddevlist () {
             await this.getDevdeplist({ organizationType: 1 })
@@ -294,11 +298,35 @@ export default {
             this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
             this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
-                    await getCheckField({ 'misCode': this.baseForm.misCode,
-                        'companyShortName': this.baseForm.companyShortName })
-                    this.$emit('backnext')
+                    try {
+                        await getCheckField({ 'misCode': this.baseForm.misCode,
+                            'companyShortName': this.baseForm.companyShortName })
+                        this.$emit('backnext')
+                    } catch (error) {
+
+                    }
                 }
                 // this.$emit('backnext')
+            })
+        },
+        onSavebasic () {
+            this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
+            this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
+            this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
+            this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
+            this.loading = true
+            this.$refs.baseForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateDevelopbasic(this.baseForm)
+                        this.$message.success('平台公司更新成功！')
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/wisdom/developlist')
+                    } catch (error) {
+                        this.loading = false
+                    }
+                }
             })
         }
     }
