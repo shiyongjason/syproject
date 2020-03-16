@@ -64,10 +64,10 @@
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isMultiple='isMultiple && isTab' @update:multiSelection='multiSelection'>
             </basicTable>
         </div>
-        <el-dialog title="提示" :visible.sync="resultDialogVisible" :close-on-click-modal='false' width="30%" center>
-            <span>{{content}}</span>
+        <el-dialog title="提示" :visible.sync="dialogMeg.resultDialogVisible" :close-on-click-modal='false' width="30%" center>
+            <span>{{dialogMeg.content}}</span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="resultDialogVisible = false">取 消</el-button>
+                <el-button @click="dialogMeg.resultDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onSure">确 定</el-button>
             </span>
         </el-dialog>
@@ -75,8 +75,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getRateList, rateStatus } from './api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { rateStatus } from './api/index'
 import { interfaceUrl } from '@/api/config'
 import { JINYUN_AMOUNT_IMPORT_IMPORT, JINYUN_AMOUNT_IMPORT_RE_CHECK } from '@/utils/auth_const'
 import { tableLabelAmountImport } from './const.js'
@@ -84,7 +84,11 @@ export default {
     name: 'amountImport',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelAmountImport',
         }),
         pickerOptionsStart () {
             return {
@@ -135,12 +139,6 @@ export default {
                 statusId: '001'
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
             tableLabel: tableLabelAmountImport,
             // statusIdType: [
             //     { value: '', label: '请选择' },
@@ -148,9 +146,11 @@ export default {
             //     { value: '000', label: '生效' },
             //     { value: '002', label: '失效' }
             // ],
-            resultDialogVisible: false,
-            content: '',
-            status: '',
+            dialogMeg: {
+                resultDialogVisible: false,
+                content: '',
+                status: ''
+            },
             // 控制权限
             isTab: true,
             multiSelect: []
@@ -160,6 +160,9 @@ export default {
         this.onSearch()
     },
     methods: {
+        ...mapActions({
+            getRateList: 'jinyunplatform/getRateList'
+        }),
         tracking (event) {
             this.$store.dispatch('tracking', {
                 type: 9,
@@ -191,36 +194,7 @@ export default {
             })
         },
         async onQuery () {
-            const { data } = await getRateList(this.queryParams)
-            this.tableData = data.records
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
-            this.tableData.map(i => {
-                if (i.statusId == '000') i.statusId = '生效'
-                if (i.statusId == '001') i.statusId = '待生效'
-                if (i.statusId == '002') i.statusId = '失效'
-                if (i.dailyInterestRate != null) {
-                    i.dailyInterestRate = i.dailyInterestRate.toFixed(4) + '%'
-                }
-                if (i.accountReceivableQuota != null) {
-                    i.accountReceivableQuota = i.accountReceivableQuota.toFixed(2)
-                }
-                if (i.dailyQuota != null) {
-                    i.dailyQuota = i.dailyQuota.toFixed(2)
-                }
-                if (i.realDailyQuota != null) {
-                    i.realDailyQuota = i.realDailyQuota.toFixed(2)
-                }
-                if (i.monthlyQuota != null) {
-                    i.monthlyQuota = i.monthlyQuota.toFixed(2)
-                }
-                if (i.yearlyQuota != null) {
-                    i.yearlyQuota = i.yearlyQuota.toFixed(2)
-                }
-            })
+            this.getRateList(this.queryParams)
         },
         onSearch () {
             this.tracking(2)
@@ -233,7 +207,6 @@ export default {
             this.$set(this.queryParams, 'createTime', '')
             this.onSearch()
         },
-        async createTags () { },
         toDo (i) {
             if (this.multiSelect.length == 0) {
                 this.$alert('请勾选需要审批的条目！', '勾选提示', {
@@ -242,21 +215,21 @@ export default {
                 return
             }
             if (i == 2) {
-                this.content = '是否确认拒绝本次导入操作？'
+                this.dialogMeg.content = '是否确认拒绝本次导入操作？'
             } else {
-                this.content = '是否确认同意本次导入操作？'
+                this.dialogMeg.content = '是否确认同意本次导入操作？'
             }
-            this.status = i
-            this.resultDialogVisible = true
+            this.dialogMeg.status = i
+            this.dialogMeg.resultDialogVisible = true
         },
         async onSure () {
             const params = {
                 reqCustomerDailyImports: this.multiSelect,
-                status: this.status
+                status: this.dialogMeg.status
             }
             this.tracking(8)
             await rateStatus(params)
-            this.resultDialogVisible = false
+            this.dialogMeg.resultDialogVisible = false
             this.onSearch()
         },
         onCurrentChange (val) {

@@ -16,7 +16,7 @@
                     <div class="query-col-title">产品名称：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.productName" clearable placeholder="请选择产品名称">
-                            <el-option v-for="item in options" :key="item" :label="item" :value="item">
+                            <el-option v-for="item in productsArr" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </div>
@@ -52,14 +52,19 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getProcessesList, getProductsArr } from './api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { getProductsArr } from './api/index'
 import { tableLabelProcessManage } from './const'
 export default {
     name: 'processManage',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination,
+            productsArr: state => state.jinyunplatform.productsArr
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelProcessManage',
         })
     },
     data () {
@@ -71,13 +76,6 @@ export default {
                 customerName: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
-            options: [],
             flowTypes: [{
                 label: '预授信',
                 value: 'pre_credit'
@@ -91,20 +89,16 @@ export default {
         }
     },
     async mounted () {
-        const { data } = await getProductsArr()
-        this.options = data
+        this.getProductsArr()
         this.onQuery()
     },
     methods: {
+        ...mapActions({
+            getProcessesList: 'jinyunplatform/getProcessesList',
+            getProductsArr: 'jinyunplatform/getProductsArr',
+        }),
         async onQuery () {
-            const { data } = await getProcessesList(this.queryParams)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getProcessesList(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
