@@ -194,3 +194,8 @@ export const total = (params) => {
 export const getCompanyType = (params) => {
     return axios.get(ossUrl + 'api/httpH5/4710', { params })
 }
+
+// 发展在线 基础信息校验
+export const getCheckField = (params) => {
+    return axios.post(ossUrl + 'develop/developbasicinfo/checkField', params)
+}

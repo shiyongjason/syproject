@@ -7,10 +7,10 @@
                 <el-step title="签约信息" icon="el-icon-edit"></el-step>
                 <el-step title="账户信息" icon="el-icon-edit"></el-step>
             </el-steps>
-            <baseForm v-if="active==1" @backnext = nextActive :baseForm=formData ref="baseform"></baseForm>
-            <otherForm v-if="active==2" @backnext = nextActive :otherForm=formData.developOtherInfoCreateForm ref="otherform"></otherForm>
-            <signForm v-if="active==3" @backnext = nextActive :signForm=formData.developSignInfoCreateForm ref="signform"></signForm>
-
+            <baseForm v-if="active==1" @backnext=nextActive :baseForm=formData ref="baseform"></baseForm>
+            <otherForm v-if="active==2" @backnext=nextActive :otherForm=formData.developOtherInfoCreateForm ref="otherform"></otherForm>
+            <signForm v-if="active==3" @backnext=nextActive :signForm=formData.developSignInfoCreateForm ref="signform"></signForm>
+            <accountForm v-if="active==4" @backnext=nextActive :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
             <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
         </div>
     </div>
@@ -19,7 +19,9 @@
 import baseForm from './fromcomponents/baseForm'
 import otherForm from './fromcomponents/otherForm'
 import signForm from './fromcomponents/signForm'
+import accountForm from './fromcomponents/accountForm'
 export default {
+    name: 'addPlatform',
     data () {
         return {
             active: 1,
@@ -126,18 +128,23 @@ export default {
     components: {
         baseForm,
         otherForm,
-        signForm
+        signForm,
+        accountForm
     },
     methods: {
         next () {
-            console.log(this.active)
             if (this.active == 1) {
-                console.log(this.$refs.baseform.onSaveBaseFrom())
+                this.$refs.baseform.onSaveBaseFrom()
             } else if (this.active == 2) {
                 this.$refs.otherform.onSaveotherFrom()
             } else if (this.active == 3) {
                 this.$refs.signform.onSaveSignFrom()
+            } else if (this.active == 4) {
+                this.$refs.accountform.onSaveaccountFrom()
             }
+            // 特殊处理 %
+            this.formData.developSignInfoCreateForm.profitGrowth = this.formData.developSignInfoCreateForm.profitGrowth ? this.formData.developSignInfoCreateForm.profitGrowth + '%' : 0
+            console.log(this.formData)
         },
         nextActive () {
             this.active++

@@ -2,36 +2,33 @@
     <div>
         <el-form :model="otherForm" :rules="baseRules" ref="otherForm" label-width="150px" class="demo-baseForm">
             <el-form-item label="员工数：" prop="staffNum">
-                <el-input v-model.trim="otherForm.staffNum" placeholder="请输入员工数" v-isPositiveInt="otherForm.staffNum" maxlength="10" class=""></el-input>
+                <el-input v-model.trim="otherForm.staffNum" placeholder="请输入员工数" v-isNum:0="otherForm.staffNum" maxlength="10" class=""></el-input>
             </el-form-item>
             <el-form-item label="销售员工数：" prop="salesmanNum">
-                <el-input v-model.trim="otherForm.salesmanNum" v-isPositiveInt="otherForm.salesmanNum" placeholder="请输入销售员工数" maxlength="10" class=""></el-input>
+                <el-input v-model.trim="otherForm.salesmanNum" v-isNum:0="otherForm.salesmanNum" placeholder="请输入销售员工数" maxlength="10" class=""></el-input>
             </el-form-item>
             <el-form-item label="施工队数：" prop="constructionTeamNum">
-                <el-input v-model.trim="otherForm.constructionTeamNum" v-isPositiveInt="otherForm.constructionTeamNum" placeholder="请输入施工队数" maxlength="10" class=""></el-input>
+                <el-input v-model.trim="otherForm.constructionTeamNum" v-isNum:0="otherForm.constructionTeamNum" placeholder="请输入施工队数" maxlength="10" class=""></el-input>
             </el-form-item>
             <el-form-item label="监理数：" prop="supervisorNum">
-                <el-input v-model.trim="otherForm.supervisorNum" v-isPositiveInt="otherForm.supervisorNum" placeholder="请输入监理数" maxlength="10" class=""></el-input>
+                <el-input v-model.trim="otherForm.supervisorNum" v-isNum:0="otherForm.supervisorNum" placeholder="请输入监理数" maxlength="10" class=""></el-input>
             </el-form-item>
             <el-form-item label="门店数：" prop="storeNum">
-                <el-input v-model.trim="otherForm.storeNum" v-isPositiveInt="otherForm.storeNum" placeholder="请输入门店数" maxlength="10" class=""></el-input>
+                <el-input v-model.trim="otherForm.storeNum" v-isNum:0="otherForm.storeNum" placeholder="请输入门店数" maxlength="10" class=""></el-input>
             </el-form-item>
             <el-form-item label="门店类型：" prop="storeType">
                 <el-input v-model.trim="otherForm.storeType"  placeholder="请输入门店类型" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
-            <el-form-item label="监理数：" prop="supervisorNum">
-                <el-input v-model.trim="otherForm.supervisorNum" v-isPositiveInt="otherForm.supervisorNum" placeholder="请输入监理数" maxlength="10" class=""></el-input>
-            </el-form-item>
             <el-form-item label="互联网工具需求：" prop="isInternetTools">
                 <el-radio-group v-model.trim="otherForm.isInternetTools">
-                    <el-radio label='1'>是</el-radio>
-                    <el-radio label='0'>否</el-radio>
+                    <el-radio :label=1>是</el-radio>
+                    <el-radio :label=0>否</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="门店改造需求：" prop="isStoreRenovation">
                 <el-radio-group v-model.trim="otherForm.isStoreRenovation">
-                    <el-radio label='1'>是</el-radio>
-                    <el-radio label='0'>否</el-radio>
+                    <el-radio :label=1>是</el-radio>
+                    <el-radio :label=0>否</el-radio>
                 </el-radio-group>
             </el-form-item>
         </el-form>
@@ -94,6 +91,7 @@ export default {
         })
     },
     mounted () {
+        this.otherForm.companyCode = this.userInfo.oldDeptCode
     },
     methods: {
         ...mapActions({

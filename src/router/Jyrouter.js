@@ -63,7 +63,7 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/jinyunplatform/faceRecognition')
-        },
+        }
         // 后台改动太大，暂时不做，或许下一期做或者下下期暂定
         // {
         //     path: 'businessCustomer',
