@@ -1,7 +1,5 @@
 import axios from 'axios'
-import {
-    ossUrl
-} from '@/api/config'
+import { ossUrl } from '@/api/config'
 
 // 公司概览 公司统计信息
 export const getStatistics = (params) => {
@@ -194,6 +192,23 @@ export const getCompanyType = (params) => {
     return axios.get(ossUrl + 'api/httpH5/4710', { params })
 }
 
+// 平台公司数据
+export const developBasicInfoList = (params) => {
+    return axios.post('develop/developbasicinfo/queryPageList', params)
+}
+
+// 平台公司数据弹窗
+export const developSignscaleChange = (params) => {
+    return axios.post('develop/developsignscalechange/queryPageList', params)
+}
+// 平台公司数据弹窗
+export const developregisteredfundchange = (params) => {
+    return axios.post('develop/developregisteredfundchange/queryPageList', params)
+}
+// 变更签约规模
+export const updateDevelopsginInfo = (params) => {
+    return axios.post('develop/developsgininfo/update', params)
+}
 // 发展在线 基础信息校验
 export const getCheckField = (params) => {
     return axios.post('develop/developbasicinfo/checkField', params)
