@@ -209,3 +209,37 @@ export const getDevelopbasic = (params) => {
 export const updateDevelopbasic = (params) => {
     return axios.post('develop/developbasicinfo/update', params)
 }
+
+// 发展在线 其他信息
+export const getDevelopother = (params) => {
+    return axios.get('develop/developotherinfo/query', { params })
+}
+export const updateDevelopother = (params) => {
+    return axios.post('develop/developotherinfo/update', params)
+}
+// 发展在线 签约信息
+export const getDevelopsign = (params) => {
+    return axios.get('develop/developsgininfo/query', { params })
+}
+export const updateDevelopsign = (params) => {
+    return axios.post('develop/developsgininfo/update', params)
+}
+// 发展在线 账户信息
+export const getDevelopaccount = (params) => {
+    return axios.get('develop/developaccountinfo/query', { params })
+}
+export const updateDevelopaccount = (params) => {
+    return axios.post('develop/developaccountinfo/update', params)
+}
+// 天眼查数据
+export const getTycHolder = (params) => {
+    return axios.get(`develop/developbasicinfo/getTycHolder/${params}`)
+}
+
+export const getTycBasicInfo = (params) => {
+    return axios.get(`develop/developbasicinfo/getTycBasicInfo/${params}`)
+}
+
+export const getTycMainStaff = (params) => {
+    return axios.get(`develop/developbasicinfo/getTycMainStaff/${params}`)
+}

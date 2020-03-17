@@ -1,14 +1,13 @@
 <template>
-    <div>
+    <div v-if="accountForm">
         <el-form :model="accountForm" :rules="baseRules" ref="accountForm" label-width="150px" class="demo-baseForm">
-
             <el-form-item label="账户类型：">
                 <el-radio-group v-model.trim="accountForm.accountType">
                     <el-radio :label=1>对公</el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="银行账户名称：">
-                <el-input v-model.trim="accountForm.accountBank" placeholder="请输入银行账户名称" maxlength="64" class="deveInput"></el-input>
+                <el-input v-model.trim="accountForm.accountBank" :disabled=true  placeholder="请输入银行账户名称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="开户行：" >
                 <el-input v-model.trim="accountForm.openBank" placeholder="请输入开户行" maxlength="64" class="deveInput"></el-input>
@@ -48,11 +47,13 @@
                 </el-col>
             </el-form-item>
         </el-form>
+          <el-button style="margin-top: 12px;" @click="onSaveaccount" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { IsInteger } from '@/utils/rules'
+import { updateDevelopaccount } from '../../api'
 export default {
     props: {
         accountForm: {
@@ -62,6 +63,8 @@ export default {
     },
     data () {
         return {
+            loading: false,
+            type: this.$route.query.type,
             baseRules: {
                 alipayRate: [
                     { required: true, message: '请输入支付宝费率', trigger: 'blur' }
@@ -97,12 +100,31 @@ export default {
     },
     mounted () {
         // this.accountForm.companyCode = this.userInfo.oldDeptCode
+
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         onSaveaccountFrom () {
             this.$refs.accountForm.validate((valid) => {
                 if (valid) {
                     this.$emit('backadd')
+                }
+            })
+        },
+        onSaveaccount () {
+            this.loading = true
+            this.$refs.accountForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateDevelopaccount(this.accountForm)
+                        this.$message.success('平台公司更新成功！')
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/wisdom/developlist')
+                    } catch (error) {
+                        this.loading = false
+                    }
                 }
             })
         }

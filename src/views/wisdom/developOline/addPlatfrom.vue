@@ -38,7 +38,7 @@ import baseForm from './fromcomponents/baseForm'
 import otherForm from './fromcomponents/otherForm'
 import signForm from './fromcomponents/signForm'
 import accountForm from './fromcomponents/accountForm'
-import { addDevelopinfo, getDevelopbasic } from '../api/index'
+import { addDevelopinfo, getDevelopbasic, getDevelopother, getDevelopsign, getDevelopaccount } from '../api/index'
 import { mapActions } from 'vuex'
 export default {
     name: 'addPlatform',
@@ -48,6 +48,7 @@ export default {
             active: 1,
             activeName: '1',
             type: this.$route.query.type,
+            loading: false,
             formData: {
                 // 基本表单数据参数
                 systemArr: [],
@@ -76,7 +77,7 @@ export default {
                 controllerId: '', // 实际控制人身份证
                 businessScope: '', // 经营范围
                 regLocation: '',
-                isTest: '0',
+                isTest: 0,
                 newAccountOpeningPermit: '', // 新开户许可证
                 newBusinessLicenseNo: '', // 新营业执照号
                 newBusinessLicenseUrl: '', // 新营业执照图片地址
@@ -164,8 +165,14 @@ export default {
             setNewTags: 'setNewTags'
         }),
         handleClick (tab, event) {
+            if (tab.name == '1') {
+                this.onGetdevelopbasicinfo()
+            }
+            if (tab.name == '2') this.onGetdevelopotherinfo()
+
+            if (tab.name == '3') this.onGetdevelopsigninfo()
+            if (tab.name == '4') this.onGetdevelopaccountinfo()
             this.active = parseInt(tab.name)
-            console.log(this.active)
         },
         next () {
             if (this.active == 1) {
@@ -200,9 +207,23 @@ export default {
         async onGetdevelopbasicinfo () {
             const { data } = await getDevelopbasic({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
             this.formData = { ...data.data }
-            this.formData.companyArr = this.formData.companyType.split(',')
-            this.formData.systemArr = this.formData.mainSystem.split(',')
-            console.log(this.formData)
+            const companyArr = this.formData.companyType.split(',')
+            const systemArr = this.formData.mainSystem.split(',')
+            this.$set(this.formData, 'companyArr', companyArr)
+            this.$set(this.formData, 'systemArr', systemArr)
+        },
+        async onGetdevelopotherinfo () {
+            const { data } = await getDevelopother({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            this.$set(this.formData, 'developOtherInfoCreateForm', { ...data.data })
+        },
+        async onGetdevelopsigninfo () {
+            const { data } = await getDevelopsign({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            data.data.profitGrowth = data.data.profitGrowth * 100
+            this.$set(this.formData, 'developSignInfoCreateForm', { ...data.data })
+        },
+        async onGetdevelopaccountinfo () {
+            const { data } = await getDevelopaccount({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            this.$set(this.formData, 'developAccountInfoCreateForm', { ...data.data })
         }
     }
 }

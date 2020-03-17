@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="otherForm">
         <el-form :model="otherForm" :rules="baseRules" ref="otherForm" label-width="150px" class="demo-baseForm">
             <el-form-item label="员工数：" prop="staffNum">
                 <el-input v-model.trim="otherForm.staffNum" placeholder="请输入员工数" v-isNum:0="otherForm.staffNum" maxlength="10" class=""></el-input>
@@ -32,10 +32,12 @@
                 </el-radio-group>
             </el-form-item>
         </el-form>
+       <el-button style="margin-top: 12px;" @click="onSaveother" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
+import { updateDevelopother } from '../../api'
 export default {
     props: {
         otherForm: {
@@ -45,6 +47,8 @@ export default {
     },
     data () {
         return {
+            type: this.$route.query.type,
+            loading: false,
             baseRules: {
                 staffNum: [
                     { required: true, message: '请输入员工数', trigger: 'blur' }
@@ -86,8 +90,6 @@ export default {
             devDepList: state => state.devDepList
         }),
         ...mapGetters({
-            nestDdata: 'nestDdata',
-            dictInfoType: 'developmodule/dictInfoType'
         })
     },
     mounted () {
@@ -95,9 +97,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            getDevdeplist: 'getDevdeplist',
-            findNest: 'findNest',
-            findCompanyType: 'developmodule/findCompanyType'
+            setNewTags: 'setNewTags'
         }),
         async onFinddevlist () {
             await this.getDevdeplist({ organizationType: 1 })
@@ -107,6 +107,21 @@ export default {
             this.$refs.otherForm.validate((valid) => {
                 if (valid) {
                     this.$emit('backnext')
+                }
+            })
+        },
+        onSaveother () {
+            this.loading = true
+            this.$refs.otherForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateDevelopother(this.otherForm)
+                        this.$message.success('平台公司更新成功！')
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/wisdom/developlist')
+                    } catch (error) {
+                        this.loading = false
+                    }
                 }
             })
         }

@@ -21,7 +21,7 @@
                 </el-col>
             </el-form-item>
             <el-form-item label="新公司名称：" prop="companyName">
-                <el-input v-model.trim="baseForm.companyName" placeholder="输入新公司名称" maxlength="64" class="deveInput"></el-input>
+                <el-input v-model.trim="baseForm.companyName" placeholder="输入新公司名称" maxlength="64" class="deveInput" @blur="onBlurinfo"></el-input>
             </el-form-item>
             <el-form-item label="公司简称：" prop="companyShortName">
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
@@ -73,12 +73,12 @@
                 <el-input v-model.trim="baseForm.newBusinessLicenseNo" placeholder="请输入营业执照号" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="新营业执照：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="oneimageUrl" ref="uploadImg" @back-event="onereadUrl" />
+                <SingleUpload :upload="uploadInfo" :imageUrl="baseForm.newBusinessLicenseUrl" ref="uploadImg" @back-event="onereadUrl" />
                 <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="新开户许可证：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="twoimageUrl" ref="uploadImg" @back-event="tworeadUrl" />
-                  <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
+                <SingleUpload :upload="uploadInfo" :imageUrl="baseForm.newAccountOpeningPermit" ref="uploadImg" @back-event="tworeadUrl" />
+                <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="公司类型：" prop="companyArr">
                 <el-checkbox-group v-model="baseForm.companyArr">
@@ -96,7 +96,9 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="经营范围：">
-                <el-input v-model.trim="baseForm.businessScope" placeholder="经营范围" maxlength="64" class="deveInput"></el-input>
+                <!-- <el-input v-model.trim="baseForm.businessScope" placeholder="" maxlength="64" class="deveInput"></el-input> -->
+                <el-input type="textarea" placeholder="请输入经营范围" v-model="baseForm.businessScope" maxlength="255" show-word-limit>
+                </el-input>
             </el-form-item>
             <el-form-item label="主设备品牌：" prop="mainBrand">
                 <el-input v-model.trim="baseForm.mainBrand" placeholder="多个以逗号隔开" maxlength="64" class="deveInput"></el-input>
@@ -127,7 +129,7 @@
                 </el-radio-group>
             </el-form-item>
         </el-form>
-          <el-button style="margin-top: 12px;" @click="onSavebasic" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
+        <el-button style="margin-top: 12px;" @click="onSavebasic" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
@@ -135,7 +137,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
-import { getCheckField, updateDevelopbasic } from '../../api/index'
+import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff } from '../../api/index'
 export default {
     props: {
         baseForm: {
@@ -247,6 +249,9 @@ export default {
             }
         }
     },
+    watch: {
+
+    },
     mounted () {
         this.onFinddevlist()
         this.onFindNest()
@@ -260,6 +265,35 @@ export default {
             findCompanyType: 'developmodule/findCompanyType',
             setNewTags: 'setNewTags'
         }),
+        onBlurinfo () {
+            Promise.all([this.onGetTycHolder(), this.onGetTycBasicInfo(), this.onGetTycMainStaff()])
+        },
+        async onGetTycHolder () {
+            const { data } = await getTycHolder(this.baseForm.companyName)
+            data && data.forEach(function (item) {
+                if (item.type == '1') {
+                    this.$set(this.baseForm.developSignInfoCreateForm, 'corporateShareholders', item.name)
+                } else {
+                    this.$set(this.baseForm.developSignInfoCreateForm, 'naturalPersonShareholders', item.name)
+                }
+            })
+        },
+        async onGetTycBasicInfo () {
+            const { data } = await getTycBasicInfo(this.baseForm.companyName)
+            this.$set(this.baseForm, 'businessScope', data.businessScope)
+            this.$set(this.baseForm, 'regLocation', data.regLocation)
+            this.$set(this.baseForm.developSignInfoCreateForm, 'estiblishTime', data.estiblishTime)
+        },
+        async onGetTycMainStaff () {
+            const { data } = await getTycMainStaff(this.baseForm.companyName)
+            data && data.forEach(function (item) {
+                if (item.typeJoin[0] == '执行董事') {
+                    this.$set(this.baseForm.developSignInfoCreateForm, 'director', item.name)
+                } else if (item.typeJoin[0] == '总经理') {
+                    this.$set(this.baseForm.developSignInfoCreateForm, 'generalManager', item.name)
+                }
+            })
+        },
         async onFinddevlist () {
             await this.getDevdeplist({ organizationType: 1 })
             this.companyData = this.devDepList.data
@@ -302,6 +336,7 @@ export default {
                         await getCheckField({ 'misCode': this.baseForm.misCode,
                             'companyShortName': this.baseForm.companyShortName })
                         this.$emit('backnext')
+                        this.baseForm.developAccountInfoCreateForm.accountBank = this.baseForm.companyName
                     } catch (error) {
 
                     }

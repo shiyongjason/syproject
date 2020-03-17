@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="signForm">
         <el-form :model="signForm" :rules="baseRules" ref="signForm" label-width="150px" class="demo-signForm">
             <el-form-item label="签约人：" required>
                 <el-col :span="5">
@@ -26,7 +26,7 @@
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="签约日期：" prop="signTime">
-                        <el-date-picker placeholder="请选择签约日期" type="date" v-model="signForm.signTime"  value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+                        <el-date-picker placeholder="请选择签约日期" type="date" v-model="signForm.signTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -89,10 +89,10 @@
             <el-row>
                 <el-form-item label="新法人身份证照片：" prop="">
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="fontimageUrl" ref="uploadImg" @back-event="fontreadUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="signForm.newCorporateIdcardFrontUrl" ref="uploadImg" @back-event="fontreadUrl" />
                     </el-col>
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="backimageUrl" ref="uploadImg" @back-event="backreadUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="signForm.newCorporateIdcardBackUrl" ref="uploadImg" @back-event="backreadUrl" />
                     </el-col>
                     <el-col :span="7">
                         上传正反面，尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG
@@ -138,7 +138,6 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
-                    {{signForm}}
                     <el-form-item label="利润增长(%)：" prop="profitGrowth">
                         <el-input placeholder="请输入利润增长" v-model="signForm.profitGrowth" v-isNum="signForm.profitGrowth" maxlength="5" class="deveInput">
                             <template slot="append">%</template>
@@ -164,7 +163,7 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="总注册资金/万：" prop="changeRegisterFund">
-                        <el-input placeholder="请输入总注册资金" v-model="signForm.changeRegisterFund" class="deveInput"></el-input>
+                        <el-input placeholder="请输入总注册资金" v-model="signForm.changeRegisterFund" v-isNum="signForm.changeRegisterFund" class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
@@ -174,11 +173,13 @@
                 </el-col>
             </el-row>
         </el-form>
+        <el-button style="margin-top: 12px;" @click="onSavesign" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
+import { updateDevelopsign } from '../../api'
 import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
     props: {
@@ -189,6 +190,8 @@ export default {
     },
     data () {
         return {
+            type: this.$route.query.type,
+            loading: false,
             fontimageUrl: '',
             backimageUrl: '',
             baseRules: {
@@ -265,9 +268,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            getDevdeplist: 'getDevdeplist',
-            findNest: 'findNest',
-            findCompanyType: 'developmodule/findCompanyType'
+            setNewTags: 'setNewTags'
         }),
         async onFinddevlist () {
             await this.getDevdeplist({ organizationType: 1 })
@@ -293,6 +294,22 @@ export default {
             this.$refs.signForm.validate((valid) => {
                 if (valid) {
                     this.$emit('backnext')
+                }
+            })
+        },
+        onSavesign () {
+            this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
+            this.loading = true
+            this.$refs.signForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateDevelopsign(this.signForm)
+                        this.$message.success('平台公司更新成功！')
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/wisdom/developlist')
+                    } catch (error) {
+                        this.loading = false
+                    }
                 }
             })
         }
