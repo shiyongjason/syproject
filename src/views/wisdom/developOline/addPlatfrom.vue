@@ -49,6 +49,7 @@ export default {
             activeName: '1',
             type: this.$route.query.type,
             loading: false,
+            companyCode: this.$route.query.companyCode,
             formData: {
                 // 基本表单数据参数
                 systemArr: [],
@@ -205,24 +206,26 @@ export default {
             this.$router.push('/wisdom/developlist')
         },
         async onGetdevelopbasicinfo () {
-            const { data } = await getDevelopbasic({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            const { data } = await getDevelopbasic({ companyCode: this.companyCode })
+            const newSignobj = { ...this.formData.developSignInfoCreateForm }
             this.formData = { ...data.data }
             const companyArr = this.formData.companyType.split(',')
             const systemArr = this.formData.mainSystem.split(',')
             this.$set(this.formData, 'companyArr', companyArr)
             this.$set(this.formData, 'systemArr', systemArr)
+            this.$set(this.formData, 'developSignInfoCreateForm', newSignobj)
         },
         async onGetdevelopotherinfo () {
-            const { data } = await getDevelopother({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            const { data } = await getDevelopother({ companyCode: this.companyCode })
             this.$set(this.formData, 'developOtherInfoCreateForm', { ...data.data })
         },
         async onGetdevelopsigninfo () {
-            const { data } = await getDevelopsign({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            const { data } = await getDevelopsign({ companyCode: this.companyCode })
             data.data.profitGrowth = data.data.profitGrowth * 100
             this.$set(this.formData, 'developSignInfoCreateForm', { ...data.data })
         },
         async onGetdevelopaccountinfo () {
-            const { data } = await getDevelopaccount({ companyCode: '7ffffe8f22f0a4ad64c349c4eaf918ba' })
+            const { data } = await getDevelopaccount({ companyCode: this.companyCode })
             this.$set(this.formData, 'developAccountInfoCreateForm', { ...data.data })
         }
     }

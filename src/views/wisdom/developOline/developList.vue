@@ -488,7 +488,7 @@ export default {
             }
         },
         editPlatform (row) {
-            console.log('row: ', row)
+            this.$router.push({ path: '/wisdom/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
         },
         async findProvinceAndCity (code, subsectionCode) {
             let params = {

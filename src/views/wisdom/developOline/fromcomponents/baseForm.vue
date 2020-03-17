@@ -282,7 +282,8 @@ export default {
             const { data } = await getTycBasicInfo(this.baseForm.companyName)
             this.$set(this.baseForm, 'businessScope', data.businessScope)
             this.$set(this.baseForm, 'regLocation', data.regLocation)
-            this.$set(this.baseForm.developSignInfoCreateForm, 'estiblishTime', data.estiblishTime)
+            this.$set(this.baseForm.developSignInfoCreateForm, 'estiblishTime', data.estiblishTime || '')
+            // this.baseForm.developSignInfoCreateForm.estiblishTime = data.estiblishTime || ''
         },
         async onGetTycMainStaff () {
             const { data } = await getTycMainStaff(this.baseForm.companyName)
