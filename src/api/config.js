@@ -14,7 +14,7 @@ var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.
 // var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
-        interfaceUrl = 'https://hbp-gateway-dev.hosjoy.com:4832/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
         ossUrl = 'http://hbp-gateway-dev.hosjoy.com:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'

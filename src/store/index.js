@@ -12,7 +12,7 @@ import membership from './modules/membership'
 import payment from './modules/payment'
 import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
-import cloudmanage from './modules/cloudManage'
+import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
