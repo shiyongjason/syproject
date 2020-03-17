@@ -99,14 +99,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getRecognitions, getRecognitionsDetail, artifVali } from './api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { getRecognitionsDetail, artifVali } from './api/index'
 import { tableLabelFaceRecognition } from './const'
 export default {
     name: 'faceRecognition',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelFaceRecognition'
         })
     },
     data () {
@@ -119,12 +123,6 @@ export default {
                 name: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
             dialogPicture: false,
             formFace: {}
         }
@@ -133,6 +131,9 @@ export default {
         this.onSearch()
     },
     methods: {
+        ...mapActions({
+            getRecognitions: 'jinyunplatform/getRecognitions'
+        }),
         tracking (event) {
             this.$store.dispatch('tracking', {
                 type: 9,
@@ -143,18 +144,7 @@ export default {
             })
         },
         async onQuery () {
-            const { data } = await getRecognitions(this.queryParams)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.tableData.map((item) => {
-                item.idCardVerificationN = item.idCardVerification ? '通过' : '失败'
-                item.faceVerificationN = item.faceVerification ? '通过' : '失败'
-            })
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getRecognitions(this.queryParams)
         },
         onSearch (val) {
             this.tracking(2)

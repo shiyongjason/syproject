@@ -209,3 +209,18 @@ export const developregisteredfundchange = (params) => {
 export const updateDevelopsginInfo = (params) => {
     return axios.post('develop/developsgininfo/update', params)
 }
+// 发展在线 基础信息校验
+export const getCheckField = (params) => {
+    return axios.post('develop/developbasicinfo/checkField', params)
+}
+// 发展在线 新增
+export const addDevelopinfo = (params) => {
+    return axios.post('develop/developbasicinfo/add', params)
+}
+// 发展在线 基本信息
+export const getDevelopbasic = (params) => {
+    return axios.get('develop/developbasicinfo/query', { params })
+}
+export const updateDevelopbasic = (params) => {
+    return axios.post('develop/developbasicinfo/update', params)
+}

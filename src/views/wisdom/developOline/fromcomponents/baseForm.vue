@@ -73,18 +73,20 @@
                 <el-input v-model.trim="baseForm.newBusinessLicenseNo" placeholder="请输入营业执照号" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="新营业执照：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                <SingleUpload :upload="uploadInfo" :imageUrl="oneimageUrl" ref="uploadImg" @back-event="onereadUrl" />
+                <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="新开户许可证：">
-                <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                <SingleUpload :upload="uploadInfo" :imageUrl="twoimageUrl" ref="uploadImg" @back-event="tworeadUrl" />
+                  <p>尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG</p>
             </el-form-item>
             <el-form-item label="公司类型：" prop="companyArr">
-                <el-checkbox-group v-model.trim="baseForm.companyArr">
+                <el-checkbox-group v-model="baseForm.companyArr">
                     <el-checkbox :label="item.dictInfoKey" v-for="(item) in companyTypeList" :key="item.dictInfoKey">{{item.dictInfoValue}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
             <el-form-item label="主营系统：" prop="systemArr">
-                <el-checkbox-group v-model.trim="baseForm.systemArr">
+                <el-checkbox-group v-model="baseForm.systemArr">
                     <el-checkbox :label="item.dictInfoKey" v-for="(item) in mainSystemList" :key="item.dictInfoKey">{{item.dictInfoValue}}</el-checkbox>
                 </el-checkbox-group>
             </el-form-item>
@@ -114,17 +116,18 @@
                 <el-col class="line" :span="1">-</el-col>
                 <el-col :span="4">
                     <el-form-item prop="controllerId">
-                        <el-input v-model.trim="baseForm.controllerId" placeholder="身份证号" maxlength="11"></el-input>
+                        <el-input v-model.trim="baseForm.controllerId" placeholder="身份证号" maxlength="18"></el-input>
                     </el-form-item>
                 </el-col>
             </el-form-item>
             <el-form-item label="是否测试机构：">
                 <el-radio-group v-model.trim="baseForm.isTest">
-                    <el-radio label='1'>是</el-radio>
-                    <el-radio label='0'>否</el-radio>
+                    <el-radio :label=1>是</el-radio>
+                    <el-radio :label=0>否</el-radio>
                 </el-radio-group>
             </el-form-item>
         </el-form>
+          <el-button style="margin-top: 12px;" @click="onSavebasic" v-if="type=='edit'" :loading="loading">{{loading?'提交中':'保存'}}</el-button>
     </div>
 </template>
 <script>
@@ -132,6 +135,7 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
+import { getCheckField, updateDevelopbasic } from '../../api/index'
 export default {
     props: {
         baseForm: {
@@ -141,6 +145,8 @@ export default {
     },
     data () {
         return {
+            loading: false,
+            type: this.$route.query.type,
             companyData: [],
             formatList: FORMAT_LIST,
             baseRules: {
@@ -185,7 +191,7 @@ export default {
                     { required: true, message: '请输入实际控制人姓名', trigger: 'blur' }
                 ],
                 mainFormat: [
-                    { required: true, message: '请选择主要业态', trigger: 'click' }
+                    { required: true, message: '请选择主要业态', trigger: 'change' }
                 ],
                 controllerId: [
                     { required: true, message: '请输入身份证', trigger: 'blur' },
@@ -204,7 +210,8 @@ export default {
             companyTypeList: [],
             mainSystemList: [],
             radio: '',
-            imageUrl: ''
+            oneimageUrl: '',
+            twoimageUrl: ''
         }
     },
     computed: {
@@ -236,7 +243,7 @@ export default {
                 data: {
 
                 },
-                accept: 'image/jpeg, image/jpg, image/png'
+                accept: 'image/jpeg, image/jpg, image/png, image/gif'
             }
         }
     },
@@ -250,7 +257,8 @@ export default {
         ...mapActions({
             getDevdeplist: 'getDevdeplist',
             findNest: 'findNest',
-            findCompanyType: 'developmodule/findCompanyType'
+            findCompanyType: 'developmodule/findCompanyType',
+            setNewTags: 'setNewTags'
         }),
         async onFinddevlist () {
             await this.getDevdeplist({ organizationType: 1 })
@@ -268,18 +276,57 @@ export default {
             await this.findNest()
             this.proviceList = this.nestDdata
         },
-        readUrl (val) {
-            this.uploadImg.imageUrl = val.imageUrl
+        onereadUrl (val) {
+            this.baseForm.newBusinessLicenseUrl = val.imageUrl
+        },
+        tworeadUrl (val) {
+            this.baseForm.newAccountOpeningPermit = val.imageUrl
         },
         onChangeNest (val) {
-
+            if (val == 1) {
+                this.baseForm.cityCode = ''
+                this.baseForm.areaCode = ''
+            } else {
+                this.baseForm.areaCode = ''
+            }
         },
         onSaveBaseFrom () {
-            this.$refs.baseForm.validate((valid) => {
+            this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
+            this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
+            this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
+            this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
+            this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
+                    try {
+                        await getCheckField({ 'misCode': this.baseForm.misCode,
+                            'companyShortName': this.baseForm.companyShortName })
+                        this.$emit('backnext')
+                    } catch (error) {
 
+                    }
                 }
-                this.$emit('backnext')
+                // this.$emit('backnext')
+            })
+        },
+        onSavebasic () {
+            this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
+            this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
+            this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
+            this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
+            this.loading = true
+            this.$refs.baseForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateDevelopbasic(this.baseForm)
+                        this.$message.success('平台公司更新成功！')
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/wisdom/developlist')
+                    } catch (error) {
+                        this.loading = false
+                    }
+                }
             })
         }
     }

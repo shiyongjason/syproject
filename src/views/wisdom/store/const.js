@@ -25,10 +25,10 @@ export const DICTINFO_TYPE = 'DICTINFO_TYPE'
 
 // 主要业态
 export const FORMAT_LIST = [
-    { value: 0, name: '零售' },
-    { value: 1, name: '批发' },
-    { value: 2, name: '工程' },
-    { value: 3, name: '零售>批发、工程' },
-    { value: 4, name: '批发>零售、工程' },
-    { value: 5, name: '工程>批发、零售' }
+    { value: '0', name: '零售' },
+    { value: '1', name: '批发' },
+    { value: '2', name: '工程' },
+    { value: '3', name: '零售>批发、工程' },
+    { value: '4', name: '批发>零售、工程' },
+    { value: '5', name: '工程>批发、零售' }
 ]

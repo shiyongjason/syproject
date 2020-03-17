@@ -63,20 +63,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import apply from './components/accountImport/accountApply'
-import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
+import { updataBankAccount, deleteBankAccount } from './api/index'
 import { tableLabelAccountImport } from './const'
 export default {
     name: 'accountImport',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelAccountImport'
         })
     },
-    components: {
-        apply: apply
-    },
+    components: { apply },
     data () {
         return {
             tableLabel: tableLabelAccountImport,
@@ -87,12 +89,6 @@ export default {
                 createTime: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 100
-            },
             dialogPicture: false,
             formBank: {},
             rules: {
@@ -127,16 +123,11 @@ export default {
                 page_path_name: 'accountImport'
             })
         },
+        ...mapActions({
+            getBankList: 'jinyunplatform/getBankList'
+        }),
         async onQuery () {
-            const { data } = await getBankList(this.queryParams)
-            // console.log(data)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getBankList(this.queryParams)
         },
         onSearch (val) {
             this.tracking(2)

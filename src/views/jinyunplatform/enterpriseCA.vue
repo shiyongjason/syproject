@@ -6,17 +6,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import apply from './components/enterpriseCA/CAapply'
 import attestation from './components/enterpriseCA/CAattestation'
 export default {
     name: 'enterpriseCA',
     components: { apply, attestation },
-    computed: {
-        ...mapState({
-            userInfo: state => state.userInfo
-        })
-    },
     methods: {
         onSearch () {
             this.$refs.attestation.onSearch()

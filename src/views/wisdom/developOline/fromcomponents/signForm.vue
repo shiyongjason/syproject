@@ -26,19 +26,19 @@
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="签约日期：" prop="signTime">
-                        <el-date-picker placeholder="请选择签约日期" v-model="signForm.signTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择签约日期" type="date" v-model="signForm.signTime"  value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="营业执照下发时间：" prop="">
-                        <el-date-picker placeholder="请选择营业执照下发时间" v-model="signForm.licenseLssuedTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择营业执照下发时间" v-model="signForm.licenseLssuedTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="签报时间：" prop="">
-                        <el-date-picker placeholder="请选择签报时间" v-model="signForm.signQuoteTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择签报时间" v-model="signForm.signQuoteTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -50,7 +50,7 @@
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="注册时间：">
-                        <el-date-picker placeholder="请选择注册时间" v-model="signForm.signQuoteTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择注册时间" v-model="signForm.estiblishTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -89,10 +89,10 @@
             <el-row>
                 <el-form-item label="新法人身份证照片：" prop="">
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="fontimageUrl" ref="uploadImg" @back-event="fontreadUrl" />
                     </el-col>
                     <el-col :span="5">
-                        <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
+                        <SingleUpload :upload="uploadInfo" :imageUrl="backimageUrl" ref="uploadImg" @back-event="backreadUrl" />
                     </el-col>
                     <el-col :span="7">
                         上传正反面，尺寸要求:2M以内，支持PNG、GIF、JPEG、JPG
@@ -102,12 +102,12 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="尽调报告时间：" prop="">
-                        <el-date-picker placeholder="请选择尽调报告时间" v-model="signForm.dueDiligenceReportTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择尽调报告时间" v-model="signForm.dueDiligenceReportTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="尽调评审时间：" prop="">
-                        <el-date-picker placeholder="请选择尽调评审时间" v-model="signForm.dueDiligenceInspectionTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择尽调评审时间" v-model="signForm.dueDiligenceInspectionTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -118,19 +118,19 @@
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="签约规模/万：" prop="signScale">
-                        <el-input placeholder="请输入签约规模/万" v-model="signForm.signScale" maxlength='9' class="deveInput"></el-input>
+                        <el-input placeholder="请输入签约规模/万" v-model="signForm.signScale" v-isNum='signForm.signScale' maxlength='9' class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="老公司规模/万：" prop="oldCompanyScale">
-                        <el-input placeholder="请输入老公司规模/万" v-model="signForm.oldCompanyScale" maxlength='9' class="deveInput"></el-input>
+                        <el-input placeholder="请输入老公司规模/万" v-model="signForm.oldCompanyScale" v-isNum='signForm.oldCompanyScale' maxlength='9' class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="销售规模增长(%)：" prop="salesVolume">
-                        <el-select v-model="signForm.salesVolume" placeholder="请选销售规模增长" >
+                        <el-select v-model="signForm.salesVolume" placeholder="请选销售规模增长">
                             <el-option label="请选销售规模增长" value=""></el-option>
                             <el-option label="20%" value="0.2"></el-option>
                             <el-option label="30%" value="0.3"></el-option>
@@ -138,25 +138,28 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
+                    {{signForm}}
                     <el-form-item label="利润增长(%)：" prop="profitGrowth">
-                        <el-input placeholder="请输入利润增长" v-model="signForm.profitGrowth" class="deveInput"></el-input>
+                        <el-input placeholder="请输入利润增长" v-model="signForm.profitGrowth" v-isNum="signForm.profitGrowth" maxlength="5" class="deveInput">
+                            <template slot="append">%</template>
+                        </el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="7">
                     <el-form-item label="我方注册资金/万：" prop="ourRegisteredFund">
-                        <el-input placeholder="请输入我方注册资金" v-model="signForm.ourRegisteredFund" class="deveInput"></el-input>
+                        <el-input placeholder="请输入我方注册资金" v-model="signForm.ourRegisteredFund" v-isNum='signForm.ourRegisteredFund' maxlength="9" class="deveInput"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="打款时间：">
-                        <el-date-picker placeholder="请选择打款时间" v-model="signForm.remittanceTime" style="width: 100%;"></el-date-picker >
+                        <el-date-picker placeholder="请选择打款时间" v-model="signForm.remittanceTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-form-item label="上线时间：">
-                <el-date-picker placeholder="请选择上线时间" v-model="signForm.onlineTime" ></el-date-picker >
+                <el-date-picker placeholder="请选择上线时间" v-model="signForm.onlineTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
             <el-row>
                 <el-col :span="7">
@@ -166,7 +169,7 @@
                 </el-col>
                 <el-col :span="7">
                     <el-form-item label="变更时间：">
-                        <el-date-picker placeholder="请选择变更时间" v-model="signForm.fundChangeTime" style="width: 100%;"></el-date-picker>
+                        <el-date-picker placeholder="请选择变更时间" v-model="signForm.fundChangeTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -177,7 +180,6 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
-import { FORMAT_LIST } from '../../store/const'
 export default {
     props: {
         signForm: {
@@ -187,8 +189,8 @@ export default {
     },
     data () {
         return {
-            companyData: [],
-            formatList: FORMAT_LIST,
+            fontimageUrl: '',
+            backimageUrl: '',
             baseRules: {
                 signerName: [
                     { required: true, message: '请输入签约人姓名', trigger: 'blur' }
@@ -205,7 +207,7 @@ export default {
                     { required: true, message: '请输入输入我方签约人', trigger: 'blur' }
                 ],
                 signTime: [
-                    { type: 'date', required: true, message: '请选择签约日期', trigger: 'change' }
+                    { required: true, message: '请选择签约日期', trigger: 'change' }
                 ],
                 newLegalPerson: [
                     { required: true, message: '请输入新公司法人', trigger: 'blur' }
@@ -248,20 +250,6 @@ export default {
             nestDdata: 'nestDdata',
             dictInfoType: 'developmodule/dictInfoType'
         }),
-        cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.signForm.provinceCode)
-            if (province.length > 0) {
-                return province[0].cities
-            }
-            return []
-        },
-        areaList () {
-            const city = this.cityList.filter(item => item.cityId == this.signForm.cityCode)
-            if (city.length > 0) {
-                return city[0].countries
-            }
-            return []
-        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -273,10 +261,7 @@ export default {
         }
     },
     mounted () {
-        this.onFinddevlist()
-        this.onFindNest()
-        this.onFindCompanyType()
-        this.onFindSystemType()
+        // this.signForm.companyCode = this.userInfo.oldDeptCode
     },
     methods: {
         ...mapActions({
@@ -296,22 +281,19 @@ export default {
             await this.findCompanyType({ 'dictCateName': 'main_system' })
             this.mainSystemList = this.dictInfoType.data
         },
-        async onFindNest () {
-            await this.findNest()
-            this.proviceList = this.nestDdata
+        fontreadUrl (val) {
+            this.signForm.newCorporateIdcardFrontUrl = val.imageUrl
         },
-        readUrl (val) {
-            this.uploadImg.imageUrl = val.imageUrl
-        },
-        onChangeNest (val) {
-
+        backreadUrl (val) {
+            this.signForm.newCorporateIdcardBackUrl = val.imageUrl
         },
         onSaveSignFrom () {
+            // 特殊处理 %
+            this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
             this.$refs.signForm.validate((valid) => {
                 if (valid) {
-
+                    this.$emit('backnext')
                 }
-                // this.$emit('backnext')
             })
         }
     }
