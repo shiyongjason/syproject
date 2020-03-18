@@ -56,9 +56,26 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-input">
-                    <el-button type="primary" @click="getList('onSearch')">搜索</el-button>
-                </div>
+                <el-button type="primary" @click="getList('onSearch')">搜索</el-button>
+            </div>
+        </div>
+        <div class="page-body-cont ">
+            <div class="query-cont-col">
+            <el-button type="primary" @click="editPlatform()">添加平台公司</el-button>
+            </div>
+            <div class="query-cont-col">
+            <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'develop/developbasicinfo/import'"
+            :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload >
+                <el-button type="primary" :loading='uploadLoading'>批量导入</el-button>
+            </el-upload>
+            </div>
+            <div class="query-cont-col">
+            <el-button type="primary" @click="onExportFile()">导出</el-button>
+            </div>
+            <div class="query-cont-col">
+            <a class="ml20 blue isLink" @click="onDownloadXlsx">
+                下载模板
+            </a>
             </div>
         </div>
         <div class="page-body-cont ">
@@ -69,7 +86,7 @@
             <div class="companyshortname">
                 <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="1000px" v-if="dialog.visible">
                     <div class="d-dialog">
-                        <el-button type="primary" @click="scaleExportFile" size='small'>导出</el-button>
+                        <el-button type="primary" @click="scaleExportFile" size='small' v-if="dialog.type==1">导出</el-button>
                         <hosJoyTable size='small' ref="hosjoyTable" border stripe showPagination :column="dialog.column" :data="dialog.tableData" align="center" :total="dialog.total" :pageNumber.sync="dialog.pageNumber" :pageSize.sync="dialog.pageSize" @pagination="getDialogList"
                             style="margin-top:20px">
                         </hosJoyTable>
@@ -104,6 +121,7 @@
                                 </div>
                             </div>
                         </el-form>
+                        <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
                         <el-form ref="dialogForm" :model="capital_formData" :rules="capital_formData_Rules" v-if="dialog.type==2">
                             <div style="margin-top:20px">
                                 <div class="query-cont-col">
@@ -227,13 +245,14 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
-
+import { mapState } from 'vuex'
 import { developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange, updateDevelopsginInfo } from '../api/index.js'
 export default {
     name: 'developList',
     components: { hosJoyTable, HAutocomplete },
     data () {
         return {
+            interfaceUrl: interfaceUrl,
             wsDialogData: '',
             wsDialogVisible: false,
             scale_formData_Rules: {
@@ -424,10 +443,48 @@ export default {
                     }
                 },
                 { prop: '', label: '操作' }
-            ]
+            ],
+            accept: '.xlsx,.xls',
+            uploadLoading: false
         }
     },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
     methods: {
+        isSuccess (response) {
+            this.$message({
+                message: '批量导入成功！',
+                type: 'success'
+            })
+            this.uploadLoading = false
+            this.getList()
+        },
+        isError (response) {
+            this.$message({
+                message: '批量导入失败，' + JSON.parse(response.message).message,
+                type: 'error'
+            })
+            this.uploadLoading = false
+        },
+        handleUpload (file) {
+            // TODO: 目前只有一个文件,待优化
+            if (file.size / (1024 * 1024) > 100) {
+                this.$message({
+                    message: '附件要保持100M以内',
+                    type: 'warning'
+                })
+                return false
+            }
+            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+            if (this.accept.lastIndexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                return false
+            }
+            this.uploadLoading = true
+        },
         submitDialog () {
             console.log('scale_formData', this.scale_formData)
             this.$refs['dialogForm'].validate(async (valid) => {
@@ -444,6 +501,9 @@ export default {
         },
         scaleExportFile () {
             window.location.href = interfaceUrl + 'develop/developsignscalechange/exportSignScaleChangeList?companyCode=' + this.scale_formData.companyCode
+        },
+        capitalExportFile () {
+            window.location.href = interfaceUrl + 'develop/developregisteredfundchange/exportRegisteredFundList?companyCode=' + this.capital_formData.companyCode
         },
         async handleDialog (row, title) {
             this.dialog.companyCode = row.companyCode
@@ -488,7 +548,11 @@ export default {
             }
         },
         editPlatform (row) {
-            this.$router.push({ path: '/wisdom/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
+            if (row) {
+                this.$router.push({ path: '/wisdom/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
+            } else {
+                this.$router.push({ path: '/wisdom/addplatfrom' })
+            }
         },
         async findProvinceAndCity (code, subsectionCode) {
             let params = {
@@ -557,6 +621,21 @@ export default {
         cutBirthday (str) {
             if (str) return str.substring(6, 10) + '-' + str.substring(10, 12) + '-' + str.substring(12, 14)
             return '-'
+        },
+        onExportFile () {
+            window.location.href = interfaceUrl + 'develop/developbasicinfo/exportCompanyList?subsectionCode=' + this.queryParams.subsectionCode +
+                '&changeFactors=' + this.queryParams.changeFactors +
+                '&companyCodeList=' + this.queryParams.companyCodeList +
+                '&provinceCode=' + this.queryParams.provinceCode +
+                '&companyCode=' + this.queryParams.companyCode +
+                '&cityCode=' + this.queryParams.cityCode +
+                '&onlineTime=' + this.queryParams.onlineTime +
+                '&signScale=' + this.queryParams.signScale +
+                '&pageNumber=' + this.queryParams.pageNumber +
+                '&pageSize=' + this.queryParams.pageSize
+        },
+        onDownloadXlsx () {
+            location.href = '/excelTemplate/importPlatform.xlsx'
         }
     },
     async mounted () {

@@ -161,7 +161,7 @@ export default [
                 name: 'addplatfrom',
                 meta: {
                     title: '添加/编辑平台公司',
-                    tagName: '编辑平台公司',
+                    tagName: '添加/编辑平台公司',
                     isMenu: false,
                     icon: '',
                     component: '@/views/wisdom/developOline/addPlatfrom'
