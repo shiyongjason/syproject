@@ -41,8 +41,8 @@
                     </el-form-item>
                 </div>
 
-                <div class="dialogtitle">逾期：</div>
                 <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(2) || changeType(3)" />
+                <div class="dialogtitle">逾期：</div>
                 <overduecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" />
 
                 <div class="dialogtitle">档案信息：</div>
