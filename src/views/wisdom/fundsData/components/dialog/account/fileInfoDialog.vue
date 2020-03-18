@@ -1,16 +1,29 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
-        <h3 style="margin-bottom: 10px;">备注：</h3>
-        <el-input type="textarea" :rows="2" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="detailData.remark"></el-input>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="50%" :before-close='onCancle'>
+        <h3 style="margin-bottom: 10px;">档案信息：</h3>
+        <div class="query-cont-col">
+            <div class="query-col-title">台账档案编号：</div>
+            <div class="query-col-input">
+                <el-input type="text" maxlength="20" v-model="detailData.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                </el-input>
+            </div>
+        </div>
+        <div class="query-cont-col">
+            <div class="query-col-title">金云档案编号：</div>
+            <div class="query-col-input">
+                <el-input type="text" maxlength="20" v-model="detailData.jinyunArchiveNo" placeholder="请输入金云档案编号">
+                </el-input>
+            </div>
+        </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="onCancle">取 消</el-button>
-            <el-button type="primary" @click="onSure" :loading='loading'>确 定</el-button>
+            <el-button type="primary" @click="onSave" :loading='loading'>确 定</el-button>
         </span>
     </el-dialog>
 </template>
 
 <script>
-import { setAccountBasic } from '../../api/index'
+import { setAccountBasic } from '../../../api/index'
 export default {
     name: 'remarkDialog',
     props: {
@@ -44,13 +57,17 @@ export default {
         }
     },
     methods: {
-        async onSure () {
+        async onSave () {
             this.loading = true
-            await setAccountBasic(this.detailData)
-            this.loading = false
-            this.$message({ type: 'success', message: '修改成功' })
-            this.onCancle()
-            this.$emit('reload')
+            try {
+                await setAccountBasic(this.detailData)
+                this.loading = false
+                this.$message({ type: 'success', message: '修改成功' })
+                this.onCancle()
+                this.$emit('reload')
+            } catch (error) {
+                this.loading = false
+            }
         },
         onCancle () {
             this.$emit('onClose')
