@@ -64,12 +64,12 @@ const mutations = {
         state.tableData = payload.records || []
     },
     [types.REPAYMENT_SCHEDULE] (state, payload) {
-        // state.pagination = {
-        //     pageNumber: payload.current || 1,
-        //     pageSize: payload.size || 10,
-        //     total: payload.total || 0
-        // }
-        // state.tableData = payload.records || []
+        state.pagination = {
+            pageNumber: payload.current || 1,
+            pageSize: payload.size || 10,
+            total: payload.total || 0
+        }
+        state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
         payload.unshift({ organizationCode: '', organizationName: '请选择分部' })
