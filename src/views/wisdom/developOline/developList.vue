@@ -61,21 +61,20 @@
         </div>
         <div class="page-body-cont ">
             <div class="query-cont-col">
-            <el-button type="primary" @click="editPlatform()">添加平台公司</el-button>
+                <el-button type="primary" @click="editPlatform()">添加平台公司</el-button>
             </div>
             <div class="query-cont-col">
-            <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'develop/developbasicinfo/import'"
-            :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload >
-                <el-button type="primary" :loading='uploadLoading'>批量导入</el-button>
-            </el-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'develop/developbasicinfo/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                    <el-button type="primary" :loading='uploadLoading'>批量导入</el-button>
+                </el-upload>
             </div>
             <div class="query-cont-col">
-            <el-button type="primary" @click="onExportFile()">导出</el-button>
+                <el-button type="primary" @click="onExportFile()">导出</el-button>
             </div>
             <div class="query-cont-col">
-            <a class="ml20 blue isLink" @click="onDownloadXlsx">
-                下载模板
-            </a>
+                <a class="ml20 blue isLink" @click="onDownloadXlsx">
+                    下载模板
+                </a>
             </div>
         </div>
         <div class="page-body-cont ">
@@ -87,6 +86,8 @@
                 <el-dialog :title="dialog.title" :visible.sync="dialog.visible" width="1000px" v-if="dialog.visible">
                     <div class="d-dialog">
                         <el-button type="primary" @click="scaleExportFile" size='small' v-if="dialog.type==1">导出</el-button>
+                        <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
+                         <el-button type="primary" @click="importoldExcel" size='small' v-if="dialog.type==3">导出</el-button>
                         <hosJoyTable size='small' ref="hosjoyTable" border stripe showPagination :column="dialog.column" :data="dialog.tableData" align="center" :total="dialog.total" :pageNumber.sync="dialog.pageNumber" :pageSize.sync="dialog.pageSize" @pagination="getDialogList"
                             style="margin-top:20px">
                         </hosJoyTable>
@@ -121,7 +122,7 @@
                                 </div>
                             </div>
                         </el-form>
-                        <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
+
                         <el-form ref="dialogForm" :model="capital_formData" :rules="capital_formData_Rules" v-if="dialog.type==2">
                             <div style="margin-top:20px">
                                 <div class="query-cont-col">
@@ -146,7 +147,7 @@
                     </div>
                     <span slot="footer" class="dialog-footer">
                         <el-button @click="dialog.visible = false">取 消</el-button>
-                        <el-button type="primary" @click="submitDialog">确 定</el-button>
+                        <el-button type="primary" @click="submitDialog" v-if="dialog.type!=3">确 定</el-button>
                     </span>
                 </el-dialog>
             </div>
@@ -246,7 +247,8 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import { developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange, updateDevelopsginInfo } from '../api/index.js'
+import { developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
+    updateDevelopsginInfo, triggerApply } from '../api/index.js'
 export default {
     name: 'developList',
     components: { hosJoyTable, HAutocomplete },
@@ -437,15 +439,20 @@ export default {
                 },
                 { prop: 'updateTime', label: '最近操作时间', minWidth: '100', displayAs: 'YYYY-MM-DD' },
                 {
-                    label: '变更记录',
+                    label: '变更',
+                    width: '150',
                     render: (h, scope) => {
-                        return <span class='color-safe'>查看</span>
+                        if (scope.row.developChangeInfoVoList.length > 0) {
+                            return <span class='color-safe' onClick={() => { this.handleDialog(scope.row, '变更') }}>变更</span>
+                        } else {
+                            return <el-link disabled>变更</el-link>
+                        }
                     }
-                },
-                { prop: '', label: '操作' }
+                }
             ],
             accept: '.xlsx,.xls',
-            uploadLoading: false
+            uploadLoading: false,
+            importCompany: '' // 变更的公司
         }
     },
     computed: {
@@ -505,6 +512,9 @@ export default {
         capitalExportFile () {
             window.location.href = interfaceUrl + 'develop/developregisteredfundchange/exportRegisteredFundList?companyCode=' + this.capital_formData.companyCode
         },
+        importoldExcel () {
+            window.location.href = interfaceUrl + `develop/developbasicinfo/exportChangeInfo/${this.importCompany}`
+        },
         async handleDialog (row, title) {
             this.dialog.companyCode = row.companyCode
             let tdata = ''
@@ -532,10 +542,21 @@ export default {
                 this.capital_formData.companyCode = row.companyCode
                 this.capital_formData.ourRegisteredFund = row.developSignInfoVo.ourRegisteredFund
             }
-            this.dialog.title = row.companyShortName + title
+            if (title === '变更') {
+                this.dialog.type = 3
+                tdata = row.developChangeInfoVoList
+                this.dialog.column = [
+                    { prop: 'signChangeTime', label: '变更时间', displayAs: 'YYYY-MM-DD' },
+                    { prop: 'changeItem', label: '变更项目' },
+                    { prop: 'contentBefore', label: '变更前' },
+                    { prop: 'contentAfter', label: '变更后' }
+                ]
+                this.importCompany = row.companyName
+            }
+            this.dialog.title = (title === '变更') ? title : row.companyShortName + title
             this.dialog.visible = true
-            this.dialog.tableData = tdata.data.pageContent
-            this.dialog.total = tdata.data.totalElements
+            this.dialog.tableData = (title === '变更') ? tdata : tdata.data.pageContent
+            this.dialog.total = (title === '变更') ? tdata.length : tdata.data.totalElements
         },
         async getDialogList () {
             if (this.dialog.type == 1) {
@@ -636,6 +657,31 @@ export default {
         },
         onDownloadXlsx () {
             location.href = '/excelTemplate/importPlatform.xlsx'
+        },
+        onTrigger (val) {
+            const params = {
+                companyCode: val.companyCode,
+                originaCompanyName: val.originaCompanyName,
+                companyName: val.companyName,
+                subsectionCode: val.subsectionCode,
+                subsectionName: val.subsectionName,
+                onlineTime: val.developSignInfoVo.onlineTime,
+                signScale: val.developSignInfoVo.signScale,
+                dueDiligenceInspectionTime: val.developSignInfoVo.dueDiligenceInspectionTime,
+                dueDiligenceOpiniot: val.developSignInfoVo.dueDiligenceOpiniot,
+                createUid: this.userInfo.jobNumber,
+                createName: this.userInfo.employeeName
+                // createTime: updateTime
+            }
+            this.$confirm('是否触发入驻申请流程？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await triggerApply(params)
+            }).catch(() => {
+
+            })
         }
     },
     async mounted () {

@@ -209,6 +209,9 @@ export const developregisteredfundchange = (params) => {
 export const updateDevelopsginInfo = (params) => {
     return axios.post('develop/developsgininfo/update', params)
 }
+export const triggerApply = (params) => {
+    return axios.post(`develop/developbasicinfo/triggerApply`, params)
+}
 // 发展在线 基础信息校验
 export const getCheckField = (params) => {
     return axios.post('develop/developbasicinfo/checkField', params)
