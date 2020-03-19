@@ -3,18 +3,16 @@
         <div class="index h-content">
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
-                <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false"
-                         :default-expanded-keys="['']" node-key="id" :highlight-current="true"></el-tree>
+                <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false" :default-expanded-keys="['']" node-key="id" :highlight-current="true"></el-tree>
             </div>
             <div class="table">
                 <h2 class="h-h2">人员/账号</h2>
                 <div class="demo-input-suffix">
-                    <el-input
-                        placeholder="请输入工号/姓名/登录名进行检索"
-                        v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
+                    <el-input placeholder="请输入工号/姓名/登录名进行检索" v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                     <el-button type="primary" v-if="true" @click="findOrganizationEmployee">搜索</el-button>
+                    <el-button type="primary">一键同步</el-button>
                 </div>
                 <div class="result">
                     <OrganizationTable :tableData="tableData" :paginationData="paginationData"></OrganizationTable>
@@ -69,7 +67,9 @@ export default {
             return {
                 label: data.deptname,
                 id: data.pkDeptdoc,
-                children: subTemp
+                children: subTemp,
+                deptCode: data.deptcode,
+                parentId: data.pkFathedept
             }
         },
         handleNodeClick (data) {
@@ -82,7 +82,9 @@ export default {
             data.departmentNodeVOS.forEach(value => {
                 treeList.push(this.makeTreeList(value))
             })
+            console.log(data)
             this.treeList = [{ label: '好享家', id: '', children: treeList }]
+            console.log(JSON.stringify(this.treeList[0].children[1].children))
             this.$nextTick(function () {
                 this.$refs.tree.setCurrentKey({ id: '' })
             })
@@ -146,27 +148,26 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .index {
-        overflow: hidden;
-        .tree {
-            width: 220px;
-            padding-right: 24px;
-            float: left;
-
+.index {
+    overflow: hidden;
+    .tree {
+        width: 220px;
+        padding-right: 24px;
+        float: left;
+    }
+    .table {
+        /*width: 810px;*/
+        margin-left: 244px;
+        padding-left: 24px;
+        box-sizing: border-box;
+        border-left: 1px solid #e5e5ea;
+        h2 {
+            text-indent: 20px;
         }
-        .table{
-            /*width: 810px;*/
-            margin-left: 244px;
-            padding-left: 24px;
-            box-sizing: border-box;
-            border-left: 1px solid #E5E5EA;
-            h2{
-                text-indent: 20px;
-            }
-            .keywords{
-                width: 406px;
-                margin-right: 10px;
-            }
+        .keywords {
+            width: 406px;
+            margin-right: 10px;
         }
     }
+}
 </style>
