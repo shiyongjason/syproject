@@ -28,7 +28,7 @@ export default {
                 title: '设备概览',
                 tagName: '设备概览',
                 parentName: '舒适云概览',
-                isMenu: false,
+                isMenu: true,
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/equipemtOverview.vue')
