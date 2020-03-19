@@ -87,7 +87,7 @@
                     <div class="d-dialog">
                         <el-button type="primary" @click="scaleExportFile" size='small' v-if="dialog.type==1">导出</el-button>
                         <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
-                         <el-button type="primary" @click="importoldExcel" size='small' v-if="dialog.type==3">导出</el-button>
+                        <el-button type="primary" @click="importoldExcel" size='small' v-if="dialog.type==3">导出</el-button>
                         <hosJoyTable size='small' ref="hosjoyTable" border stripe showPagination :column="dialog.column" :data="dialog.tableData" align="center" :total="dialog.total" :pageNumber.sync="dialog.pageNumber" :pageSize.sync="dialog.pageSize" @pagination="getDialogList"
                             style="margin-top:20px">
                         </hosJoyTable>
@@ -247,8 +247,10 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import { developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
-    updateDevelopsginInfo, triggerApply } from '../api/index.js'
+import {
+    developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
+    updateDevelopsginInfo, triggerApply
+} from '../api/index.js'
 export default {
     name: 'developList',
     components: { hosJoyTable, HAutocomplete },
@@ -548,8 +550,8 @@ export default {
                 this.dialog.column = [
                     { prop: 'signChangeTime', label: '变更时间', displayAs: 'YYYY-MM-DD' },
                     { prop: 'changeItem', label: '变更项目' },
-                    { prop: 'contentBefore', label: '变更前' },
-                    { prop: 'contentAfter', label: '变更后' }
+                    { prop: 'contentBefore', label: '变更前', showOverflowTooltip: true },
+                    { prop: 'contentAfter', label: '变更后', showOverflowTooltip: true }
                 ]
                 this.importCompany = row.companyName
             }
