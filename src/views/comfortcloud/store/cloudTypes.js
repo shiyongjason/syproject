@@ -1,3 +1,6 @@
 export const CLOUD_ACTDETAIL = 'CLOUD_ACTDETAIL'
 
 export const CLOUD_ACTLIST = 'CLOUD_ACTLIST'
+
+export const CLOUD_ALARM_LIST = 'CLOUD_ALARM_LIST' // 告警列表
+export const CLOUD_ALARM_PAGINATION = 'CLOUD_ALARM_PAGINATION' // 告警列表分页

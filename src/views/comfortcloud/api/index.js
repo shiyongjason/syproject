@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { iotUrl } from '@/api/config'
+import { iotUrl, mockUrl } from '@/api/config'
 
 // 家庭概况
 export function findHomeGeneralSituation (params) {
@@ -58,4 +58,8 @@ export function deleteActivity (params) {
 
 export function getCloudActlist (params) {
     return axios.get(iotUrl + `/api/activity-center`, { params })
+}
+
+export function getCloudAlarmList (params) {
+    return axios.get(mockUrl + `/alarm.json`, { params })
 }
