@@ -56,11 +56,6 @@ export default {
                 pageSize: 10,
                 pageNumber: 1
             },
-            pagination: {
-                total: 11,
-                pageSize: 10,
-                pageNumber: 1
-            },
             tableLabel: [
                 { label: '家庭名称', prop: 'homeName' },
                 { label: '管理员手机号', prop: 'homePhone' },
@@ -71,7 +66,6 @@ export default {
                 { label: '休眠时间', prop: 'homeSleepTime', formatters: 'dateTime' },
                 { label: '上线时间 ', prop: 'homeOnlineTime', formatters: 'dateTime' },
                 { label: '离线时长', prop: 'homeOnlineTimeLonger' }
-
             ]
         }
     },

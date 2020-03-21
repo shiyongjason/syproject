@@ -9,7 +9,10 @@ const state = {
     cloudActivitydetail: {},
     cloudActicitylist: {},
     cloudAlarmList: [],
-    cloudAlarmPagination: {}
+    cloudAlarmPagination: {},
+    cloudEquipmentErrorList: [],
+    cloudEquipmentErrorPagination: {},
+    cloudEquipmentErrorDict: []
 }
 
 const getters = {
@@ -19,7 +22,10 @@ const getters = {
     cloudActivitydetail: state => state.cloudActivitydetail,
     cloudActicitylist: state => state.cloudActicitylist,
     cloudAlarmList: state => state.cloudAlarmList,
-    cloudAlarmPagination: state => state.cloudAlarmPagination
+    cloudAlarmPagination: state => state.cloudAlarmPagination,
+    cloudEquipmentErrorList: state => state.cloudEquipmentErrorList,
+    cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
+    cloudEquipmentErrorDict: state => state.cloudEquipmentErrorDict
 }
 
 const mutations = {
@@ -43,6 +49,15 @@ const mutations = {
     },
     [cloud.CLOUD_ALARM_PAGINATION] (state, payload) {
         state.cloudAlarmPagination = payload
+    },
+    [cloud.CLOUD_EQUIPMENT_ERROR_LIST] (state, payload) {
+        state.cloudEquipmentErrorList = payload
+    },
+    [cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION] (state, payload) {
+        state.cloudEquipmentErrorPagination = payload
+    },
+    [cloud.CLOUD_EQUIPMENT_ERROR_DICT] (state, payload) {
+        state.cloudEquipmentErrorDict = payload
     }
 }
 
@@ -75,6 +90,20 @@ const actions = {
             pageSize: data.pageSize,
             total: data.total
         })
+    },
+    async findCloudEquipmentErrorList ({ commit }, params) {
+        const { data } = await Api.getCloudEquipmentErrorList(params)
+        console.log(data.data)
+        commit(cloud.CLOUD_EQUIPMENT_ERROR_LIST, data.data)
+        commit(cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION, {
+            pageNumber: data.pageNum,
+            pageSize: data.pageSize,
+            total: data.total
+        })
+    },
+    async findCloudEquipmentErrorDict ({ commit }, params) {
+        const { data } = await Api.getCloudEquipmentErrorDict(params)
+        commit(cloud.CLOUD_EQUIPMENT_ERROR_DICT, data.data)
     }
 }
 export default {

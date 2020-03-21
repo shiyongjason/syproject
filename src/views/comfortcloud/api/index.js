@@ -59,7 +59,14 @@ export function deleteActivity (params) {
 export function getCloudActlist (params) {
     return axios.get(iotUrl + `/api/activity-center`, { params })
 }
-
+// 告警监控列表
 export function getCloudAlarmList (params) {
     return axios.get(mockUrl + `/alarm.json`, { params })
+}
+// 设备故障列表
+export function getCloudEquipmentErrorList (params) {
+    return axios.get(mockUrl + `/equipmentError.json`, { params })
+}
+export function getCloudEquipmentErrorDict (params) {
+    return axios.get(mockUrl + `/dictEquipmentError.json`, { params })
 }
