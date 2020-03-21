@@ -17,7 +17,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金金额：" prop="thisPaidCapital">
-                            <el-input v-isNegative="detailData[0].thisPaidCapital" maxlength='16' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还本金金额" :disabled='!detailData[0].thisPaidCapitalTime' @blur="dealCount(detailData[0])">
+                            <el-input v-inputMAX="shy" v-isNegative:2 maxlength='16' v-model.trim="detailData[0].thisPaidCapital" placeholder="请输入本次还本金金额" :disabled='!detailData[0].thisPaidCapitalTime' @blur="dealCount(detailData[0])">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -270,7 +270,10 @@ export default {
         },
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        shy () {
+            return ((this.detailData[0].capitalAmount || 0) - (this.detailData[0].capitalPaid || 0) - (this.detailData[0].thisPaidCapital || 0)) || 0
+        }
     },
     methods: {
         async dealCount (query) {
