@@ -1,6 +1,6 @@
 <template>
     <!-- 敞口分授信 -->
-    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <el-dialog width="30%" title="确认切换" :visible.sync="innerVisible" append-to-body>
             <span>切换后，所有还款数据（含明细表内该笔台账关联的所有还款明细）均会被清空且无法恢复</span>
             <span slot="footer" class="dialog-footer">
@@ -10,18 +10,19 @@
         </el-dialog>
         <div class="form">
             <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
-                <!-- <div class="dialogtitle">还款方式：</div> -->
                 <div class="query-cont-row" style="height: 40px;">
-                    <div class="query-cont-col">
+                    <div class="query-cont-col theFirst">
+                        <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
                         <el-form-item prop="repaymentType">
-                            <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
                             <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
                             <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
                         </el-form-item>
                     </div>
                 </div>
                 <div v-for="(item,index) in detailData" :key="index">
-                    <div class="ftitle">第{{index+1}}次还款：</div>
+                    <!-- 分割线 -->
+                    <div class="fgx"></div>
+                    <div class="ftitle">第{{index+1}}期还款信息：</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <el-form-item label="约定还款日期：" prop="endTime">
@@ -130,7 +131,7 @@
                     </div>
                     <!-- isOverDue true逾期 false未逾期 -->
                     <template v-if="item.isOverDue">
-                        <div class="endline">逾期</div>
+                        <div class="endline mar020">逾期</div>
                         <div class="query-cont-row" style="margin-top:10px">
                             <div class="query-cont-col">
                                 <el-form-item label="阶梯式计息：" prop="name">
@@ -152,7 +153,7 @@
                         </div>
                         <div v-if="item.isStepOverInterest==1">
                             <div class="" v-for="(i,index) in item.overdueList" :key="index">
-                                <div class="smalltitle">逾期第{{index+1}}阶段利息：</div>
+                                <div class="smalltitle mar020">逾期第{{index+1}}阶段利息：</div>
                                 <div class="query-cont-row">
                                     <div class="query-cont-col">
                                         <el-form-item :label="'第' +(index+1)+'阶段时长：'">
@@ -198,8 +199,6 @@
                     </template>
                     <div class="ftitle" v-else>未逾期</div>
                 </div>
-                <!-- 分割线 -->
-                <div class="fgx"></div>
             </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -315,7 +314,6 @@ export default {
             }
         },
         async setPlan (planList) {
-            console.log(planList)
             await setPlan({
                 planList,
                 createBy: this.userInfo.employeeName
@@ -329,20 +327,14 @@ export default {
 /deep/ .el-dialog__body {
     padding: 20px 24px;
     min-height: auto;
+    max-height: 600px;
+    overflow: auto;
 }
 /deep/.el-form .el-input {
     width: 250px;
 }
-.dialogtitle {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    line-height: 30px;
-    color: #000;
-    border-bottom: none;
-}
-.dw {
-    margin-left: 10px;
+/deep/.theFirst .el-form-item__content {
+    margin-left: 10px !important;
 }
 .ftitle {
     padding: 5px 0 14px 0;
@@ -350,14 +342,13 @@ export default {
     font-size: 18px;
     color: #000;
 }
-/deep/.diyclass {
-    max-height: 90%;
-    overflow-y: scroll;
-}
 .endline {
     font-size: 18px;
     font-weight: bold;
     color: #000;
+}
+.mar020 {
+    margin: 0 0 5px 20px;
 }
 .fgx {
     width: 100%;

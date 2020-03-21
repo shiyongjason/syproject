@@ -1,11 +1,13 @@
 <template>
     <!-- 流贷 -->
-    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
+    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <div class="form">
             <el-form :model="detailData[0]" :rules="rules" ref="ruleForm" label-width="175px" class="demo-ruleForm">
+                <div>
+                    <b class="dialogtitle">还款方式：</b>
+                    <span class="ftitle">一次性还款</span>
+                </div>
                 <div class="dialogtitle">还款信息：</div>
-                <div class="ftitle">
-                    <b>还款方式：</b>一次性还款</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金时间：" prop="thisPaidCapitalTime">
@@ -329,6 +331,8 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+    max-height: 600px;
+    overflow: auto;
 }
 /deep/.yuqi .el-form-item__label {
     width: 206px !important;
@@ -340,7 +344,7 @@ export default {
     width: 250px;
 }
 .dialogtitle {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
     line-height: 30px;
@@ -348,10 +352,7 @@ export default {
     border-bottom: none;
 }
 .ftitle {
-    margin-bottom: 15px;
-}
-.ftitle b {
-    color: #000;
+    font-size: 18px;
 }
 .dw {
     margin-left: 10px;
@@ -359,9 +360,5 @@ export default {
 .smalltitle {
     line-height: 30px;
     margin-left: 27px;
-}
-/deep/.diyclass {
-    max-height: 90%;
-    overflow-y: scroll;
 }
 </style>
