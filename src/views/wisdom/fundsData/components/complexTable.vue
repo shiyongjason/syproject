@@ -113,7 +113,21 @@ export default {
             respAccountRepaymentPlanData: null, // 流贷还款信息数据
             // 台账汇总表
             TotalColumn: [
-                { prop: 'misCode', label: 'MIS编码', width: '150' },
+                {
+                    prop: 'misCode',
+                    label: 'MIS编码',
+                    fixed: true,
+                    width: '150',
+                    render: (h, scope) => {
+                        return (
+                            <el-tooltip placement="top" effect='light'>
+                                <div slot="content">MIS编码：{scope.row.misCode ? scope.row.misCode : '-'}
+                                    <br />平台公司：{scope.row.loanCompanyName ? scope.row.loanCompanyName : '-'}</div>
+                                <span>{scope.row.misCode ? scope.row.misCode : '-'}</span>
+                            </el-tooltip>
+                        )
+                    }
+                },
                 { prop: 'loanCompanyName', label: '平台公司', width: '150' },
                 { prop: 'subsectionName', label: '分部', width: '150' },
                 {
@@ -300,21 +314,35 @@ export default {
             FlowToBorrow: [
                 {
                     label: '基础信息',
-                    width: '600',
-                    // fixed: true,
+                    width: '150',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getAccount(scope.row)
-                                    this.accountData.title = `${this.product}-流贷基础信息维护`
-                                    this.misDialogVisible = true
-                                }}></i></span>
+                                return <div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
+                                    <i class='el-icon-edit pointer' onClick={() => {
+                                        this.getAccount(scope.row)
+                                        this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                        this.misDialogVisible = true
+                                    }}></i></div>
                             }
-                        },
+                        }
+                    ]
+                },
+                {
+                    label: '基础信息',
+                    width: '450',
+                    // fixed: true,
+                    children: [
                         { prop: 'account_misCode', label: 'MIS编码', width: '150' },
                         { prop: 'account_loanCompanyName', label: '借款单位', width: '150' },
                         { prop: 'account_subsectionName', label: '分部', width: '150' }
@@ -336,7 +364,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
-                                    this.loanData.title = `${this.product}—流贷借款信息维护`
+                                    this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                     this.supplierDialogVisible = true
                                 }}></i></span>
                             }
@@ -353,7 +381,7 @@ export default {
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
-                                        this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护`
+                                        this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                                         this.AnnualInterestRateDialogVisible = true
                                     }}></i></span>
@@ -467,21 +495,35 @@ export default {
             PointsCredit: [
                 {
                     label: '基础信息',
-                    width: '600',
-                    // fixed: true,
+                    width: '150',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getAccount(scope.row)
-                                    this.accountData.title = `${this.product}-分授信基础信息维护`
-                                    this.misDialogVisible = true
-                                }}></i></span>
+                                return <div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
+                                    <i class='el-icon-edit pointer' onClick={() => {
+                                        this.getAccount(scope.row)
+                                        this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                        this.misDialogVisible = true
+                                    }}></i></div>
                             }
-                        },
+                        }
+                    ]
+                },
+                {
+                    label: '基础信息',
+                    width: '450',
+                    // fixed: true,
+                    children: [
                         { prop: 'account_misCode', label: 'MIS编码', width: '150' },
                         { prop: 'account_loanCompanyName', label: '借款单位', width: '150' },
                         { prop: 'account_subsectionName', label: '分部', width: '150' }
@@ -539,7 +581,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
-                                    this.loanData.title = `${this.product}-分授信借款信息维护`
+                                    this.loanData.title = `${this.product}-分授信借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                     this.pointsCreditBillingDialogVisible = true
                                 }}></i></span>
                             }
@@ -820,21 +862,35 @@ export default {
             Exposure: [
                 {
                     label: '基础信息',
-                    width: '600',
-                    // fixed: true,
+                    width: '150',
+                    fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.account_standingBookNo}<i class='el-icon-edit pointer' onClick={() => {
-                                    this.getAccount(scope.row)
-                                    this.accountData.title = `${this.product}-敞口基础信息维护`
-                                    this.misDialogVisible = true
-                                }}></i></span>
+                                return <div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
+                                    <i class='el-icon-edit pointer' onClick={() => {
+                                        this.getAccount(scope.row)
+                                        this.accountData.title = `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                        this.misDialogVisible = true
+                                    }}></i></div>
                             }
-                        },
+                        }
+                    ]
+                },
+                {
+                    label: '基础信息',
+                    width: '450',
+                    // fixed: true,
+                    children: [
                         { prop: 'account_misCode', label: 'MIS编码', width: '150' },
                         { prop: 'account_loanCompanyName', label: '借款单位', width: '150' },
                         { prop: 'account_subsectionName', label: '分部', width: '150' }
@@ -1578,7 +1634,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
-                            this.loanData.title = `${this.product}-敞口借款信息维护`
+                            this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.billingDialogVisible = true
                         }}></i></span>
                     }
@@ -1869,9 +1925,9 @@ export default {
             }, 0)
             this.rowData = [...data]
             if (row.account_accountType == 2) {
-                this.$set(this.rowData[0], 'title', `${this.product}-敞口还款信息维护`)
+                this.$set(this.rowData[0], 'title', `${this.product}-敞口还款信息维护（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
             } else if (row.account_accountType == 3) {
-                this.$set(this.rowData[0], 'title', `${this.product}-分授信还款信息维护`)
+                this.$set(this.rowData[0], 'title', `${this.product}-分授信还款信息维护（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
                 this.$set(this.rowData[0], 'account_accountType', 3)
             }
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
