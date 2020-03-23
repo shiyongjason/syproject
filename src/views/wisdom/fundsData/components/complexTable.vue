@@ -349,7 +349,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
                                     class={
-                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate
+                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getRespAccountRepaymentPlanData(scope.row)
@@ -561,7 +561,7 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
                                     class={
-                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate
+                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getGrantPaymetPlanData(scope.row)
