@@ -1,18 +1,20 @@
 <template>
     <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="50%" :before-close='onCancle'>
         <h3 style="margin-bottom: 10px;">档案信息：</h3>
-        <div class="query-cont-col">
-            <div class="query-col-title">台账档案编号：</div>
-            <div class="query-col-input">
-                <el-input type="text" maxlength="20" v-model="detailData.standingBookArchiveNo" placeholder="请输入台账档案编号">
-                </el-input>
+        <div style="margin-left: 10px;">
+            <div class="query-cont-col">
+                <div class="query-col-title">台账档案编号：</div>
+                <div class="query-col-input">
+                    <el-input type="textarea" maxlength="50" show-word-limit v-model="detailData.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                    </el-input>
+                </div>
             </div>
-        </div>
-        <div class="query-cont-col">
-            <div class="query-col-title">金云档案编号：</div>
-            <div class="query-col-input">
-                <el-input type="text" maxlength="20" v-model="detailData.jinyunArchiveNo" placeholder="请输入金云档案编号">
-                </el-input>
+            <div class="query-cont-col">
+                <div class="query-col-title">金云档案编号：</div>
+                <div class="query-col-input">
+                    <el-input type="textarea" maxlength="50" show-word-limit v-model="detailData.jinyunArchiveNo" placeholder="请输入金云档案编号">
+                    </el-input>
+                </div>
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -79,5 +81,8 @@ export default {
 <style lang="scss" scoped>
 /deep/ .el-dialog__body {
     padding: 20px 24px;
+}
+/deep/.el-textarea__inner {
+    width: 200px;
 }
 </style>
