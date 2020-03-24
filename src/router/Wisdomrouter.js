@@ -168,16 +168,16 @@ export default [
                 component: () => import('@/views/wisdom/developOline/developList')
             },
             {
-                path: 'addplatfrom',
-                name: 'addplatfrom',
+                path: 'addplatform',
+                name: 'addplatform',
                 meta: {
                     title: '添加/编辑平台公司',
                     tagName: '添加/编辑平台公司',
                     isMenu: false,
                     icon: '',
-                    component: '@/views/wisdom/developOline/addPlatfrom'
+                    component: '@/views/wisdom/developOline/addPlatform'
                 },
-                component: () => import('@/views/wisdom/developOline/addPlatfrom')
+                component: () => import('@/views/wisdom/developOline/addPlatform')
             }
         ]
     }
