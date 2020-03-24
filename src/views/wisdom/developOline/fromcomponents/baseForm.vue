@@ -266,7 +266,7 @@ export default {
             setNewTags: 'setNewTags'
         }),
         onBlurinfo () {
-            Promise.all([this.onGetTycHolder(), this.onGetTycBasicInfo(), this.onGetTycMainStaff()])
+            this.baseForm.companyName && Promise.all([this.onGetTycHolder(), this.onGetTycBasicInfo(), this.onGetTycMainStaff()])
         },
         async onGetTycHolder () {
             const { data } = await getTycHolder(this.baseForm.companyName)
@@ -334,8 +334,8 @@ export default {
             this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
                     try {
-                        await getCheckField({ 'misCode': this.baseForm.misCode,
-                            'companyShortName': this.baseForm.companyShortName })
+                        await getCheckField({                            'misCode': this.baseForm.misCode,
+                            'companyShortName': this.baseForm.companyShortName                        })
                         this.$emit('backnext')
                         this.baseForm.developAccountInfoCreateForm.accountBank = this.baseForm.companyName
                     } catch (error) {
