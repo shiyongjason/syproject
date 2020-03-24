@@ -290,20 +290,20 @@ export default {
         },
         onSaveSignFrom () {
             // 特殊处理 %
-            this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
             this.$refs.signForm.validate((valid) => {
                 if (valid) {
+                    this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
                     console.log(this.signForm)
                     this.$emit('backnext')
                 }
             })
         },
         onSavesign () {
-            this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
             this.loading = true
             this.$refs.signForm.validate(async (valid) => {
                 if (valid) {
                     try {
+                        this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
                         await updateDevelopsign(this.signForm)
                         this.$message.success('平台公司更新成功！')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
