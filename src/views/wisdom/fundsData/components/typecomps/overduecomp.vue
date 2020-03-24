@@ -1,6 +1,6 @@
 <template>
     <div v-if="flowrateform">
-        <!-- 流贷组件 -->
+        <!-- 逾期阶梯设置模块 -->
         <div class="query-cont-row">
             <el-form-item label="阶梯式计息：" prop="isStepOverInterest">
                 <el-radio v-model.trim="flowrateform.isStepOverInterest" :label=0 @change="()=>{$emit('stepOver',1)}">否</el-radio>
@@ -31,13 +31,6 @@
                         </el-form-item>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <el-button type="primary" size="small" @click="onDeleteRate(index)" icon="el-icon-minus">删除
-                    </el-button>
-                </div> -->
-            </div>
-            <div>
-                <!-- <el-button type="primary" size="small" @click="onAddrate" icon="el-icon-plus" v-if="flowrateform.overdueList.length<5">下阶段利息</el-button> -->
             </div>
         </template>
     </div>
@@ -63,15 +56,6 @@ export default {
                 // newName.overdueList[0].overDueInterest = 12
             },
             deep: true
-        }
-    },
-    methods: {
-        onAddrate () {
-            let newObj = { ...this.newRata }
-            this.flowrateform.overdueList.push(newObj)
-        },
-        onDeleteRate (index) {
-            this.flowrateform.overdueList.splice(index, 1)
         }
     }
 }

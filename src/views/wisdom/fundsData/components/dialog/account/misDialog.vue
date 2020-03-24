@@ -36,9 +36,10 @@
 </template>
 
 <script>
-import { setAccountBasic } from '../../api/index'
+import { setAccountBasic } from '../../../api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { mapGetters } from 'vuex'
+import { createNamespacedHelpers } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'misDialog',
     components: { HAutocomplete },
@@ -128,7 +129,7 @@ export default {
 /deep/ .el-dialog__body {
     padding: 20px 24px;
 }
-.w150{
+.w150 {
     width: 150px;
     display: inline-block;
 }

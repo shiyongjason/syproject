@@ -10,12 +10,6 @@
                             <el-input maxlength='20' v-model.trim="ruleForm.account.standingBookNo" placeholder="请输入台账编号"></el-input>
                         </el-form-item>
                     </div>
-                    <!-- <div class="query-cont-col">
-                        <el-form-item label="金云系统编号：">
-                            <el-input v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="如有请输入，无请忽略">
-                            </el-input>
-                        </el-form-item>
-                    </div> -->
                     <div class="query-cont-col">
                         <el-form-item label="借款单位：" prop="account.loanCompanyName" ref="loanCompanyName">
                             <HAutocomplete :selectArr="paltformList" v-if="paltformList" @back-event="backPlat" :placeholder="'选择平台公司'" />
@@ -34,16 +28,23 @@
                     </div>
                 </div>
                 <!--抽离 还款-->
-                <flowcomp :flowform=ruleForm.loan v-if="changeType(1,1)" />
-                <grantcomp ref="opencomp" :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,2)" />
-                <opencomp ref="opencomp" :flowform=ruleForm.loan @repaymentTypeChange="onRepaymentTypeChange" v-if="changeType(1,3)" />
-                <!--抽离 还款利息-->
-                <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(1,1)" />
-                <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,2)" />
-                <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(1,3)" />
-                <!--供应链抽离 还款-->
-                <flowcomp :flowform=ruleForm.loan v-if="changeType(2,1)" />
-                <flowratecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" v-if="changeType(2,1)" />
+                <div class="dialogtitle">借款信息：</div>
+                <flowcomp :flowform=ruleForm.loan v-if="changeType(1)" />
+                <opencomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(2)" />
+                <pointcomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(3)" />
+
+                <div class="dialogtitle">还款信息：</div>
+                <div class="query-cont-col">
+                    <el-form-item label="还款方式：" prop="name">
+                        <el-radio v-model.trim="ruleForm.loan.repaymentType" :label=1 @change="onRepaymentTypeChange(1)">一次性还款</el-radio>
+                        <el-radio v-if="!changeType(1)" v-model.trim="ruleForm.loan.repaymentType" :label=2 @change="onRepaymentTypeChange(2)">334</el-radio>
+                    </el-form-item>
+                </div>
+
+                <grantratecomp :flowrateform=ruleForm.planList @stepOver="onStepOver" v-if="changeType(2) || changeType(3)" />
+                <div class="dialogtitle">逾期：</div>
+                <overduecomp :flowrateform=ruleForm.planList[0] @stepOver="onStepOver" />
+
                 <div class="dialogtitle">档案信息：</div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -76,16 +77,17 @@
 <script>
 import moment from 'moment'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import flowcomp from '../typecomps/flowcomp'
-import flowratecomp from '../typecomps/flowratecomp'
-import grantcomp from '../typecomps/grantcomp'
-import grantratecomp from '../typecomps/grantratecomp'
-import opencomp from '../typecomps/opencomp'
-import { addAccount } from '../../api/index'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import flowcomp from './typecomps/borrowInfo/flowcomp'
+import opencomp from './typecomps/borrowInfo/opencomp'
+import pointcomp from './typecomps/borrowInfo/pointcomp'
+import overduecomp from './typecomps/overduecomp'
+import grantratecomp from './typecomps/grantratecomp'
+import { addAccount } from './../api/index'
+import { mapState, createNamespacedHelpers } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'newFlowdialog',
-    components: { flowcomp, flowratecomp, grantcomp, grantratecomp, opencomp, HAutocomplete },
+    components: { flowcomp, overduecomp, opencomp, grantratecomp, pointcomp, HAutocomplete },
     data () {
         return {
             paltformList: [],
@@ -230,12 +232,8 @@ export default {
             findPlatformslist: 'findPlatformslist',
             setNewTags: 'setNewTags'
         }),
-        changeType (productType, accountType) {
-            if (productType == this.ruleForm.account.productType && accountType == this.ruleForm.account.accountType) {
-                return true
-            } else {
-                return false
-            }
+        changeType (accountType) {
+            return accountType == this.ruleForm.account.accountType
         },
         onSubmit () {
             // 操作
@@ -244,6 +242,7 @@ export default {
                     if (!this.ruleForm.loan.loanStartTime) this.ruleForm.loan.loanStartTime = this.ruleForm.loan.invoiceTime
                     if (!this.ruleForm.loan.invoiceTime) this.ruleForm.loan.invoiceTime = this.ruleForm.loan.loanStartTime
                     this.ruleForm.loan.registrant = this.userInfo.employeeName // Boss登记人
+                    this.ruleForm.planList.map((i) => { if (!i.isStepOverInterest) i.overdueList = [] }) // 如果不是阶梯计息，清空阶梯数据（接口这么定义的）
                     await addAccount(this.ruleForm)
                     this.$message({
                         message: '新增台账成功！',
@@ -302,7 +301,6 @@ export default {
         },
         /** 自动计算还款计划和日期 */
         setPlanList () {
-            //  moment().subtract(7, 'days').format('YYYY-MM-DD')
             if (this.ruleForm.loan.repaymentType == 1) {
                 this.ruleForm.planList[0].capitalAmount = this.ruleForm.loan.loanAmount
                 this.$set(this.ruleForm.planList[0], 'endTime', this.ruleForm.loan.loanEndTime)
