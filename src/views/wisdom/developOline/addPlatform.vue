@@ -41,7 +41,7 @@ import accountForm from './fromcomponents/accountForm'
 import { addDevelopinfo, getDevelopbasic, getDevelopother, getDevelopsign, getDevelopaccount } from '../api/index'
 import { mapActions } from 'vuex'
 export default {
-    name: 'addPlatform',
+    name: 'addplatform',
     data () {
         return {
             userDate: JSON.parse(sessionStorage.getItem('user_Data')),

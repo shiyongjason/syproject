@@ -251,8 +251,9 @@ import {
     developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
     updateDevelopsginInfo, triggerApply
 } from '../api/index.js'
+import { clearCache, newCache } from '@/utils/index'
 export default {
-    name: 'developList',
+    name: 'developlist',
     components: { hosJoyTable, HAutocomplete },
     data () {
         return {
@@ -572,9 +573,9 @@ export default {
         },
         editPlatform (row) {
             if (row) {
-                this.$router.push({ path: '/developonline/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
+                this.$router.push({ path: '/developonline/addplatform', query: { type: 'edit', companyCode: row.companyCode } })
             } else {
-                this.$router.push({ path: '/developonline/addplatfrom' })
+                this.$router.push({ path: '/developonline/addplatform', query: { type: 'add' } })
             }
         },
         async findProvinceAndCity (code, subsectionCode) {
@@ -685,6 +686,19 @@ export default {
 
             })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('developlist')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'addplatform') {
+            clearCache('developlist')
+        }
+        next()
+    },
+    activated () {
+        this.getList()
     },
     async mounted () {
         this.getList()

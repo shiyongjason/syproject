@@ -121,10 +121,12 @@ export default {
                         await updateDevelopaccount(this.accountForm)
                         this.$message.success('平台公司更新成功！')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/wisdom/developlist')
+                        this.$router.push('/developonline/developlist')
                     } catch (error) {
                         this.loading = false
                     }
+                } else {
+                    this.loading = false
                 }
             })
         }
