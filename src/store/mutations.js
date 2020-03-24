@@ -1,5 +1,6 @@
 import {
-    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, SET_NEW_TAGS, IS_COLLAPSE, MENU_LIST, IS_FIRST, ADD_CACHED_INCLUDE, REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE
+    LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, SET_NEW_TAGS, IS_COLLAPSE, MENU_LIST, IS_FIRST, ADD_CACHED_INCLUDE,
+    REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE, DEVDEP_LIST
 } from './const'
 
 export default {
@@ -39,5 +40,8 @@ export default {
     },
     [REMOVE_CACHED_EXCLUDE] (state, payload) {
         state.cachedExclude = state.cachedExclude.filter(item => item !== payload)
+    },
+    [DEVDEP_LIST] (state, payload) {
+        state.devDepList = payload
     }
 }

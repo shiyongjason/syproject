@@ -32,7 +32,7 @@ export default [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundsData/components/dialog/newFlowdialog.vue')
+                component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
             }
         ]
     },
@@ -143,6 +143,41 @@ export default [
                     component: '@/views/wisdom/profitStatistics'
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
+            }
+        ]
+    },
+    {
+        path: '/developonline',
+        meta: {
+            title: '机构在线',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'developlist',
+                name: 'developlist',
+                meta: {
+                    title: '发展在线',
+                    tagName: '发展在线',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/developList'
+                },
+                component: () => import('@/views/wisdom/developOline/developList')
+            },
+            {
+                path: 'addplatfrom',
+                name: 'addplatfrom',
+                meta: {
+                    title: '添加/编辑平台公司',
+                    tagName: '添加/编辑平台公司',
+                    isMenu: false,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/addPlatfrom'
+                },
+                component: () => import('@/views/wisdom/developOline/addPlatfrom')
             }
         ]
     }

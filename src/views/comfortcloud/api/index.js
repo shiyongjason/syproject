@@ -38,3 +38,24 @@ export function getMemberDetail (params) {
 export function getFamilyDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/home-info/${params}`)
 }
+
+// 活动管理
+export function saveActdetail (params) {
+    return axios.post(iotUrl + `/api/activity-center`, params)
+}
+
+export function editActdetail (params) {
+    return axios.put(iotUrl + `/api/activity-center`, params)
+}
+
+export function getActdetail (params) {
+    return axios.get(iotUrl + `/api/activity-center/${params}`)
+}
+
+export function deleteActivity (params) {
+    return axios.delete(iotUrl + `/api/activity-center/${params}`)
+}
+
+export function getCloudActlist (params) {
+    return axios.get(iotUrl + `/api/activity-center`, { params })
+}
