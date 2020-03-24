@@ -82,7 +82,7 @@
 
 <script>
 import moment from 'moment'
-import { setLoan } from '../../api'
+import { setLoan } from '../../../api'
 export default {
     name: 'billingDialog',
     data () {
@@ -143,6 +143,7 @@ export default {
             this.loading = true
             this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
             if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
+            this.detailData.loanStartTime = this.detailData.invoiceTime
             await setLoan(this.detailData)
             this.loading = false
             this.$message({ type: 'success', message: '修改成功' })
