@@ -1,4 +1,5 @@
 <template>
+    <!-- 流贷 -->
     <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center custom-class='diyclass'>
         <div class="form">
             <el-form :model="detailData[0]" :rules="rules" ref="ruleForm" label-width="175px" class="demo-ruleForm">
@@ -188,9 +189,9 @@
 </template>
 
 <script>
-import { setPlan } from '../../api'
+import { setPlan } from '../../../api'
 import { mapState } from 'vuex'
-import { setCountMixin } from '../../mixins/setCount'
+import { setCountMixin } from '../../../mixins/setCount'
 export default {
     name: 'AnnualInterestRateDialog',
     mixins: [setCountMixin],
@@ -335,7 +336,7 @@ export default {
 /deep/.yuqi .el-form-item__content {
     width: 298px !important;
 }
-/deep/.el-form .el-input{
+/deep/.el-form .el-input {
     width: 250px;
 }
 .dialogtitle {

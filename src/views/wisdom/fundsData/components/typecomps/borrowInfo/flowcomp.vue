@@ -1,15 +1,7 @@
 <template>
     <div>
-        <!-- 分授信组件 -->
-        <div class="dialogtitle">借款信息：</div>
+        <!-- 流贷组件-借款信息 -->
         <div class="query-cont-row">
-            <div class="query-cont-col">
-                <el-form-item label="开票金额：" prop="invoiceAmount">
-                    <el-input v-model.trim="flowform.invoiceAmount" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
-                        <template slot="append">元</template>
-                    </el-input>
-                </el-form-item>
-            </div>
             <div class="query-cont-col">
                 <el-form-item label="供货商名称：" prop="supplier">
                     <el-input v-model.trim="flowform.supplier" maxlength="30" show-word-limit placeholder="请输入供货商名">
@@ -18,33 +10,30 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="借款金额：" prop="loanAmount">
-                    <el-input v-model.trim="flowform.loanAmount" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入借款金额"><template slot="append">元</template></el-input>
+                    <el-input v-model.trim="flowform.loanAmount" v-isNum="flowform.loanAmount" maxlength='20'
+                        placeholder="请输入借款金额"><template slot="append">元</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="年利率" prop="yearRate">
-                    <el-input v-model.trim="flowform.yearRate" placeholder="请输入年利率" v-isNum:2="flowform.yearRate" maxlength='20'><template slot="append">%</template>
+                <el-form-item label="年利率：" prop="yearRate">
+                    <el-input v-model.trim="flowform.yearRate" v-isNum="flowform.yearRate" maxlength='20' placeholder="请输入年利率"><template slot="append">%</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="开票日期：" prop="invoiceTime">
-                    <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="请选择出票日期">
+                <el-form-item label="放款日期：" prop="name">
+                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime'
+                        format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择放款日期">
                     </el-date-picker>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="借款期限：" prop="loanDateNum">
-                    <el-radio v-model.trim="flowform.loanDateType" :label=1 @change="loanDateTypeChange">月</el-radio>
-                    <el-radio v-model.trim="flowform.loanDateType" :label=2 @change="loanDateTypeChange" :disabled="flowform.repaymentType===2">天</el-radio>
-                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" v-isPositiveInt='flowform.loanDateNum' @change='onChooseTime' maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
+                <el-form-item label="借款期限： " prop="loanDateNum">
+                    <el-radio v-model.trim="flowform.loanDateType" :label=1>月</el-radio>
+                    <el-radio v-model.trim="flowform.loanDateType" :label=2>天</el-radio>
+                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isPositiveInt="flowform.loanDateNum" maxlength='5'
+                        placeholder="请输入借款期限"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
                     </el-input>
-                </el-form-item>
-            </div>
-            <div class="query-cont-col">
-                <el-form-item label="借款日期：" prop="">
-                    <el-date-picker v-model="flowform.loanStartTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择借款日期">
-                    </el-date-picker>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
@@ -53,23 +42,22 @@
                 </el-form-item>
             </div>
         </div>
-        <div class="dialogtitle">还款信息：</div>
+        <!-- <div class="dialogtitle">还款信息：</div>
         <div class="query-cont-col">
             <el-form-item label="还款方式：" prop="name">
-                <el-radio v-model.trim="flowform.repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
-                <el-radio v-model.trim="flowform.repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
+                <el-radio v-model.trim="flowform.repaymentType" :label=1>一次性还款</el-radio>
             </el-form-item>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
 import moment from 'moment'
 export default {
-    name: 'openform',
+    name: 'flowform',
     props: {
         flowform: {
             type: Object,
-            default: () => { }
+            default: () => {}
         }
     },
     data () {
@@ -99,22 +87,15 @@ export default {
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
-        },
-        depositPay: {
-            get: function () {
-                return this.flowform.invoiceAmount * this.flowform.depositProportion
-            },
-            set: function (value) {
-                this.flowform.depositPay = value
-            }
-
+        }
+    },
+    watch: {
+        'flowform.loanDateType' (val) {
+            this.flowform.loanDateNum = ''
+            this.flowform.loanEndTime = ''
         }
     },
     methods: {
-        loanDateTypeChange () {
-            this.flowform.loanDateNum = ''
-            this.flowform.loanEndTime = ''
-        },
         onChooseTime (val) {
             if (this.flowform.loanDateType == 1) {
                 this.flowform.loanEndTime = this.flowform.loanStartTime && moment(this.flowform.loanStartTime, 'YYYY-MM-DD').add(this.flowform.loanDateNum, 'months').format('YYYY-MM-DD')

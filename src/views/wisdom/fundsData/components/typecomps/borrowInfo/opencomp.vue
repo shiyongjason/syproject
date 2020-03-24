@@ -1,7 +1,6 @@
 <template>
     <div>
-        <!-- 敞口组件 -->
-        <div class="dialogtitle">借款信息：</div>
+        <!-- 敞口组件-借款信息 -->
         <div class="query-cont-row">
             <div class="query-cont-col">
                 <el-form-item label="开票金额：" prop="invoiceAmount">
@@ -55,13 +54,13 @@
                 </el-form-item>
             </div>
         </div>
-        <div class="dialogtitle">还款信息：</div>
+        <!-- <div class="dialogtitle">还款信息：</div>
         <div class="query-cont-col">
             <el-form-item label="还款方式：" prop="name">
                 <el-radio v-model.trim="flowform.repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
                 <el-radio v-model.trim="flowform.repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
             </el-form-item>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

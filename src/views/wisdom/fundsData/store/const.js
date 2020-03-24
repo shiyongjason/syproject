@@ -6,3 +6,5 @@ export const STANDINGB_BOOK = 'STANDINGB_BOOK'
 export const REPAYMENT_SCHEDULE = 'REPAYMENT_SCHEDULE'
 // 分部列表
 export const GET_BRANCH = 'GET_BRANCH'
+//
+export const GET_SUMMARY = 'GET_SUMMARY'
