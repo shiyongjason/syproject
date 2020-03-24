@@ -572,9 +572,9 @@ export default {
         },
         editPlatform (row) {
             if (row) {
-                this.$router.push({ path: '/wisdom/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
+                this.$router.push({ path: '/developonline/addplatfrom', query: { type: 'edit', companyCode: row.companyCode } })
             } else {
-                this.$router.push({ path: '/wisdom/addplatfrom' })
+                this.$router.push({ path: '/developonline/addplatfrom' })
             }
         },
         async findProvinceAndCity (code, subsectionCode) {

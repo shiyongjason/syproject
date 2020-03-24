@@ -203,7 +203,7 @@ export default {
             await addDevelopinfo(this.formData)
             this.$message.success('平台公司添加成功！')
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/wisdom/developlist')
+            this.$router.push('/developonline/developlist')
         },
         async onGetdevelopbasicinfo () {
             const { data } = await getDevelopbasic({ companyCode: this.companyCode })

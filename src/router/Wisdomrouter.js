@@ -143,7 +143,18 @@ export default [
                     component: '@/views/wisdom/profitStatistics'
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
-            },
+            }
+        ]
+    },
+    {
+        path: '/developonline',
+        meta: {
+            title: '机构在线',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
             {
                 path: 'developlist',
                 name: 'developlist',
