@@ -293,6 +293,7 @@ export default {
             this.signForm.profitGrowth = this.signForm.profitGrowth + '%'
             this.$refs.signForm.validate((valid) => {
                 if (valid) {
+                    console.log(this.signForm)
                     this.$emit('backnext')
                 }
             })
@@ -306,10 +307,12 @@ export default {
                         await updateDevelopsign(this.signForm)
                         this.$message.success('平台公司更新成功！')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/wisdom/developlist')
+                        this.$router.push('/developonline/developlist')
                     } catch (error) {
                         this.loading = false
                     }
+                } else {
+                    this.loading = false
                 }
             })
         }
