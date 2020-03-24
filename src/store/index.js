@@ -12,6 +12,9 @@ import payment from './modules/payment'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import userRealreport from './modules/userRealreport'
 import supplier from './modules/supplier'
+// import cloudmanage from './modules/cloudManage'
+import developmodule from '@/views/wisdom/store/developmodule'
+import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 Vue.use(Vuex)
 
@@ -27,7 +30,8 @@ const store = new Vuex.Store({
         'menuList': [],
         'isCollapse': false,
         'cachedInclude': [],
-        'cachedExclude': []
+        'cachedExclude': [],
+        'devDepList': []
     },
     mutations,
     actions: actions,
@@ -43,7 +47,9 @@ const store = new Vuex.Store({
         payment,
         supplier,
         userRealreport,
-        cloudmanage
+        cloudmanage,
+        developmodule,
+        jinyunplatform
     }
 })
 

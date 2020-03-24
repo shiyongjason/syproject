@@ -10,17 +10,6 @@ export default {
     component: Layout,
     children: [
         {
-            path: 'jyindex',
-            name: 'jyindex',
-            meta: {
-                title: '金云',
-                tagName: '金云',
-                isMenu: true,
-                icon: ''
-            },
-            component: () => import('@/views/jinyunplatform/index')
-        },
-        {
             path: 'enterpriseCA',
             name: 'enterpriseCA',
             meta: {
@@ -75,5 +64,28 @@ export default {
             },
             component: () => import('@/views/jinyunplatform/faceRecognition')
         }
+        // 后台改动太大，暂时不做，或许下一期做或者下下期暂定
+        // {
+        //     path: 'businessCustomer',
+        //     name: 'businessCustomer',
+        //     meta: {
+        //         title: '企业客户',
+        //         tagName: '企业客户',
+        //         isMenu: true,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/jinyunplatform/businessCustomer')
+        // },
+        // {
+        //     path: 'addBusinessCustomer',
+        //     name: 'addBusinessCustomer',
+        //     meta: {
+        //         title: '企业客户',
+        //         tagName: '企业客户',
+        //         isMenu: false,
+        //         icon: ''
+        //     },
+        //     component: () => import('@/views/jinyunplatform/pages/addBusinessCustomer')
+        // }
     ]
 }

@@ -1,4 +1,5 @@
 import { findMenuList, tracking } from '../views/layout/api'
+import { findDepList } from '../views/wisdom/api/index'
 export default {
     resetVuex (context) {
         this.state.tagsInfo = []
@@ -20,5 +21,9 @@ export default {
             jinyun_type: 2,
             ...params
         })
+    },
+    async getDevdeplist ({ commit }, params) {
+        const { data } = await findDepList(params)
+        commit('DEVDEP_LIST', data)
     }
 }
