@@ -1919,7 +1919,7 @@ export default {
         // 敞口和分授信还款
         async getGrantPaymetPlanData (row) {
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
-            console.log(data)
+            // console.log(data)
             this.loanAmount = data.reduce((val, item, index) => {
                 return val + item.capitalAmount
             }, 0)
@@ -1933,7 +1933,7 @@ export default {
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
-            console.log(this.rowData)
+            // console.log(this.rowData)
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
             // 是否需要增加计息---

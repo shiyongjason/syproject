@@ -9,11 +9,11 @@
             </span>
         </el-dialog>
         <div class="form">
-            <el-form :model="form" :rules="rules" ref="ruleForm" label-width="165px" class="demo-ruleForm">
+            <el-form :model="{detailData}" :rules="rules" ref="form" label-width="165px">
                 <div class="query-cont-row" style="height: 40px;">
                     <div class="query-cont-col theFirst">
                         <span slot='label' style="color:#000;font-size:18px"><b>还款方式：</b></span>
-                        <el-form-item prop="repaymentType">
+                        <el-form-item>
                             <el-radio v-model.trim="detailData[0].repaymentType" :label=2 @change="capitalPaidChange(2)">334</el-radio>
                             <el-radio v-model.trim="detailData[0].repaymentType" :label=1 @change="capitalPaidChange(1)">一次性还款</el-radio>
                         </el-form-item>
@@ -25,106 +25,128 @@
                     <div class="ftitle">第{{index+1}}期还款信息：</div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <el-form-item label="约定还款日期：" prop="endTime">
+                            <el-form-item label="约定还款日期：">
                                 <el-date-picker v-model="item.endTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择约定还款日期" :disabled='true'>
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="是否存在宽限期：" prop="graceDay">
-                                <el-radio style="margin-right:5px" v-model.trim="item.exsitGrace" @change="dealCount(item)" :label=1>是</el-radio>
-                                <el-radio style="margin-right:5px" v-model.trim="item.exsitGrace" @change="dealCount(item)" :label=0>否</el-radio>
-                                <span style="margin-left:15px" v-if="item.exsitGrace==1">宽限日期：</span>
-                                <!-- 仅允许输入非负整数，最多允许输入3位 -->
-                                <el-input placeholder="请输入宽限期限" v-model.trim="item.graceDay" v-isNum:0='item.graceDay' maxlength='3' @blur="dealCount(item)" v-if="item.exsitGrace==1">
-                                    <template slot="append">天</template>
-                                </el-input>
-                                <span style="margin-left:25px" v-if="item.exsitGrace==1">宽限期利率：</span>
-                                <el-input v-model.trim="item.graceInterest" v-isNum:2="item.graceInterest" maxlength='16' placeholder="请输入宽限期利率" @blur="dealCount(item)" v-if="item.exsitGrace==1">
-                                    <template slot="append">%</template>
-                                </el-input>
+                            <el-form-item label="是否存在宽限期：">
+                                <div class="w250">
+                                    <el-radio style="margin-right:5px" v-model.trim="item.exsitGrace" @change="dealCount(item)" :label=1>是</el-radio>
+                                    <el-radio style="margin-right:5px" v-model.trim="item.exsitGrace" @change="dealCount(item)" :label=0>否</el-radio>
+                                </div>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="query-cont-row">
+                        <template v-if="item.exsitGrace==1">
+                            <!-- 仅允许输入非负整数，最多允许输入3位 -->
+                            <div class="query-cont-col">
+                                <el-form-item label="宽限日期：">
+                                    <el-input placeholder="请输入宽限期限" v-model.trim="item.graceDay" v-isNum:0='item.graceDay' maxlength='3' @blur="dealCount(item)">
+                                        <template slot="append">天</template>
+                                    </el-input>
+                                </el-form-item>
+                            </div>
+                            <div class="query-cont-col">
+                                <el-form-item label="宽限期利率：">
+                                    <el-input v-model.trim="item.graceInterest" v-isNum:2="item.graceInterest" maxlength='16' placeholder="请输入宽限期利率" @blur="dealCount(item)">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </el-form-item>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <el-form-item label="约定还款金额：" prop="capitalAmount">
+                            <el-form-item label="约定还款金额：">
                                 <el-input v-model.trim="item.capitalAmount" disabled v-isNegative="item.capitalAmount" maxlength='16' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="本次还本金时间：" prop="thisPaidCapitalTime">
+                            <el-form-item label="本次还本金时间：">
                                 <el-date-picker v-model="item.thisPaidCapitalTime" @blur="dealCount(item)" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择还本金时间">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="本次本金还款金额：" prop="thisPaidCapital">
-                                <el-input v-model.trim="item.thisPaidCapital" @blur="dealCount(item)" :disabled='!item.thisPaidCapitalTime' v-isNegative="item.thisPaidCapital" maxlength='16' placeholder="请输入还款金额">
+                            <el-form-item label="本次本金还款金额：">
+                                <el-input v-model.trim="item.thisPaidCapital" @blur="dealCount(item)" :disabled='!item.thisPaidCapitalTime' v-inputMAX='surplus[index].thisPaidCapitalSur' v-isNegative maxlength='16' placeholder="请输入还款金额">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
                         </div>
 
                         <div class="query-cont-col">
-                            <el-form-item label="剩余本金金额：" prop="thisPaidCapital">
+                            <el-form-item label="剩余本金金额：" :prop="`detailData[${index}].thisPaidCapital`">
                                 <!-- 本金-已还-本次还本金 -->
-                                <span>{{((item.capitalAmount||0)-(item.capitalPaid||0)-(item.thisPaidCapital||0)).toFixed(2)}}元</span>
+                                <div class="w250">
+                                    <span>{{surplus[index].thisPaidCapitalSur}}元</span>
+                                </div>
                             </el-form-item>
                         </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
-                            <el-form-item label="累计实时宽限期利息：" prop="name">
-                                {{item.graceInterestAmount||0}}元
+                            <el-form-item label="累计实时宽限期利息：">
+                                <div class="w250">
+                                    <span>{{item.graceInterestAmount||0}}元</span>
+                                </div>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="本次还宽限利息时间：" prop="thisPaidGraceInterestTime">
+                            <el-form-item label="本次还宽限利息时间：">
                                 <el-date-picker v-model="item.thisPaidGraceInterestTime" type="date" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart" placeholder="请选择本次还宽限利息时间：">
                                 </el-date-picker>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="本次收取宽限利息：" prop="thisPaidGraceInterest">
-                                <el-input v-model.trim="item.thisPaidGraceInterest" v-isNegative="item.thisPaidGraceInterest" maxlength='16' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入本次收取宽限利息：">
+                            <el-form-item label="本次收取宽限利息：">
+                                <el-input v-model.trim="item.thisPaidGraceInterest" @blur="verity(`detailData[${index}].thisPaidGraceInterest`)" v-isNegative maxlength='16' :disabled="!item.thisPaidGraceInterestTime" placeholder="请输入本次收取宽限利息：">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
-                            <el-form-item label="剩余宽限利息：" prop="name">
+                            <el-form-item label="剩余宽限利息：" :prop="`detailData[${index}].thisPaidGraceInterest`">
                                 <!-- 总宽限期利息-已还-本次还宽限期利息 -->
-                                {{((item.graceInterestAmount||0)-(item.graceInterestPaid||0)-(item.thisPaidGraceInterest||0)).toFixed(2)}}元
+                                <div class="w250">
+                                    <span>{{surplus[index].thisPaidGraceInterestSur}}元</span>
+                                </div>
                             </el-form-item>
                         </div>
                     </div>
                     <div v-if="detailData[0].account_accountType==3">
                         <div class="query-cont-row">
                             <div class="query-cont-col">
-                                <el-form-item label="累计应收正常利息：" prop="name">
-                                    {{item.interestAmount||0}}元
+                                <el-form-item label="累计应收正常利息：">
+                                    <div class="w250">
+                                        <span>{{item.interestAmount||0}}元</span>
+                                    </div>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="本次还正常利息时间：" prop="thisPaidInterestTime">
+                                <el-form-item label="本次还正常利息时间：">
                                     <el-date-picker v-model="item.thisPaidInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还正常利息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="本次收取正常利息：" prop="thisPaidInterest">
-                                    <el-input v-model.trim="item.thisPaidInterest" v-isNegative="item.thisPaidInterest" maxlength='16' :disabled="!item.thisPaidInterestTime" placeholder="请输入本次收取正常利息">
+                                <el-form-item label="本次收取正常利息：">
+                                    <el-input v-model.trim="item.thisPaidInterest" @blur="verity(`detailData[${index}].thisPaidInterest`)" v-isNegative maxlength='16' :disabled="!item.thisPaidInterestTime" placeholder="请输入本次收取正常利息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="剩余正常利息：" prop="name">
+                                <el-form-item label="剩余正常利息：" :prop="`detailData[${index}].thisPaidInterest`">
                                     <!-- 总利息-已还-本次还利息 -->
-                                    {{((item.interestAmount||0)-(item.interestPaid||0)-(item.thisPaidInterest||0)).toFixed(2)}}元
+                                    <div class="w250">
+                                        <span>{{surplus[index].thisPaidInterestSur}}元</span>
+                                    </div>
                                 </el-form-item>
                             </div>
                         </div>
@@ -134,7 +156,7 @@
                         <div class="endline mar020">逾期</div>
                         <div class="query-cont-row" style="margin-top:10px">
                             <div class="query-cont-col">
-                                <el-form-item label="阶梯式计息：" prop="name">
+                                <el-form-item label="阶梯式计息：">
                                     <el-radio v-model.trim="item.isStepOverInterest" @change="onChange(1, item)" :label=0>否</el-radio>
                                     <el-radio v-model.trim="item.isStepOverInterest" @change="onChange(2, item)" :label=1>是</el-radio>
                                 </el-form-item>
@@ -143,7 +165,7 @@
                         <div v-if="item.isStepOverInterest==0">
                             <div class="query-cont-row">
                                 <div class="query-cont-col">
-                                    <el-form-item label="逾期利率：" prop="overDueInterest">
+                                    <el-form-item label="逾期利率：">
                                         <el-input v-model.trim="item.overDueInterest" v-isNum:2="item.dateNum" maxlength='16' placeholder="请输入逾期利率" @blur="dealCount(item)">
                                             <template slot="append">%</template>
                                         </el-input>
@@ -172,27 +194,31 @@
                         </div>
                         <div class="query-cont-row">
                             <div class="query-cont-col">
-                                <el-form-item label="应缴纳逾期罚息：" prop="overDueInterestAmount">
-                                    {{item.overDueInterestAmount}} 元
+                                <el-form-item label="应缴纳逾期罚息：">
+                                    <div class="w250">
+                                        <span>{{item.overDueInterestAmount}} 元</span>
+                                    </div>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="本次还罚息时间：" prop="thisPaidOverDueInterestTime">
+                                <el-form-item label="本次还罚息时间：">
                                     <el-date-picker v-model="item.thisPaidOverDueInterestTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请选择本次还罚息时间">
                                     </el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="本次缴纳逾期罚息：" prop="thisPaidOverDueInterest">
-                                    <el-input v-model.trim="item.thisPaidOverDueInterest" v-isNegative="item.thisPaidOverDueInterest" maxlength='16' :disabled="!item.thisPaidOverDueInterestTime" placeholder="请输入本次缴纳逾期罚息">
+                                <el-form-item label="本次缴纳逾期罚息：">
+                                    <el-input v-model.trim="item.thisPaidOverDueInterest" @blur="verity(`detailData[${index}].thisPaidOverDueInterest`)" v-isNegative maxlength='16' :disabled="!item.thisPaidOverDueInterestTime" placeholder="请输入本次缴纳逾期罚息">
                                         <template slot="append">元</template>
                                     </el-input>
                                 </el-form-item>
                             </div>
                             <div class="query-cont-col">
-                                <el-form-item label="剩余逾期罚息：" prop="name">
+                                <el-form-item label="剩余逾期罚息：" :prop="`detailData[${index}].thisPaidOverDueInterest`">
                                     <!-- 总逾期利息-已还-本次还逾期 -->
-                                    {{((item.overDueInterestAmount||0)-(item.overDueInterestPaid||0)-(item.thisPaidOverDueInterest||0)).toFixed(2)||0}}元
+                                    <div class="w250">
+                                        <span>{{surplus[index].thisPaidOverDueInterestSur}}元</span>
+                                    </div>
                                 </el-form-item>
                             </div>
                         </div>
@@ -221,14 +247,127 @@ export default {
             radiox: '1',
             loading: false,
             innerVisible: false,
-            form: {
-                name: '',
-                x: ''
-            },
             rules: {
-                // name: [
-                //     { required: true, message: '请输入台账编号', trigger: 'blur' }
-                // ]
+                'detailData[0].thisPaidCapital': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[0].thisPaidCapitalSur < 0) {
+                                return callback(new Error('剩余本金金额不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[1].thisPaidCapital': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[1].thisPaidCapitalSur < 0) {
+                                return callback(new Error('剩余本金金额不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[2].thisPaidCapital': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[2].thisPaidCapitalSur < 0) {
+                                return callback(new Error('剩余本金金额不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[0].thisPaidGraceInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[0].thisPaidGraceInterestSur < 0) {
+                                return callback(new Error('剩余宽限利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[1].thisPaidGraceInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[1].thisPaidGraceInterestSur < 0) {
+                                return callback(new Error('剩余宽限利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[2].thisPaidGraceInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[2].thisPaidGraceInterestSur < 0) {
+                                return callback(new Error('剩余宽限利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[0].thisPaidInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[0].thisPaidInterestSur < 0) {
+                                return callback(new Error('剩余正常利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[1].thisPaidInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[1].thisPaidInterestSur < 0) {
+                                return callback(new Error('剩余正常利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[2].thisPaidInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[2].thisPaidInterestSur < 0) {
+                                return callback(new Error('剩余正常利息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[0].thisPaidOverDueInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[0].thisPaidOverDueInterestSur < 0) {
+                                return callback(new Error('剩余逾期罚息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[1].thisPaidOverDueInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[1].thisPaidOverDueInterestSur < 0) {
+                                return callback(new Error('剩余逾期罚息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                'detailData[2].thisPaidOverDueInterest': [
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.arrSurplus[2].thisPaidOverDueInterestSur < 0) {
+                                return callback(new Error('剩余逾期罚息不能小于0'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
             },
             newRata: {
                 dateNum: '',
@@ -238,10 +377,9 @@ export default {
                 sort: '',
                 startTime: ''
             },
-            planListItem: {}
+            planListItem: {},
+            arrSurplus: []
         }
-    },
-    watch: {
     },
     props: {
         dialogVisible: {
@@ -263,7 +401,19 @@ export default {
         },
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        surplus () {
+            this.arrSurplus = []
+            this.detailData.map((item, index) => {
+                this.arrSurplus.push({}) // 初始化arrSurplus
+                this.arrSurplus[index].thisPaidCapitalSur = ((item.capitalAmount || 0) - (item.capitalPaid || 0) - (item.thisPaidCapital || 0)).toFixed(2) || 0
+                this.arrSurplus[index].thisPaidGraceInterestSur = ((item.graceInterestAmount || 0) - (item.graceInterestPaid || 0) - (item.thisPaidGraceInterest || 0)).toFixed(2) || 0
+                this.arrSurplus[index].thisPaidInterestSur = ((item.interestAmount || 0) - (item.interestPaid || 0) - (item.thisPaidInterest || 0)).toFixed(2) || 0
+                this.arrSurplus[index].thisPaidOverDueInterestSur = ((item.overDueInterestAmount || 0) - (item.overDueInterestPaid || 0) - (item.thisPaidOverDueInterest || 0)).toFixed(2) || 0 || 0
+            })
+            console.log(this.arrSurplus)
+            return this.arrSurplus
+        }
     },
     methods: {
         async dealCount (query) {
@@ -277,6 +427,9 @@ export default {
             query.interestAmount = res.interestAmount || 0
             query.overDueInterestAmount = res.overDueInterestAmount || 0
             this.$forceUpdate()
+        },
+        verity (validateField) {
+            this.$refs.form.validateField(validateField)
         },
         async onChange (val, item) {
             await this.$emit('stepOver', val, item)
@@ -301,17 +454,21 @@ export default {
         onDeleteRate (index) {
             this.detailData[0].overdueList.splice(index, 1)
         },
-        async onSaveplan () {
-            this.loading = true
-            try {
-                await this.setPlan(this.detailData)
-                this.$message({ type: 'success', message: '修改成功' })
-                this.onCancle()
-                this.$emit('reload')
-                this.loading = false
-            } catch (error) {
-                this.loading = false
-            }
+        onSaveplan () {
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    // this.loading = true
+                    // try {
+                    //     await this.setPlan(this.detailData)
+                    //     this.$message({ type: 'success', message: '修改成功' })
+                    //     this.onCancle()
+                    //     this.$emit('reload')
+                    //     this.loading = false
+                    // } catch (error) {
+                    //     this.loading = false
+                    // }
+                }
+            })
         },
         async setPlan (planList) {
             await setPlan({
@@ -324,6 +481,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.w250 {
+    width: 250px;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
 /deep/ .el-dialog__body {
     padding: 20px 24px;
     min-height: auto;
