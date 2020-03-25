@@ -12,7 +12,10 @@ const state = {
     cloudAlarmPagination: {},
     cloudEquipmentErrorList: [],
     cloudEquipmentErrorPagination: {},
-    cloudEquipmentErrorDict: []
+    cloudEquipmentErrorDict: [],
+    cloudSmartPlayList: [],
+    cloudSmartPlayPagination: {},
+    cloudSmartPlayPostDetail: {}
 }
 
 const getters = {
@@ -25,7 +28,10 @@ const getters = {
     cloudAlarmPagination: state => state.cloudAlarmPagination,
     cloudEquipmentErrorList: state => state.cloudEquipmentErrorList,
     cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
-    cloudEquipmentErrorDict: state => state.cloudEquipmentErrorDict
+    cloudEquipmentErrorDict: state => state.cloudEquipmentErrorDict,
+    cloudSmartPlayList: state => state.cloudSmartPlayList,
+    cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
+    cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail
 }
 
 const mutations = {
@@ -58,6 +64,15 @@ const mutations = {
     },
     [cloud.CLOUD_EQUIPMENT_ERROR_DICT] (state, payload) {
         state.cloudEquipmentErrorDict = payload
+    },
+    [cloud.CLOUD_SMART_PLAY_LIST] (state, payload) {
+        state.cloudSmartPlayList = payload
+    },
+    [cloud.CLOUD_SMART_PLAY_PAGINATION] (state, payload) {
+        state.cloudSmartPlayPagination = payload
+    },
+    [cloud.CLOUD_SMART_PLAY_POST_DETAIL] (state, payload) {
+        state.cloudSmartPlayPostDetail = payload
     }
 }
 
@@ -86,24 +101,36 @@ const actions = {
         const { data } = await Api.getCloudAlarmList(params)
         commit(cloud.CLOUD_ALARM_LIST, data.data)
         commit(cloud.CLOUD_ALARM_PAGINATION, {
-            pageNumber: data.pageNum,
-            pageSize: data.pageSize,
+            pageNumber: data.current,
+            pageSize: data.size,
             total: data.total
         })
     },
     async findCloudEquipmentErrorList ({ commit }, params) {
         const { data } = await Api.getCloudEquipmentErrorList(params)
-        console.log(data.data)
-        commit(cloud.CLOUD_EQUIPMENT_ERROR_LIST, data.data)
+        commit(cloud.CLOUD_EQUIPMENT_ERROR_LIST, data.data.records)
         commit(cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION, {
-            pageNumber: data.pageNum,
-            pageSize: data.pageSize,
-            total: data.total
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
         })
     },
     async findCloudEquipmentErrorDict ({ commit }, params) {
         const { data } = await Api.getCloudEquipmentErrorDict(params)
         commit(cloud.CLOUD_EQUIPMENT_ERROR_DICT, data.data)
+    },
+    async findCloudSmartPlayList ({ commit }, params) {
+        const { data } = await Api.getCloudSmartPlayList(params)
+        commit(cloud.CLOUD_SMART_PLAY_LIST, data.data.records)
+        commit(cloud.CLOUD_SMART_PLAY_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudSmartPlayPostDetail ({ commit }, params) {
+        const { data } = await Api.getCloudSmartPlayDetail(params)
+        commit(cloud.CLOUD_SMART_PLAY_POST_DETAIL, data.data)
     }
 }
 export default {

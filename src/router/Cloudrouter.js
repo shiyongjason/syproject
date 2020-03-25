@@ -142,6 +142,18 @@ export default {
             component: () => import('@/views/comfortcloud/smartPlay/smartPlay.vue')
         },
         {
+            path: 'smartPlayEdit',
+            name: 'smartPlayEdit',
+            meta: {
+                title: '智能玩法编辑',
+                tagName: '智能玩法编辑',
+                parentName: '智能玩法',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/smartPlay/smartPlayEdit.vue')
+        },
+        {
             path: 'sendMessage',
             name: 'sendMessage',
             meta: {
