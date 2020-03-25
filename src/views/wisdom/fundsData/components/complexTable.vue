@@ -10,14 +10,14 @@
         <fileInfoDialog :detailData='accountData' v-if='accountData&&fileinfoDialogVisible' :dialogVisible='fileinfoDialogVisible' @onClose="fileinfoDialogVisible=false" @reload='getList' />
         <!-- 基本信息Dialog -备注 -->
         <remarkDialog :detailData='accountData' v-if='accountData&&remarkDialogVisible' :dialogVisible='remarkDialogVisible' @onClose="remarkDialogVisible=false" @reload='getList' />
-        <!-- 借款Dialog -手动调息 -->
-        <regulatingBreathingDialog :detailData='loanData' v-if='loanData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -流贷 -->
         <supplierDialog :detailData='loanData' v-if='loanData&&supplierDialogVisible' :dialogVisible='supplierDialogVisible' @onClose="supplierDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -分授信 -->
         <pointsCreditBillingDialog :detailData='loanData' v-if='loanData&&pointsCreditBillingDialogVisible' :dialogVisible='pointsCreditBillingDialogVisible' @onClose="pointsCreditBillingDialogVisible=false" @reload='getList' />
         <!-- 借款Dialog -敞口 -->
         <billingDialog :detailData='loanData' v-if='loanData&&billingDialogVisible' :dialogVisible='billingDialogVisible' @onClose="billingDialogVisible=false" @reload='getList' />
+        <!-- 还款Dialog -手动调息 -->
+        <regulatingBreathingDialog :detailData='regulatingBreathingDialogData' v-if='regulatingBreathingDialogData&&regulatingBreathingDialogVisible' :dialogVisible='regulatingBreathingDialogVisible' @onClose="regulatingBreathingDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -流贷 -->
         <AnnualInterestRateDialog :detailData='respAccountRepaymentPlanData' v-if='respAccountRepaymentPlanData&&AnnualInterestRateDialogVisible' :dialogVisible='AnnualInterestRateDialogVisible' @onClose="AnnualInterestRateDialogVisible=false" @reload='getList' />
         <!-- 还款Dialog -敞口&&分授信 -->
@@ -33,7 +33,7 @@ import remarkDialog from './dialog/account/remarkDialog.vue'
 import supplierDialog from './dialog/loan/supplierDialog.vue'
 import billingDialog from './dialog/loan/billingDialog.vue'
 import pointsCreditBillingDialog from './dialog/loan/pointsCreditBillingDialog.vue'
-import regulatingBreathingDialog from './dialog/loan/regulatingBreathingDialog.vue'
+import regulatingBreathingDialog from './dialog/plan/regulatingBreathingDialog.vue'
 import AnnualInterestRateDialog from './dialog/plan/AnnualInterestRateDialog.vue'
 import repaymentDialog from './dialog/plan/repaymentDialog.vue'
 import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanType } from '../api/index'
@@ -111,6 +111,7 @@ export default {
             loanData: {}, // 借款信息数据
             rowData: null, // 敞口分授信还款信息数据
             respAccountRepaymentPlanData: null, // 流贷还款信息数据
+            regulatingBreathingDialogData: [], // 手动调息数据
             // 台账汇总表
             TotalColumn: [
                 {
@@ -460,9 +461,11 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getLoan(scope.row)
-                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                            await this.getRespAccountRepaymentPlanData(scope.row)
+                            this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                            this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
+                            this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -828,9 +831,8 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getLoan(scope.row)
-                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                            await this.getGrantPaymetPlanData(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -1095,9 +1097,8 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getLoan(scope.row)
-                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                        return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                            await this.getGrantPaymetPlanData(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -1936,7 +1937,7 @@ export default {
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
-            // console.log(this.rowData)
+            this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.rowData))
             // 重新保留一份数据
             this.copyGrantdata = [...this.rowData]
             // 是否需要增加计息---

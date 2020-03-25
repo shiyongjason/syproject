@@ -251,7 +251,7 @@ export default {
                 'detailData[0].thisPaidCapital': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[0].thisPaidCapitalSur < 0) {
+                            if (this.surplus[0].thisPaidCapitalSur < 0) {
                                 return callback(new Error('剩余本金金额不能小于0'))
                             }
                             return callback()
@@ -261,7 +261,7 @@ export default {
                 'detailData[1].thisPaidCapital': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[1].thisPaidCapitalSur < 0) {
+                            if (this.surplus[1].thisPaidCapitalSur < 0) {
                                 return callback(new Error('剩余本金金额不能小于0'))
                             }
                             return callback()
@@ -271,7 +271,7 @@ export default {
                 'detailData[2].thisPaidCapital': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[2].thisPaidCapitalSur < 0) {
+                            if (this.surplus[2].thisPaidCapitalSur < 0) {
                                 return callback(new Error('剩余本金金额不能小于0'))
                             }
                             return callback()
@@ -281,7 +281,7 @@ export default {
                 'detailData[0].thisPaidGraceInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[0].thisPaidGraceInterestSur < 0) {
+                            if (this.surplus[0].thisPaidGraceInterestSur < 0) {
                                 return callback(new Error('剩余宽限利息不能小于0'))
                             }
                             return callback()
@@ -291,7 +291,7 @@ export default {
                 'detailData[1].thisPaidGraceInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[1].thisPaidGraceInterestSur < 0) {
+                            if (this.surplus[1].thisPaidGraceInterestSur < 0) {
                                 return callback(new Error('剩余宽限利息不能小于0'))
                             }
                             return callback()
@@ -301,7 +301,7 @@ export default {
                 'detailData[2].thisPaidGraceInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[2].thisPaidGraceInterestSur < 0) {
+                            if (this.surplus[2].thisPaidGraceInterestSur < 0) {
                                 return callback(new Error('剩余宽限利息不能小于0'))
                             }
                             return callback()
@@ -311,7 +311,7 @@ export default {
                 'detailData[0].thisPaidInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[0].thisPaidInterestSur < 0) {
+                            if (this.surplus[0].thisPaidInterestSur < 0) {
                                 return callback(new Error('剩余正常利息不能小于0'))
                             }
                             return callback()
@@ -321,7 +321,7 @@ export default {
                 'detailData[1].thisPaidInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[1].thisPaidInterestSur < 0) {
+                            if (this.surplus[1].thisPaidInterestSur < 0) {
                                 return callback(new Error('剩余正常利息不能小于0'))
                             }
                             return callback()
@@ -331,7 +331,7 @@ export default {
                 'detailData[2].thisPaidInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[2].thisPaidInterestSur < 0) {
+                            if (this.surplus[2].thisPaidInterestSur < 0) {
                                 return callback(new Error('剩余正常利息不能小于0'))
                             }
                             return callback()
@@ -341,7 +341,7 @@ export default {
                 'detailData[0].thisPaidOverDueInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[0].thisPaidOverDueInterestSur < 0) {
+                            if (this.surplus[0].thisPaidOverDueInterestSur < 0) {
                                 return callback(new Error('剩余逾期罚息不能小于0'))
                             }
                             return callback()
@@ -351,7 +351,7 @@ export default {
                 'detailData[1].thisPaidOverDueInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[1].thisPaidOverDueInterestSur < 0) {
+                            if (this.surplus[1].thisPaidOverDueInterestSur < 0) {
                                 return callback(new Error('剩余逾期罚息不能小于0'))
                             }
                             return callback()
@@ -361,13 +361,13 @@ export default {
                 'detailData[2].thisPaidOverDueInterest': [
                     {
                         validator: (r, v, callback) => {
-                            if (this.arrSurplus[2].thisPaidOverDueInterestSur < 0) {
+                            if (this.surplus[2].thisPaidOverDueInterestSur < 0) {
                                 return callback(new Error('剩余逾期罚息不能小于0'))
                             }
                             return callback()
                         }
                     }
-                ],
+                ]
             },
             newRata: {
                 dateNum: '',
@@ -377,8 +377,7 @@ export default {
                 sort: '',
                 startTime: ''
             },
-            planListItem: {},
-            arrSurplus: []
+            planListItem: {}
         }
     },
     props: {
@@ -403,16 +402,16 @@ export default {
             userInfo: state => state.userInfo
         }),
         surplus () {
-            this.arrSurplus = []
+            let arrSurplus = []
             this.detailData.map((item, index) => {
-                this.arrSurplus.push({}) // 初始化arrSurplus
-                this.arrSurplus[index].thisPaidCapitalSur = ((item.capitalAmount || 0) - (item.capitalPaid || 0) - (item.thisPaidCapital || 0)).toFixed(2) || 0
-                this.arrSurplus[index].thisPaidGraceInterestSur = ((item.graceInterestAmount || 0) - (item.graceInterestPaid || 0) - (item.thisPaidGraceInterest || 0)).toFixed(2) || 0
-                this.arrSurplus[index].thisPaidInterestSur = ((item.interestAmount || 0) - (item.interestPaid || 0) - (item.thisPaidInterest || 0)).toFixed(2) || 0
-                this.arrSurplus[index].thisPaidOverDueInterestSur = ((item.overDueInterestAmount || 0) - (item.overDueInterestPaid || 0) - (item.thisPaidOverDueInterest || 0)).toFixed(2) || 0 || 0
+                arrSurplus.push({}) // 初始化arrSurplus
+                arrSurplus[index].thisPaidCapitalSur = ((item.capitalAmount || 0) - (item.capitalPaid || 0) - (item.thisPaidCapital || 0)).toFixed(2) || 0
+                arrSurplus[index].thisPaidGraceInterestSur = ((item.graceInterestAmount || 0) - (item.graceInterestPaid || 0) - (item.thisPaidGraceInterest || 0)).toFixed(2) || 0
+                arrSurplus[index].thisPaidInterestSur = ((item.interestAmount || 0) - (item.interestPaid || 0) - (item.thisPaidInterest || 0)).toFixed(2) || 0
+                arrSurplus[index].thisPaidOverDueInterestSur = ((item.overDueInterestAmount || 0) - (item.overDueInterestPaid || 0) - (item.thisPaidOverDueInterest || 0)).toFixed(2) || 0 || 0
             })
-            console.log(this.arrSurplus)
-            return this.arrSurplus
+            // this.arrSurplus = arrSurplus
+            return arrSurplus
         }
     },
     methods: {
@@ -457,16 +456,16 @@ export default {
         onSaveplan () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    // this.loading = true
-                    // try {
-                    //     await this.setPlan(this.detailData)
-                    //     this.$message({ type: 'success', message: '修改成功' })
-                    //     this.onCancle()
-                    //     this.$emit('reload')
-                    //     this.loading = false
-                    // } catch (error) {
-                    //     this.loading = false
-                    // }
+                    this.loading = true
+                    try {
+                        await this.setPlan(this.detailData)
+                        this.$message({ type: 'success', message: '修改成功' })
+                        this.onCancle()
+                        this.$emit('reload')
+                        this.loading = false
+                    } catch (error) {
+                        this.loading = false
+                    }
                 }
             })
         },
