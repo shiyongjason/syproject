@@ -261,7 +261,7 @@ export default {
                             return callback()
                         }
                     }
-                ],
+                ]
             },
             loading: false
         }
