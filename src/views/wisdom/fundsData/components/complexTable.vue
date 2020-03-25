@@ -462,6 +462,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
+                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -471,9 +472,9 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = `${this.product}-流贷档案信息维护`
+                            this.accountData.title = `${this.product}-流贷档案信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.fileinfoDialogVisible = true
                         }}></i></span>
                     }
@@ -485,7 +486,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
-                            this.accountData.title = `${this.product}-流贷备注信息维护`
+                            this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.remarkDialogVisible = true
                         }}></i></span>
                     }
@@ -829,6 +830,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
+                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -838,7 +840,7 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-分授信档案信息维护`
                             this.fileinfoDialogVisible = true
@@ -1095,6 +1097,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{scope.row.loan_manualInterest ? `${scope.row.loan_manualInterest}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
+                            this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
                     }
@@ -1104,7 +1107,7 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? `${scope.row.account_standingBookArchiveNo}` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-敞口基础信息维护`
                             this.fileinfoDialogVisible = true
