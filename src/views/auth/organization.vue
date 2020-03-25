@@ -3,7 +3,11 @@
         <div class="index h-content">
             <div class="tree">
                 <h2 class="h-h2">机构</h2>
-                <el-tree :data="treeList" :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false" :default-expanded-keys="['']" node-key="id" :highlight-current="true"></el-tree>
+                <el-tree :data="treeList" show-checkbox :props="defaultProps" @node-click="handleNodeClick" ref="tree" :expand-on-click-node="false" :default-expanded-keys="['']" node-key="id" :highlight-current="true">
+                    <span class="custom-tree-node" slot-scope="{ node }">
+                        <span style="margin-left: 5px">{{ node.label }}</span>
+                    </span>
+                </el-tree>
             </div>
             <div class="table">
                 <h2 class="h-h2">人员/账号</h2>
@@ -12,7 +16,7 @@
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
                     <el-button type="primary" v-if="true" @click="findOrganizationEmployee">搜索</el-button>
-                    <el-button type="primary">一键同步</el-button>
+                    <el-button type="primary" @click="syncOrg">同步金云</el-button>
                 </div>
                 <div class="result">
                     <OrganizationTable :tableData="tableData" :paginationData="paginationData"></OrganizationTable>
@@ -28,7 +32,7 @@
 <script>
 import OrganizationTable from './components/organizationTable'
 import Pagination from '@/components/pagination/HPagination'
-import { findBOSSOrganization, findOrganizationEmployee } from './api'
+import { findBOSSOrganization, findOrganizationEmployee, syncOrg } from './api'
 
 export default {
     name: 'organization',
@@ -56,11 +60,11 @@ export default {
         }
     },
     methods: {
-        makeTreeList (data) {
+        makeTreeList (data, level) {
             let subTemp = []
             if (data.childNodeList && data.childNodeList.length) {
                 data.childNodeList.forEach(value => {
-                    subTemp.push(this.makeTreeList(value))
+                    subTemp.push(this.makeTreeList(value, 3))
                 })
             }
 
@@ -69,7 +73,8 @@ export default {
                 id: data.pkDeptdoc,
                 children: subTemp,
                 deptCode: data.deptcode,
-                parentId: data.pkFathedept
+                parentId: data.pkFathedept,
+                level: level
             }
         },
         handleNodeClick (data) {
@@ -80,11 +85,9 @@ export default {
             const { data } = await findBOSSOrganization()
             let treeList = []
             data.departmentNodeVOS.forEach(value => {
-                treeList.push(this.makeTreeList(value))
+                treeList.push(this.makeTreeList(value, 2))
             })
-            console.log(data)
-            this.treeList = [{ label: '好享家', id: '', children: treeList }]
-            console.log(JSON.stringify(this.treeList[0].children[1].children))
+            this.treeList = [{ label: '好享家', id: '', children: treeList, level: 1 }]
             this.$nextTick(function () {
                 this.$refs.tree.setCurrentKey({ id: '' })
             })
@@ -127,6 +130,15 @@ export default {
 
                 _this.lastTime = now
             }
+        },
+        async syncOrg () {
+            let params = []
+            this.$refs.tree.getCheckedNodes().map((val, index) => {
+                if (!(val.level != 3 && val.children.length != 0)) {
+                    params.push(this.$refs.tree.getCheckedNodes()[index])
+                }
+            })
+            await syncOrg(params)
         }
     },
     mounted () {
