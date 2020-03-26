@@ -123,3 +123,11 @@ export function getCloudSmartPlayDetail (id) {
 export function getCloudAlarmList (params) {
     return axios.get(mockUrl + `/alarm.json`, { params })
 }
+// 智能设备折线
+export function getCloudHistoryReport (params) {
+    return axios.get(iotUrl + `/api/device/statistics/history/report`, { params })
+}
+
+export function getCloudRuntimeReport (params) {
+    return axios.get(iotUrl + `/api/device/statistics/run-time/history/report`, { params })
+}

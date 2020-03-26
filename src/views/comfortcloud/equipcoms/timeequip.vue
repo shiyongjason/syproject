@@ -1,21 +1,18 @@
 <template>
     <div class="smart-equip">
         <div class="echart-tab">
-            <div class="echart-tab-fl">
-                <span :class="index==tabindex?'active':''" @click="onTabs(index)" v-for="(item,index) in 5" :key=index> 智能主机</span>
-            </div>
         </div>
         <div class="smart-time">
             <div>
                 <h3>总运行时长:242100.6小时</h3>
             </div>
             <div class="echart-time">
-                <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="开始日期">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate" :picker-options="pickerOptionsStart">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="datetime" format="yyyy-MM-dd" placeholder="结束日期">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate" :picker-options="pickerOptionsEnd">>
                 </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onSearch()">
+                <el-button type="primary" class="ml20" @click="onFindRuntimeR()">
                     查询
                 </el-button>
             </div>
@@ -28,6 +25,8 @@
 </template>
 <script>
 import echarts from 'echarts'
+import moment from 'moment'
+import { mapActions, mapGetters } from 'vuex'
 export default {
     data () {
         return {
@@ -37,16 +36,60 @@ export default {
                 { label: '岗位code', prop: 'positionCode', icon: 'el-icon-question', content: 'code：实现岗位与后台数据相匹配' },
                 { label: '更新时间', prop: 'updateTime' }
             ],
-            postList: []
+            smartparams: {
+                startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
+                endDate: moment().format('YYYY-MM-DD'),
+                moduleName: 'smartHost'
+            },
+            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, { key: 'sensor', name: '传感器' }, { key: 'smartAppliance', name: '智能家电' },
+                { key: 'switchPanel', name: '开关面板' }],
+            smartData: {}
+        }
+    },
+    computed: {
+        ...mapGetters({
+            cloudRuntimeReport: 'cloudRuntimeReport'
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.smartparams.endDate
+                    if (endDateVal) {
+                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.smartparams.startDate
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                    // return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
         }
     },
     mounted () {
-        this.drawLine()
-        this.drawbar()
+        this.onFindRuntimeR()
     },
     methods: {
-        onTabs (val) {
+        ...mapActions({
+            findRuntimeReport: 'findRuntimeReport'
+        }),
+        onTabs (val, name) {
             this.tabindex = val
+            this.smartparams.moduleName = name
+            this.onFindRuntimeR(this.smartparams)
+        },
+        async onFindRuntimeR () {
+            await this.findRuntimeReport(this.smartparams)
+            this.smartData = this.cloudRuntimeReport
+            this.drawLine(this.smartData)
+            this.drawbar(this.smartData)
         },
         drawLine (data) {
             // 基于准备好的dom，初始化echarts实例
@@ -54,15 +97,19 @@ export default {
             // 绘制图表
             var charts = {
                 unit: '单位',
-                names: ['中央', '地暖'],
-                lineX: ['2018-11-11 17:01', '2018-11-11 17:02', '2018-11-11 17:03', '2018-11-11 17:04', '2018-11-11 17:05', '2018-11-11 17:06', '2018-11-11 17:07', '2018-11-11 17:08', '2018-11-11 17:09', '2018-11-11 17:10', '2018-11-11 17:11', '2018-11-11 17:12', '2018-11-11 17:13', '2018-11-11 17:14', '2018-11-11 17:15', '2018-11-11 17:16', '2018-11-11 17:17', '2018-11-11 17:18', '2018-11-11 17:19', '2018-11-11 17:20'],
-                value: [
-                    [451, 352, 303, 534, 95, 236, 217, 328, 159, 151, 231, 192, 453, 524, 165, 236, 527, 328, 129, 530],
-                    [360, 545, 80, 192, 330, 580, 192, 80, 250, 453, 352, 28, 625, 345, 65, 325, 468, 108, 253, 98]
-                ]
-
+                names: [],
+                lineX: [],
+                value: []
             }
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97']
+            data && data.forEach((value, index) => {
+                charts.names.push(value.deviceName)
+                charts.value.push([])
+                value.deviceStatBOs.forEach((value1) => {
+                    charts.value[index].push(value1.value)
+                    if (index === 0) charts.lineX.push(value1.dateTime)
+                })
+            })
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97']
             var lineY = []
             // 根据数据条数 渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
@@ -95,7 +142,6 @@ export default {
                 }
                 lineY.push(dataL)
             }
-            console.log(lineY)
             var option = {
                 // backgroundColor: '#cccccc',
                 tooltip: {
@@ -128,7 +174,7 @@ export default {
                         //     color: 'rgb(0,253,255,0.6)'
                         // },
                         formatter: function (params) {
-                            return params.split(' ')[0] + '\n' + params.split(' ')[1]
+                            return params.split(' ')[0]
                         }
                     }
                 },
@@ -158,15 +204,23 @@ export default {
             }
             this.myChart.setOption(option)
         },
-        drawbar () {
+        drawbar (data) {
             // 基于准备好的dom，初始化echarts实例
             this.myChart = echarts.init(document.getElementById('twochart'))
+            var charts = {
+                lineY: [],
+                lineX: []
+            }
+            data && data.forEach((value, index) => {
+                charts.lineY.push(value.deviceName)
+                charts.lineX.push(value.totalTime)
+            })
             var option = {
                 color: ['#1c9a4c'],
                 grid: {
                     left: '3%',
                     right: '3%',
-                    top: '10%',
+                    top: '3%',
                     bottom: '3%',
                     containLabel: true
                 },
@@ -174,10 +228,7 @@ export default {
                     formatter: '{b} ({c})'
                 },
                 yAxis: {
-                    data: ['用户撞车', 'SQL注入检测', '机器人登录',
-                        '账号盗用', 'web高频攻击', '端口扫描', '内网连接…',
-                        '邮件外发'
-                    ],
+                    data: charts.lineY,
                     axisTick: {
                         show: false
                     }
@@ -190,7 +241,7 @@ export default {
                     // max: 100,
                     splitNumber: 5,
                     axisLabel: {
-                        formatter: '{value}%'
+                        formatter: '{value}'
                     }
                 }],
                 series: [{
@@ -201,13 +252,13 @@ export default {
                         normal: {
                             show: true,
                             position: 'right',
-                            formatter: '{c}%',
+                            formatter: '{c}',
                             textStyle: {
                                 color: 'black'
                             }
                         }
                     },
-                    data: [110, 20, 36, 10, 50, 80, 100, 60]
+                    data: charts.lineX
                 }]
             }
             this.myChart.setOption(option)

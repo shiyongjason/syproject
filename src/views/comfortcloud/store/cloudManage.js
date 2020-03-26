@@ -15,7 +15,9 @@ const state = {
     cloudEquipmentErrorDict: [],
     cloudSmartPlayList: [],
     cloudSmartPlayPagination: {},
-    cloudSmartPlayPostDetail: {}
+    cloudSmartPlayPostDetail: {},
+    cloudHistoryReport: {},
+    cloudRuntimeReport: {}
 }
 
 const getters = {
@@ -31,7 +33,10 @@ const getters = {
     cloudEquipmentErrorDict: state => state.cloudEquipmentErrorDict,
     cloudSmartPlayList: state => state.cloudSmartPlayList,
     cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
-    cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail
+    cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail,
+    cloudHistoryReport: state => state.cloudHistoryReport,
+    cloudRuntimeReport: state => state.cloudRuntimeReport
+
 }
 
 const mutations = {
@@ -73,6 +78,12 @@ const mutations = {
     },
     [cloud.CLOUD_SMART_PLAY_POST_DETAIL] (state, payload) {
         state.cloudSmartPlayPostDetail = payload
+    },
+    [cloud.CLOUD_HISTORY_REPORT] (state, payload) {
+        state.cloudHistoryReport = payload
+    },
+    [cloud.CLOUD_RUNTIME_REPORT] (state, payload) {
+        state.cloudRuntimeReport = payload
     }
 }
 
@@ -131,6 +142,14 @@ const actions = {
     async findCloudSmartPlayPostDetail ({ commit }, params) {
         const { data } = await Api.getCloudSmartPlayDetail(params)
         commit(cloud.CLOUD_SMART_PLAY_POST_DETAIL, data.data)
+    },
+    async findHistoryReport ({ commit }, params) {
+        const { data } = await Api.getCloudHistoryReport(params)
+        commit(cloud.CLOUD_HISTORY_REPORT, data.data)
+    },
+    async findRuntimeReport ({ commit }, params) {
+        const { data } = await Api.getCloudRuntimeReport(params)
+        commit(cloud.CLOUD_RUNTIME_REPORT, data.data)
     }
 }
 export default {
