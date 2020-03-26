@@ -334,8 +334,8 @@ export default {
             this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
                     try {
-                        await getCheckField({                            'misCode': this.baseForm.misCode,
-                            'companyShortName': this.baseForm.companyShortName                        })
+                        await getCheckField({ 'misCode': this.baseForm.misCode,
+                            'companyShortName': this.baseForm.companyShortName })
                         this.$emit('backnext')
                         this.baseForm.developAccountInfoCreateForm.accountBank = this.baseForm.companyName
                     } catch (error) {
