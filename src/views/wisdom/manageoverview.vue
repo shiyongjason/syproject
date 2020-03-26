@@ -142,7 +142,12 @@ export default {
     methods: {
         async onFindRegionList () {
             const { data } = await findRegionList()
-            this.regionList = data.data
+            // 数据问题，暂时这么改，后期再看是否要改数据库
+            data.data.map((val, index) => {
+                if (val.deptname != '西南大区' && val.deptname != '华中大区') {
+                    this.regionList.push(val)
+                }
+            })
         },
         async onFindBranchList (value) {
             const { data } = await findBranchList({ crmDeptCode: value })
@@ -161,7 +166,7 @@ export default {
 }
 </script>
 <style lang="scss" >
-.page-box{
+.page-box {
     background: #ffffff;
 }
 .red {
