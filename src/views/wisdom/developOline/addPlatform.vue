@@ -146,7 +146,8 @@ export default {
                     creditRate: '0', // 贷记卡费率
                     companyCode: ''
                 },
-                companyCode: ''
+                companyCode: '',
+                developAccountInfoCreateForms: {}
             }
         }
     },
@@ -159,6 +160,7 @@ export default {
     mounted () {
         if (this.type == 'edit') {
             this.onGetdevelopbasicinfo()
+            this.developAccountInfoCreateForms = { ...this.formData.developAccountInfoCreateForm }
         }
     },
     methods: {
@@ -214,6 +216,8 @@ export default {
             this.$set(this.formData, 'companyArr', companyArr)
             this.$set(this.formData, 'systemArr', systemArr)
             this.$set(this.formData, 'developSignInfoCreateForm', newSignobj)
+            this.developAccountInfoCreateForms.accountBank = this.formData.companyName
+            this.developAccountInfoCreateForms.companyCode = this.formData.companyCode
         },
         async onGetdevelopotherinfo () {
             const { data } = await getDevelopother({ companyCode: this.companyCode })
@@ -226,7 +230,12 @@ export default {
         },
         async onGetdevelopaccountinfo () {
             const { data } = await getDevelopaccount({ companyCode: this.companyCode })
-            this.$set(this.formData, 'developAccountInfoCreateForm', { ...data.data })
+            if (data.data) {
+                this.$set(this.formData, 'developAccountInfoCreateForm', { ...data.data })
+            } else {
+                console.log(2222, this.developAccountInfoCreateForms)
+                this.$set(this.formData, 'developAccountInfoCreateForm', { ...this.developAccountInfoCreateForms })
+            }
         }
     }
 }
