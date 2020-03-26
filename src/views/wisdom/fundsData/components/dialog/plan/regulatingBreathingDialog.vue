@@ -4,35 +4,37 @@
             <div v-for="(item, index) in detailData" :key="index">
                 <el-divider v-if="detailData.length == 3" content-position="left">第{{index+1}}期还款调息：</el-divider>
                 <!-- 应收正常利息 -->
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <el-form-item label="应收正常利息：">
-                            <div class="w250">{{item.interestAmount}}</div>
-                        </el-form-item>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="checkStyle">
-                            <el-checkbox label="正常利息调息" v-model="item.normalInterestPranayamaType"></el-checkbox>
+                <template v-if="!detailData[0].regulatingBreathingType">
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <el-form-item label="应收正常利息：">
+                                <div class="w250">{{item.interestAmount}}</div>
+                            </el-form-item>
                         </div>
-                        <el-input @blur="verity(`detailData[${index}].normalInterestPranayamaAfterAdjust`)" v-show="item.normalInterestPranayamaType" v-isNegative:2 v-model="item.normalInterestPranayama" maxlength='20' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <el-form-item label="调息后应收正常利息：" :prop='`detailData[${index}].normalInterestPranayamaAfterAdjust`'>
-                            <div class="w250">
-                                {{interest[index].normalInterestPranayamaAfterAdjust}}
+                        <div class="query-cont-col">
+                            <div class="checkStyle">
+                                <el-checkbox label="正常利息调息" v-model="item.normalInterestPranayamaType"></el-checkbox>
                             </div>
-                        </el-form-item>
+                            <el-input @blur="verity(`detailData[${index}].normalInterestPranayamaAfterAdjust`)" v-show="item.normalInterestPranayamaType" v-isNegative:2 v-model="item.normalInterestPranayama" maxlength='20' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
+                        </div>
                     </div>
-                    <div class="query-cont-col">
-                        <el-form-item label="调息后剩余正常利息：" :prop='`detailData[${index}].normalInterestPranayamaAfterAdjustOwe`'>
-                            <div class="w250">
-                                {{interest[index].normalInterestPranayamaAfterAdjustOwe}}
-                            </div>
-                        </el-form-item>
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <el-form-item label="调息后应收正常利息：" :prop='`detailData[${index}].normalInterestPranayamaAfterAdjust`'>
+                                <div class="w250">
+                                    {{interest[index].normalInterestPranayamaAfterAdjust}}
+                                </div>
+                            </el-form-item>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-form-item label="调息后剩余正常利息：" :prop='`detailData[${index}].normalInterestPranayamaAfterAdjustOwe`'>
+                                <div class="w250">
+                                    {{interest[index].normalInterestPranayamaAfterAdjustOwe}}
+                                </div>
+                            </el-form-item>
+                        </div>
                     </div>
-                </div>
+                </template>
                 <!-- 应收宽限期利息 -->
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -173,7 +175,7 @@ export default {
                 graceInterestPranayamaAfterAdjust: `detailData[${n}].graceInterestPranayamaAfterAdjust`,
                 graceInterestPranayamaAfterAdjustOwe: `detailData[${n}].graceInterestPranayamaAfterAdjustOwe`,
                 overDueInterestPranayamaAfterAdjust: `detailData[${n}].overDueInterestPranayamaAfterAdjust`,
-                overDueInterestPranayamaAfterAdjustOwe: `detailData[${n}].overDueInterestPranayamaAfterAdjustOwe`,
+                overDueInterestPranayamaAfterAdjustOwe: `detailData[${n}].overDueInterestPranayamaAfterAdjustOwe`
             }
             this.rules = {
                 ...this.rules,
@@ -242,7 +244,7 @@ export default {
                         }
                         return callback()
                     }
-                }],
+                }]
             }
         })
     },
@@ -259,6 +261,9 @@ export default {
                         if (!i.normalInterestPranayamaType) i.normalInterestPranayama = 0
                         if (!i.graceInterestPranayamaType) i.graceInterestPranayama = 0
                         if (!i.overDueInterestPranayamaType) i.overDueInterestPranayama = 0
+                        if (!i.normalInterestPranayama) i.normalInterestPranayama = 0
+                        if (!i.graceInterestPranayama) i.graceInterestPranayama = 0
+                        if (!i.overDueInterestPranayama) i.overDueInterestPranayama = 0
                     })
                     let form = {
                         // createBy: this.userInfo.employeeName,
