@@ -121,7 +121,7 @@ export default {
             }
         },
         onShowHome (val) {
-            this.H5Preview = iotUrl + '/iot/actionDetail/?articleId=' + val.id
+            this.H5Preview = iotUrl + '/iot/smartPlayDetail/?articleId=' + val.id
         }
     },
     mounted () {
