@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="50%" :before-close='onCancle'>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="750px" :before-close='onCancle'>
         <h3 style="margin-bottom: 10px;">档案信息：</h3>
         <div style="margin-left: 10px;">
             <div class="query-cont-col">

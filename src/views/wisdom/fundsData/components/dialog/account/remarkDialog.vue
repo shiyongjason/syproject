@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="30%" :before-close='onCancle'>
+    <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="450px" :before-close='onCancle'>
         <h3 style="margin-bottom: 10px;">备注：</h3>
         <el-input type="textarea" :rows="2" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="detailData.remark"></el-input>
         <span slot="footer" class="dialog-footer">
