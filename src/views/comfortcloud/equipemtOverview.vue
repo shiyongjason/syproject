@@ -3,25 +3,18 @@
         <div class="cloud-top">
             <div class="top-box" @click="onTopbox" :class="equipshow?'bgactive':''">
                 <p>设备总数(截止今日)</p>
-                <p>32323</p>
-                <p>环比昨日：-20.7%</p>
-            </div>
-            <div class="top-box">
-                <p>在线设备总数(截止今日)</p>
-                <p>32323</p>
-                <p>环比昨日：-20.7%</p>
-                <p type='danger'>在线设备总数(截止今日)</p>
-                <p type='danger'>32323</p>
+                <p>{{cloudDeviceCount.count}}</p>
+                <p>在线设备数（截止今日）</p>
+                <p>{{cloudDeviceCount.onlineCount}}</p>
             </div>
             <div class="top-box" @click="onTopbox" :class="!equipshow?'bgactive':''">
-                <p>设备总数(截止今日)</p>
-                <p>32323</p>
-                <p>环比昨日：-20.7%</p>
+                <p>设备总运行时长(截止今日)</p>
+                <p>{{cloudDeviceCount.runTimeCount}} 小时</p>
             </div>
         </div>
         <div class="cloud-echart">
             <smartequip v-if='equipshow' />
-            <timeequip v-if='!equipshow' />
+            <timeequip :totalTime="cloudDeviceCount.runTimeCount" v-if='!equipshow' />
         </div>
 
     </div>
@@ -29,6 +22,7 @@
 <script>
 import smartequip from './equipcoms/smartequip'
 import timeequip from './equipcoms/timeequip'
+import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
     data () {
         return {
@@ -39,10 +33,24 @@ export default {
         smartequip,
         timeequip
     },
+    computed: {
+        ...mapGetters({
+            cloudDeviceCount: 'cloudDeviceCount'
+        }),
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
     methods: {
         onTopbox () {
             this.equipshow = !this.equipshow
-        }
+        },
+        ...mapActions({
+            findCloudDeviceCount: 'findCloudDeviceCount'
+        })
+    },
+    mounted () {
+        this.findCloudDeviceCount()
     }
 }
 </script>
@@ -52,13 +60,16 @@ export default {
     justify-content: flex-start;
     .top-box {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        line-height: 25px;
         height: 130px;
         background: #ffffff;
         margin: 10px;
         border-radius: 10px;
         box-shadow: 3px 3px #e5e5e5;
-        padding: 10px;
-         box-sizing:border-box;
+        padding: 10px 20px;
+        box-sizing:border-box;
     }
     .bgactive {
         background: #ff7a45;

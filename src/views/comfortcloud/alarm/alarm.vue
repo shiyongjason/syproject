@@ -8,14 +8,14 @@
                 <div class="query-col-title">设备ID：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.queryId" maxlength="20" placeholder="输入设备ID"></el-input>
+                              v-model="queryParams.subDevId" maxlength="20" placeholder="输入设备ID"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">管理员手机号码：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.queryPhone" maxlength="11" placeholder="输入管理员手机号码"></el-input>
+                              v-model="queryParams.managerPhone" maxlength="11" placeholder="输入管理员手机号码"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -29,7 +29,6 @@
         </div>
 
         <div class="page-body-cont">
-            <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudAlarmList" :pagination="cloudAlarmPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
             </basicTable>
         </div>
@@ -38,7 +37,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import { iotUrl } from '@/api/config'
+import { downloadCloudAlarmList } from '../api/index'
 
 export default {
     name: 'alarm',
@@ -51,21 +50,21 @@ export default {
     data () {
         return {
             queryParams: {
-                queryId: '',
-                queryPhone: '',
+                subDevId: '',
+                managerPhone: '',
                 pageSize: 10,
                 pageNumber: 1
             },
             tableLabel: [
                 { label: '家庭名称', prop: 'homeName' },
-                { label: '管理员手机号', prop: 'homePhone' },
-                { label: '网管号', prop: 'homeNumber1' },
-                { label: '设备ID', prop: 'homeID1' },
-                { label: '设备类型', prop: 'homeType' },
-                { label: '离线时间', prop: 'homeUnOnlineTime', formatters: 'dateTime' },
-                { label: '休眠时间', prop: 'homeSleepTime', formatters: 'dateTime' },
-                { label: '上线时间 ', prop: 'homeOnlineTime', formatters: 'dateTime' },
-                { label: '离线时长', prop: 'homeOnlineTimeLonger' }
+                { label: '管理员手机号', prop: 'managerPhone' },
+                { label: '网管号', prop: 'deviceId' },
+                { label: '设备ID', prop: 'subDevId' },
+                { label: '设备类型', prop: 'subType' },
+                { label: '离线时间', prop: 'downlineTime' },
+                // { label: '休眠时间', prop: 'homeSleepTime', formatters: 'dateTime' },
+                { label: '上线时间 ', prop: 'uplineTime' },
+                { label: '离线时长', prop: 'downlineInterval' }
             ]
         }
     },
@@ -85,7 +84,7 @@ export default {
             await this.findCloudAlarmList(this.queryParams)
         },
         onExport () {
-            location.href = iotUrl + '/download?queryId=10&queryPhone=1'
+            downloadCloudAlarmList()
         }
     },
     async mounted () {

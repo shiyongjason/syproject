@@ -85,8 +85,8 @@ export default {
             path: 'cloudList',
             name: 'cloudlist',
             meta: {
-                title: '运营管理',
-                tagName: '运营管理',
+                title: '活动管理',
+                tagName: '活动管理',
                 parentName: '舒适云概览',
                 isMenu: true,
                 icon: ''
@@ -164,6 +164,18 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/sendMessage/sendMessage.vue')
+        },
+        {
+            path: 'sendMessageEdit',
+            name: 'sendMessageEdit',
+            meta: {
+                title: '创建消息',
+                tagName: '创建消息',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/sendMessage/sendMessageEdit.vue')
         }
     ]
 }

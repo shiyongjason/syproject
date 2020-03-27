@@ -9,7 +9,7 @@
                 <div class="query-col-input">
                     <el-select v-model="queryParams.categoryId">
                         <el-option label="全部" value=""></el-option>
-                        <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in cloudEquipmentErrorDict" :key="item.dataKey"></el-option>
+                        <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in cloudDict" :key="item.dataKey"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -183,7 +183,7 @@ export default {
         ...mapGetters({
             cloudEquipmentErrorList: 'cloudEquipmentErrorList',
             cloudEquipmentErrorPagination: 'cloudEquipmentErrorPagination',
-            cloudEquipmentErrorDict: 'cloudEquipmentErrorDict'
+            cloudDict: 'cloudDict'
         }),
         ...mapState({
             userInfo: state => state.userInfo
@@ -192,7 +192,7 @@ export default {
     methods: {
         ...mapActions({
             onQuery: 'findCloudEquipmentErrorList',
-            findCloudEquipmentErrorDict: 'findCloudEquipmentErrorDict'
+            findCloudDict: 'findCloudDict'
         }),
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -315,7 +315,7 @@ export default {
     },
     mounted () {
         this.onQuery(this.queryParams)
-        this.findCloudEquipmentErrorDict({ item: 'category' })
+        this.findCloudDict({ item: 'category' })
     }
 }
 </script>

@@ -12,12 +12,21 @@ const state = {
     cloudAlarmPagination: {},
     cloudEquipmentErrorList: [],
     cloudEquipmentErrorPagination: {},
-    cloudEquipmentErrorDict: [],
+    cloudDict: [],
     cloudSmartPlayList: [],
     cloudSmartPlayPagination: {},
+    cloudSendMessageList: [],
+    cloudSendMessagePagination: {},
+    cloudSendMessagePostDetail: {},
     cloudSmartPlayPostDetail: {},
     cloudHistoryReport: {},
-    cloudRuntimeReport: {}
+    cloudRuntimeReport: {},
+    cloudDeviceCount: {},
+    cloudDeviceDetailList: [],
+    cloudDeviceDetailPagination: {},
+    cloudHomeDetailList: [],
+    cloudHomeDetailPagination: {},
+    cloudHomeDetailDict: []
 }
 
 const getters = {
@@ -30,12 +39,21 @@ const getters = {
     cloudAlarmPagination: state => state.cloudAlarmPagination,
     cloudEquipmentErrorList: state => state.cloudEquipmentErrorList,
     cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
-    cloudEquipmentErrorDict: state => state.cloudEquipmentErrorDict,
+    cloudDict: state => state.cloudDict,
     cloudSmartPlayList: state => state.cloudSmartPlayList,
     cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
     cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail,
+    cloudSendMessageList: state => state.cloudSendMessageList,
+    cloudSendMessagePagination: state => state.cloudSendMessagePagination,
+    cloudSendMessagePostDetail: state => state.cloudSendMessagePostDetail,
     cloudHistoryReport: state => state.cloudHistoryReport,
-    cloudRuntimeReport: state => state.cloudRuntimeReport
+    cloudRuntimeReport: state => state.cloudRuntimeReport,
+    cloudDeviceCount: state => state.cloudDeviceCount,
+    cloudDeviceDetailList: state => state.cloudDeviceDetailList,
+    cloudDeviceDetailPagination: state => state.cloudDeviceDetailPagination,
+    cloudHomeDetailList: state => state.cloudHomeDetailList,
+    cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
+    cloudHomeDetailDict: state => state.cloudHomeDetailDict
 
 }
 
@@ -67,8 +85,8 @@ const mutations = {
     [cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION] (state, payload) {
         state.cloudEquipmentErrorPagination = payload
     },
-    [cloud.CLOUD_EQUIPMENT_ERROR_DICT] (state, payload) {
-        state.cloudEquipmentErrorDict = payload
+    [cloud.CLOUD_DICT] (state, payload) {
+        state.cloudDict = payload
     },
     [cloud.CLOUD_SMART_PLAY_LIST] (state, payload) {
         state.cloudSmartPlayList = payload
@@ -79,11 +97,38 @@ const mutations = {
     [cloud.CLOUD_SMART_PLAY_POST_DETAIL] (state, payload) {
         state.cloudSmartPlayPostDetail = payload
     },
+    [cloud.CLOUD_SEND_MESSAGE_LIST] (state, payload) {
+        state.cloudSendMessageList = payload
+    },
+    [cloud.CLOUD_SEND_MESSAGE_PAGINATION] (state, payload) {
+        state.cloudSendMessagePagination = payload
+    },
+    [cloud.CLOUD_SEND_MESSAGE_POST_DETAIL] (state, payload) {
+        state.cloudSendMessagePostDetail = payload
+    },
     [cloud.CLOUD_HISTORY_REPORT] (state, payload) {
         state.cloudHistoryReport = payload
     },
     [cloud.CLOUD_RUNTIME_REPORT] (state, payload) {
         state.cloudRuntimeReport = payload
+    },
+    [cloud.CLOUD_DEVICE_COUNT] (state, payload) {
+        state.cloudDeviceCount = payload
+    },
+    [cloud.CLOUD_DEVICE_DETAIL_LIST] (state, payload) {
+        state.cloudDeviceDetailList = payload
+    },
+    [cloud.CLOUD_DEVICE_DETAIL_PAGINATION] (state, payload) {
+        state.cloudDeviceDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_DETAIL_LIST] (state, payload) {
+        state.cloudHomeDetailList = payload
+    },
+    [cloud.CLOUD_HOME_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
+        state.cloudHomeDetailDict = payload
     }
 }
 
@@ -110,11 +155,12 @@ const actions = {
     },
     async findCloudAlarmList ({ commit }, params) {
         const { data } = await Api.getCloudAlarmList(params)
-        commit(cloud.CLOUD_ALARM_LIST, data.data)
+        // 后台返回的分页结果不一样
+        commit(cloud.CLOUD_ALARM_LIST, data.data.pageContent)
         commit(cloud.CLOUD_ALARM_PAGINATION, {
-            pageNumber: data.current,
-            pageSize: data.size,
-            total: data.total
+            pageNumber: data.data.pageNumber,
+            pageSize: data.data.pageSize,
+            total: data.data.totalElements
         })
     },
     async findCloudEquipmentErrorList ({ commit }, params) {
@@ -126,9 +172,9 @@ const actions = {
             total: data.data.total
         })
     },
-    async findCloudEquipmentErrorDict ({ commit }, params) {
-        const { data } = await Api.getCloudEquipmentErrorDict(params)
-        commit(cloud.CLOUD_EQUIPMENT_ERROR_DICT, data.data)
+    async findCloudDict ({ commit }, params) {
+        const { data } = await Api.getCloudDict(params)
+        commit(cloud.CLOUD_DICT, data.data)
     },
     async findCloudSmartPlayList ({ commit }, params) {
         const { data } = await Api.getCloudSmartPlayList(params)
@@ -143,6 +189,19 @@ const actions = {
         const { data } = await Api.getCloudSmartPlayDetail(params)
         commit(cloud.CLOUD_SMART_PLAY_POST_DETAIL, data.data)
     },
+    async findCloudSendMessageList ({ commit }, params) {
+        const { data } = await Api.getCloudSendMessageList(params)
+        commit(cloud.CLOUD_SEND_MESSAGE_LIST, data.data.records)
+        commit(cloud.CLOUD_SEND_MESSAGE_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudSendMessagePostDetail ({ commit }, params) {
+        const { data } = await Api.getCloudSendMessagePostDetail(params)
+        commit(cloud.CLOUD_SEND_MESSAGE_POST_DETAIL, data.data)
+    },
     async findHistoryReport ({ commit }, params) {
         const { data } = await Api.getCloudHistoryReport(params)
         commit(cloud.CLOUD_HISTORY_REPORT, data.data)
@@ -150,6 +209,32 @@ const actions = {
     async findRuntimeReport ({ commit }, params) {
         const { data } = await Api.getCloudRuntimeReport(params)
         commit(cloud.CLOUD_RUNTIME_REPORT, data.data)
+    },
+    async findCloudDeviceCount ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceCount(params)
+        commit(cloud.CLOUD_DEVICE_COUNT, data.data)
+    },
+    async findCloudDeviceDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceDetailList(params)
+        commit(cloud.CLOUD_DEVICE_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_DEVICE_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeDetailList(params)
+        commit(cloud.CLOUD_HOME_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeDetailSearchDict ({ commit }, params) {
+        const { data } = await Api.getCloudHomeDetailSearchDict(params)
+        commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
     }
 }
 export default {
