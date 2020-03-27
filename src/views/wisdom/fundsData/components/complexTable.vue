@@ -638,7 +638,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe + scope.row.paymentStatic_normalInterestPranayamaTotal)}</span>
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
                             }
                         },
                         {
@@ -646,7 +646,7 @@ export default {
                             sort: 14,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe + scope.row.paymentStatic_overDueInterestPranayamaTotal)}</span>
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
                         }
                     ]
@@ -701,7 +701,7 @@ export default {
                             sort: 8,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.planList_0_interestOwe + scope.row.planList_0_normalInterestPranayama)}</span>
+                                return <span>{filters.fundMoney(scope.row.planList_0_interestOwe)}</span>
                             }
                         },
                         {
@@ -755,7 +755,7 @@ export default {
                             sort: 23,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.planList_1_interestOwe + scope.row.planList_1_normalInterestPranayama)}</span>
+                                return <span>{filters.fundMoney(scope.row.planList_1_interestOwe)}</span>
                             }
                         },
                         {
@@ -809,7 +809,7 @@ export default {
                             sort: 38,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.planList_2_interestOwe + scope.row.planList_2_normalInterestPranayama)}</span>
+                                return <span>{filters.fundMoney(scope.row.planList_2_interestOwe)}</span>
                             }
                         },
                         {
@@ -966,7 +966,7 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe + scope.row.paymentStatic_overDueInterestPranayamaTotal)}</span>
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
                         }
                     ]
@@ -1287,7 +1287,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.planList_0_normalInterestPranayama)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1314,7 +1314,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe + scope.row.planList_0_normalInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
                     }
                 },
                 {
@@ -1323,7 +1323,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount + scope.row.planList_0_graceInterestPranayama)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1332,7 +1332,7 @@ export default {
                     sort: 10,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid + scope.row.planList_0_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
                     }
                 },
                 {
@@ -1341,7 +1341,7 @@ export default {
                     sort: 11,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe + scope.row.planList_0_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
                     }
                 }
             ],
@@ -1353,7 +1353,7 @@ export default {
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount + scope.row.planList_0_overDueInterestPranayama)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1371,7 +1371,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe + scope.row.planList_0_overDueInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                     }
                 }
             ],
@@ -1435,7 +1435,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
                     }
                 },
                 {
@@ -1444,7 +1444,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_normalInterestPranayamaTotal)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_normalInterestPranayamaTotal : scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1470,7 +1470,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount + scope.row.paymentStatic_graceInterestPranayamaTotal)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1486,7 +1486,7 @@ export default {
                     sort: 11,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe + scope.row.paymentStatic_graceInterestPranayamaTotal)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -1495,7 +1495,7 @@ export default {
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount + scope.row.paymentStatic_overDueInterestPranayamaTotal)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1534,7 +1534,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_interestAmount + scope.row.planList_0_normalInterestPranayama)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1543,7 +1543,7 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount + scope.row.planList_0_graceInterestPranayama)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1561,7 +1561,7 @@ export default {
                     sort: 11,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe + scope.row.planList_0_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -1570,7 +1570,7 @@ export default {
                     sort: 13,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount + scope.row.planList_0_overDueInterestPranayama)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1588,7 +1588,7 @@ export default {
                     sort: 15,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe + scope.row.planList_0_overDueInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定还款日2
@@ -1616,7 +1616,7 @@ export default {
                     sort: 21,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_interestAmount + scope.row.planList_1_normalInterestPranayama)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1625,7 +1625,7 @@ export default {
                     sort: 24,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount + scope.row.planList_1_graceInterestPranayama)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1643,7 +1643,7 @@ export default {
                     sort: 26,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe + scope.row.planList_1_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -1652,7 +1652,7 @@ export default {
                     sort: 28,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount + scope.row.planList_1_overDueInterestPranayama)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1670,7 +1670,7 @@ export default {
                     sort: 30,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe + scope.row.planList_1_overDueInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定还款日3
@@ -1698,7 +1698,7 @@ export default {
                     sort: 36,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount + scope.row.planList_1_normalInterestPranayama)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1707,7 +1707,7 @@ export default {
                     sort: 39,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount + scope.row.planList_2_graceInterestPranayama)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1725,7 +1725,7 @@ export default {
                     sort: 41,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe + scope.row.planList_2_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -1734,7 +1734,7 @@ export default {
                     sort: 43,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount + scope.row.planList_2_overDueInterestPranayama)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1752,7 +1752,7 @@ export default {
                     sort: 45,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe + scope.row.planList_2_overDueInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
                     }
                 }
             ],
@@ -1845,7 +1845,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid + scope.row.paymentStatic_graceInterestPranayamaTotal)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1861,7 +1861,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid + scope.row.paymentStatic_graceInterestPranayamaTotal)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
                     }
                 },
                 {
@@ -1869,7 +1869,7 @@ export default {
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount + scope.row.paymentStatic_overDueInterestPranayamaTotal)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1906,7 +1906,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount + scope.row.planList_0_graceInterestPranayama)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1922,7 +1922,7 @@ export default {
                     sort: 8,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe + scope.row.planList_0_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -1931,7 +1931,7 @@ export default {
                     sort: 10,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount + scope.row.planList_0_overDueInterestPranayama)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1949,7 +1949,7 @@ export default {
                     sort: 12,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe + scope.row.planList_0_overDueInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
                     }
                 },
                 // 约定日期2
@@ -1976,7 +1976,7 @@ export default {
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount + scope.row.planList_1_graceInterestPranayama)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -1992,7 +1992,7 @@ export default {
                     sort: 20,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe + scope.row.planList_1_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
                     }
                 },
                 {
@@ -2046,7 +2046,7 @@ export default {
                     sort: 30,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount + scope.row.planList_2_graceInterestPranayama)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -2062,7 +2062,7 @@ export default {
                     sort: 32,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe + scope.row.planList_2_graceInterestPranayama)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
                     }
                 },
                 {
