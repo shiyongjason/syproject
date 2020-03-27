@@ -3,47 +3,48 @@
         <!-- 敞口组件-借款信息 -->
         <div class="query-cont-row">
             <div class="query-cont-col">
-                <el-form-item label="开票金额：" prop="invoiceAmount">
+                <el-form-item label="开票金额：" prop="loan.invoiceAmount" :rules='rules.invoiceAmount'>
                     <el-input v-model.trim="flowform.invoiceAmount" @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.invoiceAmount" maxlength='20' placeholder="请输入开票金额">
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="供货商名称：" prop="supplier">
+                <el-form-item label="供货商名称：">
                     <el-input v-model.trim="flowform.supplier" maxlength="30" show-word-limit placeholder="请输入供货商名">
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="保证金比例：" prop="depositProportion">
+                <el-form-item label="保证金比例：" prop="loan.depositProportion" :rules='rules.depositProportion'>
                     <el-input v-model='flowform.depositProportion' @input="(val)=>{setDepositProportion(val)}" v-isNum:2="flowform.depositProportion" maxlength='20' placeholder="请输入保证金比例">
                         <template slot="append">%</template></el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="保证金缴纳：" prop="自动计算">
+                <el-form-item label="保证金缴纳：" prop="loan.depositPay" :rules='rules.depositPay'>
                     <el-input v-model.trim="flowform.depositPay" placeholder="请输入保证金缴纳" :disabled='!flowform.invoiceAmount' @blur="doCompute">
                         <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="敞口金额：" prop="">
+                <el-form-item label="敞口金额：" prop="loan.loanAmount" :rules='rules.loanAmount'>
                     <el-input v-model.trim="flowform.loanAmount" placeholder="请输入敞口金额" :disabled='!flowform.invoiceAmount'>
                         <template slot="append">元</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="承兑期限：" prop="loanDateNum">
+                <el-form-item label="承兑期限：" prop="loan.loanDateNum" :rules='rules.loanDateNum'>
                     <el-radio v-model.trim="flowform.loanDateType" :label=1 @change="loanDateTypeChange">月</el-radio>
                     <el-radio v-model.trim="flowform.loanDateType" :label=2 @change="loanDateTypeChange" :disabled="flowform.repaymentType===2">天</el-radio>
-                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isPositiveInt="flowform.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
+                    <el-input v-if="flowform.loanDateType" v-model.trim="flowform.loanDateNum" @change='onChooseTime' v-isPositiveInt="flowform.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled="flowform.repaymentType===2"><template
+                            slot="append">{{flowform.loanDateType==1?'月':'天'}}</template>
                     </el-input>
                 </el-form-item>
             </div>
             <div class="query-cont-col">
-                <el-form-item label="开票日期：" prop="">
+                <el-form-item label="开票日期：" prop="loan.invoiceTime" :rules='rules.invoiceTime'>
                     <el-date-picker v-model="flowform.invoiceTime" value-format="yyyy-MM-dd" @change='onChooseTime' format="yyyy-MM-dd" :picker-options="pickerOptionsStart" type="date" placeholder="请选择出票日期">
                     </el-date-picker>
                 </el-form-item>
@@ -54,13 +55,6 @@
                 </el-form-item>
             </div>
         </div>
-        <!-- <div class="dialogtitle">还款信息：</div>
-        <div class="query-cont-col">
-            <el-form-item label="还款方式：" prop="name">
-                <el-radio v-model.trim="flowform.repaymentType" :label=1 @change="()=>{$emit('repaymentTypeChange',1)}">一次性还款</el-radio>
-                <el-radio v-model.trim="flowform.repaymentType" :label=2 @change="()=>{$emit('repaymentTypeChange',2)}">334</el-radio>
-            </el-form-item>
-        </div> -->
     </div>
 </template>
 <script>
@@ -75,7 +69,26 @@ export default {
     },
     data () {
         return {
-
+            rules: {
+                'invoiceAmount': [
+                    { required: true, message: '请输入开票金额', trigger: 'blur' }
+                ],
+                'depositProportion': [
+                    { required: true, message: '请输入保证金比例', trigger: 'blur' }
+                ],
+                'depositPay': [
+                    { required: true, message: '请输入保证金缴纳', trigger: 'blur' }
+                ],
+                'loanAmount': [
+                    { required: true, message: '请输入敞口金额', trigger: 'blur' }
+                ],
+                'loanDateNum': [
+                    { required: true, message: '请选择时间类型并输入借款期限', trigger: 'blur' }
+                ],
+                'invoiceTime': [
+                    { required: true, message: '请选择开票日期', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -83,16 +96,6 @@ export default {
             return {
                 disabledDate: time => {
                     return time.getTime() > Date.now()
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.flowform.invoiceTime
-                    if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
-                    }
                 }
             }
         }

@@ -61,6 +61,8 @@ export default {
         },
         // 关闭单个标签
         closeTags (index, isSelf) {
+            console.log('isSelf: ', isSelf)
+            console.log('this.tagsList', this.tagsList)
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
                 // this.$router.push('/')
@@ -68,7 +70,12 @@ export default {
                 const menu = JSON.parse(sessionStorage.getItem('menuList'))
                 this.makeIndex(menu)
             } else if (isSelf) {
-                this.$router.push(this.tagsList[this.tagsList.length - 1].path)
+                let router = this.tagsList[this.tagsList.length - 1]
+                if (Object.keys(router.query).length > 0) {
+                    this.$router.push({ path: router.path, query: router.query })
+                } else {
+                    this.$router.push(this.tagsList[this.tagsList.length - 1].path)
+                }
             }
         },
         // 设置标签
