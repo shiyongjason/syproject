@@ -13,9 +13,9 @@
             </div>
         </div>
         <div class="query-cont-col" v-show="activeName == 'enterprise'">
-            <div class="query-col-title">创建时间：</div>
+            <div class="query-col-title">创建日期：</div>
             <div class="query-col-input">
-                <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="请选择时间"  clearable>
+                <el-date-picker v-model="queryParams.createDate" type="datetime" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsStart" clearable>
                 </el-date-picker>
             </div>
         </div>
