@@ -13,6 +13,7 @@ import payment from './modules/payment'
 import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
+import crmmanage from '@/views/crm/goodwork/store/crmManage'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -43,7 +44,8 @@ const store = new Vuex.Store({
         payment,
         supplier,
         userRealreport,
-        cloudmanage
+        cloudmanage,
+        crmmanage
     }
 })
 

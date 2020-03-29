@@ -15,6 +15,7 @@ import Jyrouter from './router/Jyrouter'
 import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
+import Crmrouter from './router/Crmrouter'
 Vue.use(Router)
 
 const routerMapping = [
@@ -217,7 +218,8 @@ const routerMapping = [
     B2brouter,
     Jyrouter,
     Cloudrouter,
-    ServiceManagement
+    ServiceManagement,
+    Crmrouter
 ]
 
 const router = new Router({
