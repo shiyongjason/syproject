@@ -6,6 +6,7 @@ import { interfaceUrl, B2bUrl } from './config'
 // const TIME_OUT = 60000 // 连接超时时间
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
+const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
@@ -76,7 +77,6 @@ axios.interceptors.response.use(
         return response
     },
     (error) => {
-        console.log(error)
         if (axios.isCancel(error)) {
             console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)
@@ -115,6 +115,12 @@ axios.interceptors.response.use(
         store.commit('LOAD_STATE', false)
         const data = error.response.data
         let message = '服务器响应错误：' + error
+        // 处理特殊
+        const config = error.response.config
+        const specialHandle = responseErrorUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+        if (specialHandle.length > 0) {
+            message = error.response.data.message
+        }
         if (error.response.status === 400 && data.message !== '') {
             message = data.message
         }
