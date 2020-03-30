@@ -314,7 +314,7 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
-                    label: '基础信息',
+                    label: '',
                     width: '150',
                     fixed: true,
                     children: [
@@ -340,9 +340,9 @@ export default {
                     ]
                 },
                 {
-                    label: '',
+                    label: '基础信息',
                     width: '450',
-                    // fixed: true,
+                    // fixed: false,
                     children: [
                         { prop: 'account_misCode', label: 'MIS编码', width: '150' },
                         { prop: 'account_loanCompanyName', label: '借款单位', width: '150' },
@@ -498,7 +498,7 @@ export default {
             // 分授信
             PointsCredit: [
                 {
-                    label: '基础信息',
+                    label: '',
                     width: '150',
                     fixed: true,
                     children: [
@@ -862,7 +862,7 @@ export default {
             // 敞口
             Exposure: [
                 {
-                    label: '基础信息',
+                    label: '',
                     width: '150',
                     fixed: true,
                     children: [
