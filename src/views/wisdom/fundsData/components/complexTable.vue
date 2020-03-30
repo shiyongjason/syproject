@@ -461,7 +461,7 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{'编辑'}<i class='el-icon-edit pointer' onClick={async () => {
+                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal)?'已调息':'-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getRespAccountRepaymentPlanData(scope.row)
                             this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
@@ -828,7 +828,7 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{'编辑'}<i class='el-icon-edit pointer' onClick={async () => {
+                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal)?'已调息':'-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getGrantPaymetPlanData(scope.row)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
@@ -1094,7 +1094,7 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{'编辑'}<i class='el-icon-edit pointer' onClick={async () => {
+                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal)?'已调息':'-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getGrantPaymetPlanData(scope.row, true)
                             this.regulatingBreathingDialogVisible = true
                         }}></i></span>
