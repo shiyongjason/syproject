@@ -107,8 +107,8 @@ export default {
             }
             try {
                 await deleteCloudSendMessage(params)
+                await this.onQuery(this.queryParams)
                 this.$message.success('删除成功')
-                this.onQuery(this.queryParams)
             } catch (e) {
                 this.$message.error('删除失败，请稍后重试')
             }
@@ -119,7 +119,7 @@ export default {
         }),
         onSortChange (val) {
             console.log(val)
-            if (val.prop === 'pushTimeSortType') {
+            if (val.prop === 'pushTime') {
                 if (val.order) {
                     this.queryParams.pushTimeSortType = val.order === 'descending' ? '2' : '1'
                 } else {

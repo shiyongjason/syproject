@@ -33,7 +33,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="goEdit(scope.data.row.id)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
@@ -107,18 +107,30 @@ export default {
                 }
             })
         },
-        async onDelete (id) {
+        async onDelete (row) {
             const params = {
-                id: id,
+                id: row.id,
                 operateUserName: this.userInfo.employeeName
             }
-            try {
-                await deleteCloudSmartPlay(params)
-                this.$message.success('删除成功')
-                this.onQuery(this.queryParams)
-            } catch (e) {
-                this.$message.error('删除失败，请稍后重试')
+            let tips = ''
+            if (row.status == 1) {
+                tips = '该玩法还在生效中，删除后客户端无法查询，是否继续删除？'
+            } else {
+                tips = '该玩法还未生效，是否继续删除？'
             }
+            this.$confirm(tips, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    await deleteCloudSmartPlay(params)
+                    this.$message.success('删除成功')
+                    this.onQuery(this.queryParams)
+                } catch (e) {
+                    this.$message.error('删除失败，请稍后重试')
+                }
+            })
         },
         onShowHome (val) {
             this.H5Preview = iotUrl + '/iot/smartPlayDetail/?articleId=' + val.id
