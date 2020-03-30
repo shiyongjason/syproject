@@ -105,13 +105,19 @@ export default {
                 id: id,
                 operateUserName: this.userInfo.employeeName
             }
-            try {
-                await deleteCloudSendMessage(params)
-                await this.onQuery(this.queryParams)
-                this.$message.success('删除成功')
-            } catch (e) {
-                this.$message.error('删除失败，请稍后重试')
-            }
+            this.$confirm('该消息为待推送，是否确认要删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                try {
+                    await deleteCloudSendMessage(params)
+                    await this.onQuery(this.queryParams)
+                    this.$message.success('删除成功')
+                } catch (e) {
+                    this.$message.error('删除失败，请稍后重试')
+                }
+            })
         },
         ...mapActions({
             findCloudDict: 'findCloudDict',
