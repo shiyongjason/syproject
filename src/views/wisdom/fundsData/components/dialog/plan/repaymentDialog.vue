@@ -373,6 +373,7 @@ export default {
             this.innerVisible = true
         },
         async onSureCut () {
+            this.$refs.form.resetFields()
             await this.$emit('repaymentTypeChange', this.detailData[0])
             this.innerVisible = false
         },
