@@ -22,21 +22,34 @@
                 <template slot="effectived" slot-scope="scope">
                     <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'未生效'}}</span>
                 </template>
+                <template slot="showedTemp" slot-scope="scope">
+<!--                    scope.data.row.showed -->
+                    <el-switch
+                        v-model="scope.data.row.showedTemp"
+                        @change="updateCloudActive(scope.data.row)"
+                        active-color="#13ce66">
+                    </el-switch>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
+        <H5Preview :activeUrl="H5Preview" :loading="loading"  @hideLoading="loading =false" @clearUrl="H5Preview = ''"/>
     </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { deleteActivity } from '../api'
+import { deleteActivity, editActdetail } from '../api'
 import { clearCache, newCache } from '@/utils/index'
 import { iotUrl } from '@/api/config'
+import H5Preview from '../../../components/h5Preview'
 export default {
     name: 'cloudlist',
+    components: {
+        H5Preview
+    },
     data () {
         return {
             queryParams: {
@@ -57,8 +70,11 @@ export default {
                 { label: '活动标题', prop: 'title' },
                 { label: '创建时间', prop: 'createTime' },
                 { label: '生效时间', prop: 'effectiveTime' },
-                { label: '状态', prop: 'effectived' }
-            ]
+                { label: '状态', prop: 'effectived' },
+                { label: '是否展示在活动轮播', prop: 'showedTemp' }
+            ],
+            H5Preview: '',
+            loading: true
         }
     },
     computed: {
@@ -114,6 +130,9 @@ export default {
         }),
         async onQuery () {
             await this.findcloudActList(this.searchParams)
+            this.cloudActicitylist.records.forEach(value => {
+                value.showedTemp = value.showed === 0
+            })
             this.tableData = this.cloudActicitylist.records
             this.pagination = {
                 pageNumber: this.cloudActicitylist.current,
@@ -169,9 +188,17 @@ export default {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
         },
         onShowHome (val) {
-            window.open(iotUrl + '/iot/actionDetail/?articleId=' + val.id)
-            // console.log(iotUrl + '/iot/actionCenter/?id=' + val.id)
-            // window.location = iotUrl + '/iot/activityCenter/?id=' + val.id
+            this.H5Preview = iotUrl + '/iot/actionDetail?articleId=' + val.id
+        },
+        async updateCloudActive (row) {
+            const params = { ...row }
+            params.showedTemp ? params.showed = 0 : params.showed = 1
+            try {
+                await editActdetail(params)
+                this.onQuery()
+                this.$message.success('操作成功')
+            } catch (e) {
+            }
         }
     }
 }
