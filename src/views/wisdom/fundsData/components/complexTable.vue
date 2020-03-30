@@ -463,7 +463,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getRespAccountRepaymentPlanData(scope.row)
-                            this.respAccountRepaymentPlanData[0].title = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                            this.respAccountRepaymentPlanData[0].otherTitle = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
                             this.regulatingBreathingDialogVisible = true
@@ -1698,7 +1698,7 @@ export default {
                     sort: 36,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_2_normalInterestPranayama ? `(${scope.row.planList_2_normalInterestPranayama > 0 ? '+' + scope.row.planList_2_normalInterestPranayama : scope.row.planList_2_normalInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -2001,7 +2001,7 @@ export default {
                     sort: 22,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
@@ -2071,7 +2071,7 @@ export default {
                     sort: 34,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}</span>
+                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
                     }
                 },
                 {
