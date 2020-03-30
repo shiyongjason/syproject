@@ -87,7 +87,7 @@
                         <el-form-item label="剩余宽限利息：" prop="thisPaidGraceInterestSur">
                             <!-- 剩余宽限期利息=总宽限期利息-已还-本次收取宽限利息 -->
                             <div class="w250">
-                                <span>{{+thisPaidGraceInterestSur + detailData[0].graceInterestPranayama}}</span>
+                                <span>{{(+thisPaidGraceInterestSur + detailData[0].graceInterestPranayama).toFixed(2)}}</span>
                                 <span class="dw">元</span>
                             </div>
                         </el-form-item>
@@ -119,7 +119,7 @@
                     <div class="query-cont-col">
                         <el-form-item label="剩余正常利息：" prop="thisPaidInterestSur">
                             <!-- 总利息-已还-本次还利息 -->
-                            <span>{{+thisPaidInterestSur + detailData[0].normalInterestPranayama}}</span>
+                            <span>{{(+thisPaidInterestSur + detailData[0].normalInterestPranayama).toFixed(2)}}</span>
                             <span class="dw">元</span>
                         </el-form-item>
                     </div>
@@ -192,7 +192,7 @@
                             <el-form-item label="剩余逾期罚息:" prop="thisPaidOverDueInterestSur">
                                 <!-- 总逾期-已还-本次还逾期 -->
                                 <div class="w250">
-                                    <span>{{+thisPaidOverDueInterestSur + detailData[0].overDueInterestPranayama}}</span>
+                                    <span>{{(+thisPaidOverDueInterestSur + detailData[0].overDueInterestPranayama).toFixed(2)}}</span>
                                     <span class="dw">元</span>
                                 </div>
                             </el-form-item>
@@ -220,11 +220,12 @@ export default {
         return {
             radio: '是',
             radio2: '1',
+            // 校验时加上手动调息
             rules: {
                 thisPaidCapitalSur: [
                     {
                         validator: (r, v, callback) => {
-                            if (this.thisPaidCapitalSur < 0) {
+                            if (+this.thisPaidCapitalSur < 0) {
                                 return callback(new Error('欠收本金不能小于0'))
                             }
                             return callback()
@@ -234,8 +235,11 @@ export default {
                 thisPaidGraceInterestSur: [
                     {
                         validator: (r, v, callback) => {
-                            if (this.thisPaidGraceInterestSur < 0) {
+                            if ((+this.thisPaidGraceInterestSur + this.detailData[0].graceInterestPranayama) < 0) {
                                 return callback(new Error('剩余宽限利息不能小于0'))
+                            }
+                            if (Number.isNaN((+this.thisPaidGraceInterestSur + this.detailData[0].graceInterestPranayama))) {
+                                return callback(new Error('请输入正确的调息'))
                             }
                             return callback()
                         }
@@ -244,8 +248,11 @@ export default {
                 thisPaidInterestSur: [
                     {
                         validator: (r, v, callback) => {
-                            if (this.thisPaidInterestSur < 0) {
+                            if ((+this.thisPaidInterestSur + this.detailData[0].normalInterestPranayama) < 0) {
                                 return callback(new Error('剩余正常利息不能小于0'))
+                            }
+                            if (Number.isNaN((+this.thisPaidInterestSur + this.detailData[0].normalInterestPranayama))) {
+                                return callback(new Error('请输入正确的调息'))
                             }
                             return callback()
                         }
@@ -254,8 +261,11 @@ export default {
                 thisPaidOverDueInterestSur: [
                     {
                         validator: (r, v, callback) => {
-                            if (this.thisPaidOverDueInterestSur < 0) {
+                            if ((+this.thisPaidOverDueInterestSur + this.detailData[0].overDueInterestPranayama) < 0) {
                                 return callback(new Error('剩余逾期罚息不能小于0'))
+                            }
+                            if (Number.isNaN((+this.thisPaidOverDueInterestSur + this.detailData[0].overDueInterestPranayama))) {
+                                return callback(new Error('请输入正确的调息'))
                             }
                             return callback()
                         }

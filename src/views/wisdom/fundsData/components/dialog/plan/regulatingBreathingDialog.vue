@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="detailData[0].title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1000px" :before-close='onCancle'>
+    <el-dialog :title="detailData[0].otherTitle" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1000px" :before-close='onCancle' center>
         <el-form :model="{detailData}" :rules="rules" ref="form" label-width="180px">
             <div v-for="(item, index) in detailData" :key="index">
                 <el-divider v-if="detailData.length == 3" content-position="left">第{{index+1}}期还款调息：</el-divider>
