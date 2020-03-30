@@ -131,7 +131,7 @@ export default {
             ],
             pickerOptionsStart: {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endDate
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -139,7 +139,7 @@ export default {
             },
             pickerOptionsEnd: {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -196,6 +196,10 @@ export default {
     },
     methods: {
         async getPlatCategory () {
+            if (!this.queryParams.startTime || !this.queryParams.endTime) {
+                this.$message.warning(`时间不能为空哦`)
+                return
+            }
             this.queryParams.onLineStatus = this.onLineStatus.join(',')
             const { data } = await getPaltCategory(this.queryParams)
             const { data: sumData } = await findPlatCategorySum(this.queryParams)
