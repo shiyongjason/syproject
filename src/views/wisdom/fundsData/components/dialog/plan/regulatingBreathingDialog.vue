@@ -15,7 +15,7 @@
                             <div class="checkStyle">
                                 <el-checkbox label="正常利息调息" v-model="item.normalInterestPranayamaType"></el-checkbox>
                             </div>
-                            <el-input @blur="verity(`detailData[${index}].normalInterestPranayamaAfterAdjust`)" v-show="item.normalInterestPranayamaType" v-isNegative:2 v-model="item.normalInterestPranayama" maxlength='20' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
+                            <el-input @blur="verity(`detailData[${index}].normalInterestPranayamaAfterAdjust`)" v-show="item.normalInterestPranayamaType" v-isNegative:2 v-model="item.normalInterestPranayama" maxlength='15' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
                         </div>
                     </div>
                     <div class="query-cont-row">
@@ -46,7 +46,7 @@
                         <div class="checkStyle">
                             <el-checkbox label="宽限期利息调息" v-model="item.graceInterestPranayamaType"></el-checkbox>
                         </div>
-                        <el-input @blur="verity(`detailData[${index}].graceInterestPranayamaAfterAdjust`)" v-show="item.graceInterestPranayamaType" v-isNegative:2 v-model="item.graceInterestPranayama" maxlength='20' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
+                        <el-input @blur="verity(`detailData[${index}].graceInterestPranayamaAfterAdjust`)" v-show="item.graceInterestPranayamaType" v-isNegative:2 v-model="item.graceInterestPranayama" maxlength='15' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-row">
@@ -76,7 +76,7 @@
                         <div class="checkStyle">
                             <el-checkbox label="逾期罚息调息" v-model="item.overDueInterestPranayamaType"></el-checkbox>
                         </div>
-                        <el-input @blur="verity(`detailData[${index}].overDueInterestPranayamaAfterAdjust`)" v-show="item.overDueInterestPranayamaType" v-isNegative:2 v-model="item.overDueInterestPranayama" maxlength='20' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
+                        <el-input @blur="verity(`detailData[${index}].overDueInterestPranayamaAfterAdjust`)" v-show="item.overDueInterestPranayamaType" v-isNegative:2 v-model="item.overDueInterestPranayama" maxlength='15' placeholder="请输入手动调息金额"><template slot="append">元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-row">
