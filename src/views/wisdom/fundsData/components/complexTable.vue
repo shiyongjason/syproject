@@ -463,7 +463,7 @@ export default {
                     render: (h, scope) => {
                         return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getRespAccountRepaymentPlanData(scope.row)
-                            this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                            this.respAccountRepaymentPlanData[0].title = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
                             this.regulatingBreathingDialogVisible = true
@@ -2154,7 +2154,6 @@ export default {
         },
         // 敞口和分授信还款
         async getGrantPaymetPlanData (row, type) {
-            console.log(type)
             const { data } = await getRespAccountRepaymentPlan(row.account_id)
             // console.log(data)
             this.loanAmount = data.reduce((val, item, index) => {
@@ -2167,6 +2166,7 @@ export default {
                 this.$set(this.rowData[0], 'title', `${this.product}-分授信还款信息维护（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
                 this.$set(this.rowData[0], 'account_accountType', 3)
             }
+            this.$set(this.rowData[0], 'otherTitle', `${this.product}-手动调息（${row.account_standingBookNo} ${row.account_loanCompanyName}）`)
             this.$set(this.rowData[0], 'repaymentType', row.loan_repaymentType)
             this.$set(this.rowData[0], 'accountId', row.account_id)
             this.rowData[2] && this.$set(this.rowData[2], 'accountId', row.account_id)
