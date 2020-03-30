@@ -1823,7 +1823,6 @@ export default {
             // 敞口还款账目总计的展开
             ExpoRepaymentAccount: [
                 {
-                    prop: 'paymentStatic_capitalTime',
                     label: '最新还款时间',
                     sort: 1,
                     width: '150',
@@ -1832,7 +1831,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'paymentStatic_capitalPaid',
                     label: '累计已还敞口本金',
                     sort: 2,
                     width: '150',
@@ -1845,7 +1843,7 @@ export default {
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
                     }
                 },
                 {
@@ -1853,7 +1851,7 @@ export default {
                     sort: 5,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
                     }
                 },
                 {
@@ -1861,7 +1859,7 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
                     }
                 },
                 {
