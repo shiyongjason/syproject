@@ -1,1 +1,3 @@
 export const PROJECT_DATA = 'PROJECT_DATA'
+
+export const PROJECT_DETAIL = 'PROJECT_DETAIL'

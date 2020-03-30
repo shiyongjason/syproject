@@ -81,19 +81,18 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                <template slot="brandName" slot-scope="scope">
+                <!-- <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
-                </template>
+                </template> -->
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
-                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '禁用' : '启用'">
-                    </el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
+          <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom" ></projectDrawer>
         <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
@@ -101,9 +100,9 @@
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
+import projectDrawer from './components/projectDrawer'
 export default {
-    name: 'spumange',
+    name: 'projectlist',
     data () {
         return {
             categoryIdArr: [],
@@ -111,7 +110,12 @@ export default {
             brandList: [],
             queryParams: {
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                companyName: '',
+                firstPartName: ''
+                // maxCreateTime: '',
+                // maxUpdateTime: '',
+                // minCreateTime: ''
             },
             copyParams: {},
             tableData: [],
@@ -125,13 +129,16 @@ export default {
                 { label: '甲方名', prop: 'firstPartName', width: '200' },
                 { label: '项目类', prop: 'type' },
                 { label: '合作进度', prop: 'merchantName' },
-                { label: '项目提交时间', prop: 'createTime' },
+                { label: '项目提交时间', prop: 'createTime', width: '200' },
                 { label: '更新时间', prop: 'updateTime', width: '200' }
             ],
             rowKey: '',
             multiSelection: [],
-            removeValue: false
+            drawer: false
         }
+    },
+    components: {
+        projectDrawer
     },
     computed: {
         pickerOptionsStart () {
@@ -155,26 +162,14 @@ export default {
             }
         },
         ...mapGetters('crmmanage', {
-            projectDat: state => state.projectData
+            projectData: 'projectData'
         })
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('spumange')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'spudetail') {
-            clearCache('spumange')
-        }
-        next()
     },
     async mounted () {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+
     methods: {
         ...mapActions('crmmanage', {
             findProjetpage: 'findProjetpage'
@@ -197,17 +192,37 @@ export default {
             this.queryParams.categoryId = val
         },
         async  searchList () {
-            // this.removeValue = false
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
-            // this.tableData = data.records
-            // this.paginationInfo = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     total: data.total
-            // }
+            this.tableData = this.projectData.records
+            this.paginationInfo = {
+                pageNumber: this.projectData.current,
+                pageSize: this.projectData.size,
+                total: this.projectData.total
+            }
+        },
+        onLookproject (val) {
+            this.drawer = true
+            this.$refs.drawercom.onFindProjectDetail(val)
+        },
+        restDrawer () {
+            this.drawer = false
+            this.searchList()
         }
     }
+    // activated () {
+    //     this.searchList()
+    // },
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('projectlist')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'spudetail') {
+    //         clearCache('spumange')
+    //     }
+    //     next()
+    // }
 }
 </script>
 <style lang="scss" scoped>
