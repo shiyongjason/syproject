@@ -389,16 +389,16 @@ export default {
         onSaveplan () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    // this.loading = true
-                    // try {
-                    //     await this.setPlan(this.detailData)
-                    //     this.$message({ type: 'success', message: '修改成功' })
-                    //     this.onCancle()
-                    //     this.$emit('reload')
-                    //     this.loading = false
-                    // } catch (error) {
-                    //     this.loading = false
-                    // }
+                    this.loading = true
+                    try {
+                        await this.setPlan(this.detailData)
+                        this.$message({ type: 'success', message: '修改成功' })
+                        this.onCancle()
+                        this.$emit('reload')
+                        this.loading = false
+                    } catch (error) {
+                        this.loading = false
+                    }
                 }
             })
         },
