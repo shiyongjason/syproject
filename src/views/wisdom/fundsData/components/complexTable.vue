@@ -340,7 +340,7 @@ export default {
                     ]
                 },
                 {
-                    label: '基础信息',
+                    label: '',
                     width: '450',
                     // fixed: true,
                     children: [
