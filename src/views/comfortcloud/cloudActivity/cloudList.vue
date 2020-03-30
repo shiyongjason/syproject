@@ -129,6 +129,7 @@ export default {
             findcloudActList: 'findcloudActList'
         }),
         async onQuery () {
+            this.tableData = []
             await this.findcloudActList(this.searchParams)
             this.cloudActicitylist.records.forEach(value => {
                 value.showedTemp = value.showed === 0
