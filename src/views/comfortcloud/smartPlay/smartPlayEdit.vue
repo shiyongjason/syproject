@@ -25,6 +25,7 @@
                 </div>
                 <el-form-item label="详情：" prop="content">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
+                    {{smartPlayForm.content}}
                     <RichEditor ref="editors" v-model="smartPlayForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
@@ -84,7 +85,7 @@ export default {
             videoimageUrl: '',
             rules: {
                 title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                    { required: true, message: '请输入玩法标题', trigger: 'blur' }
                 ],
                 iconUrl: [
                     { required: true, message: '请选择列表图片' }
@@ -93,7 +94,7 @@ export default {
                     { required: true, message: '请选择生效时间', trigger: 'blur' }
                 ],
                 content: [
-                    { required: true, message: '请输入活动详情', trigger: 'blur' }
+                    { required: true, message: '请输入玩法', trigger: 'blur' }
                 ]
             },
             loading: false
