@@ -65,7 +65,7 @@
                         <el-form-item label="累计宽限期实时利息：">
                             <!-- 实时从接口获取 -->
                             <div class="w250">
-                                <span>{{`${(detailData[0].graceInterestAmount||0) + detailData[0].graceInterestPranayama}(调息：${detailData[0].graceInterestPranayama})`}}</span>
+                                <span>{{`${(detailData[0].graceInterestAmount||0)}`}}{{`${detailData[0].graceInterestPranayama?detailData[0].graceInterestPranayama>0?'(调息：+'+detailData[0].graceInterestPranayama+')':'('+detailData[0].graceInterestPranayama+')':''}`}}</span>
                             </div>
                         </el-form-item>
                     </div>
@@ -98,7 +98,8 @@
                         <el-form-item label="累计应收正常利息：">
                             <!-- 实时自动计算 -->
                             <div class="w250">
-                                <span>{{`${(detailData[0].interestAmount||0) + detailData[0].normalInterestPranayama}(调息：${detailData[0].normalInterestPranayama})`}}</span>
+                                <span>{{`${(detailData[0].interestAmount||0)}`}}
+                                    {{detailData[0].normalInterestPranayama?detailData[0].normalInterestPranayama>0?`(调息：+${detailData[0].normalInterestPranayama})`:`(调息：${detailData[0].normalInterestPranayama})`:''}}</span>
                                 <span class="dw">元</span>
                             </div>
                         </el-form-item>
@@ -170,7 +171,8 @@
                         <div class="query-cont-col">
                             <el-form-item label="累计应缴纳逾期罚息:">
                                 <div class="w250">
-                                    <span>{{`${(detailData[0].overDueInterestAmount||0) + detailData[0].overDueInterestPranayama}(调息：${detailData[0].overDueInterestPranayama})`}}</span>
+                                    <span>{{`${(detailData[0].overDueInterestAmount||0)}`}}
+                                    {{detailData[0].overDueInterestPranayama?detailData[0].overDueInterestPranayama>0?`(调息：+${detailData[0].overDueInterestPranayama})`:`(调息：${detailData[0].overDueInterestPranayama})`:''}}</span>
                                     <span class="dw">元</span>
                                 </div>
                             </el-form-item>

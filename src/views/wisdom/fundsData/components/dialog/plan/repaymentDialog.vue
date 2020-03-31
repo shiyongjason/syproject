@@ -84,7 +84,8 @@
                             <el-form-item label="剩余本金金额：" :prop="`detailData[${index}].thisPaidCapital`">
                                 <!-- 本金-已还-本次还本金 -->
                                 <div class="w250">
-                                    <span>{{surplus[index].thisPaidCapitalSur}}元</span>
+                                    <span>{{surplus[index].thisPaidCapitalSur}}</span>
+                                    <span class="dw">元</span>
                                 </div>
                             </el-form-item>
                         </div>
@@ -93,7 +94,9 @@
                         <div class="query-cont-col">
                             <el-form-item label="累计实时宽限期利息：">
                                 <div class="w250">
-                                    <span>{{`${(item.graceInterestAmount||0) + item.graceInterestPranayama}(调息：${item.graceInterestPranayama})`}}元</span>
+                                    <span>{{`${(item.graceInterestAmount||0)}`}}
+                                        {{item.graceInterestPranayama?item.graceInterestPranayama>0?`(调息：+${item.graceInterestPranayama})`:`(调息：${item.graceInterestPranayama})`:''}}</span>
+                                    <span class="dw">元</span>
                                 </div>
                             </el-form-item>
                         </div>
@@ -114,7 +117,8 @@
                             <el-form-item label="剩余宽限利息：" :prop="`detailData[${index}].thisPaidGraceInterest`">
                                 <!-- 总宽限期利息-已还-本次还宽限期利息 -->
                                 <div class="w250">
-                                    <span>{{(+surplus[index].thisPaidGraceInterestSur + item.graceInterestPranayama).toFixed(2)}}元</span>
+                                    <span>{{(+surplus[index].thisPaidGraceInterestSur + item.graceInterestPranayama).toFixed(2)}}</span>
+                                    <span class="dw">元</span>
                                 </div>
                             </el-form-item>
                         </div>
@@ -124,7 +128,9 @@
                             <div class="query-cont-col">
                                 <el-form-item label="累计应收正常利息：">
                                     <div class="w250">
-                                        <span>{{`${(item.interestAmount||0) + item.normalInterestPranayama}(调息：${item.normalInterestPranayama})`}}元</span>
+                                        <span>{{`${(item.interestAmount||0)}`}}
+                                            {{item.normalInterestPranayama?item.normalInterestPranayama>0?`(调息：+${item.normalInterestPranayama})`:`(调息：${item.normalInterestPranayama})`:''}}</span>
+                                        <span class="dw">元</span>
                                     </div>
                                 </el-form-item>
                             </div>
@@ -145,7 +151,8 @@
                                 <el-form-item label="剩余正常利息：" :prop="`detailData[${index}].thisPaidInterest`">
                                     <!-- 总利息-已还-本次还利息 -->
                                     <div class="w250">
-                                        <span>{{(+surplus[index].thisPaidInterestSur + item.normalInterestPranayama).toFixed(2)}}元</span>
+                                        <span>{{(+surplus[index].thisPaidInterestSur + item.normalInterestPranayama).toFixed(2)}}</span>
+                                        <span class="dw">元</span>
                                     </div>
                                 </el-form-item>
                             </div>
@@ -196,7 +203,9 @@
                             <div class="query-cont-col">
                                 <el-form-item label="应缴纳逾期罚息：">
                                     <div class="w250">
-                                        <span>{{`${item.overDueInterestAmount + item.overDueInterestPranayama}(调息：${item.overDueInterestPranayama})`}} 元</span>
+                                        <span>{{`${(item.overDueInterestAmount||0)}`}}
+                                            {{item.overDueInterestPranayama?item.overDueInterestPranayama>0?`(调息：+${item.overDueInterestPranayama})`:`(调息：${item.overDueInterestPranayama})`:''}}</span>
+                                        <span class="dw">元</span>
                                     </div>
                                 </el-form-item>
                             </div>
@@ -217,7 +226,8 @@
                                 <el-form-item label="剩余逾期罚息：" :prop="`detailData[${index}].thisPaidOverDueInterest`">
                                     <!-- 总逾期利息-已还-本次还逾期 -->
                                     <div class="w250">
-                                        <span>{{(+surplus[index].thisPaidOverDueInterestSur + item.overDueInterestPranayama).toFixed(2)}}元</span>
+                                        <span>{{(+surplus[index].thisPaidOverDueInterestSur + item.overDueInterestPranayama).toFixed(2)}}</span>
+                                        <span class="dw">元</span>
                                     </div>
                                 </el-form-item>
                             </div>
@@ -450,5 +460,8 @@ export default {
     margin: 15px auto;
     height: 1px;
     border-bottom: 1px solid #dcdfe6;
+}
+.dw {
+    margin-left: 10px;
 }
 </style>
