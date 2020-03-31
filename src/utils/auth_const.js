@@ -130,3 +130,7 @@ export const JINYUN_AMOUNT_IMPORT_IMPORT = 10561
 export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
 // 好智慧-利润统计 导出
 export const AUTH_PROFIT_STATISTICS_EXPORT = 10580
+// 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
+export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
+
+export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681

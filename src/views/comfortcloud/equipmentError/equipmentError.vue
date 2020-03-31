@@ -55,7 +55,7 @@
                 :on-error="uploadError"
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary"  slot="trigger">选择本地文件</el-button>
-                <p slot="tip" class="el-upload__tip">1.仅支持csv格式文件（大小在10M以内）</p>
+                <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
             <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button>
@@ -63,10 +63,13 @@
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="编辑故障代码" :visible.sync="faultEdit" class="fault-code-edit" width="395px" :close-on-click-modal="false">
+        <el-dialog title="设备故障编辑" :visible.sync="faultEdit" class="fault-code-edit" width="395px" :close-on-click-modal="false">
             <el-form ref="faultCodeEdit" :model="faultCodeEdit" :rules="rules" label-width="120px">
-                <el-form-item label="故障代码:" label-width='100px' prop='code'>
+                <el-form-item label="故障代码:" label-width='100px' prop='code' v-if="isCode">
                     <el-input type="text" v-model="faultCodeEdit.code" placeholder="请输入故障代码"></el-input>
+                </el-form-item>
+                <el-form-item label="故障内容:" label-width='100px' prop='content' v-if="!isCode">
+                    <el-input type="text" v-model="faultCodeEdit.content" placeholder="请输入故障内容"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -83,7 +86,10 @@
                     {{scope.data.row.source === 1 ? '人工导入': '设备上报'}}
                 </template>
                 <template slot="code" slot-scope="scope">
-                    <p class="colred" @click="openFaultEdit(scope.data.row)">{{scope.data.row.code}}</p>
+                    <p class="colred" @click="openFaultEdit(scope.data.row, 'code')">{{scope.data.row.code}}</p>
+                </template>
+                <template slot="content" slot-scope="scope">
+                    <p class="colred" @click="openFaultEdit(scope.data.row,'content')">{{scope.data.row.content}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="deleteFault(scope.data.row.id)">删除</el-button>
@@ -136,6 +142,9 @@ export default {
             rules: {
                 code: [
                     { required: true, message: '请输入故障代码', trigger: 'blur' }
+                ],
+                content: [
+                    { required: true, message: '请输入故障内容', trigger: 'blur' }
                 ]
             },
             uploadData: {
@@ -143,7 +152,7 @@ export default {
                 action: `${iotUrl}/api/device/breakdown/import`,
                 limit: 1,
                 autoUpload: false,
-                headers: { // todo I'am need a config file
+                headers: { // todo I'm need a config file
                     refreshToken: sessionStorage.getItem('refreshToken'),
                     token: `Bearer ` + sessionStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
@@ -152,7 +161,8 @@ export default {
                     operateUserName: ''
                 }
             },
-            loading: false
+            loading: false,
+            isCode: true
         }
     },
     computed: {
@@ -217,12 +227,16 @@ export default {
             return this.$refs.upload.uploadFiles.length > 0
         },
         async onImport () {
+            if (this.loading) return
+            this.loading = true
             if (this.hasFile()) {
-                this.loading = true
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
-                this.$refs.upload.submit()
+                try {
+                    await this.$refs.upload.submit()
+                } catch (e) {}
             } else {
                 this.$message.error('请选择上传的文件')
+                this.loading = false
             }
         },
         onDownload () {
@@ -261,7 +275,12 @@ export default {
                 this.onQuery(this.queryParams)
             }
         },
-        openFaultEdit (row) {
+        openFaultEdit (row, type) {
+            if (type === 'code') {
+                this.isCode = true
+            } else if (type === 'content') {
+                this.isCode = false
+            }
             this.faultCodeEdit = {
                 code: row.code,
                 content: row.content,
@@ -270,16 +289,32 @@ export default {
             this.faultEdit = true
         },
         beforeAvatarUpload (file) {
-            const isLt10M = file.size / (1024 * 10) < 10
+            const isLt10M = file.size / (1024 * 10) < 1
             // const isCsv = file.type === 'application/vnd.ms-excel'
             const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
             if (!isCsv) {
-                this.$message.error('上传文件只能是 excel 格式!')
-                this.loading = false
+                // this.$message.error('上传文件只能是 excel 格式!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件只能是 excel 格式!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
             }
             if (!isLt10M) {
-                this.$message.error('上传文件大小不能超过 10MB!')
-                this.loading = false
+                // this.$message.error('上传文件大小不能超过 10MB!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件大小不能超过 10MB!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
             }
             return isCsv && isLt10M
         },
