@@ -13,7 +13,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery(this.queryParams)">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="onQuery(queryParams)">查询</el-button>
                 </div>
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="goEdit('add')">新建</el-button>
@@ -33,6 +33,9 @@
                     <span v-if="scope.data.row.redirectType === 1">应用</span>
                     <span v-if="scope.data.row.redirectType === 2">应用内页面</span>
                     <span v-if="scope.data.row.redirectType === 3">h5页面</span>
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{scope.data.row.status === 1 ? "已推送": "待推送"}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="goEdit('edit',scope.data.row.id)">编辑</el-button>

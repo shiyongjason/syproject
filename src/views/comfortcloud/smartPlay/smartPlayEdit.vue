@@ -25,7 +25,7 @@
                 </div>
                 <el-form-item label="详情：" prop="content">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor ref="editors" v-model="smartPlayForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor @blur="$refs['smartPlayForm'].validateField('content')" tabindex="0" hidefocus="true" ref="editors" v-model="smartPlayForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveSmartPlay" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
@@ -84,7 +84,7 @@ export default {
             videoimageUrl: '',
             rules: {
                 title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                    { required: true, message: '请输入玩法标题', trigger: 'blur' }
                 ],
                 iconUrl: [
                     { required: true, message: '请选择列表图片' }
@@ -93,7 +93,15 @@ export default {
                     { required: true, message: '请选择生效时间', trigger: 'blur' }
                 ],
                 content: [
-                    { required: true, message: '请输入活动详情', trigger: 'blur' }
+                    {
+                        validator: (rule, value, callback) => {
+                            if (value.length <= 0 || value === '<p><br></p>') {
+                                return callback(new Error('请输入玩法'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             loading: false
@@ -183,7 +191,7 @@ export default {
             this.dialogVisible = false
         },
         onInsertVideo () {
-            this.$refs.editors.onInsertUrl(`<p><video src="${this.uploadedUrl}"  poster="" controls="controls" width="450" height="300" style="border:1px solid #f5f5f5;"></video></p>`)
+            this.$refs.editors.onInsertUrl(`<video src="${this.uploadedUrl}"  poster="" controls="controls" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
         },
         onBack () {
