@@ -59,7 +59,7 @@
                 <el-form-item label="预估借款周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                 </el-form-item>
-                <el-form-item label="工程项目回款方式：" prop="loanPayType">
+                <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
                         <el-input v-model="form.advancePaymentProportion" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
@@ -90,19 +90,44 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <el-button type="info" @click="cancelForm">审 核</el-button>
+                    <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     <el-button @click="cancelForm">取 消</el-button>
                     <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
             </div>
         </el-drawer>
+        <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
+            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
+                <el-form-item label="审核结果：" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
+                    <el-radio-group v-model="statusForm.result">
+                        <el-radio :label=1>通过</el-radio>
+                        <el-radio :label=0>不通过</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
+                    <el-radio-group v-model="statusForm.afterStatus">
+                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="活动形式：" prop="remark">
+                    <el-input type="textarea" v-model="statusForm.remark" maxlength="200" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onUpdateAudit">确 定</el-button>
+            </span>
+        </el-dialog>
+
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
-import { putProjectDetail } from './../api/index'
+import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE } from '../../const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -117,24 +142,34 @@ export default {
     data () {
         return {
             loading: false,
+            statusTxt: '',
+            dialogVisible: false,
+            statusForm: {
+                afterStatus: '',
+                createBy: '',
+                projectId: '',
+                remark: '',
+                result: ''
+            },
+            copyStatusForm: {},
+            aduitTitle: '',
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
+            statusType: STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
             },
             form: {
-                upstreamPromiseMonth: 1,
-                loanMonth: 1,
-                projectUpload: []
+                projectUpload: [],
+                loanPayTypeRate: '方法定义必填'
             },
-
+            copyForm: {},
             formLabelWidth: '150px',
-            progressList: [{ key: 1, value: '项目跟踪阶段' }, { key: 2, value: '招投标' }, { key: 3, value: '合同已签订' }, { key: 4, value: '项目已开工' }],
-            typeList: [{ key: 1, value: '地产项目' }, { key: 2, value: '政府共建项目' }, { key: 3, value: '市政项目' }, { key: 4, value: '办公楼' },
-                { key: 5, value: '厂房' }, { key: 6, value: '其他' }],
-            deviceCategoryList: [{ key: 1, value: '空调' }, { key: 2, value: '采暖' }, { key: 3, value: '新风' }, { key: 4, value: '净水' }, { key: 5, value: '智能化' }, { key: 6, value: '辅材' },
-                { key: 7, value: '电梯' }, { key: 8, value: '其他' }],
-            upstreamSupplierTypeList: [{ key: 1, value: '厂商' }, { key: 2, value: '代理商' }, { key: 3, value: '经销商' }],
+            progressList: PROCESS_LIST,
+            typeList: TYPE_LIST,
+            deviceCategoryList: DEVICE_LIST,
+            upstreamSupplierTypeList: UPSTREAM_LIST,
             rules: {
                 projectName: [
                     { required: true, message: '请输入工程项目名称', trigger: 'blur' }
@@ -178,27 +213,39 @@ export default {
                 loanMonth: [
                     { required: true, message: '请输入预估借款周期', trigger: 'blur' }
                 ],
-                loanPayType: [
+                loanPayTypeRate: [
                     { required: true },
                     {
                         validator: (r, v, callback) => {
                             if (!(this.form.acceptancePaymentProportion || this.form.advancePaymentProportion || this.form.auditCalculationPaymentProportion || this.form.deliveryPaymentProportion ||
-                          this.form.installProgressPaymentProportion || this.form.payProportion || this.form.realPaymentProportion || this.form.payOtherText)) {
+                                this.form.installProgressPaymentProportion || this.form.payProportion || this.form.realPaymentProportion || this.form.payOtherText)) {
                                 return callback(new Error('必填一项'))
                             }
                             return callback()
                         }
-
                     }
                 ],
                 projectUpload: [
                     { required: true, message: '请上传附件', trigger: 'blur' }
                 ]
+            },
+            statusRules: {
+                result: [
+                    { required: true, message: '请选择审核状态', trigger: 'change' }
+                ],
+                afterStatus: [
+                    { required: true, message: '请选择重置状态', trigger: 'change' }
+                ],
+                remark: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
             }
-
         }
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         ...mapGetters('crmmanage', {
             projectDetail: 'projectDetail'
         })
@@ -211,6 +258,7 @@ export default {
         }
     },
     mounted () {
+        this.copyStatusForm = { ...this.statusForm }
     },
     methods: {
         ...mapActions('crmmanage', {
@@ -222,16 +270,109 @@ export default {
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
             this.form = { ...this.projectDetail }
-            console.log(this.form)
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
+            this.form.loanPayTypeRate = '方法定义必填'
+            this.copyForm = { ...this.form }
         },
         handleChange (value) {
             console.log(value)
         },
         onBackUpload (str) {
         },
+        async onAuditstatus (val) {
+            let status = Object.keys(val)[0]
+            let statusTxt = ''
+            if (status == 2) {
+                // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
+                this.dialogVisible = true
+                this.aduitTitle = '审核'
+                this.statusForm = { ...this.copyStatusForm }
+                this.$nextTick(() => {
+                    this.$refs['statusForm'].clearValidate()
+                })
+                return
+            } else if (status == 3) {
+                status = !!status // H5端资料收集种 显示重置按钮
+            } else if (status == 4) {
+                // status = !!status // H5端待尽调 显示重置按钮和尽调  这里需要弹窗  通过 不通过
+                this.dialogVisible = true
+                this.aduitTitle = '尽调'
+                this.statusForm = { ...this.copyStatusForm }
+                this.$nextTick(() => {
+                    this.$refs['statusForm'].clearValidate()
+                })
+                return
+            } else if (status == 5) {
+                // status = !!status //  合作关闭显示 重置
+            } else if (status == 6) {
+                status = 7 //  H5端 待签约   显示重置和签约按钮
+            } else if (status == 7) {
+                status = 8 //  H5端 待放款   显示重置和放款按钮
+            } else if (status == 8) {
+                status = 9 //  H5端 贷种   显示重置和全部回款
+            } else if (status == 9) {
+                // status = !!status + 1 //  H5端 合作完成   显示重置
+            }
+
+            await saveStatus({ projectId: this.form.id,
+                status: status,
+                updateBy: this.userInfo.employeeName })
+            this.$message({
+                message: `${statusTxt}成功`,
+                type: 'success'
+            })
+            this.$emit('backEvent')
+        },
+        onReststatus (val) {
+            console.log(this.statusType)
+            this.statusType = this.statusType.slice(0, val - 1)
+
+            this.statusForm = { ...this.copyStatusForm }
+            this.$nextTick(() => {
+                this.$refs['statusForm'].clearValidate()
+            })
+            this.dialogVisible = true
+            this.aduitTitle = '重置状态'
+            // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
+        },
+        async onUpdateAudit () {
+            const msg = this.aduitTitle
+            this.statusForm.createBy = this.userInfo.employeeName
+            this.statusForm.projectId = this.form.id
+            this.$refs.statusForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateAudit(this.statusForm)
+                        this.dialogVisible = false
+                        this.$message({
+                            message: `${msg}成功`,
+                            type: 'success'
+                        })
+                        this.$emit('backEvent')
+                    } catch (error) {
+
+                    }
+                }
+            })
+        },
+        isShowBtn (val) {
+            const newVal = val && Object.keys(val)[0]
+            if (newVal == 3 || newVal == 5 || newVal == 9) {
+                return false
+            } else {
+                return true
+            }
+        },
+        isShowRest (val) {
+            const newVal = val && Object.keys(val)[0]
+            if (newVal == 2) {
+                return false
+            } else {
+                return true
+            }
+        },
         cancelForm () {
-            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+            if (JSON.stringify(this.form) != JSON.stringify(this.copyForm)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -245,6 +386,7 @@ export default {
         },
         onSaveproject () {
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
+            this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     try {
@@ -253,15 +395,15 @@ export default {
                             message: '数据保存成功',
                             type: 'success'
                         })
+                        this.loading = false
                         this.$emit('backEvent')
                     } catch (error) {
-
+                        this.loading = false
                     }
                 } else {
-
+                    this.loading = false
                 }
             })
-            console.log(this.form)
         }
     }
 }
@@ -307,5 +449,8 @@ export default {
 }
 /deep/.el-form-item__content .el-input {
     width: 100% !important;
+}
+/deep/ .el-radio{
+    margin-bottom: 10px;
 }
 </style>

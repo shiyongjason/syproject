@@ -40,7 +40,7 @@
                     <p>暂无企业</p>
                 </div>
                 <h3>关联的微信用户</h3>
-                <div class="account-wx" v-for="(item,index) in account.wxUserList" :key="item.userId">
+                <div class="account-wx" v-for="(item) in account.wxUserList" :key="item.userId">
                     <img :src="item.avatarUrl" alt="">
                     <div class="account-wx_user">
                         <p><i>昵称</i>&emsp;{{item.nickName}}</p>

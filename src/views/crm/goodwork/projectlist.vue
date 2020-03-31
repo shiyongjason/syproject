@@ -8,13 +8,13 @@
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
                     </div>
                 </div>
-                    <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">项目提交时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                         <el-input v-model="queryParams.companyName" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">甲方名称：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
@@ -33,10 +33,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
                         </el-date-picker>
                     </div>
                 </div>
@@ -46,22 +46,18 @@
                         <el-select v-model="queryParams.type">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="禁用" value="2">
-                            </el-option>
-                            <el-option label="启用" value="1">
+                            <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.progress">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="禁用" value="2">
-                            </el-option>
-                            <el-option label="启用" value="1">
+                           <el-option v-for="item in processList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -81,18 +77,18 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                <!-- <template slot="brandName" slot-scope="scope">
-                    {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
+                  <template slot="type" slot-scope="scope">
+                   {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
-                <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
-                </template> -->
+                  <template slot="progress" slot-scope="scope">
+                   {{scope.data.row.type&&processList[scope.data.row.progress-1]['value']}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
-          <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom" ></projectDrawer>
+        <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></projectDrawer>
         <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
@@ -101,6 +97,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import projectDrawer from './components/projectDrawer'
+import { TYPE_LIST, PROCESS_LIST } from '../const'
 export default {
     name: 'projectlist',
     data () {
@@ -112,10 +109,16 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 companyName: '',
-                firstPartName: ''
-                // maxCreateTime: '',
-                // maxUpdateTime: '',
-                // minCreateTime: ''
+                firstPartName: '',
+                maxCreateTime: '',
+                maxUpdateTime: '',
+                minCreateTime: '',
+                minUpdateTime: '',
+                progress: '',
+                projectName: '',
+                projectNo: '',
+                type: '',
+                originType: 1
             },
             copyParams: {},
             tableData: [],
@@ -124,17 +127,19 @@ export default {
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
                 { label: '项目编号', prop: 'projectNo' },
-                { label: '借款总额', prop: 'predictLoanAmount', width: '200' },
+                { label: '借款总额', prop: 'predictLoanAmount' },
                 { label: '经销商', prop: 'upstreamSupplierName' },
-                { label: '甲方名', prop: 'firstPartName', width: '200' },
-                { label: '项目类', prop: 'type' },
-                { label: '合作进度', prop: 'merchantName' },
-                { label: '项目提交时间', prop: 'createTime', width: '200' },
-                { label: '更新时间', prop: 'updateTime', width: '200' }
+                { label: '甲方名', prop: 'firstPartName' },
+                { label: '项目类别', prop: 'type', width: '120' },
+                { label: '合作进度', prop: 'progress', width: '120' },
+                { label: '项目提交时间', prop: 'createTime', width: '180' },
+                { label: '更新时间', prop: 'updateTime', width: '180' }
             ],
             rowKey: '',
             multiSelection: [],
-            drawer: false
+            drawer: false,
+            typeList: TYPE_LIST,
+            processList: PROCESS_LIST
         }
     },
     components: {
@@ -144,7 +149,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
+                    let beginDateVal = this.queryParams.maxCreateTime
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
@@ -154,7 +159,27 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.minCreateTime
+                    if (beginDateVal) {
+                        return time.getTime() < beginDateVal
+                    }
+                }
+            }
+        },
+        pickerOptionsMax () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.maxUpdateTime
+                    if (beginDateVal) {
+                        return time.getTime() > beginDateVal
+                    }
+                }
+            }
+        },
+        pickerOptionsMin () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.minUpdateTime
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
@@ -210,19 +235,6 @@ export default {
             this.searchList()
         }
     }
-    // activated () {
-    //     this.searchList()
-    // },
-    // beforeRouteEnter (to, from, next) {
-    //     newCache('projectlist')
-    //     next()
-    // },
-    // beforeRouteLeave (to, from, next) {
-    //     if (to.name != 'spudetail') {
-    //         clearCache('spumange')
-    //     }
-    //     next()
-    // }
 }
 </script>
 <style lang="scss" scoped>
