@@ -11,7 +11,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="本次还本金时间：">
-                            <el-date-picker v-model="detailData[0].thisPaidCapitalTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请输入本次还本金时间" @change="dealCount(detailData[0])">
+                            <el-date-picker v-model="detailData[0].thisPaidCapitalTime" type="date" :picker-options="pickerOptionsStart" value-format='yyyy-MM-dd' placeholder="请输入本次还本金时间" @change="dealCount(detailData[0])" :editable='false' :clearable='false'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还宽限利息时间：">
-                            <el-date-picker v-model="detailData[0].thisPaidGraceInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还宽限利息时间">
+                            <el-date-picker v-model="detailData[0].thisPaidGraceInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还宽限利息时间" :editable='false' :clearable='false'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -106,7 +106,7 @@
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="本次还正常利息时间：">
-                            <el-date-picker v-model="detailData[0].thisPaidInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还正常利息时间">
+                            <el-date-picker v-model="detailData[0].thisPaidInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择本次还正常利息时间" :editable='false' :clearable='false'>
                             </el-date-picker>
                         </el-form-item>
                     </div>
@@ -172,14 +172,14 @@
                             <el-form-item label="累计应缴纳逾期罚息:">
                                 <div class="w250">
                                     <span>{{`${(detailData[0].overDueInterestAmount||0)}`}}
-                                    {{detailData[0].overDueInterestPranayama?detailData[0].overDueInterestPranayama>0?`(调息：+${detailData[0].overDueInterestPranayama})`:`(调息：${detailData[0].overDueInterestPranayama})`:''}}</span>
+                                        {{detailData[0].overDueInterestPranayama?detailData[0].overDueInterestPranayama>0?`(调息：+${detailData[0].overDueInterestPranayama})`:`(调息：${detailData[0].overDueInterestPranayama})`:''}}</span>
                                     <span class="dw">元</span>
                                 </div>
                             </el-form-item>
                         </div>
                         <div class="query-cont-col">
                             <el-form-item label="本次还罚息时间：">
-                                <el-date-picker v-model="detailData[0].thisPaidOverDueInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期">
+                                <el-date-picker v-model="detailData[0].thisPaidOverDueInterestTime" :picker-options="pickerOptionsStart" type="date" value-format='yyyy-MM-dd' placeholder="请选择约定还款日期" :editable='false' :clearable='false'>
                                 </el-date-picker>
                             </el-form-item>
                         </div>
