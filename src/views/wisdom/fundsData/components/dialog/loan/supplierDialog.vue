@@ -6,7 +6,7 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="供货商名称：">
-                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='30' :disabled='detailData.isRepayment'>
+                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='100' :disabled='detailData.isRepayment' show-word-limit>
                             </el-input>
                         </el-form-item>
                     </div>
