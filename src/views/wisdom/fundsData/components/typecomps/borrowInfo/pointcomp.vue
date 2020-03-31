@@ -11,7 +11,7 @@
             </div>
             <div class="query-cont-col">
                 <el-form-item label="供货商名称：">
-                    <el-input v-model.trim="flowform.supplier" maxlength="30" show-word-limit placeholder="请输入供货商名">
+                    <el-input v-model.trim="flowform.supplier" maxlength="100" show-word-limit placeholder="请输入供货商名">
                     </el-input>
                 </el-form-item>
             </div>
