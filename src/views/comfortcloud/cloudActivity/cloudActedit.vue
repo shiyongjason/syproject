@@ -13,7 +13,7 @@
                     <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
                         <!-- 尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB -->
-                        大小1M以内，支持jpeg,png和jpg格式
+                        建议尺寸：993*426，1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
@@ -183,7 +183,7 @@ export default {
             this.dialogVisible = false
         },
         onInsertVideo () {
-            this.$refs.editors.onInsertUrl(`<p><video src="${this.uploadedUrl}"  poster="" controls="controls" width="450" height="300" style="border:1px solid #f5f5f5;"></video></p>`)
+            this.$refs.editors.onInsertUrl(`<p><video src="${this.uploadedUrl}"  poster="" controls="controls" controlsList="nodownload" width="450" height="300" style="border:1px solid #f5f5f5;"></video></p>`)
             this.dialogVisible = false
         },
         onBack () {

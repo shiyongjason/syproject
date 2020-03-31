@@ -11,7 +11,7 @@
                 </el-form-item>
                 <el-form-item label="目标用户：" prop="target">
                     <el-select v-model="sendMessage.target">
-                        <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in pushTargetTypeList" :key="item.dataKey"></el-option>
+                        <el-option :label="item.dataValue" :value="+item.dataKey" v-for="item in pushTargetTypeList" :key="item.dataKey"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="消息通知内容：" prop="content">
@@ -137,11 +137,14 @@ export default {
     },
     watch: {
         'sendMessage.redirectType' (val) {
-            this.sendMessage.redirectUrl = ''
+            if (this.isFirstLoad) {
+                this.sendMessage.redirectUrl = ''
+            }
             this.inputType = this.sendMessage.redirectType
         }
     },
     async mounted () {
+        this.isFirstLoad = false
         if (this.$route.query.id) {
             this.getActivityDetail(this.$route.query.id)
         }
@@ -149,6 +152,7 @@ export default {
         this.pushTargetTypeList = this.cloudDict.concat()
         await this.findCloudDict({ item: 'push_app_inner_page' })
         this.pushAppInnerPageList = this.cloudDict.concat()
+        this.isFirstLoad = true
     },
     methods: {
         ...mapActions(
@@ -238,10 +242,20 @@ export default {
         justify-content: center;
         table{
             width: 100%;
+            line-height: 20px;
+            border-collapse: collapse;
+            th{
+                color: #333333;
+                font-size: 14px;
+                text-align: left;
+                padding: 10px;
+                border: 1px solid #f1f1f1;
+            }
             td{
                 width: 50%;
                 font-size: 14px;
-                padding: 5px;
+                padding: 10px;
+                border: 1px solid #f1f1f1;
             }
         }
     }
