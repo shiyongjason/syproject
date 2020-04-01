@@ -18,7 +18,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" clearable>
-                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.organizationName" :value="item.organizationCode">
+                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.deptname" :value="item.crmDeptCode">
                         </el-option>
                     </el-select>
                 </div>
@@ -91,10 +91,12 @@ import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
+import { shy } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'standingBook',
+    mixins: [shy],
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
@@ -131,8 +133,9 @@ export default {
     },
     mounted () {
         this.onSearch()
-        this.findBranchList()
-        this.findPlatformslist()
+        // this.findBranchList()
+        // this.findPlatformslist()
+        this.oldAuth()
     },
     methods: {
         ...mapActions([
