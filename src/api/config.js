@@ -20,7 +20,7 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
-        iotUrl = 'http://192.168.20.249:20000'
+        iotUrl = 'http://192.168.20.249:20000' // 其实是测试环境
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
