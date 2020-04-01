@@ -11,16 +11,25 @@ let fileUploadUrl = ''
 let iotUrl = ''
 let mockUrl = window.location.origin + '/mock/' // 自定义的json数据，开发用
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
+
+// var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
         interfaceUrl = 'http://192.168.20.248:30000/'
-        ossUrl = 'http://192.168.20.248:8089/'
+        ossUrl = 'http://hbp-gateway-dev.hosjoy.com:8089/'
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        ccpBaseUrl = 'http://192.168.20.248:8021/'
-        B2bUrl = 'http://192.168.20.248:40000/'
-        fileUploadUrl = 'http://192.168.20.248:30000/'
-        iotUrl = 'http://192.168.20.249:20000' // 其实是测试环境
+        ccpBaseUrl = 'https://ccp-gateway-dev.hosjoy.com:4832/'
+        B2bUrl = 'https://b2b-gateway-dev.hosjoy.com:4832/'
+        fileUploadUrl = 'https://hbp-gateway-dev.hosjoy.com:4832'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
+        // interfaceUrl = 'http://192.168.20.248:30000/'
+        // ossUrl = 'http://192.168.20.248:8089/'
+        // iframeUrl = 'http://devcrm.hosjoy.com/'
+        // jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        // ccpBaseUrl = 'http://192.168.20.248:8021/'
+        // B2bUrl = 'http://192.168.20.248:40000/'
+        // fileUploadUrl = 'http://192.168.20.248:30000/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -30,7 +39,7 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
-        iotUrl = 'http://192.168.20.249:20000/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -40,7 +49,7 @@ switch (env) {
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
-        iotUrl = 'http://192.168.20.249:20000'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
