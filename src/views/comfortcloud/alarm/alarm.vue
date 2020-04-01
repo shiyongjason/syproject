@@ -30,6 +30,9 @@
 
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudAlarmList" :pagination="cloudAlarmPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                <template slot="downlineInterval" slot-scope="scope">
+                    {{scope.data.row.downlineInterval + '分钟'}}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -58,7 +61,7 @@ export default {
             tableLabel: [
                 { label: '家庭名称', prop: 'homeName' },
                 { label: '管理员手机号', prop: 'managerPhone' },
-                { label: '网管号', prop: 'deviceId' },
+                { label: '网关号', prop: 'deviceId' },
                 { label: '设备ID', prop: 'subDevId' },
                 { label: '设备类型', prop: 'subType' },
                 { label: '离线时间', prop: 'downlineTime' },

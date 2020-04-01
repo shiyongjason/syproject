@@ -289,7 +289,7 @@ export default {
             this.faultEdit = true
         },
         beforeAvatarUpload (file) {
-            const isLt10M = file.size / (1024 * 10) < 1
+            const isLt10M = file.size / (1024 * 1024 * 10) < 1
             // const isCsv = file.type === 'application/vnd.ms-excel'
             const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
             if (!isCsv) {
@@ -376,6 +376,7 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            height: 100px;
         }
     }
 </style>
