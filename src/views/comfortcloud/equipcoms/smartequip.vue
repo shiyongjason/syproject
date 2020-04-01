@@ -22,9 +22,15 @@
             <h3>设备明细</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">手机号/网关号：</div>
+                    <div class="query-col-title">手机号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="deviceDetailParams.phone" placeholder="输入手机号/网关号" maxlength="11"></el-input>
+                        <el-input v-model="deviceDetailParams.phone" placeholder="输入手机号" maxlength="11"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">网关号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="deviceDetailParams.iotId" placeholder="输入网关号" maxlength="20"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
