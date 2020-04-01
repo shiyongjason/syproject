@@ -191,7 +191,7 @@ export default {
             this.dialogVisible = false
         },
         onInsertVideo () {
-            this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls="controls" controlsList="nodownload" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
+            this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
         },
         onBack () {
