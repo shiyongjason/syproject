@@ -118,7 +118,7 @@ export default {
                 projectName: '',
                 projectNo: '',
                 type: '',
-                originType: 1
+                originType: ''
             },
             copyParams: {},
             tableData: [],

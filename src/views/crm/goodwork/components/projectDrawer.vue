@@ -271,6 +271,7 @@ export default {
             await this.findProjectDetail(val)
             this.form = { ...this.projectDetail }
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
+            console.log(this.form.projectUpload)
             this.form.loanPayTypeRate = '方法定义必填'
             this.copyForm = { ...this.form }
         },
@@ -385,6 +386,11 @@ export default {
             }
         },
         onSaveproject () {
+            this.form.projectUpload.map(value => {
+                if (!value.url) {
+                    value.url = value.fileUrl
+                }
+            })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
