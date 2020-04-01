@@ -5,10 +5,10 @@
                 <span :class="index==tabindex?'active':''" @click="onTabs(index,item.key)" v-for="(item,index) in smartList" :key=index>{{item.name}}</span>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期"  :picker-options="pickerOptionsStart">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期"  :picker-options="pickerOptionsStart">
                 </el-date-picker>
                 <span class="">-</span>
-                <el-date-picker type="date" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期"  :picker-options="pickerOptionsEnd">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期"  :picker-options="pickerOptionsEnd">
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindHistoryR()">
                     查询
