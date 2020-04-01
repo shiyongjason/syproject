@@ -215,13 +215,18 @@ export default {
         uploadError () {
             this.$refs.upload.clearFiles()
             this.$message.error('文件上传失败，请重试！')
+            this.loading = false
         },
-        uploadSuccess () {
+        uploadSuccess (response) {
             this.$refs.upload.clearFiles()
             this.loading = false
-            this.$message.success('文件上传成功')
-            this.uploadShow = false
-            this.onQuery()
+            if (response.code === 200) {
+                this.$message.success('文件上传成功')
+                this.uploadShow = false
+                this.onQuery()
+            } else {
+                this.$message.error(response.message)
+            }
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
@@ -377,6 +382,7 @@ export default {
             flex-direction: column;
             justify-content: center;
             height: 100px;
+            min-height: 100px;
         }
     }
 </style>
