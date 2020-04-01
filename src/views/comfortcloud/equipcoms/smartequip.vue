@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="echart-wrap">
-            <div class="" id="firstchart" style="height:500px"></div>
+            <div ref="chart" style="height:500px"></div>
         </div>
         <div class="page-body-cont query-cont">
             <h3>设备明细</h3>
@@ -138,6 +138,7 @@ export default {
     mounted () {
         this.onFindHistoryR()
         this.findCloudDeviceDetailList(this.deviceDetailParams)
+        this.echart = echarts.init(this.$refs.chart)
     },
     methods: {
         ...mapActions({
@@ -169,8 +170,6 @@ export default {
             this.drawLine(this.smartData)
         },
         drawLine (data) {
-            // 基于准备好的dom，初始化echarts实例
-            this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
             var charts = {
                 unit: '单位',
@@ -193,24 +192,25 @@ export default {
                 var x = i
                 if (x > color.length - 1) {
                     x = color.length - 1
-                } var dataL = {
+                }
+                var dataL = {
                     name: charts.names[i],
                     type: 'line',
                     color: color[x] + ')',
                     smooth: false,
-                    areaStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                offset: 0,
-                                color: color[x] + ', 0.3)'
-                            }, {
-                                offset: 0.8,
-                                color: color[x] + ', 0)'
-                            }], false),
-                            shadowColor: 'rgba(0, 0, 0, 0.1)',
-                            shadowBlur: 10
-                        }
-                    },
+                    // areaStyle: {
+                    //     normal: {
+                    //         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                    //             offset: 0,
+                    //             color: color[x] + ', 0.3)'
+                    //         }, {
+                    //             offset: 0.8,
+                    //             color: color[x] + ', 0)'
+                    //         }], false),
+                    //         shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    //         shadowBlur: 10
+                    //     }
+                    // },
                     symbol: 'circle',
                     symbolSize: 8,
                     yAxisIndex: 0,
@@ -224,6 +224,15 @@ export default {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross'
+                    },
+                    label: {
+                        formatter: function () {
+                            let temp = []
+                            lineY.forEach(value => {
+                                temp.push(value.name)
+                            })
+                            return temp
+                        }
                     }
                 },
                 legend: {
@@ -246,12 +255,13 @@ export default {
                     boundaryGap: false,
                     data: charts.lineX,
                     axisLabel: {
+                        formatter: '{value}'
                         // textStyle: {
                         //     color: 'rgb(0,253,255,0.6)'
                         // },
-                        formatter: function (params) {
-                            return params.split(' ')[0]
-                        }
+                        // formatter: function (params) {
+                        //     return params.split(' ')[0]
+                        // }
                     }
                 },
                 yAxis: {
@@ -259,9 +269,6 @@ export default {
                     type: 'value',
                     axisLabel: {
                         formatter: '{value}'
-                        // textStyle: {
-                        //     color: 'rgb(0,253,255,0.6)'
-                        // }
                     },
                     splitLine: {
                         // x轴的颜色
@@ -278,7 +285,7 @@ export default {
                 },
                 series: lineY
             }
-            this.myChart.setOption(option)
+            this.echart.setOption(option, true)
         }
     }
 }

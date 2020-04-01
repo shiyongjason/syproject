@@ -30,7 +30,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item prop="redirectUrl">
-                    <p class="select-type" v-show="inputType === sendMessageRedirectType.appUrl" @click="openModel"><i class="el-icon-plus"></i>选择页面</p>
+                    <p class="select-type" v-show="inputType === sendMessageRedirectType.appUrl" @click="openModel"><i class="el-icon-plus"></i>选择页面 <span>{{pageName}}</span></p>
                     <el-input v-show="inputType === sendMessageRedirectType.h5Url" v-model="sendMessage.redirectUrl" placeholder="请输入已http或https开头的url"></el-input>
                 </el-form-item>
                 <el-form-item label="推送时间：" prop="pushTime">
@@ -133,6 +133,18 @@ export default {
         },
         sendMessageRedirectType () {
             return sendMessageRedirectType
+        },
+        pageName () {
+            if (this.inputType === this.sendMessageRedirectType.appUrl) {
+                let temp = ''
+                this.pushAppInnerPageList.forEach(value => {
+                    if (value.dataKey === this.sendMessage.redirectUrl) {
+                        temp = value.dataValue
+                    }
+                })
+                return temp
+            }
+            return ''
         }
     },
     watch: {
@@ -230,6 +242,11 @@ export default {
         color: #ff7a45;
         cursor: pointer;
         float: left;
+        span {
+            margin-left: 10px;
+            color: #333333;
+            font-size: 14px;
+        }
     }
     /deep/ .el-icon-plus{
         margin-right: 8px;
