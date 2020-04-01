@@ -49,13 +49,13 @@
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="台账档案编号：">
-                            <el-input maxlength='20' v-model.trim="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
+                            <el-input type="textarea" maxlength="50" show-word-limit v-model="ruleForm.account.standingBookArchiveNo" placeholder="请输入台账档案编号">
                             </el-input>
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
                         <el-form-item label="金云档案编号：">
-                            <el-input maxlength='20' v-model.trim="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号">
+                            <el-input type="textarea" maxlength="50" show-word-limit v-model="ruleForm.account.jinyunArchiveNo" placeholder="请输入金云档案编号">
                             </el-input>
                         </el-form-item>
                     </div>
