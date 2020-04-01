@@ -382,7 +382,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/category/category.vue')
+                component: () => import('@/views/hmall/finance/product.vue')
             },
             {
                 path: 'charge',
@@ -394,6 +394,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/finance/serviceCharge.vue')
+            },
+            {
+                path: 'withdrawal',
+                name: 'financeWithdrawal',
+                meta: {
+                    title: '提现',
+                    tagName: '提现',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/finance/withdrawal.vue')
             }
         ]
     }

@@ -1,7 +1,7 @@
 // 服务费收取明细
-export const SERVICE_CHARGE_LIST = 'SERVICE_CHARGE_LIST'
+export const SERVICE_CHARGE_INFO = 'SERVICE_CHARGE_INFO'
 // 服务费提现明细
-export const CASH_WITHDRAWAL_LIST = 'CASH_WITHDRAWAL_LIST'
+export const CASH_WITHDRAWAL_INFO = 'CASH_WITHDRAWAL_INFO'
 // 账户信息
 export const BANK_ACCOUNT_INFO = 'BANK_ACCOUNT_INFO'
 // 提现银行卡信息
