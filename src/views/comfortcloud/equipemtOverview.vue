@@ -70,6 +70,7 @@ export default {
         box-shadow: 3px 3px #e5e5e5;
         padding: 10px 20px;
         box-sizing:border-box;
+        cursor: pointer;
     }
     .bgactive {
         background: #ff7a45;
