@@ -69,10 +69,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">支付时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startPayTime" type="date" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startPayTime" type="date" format="yyyy-MM-dd" placeholder="开始日期" value-format="yyyy-MM-dd" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endPayTime" type="date" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endPayTime" type="date" format="yyyy-MM-dd" placeholder="结束日期" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>

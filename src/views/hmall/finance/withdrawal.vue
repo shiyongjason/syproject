@@ -12,18 +12,26 @@
                     label-position="right"
                     :rules="rules"
                 >
-                    <el-form-item label="提现金额" prop="money">
-                        <el-input v-model="withdrawalForm.money"></el-input>
+                    <el-form-item label="银行卡号">
+                        <span style="margin-left: 20px">{{bankCardInfo.bankAccountNumber}}</span>
+                    </el-form-item>
+                    <el-form-item label="提现金额" prop="amount">
+                        <el-input v-model="withdrawalForm.amount"></el-input>
                         <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | money}}元</span>
                     </el-form-item>
-                    <el-form-item label="验证码" prop="name">
-                        <el-input v-model="withdrawalForm.name"></el-input>
-                        <span style="margin-left: 20px">137****1919</span>
-                        <el-button style="margin-left: 20px" size="mini">获取验证码</el-button>
+                    <el-form-item label="验证码" prop="smsCode">
+                        <el-input v-model="withdrawalForm.smsCode"></el-input>
+                        <span style="margin-left: 20px">{{phoneNumber}}</span>
+                        <el-button
+                            style="margin-left: 20px"
+                            size="mini"
+                            :disabled="after?false:true"
+                            @click="onMobileVerifica"
+                        >{{content}}</el-button>
                     </el-form-item>
                     <el-form-item>
                         <el-button @click="onCancel">取消</el-button>
-                        <el-button type="primary" @click="onSubmit">查询</el-button>
+                        <el-button type="primary" @click="onSubmit">确定</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -72,17 +80,40 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import { IsFixedTwoNumber } from '@/utils/rules.js'
+import { getSmsCode, cashWithdrawal } from './api/index'
+import { VerificationCode } from '@/utils/rules.js'
 export default {
     data () {
         return {
             withdrawalForm: {
 
             },
+            after: true,
+            content: '获取验证码',
+            time: 60,
+            clock: null,
             rules: {
-                money: [
+                amount: [
                     { required: true, message: '请输入提现金额', trigger: 'blur' },
-                    { validator: IsFixedTwoNumber, message: '可以输入有两位小数的正实数', trigger: 'blur' }
+                    {
+                        validator: (rule, value, callback) => {
+                            var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value == 0) {
+                                return callback(new Error('提现金额不能为0'))
+                            // } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
+                            //     return callback(new Error('提现金额超限'))
+                            } else if (value && !(Reg.test(value))) {
+                                return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
+                            } else if (value < 100) {
+                                return callback(new Error('提现金额最低100元'))
+                            }
+                            return callback()
+                        }
+                    }
+                ],
+                smsCode: [
+                    { required: true, message: '请输入验证码', trigger: 'blur' },
+                    { validator: VerificationCode, trigger: 'blur' }
                 ]
             },
             queryParams: {
@@ -104,8 +135,23 @@ export default {
     computed: {
         ...mapGetters('finance', {
             cashWithdrawalInfo: 'cashWithdrawalInfo',
-            bankAccountInfo: 'bankAccountInfo'
+            bankAccountInfo: 'bankAccountInfo',
+            bankCardInfo: 'bankCardInfo'
         }),
+        phoneNumber () {
+            return this.bankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
+        },
+        reqWithdraw () {
+            let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+            return {
+                ...this.withdrawalForm,
+                bankCardId: this.bankCardInfo.bankCardId,
+                mobile: this.bankCardInfo.bankPhoneNumber,
+                operator: `${userInfo.employeeName}(${userInfo.phoneNumber})`,
+                receivedAmount: this.withdrawalForm.amount,
+                serviceFee: 0
+            }
+        },
         tableData () {
             return this.cashWithdrawalInfo.records
         },
@@ -140,19 +186,60 @@ export default {
     mounted () {
         this.findCashWithdrawalAction()
         this.findBankAccountInfo()
+        this.findBankCardInfo()
     },
     methods: {
         ...mapActions('finance', {
             findCashWithdrawal: 'findCashWithdrawal',
-            findBankAccountInfo: 'findBankAccountInfo'
+            findBankAccountInfo: 'findBankAccountInfo',
+            findBankCardInfo: 'findBankCardInfo'
         }),
 
-        onSubmit () {
+        onMobileVerifica () {
+            this.after = false
+            this.content = '重新发送 ' + this.time
+            getSmsCode()
+            this.clock = setInterval(() => {
+                this.time--
+                this.content = '重新发送' + this.time
+                if (this.time <= 0) {
+                    clearInterval(this.clock)
+                    this.content = '获取验证码'
+                    this.time = 60
+                    this.after = true
+                }
+            }, 1000)
+        },
 
+        onSubmit () {
+            this.$refs['withdrawalForm'].validate(async (valid) => {
+                if (valid) {
+                    this.$confirm(`确认提现?`, '提现', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        await cashWithdrawal(this.reqWithdraw)
+                        this.withdrawalSuccess()
+                    })
+                }
+            })
+        },
+
+        withdrawalSuccess () {
+            this.$refs['withdrawalForm'].resetField()
+            clearInterval(this.clock)
+            this.content = '获取验证码'
+            this.time = 60
+            this.after = true
+            this.$message({
+                showClose: true,
+                message: '提现成功',
+                type: 'success'
+            })
         },
 
         onCancel () {
-
+            this.$router.push('/hmall/finance/charge')
         },
 
         searchList () {
@@ -176,7 +263,8 @@ export default {
             for (let key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
-            location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?' + url
+            url += 'access_token=' + sessionStorage.getItem('token')
+            location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/export?' + url
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
