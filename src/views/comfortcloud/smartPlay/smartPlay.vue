@@ -43,7 +43,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { iotUrl } from '@/api/config'
+import { iotUrlH5 } from '@/api/config'
 import H5Preview from '../../../components/h5Preview/index'
 import { deleteCloudSmartPlay } from '../api/index'
 export default {
@@ -133,7 +133,7 @@ export default {
             })
         },
         onShowHome (val) {
-            this.H5Preview = iotUrl + '/iot/smartPlayDetail/?articleId=' + val.id
+            this.H5Preview = iotUrlH5 + '/iot/smartPlayDetail/?articleId=' + val.id
         }
     },
     mounted () {

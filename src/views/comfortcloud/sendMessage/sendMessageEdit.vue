@@ -6,7 +6,7 @@
                     <h3>创建消息</h3>
                 </div>
                 <el-form-item label="消息主题：" prop="theme">
-                    <el-input v-model.trim="sendMessage.theme" show-word-limit placeholder="输入玩法标题" maxlength='50'
+                    <el-input v-model.trim="sendMessage.theme" show-word-limit placeholder="输入消息主题" maxlength='50'
                               class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="目标用户：" prop="target">
