@@ -38,8 +38,11 @@
                     {{scope.data.row.status === 1 ? "已推送": "待推送"}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="goEdit('edit',scope.data.row.id)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                    <template v-if="scope.data.row.status !== 1">
+                        <el-button class="orangeBtn" @click="goEdit('edit',scope.data.row.id)">编辑</el-button>
+                        <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                    </template>
+                    <template v-else>-</template>
                 </template>
             </basicTable>
         </div>
