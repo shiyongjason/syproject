@@ -43,7 +43,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { deleteActivity, editActdetail } from '../api'
 import { clearCache, newCache } from '@/utils/index'
-import { iotUrlH5 } from '@/api/config'
+import { iotUrl } from '@/api/config'
 import H5Preview from '../../../components/h5Preview'
 export default {
     name: 'cloudlist',
@@ -189,7 +189,7 @@ export default {
             this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
         },
         onShowHome (val) {
-            this.H5Preview = iotUrlH5 + '/iot/actionDetail?articleId=' + val.id
+            this.H5Preview = iotUrl + '/iot/actionDetail?articleId=' + val.id
         },
         async updateCloudActive (row) {
             const params = { ...row }
