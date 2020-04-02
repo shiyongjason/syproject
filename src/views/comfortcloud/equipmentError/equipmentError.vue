@@ -66,10 +66,10 @@
         <el-dialog title="设备故障编辑" :visible.sync="faultEdit" class="fault-code-edit" width="395px" :close-on-click-modal="false">
             <el-form ref="faultCodeEdit" :model="faultCodeEdit" :rules="rules" label-width="120px">
                 <el-form-item label="故障代码:" label-width='100px' prop='code' v-if="isCode">
-                    <el-input type="text" v-model="faultCodeEdit.code" placeholder="请输入故障代码"></el-input>
+                    <el-input type="text" maxlength="32" v-model="faultCodeEdit.code" placeholder="请输入故障代码"></el-input>
                 </el-form-item>
                 <el-form-item label="故障内容:" label-width='100px' prop='content' v-if="!isCode">
-                    <el-input type="text" v-model="faultCodeEdit.content" placeholder="请输入故障内容"></el-input>
+                    <el-input  maxlength="512" type="text" v-model="faultCodeEdit.content" placeholder="请输入故障内容"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
