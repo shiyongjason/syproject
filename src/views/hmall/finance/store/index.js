@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -10,11 +10,15 @@ const state = {
     // 银行账户信息
     bankAccountInfo: {},
     // 提现银行卡信息
-    bankCardInfo: {},
+    bankCardInfo: {
+        bankPhoneNumber: ''
+    },
     // 订单信息
     orderList: [],
     // 营销列表
-    marketingList: []
+    marketingList: [],
+    // 商品明细列表信息
+    productsInfo: {}
 }
 
 const getters = {
@@ -23,7 +27,8 @@ const getters = {
     bankAccountInfo: state => state.bankAccountInfo,
     bankCardInfo: state => state.bankCardInfo,
     orderList: state => state.orderList,
-    marketingList: state => state.marketingList
+    marketingList: state => state.marketingList,
+    productsInfo: state => state.productsInfo
 }
 
 const mutations = {
@@ -44,6 +49,9 @@ const mutations = {
     },
     [types.MARKETING_LIST] (state, payload) {
         state.marketingList = payload
+    },
+    [types.PRODUCTS_INFO] (state, payload) {
+        state.productsInfo = payload
     }
 }
 
@@ -71,8 +79,13 @@ const actions = {
     async findMarketing ({ commit }, params) {
         const { data } = await findMarketing(params)
         commit(types.MARKETING_LIST, data)
+    },
+    async findProductsInfo ({ commit }, params) {
+        const { data } = await findProductsInfo(params)
+        commit(types.PRODUCTS_INFO, data)
     }
 }
+
 export default {
     namespaced: true,
     state,

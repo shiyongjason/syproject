@@ -10,3 +10,5 @@ export const BANK_CARD_INFO = 'BANK_CARD_INFO'
 export const ORDER_LIST = 'ORDER_LIST'
 // 营销列表
 export const MARKETING_LIST = 'MARKETING_LIST'
+// 商品明细列表
+export const PRODUCTS_INFO = 'PRODUCTS_INFO'
