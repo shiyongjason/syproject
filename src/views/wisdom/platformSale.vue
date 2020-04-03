@@ -211,7 +211,7 @@ export default {
         async onFindRegionList () {
             const { data } = await findRegionList()
             this.regionList = data.data
-            this.regionList.pop()
+            // this.regionList.pop()
         },
         async onFindRegion (val) {
             const { data } = await findRegionList({ pkDeptdoc: val })
@@ -220,6 +220,7 @@ export default {
             }
         },
         async onFindBranchList (value) {
+            console.log(value)
             const { data } = await findBranchList({ crmDeptCode: value })
             this.branchList = data.data ? data.data : []
             this.branchList.map((val, index) => {

@@ -52,9 +52,16 @@ function isPositiveInt (str) {
     return str.replace(regular, '')
 }
 
+// 限制输入最大值
+function inputMAX (str, limit) {
+    if (+str > limit) return limit
+    return str
+}
+
 export {
     isNum,
     isNegative,
     isNotInputTxt,
-    isPositiveInt
+    isPositiveInt,
+    inputMAX
 }
