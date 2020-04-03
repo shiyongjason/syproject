@@ -2,7 +2,7 @@
     <div class="page-body cloud-app">
         <div class="cloud-top">
             <div class="top-box" @click="onTopbox" :class="equipshow?'bgactive':''">
-                <p>设备总数(截止今日)</p>
+                <p>设备总数（截止今日）</p>
                 <p>{{cloudDeviceCount.count}}</p>
                 <p>在线设备数（截止今日）</p>
                 <p>{{cloudDeviceCount.onlineCount}}</p>
