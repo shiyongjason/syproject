@@ -57,7 +57,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getSignSelector, bankAccount } from '../api/index'
+import { getSignSelector, bankAccount } from '../../api/index'
 export default {
     name: 'accountApply',
     data () {
