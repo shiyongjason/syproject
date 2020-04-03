@@ -63,30 +63,25 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import apply from './components/accountApply'
-import { getBankList, updataBankAccount, deleteBankAccount } from './api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import apply from './components/accountImport/accountApply'
+import { updataBankAccount, deleteBankAccount } from './api/index'
+import { tableLabelAccountImport } from './const'
 export default {
     name: 'accountImport',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelAccountImport'
         })
     },
-    components: {
-        apply: apply
-    },
+    components: { apply },
     data () {
         return {
-            tableLabel: [
-                { label: '账户编号', prop: 'accountId' },
-                { label: '客户名称', prop: 'customerName' },
-                { label: '客户号', prop: 'customerId' },
-                { label: '账户名称', prop: 'accountName' },
-                { label: '开户银行', prop: 'bankName' },
-                { label: '银行账号', prop: 'accountNumber' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
-            ],
+            tableLabel: tableLabelAccountImport,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -94,12 +89,6 @@ export default {
                 createTime: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 100
-            },
             dialogPicture: false,
             formBank: {},
             rules: {
@@ -134,16 +123,11 @@ export default {
                 page_path_name: 'accountImport'
             })
         },
+        ...mapActions({
+            getBankList: 'jinyunplatform/getBankList'
+        }),
         async onQuery () {
-            const { data } = await getBankList(this.queryParams)
-            // console.log(data)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getBankList(this.queryParams)
         },
         onSearch (val) {
             this.tracking(2)

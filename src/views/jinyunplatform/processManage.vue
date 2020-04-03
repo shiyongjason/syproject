@@ -5,7 +5,6 @@
                 <h3>审批流程查询</h3>
             </div>
             <div class="padd20">
-                <!-- 有空改一下 -->
                 <div class="query-cont-col">
                     <div class="query-col-title">客户名称：</div>
                     <div class="query-col-input">
@@ -17,7 +16,7 @@
                     <div class="query-col-title">产品名称：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.productName" clearable placeholder="请选择产品名称">
-                            <el-option v-for="item in options" :key="item" :label="item" :value="item">
+                            <el-option v-for="item in productsArr" :key="item" :label="item" :value="item">
                             </el-option>
                         </el-select>
                     </div>
@@ -53,36 +52,29 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { getProcessesList, getProductsArr } from './api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { tableLabelProcessManage } from './const'
 export default {
     name: 'processManage',
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            pagination: state => state.jinyunplatform.pagination,
+            productsArr: state => state.jinyunplatform.productsArr
+        }),
+        ...mapGetters({
+            tableData: 'jinyunplatform/tableLabelProcessManage'
         })
     },
     data () {
         return {
-            tableLabel: [
-                { label: '任务标题', prop: 'taskTitle' },
-                { label: '任务内容', prop: 'taskContent' },
-                { label: '待审批人员', prop: 'approver' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }
-            ],
+            tableLabel: tableLabelProcessManage,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
                 customerName: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
-            options: [],
             flowTypes: [{
                 label: '预授信',
                 value: 'pre_credit'
@@ -96,20 +88,16 @@ export default {
         }
     },
     async mounted () {
-        const { data } = await getProductsArr()
-        this.options = data
+        this.getProductsArr()
         this.onQuery()
     },
     methods: {
+        ...mapActions({
+            getProcessesList: 'jinyunplatform/getProcessesList',
+            getProductsArr: 'jinyunplatform/getProductsArr'
+        }),
         async onQuery () {
-            const { data } = await getProcessesList(this.queryParams)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getProcessesList(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }

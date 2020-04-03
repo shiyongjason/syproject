@@ -145,5 +145,40 @@ export default [
                 component: () => import('@/views/wisdom/profitStatistics')
             }
         ]
+    },
+    {
+        path: '/developonline',
+        meta: {
+            title: '机构在线',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'developlist',
+                name: 'developlist',
+                meta: {
+                    title: '发展在线',
+                    tagName: '发展在线',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/developList'
+                },
+                component: () => import('@/views/wisdom/developOline/developList')
+            },
+            {
+                path: 'addplatform',
+                name: 'addplatform',
+                meta: {
+                    title: '添加/编辑平台公司',
+                    tagName: '添加/编辑平台公司',
+                    isMenu: false,
+                    icon: '',
+                    component: '@/views/wisdom/developOline/addPlatform'
+                },
+                component: () => import('@/views/wisdom/developOline/addPlatform')
+            }
+        ]
     }
 ]

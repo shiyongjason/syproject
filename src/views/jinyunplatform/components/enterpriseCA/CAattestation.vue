@@ -30,7 +30,7 @@
         <div class="query-cont-col" v-show="activeName == 'personage'">
             <div class="query-col-title">创建日期：</div>
             <div class="query-col-input">
-                <el-date-picker v-model="queryParams.personageCreateDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间" :picker-options="pickerOptionsStart" clearable>
+                <el-date-picker v-model="queryParams.personageCreateDate" type="date" value-format='yyyy-MM-dd' placeholder="请选择时间"  clearable>
                 </el-date-picker>
             </div>
         </div>
@@ -42,7 +42,16 @@
                 <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
             </div>
         </div>
-        <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" isShowIndex :actionMinWidth='actionMinWidth'>
+        <basicTable
+            :tableLabel="tableLabel"
+            :tableData="activeName == 'enterprise'? tableDataCom : tableDataPer"
+            :pagination='pagination'
+            @onCurrentChange='onCurrentChange'
+            @onSizeChange='onSizeChange'
+            :isAction="true"
+            isShowIndex
+            :actionMinWidth="activeName == 'enterprise'? 450 : 100"
+        >
             <template slot="action" slot-scope="scope">
                 <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="onupdate(scope.data.row,'look')">查看信息</el-button>
                 <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="uploadSeal(scope.data.row)">上传印章图片</el-button>
@@ -58,48 +67,29 @@
 </template>
 
 <script>
-import { getSignList, getSignPersonList, getPersonRelevence, getSignsDetail, signInfo } from '../../api/index'
+import { getPersonRelevence, getSignsDetail, signInfo } from '../../api/index'
 import CaDialog from './dialog/CAdialog'
 import CaeditDialog from './dialog/CAeditdialog'
 import CAstamp from './dialog/CAstamp'
 import CAlogOut from './dialog/CAlogOut'
 import { tableLabelCompany, tableLabelPerson } from '../../const.js'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'CAattestation',
     components: { CaDialog, CaeditDialog, CAstamp, CAlogOut },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeEnd
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() > new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.createTimeStart
-                    if (beginDateVal) {
-                        return (
-                            time.getTime() < new Date(beginDateVal).getTime()
-                        )
-                    }
-                }
-            }
-        }
+        ...mapState({
+            pagination: state => state.jinyunplatform.pagination
+        }),
+        ...mapGetters({
+            tableDataCom: 'jinyunplatform/tableLabelCACompany',
+            tableDataPer: 'jinyunplatform/tableLabelCAPerson'
+        })
     },
     data () {
         return {
             tableLabel: [],
-            tableLabelCompany: tableLabelCompany,
-            tableLabelPerson: tableLabelPerson,
             activeName: 'enterprise',
-            actionMinWidth: 0,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -108,13 +98,6 @@ export default {
                 personageCreateDate: ''
             },
             searchParams: {},
-            tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 100
-            },
-            multipleSelection: [],
             dialog: false,
             dialogVisible: false,
             dialogPicture: false,
@@ -133,6 +116,10 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            getSignList: 'jinyunplatform/getSignList',
+            getSignPersonList: 'jinyunplatform/getSignPersonList'
+        }),
         tracking (event) {
             this.$store.dispatch('tracking', {
                 type: 9,
@@ -144,45 +131,18 @@ export default {
         },
         // 企业搜索
         async onQuery () {
-            this.actionMinWidth = 450
-            this.tableLabel = this.tableLabelCompany
-            const { data } = await getSignList(this.queryParams)
-            // console.log(data)
-            this.tableData = data.records
-            this.tableData.map(i => {
-                if (i.companyType == 1) i.companyType = '借款方'
-                if (i.companyType == 2) i.companyType = '资金方'
-                if (i.companyType == 3) i.companyType = '合作方'
-                if (i.companyType == 4) i.companyType = '组织方'
-                if (i.companyType == 5) i.companyType = '担保方'
-                if (i.companyDocumentType == 1) i.companyDocumentType = '统一社会信用代码证'
-                if (i.status == 1) i.status = '认证成功'
-                if (i.status == 2) i.status = '认证失败'
-            })
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.tableLabel = tableLabelCompany
+            this.getSignList(this.queryParams)
         },
         // 个人搜索
         async onQueryPerson () {
-            this.actionMinWidth = 100
-            this.tableLabel = this.tableLabelPerson
+            this.tableLabel = tableLabelPerson
             const params = {
                 ...this.queryParams,
                 customerName: this.queryParams.companyName,
                 createDate: this.queryParams.personageCreateDate
             }
-            const { data } = await getSignPersonList(params)
-            this.tableData = data.records
-            // 控制页数和页码
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            this.getSignPersonList(params)
         },
         handleClick () {
             const queryParams = {
