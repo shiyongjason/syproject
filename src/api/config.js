@@ -9,7 +9,6 @@ let ccpBaseUrl = ''
 let B2bUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
-let crmUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
 
 // var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
@@ -23,7 +22,6 @@ switch (env) {
         B2bUrl = 'https://b2b-gateway-dev.hosjoy.com:4832/'
         fileUploadUrl = 'https://hbp-gateway-dev.hosjoy.com:4832'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        crmUrl = 'http://192.168.20.248:40601'
         // interfaceUrl = 'http://192.168.20.248:30000/'
         // ossUrl = 'http://192.168.20.248:8089/'
         // iframeUrl = 'http://devcrm.hosjoy.com/'
@@ -41,7 +39,6 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -83,6 +80,5 @@ export {
     ccpBaseUrl,
     B2bUrl,
     fileUploadUrl,
-    iotUrl,
-    crmUrl
+    iotUrl
 }
