@@ -41,6 +41,7 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
+
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
