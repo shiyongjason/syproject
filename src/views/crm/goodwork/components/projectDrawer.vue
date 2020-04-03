@@ -3,7 +3,7 @@
         <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                 <el-form-item label="经销商：">
-                    <el-input v-model="form.name" disabled></el-input>
+                    <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
