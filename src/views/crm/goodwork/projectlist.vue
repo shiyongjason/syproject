@@ -151,7 +151,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.maxCreateTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -161,7 +161,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.minCreateTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -171,7 +171,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.maxUpdateTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -181,7 +181,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.minUpdateTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
