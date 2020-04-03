@@ -31,7 +31,6 @@ switch (env) {
         // ccpBaseUrl = 'http://192.168.20.248:8021/'
         // B2bUrl = 'http://192.168.20.248:40000/'
         // fileUploadUrl = 'http://192.168.20.248:30000/'
-
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
