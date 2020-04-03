@@ -67,17 +67,15 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange"
                 :isShowIndex='true'>
                 <template slot-scope="scope" slot="status">
-                <!--10:待支付，20:待发货，30:待收货，40:已完成，50:已关闭-->
-                <span v-if="scope.data.row.status === 20">处理中</span>
-                <span v-if="scope.data.row.status === 30">成功</span>
-                <span v-if="scope.data.row.status === 40">失败</span>
-            </template>
+                    {{ cashWithdrawalMap.get(scope.data.row.status) }}
+                </template>
             </basicTable>
         </div>
     </div>
 </template>
 
 <script>
+import { CASH_WITHDRAWAL_MAP } from './const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 import { getSmsCode, cashWithdrawal } from './api/index'
@@ -85,8 +83,10 @@ import { VerificationCode } from '@/utils/rules.js'
 export default {
     data () {
         return {
+            cashWithdrawalMap: CASH_WITHDRAWAL_MAP,
             withdrawalForm: {
-
+                amount: '',
+                smsCode: ''
             },
             after: true,
             content: '获取验证码',
@@ -226,7 +226,10 @@ export default {
         },
 
         withdrawalSuccess () {
-            this.$refs['withdrawalForm'].resetField()
+            this.$refs['withdrawalForm'].resetFields()
+            this.findCashWithdrawalAction()
+            this.findBankAccountInfo()
+            this.findBankCardInfo()
             clearInterval(this.clock)
             this.content = '获取验证码'
             this.time = 60

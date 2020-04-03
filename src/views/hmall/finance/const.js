@@ -55,3 +55,9 @@ export const ACTIVITY_TYPE_MAP = new Map([
     [1, '满减'],
     [2, '折扣']
 ])
+
+export const CASH_WITHDRAWAL_MAP = new Map([
+    [20, '处理中'],
+    [30, '成功'],
+    [40, '失败']
+])
