@@ -41,7 +41,7 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'http://192.168.20.248:30000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        crmUrl = 'http://192.168.20.248:40601'
+
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -52,7 +52,6 @@ switch (env) {
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        crmUrl = 'http://192.168.20.248:40601'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
