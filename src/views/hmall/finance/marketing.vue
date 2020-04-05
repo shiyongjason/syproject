@@ -118,19 +118,19 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange"
                 :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">
-                    {{ paymethodMap.get(scope.data.row.payWay) }}
+                    {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
                 <template slot="childOrderStatus" slot-scope="scope">
-                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
+                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) || '-' }}
                 </template>
                 <template slot="source" slot-scope="scope">
-                    {{ orderChannelMap.get(scope.data.row.source) }}
+                    {{ orderChannelMap.get(scope.data.row.source) || '-' }}
                 </template>
                 <template slot="couponType" slot-scope="scope">
-                    {{ couponsTypeMap.get(scope.data.row.couponType) }}
+                    {{ couponsTypeMap.get(scope.data.row.couponType) || '-' }}
                 </template>
                 <template slot="activityType" slot-scope="scope">
-                    {{ activityTypeMap.get(scope.data.row.activityType) }}
+                    {{ activityTypeMap.get(scope.data.row.activityType) || '-' }}
                 </template>
             </basicTable>
         </div>
@@ -176,7 +176,9 @@ export default {
                 startCompleteTime: '',
                 endCompleteTime: '',
                 sourceMerchantName: '',
-                merchantName: ''
+                merchantName: '',
+                pageNumber: 1,
+                pageSize: 10
             },
             tableLabel: [
                 { label: '子订单号', prop: 'childOrderNo' },
@@ -259,6 +261,7 @@ export default {
     },
     methods: {
         onQuery () {
+            this.queryParams.pageNumber = 1
             this.findMarketing(this.queryParams)
         },
         onReset () {
@@ -266,11 +269,15 @@ export default {
             this.findMarketing()
         },
         onExport () {
-            let url = ''
-            for (let key in this.queryParams) {
-                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无营销明细可导出！')
+            } else {
+                let url = ''
+                for (let key in this.queryParams) {
+                    url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                }
+                location.href = B2bUrl + 'order/api/boss/orders/finance-market/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
-            location.href = B2bUrl + 'order/api/boss/orders/finance-market/export?' + url
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val

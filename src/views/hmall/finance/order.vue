@@ -85,16 +85,16 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
                 @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">
-                    {{ paymethodMap.get(scope.data.row.payWay) }}
+                    {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
                 <template slot="childOrderStatus" slot-scope="scope">
-                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
+                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) || '-' }}
                 </template>
                 <template slot="source" slot-scope="scope">
-                    {{ orderChannelMap.get(scope.data.row.source) }}
+                    {{ orderChannelMap.get(scope.data.row.source) || '-' }}
                 </template>
                 <template slot="own" slot-scope="scope">
-                    {{ selfSupportMap.get(scope.data.row.own) }}
+                    {{ selfSupportMap.get(scope.data.row.own) || '-' }}
                 </template>
             </basicTable>
         </div>
@@ -128,7 +128,9 @@ export default {
                 endPayTime: '',
                 own: '',
                 sourceMerchantName: '',
-                merchantName: ''
+                merchantName: '',
+                pageNumber: 1,
+                pageSize: 10
             },
             tableLabel: [
                 { label: '子订单号', prop: 'childOrderNo' },
@@ -182,6 +184,7 @@ export default {
     },
     methods: {
         onQuery () {
+            this.queryParams.pageNumber = 1
             this.findOrders(this.queryParams)
         },
         onReset () {
@@ -189,11 +192,15 @@ export default {
             this.findOrders()
         },
         onExport () {
-            let url = ''
-            for (let key in this.queryParams) {
-                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无订单明细可导出！')
+            } else {
+                let url = ''
+                for (let key in this.queryParams) {
+                    url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                }
+                location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
-            location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?' + url
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
