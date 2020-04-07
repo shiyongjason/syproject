@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { interfaceUrl } from '@/api/config'
+
 // 获取菜单列表
 export const findMenuList = (params) => axios.get(`/uaa/employee/auth-list/${params}`, params)
 

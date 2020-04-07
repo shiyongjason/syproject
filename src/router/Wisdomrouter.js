@@ -33,6 +33,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
+            },
+            {
+                path: 'capitalEfficiency',
+                name: 'capitalEfficiency',
+                meta: {
+                    title: '资金效率表',
+                    tagName: '资金效率表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
             }
         ]
     },
