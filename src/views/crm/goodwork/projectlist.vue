@@ -133,7 +133,7 @@ export default {
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
                 { label: '项目编号', prop: 'projectNo' },
-                { label: '借款总额', prop: 'predictLoanAmount' },
+                { label: '赊销总额', prop: 'predictLoanAmount' },
                 { label: '经销商', prop: 'upstreamSupplierName' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
