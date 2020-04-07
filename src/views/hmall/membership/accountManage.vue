@@ -3,7 +3,7 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">账号：</div>
+                    <div class="query-col-title">账号/姓名：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.username" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>

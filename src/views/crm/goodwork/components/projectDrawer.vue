@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
+        <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
@@ -110,7 +110,7 @@
                         <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="活动形式：" prop="remark">
+                <el-form-item label="说明：" prop="remark">
                     <el-input type="textarea" v-model="statusForm.remark" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
@@ -224,9 +224,6 @@ export default {
                             return callback()
                         }
                     }
-                ],
-                projectUpload: [
-                    { required: true, message: '请上传附件', trigger: 'blur' }
                 ]
             },
             statusRules: {

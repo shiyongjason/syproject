@@ -6,6 +6,18 @@ export const PROCESS_LIST =
         { key: 4, value: '项目已开工' }
     ]
 
+export const STATUS_LIST =
+    [
+        { key: 1, value: '待提交' },
+        { key: 2, value: '审核中' },
+        { key: 3, value: '资料收集中' },
+        { key: 4, value: '待尽调' },
+        { key: 5, value: '合作关闭' },
+        { key: 6, value: '待签约' },
+        { key: 7, value: '待放款' },
+        { key: 8, value: '贷中' },
+        { key: 9, value: '合作完成' }
+    ]
 export const TYPE_LIST =
     [{ key: 1, value: '地产项目' },
         { key: 2, value: '政府共建项目' },
