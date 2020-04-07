@@ -224,9 +224,6 @@ export default {
                             return callback()
                         }
                     }
-                ],
-                projectUpload: [
-                    { required: true, message: '请上传附件', trigger: 'blur' }
                 ]
             },
             statusRules: {

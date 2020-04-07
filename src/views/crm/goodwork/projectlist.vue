@@ -54,10 +54,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.progress">
+                        <el-select v-model="queryParams.status">
                             <el-option label="全部" value="">
                             </el-option>
-                           <el-option v-for="item in processList" :key="item.key" :label="item.value" :value="item.key">
+                           <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -81,7 +81,7 @@
                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
                   <template slot="progress" slot-scope="scope">
-                   {{scope.data.row.type&&processList[scope.data.row.progress-1]['value']}}
+                   {{scope.data.row.type&&statusList[scope.data.row.status-1]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
@@ -97,7 +97,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import projectDrawer from './components/projectDrawer'
-import { TYPE_LIST, PROCESS_LIST } from '../const'
+import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
 export default {
     name: 'projectlist',
     data () {
@@ -114,7 +114,7 @@ export default {
                 maxUpdateTime: '',
                 minCreateTime: '',
                 minUpdateTime: '',
-                progress: '',
+                status: '',
                 projectName: '',
                 projectNo: '',
                 type: '',
@@ -139,7 +139,8 @@ export default {
             multiSelection: [],
             drawer: false,
             typeList: TYPE_LIST,
-            processList: PROCESS_LIST
+            processList: PROCESS_LIST,
+            statusList: STATUS_LIST
         }
     },
     components: {
