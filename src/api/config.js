@@ -9,6 +9,7 @@ let ccpBaseUrl = ''
 let B2bUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
+let mockUrl = window.location.origin + '/mock/' // 自定义的json数据，开发用
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
 
 // var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
@@ -37,7 +38,6 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
-        fileUploadUrl = 'http://192.168.20.248:30000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
@@ -80,5 +80,6 @@ export {
     ccpBaseUrl,
     B2bUrl,
     fileUploadUrl,
-    iotUrl
+    iotUrl,
+    mockUrl
 }

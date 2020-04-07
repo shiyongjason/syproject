@@ -1,34 +1,34 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="cloudForm" :model="cloudForm" :rules="rules" label-width="110px">
+            <el-form ref="smartPlayForm" :model="smartPlayForm" :rules="rules" label-width="110px">
                 <div class="page-body-title">
-                    <h3>活动管理</h3>
+                    <h3>智能玩法编辑</h3>
                 </div>
-                <el-form-item label="活动标题：" prop="title">
-                    <el-input v-model.trim="cloudForm.title" show-word-limit placeholder="请输入活动标题" maxlength='50' class="newTitle"></el-input>
+                <el-form-item label="玩法标题：" prop="title">
+                    <el-input v-model.trim="smartPlayForm.title" show-word-limit placeholder="输入玩法标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="列表图片：" prop="picture" ref="picture">
+                <el-form-item label="列表图片：" prop="iconUrl" ref="iconUrl">
                     <!--logoUrl-->
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="smartPlayForm.iconUrl" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
                         <!-- 尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB -->
-                        建议尺寸：993*426，1M以内，支持jpeg,png和jpg格式
+                        建议尺寸：993*993或1:1比例图片，1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
-                    <el-date-picker type="datetime" v-model="cloudForm.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
+                    <el-date-picker type="datetime" v-model="smartPlayForm.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </el-form-item>
                 <div class="page-body-title">
-                    <h3>活动详情</h3>
+                    <h3>玩法内容</h3>
                 </div>
-                <el-form-item label="详情：" prop="detail">
+                <el-form-item label="详情：" prop="content">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor @blur="$refs['cloudForm'].validateField('detail')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.detail" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor @blur="$refs['smartPlayForm'].validateField('content')" tabindex="0" hidefocus="true" ref="editors" v-model="smartPlayForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onSaveact()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+                    <el-button type="primary" @click="onSaveSmartPlay" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
             </el-form>
@@ -47,16 +47,16 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveActdetail, editActdetail } from '../api'
+import { createCloudSmartPlay, updateCloudSmartPlay } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
-    name: 'cloudActedit',
+    name: 'smartPlayEdit',
     data () {
         return {
-            cloudForm: {
-                detail: '',
+            smartPlayForm: {
+                content: '',
                 effectiveTime: '',
-                picture: '',
+                iconUrl: '',
                 title: ''
             },
             menus: [
@@ -84,19 +84,19 @@ export default {
             videoimageUrl: '',
             rules: {
                 title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                    { required: true, message: '请输入玩法标题', trigger: 'blur' }
                 ],
-                picture: [
+                iconUrl: [
                     { required: true, message: '请选择列表图片' }
                 ],
                 effectiveTime: [
                     { required: true, message: '请选择生效时间', trigger: 'blur' }
                 ],
-                detail: [
+                content: [
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入活动详情'))
+                                return callback(new Error('请输入玩法'))
                             }
                             return callback()
                         },
@@ -112,7 +112,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudActivitydetail: 'cloudActivitydetail'
+            cloudSmartPlayPostDetail: 'cloudSmartPlayPostDetail'
         }),
         videoUpload () {
             return {
@@ -133,7 +133,7 @@ export default {
             }
         },
         imageUrl () {
-            return this.cloudForm.logoUrl
+            return this.smartPlayForm.logoUrl
         },
         uploadImgServer () {
             return interfaceUrl + 'tms/files/upload-list'
@@ -155,9 +155,9 @@ export default {
         }
     },
     watch: {
-        'cloudForm.picture' (val) {
+        'smartPlayForm.iconUrl' (val) {
             this.$nextTick(() => {
-                if (val) this.$refs['picture'].clearValidate()
+                if (val) this.$refs['iconUrl'].clearValidate()
             })
         }
     },
@@ -170,11 +170,11 @@ export default {
         ...mapActions(
             {
                 setNewTags: 'setNewTags',
-                findcloudActDetail: 'findcloudActDetail'
+                findCloudSmartPlayPostDetail: 'findCloudSmartPlayPostDetail'
             }
         ),
         readUrl (val) {
-            this.cloudForm.picture = val.imageUrl
+            this.smartPlayForm.iconUrl = val.imageUrl
         },
         videoUrl (val) {
             this.$message.success('视频上传成功')
@@ -191,31 +191,34 @@ export default {
             this.dialogVisible = false
         },
         onInsertVideo () {
-            this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
+            this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/cloudList')
+            this.$router.push('/comfortCloud/smartPlay')
         },
         async getActivityDetail (id) {
-            await this.findcloudActDetail(id)
-            this.cloudForm = { ...this.cloudActivitydetail }
+            await this.findCloudSmartPlayPostDetail(id)
+            this.cloudSmartPlayPostDetail.effectiveTime = this.$root.$options.filters.formatDate(this.cloudSmartPlayPostDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
+            this.smartPlayForm = { ...this.cloudSmartPlayPostDetail }
         },
-        onSaveact () {
+        onSaveSmartPlay () {
             this.loading = true
-            this.$refs['cloudForm'].validate(async (valid) => {
+            this.$refs['smartPlayForm'].validate(async (valid) => {
                 if (valid) {
                     try {
                         if (this.$route.query.id) {
-                            await editActdetail(this.cloudForm)
+                            this.smartPlayForm.operateUserName = this.userInfo.employeeName
+                            await updateCloudSmartPlay(this.smartPlayForm)
                             this.$message.success('活动修改成功')
                         } else {
-                            await saveActdetail(this.cloudForm)
+                            this.smartPlayForm.operateUserName = this.userInfo.employeeName
+                            await createCloudSmartPlay(this.smartPlayForm)
                             this.$message.success('活动保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/cloudList')
+                        this.$router.push('/comfortCloud/smartPlay')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -229,39 +232,39 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.page-body-title {
-    margin-bottom: 20px;
-}
-.upload-tips {
-    font-size: 12px;
-    color: #999;
-    display: flex;
-    align-items: center;
-    height: 100px;
-    margin-left: 10px;
-}
-/deep/.avatar-uploader {
-    margin-right: 10px;
-}
-.editor-wrap {
-    margin-top: 20px;
-}
-/deep/.el-dialog__wrapper {
-    // z-index: 99999 !important;
-}
-/deep/.newTitle {
-    width: 500px!important;
-}
-.el-picker-panel {
-    z-index: 99999 !important;
-}
-/deep/.w-e-text-container {
-    z-index: 40 !important;
-}
-/deep/.w-e-menu {
-    z-index: 99 !important;
-}
-/deep/.editor-wrap{
-    margin-bottom: 23px  !important;
-}
+    .page-body-title {
+        margin-bottom: 20px;
+    }
+    .upload-tips {
+        font-size: 12px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        height: 100px;
+        margin-left: 10px;
+    }
+    /deep/.avatar-uploader {
+        margin-right: 10px;
+    }
+    .editor-wrap {
+        margin-top: 20px;
+    }
+    /deep/.el-dialog__wrapper {
+        // z-index: 99999 !important;
+    }
+    /deep/.newTitle {
+        width: 500px!important;
+    }
+    .el-picker-panel {
+        z-index: 99999 !important;
+    }
+    /deep/.w-e-text-container {
+        z-index: 40 !important;
+    }
+    /deep/.w-e-menu {
+        z-index: 99 !important;
+    }
+    /deep/.editor-wrap{
+        margin-bottom: 23px  !important;
+    }
 </style>

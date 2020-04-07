@@ -3,9 +3,15 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">项目名称/编号：</div>
+                    <div class="query-col-title">项目名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                  <div class="query-cont-col">
+                    <div class="query-col-title">项目编号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -127,7 +133,7 @@ export default {
             tableLabel: [
                 { label: '项目名称', prop: 'projectName' },
                 { label: '项目编号', prop: 'projectNo' },
-                { label: '借款总额', prop: 'predictLoanAmount' },
+                { label: '赊销总额', prop: 'predictLoanAmount' },
                 { label: '经销商', prop: 'upstreamSupplierName' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },

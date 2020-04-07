@@ -53,10 +53,10 @@
                 <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
                 </el-form-item>
-                <el-form-item label="预估借款金额：" prop="predictLoanAmount">
-                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估借款金额" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
+                <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
+                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
-                <el-form-item label="预估借款周期：" prop="loanMonth">
+                <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                 </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
@@ -208,10 +208,10 @@ export default {
                     { required: true, message: '请输入上游接受承兑时间', trigger: 'blur' }
                 ],
                 predictLoanAmount: [
-                    { required: true, message: '请输入预估借款金额', trigger: 'blur' }
+                    { required: true, message: '请输入预估赊销金额', trigger: 'blur' }
                 ],
                 loanMonth: [
-                    { required: true, message: '请输入预估借款周期', trigger: 'blur' }
+                    { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
                 ],
                 loanPayTypeRate: [
                     { required: true },
