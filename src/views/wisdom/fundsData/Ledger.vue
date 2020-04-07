@@ -39,7 +39,7 @@
                 </div> -->
             </div><br>
             <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
-            <div class="query-cont-col">
+            <!-- <div class="query-cont-col">
                 <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
                     还款明细表模板导出
                 </a>
@@ -62,7 +62,7 @@
                         还款明细表信息导入
                     </el-button>
                 </el-upload>
-            </div>
+            </div> -->
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
