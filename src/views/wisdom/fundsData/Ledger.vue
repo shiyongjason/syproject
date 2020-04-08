@@ -17,7 +17,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.subsectionCode" clearable>
+                    <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
                         <el-option v-for="(item,index) in branchList" :key="index" :label="item.deptname" :value="item.crmDeptCode">
                         </el-option>
                     </el-select>
@@ -66,11 +66,11 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane label="台账汇总表" name="0"></el-tab-pane>
-                <el-tab-pane label="流贷" name="1"></el-tab-pane>
-                <el-tab-pane label="敞口" name="2"></el-tab-pane>
-                <el-tab-pane label="分授信" name="3"></el-tab-pane>
-                <el-tab-pane label="还款明细表" name="4"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(TotalColumn)" label="台账汇总表" name="0"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(FlowToBorrow)" label="流贷" name="1"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(Exposure)" label="敞口" name="2"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(PointsCredit)" label="分授信" name="3"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(ReimbursementDetail)" label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
             <template v-if="accountType == '1'||accountType == '2'||accountType == '3'">
                 <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
@@ -78,7 +78,7 @@
                     <el-tab-pane label="供应链" v-if="accountType == 1" name="2"></el-tab-pane>
                     <el-tab-pane label="好橙工" v-if="accountType !=3" name="3"></el-tab-pane>
                 </el-tabs>
-                <el-button type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </template>
             <complexTable :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
@@ -89,6 +89,7 @@
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
+import { WISDOM_FUNDSDATA_ADD, WISDOM_TOTALCOLUMN, WISDOM_FLOWTOBORROW, WISDOM_EXPOSURE, WISDOM_POINTSCREDIT, WISDOM_REIMBURSEMENTDETAIL } from '@/utils/auth_const'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
 import { shy } from './mixins/userAuth'
@@ -128,14 +129,25 @@ export default {
             searchParams: {},
             removeValue: false,
             accept: '.xlsx,.xls',
-            loading: false
+            loading: false,
+            addFundsData: WISDOM_FUNDSDATA_ADD,
+            TotalColumn: WISDOM_TOTALCOLUMN,
+            FlowToBorrow: WISDOM_FLOWTOBORROW,
+            Exposure: WISDOM_EXPOSURE,
+            PointsCredit: WISDOM_POINTSCREDIT,
+            ReimbursementDetail: WISDOM_REIMBURSEMENTDETAIL,
+            shy: type.accountType
         }
     },
     mounted () {
         this.onSearch()
         // this.findBranchList()
         // this.findPlatformslist()
+        console.log(this.shy)
         this.oldAuth()
+        if (this.userInfo.deptType == 2) {
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : '无权限'
+        }
     },
     methods: {
         ...mapActions([
@@ -155,6 +167,11 @@ export default {
         //         page_path_name: 'amountImport'
         //     })
         // },
+        findPlatformslistByBranchList () {
+            console.log(this.$store.state.userInfo)
+            let subsectionCode = this.queryParams.subsectionCode
+            this.findPlatformslist({ subsectionCode })
+        },
         backPlat (value) {
             this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
             this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
@@ -199,6 +216,17 @@ export default {
             this.loading = true
         },
         async onQuery () {
+            if (this.hosAuthCheck(this.TotalColumn)) {
+                this.accountType = '0'
+            } else if (this.hosAuthCheck(this.FlowToBorrow)) {
+                this.accountType = '1'
+            } else if (this.hosAuthCheck(this.Exposure)) {
+                this.accountType = '2'
+            } else if (this.hosAuthCheck(this.PointsCredit)) {
+                this.accountType = '3'
+            } else if (this.hosAuthCheck(this.ReimbursementDetail)) {
+                this.accountType = '4'
+            }
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {

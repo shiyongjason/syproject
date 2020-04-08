@@ -8,29 +8,33 @@ export const shy = {
     },
     data () {
         return {
-            shy: []
+            platForm: true,
+            branch: true
         }
     },
     methods: {
         ...mapActions([
-            'findPlatformslist',
-            'findBranchList'
+            'findPlatformslist', // 平台公司
+            'findBranchList' // 分部
         ]),
-        async abc (code) {
-            this.findPlatformslist({ subsectionCode: code })
+        async abc (params) {
+            console.log(params)
         },
-        oldAuth () {
+        async oldAuth () {
             console.log(this.userInfo)
+            // 0总部 1大区 2分部
             switch (this.userInfo.deptType) {
                 case 0:
                     this.findPlatformslist()
-                    // this.findBranchList()
+                    this.findBranchList()
                     break
                 case 1:
+                    this.findBranchList({ crmDeptCode: this.userInfo.oldDeptCode })
                     break
                 case 2:
-                    const code = this.userInfo.oldDeptCode
-                    this.findPlatformslist({ subsectionCode: code })
+                    this.branch = false
+                    this.findBranchList({ crmDeptCode: this.userInfo.oldDeptCode })
+                    this.findPlatformslist({ subsectionCode: this.userInfo.oldDeptCode })
                     break
                 default:
             }

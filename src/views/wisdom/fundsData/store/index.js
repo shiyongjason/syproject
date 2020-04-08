@@ -88,8 +88,12 @@ const mutations = {
 
 const actions = {
     async findPlatformslist ({ commit }, params) {
-        const { data } = await findPlatformslist(params)
-        commit(types.PLAT_FORMDATA, data.data.pageContent)
+        if (this.state.userInfo.deptType != 0 && params.subsectionCode == '') {
+            commit(types.PLAT_FORMDATA, [])
+        } else {
+            const { data } = await findPlatformslist(params)
+            commit(types.PLAT_FORMDATA, data.data.pageContent)
+        }
     },
     async getAccountList ({ commit }, params) {
         const { data } = await getAccountList(params)
@@ -101,9 +105,9 @@ const actions = {
     },
     async findBranchList ({ commit }, params) {
         // 查询分部（不用做权限，现在是总部在使用）
-        console.log(params)
-        const { data } = await findBranchList({ crmDeptCode: '' })
-        console.log(data)
+        // console.log(params)
+        const { data } = await findBranchList(params)
+        // console.log(data)
         commit(types.GET_BRANCH, data.data)
     },
     async findSummaryList ({ commit }, params) {

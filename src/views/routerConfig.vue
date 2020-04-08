@@ -49,13 +49,13 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
@@ -63,13 +63,13 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配1置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配1置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配0置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
@@ -80,7 +80,7 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[0])" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
@@ -453,7 +453,7 @@ export default {
         onShowFieldConfig (index, item) {
             // 初始化
             this.list = [{}]
-            // console.log(index, item)
+            console.log(index, item)
             if (item.authResourceList.length > 0) {
                 this.list = item.authResourceList
             }
@@ -464,7 +464,7 @@ export default {
             this.list.push({})
         },
         async addSensitive (index, indexa, obj, type) {
-            // console.log(index, indexa, obj, type)
+            console.log(index, indexa, obj, type)
             // console.log(this.tableList[index].childAuthList[indexa].childAuthList)
             if (!obj.authCode) {
                 this.$message.warning('权限配置菜单不存在')
@@ -475,10 +475,10 @@ export default {
                 authCode,
                 authType: type
             }
-            // console.log(params)
-            await addAuthType(params)
+            console.log(params)
+            // await addAuthType(params)
             // console.log(data)
-            this.init()
+            // this.init()
         },
         clearCache () {
             clearCache()

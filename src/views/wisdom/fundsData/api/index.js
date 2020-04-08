@@ -34,3 +34,8 @@ export const setCount = (params) => axios.post(interfaceUrl + 'backend/account/i
 export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/account/plan/account-type`, { params })
 // 台账汇总表
 export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/account/summary`, { params })
+
+// 根据大区获取平台公司
+export const queryCompanyByParams = (params) => {
+    return axios.post(interfaceUrl + 'develop/developbasicinfo/queryCompanyByParams', params)
+}
