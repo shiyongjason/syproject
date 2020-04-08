@@ -302,7 +302,7 @@ export default {
             this.$refs.drawercom.getMerchtMemberDetail(val, type)
         },
         restDrawer () {
-            this.drawer = true
+            this.drawer = false
             this.onFindMlist()
         }
     }

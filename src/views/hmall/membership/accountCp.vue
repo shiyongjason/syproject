@@ -104,6 +104,10 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+/deep/ .el-drawer__body {
+    overflow-y: scroll;
+    // position: relative;
+}
 .container {
     padding: 0 10px;
     .account-box {
