@@ -17,10 +17,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">项目提交时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -118,9 +118,9 @@ export default {
                 pageSize: 10,
                 companyName: '',
                 firstPartName: '',
-                maxCreateTime: '',
+                maxSubmitTime: '',
                 maxUpdateTime: '',
-                minCreateTime: '',
+                minSubmitTime: '',
                 minUpdateTime: '',
                 statusList: '',
                 projectName: '',
@@ -160,7 +160,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxCreateTime
+                    let beginDateVal = this.queryParams.maxSubmitTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -170,7 +170,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minCreateTime
+                    let beginDateVal = this.queryParams.minSubmitTime
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime()
                     }
