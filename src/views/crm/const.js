@@ -8,7 +8,6 @@ export const PROCESS_LIST =
 
 export const STATUS_LIST =
     [
-        { key: 1, value: '待提交' },
         { key: 2, value: '审核中' },
         { key: 3, value: '资料收集中' },
         { key: 4, value: '待尽调' },

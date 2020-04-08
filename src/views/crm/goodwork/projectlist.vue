@@ -89,7 +89,7 @@
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
                 <template slot="progress" slot-scope="scope">
-                    {{scope.data.row.type&&statusList[scope.data.row.status-1]['value']}}
+                    {{scope.data.row.type&&statusList[scope.data.row.status-2]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
