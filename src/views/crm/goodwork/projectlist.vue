@@ -138,8 +138,8 @@ export default {
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
                 { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'createTime', width: '180' },
-                { label: '更新时间', prop: 'updateTime', width: '180' }
+                { label: '项目提交时间', prop: 'createTime', width: '180', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', width: '180', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
