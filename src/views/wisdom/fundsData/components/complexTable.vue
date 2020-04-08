@@ -337,11 +337,11 @@ export default {
                                         this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <el-tooltip effect="light" placement="top">
-                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                            <br />借款单位：{scope.row.account_loanCompanyName}
-                                            <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                    </el-tooltip>
+                                    <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                        <br />借款单位：{scope.row.account_loanCompanyName}
+                                        <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                    <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                </el-tooltip>
                             }
                         }
                     ]
@@ -532,12 +532,12 @@ export default {
                                         this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <div>
-                                        <el-tooltip effect="light" placement="top">
-                                            <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                <br />借款单位：{scope.row.account_loanCompanyName}
-                                                <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                            <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                        </el-tooltip></div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip></div>
                             }
                         }
                     ]
@@ -908,12 +908,13 @@ export default {
                                         this.accountData.title = `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <div>
-                                        <el-tooltip effect="light" placement="top">
-                                            <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                                <br />借款单位：{scope.row.account_loanCompanyName}
-                                                <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                            <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                        </el-tooltip></div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
+                                </div>
                             }
                         }
                     ]
