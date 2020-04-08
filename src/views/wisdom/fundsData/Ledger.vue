@@ -9,18 +9,18 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">平台公司名：</div>
-                <div class="query-col-input">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
-                </div>
-            </div>
-            <div class="query-cont-col">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
-                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.deptname" :value="item.crmDeptCode">
+                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.deptName" :value="item.crmDeptCode">
                         </el-option>
                     </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">平台公司名：</div>
+                <div class="query-col-input">
+                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -92,12 +92,12 @@ import complexTable from './components/complexTable.vue'
 import { WISDOM_FUNDSDATA_ADD, WISDOM_TOTALCOLUMN, WISDOM_FLOWTOBORROW, WISDOM_EXPOSURE, WISDOM_POINTSCREDIT, WISDOM_REIMBURSEMENTDETAIL } from '@/utils/auth_const'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-import { shy } from './mixins/userAuth'
+import { departmentAuth } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'standingBook',
-    mixins: [shy],
+    mixins: [departmentAuth],
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
@@ -135,18 +135,16 @@ export default {
             FlowToBorrow: WISDOM_FLOWTOBORROW,
             Exposure: WISDOM_EXPOSURE,
             PointsCredit: WISDOM_POINTSCREDIT,
-            ReimbursementDetail: WISDOM_REIMBURSEMENTDETAIL,
-            shy: type.accountType
+            ReimbursementDetail: WISDOM_REIMBURSEMENTDETAIL
         }
     },
-    mounted () {
+    async mounted () {
         this.onSearch()
         // this.findBranchList()
         // this.findPlatformslist()
-        console.log(this.shy)
-        this.oldAuth()
+        await this.oldAuth()
         if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : '无权限'
+            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
         }
     },
     methods: {

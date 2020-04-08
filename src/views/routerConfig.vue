@@ -476,9 +476,8 @@ export default {
                 authType: type
             }
             console.log(params)
-            // await addAuthType(params)
-            // console.log(data)
-            // this.init()
+            await addAuthType(params)
+            this.init()
         },
         clearCache () {
             clearCache()

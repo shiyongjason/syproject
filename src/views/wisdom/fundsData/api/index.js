@@ -1,15 +1,11 @@
 import axios from 'axios'
-import { interfaceUrl, ossUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => axios.get(interfaceUrl + `backend/account`, { params })
 // 还款明细表
 export const getRepaymentList = (params) => axios.get(interfaceUrl + 'backend/account/repayment/page', { params })
 // 查询平台公司
 export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
-// 发展在线 分部查询
-export const findDepList = (params) => axios.get(ossUrl + 'api/httpH5/3107', { params })
-// 分部列表查询
-export const findBranchList = (params) => axios.get(interfaceUrl + 'rms/dept/queryDeptList', { params })
 // 新增各类台账
 export const addAccount = (params) => axios.post(interfaceUrl + 'backend/account', params)
 
@@ -35,7 +31,5 @@ export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/a
 // 台账汇总表
 export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/account/summary`, { params })
 
-// 根据大区获取平台公司
-export const queryCompanyByParams = (params) => {
-    return axios.post(interfaceUrl + 'develop/developbasicinfo/queryCompanyByParams', params)
-}
+// 根据机构id查询机构：大区 | 分部 | 区域列表
+export const findDepartment = (params) => axios.get(`/uaa/department/${params.pkDeptDoc}/${params.deptType}`)

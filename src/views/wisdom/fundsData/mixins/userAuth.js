@@ -1,6 +1,6 @@
 import { mapState, createNamespacedHelpers } from 'vuex'
 const { mapActions } = createNamespacedHelpers('fundsData')
-export const shy = {
+export const departmentAuth = {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -21,20 +21,18 @@ export const shy = {
             console.log(params)
         },
         async oldAuth () {
-            console.log(this.userInfo)
+            const data = await this.findBranchList({
+                deptType: 'F',
+                pkDeptDoc: this.userInfo.deptDoc
+            })
             // 0总部 1大区 2分部
             switch (this.userInfo.deptType) {
                 case 0:
                     this.findPlatformslist()
-                    this.findBranchList()
-                    break
-                case 1:
-                    this.findBranchList({ crmDeptCode: this.userInfo.oldDeptCode })
                     break
                 case 2:
                     this.branch = false
-                    this.findBranchList({ crmDeptCode: this.userInfo.oldDeptCode })
-                    this.findPlatformslist({ subsectionCode: this.userInfo.oldDeptCode })
+                    this.findPlatformslist({ subsectionCode: data[0].crmDeptCode })
                     break
                 default:
             }
