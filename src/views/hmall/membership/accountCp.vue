@@ -55,7 +55,7 @@
                     <img :src="item.avatarUrl" alt="">
                     <div class="account-wx_user">
                         <p><i>昵称</i>&emsp;{{item.nickName}}</p>
-                        <p><i>userid：</i>&emsp;{{item.userId?item.userId:'-'}}&emsp;<i>openid：</i>&emsp;{{item.openid?item.openid:'-'}}&emsp;<i>unionid：</i>&emsp;{{item.unionid?item.unionid:'-'}}</p>
+                        <p><i>userId：</i>&emsp;{{item.userId?item.userId:'-'}}&emsp;<i>openId：</i>&emsp;{{item.openId?item.openId:'-'}}&emsp;<br><i>unionId：</i>&emsp;{{item.unionId?item.unionId:'-'}}</p>
                     </div>
                 </div>
                 <div class="account-box" v-if="account.wxUserList&&account.wxUserList.length==0">
