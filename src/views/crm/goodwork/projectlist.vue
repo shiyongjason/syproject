@@ -8,7 +8,7 @@
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                  <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">项目编号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
@@ -49,9 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.type">
-                            <el-option label="全部" value="">
-                            </el-option>
+                        <el-select v-model="typeArr" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -60,10 +58,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.status">
+                        <!-- <el-select v-model="queryParams.status">
                             <el-option label="全部" value="">
                             </el-option>
-                           <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select> -->
+                        <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                            <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -83,11 +85,11 @@
         <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                  <template slot="type" slot-scope="scope">
-                   {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
+                <template slot="type" slot-scope="scope">
+                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
-                  <template slot="progress" slot-scope="scope">
-                   {{scope.data.row.type&&statusList[scope.data.row.status-1]['value']}}
+                <template slot="progress" slot-scope="scope">
+                    {{scope.data.row.type&&statusList[scope.data.row.status-1]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
@@ -120,12 +122,14 @@ export default {
                 maxUpdateTime: '',
                 minCreateTime: '',
                 minUpdateTime: '',
-                status: '',
+                statusList: '',
                 projectName: '',
                 projectNo: '',
-                type: '',
+                typeList: '',
                 originType: 1
             },
+            status: [],
+            typeArr: [],
             copyParams: {},
             tableData: [],
             paginationInfo: {},
@@ -138,8 +142,8 @@ export default {
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
                 { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'createTime', width: '180' },
-                { label: '更新时间', prop: 'updateTime', width: '180' }
+                { label: '项目提交时间', prop: 'createTime', width: '180', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', width: '180', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -209,7 +213,8 @@ export default {
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
-            this.removeValue = true
+            this.status = []
+            this.typeArr = []
             this.searchList()
         },
         handleSizeChange (val) {
@@ -224,6 +229,8 @@ export default {
             this.queryParams.categoryId = val
         },
         async  searchList () {
+            this.queryParams.statusList = this.status.toString()
+            this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records
