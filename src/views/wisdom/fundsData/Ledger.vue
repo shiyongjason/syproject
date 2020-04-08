@@ -12,7 +12,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
-                        <el-option v-for="(item,index) in branchList" :key="index" :label="item.deptName" :value="item.crmDeptCode">
+                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptName" :value="item.crmDeptCode">
                         </el-option>
                     </el-select>
                 </div>
@@ -66,21 +66,28 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane v-if="hosAuthCheck(TotalColumn)" label="台账汇总表" name="0"></el-tab-pane>
-                <el-tab-pane v-if="hosAuthCheck(FlowToBorrow)" label="流贷" name="1"></el-tab-pane>
-                <el-tab-pane v-if="hosAuthCheck(Exposure)" label="敞口" name="2"></el-tab-pane>
-                <el-tab-pane v-if="hosAuthCheck(PointsCredit)" label="分授信" name="3"></el-tab-pane>
-                <el-tab-pane v-if="hosAuthCheck(ReimbursementDetail)" label="还款明细表" name="4"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('台账汇总表')" label="台账汇总表" name="0"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('流贷台账')" label="流贷" name="1"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('敞口台账')" label="敞口" name="2"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('分授信台账')" label="分授信" name="3"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('还款明细表')" label="还款明细表" name="4"></el-tab-pane>
             </el-tabs>
-            <template v-if="accountType == '1'||accountType == '2'||accountType == '3'">
-                <el-tabs v-model="productType" type="card" @tab-click="handleClick(2)">
-                    <el-tab-pane label="好信用" name="1"></el-tab-pane>
-                    <el-tab-pane label="供应链" v-if="accountType == 1" name="2"></el-tab-pane>
-                    <el-tab-pane label="好橙工" v-if="accountType !=3" name="3"></el-tab-pane>
-                </el-tabs>
-                <el-button v-if="hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            </template>
-            <complexTable :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
+            <el-tabs v-model="productType" v-if="accountType == 1" type="card" @tab-click="handleClick(2)">
+                <el-tab-pane v-if="hosAuthCheck(flowtoborrow_good_credit)" label="好信用" name="1"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(flowtoborrow_supply_chain)" label="供应链" name="2"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(flowtoborrow_orange)" label="好橙工" name="3"></el-tab-pane>
+            </el-tabs>
+            <el-tabs v-model="productType" v-if="accountType == 2" type="card" @tab-click="handleClick(2)">
+                <el-tab-pane v-if="hosAuthCheck(exposure_good_credit)" label="好信用" key="好信用" name="1"></el-tab-pane>
+                <el-tab-pane v-if="hosAuthCheck(exposure_orange)" label="好橙工" key="好橙工" name="3"></el-tab-pane>
+            </el-tabs>
+            <el-tabs v-model="productType" v-if="accountType == 3" type="card" @tab-click="handleClick(2)">
+                <el-tab-pane v-if="hosAuthCheck(pointscredit_good_credit)" label="好信用" name="1"></el-tab-pane>
+            </el-tabs>
+            <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <complexTable v-if="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -89,9 +96,10 @@
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
-import { WISDOM_FUNDSDATA_ADD, WISDOM_TOTALCOLUMN, WISDOM_FLOWTOBORROW, WISDOM_EXPOSURE, WISDOM_POINTSCREDIT, WISDOM_REIMBURSEMENTDETAIL } from '@/utils/auth_const'
+import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
+// import { tabAuthPath } from '@/router/const'
 import { departmentAuth } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
@@ -130,18 +138,21 @@ export default {
             removeValue: false,
             accept: '.xlsx,.xls',
             loading: false,
-            addFundsData: WISDOM_FUNDSDATA_ADD,
-            TotalColumn: WISDOM_TOTALCOLUMN,
-            FlowToBorrow: WISDOM_FLOWTOBORROW,
-            Exposure: WISDOM_EXPOSURE,
-            PointsCredit: WISDOM_POINTSCREDIT,
-            ReimbursementDetail: WISDOM_REIMBURSEMENTDETAIL
+            addFundsData: WISDOM_FLOWTOBORROW_FUNDSDATA_ADD,
+            addExposureData: WISDOM_EXPOSURE_FUNDSDATA_ADD,
+            addPointscreditData: WISDOM_POINTSCREDIT_FUNDSDATA_ADD,
+            flowtoborrow_good_credit: WISDOM_FLOWTOBORROW_GOOD_CREDIT,
+            flowtoborrow_supply_chain: WISDOM_FLOWTOBORROW_SUPPLY_CHAIN,
+            flowtoborrow_orange: WISDOM_FLOWTOBORROW_ORANGE,
+            exposure_good_credit: WISDOM_EXPOSURE_GOOD_CREDIT,
+            exposure_orange: WISDOM_EXPOSURE_ORANGE,
+            pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
+            hasNoneAuth: false
         }
     },
     async mounted () {
+        this.getUserTabAuth()
         this.onSearch()
-        // this.findBranchList()
-        // this.findPlatformslist()
         await this.oldAuth()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
@@ -214,17 +225,6 @@ export default {
             this.loading = true
         },
         async onQuery () {
-            if (this.hosAuthCheck(this.TotalColumn)) {
-                this.accountType = '0'
-            } else if (this.hosAuthCheck(this.FlowToBorrow)) {
-                this.accountType = '1'
-            } else if (this.hosAuthCheck(this.Exposure)) {
-                this.accountType = '2'
-            } else if (this.hosAuthCheck(this.PointsCredit)) {
-                this.accountType = '3'
-            } else if (this.hosAuthCheck(this.ReimbursementDetail)) {
-                this.accountType = '4'
-            }
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
@@ -260,6 +260,31 @@ export default {
         },
         onLinddialog () {
             this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
+        },
+        getUserTabAuth () {
+            let menuList = JSON.parse(sessionStorage.getItem('menuList'))
+            this.router = menuList.filter(i => {
+                return i.path == '/fundsData'
+            })[0].children
+            if (this.tabAuth('台账汇总表')) {
+                this.accountType = '0'
+            } else if (this.tabAuth('流贷台账')) {
+                this.accountType = '1'
+            } else if (this.tabAuth('敞口台账')) {
+                this.accountType = '2'
+            } else if (this.tabAuth('分授信台账')) {
+                this.accountType = '3'
+            } else if (this.tabAuth('还款明细表')) {
+                this.accountType = '4'
+            } else {
+                this.hasNoneAuth = true
+            }
+        },
+        tabAuth (param) {
+            let router = this.router
+            return router && router.some(i => {
+                return i.path == param
+            })
         }
     },
     activated () {

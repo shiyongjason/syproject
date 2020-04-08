@@ -84,12 +84,12 @@
                                                     </div>
                                                 </td>
                                                 <td width="300">
-                                                    <el-button @click="addSensitive(index, indexa, itema, 1)" type="success" round>+</el-button>
+                                                    <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 1)" type="success" round>+</el-button>
                                                 </td>
                                             </template>
                                             <template v-else>
                                                 <td width="300">
-                                                    <el-button @click="addSensitive(index, indexa, itema, 0)" type="success" round>+</el-button>
+                                                    <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 0)" type="success" round>+</el-button>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
@@ -109,10 +109,10 @@
                                         </template>
                                         <template v-else>
                                             <td width="300">
-                                                <el-button @click="addSensitive(index, indexa, itema, 0)" type="success" round>+</el-button>
+                                                <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 0)" type="success" round>+</el-button>
                                             </td>
                                             <td width="300">
-                                                <el-button @click="addSensitive(index, indexa, itema, 1)" type="success" round>+</el-button>
+                                                <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 1)" type="success" round>+</el-button>
                                             </td>
                                         </template>
                                     </tr>
@@ -463,19 +463,19 @@ export default {
         addAuthList () {
             this.list.push({})
         },
-        async addSensitive (index, indexa, obj, type) {
-            console.log(index, indexa, obj, type)
+        async addSensitive (index, indexa, obj, childObj, indexb, type) {
+            console.log(index, indexa, obj, childObj, indexb, type)
             // console.log(this.tableList[index].childAuthList[indexa].childAuthList)
             if (!obj.authCode) {
                 this.$message.warning('权限配置菜单不存在')
                 return
             }
-            const authCode = obj.childAuthList[0].authCode ? obj.childAuthList[0].authCode : obj.authCode
+            const authCode = obj.childAuthList[indexb].authCode ? obj.childAuthList[indexb].authCode : obj.authCode
             const params = {
                 authCode,
                 authType: type
             }
-            console.log(params)
+            // console.log(params)
             await addAuthType(params)
             this.init()
         },

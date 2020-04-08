@@ -131,15 +131,27 @@ export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
 // 好智慧-利润统计 导出
 export const AUTH_PROFIT_STATISTICS_EXPORT = 10580
 
-// 好智慧-资金数据 新增台账
-export const WISDOM_FUNDSDATA_ADD = 10710
-// 好智慧-资金数据 台账汇总表
-export const WISDOM_TOTALCOLUMN = 10720
-// // 好智慧-资金数据 流贷
-export const WISDOM_FLOWTOBORROW = 10730
-// // 好智慧-资金数据 敞口
-export const WISDOM_EXPOSURE = 10740
-// // 好智慧-资金数据 分授信
-export const WISDOM_POINTSCREDIT = 10750
-// // 好智慧-资金数据 还款明细表
-export const WISDOM_REIMBURSEMENTDETAIL = 10760
+// 好智慧-资金数据 新增流贷台账
+export const WISDOM_FLOWTOBORROW_FUNDSDATA_ADD = 10710
+// 好智慧-资金数据 流贷-好信用
+export const WISDOM_FLOWTOBORROW_GOOD_CREDIT = 10720
+// 好智慧-资金数据 流贷-供应链
+export const WISDOM_FLOWTOBORROW_SUPPLY_CHAIN = 10730
+// 好智慧-资金数据 流贷-好橙工
+export const WISDOM_FLOWTOBORROW_ORANGE = 10740
+// 好智慧-资金数据 敞口-好信用
+export const WISDOM_EXPOSURE_GOOD_CREDIT = 10750
+// 好智慧-资金数据 敞口-好橙工
+export const WISDOM_EXPOSURE_ORANGE = 10760
+// 好智慧-资金数据 分授信-好信用
+export const WISDOM_POINTSCREDIT_GOOD_CREDIT = 10770
+// 好智慧-资金数据 新增敞口台账
+export const WISDOM_EXPOSURE_FUNDSDATA_ADD = 10780
+// 好智慧-资金数据 新增分授信台账
+export const WISDOM_POINTSCREDIT_FUNDSDATA_ADD = 10790
+// 好智慧-资金数据 修改流贷台账
+export const WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA = 10810
+// 好智慧-资金数据 修改敞口台账
+export const WISDOM_EXPOSURE_FUNDSDATA_UPDATA = 10820
+// 好智慧-资金数据 新增分授信台账
+export const WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA = 10830

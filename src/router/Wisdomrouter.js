@@ -1,4 +1,6 @@
 import Layout from '@/views/layout/Default.vue'
+// 非菜单，权限控制二级菜单下的tab权限
+import { tabAuth } from './const'
 
 export default [
     {
@@ -33,7 +35,8 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
-            }
+            },
+            ...tabAuth
         ]
     },
     {
