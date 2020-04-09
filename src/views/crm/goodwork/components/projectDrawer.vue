@@ -98,7 +98,7 @@
         </el-drawer>
         <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item label="审核结果：" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
+                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
                     <el-radio-group v-model="statusForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
