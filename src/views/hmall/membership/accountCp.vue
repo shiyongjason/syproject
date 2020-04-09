@@ -120,7 +120,7 @@ export default {
             color: #13c2c2;
             em {
                 background: #e26666;
-                font-size: 14px;
+                font-size: 12px;
                 border-radius: 6px;
                 color: #fff;
                 font-style: normal;
@@ -175,7 +175,7 @@ export default {
         background: #f7f5f5;
         display: flex;
         align-items: center;
-        margin-top: 10px;
+        margin: 10px;
         .account-wx_user {
             display: flex;
             flex-direction: column;
