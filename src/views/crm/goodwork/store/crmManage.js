@@ -3,13 +3,14 @@ import * as types from './crmTypes'
 import * as Api from './../api'
 const state = {
     projectData: {},
-    projectDetail: {}
-
+    projectDetail: {},
+    projectLoan: {}
 }
 
 const getters = {
     projectData: state => state.projectData,
-    projectDetail: state => state.projectDetail
+    projectDetail: state => state.projectDetail,
+    projectLoan: state => state.projectLoan
 }
 
 const mutations = {
@@ -18,6 +19,9 @@ const mutations = {
     },
     [types.PROJECT_DETAIL] (state, payload) {
         state.projectDetail = payload
+    },
+    [types.PROJECT_LOAN] (state, payload) {
+        state.projectLoan = payload
     }
 }
 
@@ -29,6 +33,10 @@ const actions = {
     async findProjectDetail ({ commit }, params) {
         const { data } = await Api.getProjectDetail(params)
         commit(types.PROJECT_DETAIL, data)
+    },
+    async findProjectLoan ({ commit }, params) {
+        const { data } = await Api.getProjectloan(params)
+        commit(types.PROJECT_LOAN, data)
     }
 }
 export default {

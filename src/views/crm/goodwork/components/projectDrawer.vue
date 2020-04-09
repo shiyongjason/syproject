@@ -110,7 +110,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model="statusForm.remark" maxlength="200" show-word-limit></el-input>
+                    <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -149,7 +149,8 @@ export default {
                 createByMobile: '',
                 projectId: '',
                 remark: '',
-                result: ''
+                result: '',
+                reset: ''
             },
             copyStatusForm: {},
             aduitTitle: '',
@@ -345,6 +346,7 @@ export default {
             this.statusForm.createBy = this.userInfo.employeeName
             this.statusForm.createByMobile = this.userInfo.phoneNumber
             this.statusForm.projectId = this.form.id
+            this.statusForm.reset = true
             this.$refs.statusForm.validate(async (valid) => {
                 if (valid) {
                     try {

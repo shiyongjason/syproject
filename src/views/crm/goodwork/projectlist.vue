@@ -83,9 +83,12 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 借款总金额 600,000 万元 </el-tag>
+             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 借款总金额 {{fundMoneys(loanData)}} 万元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
+                 <template slot="predictLoanAmount" slot-scope="scope">
+                    {{fundMoneys(scope.data.row.predictLoanAmount)}}
+                </template>
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
@@ -105,8 +108,10 @@
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
+
 export default {
     name: 'projectlist',
     data () {
@@ -151,7 +156,8 @@ export default {
             drawer: false,
             typeList: TYPE_LIST,
             processList: PROCESS_LIST,
-            statusList: STATUS_LIST
+            statusList: STATUS_LIST,
+            loanData: {}
         }
     },
     components: {
@@ -199,7 +205,9 @@ export default {
             }
         },
         ...mapGetters('crmmanage', {
-            projectData: 'projectData'
+            projectData: 'projectData',
+            projectLoan: 'projectLoan'
+
         })
     },
     async mounted () {
@@ -209,8 +217,12 @@ export default {
 
     methods: {
         ...mapActions('crmmanage', {
-            findProjetpage: 'findProjetpage'
+            findProjetpage: 'findProjetpage',
+            findProjectLoan: 'findProjectLoan'
         }),
+        fundMoneys (val) {
+            return filters.fundMoney(val)
+        },
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
@@ -240,6 +252,8 @@ export default {
                 pageSize: this.projectData.size,
                 total: this.projectData.total
             }
+            await this.findProjectLoan(params)
+            this.loanData = this.projectLoan
         },
         onLookproject (val) {
             this.drawer = true
