@@ -245,7 +245,7 @@ export default {
             this.removeValue = !this.removeValue
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'subsectionCode', '')
+            if (this.userInfo.deptType != 2) this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')
