@@ -88,6 +88,10 @@ const mutations = {
 
 const actions = {
     async findPlatformslist ({ commit }, params) {
+        if ((this.state.userInfo.deptType == 1 || this.state.userInfo.deptType == 2) && !params.subsectionCode) {
+            commit(types.PLAT_FORMDATA, [])
+            return
+        }
         const { data } = await findPlatformslist(params)
         commit(types.PLAT_FORMDATA, data.data.pageContent)
     },
