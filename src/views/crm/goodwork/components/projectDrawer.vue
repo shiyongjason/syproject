@@ -81,7 +81,6 @@
                     <el-form-item label="其他">
                         <el-input v-model.trim="form.payOtherText"></el-input>
                     </el-form-item>
-
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                     <hosjoyUpload v-model="form.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
@@ -127,7 +126,7 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE } from '../../const'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -147,6 +146,7 @@ export default {
             statusForm: {
                 afterStatus: '',
                 createBy: '',
+                createByMobile: '',
                 projectId: '',
                 remark: '',
                 result: ''
@@ -155,6 +155,7 @@ export default {
             aduitTitle: '',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
             statusType: STATUS_TYPE,
+            newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
@@ -322,8 +323,12 @@ export default {
             this.$emit('backEvent')
         },
         onReststatus (val) {
-            console.log(this.statusType)
-            this.statusType = this.statusType.slice(0, val - 1)
+            console.log(val)
+            if (val == 5) {
+                this.statusType = this.newstatusType
+            } else {
+                this.statusType = this.newstatusType.slice(0, val - 2)
+            }
 
             this.statusForm = { ...this.copyStatusForm }
             this.$nextTick(() => {
@@ -336,6 +341,7 @@ export default {
         async onUpdateAudit () {
             const msg = this.aduitTitle
             this.statusForm.createBy = this.userInfo.employeeName
+            this.statusForm.createByMobile = this.userInfo.phoneNumber
             this.statusForm.projectId = this.form.id
             this.$refs.statusForm.validate(async (valid) => {
                 if (valid) {
@@ -453,7 +459,7 @@ export default {
 /deep/.el-form-item__content .el-input {
     width: 100% !important;
 }
-/deep/ .el-radio{
+/deep/ .el-radio {
     margin-bottom: 10px;
 }
 </style>

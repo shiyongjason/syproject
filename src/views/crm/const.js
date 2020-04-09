@@ -40,3 +40,6 @@ export const UPSTREAM_LIST = [{ key: 1, value: '厂商' }, { key: 2, value: '代
 
 export const STATUS_TYPE = [ { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '尽调' },
     { key: 5, value: '合作关闭' }, { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }, { key: 9, value: '合作完成' }]
+
+export const NEW_STATUS_TYPE = [ { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '尽调' },
+    { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }]
