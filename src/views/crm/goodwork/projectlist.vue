@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 借款总金额 {{fundMoneys(loanData)}} 万元 </el-tag>
+             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 借款总金额 {{fundMoneys(loanData)}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                  <template slot="predictLoanAmount" slot-scope="scope">
@@ -221,7 +221,9 @@ export default {
             findProjectLoan: 'findProjectLoan'
         }),
         fundMoneys (val) {
-            return filters.fundMoney(val)
+            if (val) {
+                return filters.money(val)
+            }
         },
         onRest () {
             this.categoryIdArr = []

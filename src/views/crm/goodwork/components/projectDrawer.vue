@@ -270,7 +270,6 @@ export default {
             await this.findProjectDetail(val)
             this.form = { ...this.projectDetail }
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
-            console.log(this.form.projectUpload)
             this.form.loanPayTypeRate = '方法定义必填'
             this.copyForm = { ...this.form }
         },
@@ -282,11 +281,13 @@ export default {
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
+
             if (status == 2) {
                 // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
                 this.dialogVisible = true
                 this.aduitTitle = '审核'
                 this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
                 this.$nextTick(() => {
                     this.$refs['statusForm'].clearValidate()
                 })
@@ -298,6 +299,7 @@ export default {
                 this.dialogVisible = true
                 this.aduitTitle = '尽调'
                 this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
                 this.$nextTick(() => {
                     this.$refs['statusForm'].clearValidate()
                 })
@@ -313,7 +315,7 @@ export default {
             } else if (status == 9) {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
-
+            this.statusForm.reset = false
             await saveStatus({ projectId: this.form.id,
                 status: status,
                 updateBy: this.userInfo.employeeName })
@@ -324,7 +326,6 @@ export default {
             this.$emit('backEvent')
         },
         onReststatus (val) {
-            console.log(val)
             if (val == 5) {
                 this.statusType = this.newstatusType
             } else if (val == 6 || val == 7 || val == 8) {
@@ -337,6 +338,7 @@ export default {
             this.$nextTick(() => {
                 this.$refs['statusForm'].clearValidate()
             })
+            this.statusForm.reset = true
             this.dialogVisible = true
             this.aduitTitle = '重置状态'
             // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
@@ -346,7 +348,6 @@ export default {
             this.statusForm.createBy = this.userInfo.employeeName
             this.statusForm.createByMobile = this.userInfo.phoneNumber
             this.statusForm.projectId = this.form.id
-            this.statusForm.reset = true
             this.$refs.statusForm.validate(async (valid) => {
                 if (valid) {
                     try {
