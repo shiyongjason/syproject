@@ -50,14 +50,14 @@
                 </a>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
                     <el-button type="primary" class='m0' :loading='loading'>
                         借款信息导入
                     </el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
                     <el-button type="primary" class="m0" :loading='loading'>
                         还款明细表信息导入
                     </el-button>
