@@ -87,7 +87,7 @@
             <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <complexTable v-if="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
+            <complexTable v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -187,9 +187,12 @@ export default {
         },
         handleClick (i) {
             if (i == 1) {
+                this.hasNoneAuth = false
                 this.productType = '1'
-                // console.log(this.$store.state.userInfo)
                 this.$store.commit('fundsData/cleartableData')
+                if (this.accountType == '1') this.flowtoborrowAuth()
+                if (this.accountType == '2') this.exposureAuth()
+                if (this.accountType == '3') this.pointscredit()
             }
             this.onReset()
         },
@@ -245,7 +248,7 @@ export default {
             this.removeValue = !this.removeValue
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'subsectionCode', '')
+            if (this.userInfo.deptType != 2) this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')
@@ -266,16 +269,50 @@ export default {
             this.router = menuList.filter(i => {
                 return i.path == '/fundsData'
             })[0].children
+            this.stairTab()
+        },
+        stairTab () {
             if (this.tabAuth('台账汇总表')) {
                 this.accountType = '0'
             } else if (this.tabAuth('流贷台账')) {
                 this.accountType = '1'
+                this.flowtoborrowAuth()
             } else if (this.tabAuth('敞口台账')) {
                 this.accountType = '2'
+                this.exposureAuth()
             } else if (this.tabAuth('分授信台账')) {
                 this.accountType = '3'
+                this.pointscredit()
             } else if (this.tabAuth('还款明细表')) {
                 this.accountType = '4'
+            } else {
+                this.hasNoneAuth = true
+            }
+        },
+        // 1：好信用 2：供应链 3：好橙工
+        flowtoborrowAuth () {
+            if (this.hosAuthCheck(this.flowtoborrow_good_credit)) {
+                this.productType = '1'
+            } else if (this.hosAuthCheck(this.flowtoborrow_supply_chain)) {
+                this.productType = '2'
+            } else if (this.hosAuthCheck(this.flowtoborrow_orange)) {
+                this.productType = '3'
+            } else {
+                this.hasNoneAuth = true
+            }
+        },
+        exposureAuth () {
+            if (this.hosAuthCheck(this.exposure_good_credit)) {
+                this.productType = '1'
+            } else if (this.hosAuthCheck(this.exposure_orange)) {
+                this.productType = '3'
+            } else {
+                this.hasNoneAuth = true
+            }
+        },
+        pointscredit () {
+            if (this.hosAuthCheck(this.pointscredit_good_credit)) {
+                this.productType = '1'
             } else {
                 this.hasNoneAuth = true
             }
