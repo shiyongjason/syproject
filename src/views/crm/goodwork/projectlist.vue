@@ -27,7 +27,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经销商：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
