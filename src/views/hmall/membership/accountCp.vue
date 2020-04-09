@@ -20,7 +20,7 @@
             </div> -->
             <div class="container">
                 <div class="account-top">
-                    <div class="account-topimg"><img :src="account.avatarUrl" /></div>
+                    <div class="account-topimg"><img :src="account.avatarUrl?account.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" /></div>
                     <div>
                         <p>{{account.name}}</p>
                         <p>{{account.username}}</p>
@@ -52,7 +52,7 @@
                 </div>
                 <h3>关联的微信用户</h3>
                 <div class="account-wx" v-for="(item) in account.wxUserList" :key="item.userId">
-                    <img :src="item.avatarUrl" alt="">
+                    <img :src="item.avatarUrl?item.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" alt="">
                     <div class="account-wx_user">
                         <p><i>昵称</i>&emsp;{{item.nickName}}</p>
                         <p><i>userId：</i>&emsp;{{item.userId?item.userId:'-'}}&emsp;<i>openId：</i>&emsp;{{item.openId?item.openId:'-'}}&emsp;<br><i>unionId：</i>&emsp;{{item.unionId?item.unionId:'-'}}</p>
