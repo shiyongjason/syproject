@@ -50,14 +50,14 @@
                 </a>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         借款信息导入
                     </el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
                     <el-button type="primary" class="m0" :loading='loading'>
                         还款明细表信息导入
                     </el-button>
@@ -122,6 +122,10 @@ export default {
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
+            headersData: {
+                'refreshToken': sessionStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
