@@ -1,9 +1,9 @@
 
 // 资金台账 store
 import * as types from './const'
-import { findPlatformslist, getAccountList, getRepaymentList, findDepList, getSummaryList } from '@/views/wisdom/fundsData/api'
+import { findPlatformslist, getAccountList, getRepaymentList, getSummaryList, findDepartment } from '@/views/wisdom/fundsData/api'
 const state = {
-    platformData: [],
+    platformData: [], // 平台公司list
     // 阶梯逾期默认值
     overdueList: [
         { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
@@ -72,7 +72,7 @@ const mutations = {
         state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
-        payload.unshift({ organizationCode: '', organizationName: '请选择分部' })
+        // payload.unshift({ crmDeptCode: '', deptName: '请选择分部' })
         state.branchList = payload
     },
     [types.GET_SUMMARY] (state, payload) {
@@ -88,7 +88,7 @@ const mutations = {
 
 const actions = {
     async findPlatformslist ({ commit }, params) {
-        const { data } = await findPlatformslist()
+        const { data } = await findPlatformslist(params)
         commit(types.PLAT_FORMDATA, data.data.pageContent)
     },
     async getAccountList ({ commit }, params) {
@@ -99,10 +99,11 @@ const actions = {
         const { data } = await getRepaymentList(params)
         commit(types.REPAYMENT_SCHEDULE, data)
     },
-    async findBranchList ({ commit }) {
+    async findBranchList ({ commit }, params) {
         // 查询分部（不用做权限，现在是总部在使用）
-        const { data } = await findDepList({ organizationType: 1 })
-        commit(types.GET_BRANCH, data.data)
+        const { data } = await findDepartment(params)
+        commit(types.GET_BRANCH, data)
+        return data
     },
     async findSummaryList ({ commit }, params) {
         const { data } = await getSummaryList(params)

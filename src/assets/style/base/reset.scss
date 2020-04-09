@@ -416,3 +416,7 @@ ul,
 li {
     list-style: none;
 }
+.el-table__body-wrapper::-webkit-scrollbar-thumb {
+    min-height: 20px;
+    background-color: rgba(33, 37, 43, 0.26);
+}

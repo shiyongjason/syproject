@@ -40,6 +40,7 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
+import { WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA, WISDOM_EXPOSURE_FUNDSDATA_UPDATA, WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA } from '@/utils/auth_const'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
@@ -323,7 +324,8 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <div>
+                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                return render ? <div>
                                     <el-tooltip effect="light" placement="top">
                                         <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                             <br />借款单位：{scope.row.account_loanCompanyName}
@@ -334,7 +336,12 @@ export default {
                                         this.getAccount(scope.row)
                                         this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
-                                    }}></i></div>
+                                    }}></i></div> : <el-tooltip effect="light" placement="top">
+                                    <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                        <br />借款单位：{scope.row.account_loanCompanyName}
+                                        <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                    <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                </el-tooltip>
                             }
                         }
                     ]
@@ -363,11 +370,12 @@ export default {
                             sort: 1,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
+                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
                                     this.loanData.title = `${this.product}—流贷借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                     this.supplierDialogVisible = true
-                                }}></i></span>
+                                }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
                             }
                         },
                         {
@@ -376,7 +384,8 @@ export default {
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
                                     class={
                                         scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
@@ -385,7 +394,7 @@ export default {
                                         this.respAccountRepaymentPlanData[0].title = `${this.product}-流贷还款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                                         this.AnnualInterestRateDialogVisible = true
-                                    }}></i></span>
+                                    }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                             }
                         },
                         {
@@ -461,13 +470,14 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                        return render ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getRespAccountRepaymentPlanData(scope.row)
                             this.respAccountRepaymentPlanData[0].otherTitle = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
                             this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
                             this.regulatingBreathingDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                     }
                 },
                 {
@@ -475,11 +485,12 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-流贷档案信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.fileinfoDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                     }
                 },
                 {
@@ -487,11 +498,12 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.remarkDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
                     }
                 }
             ],
@@ -507,7 +519,8 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <div>
+                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                return render ? <div>
                                     <el-tooltip effect="light" placement="top">
                                         <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                             <br />借款单位：{scope.row.account_loanCompanyName}
@@ -518,7 +531,13 @@ export default {
                                         this.getAccount(scope.row)
                                         this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
-                                    }}></i></div>
+                                    }}></i></div> : <div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip></div>
                             }
                         }
                     ]
@@ -583,11 +602,12 @@ export default {
                             sort: 5,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
+                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                                     this.getLoan(scope.row)
                                     this.loanData.title = `${this.product}-分授信借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                     this.pointsCreditBillingDialogVisible = true
-                                }}></i></span>
+                                }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
                             }
                         },
                         {
@@ -605,14 +625,15 @@ export default {
                             sort: 9,
                             width: '150',
                             render: (h, scope) => {
-                                return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
                                     class={
                                         scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_loanStartTime && scope.row.loan_yearRate !== null
                                             ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                                     onClick={async () => {
                                         await this.getGrantPaymetPlanData(scope.row)
                                         this.repaymentDialogVisible = true
-                                    }}></i></span>
+                                    }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                             }
                         }
                     ]
@@ -828,10 +849,11 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                        return render ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getGrantPaymetPlanData(scope.row)
                             this.regulatingBreathingDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                     }
                 },
                 {
@@ -839,11 +861,12 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-分授信档案信息维护`
                             this.fileinfoDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                     }
                 },
                 {
@@ -851,11 +874,12 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-分授信备注信息维护`
                             this.remarkDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
                     }
                 }
             ],
@@ -871,7 +895,8 @@ export default {
                             label: '台账编号',
                             width: '150',
                             render: (h, scope) => {
-                                return <div>
+                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                return render ? <div>
                                     <el-tooltip effect="light" placement="top">
                                         <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                             <br />借款单位：{scope.row.account_loanCompanyName}
@@ -882,7 +907,14 @@ export default {
                                         this.getAccount(scope.row)
                                         this.accountData.title = `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
-                                    }}></i></div>
+                                    }}></i></div> : <div>
+                                    <el-tooltip effect="light" placement="top">
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
+                                </div>
                             }
                         }
                     ]
@@ -1094,10 +1126,11 @@ export default {
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
-                        return <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
+                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                        return render ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i class='el-icon-edit pointer' onClick={async () => {
                             await this.getGrantPaymetPlanData(scope.row, true)
                             this.regulatingBreathingDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
                     }
                 },
                 {
@@ -1105,11 +1138,12 @@ export default {
                     label: '台账档案编号',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-敞口基础信息维护`
                             this.fileinfoDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
                     }
                 },
                 {
@@ -1117,11 +1151,12 @@ export default {
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
-                        return <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i class='el-icon-edit pointer' onClick={() => {
                             this.getAccount(scope.row)
                             this.accountData.title = `${this.product}-敞口备注信息维护`
                             this.remarkDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
                     }
                 }
             ],
@@ -1772,11 +1807,12 @@ export default {
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
+                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                        return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
                             this.getLoan(scope.row)
                             this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                             this.billingDialogVisible = true
-                        }}></i></span>
+                        }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
                     }
                 },
                 {
@@ -1806,14 +1842,15 @@ export default {
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
-                        return <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
                             class={
                                 scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
                                     ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
                             onClick={async () => {
                                 await this.getGrantPaymetPlanData(scope.row)
                                 this.repaymentDialogVisible = true
-                            }}></i></span>
+                            }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                     }
                 },
                 { prop: 'loan_registrant', label: '登记人', sort: 9, width: '150' }
