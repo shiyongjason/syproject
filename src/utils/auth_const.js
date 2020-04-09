@@ -155,3 +155,7 @@ export const WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA = 10810
 export const WISDOM_EXPOSURE_FUNDSDATA_UPDATA = 10820
 // 好智慧-资金数据 新增分授信台账
 export const WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA = 10830
+// 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
+export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
+
+export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
