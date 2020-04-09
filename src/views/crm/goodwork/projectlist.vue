@@ -83,6 +83,7 @@
             </div>
         </div>
         <div class="page-body-cont">
+             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 借款总金额 600,000 万元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="type" slot-scope="scope">
@@ -135,15 +136,15 @@ export default {
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName' },
-                { label: '项目编号', prop: 'projectNo' },
+                { label: '项目名称', prop: 'projectName', width: '180' },
+                { label: '项目编号', prop: 'projectNo', width: '180' },
                 { label: '赊销总额', prop: 'predictLoanAmount' },
-                { label: '经销商', prop: 'upstreamSupplierName' },
+                { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
                 { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'submitTime', width: '180', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '180', formatters: 'dateTimes' }
+                { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -257,5 +258,8 @@ export default {
 }
 .colgry {
     color: #ccc;
+}
+.eltagtop {
+    margin-bottom: 10px;
 }
 </style>
