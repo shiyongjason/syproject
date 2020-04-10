@@ -52,13 +52,15 @@
                 </el-form-item>
                 <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+               个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
                     <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
-                </el-form-item>
+               个月
+               </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
                         <el-input v-model="form.advancePaymentProportion" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
