@@ -49,13 +49,13 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[1])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
@@ -63,13 +63,13 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配1置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配0置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[1])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
@@ -80,7 +80,7 @@
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(1, itemb.authTypes[1])" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td width="300">
@@ -94,7 +94,7 @@
                                                 <td width="300">
                                                     <div>敏感操作</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(0, itemb.authTypes[0])" type="primary" round>配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[1])" type="primary" round>配置</el-button>
                                                     </div>
                                                 </td>
                                             </template>
@@ -450,10 +450,10 @@ export default {
             this.$message.success(`保存成功`)
             this.init()
         },
-        onShowFieldConfig (index, item) {
+        onShowFieldConfig (item) {
+            // console.log(item)
             // 初始化
             this.list = [{}]
-            console.log(index, item)
             if (item.authResourceList.length > 0) {
                 this.list = item.authResourceList
             }
