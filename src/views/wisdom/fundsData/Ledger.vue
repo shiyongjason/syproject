@@ -38,31 +38,6 @@
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div> -->
             </div><br>
-            <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
-            <!-- <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
-                    还款明细表模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-借款信息导入模板.xlsx" download="资金台账-借款信息导入模板.xlsx">
-                    借款模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        借款信息导入
-                    </el-button>
-                </el-upload>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class="m0" :loading='loading'>
-                        还款明细表信息导入
-                    </el-button>
-                </el-upload>
-            </div> -->
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
@@ -99,7 +74,6 @@ import complexTable from './components/complexTable.vue'
 import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-// import { tabAuthPath } from '@/router/const'
 import { departmentAuth } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')

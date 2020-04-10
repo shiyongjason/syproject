@@ -5,37 +5,37 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">mis编码：</div>
                     <div class="flex-wrap-cont">
-                        <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">平台公司名：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
+                        <el-input :disabled='disabled' v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
-                            <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
+                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true @change="onChange">
+                            <el-option v-for="item in branchList" :key="item.deptCode" :label="item.deptName" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司名：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :disabled='disabled' ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
+                    </div>
+                </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="searchParams.startTime" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="searchParams.startDate" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="searchParams.endTime" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="searchParams.endDate" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">上线状态：</div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
-                            <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
+                        <el-select v-model="searchParams.onlineStatus" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in onlineStatus" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -43,8 +43,8 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">好享家注资：</div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
-                            <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
+                        <el-select v-model="searchParams.capital" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in  hosjoyInjection" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -57,8 +57,8 @@
                         </el-tooltip>：
                     </div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
-                            <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
+                        <el-select v-model="searchParams.financialSupport" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in financialSupport" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -71,7 +71,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="updateTime" slot-scope="scope">
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </template>
@@ -84,27 +84,38 @@
 // import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
-import { CAPITAL_EFFICIENCY_TABLE } from './const'
+import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
+    name: 'capitalEfficiency',
+    mixins: [departmentAuth],
     data () {
         return {
-            platformData: [],
             removeValue: false,
             tableLabel: CAPITAL_EFFICIENCY_TABLE,
-            incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
-            searchParams: {
-                subsectionCode: '',
-                misCode: '',
-                incremental: '',
+            tableData: [],
+            paginationData: {
                 pageNumber: 1,
                 pageSize: 10,
-                startTime: '',
-                endTime: ''
+                total: 0
             },
-            branchList: [],
-            tableData: [],
-            paginationData: {},
-            companyList: []
+            onlineStatus: ONLINESTATUS,
+            hosjoyInjection: HOSJOYINJECTION,
+            financialSupport: FINANCIALSUPPORT,
+            searchParams: {
+                misCode: '',
+                subsectionCode: '',
+                companyCode: '',
+                companyName: '',
+                startDate: '',
+                endDate: '',
+                capital: '',
+                financialSupport: '',
+                onlineStatus: '',
+                pageNumber: 1,
+                pageSize: 10
+            },
+            disabled: false
         }
     },
     components: {
@@ -112,12 +123,20 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: (state) => state.branchList,
+            platformData: (state) => {
+                for (let i of state.platformData) {
+                    i.value = i.companyShortName
+                    i.selectCode = i.companyCode
+                }
+                return state.platformData
+            }
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.searchParams.endTime
+                    let endDateVal = this.searchParams.endDate
                     if (endDateVal) {
                         return time.getTime() > new Date(endDateVal).getTime()
                     }
@@ -127,7 +146,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.searchParams.startTime
+                    let beginDateVal = this.searchParams.startDate
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -135,17 +154,15 @@ export default {
             }
         }
     },
-    mounted () {
-        // if (this.userInfo.oldDeptCode !== 'top') {
-        //     this.searchParams.subsectionCode = this.userInfo.oldDeptCode
-        // }
-        // this.companyData.params.companyCode = this.userInfo.oldDeptCode
-        // this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        // this.onFindBranchList(this.userInfo.oldDeptCode)
-        // this.getCompanyList()
+    async mounted () {
+        await this.oldAuth()
+        if (this.userInfo.deptType == 2) {
+            this.searchParams.subsectionCode = this.branchList[0].crmDeptCode
+        }
     },
     methods: {
         async onSearch () {
+            console.log(1)
             // const { data } = await findTableList(this.searchParams)
             // console.log(data)
             // this.tableData = data.data.list
@@ -155,12 +172,21 @@ export default {
             //     total: data.data.total
             // }
         },
-        async onFindBranchList (value) {
-            // const { data } = await findSubsectionList({ companyCode: value })
-            // this.branchList = data.data
+        onFieldChange (val) {
+            if (!val.includes('平台公司')) {
+                this.disabled = true
+                this.searchParams.companyCode = ''
+                this.searchParams.companyName = ''
+                this.searchParams.misCode = ''
+                this.removeValue = !this.removeValue
+            } else {
+                this.disabled = false
+            }
+            if (!val.includes('分部')) {
+                val.push('分部')
+            }
         },
         onCurrentChange (val) {
-            console.log(222)
             this.searchParams.pageNumber = val.pageNumber
             this.onSearch()
         },
@@ -169,17 +195,12 @@ export default {
             this.onSearch()
         },
         backPlat (value) {
-            // this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
-            // this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
+            this.searchParams.companyCode = value.value.companyCode ? value.value.companyCode : ''
+            this.searchParams.companyName = value.value.companyShortName ? value.value.companyShortName : ''
         },
-        async getCompanyList () {
-            // this.companyData.params.companyCode = this.userInfo.companyCode
-            // const { data } = await getCompany({ companyCode: this.userInfo.oldDeptCode })
-            // this.companyList = data.data
-            // this.companyList && this.companyList.map(item => {
-            //     item.value = item.companyShortName
-            //     item.selectCode = item.misCode
-            // })
+        onChange (subsectionCode) {
+            this.removeValue = !this.removeValue
+            this.onFindPlatformslist(subsectionCode)
         }
     }
 }
