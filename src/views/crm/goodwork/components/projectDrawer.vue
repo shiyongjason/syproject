@@ -81,7 +81,7 @@
                         <el-input v-model="form.auditCalculationPaymentProportion" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="其他">
-                        <el-input v-model.trim="form.payOtherText"></el-input>
+                        <el-input v-model.trim="form.payOtherText" maxlength="100"></el-input>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
