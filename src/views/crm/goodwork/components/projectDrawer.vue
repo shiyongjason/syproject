@@ -27,10 +27,10 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="合同总额：" prop="contractAmount">
-                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
+                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" maxlength="100" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备款总额：" prop="deviceAmount">
-                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
+                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="100" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备品类：" prop="deviceCategory">
                     <el-select v-model="form.deviceCategory" placeholder="请选择">
@@ -39,7 +39,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备品牌：" prop="deviceBrand">
-                    <el-input v-model="form.deviceBrand" placeholder="请输入设备品牌"></el-input>
+                    <el-input v-model="form.deviceBrand" placeholder="请输入设备品牌" maxlength="100"></el-input>
                 </el-form-item>
                 <el-form-item label="上游供应商类型：" prop="upstreamSupplierType">
                     <el-select v-model="form.upstreamSupplierType" placeholder="请选择">
@@ -55,7 +55,7 @@
                个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
-                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
+                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="100" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
@@ -63,22 +63,22 @@
                </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
-                        <el-input v-model="form.advancePaymentProportion" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="货到付款比例">
-                        <el-input v-model="form.deliveryPaymentProportion" v-isNum:2="form.deliveryPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.deliveryPaymentProportion" maxlength="10" v-isNum:2="form.deliveryPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="安装进度款比例">
-                        <el-input v-model="form.installProgressPaymentProportion" v-isNum:2="form.installProgressPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.installProgressPaymentProportion" maxlength="10" v-isNum:2="form.installProgressPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="验收款比例">
-                        <el-input v-model="form.acceptancePaymentProportion" v-isNum:2="form.acceptancePaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.acceptancePaymentProportion" maxlength="10" v-isNum:2="form.acceptancePaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="交付款比例">
-                        <el-input v-model="form.realPaymentProportion" v-isNum:2="form.realPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.realPaymentProportion" maxlength="10" v-isNum:2="form.realPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="审计结算款比例">
-                        <el-input v-model="form.auditCalculationPaymentProportion" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.auditCalculationPaymentProportion" maxlength="10" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="其他">
                         <el-input v-model.trim="form.payOtherText" maxlength="100"></el-input>
