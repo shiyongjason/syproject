@@ -5,94 +5,83 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable placeholder="全部" :disabled="branchDisabled" @change='getSubsectionCode'>
-                            <el-option v-for="item in branchList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat" :placeholder="'全部'" :disabled="platDisabled" :remove-value='removeValue'></HAutocomplete>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" style="display:flex">
-                    <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.value3" type="year" placeholder="选择年"></el-date-picker>
+                <div class="query-cont-col flex-box-time">
+                    <div class="query-col-title">年份：</div>
+                    <el-date-picker v-model="queryParams.year" type="year" placeholder="选择年">
+                    </el-date-picker>
                 </div>
-                <div class="query-cont-col pl20">
-                    <el-button type="primary" @click="onSearch">搜索</el-button>
-                    <el-button type="primary" @click="onReset">重置</el-button>
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">重置</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <platformSaleTable ref="platformSaleTable" :tableData="tableData" :loading="platformLoading" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></platformSaleTable>
+                <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                </hosJoyTable>
             </div>
         </div>
     </div>
 </template>
+
 <script>
-import { interfaceUrl } from '@/api/config'
+import moment from 'moment'
 import { mapState } from 'vuex'
-import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
-import platformSaleTable from './components/platformSaleTable.vue'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { DEPT_TYPE } from './store/const'
-import { AUTH_WIXDOM_PLATFORM_SALE_EXPORT } from '@/utils/auth_const'
+import { tableLabel } from './const'
 export default {
-    name: 'platformSale',
+    name: 'profitStatistics',
+    components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            platformLoading: true,
-            removeValue: false,
+            selectPlatObj: {
+                selectCode: '',
+                selectName: ''
+            },
+            platComList: [], // 平台公司
+            branchList: [],
+            platList: [],
             queryParams: {
-                onLineStatus: 1,
-                pageSize: 10,
+                misCode: '',
+                companyCode: '',
+                regionCode: '',
+                subsectionCode: '',
+                year: '',
                 pageNumber: 1,
-                signScaleStart: '', // 签约规模
-                signScaleEnd: '',
-                saleTimeStart: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1))) + '-01'}`, // 时间
-                saleTimeEnd: new Date().toJSON().split('T')[0],
-                onlineTimeStart: '', // 上线时间
-                onlineTimeEnd: '',
-                incremental: '', // 增量
-                regionCode: '', // 大区编码
-                subsectionCode: '', // 分部编码
-                companyCode: '', // 公司编码
-                value3: ''
+                pageSize: 10
             },
-            paginationData: {
-                totalElements: 0,
-                pageSize: 10,
-                pageNumber: 1
+            page: {
+                sizes: [10, 20, 50, 100],
+                total: 0
             },
+            total: {},
             tableData: [],
-            regionList: [], // 大区
-            branchList: [], // 分部
-            platList: [], // 平台公司
-            subsectionCodeList: [], // 分部list
-            checked: false
+            column: tableLabel
         }
     },
     computed: {
@@ -100,34 +89,35 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    components: {
-        platformSaleTable,
-        HAutocomplete
-    },
     methods: {
-        onSearch () {
-            console.log('search')
+        backPlat (val) {
+            // 平台公司名称点击后事件
+            if (val && val.value && val.value.companyShortName) {
+                this.queryParams.companyCode = val.value.companyCode
+            } else {
+                this.queryParams.companyCode = ''
+            }
         },
-        onReset () {
-            console.log('重置')
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery()
+        },
+        onQuery () {
+            console.log('搜索')
+        },
+        getList (val) {
+            this.searchParams = {
+                ...this.searchParams,
+                ...val
+            }
+            this.onQuery()
         }
     },
     async mounted () {
-
+        this.onSearch()
     }
 }
 </script>
 
-<style scoped>
-.download {
-    text-decoration: none;
-    color: #ffffff;
-    background: #f88825;
-    line-height: 38px;
-    border-radius: 4px;
-    padding: 0 12px;
-}
-.flex-box-time {
-    min-width: 500px;
-}
+<style lang="scss" scoped>
 </style>
