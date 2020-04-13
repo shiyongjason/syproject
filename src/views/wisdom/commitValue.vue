@@ -41,7 +41,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -54,7 +54,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { tableLabel } from './const'
 export default {
-    name: 'profitStatistics',
+    name: 'commitValue',
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
@@ -99,6 +99,8 @@ export default {
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
+            console.log(this.column)
+            // this.column[1].label = 'shy'
             this.onQuery()
         },
         onQuery () {

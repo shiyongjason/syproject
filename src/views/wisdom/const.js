@@ -1,11 +1,6 @@
 export let tableLabel = [
-    {
-        prop: 'misCode',
-        label: '公司编码',
-        width: '100'
-        // fixed: true
-    },
-    { prop: 'companyShortName', label: '全部', width: '120' },
+    { prop: 'misCode', label: '公司编码', width: '100', fixed: true },
+    { prop: 'companyShortName', label: '全部', width: '120', fixed: true },
     {
         label: 'XXXX年度销售承诺值',
         children: [
@@ -16,63 +11,63 @@ export let tableLabel = [
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '2月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '3月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '4月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '5月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '6月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '7月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '8月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '9月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '10月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '11月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
-                label: '1月',
+                label: '12月',
                 width: '100'
             },
             {
                 prop: 'salesIncomeIncludingTax',
                 label: '合计',
-                width: '150'
+                width: '100'
             }
         ]
     }
