@@ -215,6 +215,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/jinyunplatform/fundPlan/index')
+            },
+            {
+                path: 'planTotal',
+                name: 'planTotal',
+                meta: {
+                    title: '计划汇总分析表',
+                    tagName: '计划汇总分析表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/jinyunplatform/fundPlan/planTotal')
             }
         ]
     }
