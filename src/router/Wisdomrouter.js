@@ -146,6 +146,18 @@ export default [
                     component: '@/views/wisdom/profitStatistics'
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
+            },
+            {
+                path: 'commitValue',
+                name: 'commitValue',
+                meta: {
+                    title: '承诺值管理',
+                    tagName: '承诺值管理',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/commitValue'
+                },
+                component: () => import('@/views/wisdom/commitValue')
             }
         ]
     },
@@ -181,6 +193,28 @@ export default [
                     component: '@/views/wisdom/developOline/addPlatform'
                 },
                 component: () => import('@/views/wisdom/developOline/addPlatform')
+            }
+        ]
+    },
+    {
+        path: '/fundsPlan',
+        meta: {
+            title: '销售及资金用款计划',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'fundPlan',
+                name: 'fundPlan',
+                meta: {
+                    title: '资金计划',
+                    tagName: '资金计划',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/jinyunplatform/fundPlan/index')
             }
         ]
     }
