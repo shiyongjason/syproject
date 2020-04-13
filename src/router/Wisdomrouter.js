@@ -162,6 +162,28 @@ export default [
         ]
     },
     {
+        path: '/fundsPlan',
+        meta: {
+            title: '销售及资金用款计划',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'fundPlan',
+                name: 'fundPlan',
+                meta: {
+                    title: '计划申报',
+                    tagName: '计划申报',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/jinyunplatform/fundPlan/planToDeclare')
+            }
+        ]
+    },
+    {
         path: '/developonline',
         meta: {
             title: '机构在线',
@@ -193,28 +215,6 @@ export default [
                     component: '@/views/wisdom/developOline/addPlatform'
                 },
                 component: () => import('@/views/wisdom/developOline/addPlatform')
-            }
-        ]
-    },
-    {
-        path: '/fundsPlan',
-        meta: {
-            title: '销售及资金用款计划',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'fundPlan',
-                name: 'fundPlan',
-                meta: {
-                    title: '资金计划',
-                    tagName: '资金计划',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/jinyunplatform/fundPlan/index')
             }
         ]
     }
