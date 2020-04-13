@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
