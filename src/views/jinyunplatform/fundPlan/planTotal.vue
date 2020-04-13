@@ -185,6 +185,7 @@ export default {
     methods: {
         backPlat (value) {
             console.log(value)
+
         },
         onReset () {
             this.params = { ...this.paramsTemp }
