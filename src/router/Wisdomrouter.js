@@ -202,6 +202,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundPlan/pages/declareAdd')
+            },
+            {
+                path: 'approveDeclare',
+                name: 'approveDeclare',
+                meta: {
+                    title: '审批详情',
+                    tagName: '审批详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundPlan/pages/declareDetail')
             }
         ]
     },
