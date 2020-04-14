@@ -198,10 +198,10 @@ export default [
                 meta: {
                     title: '新增申报',
                     tagName: '新增申报',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/planTotal')
+                component: () => import('@/views/wisdom/fundPlan/pages/declareAdd')
             }
         ]
     },

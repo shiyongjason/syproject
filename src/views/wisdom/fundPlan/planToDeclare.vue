@@ -1,6 +1,6 @@
 <template>
     <div class="page-body">
-        <div class="page-body-cont center">
+        <div class="page-body-cont">
             <div class="title">
                 <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span>
             </div>
@@ -17,7 +17,9 @@
                 </basicTable>
             </div>
         </div>
-        <hasDeclare />
+        <div class="page-body-cont">
+            <hasDeclare />
+        </div>
     </div>
 </template>
 

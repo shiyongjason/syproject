@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body-cont center">
+    <div>
         <h3 class="p20">已申报资金计划</h3>
         <div class="query-cont-col">
             <div class="query-col-title">申报月份：</div>
