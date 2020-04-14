@@ -27,6 +27,11 @@ instance.interceptors.request.use(async function (config) {
         sessionStorage.setItem('tokenB2b', data.access_token)
         config.headers['Authorization'] = 'Bearer ' + data.access_token
     }
+
+    // 以下两个字段是用于埋点的
+    config.headers['Request-Source'] = 4
+    config.headers['BAackend-Request'] = 'true'
+
     store.commit('LOAD_STATE', true)
     return config
 }, function (error) {
