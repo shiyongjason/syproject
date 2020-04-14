@@ -5,7 +5,8 @@
             <div class="title">
                 <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span>
             </div>
-            <baseInfo />
+            <baseInfo/>
+            <districtEmployee></districtEmployee>
         </div>
         <div class="page-body-cont">
         </div>
@@ -14,13 +15,16 @@
 
 <script>
 import baseInfo from '../components/declare/baseInfo'
+import districtEmployee from '../components/declare/districtEmployee'
+
 export default {
     name: 'planTotal',
-    components: { baseInfo },
+    components: {
+        baseInfo,
+        districtEmployee
+    },
     data () {
-        return {
-
-        }
+        return {}
     },
     methods: {
         backPlat (value) {
@@ -37,13 +41,14 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.title {
-    font-weight: 700;
-    text-align: center;
-    font-size: 20px;
-    i {
-        font-style: normal;
-        color: #ff0000;
+    .title {
+        font-weight: 700;
+        text-align: center;
+        font-size: 20px;
+
+        i {
+            font-style: normal;
+            color: #ff0000;
+        }
     }
-}
 </style>
