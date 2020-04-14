@@ -236,7 +236,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/jinyunplatform/fundPlan/index')
+                component: () => import('@/views/jinyunplatform/fundPlan/planToDeclare')
             },
             {
                 path: 'planTotal',

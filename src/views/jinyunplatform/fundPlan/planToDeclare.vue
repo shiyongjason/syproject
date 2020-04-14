@@ -10,6 +10,7 @@
             <h3>银行账户列表</h3>
             <div class="p24">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120'>
+                    <!-- eslint-disable-next-line -->
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn" disabled>点击申报</el-button>
                     </template>
