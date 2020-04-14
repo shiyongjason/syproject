@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import baseInfo from '../components/baseInfo'
+import baseInfo from '../components/declare/baseInfo'
 export default {
     name: 'planTotal',
     components: { baseInfo },
