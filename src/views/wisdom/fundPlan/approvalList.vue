@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { approvalTable } from './components/approvalTable'
+import approvalTable from './components/approvalTable'
 export default {
     name: 'ApprovalList',
     components: {
