@@ -104,6 +104,7 @@
                         <el-button type="primary" size="small">{{BaseInfoBtnTip}}</el-button>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
