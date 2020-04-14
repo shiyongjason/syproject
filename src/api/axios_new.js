@@ -30,7 +30,7 @@ instance.interceptors.request.use(async function (config) {
 
     // 以下两个字段是用于埋点的
     config.headers['Request-Source'] = 4
-    config.headers['BAackend-Request'] = 'true'
+    config.headers['Backend-Request'] = 'true'
 
     store.commit('LOAD_STATE', true)
     return config
