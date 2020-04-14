@@ -228,8 +228,8 @@ export default [
         component: Layout,
         children: [
             {
-                path: 'fundPlan',
-                name: 'fundPlan',
+                path: 'planToDeclare',
+                name: 'planToDeclare',
                 meta: {
                     title: '资金计划',
                     tagName: '资金计划',
