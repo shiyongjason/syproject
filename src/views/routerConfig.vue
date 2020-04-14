@@ -31,6 +31,7 @@
                         </thead>
                         <tbody>
                             <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
+                            <!-- 需求：展开与搜索（有空改修改） -->
                             <template v-for="(item, index) in tableList">
                                 <template v-for="(itema, indexa) in item.childAuthList">
                                     <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
