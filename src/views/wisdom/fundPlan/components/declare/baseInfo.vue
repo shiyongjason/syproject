@@ -119,6 +119,10 @@ export default {
         }
     },
     computed: {
+        /**
+         * @return {string}
+         * 按钮文案
+         */
         BaseInfoBtnTip () {
             return this.isOpen ? BaseInfoBtnTip.open : BaseInfoBtnTip.close
         }
