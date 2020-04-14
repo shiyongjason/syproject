@@ -171,15 +171,37 @@ export default [
         component: Layout,
         children: [
             {
-                path: 'fundPlan',
-                name: 'fundPlan',
+                path: 'planToDeclare',
+                name: 'planToDeclare',
                 meta: {
-                    title: '计划申报',
-                    tagName: '计划申报',
+                    title: '资金计划',
+                    tagName: '资金计划',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/jinyunplatform/fundPlan/planToDeclare')
+                component: () => import('@/views/wisdom/fundPlan/planToDeclare')
+            },
+            {
+                path: 'planTotal',
+                name: 'planTotal',
+                meta: {
+                    title: '计划汇总分析表',
+                    tagName: '计划汇总分析表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundPlan/planTotal')
+            },
+            {
+                path: 'addDeclare',
+                name: 'addDeclare',
+                meta: {
+                    title: '新增申报',
+                    tagName: '新增申报',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundPlan/planTotal')
             }
         ]
     },
@@ -215,39 +237,6 @@ export default [
                     component: '@/views/wisdom/developOline/addPlatform'
                 },
                 component: () => import('@/views/wisdom/developOline/addPlatform')
-            }
-        ]
-    },
-    {
-        path: '/fundsPlan',
-        meta: {
-            title: '销售及资金用款计划',
-            isMenu: true,
-            icon: 'hosjoy_operation'
-        },
-        component: Layout,
-        children: [
-            {
-                path: 'planToDeclare',
-                name: 'planToDeclare',
-                meta: {
-                    title: '资金计划',
-                    tagName: '资金计划',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/jinyunplatform/fundPlan/planToDeclare')
-            },
-            {
-                path: 'planTotal',
-                name: 'planTotal',
-                meta: {
-                    title: '计划汇总分析表',
-                    tagName: '计划汇总分析表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/jinyunplatform/fundPlan/planTotal')
             }
         ]
     }
