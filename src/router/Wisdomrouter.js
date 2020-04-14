@@ -202,6 +202,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundPlan/pages/declareAdd')
+            },
+            {
+                path: 'approvalList',
+                name: 'approvalList',
+                meta: {
+                    title: '计划审批',
+                    tagName: '计划审批',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/fundPlan/approvalList'
+                },
+                component: () => import('@/views/wisdom/fundPlan/approvalList')
             }
         ]
     },
