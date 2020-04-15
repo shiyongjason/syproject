@@ -1,134 +1,169 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
-            <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
-                <el-form-item label="企业名称：">
-                   asdasd <el-button size="mini" round>认证</el-button>
-                </el-form-item>
-                <el-form-item label="管理员账号：" >
-                    12312222222
-                </el-form-item>
-                <el-form-item label="项目地址：" prop="address">
-                    <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入项目地址" v-model="form.address" maxlength="200" show-word-limit>
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="甲方名称：" prop="firstPartName">
-                    <el-input v-model="form.firstPartName" maxlength="50" placeholder="请输入甲方名称"></el-input>
-                </el-form-item>
-                <el-form-item label="项目类别：" prop="type">
-                    <el-select v-model="form.type" placeholder="请选择项目类别">
-                        <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="工程项目进度：" prop="progress">
-                    <el-radio-group v-model="form.progress">
-                        <el-radio :label=item.key v-for="item in progressList" :key="item.key">{{item.value}}</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="合同总额：" prop="contractAmount">
-                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
-                </el-form-item>
-                <el-form-item label="设备款总额：" prop="deviceAmount">
-                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
-                </el-form-item>
-                <el-form-item label="设备品类：" prop="deviceCategory">
-                    <el-select v-model="form.deviceCategory" placeholder="请选择">
-                        <el-option v-for="item in deviceCategoryList" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="设备品牌：" prop="deviceBrand">
-                    <el-input v-model="form.deviceBrand" placeholder="请输入设备品牌" maxlength="100"></el-input>
-                </el-form-item>
-                <el-form-item label="上游供应商类型：" prop="upstreamSupplierType">
-                    <el-select v-model="form.upstreamSupplierType" placeholder="请选择">
-                        <el-option v-for="item in upstreamSupplierTypeList" :key="item.key" :label="item.value" :value="item.key">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
-                    <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
-                </el-form-item>
-                <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
-                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
-               个月
-                </el-form-item>
-                <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
-                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
-                </el-form-item>
-                <el-form-item label="预估赊销周期：" prop="loanMonth">
-                    <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
-               个月
-               </el-form-item>
-                <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
-                    <el-form-item label="预付款比例">
-                        <el-input v-model="form.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
+        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+            <div class="drawer-content">
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
+                    <el-form-item label="企业名称：" :label-width="formLabelWidth">
+                        江苏舒适云信息技术有限公司 <span>已认证</span>
                     </el-form-item>
-                    <el-form-item label="货到付款比例">
-                        <el-input v-model="form.deliveryPaymentProportion" maxlength="10" v-isNum:2="form.deliveryPaymentProportion"><template slot="append">%</template></el-input>
+                    <el-form-item label="管理员账号：" :label-width="formLabelWidth">
+                        1233433443
                     </el-form-item>
-                    <el-form-item label="安装进度款比例">
-                        <el-input v-model="form.installProgressPaymentProportion" maxlength="10" v-isNum:2="form.installProgressPaymentProportion"><template slot="append">%</template></el-input>
+                    <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
+                        1233433443
                     </el-form-item>
-                    <el-form-item label="验收款比例">
-                        <el-input v-model="form.acceptancePaymentProportion" maxlength="10" v-isNum:2="form.acceptancePaymentProportion"><template slot="append">%</template></el-input>
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
+                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                        </el-select>
                     </el-form-item>
-                    <el-form-item label="交付款比例">
-                        <el-input v-model="form.realPaymentProportion" maxlength="10" v-isNum:2="form.realPaymentProportion"><template slot="append">%</template></el-input>
+
+                    <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
+                        <el-col :span="6">
+                            <el-form-item prop="provinceId">
+                                <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <template v-for="item in proviceList">
+                                        <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
+                                        </el-option>
+                                    </template>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="1">-</el-col>
+                        <el-col :span="6">
+                            <el-form-item prop="cityId">
+                                <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col class="line" :span="1">-</el-col>
+                        <el-col :span="6">
+                            <el-form-item prop="countryId">
+                                <el-select v-model="bossDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
+                                    <el-option label="请选择" value=""></el-option>
+                                    <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     </el-form-item>
-                    <el-form-item label="审计结算款比例">
-                        <el-input v-model="form.auditCalculationPaymentProportion" maxlength="10" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
+
+                    <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
+                        <el-radio-group v-model="bossDetail.merchantType">
+                            <el-radio :label="1">体系内</el-radio>
+                            <el-radio :label="2">体系外</el-radio>
+                        </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="其他">
-                        <el-input v-model.trim="form.payOtherText" maxlength="100"></el-input>
+
+                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth">
+                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
-                </el-form-item>
-                <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <hosjoyUpload v-model="form.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
-                    </hosjoyUpload>
-                </el-form-item>
-            </el-form>
-            <div class="drawer-footer">
-                <div class="drawer-button">
-                    <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                    <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
-                    <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-form-item label="认证状态：" :label-width="formLabelWidth">
+                        {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
+                        <template v-if="bossDetail.authenticationTime">
+                            {{bossDetail.authenticationTime | formatterTime}}
+                        </template>
+                    </el-form-item>
+                    <el-form-item label="金融风险：" :label-width="formLabelWidth">
+                        白名单
+                    </el-form-item>
+                    <el-form-item label="创建时间：" :label-width="formLabelWidth">
+                        {{bossDetail.registrationTime | formatterTime}}
+                    </el-form-item>
+                    <el-form-item label="创建人：" :label-width="formLabelWidth">
+                        赵娟 15195954045
+                    </el-form-item>
+                    <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
+                        2019-12-06 13:00:06
+                    </el-form-item>
+                    <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
+                        赵娟 15195954045
+                    </el-form-item>
+                    <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
+                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                    </el-form-item>
+                    <el-form-item label="最近维护人：" :label-width="formLabelWidth">
+                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                    </el-form-item>
+                </el-form>
+                <div class="drawer-footer" v-if="activeName=='first'">
+                    <div class="drawer-button">
+                        <el-button @click="cancelForm">取 消</el-button>
+                        <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    </div>
                 </div>
+                <!-- <div class="" v-if="activeName=='second'">
+                    <el-form :model="form">
+                        <el-form-item label="企业名称：" :label-width="formLabelWidth">
+                            江苏舒适云信息技术有限公司
+                        </el-form-item>
+                        <el-form-item label="企业类型：" :label-width="formLabelWidth">
+                            个体工商户
+                        </el-form-item>
+                        <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
+                            2716986423661687QAZ
+                        </el-form-item>
+                        <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="法人姓名：" :label-width="formLabelWidth">
+                            韦小宝
+                        </el-form-item>
+                        <el-form-item label="法人手机号：" :label-width="formLabelWidth">
+                            3778765678
+                        </el-form-item>
+                        <el-form-item label="法人身份证号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="法人身份证照片：" :label-width="formLabelWidth">
+                            <div style="float:left">
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                            <div style="float:left;margin-left:10px">
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="开户名：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="银行卡号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="联行号：" :label-width="formLabelWidth">
+                            320121199997897797979
+                        </el-form-item>
+                        <el-form-item label="开户许可证图片：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="门头照：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="门店内景：" :label-width="formLabelWidth">
+                            <div>
+                                <img src="../../../assets/images/img_0.png" alt="">
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </div> -->
             </div>
         </el-drawer>
-        <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
-            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
-                    <el-radio-group v-model="statusForm.result">
-                        <el-radio :label=1>通过</el-radio>
-                        <el-radio :label=0>不通过</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
-                    <el-radio-group v-model="statusForm.afterStatus">
-                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onUpdateAudit">确 定</el-button>
-            </span>
-        </el-dialog>
-
     </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapState } from 'vuex'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
-import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { mapState, mapGetters, mapActions } from 'vuex'
+import { putMerchantDetail, putMemberDetail } from '../api/index'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'businessdrawer',
     props: {
@@ -137,253 +172,112 @@ export default {
             default: false
         }
     },
-    components: {
-        hosjoyUpload
-    },
     data () {
         return {
+            type: '',
+            removeValue: true,
+            merchantArr: [],
+            activeName: 'first',
+            branchArr: [],
+            formLabelWidth: '140px',
             loading: false,
-            statusTxt: '',
-            dialogVisible: false,
-            statusForm: {
-                afterStatus: '',
-                createBy: '',
-                createByMobile: '',
-                projectId: '',
-                remark: '',
-                result: '',
-                reset: ''
+            proviceList: [],
+            merchantCode: '',
+            memberCode: '',
+            bossDetail: {
+                // memberAccount: '',
+                // authenticationTime: '',
+                // cityId: '',
+                // cityName: '',
+                // companyName: '',
+                // countryId: '',
+                // countryName: '',
+                // isAuthentication: '',
+                // isAutoDispatch: '',
+                // isCommodity: '', // 是否商品型商家
+                // isOperational: '',
+                // merchantAccount: '',
+                // merchantType: '',
+                // provinceId: '',
+                // provinceName: '',
+                // registrationTime: '',
+                // staff: [],
+                // subsectionCode: '',
+                // subsectionName: '',
+                // updateBy: '',
+                // updateTime: '',
+                // updatePhone: ''
+
             },
-            copyStatusForm: {},
-            aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
-            statusType: STATUS_TYPE,
-            newstatusType: NEW_STATUS_TYPE,
-            action: interfaceUrl + 'tms/files/upload',
-            uploadParameters: {
-                updateUid: '',
-                reservedName: true
-            },
-            form: {
-                projectUpload: [],
-                loanPayTypeRate: '方法定义必填'
-            },
-            copyForm: {},
-            formLabelWidth: '150px',
-            progressList: PROCESS_LIST,
-            typeList: TYPE_LIST,
-            deviceCategoryList: DEVICE_LIST,
-            upstreamSupplierTypeList: UPSTREAM_LIST,
+            copyDetail: {},
             rules: {
-                projectName: [
-                    { required: true, message: '请输入工程项目名称', trigger: 'blur' }
+                countryId: [
+                    { required: true, message: '请选择区', trigger: 'change' }
                 ],
-                address: [
-                    { required: true, message: '请输入项目地址', trigger: 'blur' }
+                cityId: [
+                    { required: true, message: '请选择市', trigger: 'change' }
                 ],
-                firstPartName: [
-                    { required: true, message: '请输入甲方名称', trigger: 'blur' }
-                ],
-                type: [
-                    { required: true, message: '请选择项目类别', trigger: 'change' }
-                ],
-                progress: [
-                    { required: true, message: '请选择工程项目进度', trigger: 'change' }
-                ],
-                contractAmount: [
-                    { required: true, message: '请输入合同金额', trigger: 'blur' }
-                ],
-                deviceAmount: [
-                    { required: true, message: '请输入设备款总额', trigger: 'blur' }
-                ],
-                deviceCategory: [
-                    { required: true, message: '请选择设备品类', trigger: 'change' }
-                ],
-                deviceBrand: [
-                    { required: true, message: '请输入设备品牌', trigger: 'blur' }
-                ],
-                upstreamSupplierType: [
-                    { required: true, message: '请选择上游供应商类型', trigger: 'change' }
-                ],
-                upstreamSupplierName: [
-                    { required: true, message: '请输入上游供应商名称', trigger: 'blur' }
-                ],
-                upstreamPromiseMonth: [
-                    { required: true, message: '请输入上游接受承兑时间', trigger: 'blur' }
-                ],
-                predictLoanAmount: [
-                    { required: true, message: '请输入预估赊销金额', trigger: 'blur' }
-                ],
-                loanMonth: [
-                    { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
-                ],
-                loanPayTypeRate: [
-                    { required: true },
-                    {
-                        validator: (r, v, callback) => {
-                            if (!(this.form.acceptancePaymentProportion || this.form.advancePaymentProportion || this.form.auditCalculationPaymentProportion || this.form.deliveryPaymentProportion ||
-                                this.form.installProgressPaymentProportion || this.form.payProportion || this.form.realPaymentProportion || this.form.payOtherText)) {
-                                return callback(new Error('必填一项'))
-                            }
-                            return callback()
-                        }
-                    }
+                provinceId: [
+                    { required: true, message: '请选择省', trigger: 'change' }
                 ]
             },
-            statusRules: {
-                result: [
-                    { required: true, message: '请选择审核状态', trigger: 'change' }
-                ],
-                afterStatus: [
-                    { required: true, message: '请选择重置状态', trigger: 'change' }
-                ],
-                remark: [
-                    { required: true, message: '请输入说明', trigger: 'blur' }
-                ]
+            memberSource: ['存量会员店', '存量平台公司', 'app注册', '商家注册', '好友推荐', '商家邀请'],
+            targetObj: {
+                selectName: '',
+                selectCode: ''
             }
         }
+    },
+    components: {
+        HAutocomplete
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters('crmmanage', {
-            projectDetail: 'projectDetail'
-        })
-    },
-    watch: {
-        'form.projectUpload' (val) {
-            this.$nextTick(() => {
-                if (val) this.$refs['projectUpload'].clearValidate()
-            })
+        ...mapGetters({
+            nestDdata: 'nestDdata',
+            merchantDetail: 'merchantDetail',
+            branchList: 'branchList',
+            memberDetail: 'memberDetail',
+            merchantList: 'merchantList'
+        }),
+        cityList () {
+            const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
+            if (province.length > 0) {
+                return province[0].cities
+            }
+            return []
+        },
+        areaList () {
+            const city = this.cityList.filter(item => item.cityId == this.bossDetail.cityId)
+            if (city.length > 0) {
+                return city[0].countries
+            }
+            return []
         }
     },
-    mounted () {
-        this.copyStatusForm = { ...this.statusForm }
+    watch: {
+        // merchantCode: {
+        //     handler (newV, oldV) {
+        //         console.log(newV, oldV)
+        //         if (newV) {
+        //             this.getMerchtDetail(newV)
+        //         }
+        //     },
+        //     deep: true
+        // }
     },
     methods: {
-        ...mapActions('crmmanage', {
-            findProjectDetail: 'findProjectDetail'
+        ...mapActions({
+            findNest: 'findNest',
+            findMerchantDetail: 'findMerchantDetail',
+            findBranch: 'findBranch',
+            findMemberDetail: 'findMemberDetail',
+            findMerchant: 'findMerchant'
         }),
         handleClose () {
-            this.$emit('backEvent')
-        },
-        async onFindProjectDetail (val) {
-            await this.findProjectDetail(val)
-            this.form = { ...this.projectDetail }
-            this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
-            this.form.loanPayTypeRate = '方法定义必填'
-            this.copyForm = { ...this.form }
-        },
-        handleChange (value) {
-            console.log(value)
-        },
-        onBackUpload (str) {
-        },
-        async onAuditstatus (val) {
-            let status = Object.keys(val)[0]
-            let statusTxt = ''
-
-            if (status == 2) {
-                // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
-                this.dialogVisible = true
-                this.aduitTitle = '审核'
-                this.statusForm = { ...this.copyStatusForm }
-                this.statusForm.reset = false
-                this.$nextTick(() => {
-                    this.$refs['statusForm'].clearValidate()
-                })
-                return
-            } else if (status == 3) {
-                status = !!status // H5端资料收集种 显示重置按钮
-            } else if (status == 4) {
-                // status = !!status // H5端待尽调 显示重置按钮和尽调  这里需要弹窗  通过 不通过
-                this.dialogVisible = true
-                this.aduitTitle = '尽调'
-                this.statusForm = { ...this.copyStatusForm }
-                this.statusForm.reset = false
-                this.$nextTick(() => {
-                    this.$refs['statusForm'].clearValidate()
-                })
-                return
-            } else if (status == 5) {
-                // status = !!status //  合作关闭显示 重置
-            } else if (status == 6) {
-                status = 7 //  H5端 待签约   显示重置和签约按钮
-            } else if (status == 7) {
-                status = 8 //  H5端 待放款   显示重置和放款按钮
-            } else if (status == 8) {
-                status = 9 //  H5端 贷种   显示重置和全部回款
-            } else if (status == 9) {
-                // status = !!status + 1 //  H5端 合作完成   显示重置
-            }
-            this.statusForm.reset = false
-            await saveStatus({ projectId: this.form.id,
-                status: status,
-                updateBy: this.userInfo.employeeName })
-            this.$message({
-                message: `${statusTxt}成功`,
-                type: 'success'
-            })
-            this.$emit('backEvent')
-        },
-        onReststatus (val) {
-            if (val == 5) {
-                this.statusType = this.newstatusType
-            } else if (val == 6 || val == 7 || val == 8) {
-                this.statusType = this.newstatusType.slice(0, val - 3)
-            } else {
-                this.statusType = this.newstatusType.slice(0, val - 2)
-            }
-
-            this.statusForm = { ...this.copyStatusForm }
-            this.$nextTick(() => {
-                this.$refs['statusForm'].clearValidate()
-            })
-            this.statusForm.reset = true
-            this.dialogVisible = true
-            this.aduitTitle = '重置状态'
-            // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
-        },
-        async onUpdateAudit () {
-            const msg = this.aduitTitle
-            this.statusForm.createBy = this.userInfo.employeeName
-            this.statusForm.createByMobile = this.userInfo.phoneNumber
-            this.statusForm.projectId = this.form.id
-            this.$refs.statusForm.validate(async (valid) => {
-                if (valid) {
-                    try {
-                        await updateAudit(this.statusForm)
-                        this.dialogVisible = false
-                        this.$message({
-                            message: `${msg}成功`,
-                            type: 'success'
-                        })
-                        this.$emit('backEvent')
-                    } catch (error) {
-
-                    }
-                }
-            })
-        },
-        isShowBtn (val) {
-            const newVal = val && Object.keys(val)[0]
-            if (newVal == 3 || newVal == 5 || newVal == 9) {
-                return false
-            } else {
-                return true
-            }
-        },
-        isShowRest (val) {
-            const newVal = val && Object.keys(val)[0]
-            if (newVal == 2) {
-                return false
-            } else {
-                return true
-            }
-        },
-        cancelForm () {
-            if (JSON.stringify(this.form) != JSON.stringify(this.copyForm)) {
+            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -395,60 +289,139 @@ export default {
                 this.$emit('backEvent')
             }
         },
-        onSaveproject () {
-            this.form.projectUpload.map(value => {
-                if (!value.url) {
-                    value.url = value.fileUrl
-                }
-            })
-            this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
-            this.loading = true
-            this.$refs.ruleForm.validate(async (valid) => {
+        cancelForm () {
+            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+                this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '返回',
+                    type: 'warning'
+                }).then(async () => {
+                    this.$emit('backEvent')
+                })
+            } else {
+                this.$emit('backEvent')
+            }
+        },
+        onSaveDetail () {
+            this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)[0].name
+            this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId)[0].name
+            this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId)[0].name
+            const params = { ...this.bossDetail }
+            params.updateBy = this.userInfo.employeeName
+            params.phone = this.userInfo.phoneNumber
+            if (params.subsectionCode) {
+                params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
+            }
+            this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
+                    this.loading = true
                     try {
-                        await putProjectDetail(this.form)
+                        if (this.type === 'merchant') {
+                            params.merchantCode = this.merchantCode
+                            await putMerchantDetail(params)
+                        } else if (this.type === 'member') {
+                            params.memberCode = this.memberCode
+                            delete params.merchantName
+                            await putMemberDetail(params)
+                        }
                         this.$message({
                             message: '数据保存成功',
                             type: 'success'
                         })
-                        this.loading = false
                         this.$emit('backEvent')
+                        this.loading = false
                     } catch (error) {
                         this.loading = false
                     }
-                } else {
-                    this.loading = false
                 }
             })
+        },
+        async onGetbranch () {
+            await this.findBranch()
+            this.branchArr = this.branchList
+        },
+        onChangeList (val) {
+            if (val === 1) {
+                this.bossDetail.countryId = ''
+                this.bossDetail.cityId = ''
+                // 获取中文
+                // this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId).name
+            } else if (val === 2) {
+                this.bossDetail.countryId = ''
+                // this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId).name
+            } else if (val === 3) {
+                // this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId).name
+            }
+        },
+        async getFindNest () {
+            await this.findNest()
+            this.proviceList = this.nestDdata
+        },
+        async getMerchantList () {
+            await this.findMerchant()
+            this.merchantArr = this.merchantList
+        },
+        async getMerchtMemberDetail (val, type) {
+            this.type = type
+            if (type === 'merchant') {
+                this.merchantCode = val
+                await this.findMerchantDetail({ merchantCode: val })
+                this.bossDetail = { ...this.merchantDetail }
+            } else {
+                this.memberCode = val
+                await this.findMemberDetail({ memberCode: val })
+                this.bossDetail = { ...this.memberDetail }
+                // this.getFindNest()
+                this.targetObj.selectCode = this.memberDetail.merchantCode
+                this.targetObj.selectName = this.memberDetail.merchantName
+            }
+            this.copyDetail = deepCopy(this.bossDetail)
+        },
+        backFindbrand (val) {
+            this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
         }
+    },
+    mounted () {
+        this.getFindNest()
+        this.onGetbranch()
+        this.getMerchantList()
     }
 }
 </script>
 <style  lang="scss" scoped>
-.project-form {
-    padding: 10px 10px 150px 10px;
-}
 /deep/ .el-drawer__body {
     overflow-y: scroll;
     // position: relative;
 }
-.drawer-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 24px;
-    border-top: 1px solid #e5e5ea;
-    background: #fff;
-    z-index: 1000;
-    button {
-        flex: 1;
+.drawer-content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    form {
+        // flex: 1;
+        margin-bottom: 60px;
+        // border-bottom: 1px solid #e5e5e5;
     }
-    .drawer-button {
-        text-align: right;
+    .drawer-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 24px;
+        border-top: 1px solid #e5e5ea;
+        background: #fff;
+        z-index: 1000;
+        button {
+            flex: 1;
+        }
+        .drawer-button {
+            text-align: right;
+        }
     }
 }
-
 /deep/ .el-tabs__item.is-active {
     background: transparent;
     color: #000;
@@ -461,12 +434,8 @@ export default {
     }
 }
 /deep/.el-form .el-input {
-    margin-left: 0;
 }
-/deep/.el-form-item__content .el-input {
-    width: 100% !important;
-}
-/deep/ .el-radio {
-    margin-bottom: 10px;
+.el-form-item__content .el-input {
+    width: 200px !important;
 }
 </style>

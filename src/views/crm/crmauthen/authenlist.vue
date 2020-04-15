@@ -86,7 +86,7 @@
                 :isShowIndex='true'>
 
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -133,7 +133,8 @@ export default {
             options: [],
             optarr: '',
             businessTypelist: BUS_TYPE_LIST,
-            riskTypelist: RISK_TYPE_LIST
+            riskTypelist: RISK_TYPE_LIST,
+            drawer: false
         }
     },
     components: {
@@ -231,9 +232,9 @@ export default {
         onSortChange (val) {
             console.log(val)
         },
-        onLookproject (val) {
+        onLookauthen (val) {
             this.drawer = true
-            this.$refs.drawercom.onFindProjectDetail(val)
+            // this.$refs.drawercom.onFindProjectDetail(val)
         },
         restDrawer () {
             this.drawer = false
