@@ -1,0 +1,3 @@
+export const PROJECT_DATA = 'PROJECT_DATA'
+
+export const PROJECT_STATIC = 'PROJECT_STATIC'
