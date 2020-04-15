@@ -130,7 +130,7 @@ import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
 export default {
-    name: 'projectdrawer',
+    name: 'businessdrawer',
     props: {
         drawer: {
             type: Boolean,

@@ -90,7 +90,7 @@
                 </template>
             </basicTable>
         </div>
-        <!-- <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></projectDrawer> -->
+        <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
         <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
@@ -98,7 +98,7 @@
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-
+import businessDrawer from './components/businessDrawer'
 import { BUS_TYPE_LIST, RISK_TYPE_LIST } from '../const'
 
 export default {
@@ -137,7 +137,7 @@ export default {
         }
     },
     components: {
-
+        businessDrawer
     },
     computed: {
         pickerOptionsStart () {
