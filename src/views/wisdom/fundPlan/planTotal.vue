@@ -4,10 +4,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker type="date" v-model="params.startDate" :clearable=false placeholder="开始日期" value-format='yyyy-MM-dd' :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" v-model="params.endDate" :clearable=false placeholder="结束日期" value-format='yyyy-MM-dd' :picker-options="pickerOptionsEnd">
+                    <el-date-picker
+                        v-model="params.applyMonth"
+                        type="month"
+                        placeholder="选择月">
                     </el-date-picker>
                 </div>
             </div>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total"></hosJoyTable>
+            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="column" :data="planTotalList" align="center" :total="page.total"></hosJoyTable>
         </div>
     </div>
 </template>
@@ -39,6 +39,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { mapGetters } from 'vuex'
 export default {
     name: 'planTotal',
     mixins: [departmentAuth],
@@ -63,7 +64,6 @@ export default {
             page: {
                 total: 0
             },
-            tableData: [],
             column: summarySheet
         }
     },
@@ -89,7 +89,10 @@ export default {
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
-        }
+        },
+        ...mapGetters({
+            planTotalList: 'planTotalList'
+        })
     },
     methods: {
         backPlat (value) {

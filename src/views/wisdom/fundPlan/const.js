@@ -15,7 +15,7 @@ export const hasDeclareLabel = [
 // 资金计划汇总表
 export const summarySheet = [
     {
-        prop: 'misCode',
+        prop: 'subsectionName',
         label: '分部',
         width: '100',
         fixed: true

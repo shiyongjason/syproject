@@ -14,7 +14,7 @@ const mutations = {
 const actions = {
     async findPlanTotalList ({ commit }, params) {
         const { data } = await Api.getPlanTotalList(params)
-        commit(types.DICTINFO_TYPE, data)
+        commit(types.PLAN_TOTAL_LIST, data)
     }
 }
 export default {
