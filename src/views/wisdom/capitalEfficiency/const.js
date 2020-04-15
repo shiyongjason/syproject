@@ -1,8 +1,8 @@
 export const CAPITAL_EFFICIENCY_TABLE = [
-    { label: 'MIS编码', prop: 'misCode' },
+    { label: 'MIS编码', prop: 'misCode', width: 100 },
     { label: '平台公司', prop: 'loanCompanyName', width: 100 },
-    { label: '分部', prop: 'subsectionName' },
-    { label: '资金周转次数', prop: 'turnoverCount' },
+    { label: '分部', prop: 'subsectionName', width: 100 },
+    { label: '资金周转次数', prop: 'turnoverCount', width: 150 },
     { label: '销售金额', prop: 'saleAmount', formatters: 'money', width: 150 },
     { label: '资金占用总计', prop: 'totalOccupy', formatters: 'money', width: 150 },
     { label: '资金敞口占用', prop: 'openOccupy', formatters: 'money', width: 150 },

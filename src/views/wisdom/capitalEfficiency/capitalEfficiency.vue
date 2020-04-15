@@ -205,8 +205,8 @@ export default {
             if (!val.includes('平台公司')) {
                 this.disabled = true
                 this.queryParams.companyType = 2
-                this.queryParams.companyCode = ''
-                this.queryParams.companyName = ''
+                this.queryParams.loanCompanyCode = ''
+                this.queryParams.loanCompanyName = ''
                 this.queryParams.misCode = ''
                 this.removeValue = !this.removeValue
             } else {
