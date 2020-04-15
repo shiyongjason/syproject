@@ -100,13 +100,11 @@ export default {
         }
     },
     async mounted () {
-        console.log(this)
         this.paramsTemp = { ...this.params }
         await this.oldAuth()
-        if (this.userInfo.deptType == 2) {
+        if (this.userInfo.deptType === 2) {
             this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
         }
-
     }
 }
 </script>
