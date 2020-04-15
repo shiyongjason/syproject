@@ -181,7 +181,6 @@ export default {
             this.onQuery()
         },
         async onQuery () {
-            console.log(this.searchParams)
             const promiseArr = [getEfficiencyList(this.searchParams), getEfficiencyTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.misCode = '合计'
@@ -232,7 +231,6 @@ export default {
             this.onFindPlatformslist(subsectionCode)
         },
         onRemark (row) {
-            console.log(row)
             this.rowData = row
             this.dialogVisible = true
         },
