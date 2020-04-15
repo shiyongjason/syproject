@@ -27,10 +27,13 @@ export default {
         const { data } = await findDepList(params)
         commit('DEVDEP_LIST', data)
     },
-    async findBranchList ({ commit }, params) {
-        // 查询分部（不用做权限，现在是总部在使用）
+    async findAuthList ({ commit }, params) {
         const { data } = await findDepartment(params)
-        commit('GET_BRANCH', data)
+        for (let i of data) {
+            i.value = i.deptName
+            i.selectCode = i.deptName
+        }
+        commit('GET_AUTHLIST', { data, deptType: params.deptType })
         return data
     },
     async findPlatformslist ({ commit }, params) {
@@ -39,6 +42,11 @@ export default {
             return
         }
         const { data } = await findPlatformslist(params)
+        console.log(data)
+        for (let i of data.data.pageContent) {
+            i.value = i.companyShortName
+            i.selectCode = i.companyCode
+        }
         commit('PLAT_FORMDATA', data.data.pageContent)
     }
 }
