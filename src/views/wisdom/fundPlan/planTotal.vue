@@ -37,8 +37,11 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import { summarySheet } from './const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'planTotal',
+    mixins: [departmentAuth],
     components: {
         hosJoyTable,
         HAutocomplete
@@ -61,101 +64,7 @@ export default {
                 total: 0
             },
             tableData: [],
-            column: [
-                {
-                    prop: 'misCode',
-                    label: '分部',
-                    width: '100',
-                    fixed: true
-                },
-                {
-                    label: '销售',
-                    children: [
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年责任状目标',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月责任状目标',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月实际销售',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月预计销售',
-                            width: '150',
-                            displayAs: 'money'
-                        }
-                    ]
-                },
-                {
-                    label: '资金用款',
-                    children: [
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '在款余额',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '逾期额',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月预计还款',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月实际用款',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月预计用款',
-                            width: '150',
-                            displayAs: 'money'
-                        }
-                    ]
-                },
-                {
-                    label: '分析',
-                    children: [
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月销售同比',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '2020年4月用款同比',
-                            width: '150',
-                            displayAs: 'money'
-                        },
-                        {
-                            prop: 'salesIncomeIncludingTax',
-                            label: '逾期率=（逾期额/在款余额）',
-                            width: '150',
-                            displayAs: 'money'
-                        }
-                    ]
-                }
-            ]
+            column: summarySheet
         }
     },
     computed: {
@@ -190,12 +99,17 @@ export default {
             this.params = { ...this.paramsTemp }
         }
     },
-    mounted () {
+    async mounted () {
+        console.log(this)
         this.paramsTemp = { ...this.params }
+        await this.oldAuth()
+        if (this.userInfo.deptType == 2) {
+            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+        }
+
     }
 }
 </script>
 
 <style scoped>
-
 </style>
