@@ -1,5 +1,4 @@
 import axios from 'axios'
-
 // 获取菜单列表
 export const findMenuList = (params) => axios.get(`/uaa/employee/auth-list/${params}`, params)
 
@@ -44,3 +43,5 @@ export const editAuthResource = (params) => axios.put(`/uaa/api/auth/resource`, 
 export const editAuth = (params) => axios.put(`/uaa/api/auth`, params)
 // 清空缓存
 export const clearCache = (params) => axios.get(`/api/auth/refresh`)
+// 同步机构
+export const syncOrg = (params) => axios.post(`/backend/organizations/sync-jinyun`, params)

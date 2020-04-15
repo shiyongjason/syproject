@@ -28,7 +28,7 @@ export default {
                 title: '设备概览',
                 tagName: '设备概览',
                 parentName: '舒适云概览',
-                isMenu: false,
+                isMenu: true,
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/equipemtOverview.vue')
@@ -85,8 +85,8 @@ export default {
             path: 'cloudList',
             name: 'cloudlist',
             meta: {
-                title: '运营管理',
-                tagName: '运营管理',
+                title: '活动管理',
+                tagName: '活动管理',
                 parentName: '舒适云概览',
                 isMenu: true,
                 icon: ''
@@ -104,6 +104,78 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/cloudActivity/cloudActedit.vue')
+        },
+        {
+            path: 'cloudAlarm',
+            name: 'cloudAlarm',
+            meta: {
+                title: '告警监控',
+                tagName: '告警监控',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/alarm/alarm.vue')
+        },
+        {
+            path: 'equipmentError',
+            name: 'equipmentError',
+            meta: {
+                title: '设备故障',
+                tagName: '设备故障',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/equipmentError/equipmentError.vue')
+        },
+        {
+            path: 'smartPlay',
+            name: 'smartPlay',
+            meta: {
+                title: '智能玩法',
+                tagName: '智能玩法',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/smartPlay/smartPlay.vue')
+        },
+        {
+            path: 'smartPlayEdit',
+            name: 'smartPlayEdit',
+            meta: {
+                title: '智能玩法编辑',
+                tagName: '智能玩法编辑',
+                parentName: '智能玩法',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/smartPlay/smartPlayEdit.vue')
+        },
+        {
+            path: 'sendMessage',
+            name: 'sendMessage',
+            meta: {
+                title: '消息推送',
+                tagName: '消息推送',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/sendMessage/sendMessage.vue')
+        },
+        {
+            path: 'sendMessageEdit',
+            name: 'sendMessageEdit',
+            meta: {
+                title: '创建消息',
+                tagName: '创建消息',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/sendMessage/sendMessageEdit.vue')
         }
     ]
 }

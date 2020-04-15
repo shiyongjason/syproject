@@ -1,7 +1,7 @@
 <template>
     <el-dialog :title="detailData.title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="1200px" :before-close='onCancle' center>
         <div class="form">
-            <el-form :model="detailData" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+            <el-form :model="detailData" :rules="rules" ref="form" label-width="130px" class="demo-ruleForm">
                 <div class="query-cont-row">
                     <div class="query-cont-col">
                         <el-form-item label="开票金额：" prop="invoiceAmount">
@@ -12,8 +12,8 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="供货商名称：" prop="supplier">
-                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='30' :disabled='detailData.isRepayment'></el-input>
+                        <el-form-item label="供货商名称：">
+                            <el-input v-model.trim="detailData.supplier" placeholder="请输入供货商名称" maxlength='100' :disabled='detailData.isRepayment' show-word-limit></el-input>
                         </el-form-item>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="query-cont-col">
                         <!-- 第一笔还款维护后，变为不可修改 -->
-                        <el-form-item label="承兑期限：" prop="loanDateNum">
+                        <el-form-item label="承兑期限：" prop="loanDateType">
                             <el-radio style="margin-right:5px" v-model.trim="detailData.loanDateType" :label=1 @change='loanDateNumM' :disabled='detailData.isRepayment || detailData.repaymentType == 2'>月</el-radio>
                             <el-input v-model.trim="detailData.loanDateNumM" v-isPositiveInt="detailData.loanDateNum" maxlength='5' placeholder="请输入借款期限" :disabled='detailData.loanDateType != 1 || detailData.isRepayment || detailData.repaymentType == 2' @blur='loanDateNumM'>
                                 <template slot="append">月</template>
@@ -65,7 +65,7 @@
                         </el-form-item>
                     </div>
                     <div class="query-cont-col">
-                        <el-form-item label="到期日：" prop="name">
+                        <el-form-item label="到期日：">
                             <!-- 自动计算，到期日=开票日期+借款期限 -->
                             <span>{{detailData.loanEndTimeInvoice || '-'}}</span>
                         </el-form-item>
@@ -88,8 +88,34 @@ export default {
     data () {
         return {
             rules: {
-                name: [
-                    { required: true, message: '请输入台账编号', trigger: 'blur' }
+                invoiceAmount: [
+                    { required: true, message: '请输入开票金额', trigger: 'blur' }
+                ],
+                depositProportion: [
+                    { required: true, message: '请输入保证金比例', trigger: 'blur' }
+                ],
+                depositPay: [
+                    { required: true, message: '请输入保证金缴纳', trigger: 'blur' }
+                ],
+                loanAmount: [
+                    { required: true, message: '请输入敞口金额', trigger: 'blur' }
+                ],
+                invoiceTime: [
+                    { required: true, message: '请选择开票日期', trigger: 'blur' }
+                ],
+                loanDateType: [
+                    { type: 'number', required: true, message: '请输入借款期限', trigger: 'change' },
+                    {
+                        validator: (rule, value, cb) => {
+                            if (value == 1) {
+                                if (!this.detailData.loanDateNumM) return cb(new Error('请输入借款期限'))
+                            } else {
+                                if (!this.detailData.loanDateNumD) return cb(new Error('请输入借款期限'))
+                            }
+                            return cb()
+                        },
+                        trigger: 'change'
+                    }
                 ]
             },
             loading: false
@@ -140,22 +166,28 @@ export default {
             this.$emit('onClose')
         },
         async onSave () {
-            this.loading = true
-            this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
-            if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
-            this.detailData.loanStartTime = this.detailData.invoiceTime
-            await setLoan(this.detailData)
-            this.loading = false
-            this.$message({ type: 'success', message: '修改成功' })
-            this.onCancle()
-            this.$emit('reload')
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    this.loading = true
+                    this.detailData.loanEndTime = this.detailData.loanEndTimeInvoice
+                    if (this.detailData.loanEndTime === '-') this.detailData.loanEndTime = ''
+                    this.detailData.loanStartTime = this.detailData.invoiceTime
+                    await setLoan(this.detailData)
+                    this.loading = false
+                    this.$message({ type: 'success', message: '修改成功' })
+                    this.onCancle()
+                    this.$emit('reload')
+                }
+            })
         },
         loanDateNumM () {
+            this.$refs.form.validateField('loanDateType')
             this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime && moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumM, 'M').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumM
             this.$forceUpdate()
         },
         loanDateNumD () {
+            this.$refs.form.validateField('loanDateType')
             this.detailData.loanEndTimeInvoice = this.detailData.invoiceTime && moment(this.detailData.invoiceTime).add(this.detailData.loanDateNumD, 'd').format('YYYY-MM-DD')
             this.detailData.loanDateNum = this.detailData.loanDateNumD
             this.$forceUpdate()

@@ -9,12 +9,12 @@ import axios from 'axios'
 import { B2bUrl } from './api/config'
 import qs from 'qs'
 import jwtDecode from 'jwt-decode'
-import ServiceManagement from './router/catalogue/serviceManagement'
 import B2brouter from './router/B2brouter'
 import Jyrouter from './router/Jyrouter'
 import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
+import Crmrouter from './router/Crmrouter'
 Vue.use(Router)
 
 const routerMapping = [
@@ -214,10 +214,10 @@ const routerMapping = [
     },
     ...Wisdomrouter,
     Bestrouter,
-    B2brouter,
+    ...B2brouter,
     Jyrouter,
     Cloudrouter,
-    ServiceManagement
+    Crmrouter
 ]
 
 const router = new Router({
