@@ -14,24 +14,23 @@ export const departmentAuth = {
     methods: {
         ...mapActions([
             'findPlatformslist', // 平台公司
-            'findBranchList' // 分部
+            'findAuthList' // 大区、分部、区域
         ]),
-        async onFindPlatformslist (subsectionCode) {
-            this.findPlatformslist({ subsectionCode })
-        },
         async oldAuth () {
-            const data = await this.findBranchList({
+            this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.deptDoc })
+            this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.deptDoc })
+            const data = await this.findAuthList({
                 deptType: 'F',
                 pkDeptDoc: this.userInfo.deptDoc
             })
             // 0总部 1大区 2分部
             switch (this.userInfo.deptType) {
                 case 0:
-                    this.onFindPlatformslist()
+                    this.findPlatformslist()
                     break
                 case 2:
                     this.branch = false
-                    this.onFindPlatformslist(data[0].crmDeptCode)
+                    this.findPlatformslist({ subsectionCode: data[0].crmDeptCode })
                     break
                 default:
             }

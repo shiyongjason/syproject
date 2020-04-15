@@ -40,5 +40,5 @@ export const GET_WORK_ORDER_USER_INFO = 'GET_WORK_ORDER_USER_INFO'
 export const DEVDEP_LIST = 'DEVDEP_LIST'
 
 // Boss公共权限
-export const GET_BRANCH = 'GET_BRANCH'
+export const GET_AUTHLIST = 'GET_AUTHLIST'
 export const PLAT_FORMDATA = 'PLAT_FORMDATA'
