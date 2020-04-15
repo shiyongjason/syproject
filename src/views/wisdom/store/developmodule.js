@@ -1,11 +1,13 @@
 import * as types from './const'
-import { getCompanyType } from '../api'
+import * as Api from '../api'
 const state = {
-    dictInfoType: {}
+    dictInfoType: {},
+    planTotalList: {}
 }
 
 const getters = {
-    dictInfoType: state => state.dictInfoType
+    dictInfoType: state => state.dictInfoType,
+    planTotalList: state => state.planTotalList
 }
 
 const mutations = {
@@ -16,7 +18,11 @@ const mutations = {
 
 const actions = {
     async findCompanyType ({ commit }, params) {
-        const { data } = await getCompanyType(params)
+        const { data } = await Api.getCompanyType(params)
+        commit(types.DICTINFO_TYPE, data)
+    },
+    async findPlanTotalList ({ commit }, params) {
+        const { data } = await Api.getPlanTotalList(params)
         commit(types.DICTINFO_TYPE, data)
     }
 }

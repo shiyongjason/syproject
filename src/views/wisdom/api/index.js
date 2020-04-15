@@ -261,3 +261,7 @@ export const getTycBasicInfo = (params) => {
 export const getTycMainStaff = (params) => {
     return axios.get(`develop/developbasicinfo/getTycMainStaff/${params}`)
 }
+// 资金计划汇总数据
+export const getPlanTotalList = (params) => {
+    return axios.get(`develop/fundplan/summary`, { params })
+}
