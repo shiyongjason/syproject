@@ -73,7 +73,8 @@
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="remark" slot-scope="scope">
-                        <span>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="shy(scope.data.row)"></i></span>
+                        <span v-if="!scope.data.row.efficiencyRemarkId">-</span>
+                        <span v-else>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="onRemark(scope.data.row)"></i></span>
                     </template>
                 </basicTable>
             </div>
@@ -90,7 +91,7 @@
 </template>
 <script>
 import moment from 'moment'
-import { getEfficiencyList, updataRemark } from './api/index.js'
+import { getEfficiencyList, updataRemark, getEfficiencyTotal } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
@@ -120,7 +121,7 @@ export default {
                 startDate: moment().format('YYYY-MM-') + '01',
                 endDate: moment().format('YYYY-MM-DD'),
                 capital: '', // 好享家注资
-                companyType: 1, // 查询维度
+                companyType: 1, // 查询维度 1：平台公司维度 2：分部维度
                 financialSupport: '', // 资金支持
                 onlineStatus: '', // 上线状态
                 pageNumber: 1,
@@ -128,7 +129,7 @@ export default {
             },
             dialogVisible: false,
             rowData: {},
-            disabled: false
+            disabled: false,
         }
     },
     components: {
@@ -175,14 +176,20 @@ export default {
         }
     },
     methods: {
-        onSearch () {
+        async onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
             console.log(this.searchParams)
-            const { data } = await getEfficiencyList(this.searchParams)
-            console.log(data)
+            const promiseArr = [getEfficiencyList(this.searchParams), getEfficiencyTotal(this.searchParams)]
+            var data = await Promise.all(promiseArr).then((res) => {
+                res[1].data.misCode = '合计'
+                res[0].data.records.unshift(res[1].data)
+                return res[0].data
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
             this.tableData = data.records
             this.paginationData = {
                 pageSize: data.size,
@@ -191,6 +198,10 @@ export default {
             }
         },
         onFieldChange (val) {
+            if (!val.includes('分部')) {
+                val.push('分部')
+                return
+            }
             if (!val.includes('平台公司')) {
                 this.disabled = true
                 this.queryParams.companyType = 2
@@ -202,10 +213,7 @@ export default {
                 this.disabled = false
                 this.queryParams.companyType = 1
             }
-            this.onQuery()
-            if (!val.includes('分部')) {
-                val.push('分部')
-            }
+            this.onSearch()
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -223,7 +231,7 @@ export default {
             this.removeValue = !this.removeValue
             this.onFindPlatformslist(subsectionCode)
         },
-        shy (row) {
+        onRemark (row) {
             console.log(row)
             this.rowData = row
             this.dialogVisible = true

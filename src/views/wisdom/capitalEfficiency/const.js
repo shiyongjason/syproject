@@ -15,18 +15,18 @@ export const CAPITAL_EFFICIENCY_TABLE = [
 
 export const ONLINESTATUS = [
     { key: '', value: '全部' },
-    { key: 1, value: '未淘汰' },
-    { key: 0, value: '淘汰' }
+    { key: 1, value: '淘汰' },
+    { key: 2, value: '未淘汰' }
 ]
 
 export const HOSJOYINJECTION = [
     { key: '', value: '全部' },
     { key: 1, value: '已注资' },
-    { key: 0, value: '未注资' }
+    { key: 2, value: '未注资' }
 ]
 
 export const FINANCIALSUPPORT = [
     { key: '', value: '全部' },
     { key: 1, value: '有支持' },
-    { key: 0, value: '无支持' }
+    { key: 2, value: '无支持' }
 ]
