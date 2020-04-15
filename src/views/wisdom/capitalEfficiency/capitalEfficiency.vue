@@ -129,7 +129,7 @@ export default {
             },
             dialogVisible: false,
             rowData: {},
-            disabled: false,
+            disabled: false
         }
     },
     components: {
