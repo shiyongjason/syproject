@@ -73,7 +73,7 @@
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="remark" slot-scope="scope">
-                        <span v-if="!scope.data.row.efficiencyRemarkId">-</span>
+                        <span v-if="scope.data.row.misCode == '合计'">-</span>
                         <span v-else>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="onRemark(scope.data.row)"></i></span>
                     </template>
                 </basicTable>
