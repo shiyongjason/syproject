@@ -6,6 +6,7 @@
                    <approvalTable></approvalTable>
                </el-tab-pane>
                <el-tab-pane label="我的已办" name="second">
+                   <approvalTable></approvalTable>
                </el-tab-pane>
            </el-tabs>
        </div>
