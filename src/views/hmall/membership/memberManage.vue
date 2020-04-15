@@ -288,10 +288,8 @@ export default {
                 })
                 return item
             })
-            console.log(this.options)
         },
         cityChange (val) {
-            console.log(val)
             const cityarr = []
             val && val.map(item => {
                 cityarr.push(item[2])
