@@ -76,7 +76,7 @@ export default {
                 platformObj: {
                     selectCode: '',
                     selectName: ''
-                },
+                }
             },
             queryParams: {
                 regionCode: '',
