@@ -24,25 +24,25 @@ export const summarySheet = [
         label: '销售',
         children: [
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'annualCommitment',
                 label: '2020年责任状目标',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'currentMonthCommitment',
                 label: '2020年4月责任状目标',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'lastYearMonthUsed',
                 label: '2020年4月实际销售',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'currentMonthPresale',
                 label: '2020年4月预计销售',
                 width: '150',
                 displayAs: 'money'
@@ -53,31 +53,31 @@ export const summarySheet = [
         label: '资金用款',
         children: [
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'totalBalanceOnway',
                 label: '在款余额',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'totalOverdue',
                 label: '逾期额',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'preRepaymentCurrentMonth',
                 label: '2020年4月预计还款',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
-                label: '2020年4月实际用款',
+                prop: 'lastYearMonthUsed',
+                label: '去年实际用款',
                 width: '150',
                 displayAs: 'money'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'preBorrowCurrentMonth',
                 label: '2020年4月预计用款',
                 width: '150',
                 displayAs: 'money'
@@ -88,22 +88,19 @@ export const summarySheet = [
         label: '分析',
         children: [
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'salePercentCurrent',
                 label: '2020年4月销售同比',
-                width: '150',
-                displayAs: 'money'
+                width: '150'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'usedPercentCurrent',
                 label: '2020年4月用款同比',
-                width: '150',
-                displayAs: 'money'
+                width: '150'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'overduePercent',
                 label: '逾期率=（逾期额/在款余额）',
-                width: '150',
-                displayAs: 'money'
+                width: '150'
             }
         ]
     }
