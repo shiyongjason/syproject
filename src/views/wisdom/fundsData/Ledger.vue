@@ -100,10 +100,6 @@ export default {
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -308,7 +304,7 @@ export default {
         onExport () {
             const params = {
                 misCode: this.queryParams.misCode,
-                loanCompanyCode: this.queryParams.loanCompanyCode,
+                loanCompanyName: this.queryParams.loanCompanyName,
                 subsectionCode: this.queryParams.subsectionCode,
                 standingBookNo: this.queryParams.standingBookNo
             }
