@@ -34,6 +34,9 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
+                <div class="query-col-title">
+                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                </div>
                 <!-- <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div> -->
@@ -72,6 +75,7 @@ import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
+import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
 import { departmentAuth } from './mixins/userAuth'
@@ -300,6 +304,15 @@ export default {
             return router && router.some(i => {
                 return i.path == param
             })
+        },
+        onExport () {
+            const params = {
+                misCode: this.queryParams.misCode,
+                loanCompanyCode: this.queryParams.loanCompanyCode,
+                subsectionCode: this.queryParams.subsectionCode,
+                standingBookNo: this.queryParams.standingBookNo
+            }
+            downloadCloudAlarmList(params)
         }
     },
     activated () {

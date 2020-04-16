@@ -116,7 +116,6 @@ axios.interceptors.response.use(
         //     }
         // }
         store.commit('LOAD_STATE', false)
-        console.log(error)
         const data = error.response.data
         let message = '服务器响应错误：' + error
         // 处理特殊
@@ -129,7 +128,7 @@ axios.interceptors.response.use(
             message = data.message
         }
         Message({
-            message: message,
+            message: message ? message : '操作失败',
             type: 'error'
         })
         return Promise.reject(error)
