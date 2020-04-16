@@ -125,10 +125,10 @@ axios.interceptors.response.use(
             message = error.response.data.message
         }
         if (error.response.status === 400 && data.message !== '') {
-            message = data.message
+            message = data.message ? data.message : '操作失败'
         }
         Message({
-            message: message ? message : '操作失败',
+            message: message,
             type: 'error'
         })
         return Promise.reject(error)
