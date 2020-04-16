@@ -4,17 +4,14 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker
-                        v-model="params.applyMonth"
-                        type="month"
-                        placeholder="选择月">
+                    <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -39,7 +36,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'planTotal',
     mixins: [departmentAuth],
@@ -68,46 +65,26 @@ export default {
         }
     },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.params.endDate
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.params.startDate
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
+        ...mapState({
+            branchList: state => state.branchList
+        }),
         ...mapGetters({
-            planTotalList: 'planTotalList'
+            planTotalList: 'fundsPlan/planTotalList'
         })
     },
     methods: {
-        backPlat (value) {
-            console.log(value)
+        backPlat (val) {
+            console.log(val)
+            this.params.companyName = val.value.value
         },
-        onReset () {
-            this.params = { ...this.paramsTemp }
-        }
+        onReset () { }
     },
     async mounted () {
         this.paramsTemp = { ...this.params }
-        console.log(this)
         await this.oldAuth()
         if (this.userInfo.deptType === 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            this.selectPlatObj.selectCode = this.branchList[0].crmDeptCode
+            this.selectPlatObj.selectName = this.branchList[0].deptName
         }
     }
 }

@@ -1,7 +1,7 @@
 import * as types from './const'
 import * as Api from '../api'
 const state = {
-    planTotalList: {}
+    planTotalList: []
 }
 
 const getters = {
