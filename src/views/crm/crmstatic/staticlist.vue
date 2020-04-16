@@ -28,6 +28,9 @@
                     <template slot="cooperCloseValue" slot-scope="scope">
                         {{fundMoneys(scope.data.row.cooperCloseValue)}}
                     </template>
+                          <template slot="toBeSignedValue" slot-scope="scope">
+                        {{fundMoneys(scope.data.row.toBeSignedValue)}}
+                    </template>
                     <template slot="cooperCompleteValue" slot-scope="scope">
                         {{fundMoneys(scope.data.row.cooperCompleteValue)}}
                     </template>
@@ -176,7 +179,7 @@ export default {
                 tooltip: {
                     trigger: 'axis', // axis , item
                     axisPointer: {
-                        type: 'shadow' // 'line' | 'shadow'
+                        type: '' // 'line' | 'shadow'
                     },
                     padding: 0,
                     textStyle: {
@@ -190,7 +193,7 @@ export default {
                             '<tr><th colspan="2" style="padding:2px 5px; background:' + params[1].color + '">' + params[1].name + '</th></tr>' +
                             '</thead>' +
                             '<tbody>' +
-                            '<tr><td class="cc" style="padding:2px 5px;">' + params[1].name + '</td><td>' + params[1].value + this.barUnit + '</td></tr>' +
+                            '<tr><td class="cc" style="padding:2px 5px;">' + params[1].name + '</td><td>' + this.fundMoneys(params[1].value) + this.barUnit + '</td></tr>' +
                             '</tbody>' +
                             '</table>'
                         setTimeout(function () {
@@ -207,7 +210,7 @@ export default {
                 },
                 grid: {
                     top: '5%',
-                    left: '5%',
+                    left: '10%',
                     right: '30%',
                     bottom: '5%',
                     containLabel: false
@@ -315,7 +318,7 @@ export default {
                     barWidth: 40,
                     itemStyle: {
                         normal: {
-                            color: '#f2f2f4' // 背景图表颜色
+                            color: '#e5e5e5' // 背景图表颜色
                         }
                     },
                     data: bgData, // 载入背景数据
