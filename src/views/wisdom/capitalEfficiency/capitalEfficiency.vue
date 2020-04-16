@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择" :clearable=true @change="onChange">
+                        <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' placeholder="选择" :clearable=true @change="onChange">
                             <el-option v-for="item in branchList" :key="item.deptCode" :label="item.deptName" :value="item.crmDeptCode">
                             </el-option>
                         </el-select>
