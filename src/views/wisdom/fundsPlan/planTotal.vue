@@ -81,7 +81,9 @@ export default {
             console.log(val)
             this.params.companyName = val.value.value
         },
-        onReset () { },
+        onReset () {
+            this.params = { ...this.paramsTemp }
+        },
         onExport () {
             downloadPlanTotalList()
         }
