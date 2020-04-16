@@ -22,6 +22,9 @@
                     <el-button type="primary" class="ml20" @click="onReset()">
                         重置
                     </el-button>
+                    <el-button type="primary" class="ml20" @click="onExport">
+                        导出汇总表
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -37,6 +40,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState, mapGetters } from 'vuex'
+import { downloadPlanTotalList } from './api/index'
 export default {
     name: 'planTotal',
     mixins: [departmentAuth],
@@ -77,7 +81,10 @@ export default {
             console.log(val)
             this.params.companyName = val.value.value
         },
-        onReset () { }
+        onReset () { },
+        onExport () {
+            downloadPlanTotalList()
+        }
     },
     async mounted () {
         this.paramsTemp = { ...this.params }
