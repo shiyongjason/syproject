@@ -82,16 +82,14 @@
         <div class="page-body-cont">
              <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项,体系内 <b>1</b>;体系外 <b>1</b>;白名单 <b>1</b>;黑名单 <b>1</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"  @onSortChange="onSortChange"
-             @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+             @onSizeChange="handleSizeChange"  :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.id)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
         <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
 <script>
@@ -174,7 +172,7 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.tableData = [
-            { projectName: 'asda' }, { projectName: 'asda' }
+            { projectName: '11' }
         ]
     },
     methods: {

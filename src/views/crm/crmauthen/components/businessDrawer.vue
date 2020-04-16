@@ -1,10 +1,10 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        江苏舒适云信息技术有限公司 <span>已认证</span>
+                        江苏舒适云信息技术有限公司 &emsp;<el-button size="mini" round type="primary">已认证</el-button>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                         1233433443
@@ -12,7 +12,7 @@
                     <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
                         1233433443
                     </el-form-item>
-                    <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth">
                         <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
@@ -51,24 +51,16 @@
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-
                     <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
                         <el-radio-group v-model="bossDetail.merchantType">
                             <el-radio :label="1">体系内</el-radio>
                             <el-radio :label="2">体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-
-                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth">
-                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput">
+                        <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
-                    <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                        {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
-                        <template v-if="bossDetail.authenticationTime">
-                            {{bossDetail.authenticationTime | formatterTime}}
-                        </template>
-                    </el-form-item>
-                    <el-form-item label="金融风险：" :label-width="formLabelWidth">
+                    <el-form-item label="客户分类：" :label-width="formLabelWidth">
                         白名单
                     </el-form-item>
                     <el-form-item label="创建时间：" :label-width="formLabelWidth">
@@ -87,76 +79,40 @@
                         {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} ({{bossDetail.updatePhone}})
                     </el-form-item>
                 </el-form>
-                <div class="drawer-footer" v-if="activeName=='first'">
+                <div class="drawer-footer">
                     <div class="drawer-button">
+                        <el-button type="info" @click="()=>dialogVisible = true">设置白名单</el-button>
                         <el-button @click="cancelForm">取 消</el-button>
                         <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
-                <!-- <div class="" v-if="activeName=='second'">
-                    <el-form :model="form">
-                        <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                            江苏舒适云信息技术有限公司
-                        </el-form-item>
-                        <el-form-item label="企业类型：" :label-width="formLabelWidth">
-                            个体工商户
-                        </el-form-item>
-                        <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
-                            2716986423661687QAZ
-                        </el-form-item>
-                        <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="法人姓名：" :label-width="formLabelWidth">
-                            韦小宝
-                        </el-form-item>
-                        <el-form-item label="法人手机号：" :label-width="formLabelWidth">
-                            3778765678
-                        </el-form-item>
-                        <el-form-item label="法人身份证号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="法人身份证照片：" :label-width="formLabelWidth">
-                            <div style="float:left">
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                            <div style="float:left;margin-left:10px">
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="开户名：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="银行卡号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="联行号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="开户许可证图片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="门头照：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="门店内景：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                    </el-form>
-                </div> -->
             </div>
         </el-drawer>
+        <el-dialog title="设置白名单" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
+            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
+                <el-form-item label="客户分类：" prop="afterStatus">
+                    <el-radio-group v-model="bossDetail.afterStatus">
+                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="说明：" prop="remark">
+                    <el-input type="textarea" v-model.trim="bossDetail.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                </el-form-item>
+                <p class="page-title">记录</p>
+                <div class="page-warp">
+                    <div v-for="i in 15">
+                        <i class="el-icon-edit"></i>系统自动 在 2019-12-06 13:00:06 将 客户分类 设置为了 待审核 说明：白名单失效；
+                    </div>
+                </div>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -174,40 +130,11 @@ export default {
     },
     data () {
         return {
-            type: '',
             removeValue: true,
-            merchantArr: [],
-            activeName: 'first',
             branchArr: [],
             formLabelWidth: '140px',
             loading: false,
-            proviceList: [],
-            merchantCode: '',
-            memberCode: '',
             bossDetail: {
-                // memberAccount: '',
-                // authenticationTime: '',
-                // cityId: '',
-                // cityName: '',
-                // companyName: '',
-                // countryId: '',
-                // countryName: '',
-                // isAuthentication: '',
-                // isAutoDispatch: '',
-                // isCommodity: '', // 是否商品型商家
-                // isOperational: '',
-                // merchantAccount: '',
-                // merchantType: '',
-                // provinceId: '',
-                // provinceName: '',
-                // registrationTime: '',
-                // staff: [],
-                // subsectionCode: '',
-                // subsectionName: '',
-                // updateBy: '',
-                // updateTime: '',
-                // updatePhone: ''
-
             },
             copyDetail: {},
             rules: {
@@ -221,10 +148,17 @@ export default {
                     { required: true, message: '请选择省', trigger: 'change' }
                 ]
             },
-            memberSource: ['存量会员店', '存量平台公司', 'app注册', '商家注册', '好友推荐', '商家邀请'],
             targetObj: {
                 selectName: '',
                 selectCode: ''
+            },
+            statusType: [{ value: '白名单', key: 0 }, { value: '黑名单', key: 1 }, { value: '待审核', key: 2 }],
+            dialogVisible: false,
+            proviceList: [],
+            merchantArr: [],
+            statusForm: {},
+            statusRules: {
+
             }
         }
     },
@@ -362,20 +296,7 @@ export default {
             this.merchantArr = this.merchantList
         },
         async getMerchtMemberDetail (val, type) {
-            this.type = type
-            if (type === 'merchant') {
-                this.merchantCode = val
-                await this.findMerchantDetail({ merchantCode: val })
-                this.bossDetail = { ...this.merchantDetail }
-            } else {
-                this.memberCode = val
-                await this.findMemberDetail({ memberCode: val })
-                this.bossDetail = { ...this.memberDetail }
-                // this.getFindNest()
-                this.targetObj.selectCode = this.memberDetail.merchantCode
-                this.targetObj.selectName = this.memberDetail.merchantName
-            }
-            this.copyDetail = deepCopy(this.bossDetail)
+
         },
         backFindbrand (val) {
             this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
@@ -391,7 +312,6 @@ export default {
 <style  lang="scss" scoped>
 /deep/ .el-drawer__body {
     overflow-y: scroll;
-    // position: relative;
 }
 .drawer-content {
     width: 100%;
@@ -422,20 +342,49 @@ export default {
         }
     }
 }
+.page-title {
+    font-size: 16px;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px 0;
+}
+.page-warp {
+    max-height: 250px;
+    overflow-y: scroll;
+    div {
+        margin-top: 10px;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ebeef5;
+        background-color: #fff;
+        overflow: hidden;
+        color: #303133;
+        transition: 0.3s;
+        .el-icon-edit {
+            color: #eb7343;
+            margin-right: 10px;
+        }
+    }
+}
 /deep/ .el-tabs__item.is-active {
     background: transparent;
     color: #000;
 }
 
 /deep/.el-autocomplete {
-    width: 300px;
+    width: 100%;
     .el-input {
-        width: 300px !important;
+        width: 100% !important;
     }
 }
-/deep/.el-form .el-input {
+/deep/.el-drawer__header {
+    padding: 20px 20px;
+    border-bottom: 1px solid #e5e5e5;
 }
 .el-form-item__content .el-input {
     width: 200px !important;
+}
+/deep/.el-autocomplete {
+    width: 100% !important;
 }
 </style>

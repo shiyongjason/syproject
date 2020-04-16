@@ -52,5 +52,5 @@ export const BUS_TYPE_LIST = [
 export const RISK_TYPE_LIST = [
     { key: 1, value: '白名单' },
     { key: 2, value: '黑名单' },
-    { key: 2, value: '待审核' }
+    { key: 3, value: '待审核' }
 ]

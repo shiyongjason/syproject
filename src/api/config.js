@@ -19,7 +19,7 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'https://ccp-gateway-dev.hosjoy.com:4832/'
-        B2bUrl = 'https://b2b-gateway-dev.hosjoy.com:4832/'
+        B2bUrl = 'http://192.168.20.248:40000/'
         fileUploadUrl = 'https://hbp-gateway-dev.hosjoy.com:4832'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         // interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
