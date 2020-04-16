@@ -8,31 +8,31 @@
                         {{onAccountType(scope.data.row.type)}}
                     </template>
                     <template slot="totalValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.totalValue)}}
+                        {{scope.data.row.totalValue?fundMoneys(scope.data.row.totalValue):'-'}}
                     </template>
                     <template slot="retainValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.retainValue)}}
+                        {{scope.data.row.retainValue?fundMoneys(scope.data.row.retainValue):'-'}}
                     </template>
                     <template slot="dataCollectValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.dataCollectValue)}}
+                        {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
                     </template>
                     <template slot="trustTrialValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.trustTrialValue)}}
+                        {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
                     </template>
                     <template slot="pendingLoanValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.pendingLoanValue)}}
+                        {{scope.data.row.pendingLoanValue?fundMoneys(scope.data.row.pendingLoanValue):'-'}}
                     </template>
                     <template slot="toReturnLoanValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.toReturnLoanValue)}}
+                        {{scope.data.row.toReturnLoanValue?fundMoneys(scope.data.row.toReturnLoanValue):'-'}}
                     </template>
                     <template slot="cooperCloseValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.cooperCloseValue)}}
+                        {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
                     </template>
                           <template slot="toBeSignedValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.toBeSignedValue)}}
+                        {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
                     </template>
                     <template slot="cooperCompleteValue" slot-scope="scope">
-                        {{fundMoneys(scope.data.row.cooperCompleteValue)}}
+                        {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
