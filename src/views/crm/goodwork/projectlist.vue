@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{fundMoneys(loanData)}} 元 </el-tag>
+             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                  <template slot="predictLoanAmount" slot-scope="scope">
@@ -255,7 +255,7 @@ export default {
                 total: this.projectData.total
             }
             await this.findProjectLoan(params)
-            this.loanData = this.projectLoan
+            this.loanData = this.projectLoan ? this.projectLoan : ''
         },
         onLookproject (val) {
             this.drawer = true
