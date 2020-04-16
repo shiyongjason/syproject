@@ -179,7 +179,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/planToDeclare')
+                component: () => import('@/views/wisdom/fundsPlan/planToDeclare')
             },
             {
                 path: 'planTotal',
@@ -190,7 +190,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/planTotal')
+                component: () => import('@/views/wisdom/fundsPlan/planTotal')
             },
             {
                 path: 'addDeclare',
@@ -201,7 +201,7 @@ export default [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/pages/declareAdd')
+                component: () => import('@/views/wisdom/fundsPlan/pages/declareAdd')
             },
             {
                 path: 'approvalList',
@@ -210,10 +210,9 @@ export default [
                     title: '计划审批',
                     tagName: '计划审批',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/fundPlan/approvalList'
+                    icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/approvalList')
+                component: () => import('@/views/wisdom/fundsPlan/approvalList')
             },
             {
                 path: 'approveDeclare',
@@ -224,7 +223,7 @@ export default [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/fundPlan/pages/declareDetail')
+                component: () => import('@/views/wisdom/fundsPlan/pages/declareDetail')
             }
         ]
     },
