@@ -8,6 +8,7 @@ import layout from '@/views/layout/store/index.js'
 import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
+import fundsPlan from '@/views/wisdom/fundsData/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import supplier from './modules/supplier'
@@ -55,7 +56,8 @@ const store = new Vuex.Store({
         cloudmanage,
         crmmanage,
         developmodule,
-        jinyunplatform
+        jinyunplatform,
+        fundsPlan,
     }
 })
 
