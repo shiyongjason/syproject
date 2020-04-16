@@ -60,6 +60,4 @@ const store = new Vuex.Store({
         fundsPlan
     }
 })
-
 export default store
- 
