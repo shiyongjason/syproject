@@ -546,7 +546,7 @@ export default {
 
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 .el-tabs__header {
     margin-bottom: 0 !important;
     border-bottom: none !important;
