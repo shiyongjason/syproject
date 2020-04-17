@@ -355,13 +355,10 @@ export default {
 /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
     border-bottom-color: #ff7a45;
 }
-/deep/.el-table td,/deep/ .el-table th{
-    padding: 7px 0;
-}
-/deep/.el-tabs__header{
-    margin: 0 0 10px;
-}
-.page-body{
+.page-body {
     padding: 15px 10px 20px 10px;
+}
+/deep/.el-tabs__header {
+    margin: 0 0 10px;
 }
 </style>
