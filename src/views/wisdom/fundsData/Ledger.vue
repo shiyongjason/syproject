@@ -34,7 +34,7 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
-                <div class="query-col-title">
+                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
                     <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                 </div>
                 <!-- <div class="query-col-title">
@@ -74,7 +74,7 @@
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
-import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
+import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD, WISDOM_ACCOUNT_EXPORT } from '@/utils/auth_const'
 import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
@@ -125,6 +125,7 @@ export default {
             exposure_good_credit: WISDOM_EXPOSURE_GOOD_CREDIT,
             exposure_orange: WISDOM_EXPOSURE_ORANGE,
             pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
+            account_export: WISDOM_ACCOUNT_EXPORT,
             hasNoneAuth: false
         }
     },
@@ -353,5 +354,14 @@ export default {
 }
 /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
     border-bottom-color: #ff7a45;
+}
+/deep/.el-table td,/deep/ .el-table th{
+    padding: 7px 0;
+}
+/deep/.el-tabs__header{
+    margin: 0 0 10px;
+}
+.page-body{
+    padding: 15px 10px 20px 10px;
 }
 </style>
