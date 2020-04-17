@@ -3,25 +3,31 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">项目名称/编号：</div>
+                    <div class="query-col-title">项目名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">项目编号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">项目提交时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">经销商：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入项目名称/编号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -43,9 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.type">
-                            <el-option label="全部" value="">
-                            </el-option>
+                        <el-select v-model="typeArr" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -54,10 +58,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.progress">
+                        <!-- <el-select v-model="queryParams.status">
                             <el-option label="全部" value="">
                             </el-option>
-                           <el-option v-for="item in processList" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select> -->
+                        <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                            <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -75,13 +83,17 @@
             </div>
         </div>
         <div class="page-body-cont">
+             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{fundMoneys(loanData)}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                  <template slot="type" slot-scope="scope">
-                   {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
+                 <template slot="predictLoanAmount" slot-scope="scope">
+                    {{fundMoneys(scope.data.row.predictLoanAmount)}}
                 </template>
-                  <template slot="progress" slot-scope="scope">
-                   {{scope.data.row.type&&processList[scope.data.row.progress-1]['value']}}
+                <template slot="type" slot-scope="scope">
+                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
+                </template>
+                <template slot="progress" slot-scope="scope">
+                    {{scope.data.row.type&&statusList[scope.data.row.status-2]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
@@ -96,8 +108,10 @@
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
-import { TYPE_LIST, PROCESS_LIST } from '../const'
+import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
+
 export default {
     name: 'projectlist',
     data () {
@@ -110,36 +124,40 @@ export default {
                 pageSize: 10,
                 companyName: '',
                 firstPartName: '',
-                maxCreateTime: '',
+                maxSubmitTime: '',
                 maxUpdateTime: '',
-                minCreateTime: '',
+                minSubmitTime: '',
                 minUpdateTime: '',
-                progress: '',
+                statusList: '',
                 projectName: '',
                 projectNo: '',
-                type: '',
+                typeList: '',
                 originType: 1
             },
+            status: [],
+            typeArr: [],
             copyParams: {},
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName' },
-                { label: '项目编号', prop: 'projectNo' },
-                { label: '借款总额', prop: 'predictLoanAmount' },
-                { label: '经销商', prop: 'upstreamSupplierName' },
+                { label: '项目名称', prop: 'projectName', width: '180' },
+                { label: '项目编号', prop: 'projectNo', width: '180' },
+                { label: '赊销总额', prop: 'predictLoanAmount' },
+                { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
                 { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'createTime', width: '180' },
-                { label: '更新时间', prop: 'updateTime', width: '180' }
+                { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
             drawer: false,
             typeList: TYPE_LIST,
-            processList: PROCESS_LIST
+            processList: PROCESS_LIST,
+            statusList: STATUS_LIST,
+            loanData: {}
         }
     },
     components: {
@@ -149,7 +167,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxCreateTime
+                    let beginDateVal = this.queryParams.maxSubmitTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -159,7 +177,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minCreateTime
+                    let beginDateVal = this.queryParams.minSubmitTime
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime()
                     }
@@ -187,7 +205,9 @@ export default {
             }
         },
         ...mapGetters('crmmanage', {
-            projectData: 'projectData'
+            projectData: 'projectData',
+            projectLoan: 'projectLoan'
+
         })
     },
     async mounted () {
@@ -197,12 +217,19 @@ export default {
 
     methods: {
         ...mapActions('crmmanage', {
-            findProjetpage: 'findProjetpage'
+            findProjetpage: 'findProjetpage',
+            findProjectLoan: 'findProjectLoan'
         }),
+        fundMoneys (val) {
+            if (val) {
+                return filters.money(val)
+            }
+        },
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
-            this.removeValue = true
+            this.status = []
+            this.typeArr = []
             this.searchList()
         },
         handleSizeChange (val) {
@@ -217,6 +244,8 @@ export default {
             this.queryParams.categoryId = val
         },
         async  searchList () {
+            this.queryParams.statusList = this.status.toString()
+            this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records
@@ -225,6 +254,8 @@ export default {
                 pageSize: this.projectData.size,
                 total: this.projectData.total
             }
+            await this.findProjectLoan(params)
+            this.loanData = this.projectLoan
         },
         onLookproject (val) {
             this.drawer = true
@@ -243,5 +274,8 @@ export default {
 }
 .colgry {
     color: #ccc;
+}
+.eltagtop {
+    margin-bottom: 10px;
 }
 </style>

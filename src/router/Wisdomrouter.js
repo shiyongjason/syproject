@@ -1,4 +1,6 @@
 import Layout from '@/views/layout/Default.vue'
+// 非菜单，权限控制二级菜单下的tab权限
+import { tabAuth } from './const'
 
 export default [
     {
@@ -33,7 +35,32 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
-            }
+            },
+            {
+                path: 'importData',
+                name: 'importData',
+                meta: {
+                    title: '历史数据导入',
+                    tagName: '历史数据导入',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/importData.vue')
+            },
+            {
+                path: 'capitalEfficiency',
+                name: 'capitalEfficiency',
+                meta: {
+                    title: '资金效率表',
+                    tagName: '资金效率表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
+            },
+            ...tabAuth
         ]
     },
     {

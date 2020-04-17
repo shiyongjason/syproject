@@ -20,7 +20,7 @@
             </div> -->
             <div class="container">
                 <div class="account-top">
-                    <div class="account-topimg"><img :src="account.avatarUrl" /></div>
+                    <div class="account-topimg"><img :src="account.avatarUrl?account.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" /></div>
                     <div>
                         <p>{{account.name}}</p>
                         <p>{{account.username}}</p>
@@ -52,10 +52,10 @@
                 </div>
                 <h3>关联的微信用户</h3>
                 <div class="account-wx" v-for="(item) in account.wxUserList" :key="item.userId">
-                    <img :src="item.avatarUrl" alt="">
+                    <img :src="item.avatarUrl?item.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" alt="">
                     <div class="account-wx_user">
                         <p><i>昵称</i>&emsp;{{item.nickName}}</p>
-                        <p><i>userid：</i>&emsp;{{item.userId?item.userId:'-'}}&emsp;<i>openid：</i>&emsp;{{item.openid?item.openid:'-'}}&emsp;<i>unionid：</i>&emsp;{{item.unionid?item.unionid:'-'}}</p>
+                        <p><i>userId：</i>&emsp;{{item.userId?item.userId:'-'}}&emsp;<i>openId：</i>&emsp;{{item.openId?item.openId:'-'}}&emsp;<br><i>unionId：</i>&emsp;{{item.unionId?item.unionId:'-'}}</p>
                     </div>
                 </div>
                 <div class="account-box" v-if="account.wxUserList&&account.wxUserList.length==0">
@@ -104,6 +104,10 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+/deep/ .el-drawer__body {
+    overflow-y: scroll;
+    // position: relative;
+}
 .container {
     padding: 0 10px;
     .account-box {
@@ -116,7 +120,7 @@ export default {
             color: #13c2c2;
             em {
                 background: #e26666;
-                font-size: 14px;
+                font-size: 12px;
                 border-radius: 6px;
                 color: #fff;
                 font-style: normal;
@@ -171,7 +175,7 @@ export default {
         background: #f7f5f5;
         display: flex;
         align-items: center;
-        margin-top: 10px;
+        margin: 10px;
         .account-wx_user {
             display: flex;
             flex-direction: column;

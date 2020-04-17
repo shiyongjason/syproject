@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
+        <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
@@ -27,10 +27,10 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="合同总额：" prop="contractAmount">
-                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
+                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备款总额：" prop="deviceAmount">
-                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
+                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备品类：" prop="deviceCategory">
                     <el-select v-model="form.deviceCategory" placeholder="请选择">
@@ -39,7 +39,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="设备品牌：" prop="deviceBrand">
-                    <el-input v-model="form.deviceBrand" placeholder="请输入设备品牌"></el-input>
+                    <el-input v-model="form.deviceBrand" placeholder="请输入设备品牌" maxlength="100"></el-input>
                 </el-form-item>
                 <el-form-item label="上游供应商类型：" prop="upstreamSupplierType">
                     <el-select v-model="form.upstreamSupplierType" placeholder="请选择">
@@ -52,36 +52,37 @@
                 </el-form-item>
                 <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+               个月
                 </el-form-item>
-                <el-form-item label="预估借款金额：" prop="predictLoanAmount">
-                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估借款金额" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
+                <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
+                    <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
-                <el-form-item label="预估借款周期：" prop="loanMonth">
+                <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
-                </el-form-item>
+               个月
+               </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
-                        <el-input v-model="form.advancePaymentProportion" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="货到付款比例">
-                        <el-input v-model="form.deliveryPaymentProportion" v-isNum:2="form.deliveryPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.deliveryPaymentProportion" maxlength="10" v-isNum:2="form.deliveryPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="安装进度款比例">
-                        <el-input v-model="form.installProgressPaymentProportion" v-isNum:2="form.installProgressPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.installProgressPaymentProportion" maxlength="10" v-isNum:2="form.installProgressPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="验收款比例">
-                        <el-input v-model="form.acceptancePaymentProportion" v-isNum:2="form.acceptancePaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.acceptancePaymentProportion" maxlength="10" v-isNum:2="form.acceptancePaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="交付款比例">
-                        <el-input v-model="form.realPaymentProportion" v-isNum:2="form.realPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.realPaymentProportion" maxlength="10" v-isNum:2="form.realPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="审计结算款比例">
-                        <el-input v-model="form.auditCalculationPaymentProportion" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
+                        <el-input v-model="form.auditCalculationPaymentProportion" maxlength="10" v-isNum:2="form.auditCalculationPaymentProportion"><template slot="append">%</template></el-input>
                     </el-form-item>
                     <el-form-item label="其他">
-                        <el-input v-model.trim="form.payOtherText"></el-input>
+                        <el-input v-model.trim="form.payOtherText" maxlength="100"></el-input>
                     </el-form-item>
-
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                     <hosjoyUpload v-model="form.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
@@ -99,7 +100,7 @@
         </el-drawer>
         <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item label="审核结果：" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
+                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
                     <el-radio-group v-model="statusForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
@@ -110,8 +111,8 @@
                         <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="活动形式：" prop="remark">
-                    <el-input type="textarea" v-model="statusForm.remark" maxlength="200" show-word-limit></el-input>
+                <el-form-item label="说明：" prop="remark">
+                    <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -127,7 +128,7 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE } from '../../const'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -147,14 +148,17 @@ export default {
             statusForm: {
                 afterStatus: '',
                 createBy: '',
+                createByMobile: '',
                 projectId: '',
                 remark: '',
-                result: ''
+                result: '',
+                reset: ''
             },
             copyStatusForm: {},
             aduitTitle: '',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
             statusType: STATUS_TYPE,
+            newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
@@ -208,10 +212,10 @@ export default {
                     { required: true, message: '请输入上游接受承兑时间', trigger: 'blur' }
                 ],
                 predictLoanAmount: [
-                    { required: true, message: '请输入预估借款金额', trigger: 'blur' }
+                    { required: true, message: '请输入预估赊销金额', trigger: 'blur' }
                 ],
                 loanMonth: [
-                    { required: true, message: '请输入预估借款周期', trigger: 'blur' }
+                    { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
                 ],
                 loanPayTypeRate: [
                     { required: true },
@@ -224,9 +228,6 @@ export default {
                             return callback()
                         }
                     }
-                ],
-                projectUpload: [
-                    { required: true, message: '请上传附件', trigger: 'blur' }
                 ]
             },
             statusRules: {
@@ -271,7 +272,6 @@ export default {
             await this.findProjectDetail(val)
             this.form = { ...this.projectDetail }
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
-            console.log(this.form.projectUpload)
             this.form.loanPayTypeRate = '方法定义必填'
             this.copyForm = { ...this.form }
         },
@@ -283,11 +283,13 @@ export default {
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
+
             if (status == 2) {
                 // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
                 this.dialogVisible = true
                 this.aduitTitle = '审核'
                 this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
                 this.$nextTick(() => {
                     this.$refs['statusForm'].clearValidate()
                 })
@@ -299,6 +301,7 @@ export default {
                 this.dialogVisible = true
                 this.aduitTitle = '尽调'
                 this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
                 this.$nextTick(() => {
                     this.$refs['statusForm'].clearValidate()
                 })
@@ -314,7 +317,7 @@ export default {
             } else if (status == 9) {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
-
+            this.statusForm.reset = false
             await saveStatus({ projectId: this.form.id,
                 status: status,
                 updateBy: this.userInfo.employeeName })
@@ -325,13 +328,19 @@ export default {
             this.$emit('backEvent')
         },
         onReststatus (val) {
-            console.log(this.statusType)
-            this.statusType = this.statusType.slice(0, val - 1)
+            if (val == 5) {
+                this.statusType = this.newstatusType
+            } else if (val == 6 || val == 7 || val == 8) {
+                this.statusType = this.newstatusType.slice(0, val - 3)
+            } else {
+                this.statusType = this.newstatusType.slice(0, val - 2)
+            }
 
             this.statusForm = { ...this.copyStatusForm }
             this.$nextTick(() => {
                 this.$refs['statusForm'].clearValidate()
             })
+            this.statusForm.reset = true
             this.dialogVisible = true
             this.aduitTitle = '重置状态'
             // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
@@ -339,6 +348,7 @@ export default {
         async onUpdateAudit () {
             const msg = this.aduitTitle
             this.statusForm.createBy = this.userInfo.employeeName
+            this.statusForm.createByMobile = this.userInfo.phoneNumber
             this.statusForm.projectId = this.form.id
             this.$refs.statusForm.validate(async (valid) => {
                 if (valid) {
@@ -456,7 +466,7 @@ export default {
 /deep/.el-form-item__content .el-input {
     width: 100% !important;
 }
-/deep/ .el-radio{
+/deep/ .el-radio {
     margin-bottom: 10px;
 }
 </style>
