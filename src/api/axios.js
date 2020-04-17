@@ -7,6 +7,7 @@ import { interfaceUrl, B2bUrl } from './config'
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
+const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
@@ -47,7 +48,8 @@ axios.interceptors.request.use(
         // config.cancelToken = new CancelToken(cancelMethod => {
         //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
         // })
-        store.commit('LOAD_STATE', true)
+        const skipLoading = specialReqUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+        if (skipLoading.length === 0) store.commit('LOAD_STATE', true)
         return config
     },
     (error) => {
@@ -76,7 +78,7 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return Promise.reject(response)
         }
-        if (requestLoading == 0) store.commit('LOAD_STATE', false)
+        if (requestLoading === 0) store.commit('LOAD_STATE', false)
         return response
     },
     (error) => {

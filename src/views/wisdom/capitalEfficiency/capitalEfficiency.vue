@@ -261,7 +261,12 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
+<style lang="scss" scoped>
+// 台账专属表格样式
+/deep/.el-table td,
+/deep/ .el-table th {
+    padding: 7px 0;
+}
 .red {
     color: red !important;
 }
