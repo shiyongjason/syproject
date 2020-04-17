@@ -34,7 +34,7 @@
                 </a>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/efficiency/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/account-efficiency/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
                     <el-button type="primary" class="m0" :loading='loading'>
                         注资信息导入
                     </el-button>
