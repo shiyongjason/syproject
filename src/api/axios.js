@@ -98,8 +98,6 @@ axios.interceptors.response.use(
             }, 1200)
             return Promise.reject(error)
         }
-
-        // console.log(error)
         // if (error.response && error.response.status) {
         //     switch (error.response.status) {
         //         case 401:
