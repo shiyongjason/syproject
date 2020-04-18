@@ -2,7 +2,8 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="title">
-                <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span>
+                <!-- <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span> -->
+                <span>本次可申报：<i>{{tableData[0].applyMonth}}</i>月的预计销售及资金用款计划</span>
             </div>
             <div class="tips">
                 每月20日—25日提报次月资金计划，每家平台公司每月仅可提报一次
@@ -11,8 +12,12 @@
             <div class="p24">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120'>
                     <!-- eslint-disable-next-line -->
+                    <template slot="applyType" slot-scope="scope">
+                        <span v-if="scope.data.row.applyType === 0">未申报</span>
+                        <span v-else-if="scope.data.row.applyType === 1">已申报</span>
+                    </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" disabled>点击申报</el-button>
+                        <el-button class="orangeBtn" :disabled='scope.data.row.applyType === 1'>点击申报</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -33,7 +38,7 @@ export default {
     data () {
         return {
             tableLabel: bankLabel,
-            tableData: [],
+            tableData: [{}],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -48,10 +53,10 @@ export default {
         async getPlanDeclare () {
             const params = {
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 5
             }
             const { data } = await getPlanDeclare(params)
-            console.log(data)
+            this.tableData = data.records
         }
     }
 }

@@ -29,3 +29,5 @@ export function downloadPlanTotalList () {
 
 // 查询当月资金申报数据
 export const getPlanDeclare = (params) => axios.get(shy + `/fundplan/query/current`, { params })
+// 查询资金申报数据（该区域/分部/大区/所有，代办和已办）
+export const getFundPlanAll = (params) => axios.get(shy + `/fundplan/query/all`, { params })

@@ -4,7 +4,7 @@
         <div class="query-cont-col">
             <div class="query-col-title">申报月份：</div>
             <div class="query-col-input">
-                <el-date-picker v-model="queryParams.mounth" type="month" placeholder="选择月">
+                <el-date-picker v-model="queryParams.applyMonth" type="month" value-format="yyyyMM" placeholder="选择月">
                 </el-date-picker>
             </div>
         </div>
@@ -20,8 +20,7 @@
             <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
         </div>
         <div class="p24">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange'
-            @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='120'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='120'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="shy(scope)">查看详情</el-button>
                 </template>
@@ -32,6 +31,7 @@
 
 <script>
 import { hasDeclareLabel } from '../const'
+import { getFundPlanAll } from '../api/index'
 export default {
     name: 'hasDeclare',
     data () {
@@ -44,10 +44,11 @@ export default {
                 total: 0
             },
             queryParams: {
+                applyMonth: '',
                 companyName: '',
-                mounth: '',
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                applyType: 1 // 已申报
             },
             searchParams: {}
         }
@@ -61,8 +62,16 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onQuery () {
+        async onQuery () {
             console.log(this.searchParams)
+            const { data } = await getFundPlanAll(this.searchParams)
+            console.log(data)
+            this.tableData = data.records
+            this.pagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         onReset () {
             // this.$set(this.queryParams, 'companyName', '')
