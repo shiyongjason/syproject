@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+const shy = 'http://192.168.20.168:31090'
 // 资金计划汇总数据
 export const getPlanTotalList = (params) => axios.get(`develop/fundplan/summary`, { params })
 
@@ -28,4 +28,4 @@ export function downloadPlanTotalList () {
 }
 
 // 查询当月资金申报数据
-export const getPlanDeclare = (params) => axios.get(`backend/fundplan/query/current`, { params })
+export const getPlanDeclare = (params) => axios.get(shy + `/fundplan/query/current`, { params })

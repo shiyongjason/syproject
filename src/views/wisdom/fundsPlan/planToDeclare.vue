@@ -46,7 +46,11 @@ export default {
     },
     methods: {
         async getPlanDeclare () {
-            const { data } = await getPlanDeclare()
+            const params = {
+                pageNumber: 1,
+                pageSize: 10
+            }
+            const { data } = await getPlanDeclare(params)
             console.log(data)
         }
     }
