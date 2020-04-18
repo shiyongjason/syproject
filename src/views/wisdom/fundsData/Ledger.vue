@@ -331,43 +331,45 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.add-tags-dialog {
-    padding-top: 20px;
-}
-.downloadExcel {
-    padding: 12px 20px;
-    border-radius: 4px;
-    background-color: #ff7a45;
-    color: #fff;
-}
-/deep/ .el-dialog__body {
-    min-height: 0 !important;
-}
+.amountImport {
+    .add-tags-dialog {
+        padding-top: 20px;
+    }
+    .downloadExcel {
+        padding: 12px 20px;
+        border-radius: 4px;
+        background-color: #ff7a45;
+        color: #fff;
+    }
+    /deep/ .el-dialog__body {
+        min-height: 0 !important;
+    }
 
-/deep/ .el-tabs--card > .el-tabs__header {
-    border-bottom: 0;
-}
+    /deep/ .el-tabs--card > .el-tabs__header {
+        border-bottom: 0;
+    }
 
-/deep/ .el-tabs--card .el-tabs__nav {
-    border-bottom: 1px solid #e4e7ed;
-}
-.m0 {
-    margin: 0;
-}
-/deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-    border-bottom-color: #ff7a45;
-}
-.page-body {
-    padding: 8px 0 20px 0;
-}
-/deep/.el-tabs__header {
-    margin: 0 0 10px;
-}
-/deep/.el-tabs__item {
-    height: 30px;
-    line-height: 30px;
-}
-.fundBtn .el-button{
-    padding: 7px 15px;
+    /deep/ .el-tabs--card .el-tabs__nav {
+        border-bottom: 1px solid #e4e7ed;
+    }
+    .m0 {
+        margin: 0;
+    }
+    /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+        border-bottom-color: #ff7a45;
+    }
+    .page-body {
+        padding: 8px 0 20px 0;
+    }
+    /deep/.el-tabs__header {
+        margin: 0 0 10px;
+    }
+    /deep/.el-tabs__item {
+        height: 30px;
+        line-height: 30px;
+    }
+    .fundBtn .el-button {
+        padding: 7px 15px;
+    }
 }
 </style>
