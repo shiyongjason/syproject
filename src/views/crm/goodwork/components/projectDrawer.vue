@@ -91,8 +91,10 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
+                    <template v-if="hosAuthCheck(crm_goodwork_operate)">
                     <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
+                    </template>
                     <el-button @click="cancelForm">取 消</el-button>
                     <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
@@ -129,6 +131,7 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import { CRM_GOODWORK_OPERATE } from '@/utils/auth_const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -142,6 +145,7 @@ export default {
     },
     data () {
         return {
+            crm_goodwork_operate: CRM_GOODWORK_OPERATE,
             loading: false,
             statusTxt: '',
             dialogVisible: false,

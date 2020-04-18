@@ -4,6 +4,18 @@ import axios from 'axios'
 export const getChiness = (params) => {
     return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
 }
+// 获取商家列表
+export const getBossMerchant = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant', { params })
+}
+// 获取商家详情
+export const getBossMerchantDetail = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/detail', { params })
+}
+// 获取商家详情统计
+export const getBossMerchantStatic = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/statistics', { params })
+}
 // 更新商家详情
 export const putMerchantDetail = (params) => {
     return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', params)
@@ -13,6 +25,22 @@ export const findBrandsList = (params) => {
     return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
 }
 
+// 启用禁用商家
+export const changeState = (params) => {
+    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/enable-status', params)
+}
+// 获取会员列表
+export const getBossMember = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/company/boss/member', { params })
+}
+// 获取商家详情统计
+export const getBossMemberStatic = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/company/boss/member/statistics', { params })
+}
+// 启用禁用会员
+export const changeMemberState = (params) => {
+    return axios.put(B2bUrl + 'merchant/api/company/boss/member/enable-status', params)
+}
 // 获取会员详情
 export const getBossMemberDetail = (params) => {
     return axios.get(B2bUrl + 'merchant/api/company/boss/member/detail', { params })

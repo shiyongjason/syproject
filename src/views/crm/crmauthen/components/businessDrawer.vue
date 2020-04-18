@@ -296,7 +296,7 @@ export default {
             this.merchantArr = this.merchantList
         },
         async getMerchtMemberDetail (val, type) {
-
+            deepCopy()
         },
         backFindbrand (val) {
             this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''

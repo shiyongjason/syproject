@@ -96,7 +96,7 @@
                     {{scope.data.row.type&&statusList[scope.data.row.status-2]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -111,11 +111,12 @@ import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
-
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'projectlist',
     data () {
         return {
+            crm_goodwork_detail: Auths.CRM_GOODWORK_DETAIL,
             categoryIdArr: [],
             productSource: [],
             brandList: [],

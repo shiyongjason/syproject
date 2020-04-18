@@ -247,7 +247,9 @@ export default {
         },
         async onFindMlist (val) {
             if (val) this.queryParams.pageNumber = val
+            console.log(123)
             await this.findMemberList(this.queryParams)
+            console.log(22)
             this.tableData = this.memberData.records
             this.paginationInfo = {
                 total: this.memberData.total,
