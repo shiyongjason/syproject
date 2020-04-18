@@ -1,8 +1,8 @@
 import axios from 'axios'
+
 // 资金计划汇总数据
-export const getPlanTotalList = (params) => {
-    return axios.get(`develop/fundplan/summary`, { params })
-}
+export const getPlanTotalList = (params) => axios.get(`develop/fundplan/summary`, { params })
+
 // 下载故障模板
 export function downloadPlanTotalList () {
     axios.defaults.responseType = 'blob'
@@ -26,3 +26,6 @@ export function downloadPlanTotalList () {
         axios.defaults.responseType = 'json'
     })
 }
+
+// 查询当月资金申报数据
+export const getPlanDeclare = (params) => axios.get(`backend/fundplan/query/current`, { params })

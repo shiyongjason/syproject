@@ -26,6 +26,7 @@
 <script>
 import { bankLabel } from './const'
 import hasDeclare from './components/hasDeclare'
+import { getPlanDeclare } from './api/index'
 export default {
     name: 'fundPlanHome',
     components: { hasDeclare },
@@ -40,9 +41,14 @@ export default {
             }
         }
     },
-    mounted () { },
+    mounted () {
+        this.getPlanDeclare()
+    },
     methods: {
-
+        async getPlanDeclare () {
+            const { data } = await getPlanDeclare()
+            console.log(data)
+        }
     }
 }
 </script>
