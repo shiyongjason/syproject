@@ -5,7 +5,7 @@ export default {
     meta: {
         title: '好橙工',
         isMenu: true,
-        icon: 'hosjoy_stay_online'
+        icon: 'hosjoy_hcg'
     },
     component: Layout,
     children: [

@@ -136,7 +136,7 @@ const routerMapping = [
         meta: {
             title: '平台公司驾驶舱',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_ptgsjsc'
         },
         component: Layout,
         children: [
@@ -171,7 +171,7 @@ const routerMapping = [
         meta: {
             title: 'App管理',
             isMenu: true,
-            icon: 'hosjoy_set'
+            icon: 'hosjoy_cloud_service'
         },
         component: Layout,
         children: [
@@ -194,7 +194,7 @@ const routerMapping = [
         meta: {
             title: '中金支付',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_zjzf'
         },
         component: Layout,
         children: [
