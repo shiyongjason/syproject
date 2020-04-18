@@ -31,3 +31,5 @@ export function downloadPlanTotalList () {
 export const getPlanDeclare = (params) => axios.get(shy + `/fundplan/query/current`, { params })
 // 查询资金申报数据（该区域/分部/大区/所有，代办和已办）
 export const getFundPlanAll = (params) => axios.get(shy + `/fundplan/query/all`, { params })
+// 查询资金申报明细数据
+export const getFundDetail = (params) => axios.get(shy + `/fundplan/query/detail/${params}`)

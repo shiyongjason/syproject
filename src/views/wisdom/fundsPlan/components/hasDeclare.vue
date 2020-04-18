@@ -22,7 +22,7 @@
         <div class="p24">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='120'>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="shy(scope)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="shy(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -57,7 +57,9 @@ export default {
         this.onSearch()
     },
     methods: {
-        shy () { },
+        shy (row) {
+            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+        },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()

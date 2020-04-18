@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <span>>>ZJJH20200222001—分部总经理审批 待办</span>
             <div class="title">
-                <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span>
+                <span>本次可申报：<i>{{applyMonth}}</i>月的预计销售及资金用款计划</span>
             </div>
             <baseInfo />
         </div>
@@ -34,12 +34,22 @@ import districtEmployee from '../components/declare/districtEmployee'
 import branchFinancial from '../components/declare/branchFinancial'
 import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
-
+import { getFundDetail } from '../api/index'
+import moment from 'moment'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
     data () {
         return {
+            fundDetail: {
+                fundplanMain: {}, // 基本信息
+                fundplanSale: {}, // 销售信息
+                regionManagerFundplanApprove: null,
+                subRegionFundplanApply: null,
+                subsectionFinanceFundplanApprove: null,
+                subsectionManagerFundplanApprove: null,
+                respResult: null
+            },
             isBottom: false
         }
     },
@@ -74,10 +84,16 @@ export default {
             if (scrollTop + clientHeight <= scrollHeight - 200) {
                 this.isBottom = false
             }
+        },
+        async getFundDetail () {
+            const { data } = await getFundDetail(this.$route.query.id)
+            console.log(data)
         }
     },
     mounted () {
         this.listenerFunction()
+        this.getFundDetail()
+        console.log(moment('Sat Apr 18 08:00:00 CST 2020').format('YY_MM_DD HH:mm:ss'))
     }
 }
 </script>
