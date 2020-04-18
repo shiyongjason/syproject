@@ -1,6 +1,6 @@
 import {
     LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, SET_NEW_TAGS, IS_COLLAPSE, MENU_LIST, IS_FIRST, ADD_CACHED_INCLUDE,
-    REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE, DEVDEP_LIST
+    REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE, DEVDEP_LIST, GET_BRANCH, PLAT_FORMDATA
 } from './const'
 
 export default {
@@ -43,5 +43,11 @@ export default {
     },
     [DEVDEP_LIST] (state, payload) {
         state.devDepList = payload
+    },
+    [GET_BRANCH] (state, payload) {
+        state.branchList = payload
+    },
+    [PLAT_FORMDATA] (state, payload) {
+        state.platformData = payload
     }
 }

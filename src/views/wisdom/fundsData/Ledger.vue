@@ -34,35 +34,13 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
+                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
+                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                </div>
                 <!-- <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div> -->
             </div><br>
-            <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
-                    还款明细表模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-借款信息导入模板.xlsx" download="资金台账-借款信息导入模板.xlsx">
-                    借款模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        借款信息导入
-                    </el-button>
-                </el-upload>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class="m0" :loading='loading'>
-                        还款明细表信息导入
-                    </el-button>
-                </el-upload>
-            </div>
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
@@ -96,10 +74,10 @@
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
-import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
+import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD, WISDOM_ACCOUNT_EXPORT } from '@/utils/auth_const'
+import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-// import { tabAuthPath } from '@/router/const'
 import { departmentAuth } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
@@ -122,10 +100,6 @@ export default {
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -151,6 +125,7 @@ export default {
             exposure_good_credit: WISDOM_EXPOSURE_GOOD_CREDIT,
             exposure_orange: WISDOM_EXPOSURE_ORANGE,
             pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
+            account_export: WISDOM_ACCOUNT_EXPORT,
             hasNoneAuth: false
         }
     },
@@ -326,6 +301,15 @@ export default {
             return router && router.some(i => {
                 return i.path == param
             })
+        },
+        onExport () {
+            const params = {
+                misCode: this.queryParams.misCode,
+                loanCompanyName: this.queryParams.loanCompanyName,
+                subsectionCode: this.queryParams.subsectionCode,
+                standingBookNo: this.queryParams.standingBookNo
+            }
+            downloadCloudAlarmList(params)
         }
     },
     activated () {
@@ -370,5 +354,11 @@ export default {
 }
 /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
     border-bottom-color: #ff7a45;
+}
+.page-body {
+    padding: 15px 10px 20px 10px;
+}
+/deep/.el-tabs__header {
+    margin: 0 0 10px;
 }
 </style>

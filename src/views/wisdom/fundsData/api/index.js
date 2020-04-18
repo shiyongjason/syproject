@@ -30,6 +30,29 @@ export const setCount = (params) => axios.post(interfaceUrl + 'backend/api/accou
 export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/api/account/plan/account-type`, { params })
 // 台账汇总表
 export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/api/account/summary`, { params })
+// 台账数据导出
+export function downloadCloudAlarmList (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(interfaceUrl + `backend/api/account/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '台账数据.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
 
 // 根据机构id查询机构：大区 | 分部 | 区域列表
 export const findDepartment = (params) => axios.get(`/uaa/department/${params.pkDeptDoc}/${params.deptType}`)
