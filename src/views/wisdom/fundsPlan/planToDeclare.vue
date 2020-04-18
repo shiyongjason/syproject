@@ -7,7 +7,7 @@
             <div class="tips">
                 每月20日—25日提报次月资金计划，每家平台公司每月仅可提报一次
             </div>
-            <h3>银行账户列表</h3>
+            <h3>申报列表</h3>
             <div class="p24">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120'>
                     <!-- eslint-disable-next-line -->

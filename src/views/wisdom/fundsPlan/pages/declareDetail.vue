@@ -45,7 +45,7 @@ export default {
     },
     computed: {
         shy: {
-            get: function() {
+            get: function () {
                 if (!this.isBottom) {
                     return 'fixedAuth'
                 }
@@ -64,9 +64,9 @@ export default {
             window.addEventListener('scroll', this.handleScroll, true)
         },
         handleScroll (e) {
-            let scrollTop = document.getElementsByTagName('main')[0].scrollTop;
-            let clientHeight = document.getElementsByTagName('main')[0].clientHeight;
-            let scrollHeight = document.getElementsByTagName('main')[0].scrollHeight;
+            let scrollTop = document.getElementsByTagName('main')[0].scrollTop
+            let clientHeight = document.getElementsByTagName('main')[0].clientHeight
+            let scrollHeight = document.getElementsByTagName('main')[0].scrollHeight
             console.log(scrollTop, scrollHeight)
             if (scrollTop + clientHeight > scrollHeight - 200) {
                 this.isBottom = true
