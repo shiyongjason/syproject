@@ -62,9 +62,11 @@
             <el-tabs v-model="productType" v-if="accountType == 3" type="card" @tab-click="handleClick(2)">
                 <el-tab-pane v-if="hosAuthCheck(pointscredit_good_credit)" label="好信用" name="1"></el-tab-pane>
             </el-tabs>
-            <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <div class="fundBtn">
+                <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            </div>
             <complexTable v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
@@ -356,9 +358,16 @@ export default {
     border-bottom-color: #ff7a45;
 }
 .page-body {
-    padding: 15px 10px 20px 10px;
+    padding: 8px 0 20px 0;
 }
 /deep/.el-tabs__header {
     margin: 0 0 10px;
+}
+/deep/.el-tabs__item {
+    height: 30px;
+    line-height: 30px;
+}
+.fundBtn .el-button{
+    padding: 7px 15px;
 }
 </style>
