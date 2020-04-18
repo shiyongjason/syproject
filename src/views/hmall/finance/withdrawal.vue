@@ -100,8 +100,8 @@ export default {
                             var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value == 0) {
                                 return callback(new Error('提现金额不能为0'))
-                            // } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
-                            //     return callback(new Error('提现金额超限'))
+                            } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
+                                return callback(new Error('提现金额超限'))
                             } else if (value && !(Reg.test(value))) {
                                 return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
                             } else if (value < 100) {
