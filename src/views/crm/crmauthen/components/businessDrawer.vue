@@ -2,26 +2,25 @@
     <div class="drawer-wrap">
         <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
-                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
+                <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        江苏舒适云信息技术有限公司 &emsp;<el-button size="mini" round type="primary">已认证</el-button>
+                        {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{onAutenSatus(businessDetail.authenticationStatus)}}</el-button>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
-                        1233433443
+                        {{businessDetail.userAccount}}
                     </el-form-item>
                     <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
-                        1233433443
+                           {{businessDetail.userName}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth">
-                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
+                        <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
-
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
                             <el-form-item prop="provinceId">
-                                <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                                <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                                     <el-option label="请选择" value=""></el-option>
                                     <template v-for="item in proviceList">
                                         <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
@@ -33,7 +32,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="cityId">
-                                <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
+                                <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                                     </el-option>
@@ -43,7 +42,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="countryId">
-                                <el-select v-model="bossDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
+                                <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                                     </el-option>
@@ -51,35 +50,35 @@
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-                    <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
-                        <el-radio-group v-model="bossDetail.merchantType">
-                            <el-radio :label="1">体系内</el-radio>
-                            <el-radio :label="2">体系外</el-radio>
+                    <el-form-item label="企业类型：" prop="companyType" :label-width="formLabelWidth">
+                        <el-radio-group v-model="businessDetail.companyType">
+                            <el-radio :label=1>体系内</el-radio>
+                            <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput">
+                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2">
                         <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="客户分类：" :label-width="formLabelWidth">
-                        白名单
+                      {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                     </el-form-item>
                     <el-form-item label="创建时间：" :label-width="formLabelWidth">
-                        {{bossDetail.registrationTime | formatterTime}}
+                        {{businessDetail.createTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="创建人：" :label-width="formLabelWidth">
-                        赵娟 15195954045
+                        {{businessDetail.createBy}} {{businessDetail.createPhone}}
                     </el-form-item>
                     <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
-                        2019-12-06 13:00:06
+                        {{businessDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
-                        赵娟 15195954045
+                       {{businessDetail.authenticationBy}} {{businessDetail.authenticationPhone}}
                     </el-form-item>
                     <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                        {{businessDetail.updateTime| formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} ({{bossDetail.updatePhone}})
+                        {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
                     </el-form-item>
                 </el-form>
                 <div class="drawer-footer">
@@ -94,12 +93,12 @@
         <el-dialog title="设置白名单" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
                 <el-form-item label="客户分类：" prop="afterStatus">
-                    <el-radio-group v-model="bossDetail.afterStatus">
+                    <el-radio-group v-model="businessDetail.afterStatus">
                         <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="bossDetail.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                    <el-input type="textarea" v-model.trim="businessDetail.remark" maxlength="200" :rows="5" show-word-limit></el-input>
                 </el-form-item>
                 <p class="page-title">记录</p>
                 <div class="page-warp">
@@ -118,7 +117,7 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { putMerchantDetail, putMemberDetail } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'businessdrawer',
@@ -134,7 +133,7 @@ export default {
             branchArr: [],
             formLabelWidth: '140px',
             loading: false,
-            bossDetail: {
+            businessDetail: {
             },
             copyDetail: {},
             rules: {
@@ -171,20 +170,19 @@ export default {
         }),
         ...mapGetters({
             nestDdata: 'nestDdata',
-            merchantDetail: 'merchantDetail',
             branchList: 'branchList',
-            memberDetail: 'memberDetail',
-            merchantList: 'merchantList'
+            crmauthDetail: 'crmauthen/crmauthDetail'
+
         }),
         cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
+            const province = this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)
             if (province.length > 0) {
                 return province[0].cities
             }
             return []
         },
         areaList () {
-            const city = this.cityList.filter(item => item.cityId == this.bossDetail.cityId)
+            const city = this.cityList.filter(item => item.cityId == this.businessDetail.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -192,26 +190,27 @@ export default {
         }
     },
     watch: {
-        // merchantCode: {
-        //     handler (newV, oldV) {
-        //         console.log(newV, oldV)
-        //         if (newV) {
-        //             this.getMerchtDetail(newV)
-        //         }
-        //     },
-        //     deep: true
-        // }
+
     },
     methods: {
         ...mapActions({
             findNest: 'findNest',
-            findMerchantDetail: 'findMerchantDetail',
-            findBranch: 'findBranch',
-            findMemberDetail: 'findMemberDetail',
-            findMerchant: 'findMerchant'
+            findBusinessDetail: 'crmauthen/findBusinessDetail',
+            findBranch: 'findBranch'
         }),
+        onAutenSatus (val) {
+            if (val == 1) {
+                return '未认证'
+            } else if (val == 2) {
+                return '认证中'
+            } else if (val == 3) {
+                return '认证成功'
+            } else if (val == 4) {
+                return '认证失败'
+            }
+        },
         handleClose () {
-            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+            if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -224,7 +223,7 @@ export default {
             }
         },
         cancelForm () {
-            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+            if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -237,10 +236,10 @@ export default {
             }
         },
         onSaveDetail () {
-            this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)[0].name
-            this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId)[0].name
-            this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId)[0].name
-            const params = { ...this.bossDetail }
+            this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)[0].name
+            this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId)[0].name
+            this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId)[0].name
+            const params = { ...this.businessDetail }
             params.updateBy = this.userInfo.employeeName
             params.phone = this.userInfo.phoneNumber
             if (params.subsectionCode) {
@@ -252,11 +251,7 @@ export default {
                     try {
                         if (this.type === 'merchant') {
                             params.merchantCode = this.merchantCode
-                            await putMerchantDetail(params)
-                        } else if (this.type === 'member') {
-                            params.memberCode = this.memberCode
-                            delete params.merchantName
-                            await putMemberDetail(params)
+                            await updateCrmauthen(params)
                         }
                         this.$message({
                             message: '数据保存成功',
@@ -276,15 +271,15 @@ export default {
         },
         onChangeList (val) {
             if (val === 1) {
-                this.bossDetail.countryId = ''
-                this.bossDetail.cityId = ''
+                this.businessDetail.countryId = ''
+                this.businessDetail.cityId = ''
                 // 获取中文
-                // this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId).name
+                // this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId).name
             } else if (val === 2) {
-                this.bossDetail.countryId = ''
-                // this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId).name
+                this.businessDetail.countryId = ''
+                // this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId).name
             } else if (val === 3) {
-                // this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId).name
+                // this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId).name
             }
         },
         async getFindNest () {
@@ -295,11 +290,15 @@ export default {
             await this.findMerchant()
             this.merchantArr = this.merchantList
         },
-        async getMerchtMemberDetail (val, type) {
-            deepCopy()
+        async getMerchtMemberDetail (val) {
+            const { data } = await getBusinessAuthen(val)
+            await this.findBusinessDetail({ companyCode: val })
+            this.businessDetail = this.crmauthDetail
+            this.businessDetail.authenticationStatus = data.authenticationStatus
+            this.copyDetail = deepCopy(this.businessDetail)
         },
         backFindbrand (val) {
-            this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
+            this.businessDetail.merchantCode = val.value ? val.value.selectCode : ''
         }
     },
     mounted () {

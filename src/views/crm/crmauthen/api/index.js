@@ -4,23 +4,31 @@ import axios from 'axios'
 export const getChiness = (params) => {
     return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
 }
-// 获取商家列表
-export const getBossMerchant = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant', { params })
+
+export const getCompanyBosslist = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/page', { params })
 }
-// 获取商家详情
-export const getBossMerchantDetail = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/detail', { params })
+
+// CRM 认证详情
+export const getBusinessAuthen = (params) => {
+    return axios.get(B2bUrl + `merchant/api/crm/company/authentication-info/${params}`)
 }
-// 获取商家详情统计
-export const getBossMerchantStatic = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/statistics', { params })
+
+// CRM 认证状态
+export const getBusinessDetail = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/detail', { params })
 }
-// 更新商家详情
-export const putMerchantDetail = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', params)
+// 获取详情统计
+export const getCrmauthenStatic = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/statistics', { params })
 }
+
 // 分部列表
 export const findBrandsList = (params) => {
     return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
+}
+
+// 更新认证企业
+export const updateCrmauthen = (params) => {
+    return axios.put(B2bUrl + 'merchant/api/crm/company/boss/update', params)
 }

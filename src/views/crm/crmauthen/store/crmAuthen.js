@@ -2,41 +2,43 @@
 import * as types from './crmTypes'
 import * as Api from '../api'
 const state = {
-    projectData: {},
-    projectDetail: {},
-    projectLoan: {}
+    businessData: {},
+    crmauthDetail: {},
+    crmauthLoan: {}
+
 }
 
 const getters = {
-    projectData: state => state.projectData,
-    projectDetail: state => state.projectDetail,
-    projectLoan: state => state.projectLoan
+    businessData: state => state.businessData,
+    crmauthDetail: state => state.crmauthDetail,
+    crmauthLoan: state => state.crmauthLoan
+
 }
 
 const mutations = {
-    [types.PROJECT_DATA] (state, payload) {
-        state.projectData = payload
+    [types.BUSINESS_DATA] (state, payload) {
+        state.businessData = payload
     },
-    [types.PROJECT_DETAIL] (state, payload) {
-        state.projectDetail = payload
+    [types.BUSINESS_DETAIL] (state, payload) {
+        state.crmauthDetail = payload
     },
-    [types.PROJECT_LOAN] (state, payload) {
-        state.projectLoan = payload
+    [types.CRMSTATIC_LOAN] (state, payload) {
+        state.crmauthLoan = payload
     }
 }
 
 const actions = {
-    async findProjetpage ({ commit }, params) {
-        const { data } = await Api.getProject(params)
-        commit(types.PROJECT_DATA, data)
+    async findBusinesspage ({ commit }, params) {
+        const { data } = await Api.getCompanyBosslist(params)
+        commit(types.BUSINESS_DATA, data)
     },
-    async findProjectDetail ({ commit }, params) {
-        const { data } = await Api.getProjectDetail(params)
-        commit(types.PROJECT_DETAIL, data)
+    async findBusinessDetail ({ commit }, params) {
+        const { data } = await Api.getBusinessDetail(params)
+        commit(types.BUSINESS_DETAIL, data)
     },
-    async findProjectLoan ({ commit }, params) {
-        const { data } = await Api.getProjectloan(params)
-        commit(types.PROJECT_LOAN, data)
+    async findCrmauthenStatic ({ commit }, params) {
+        const { data } = await Api.getCrmauthenStatic(params)
+        commit(types.CRMSTATIC_LOAN, data)
     }
 }
 export default {

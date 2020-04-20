@@ -5,25 +5,27 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">企业名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">管理员账号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.userAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                    <div class="query-cont-col">
                     <div class="query-col-title">管理员姓名：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入管理员姓名" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.userName" placeholder="请输入管理员姓名" maxlength="50"></el-input>
                     </div>
                 </div>
                      <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入管理员姓名" maxlength="50"></el-input>
+                            <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -47,9 +49,9 @@
                     </div>
                 </div>
                  <div class="query-cont-col">
-                    <div class="query-col-title">金融风险：</div>
+                    <div class="query-col-title">客户分类：</div>
                     <div class="query-col-input">
-                       <el-select v-model="queryParams.status">
+                       <el-select v-model="queryParams.customerType">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option v-for="item in riskTypelist" :key="item.key" :label="item.value" :value="item.key">
@@ -60,10 +62,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">关联/认证时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -80,12 +82,22 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项,体系内 <b>1</b>;体系外 <b>1</b>;白名单 <b>1</b>;黑名单 <b>1</b></el-tag>
+             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum}}</b>;体系外 <b>{{crmauthLoan.outSystemNum}}
+                 </b>;白名单 <b>{{crmauthLoan.whiteListNum}}</b>;黑名单 <b>{{crmauthLoan.blackListNum}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"  @onSortChange="onSortChange"
              @onSizeChange="handleSizeChange"  :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
+                <template slot="areaname" slot-scope="scope">
+                   {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                </template>
+                 <template slot="companyType" slot-scope="scope">
+                   {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                </template>
+                  <template slot="customerType" slot-scope="scope">
+                   {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.id)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -106,25 +118,29 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
+                authenticationEndTime: '',
+                authenticationStartTime: '',
+                authenticationTimeOrder: '',
+                customerType: '',
+                customerTypeOrder: '',
                 companyName: '',
-                firstPartName: '',
-                maxSubmitTime: '',
-                maxUpdateTime: '',
-                minSubmitTime: '',
-                minUpdateTime: ''
+                companyType: '',
+                subsectionCode: '',
+                userAccount: '',
+                userName: ''
             },
             copyParams: {},
             tableData: [],
             paginationInfo: {},
             tableLabel: [
-                { label: '企业名称', prop: 'projectName', width: '180' },
-                { label: '管理员账号', prop: 'projectNo', width: '180' },
-                { label: '管理员姓名', prop: 'predictLoanAmount' },
-                { label: '所属分部', prop: 'companyName', width: '180' },
-                { label: '经营区域', prop: 'firstPartName' },
-                { label: '企业类型', prop: 'type', width: '120' },
-                { label: '金融风险', prop: 'progress', width: '120' },
-                { label: '关联认证时间', prop: 'submitTime', width: '150', formatters: 'dateTimes', sortable: true }
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'userAccount' },
+                { label: '管理员姓名', prop: 'userName' },
+                { label: '所属分部', prop: 'subsectionName', width: '180' },
+                { label: '经营区域', prop: 'areaname' },
+                { label: '企业类型', prop: 'companyType', width: '120' },
+                { label: '客户分类', prop: 'customerType', width: '120', sortable: true },
+                { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: true }
             ],
             rowKey: '',
             multiSelection: [],
@@ -132,7 +148,8 @@ export default {
             optarr: '',
             businessTypelist: BUS_TYPE_LIST,
             riskTypelist: RISK_TYPE_LIST,
-            drawer: false
+            drawer: false,
+            branchArr: []
         }
     },
     components: {
@@ -142,7 +159,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxSubmitTime
+                    let beginDateVal = this.queryParams.authenticationEndTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -152,36 +169,36 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minSubmitTime
+                    let beginDateVal = this.queryParams.authenticationStartTime
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
         },
-        ...mapGetters('crmmanage', {
-            projectData: 'projectData',
-            projectLoan: 'projectLoan'
+        ...mapGetters('crmauthen', {
+            businessData: 'businessData',
+            crmauthLoan: 'crmauthLoan'
         }),
         ...mapGetters({
-            nestDdata: 'nestDdata'
+            nestDdata: 'nestDdata',
+            branchList: 'branchList'
         })
     },
     async mounted () {
-        // this.searchList()
+        this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
-        this.tableData = [
-            { projectName: '11' }
-        ]
+        this.getFindbranch()
     },
     methods: {
-        ...mapActions('crmmanage', {
-            findProjetpage: 'findProjetpage',
-            findProjectLoan: 'findProjectLoan'
+        ...mapActions('crmauthen', {
+            findBusinesspage: 'findBusinesspage',
+            findCrmauthenStatic: 'findCrmauthenStatic'
         }),
         ...mapActions({
-            findNest: 'findNest'
+            findNest: 'findNest',
+            findBranch: 'findBranch'
         }),
         async getFindNest () {
             await this.findNest()
@@ -193,6 +210,10 @@ export default {
                 })
                 return item
             })
+        },
+        async getFindbranch () {
+            await this.findBranch()
+            this.branchArr = this.branchList
         },
         onRest () {
             this.categoryIdArr = []
@@ -217,22 +238,26 @@ export default {
         },
         async  searchList () {
             const { ...params } = this.queryParams
-            await this.findProjetpage(params)
-            this.tableData = this.projectData.records
+            await this.findBusinesspage(params)
+            this.tableData = this.businessData.records
             this.paginationInfo = {
-                pageNumber: this.projectData.current,
-                pageSize: this.projectData.size,
-                total: this.projectData.total
+                pageNumber: this.businessData.current,
+                pageSize: this.businessData.size,
+                total: this.businessData.total
             }
-            await this.findProjectLoan(params)
-            this.loanData = this.projectLoan
+            await this.findCrmauthenStatic()
         },
         onSortChange (val) {
-            console.log(val)
+            if (val.prop == 'customerType') {
+                this.queryParams.customerTypeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+            } else if (val.prop == 'authenticationTime') {
+                this.queryParams.authenticationTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+            }
+            this.searchList()
         },
         onLookauthen (val) {
             this.drawer = true
-            // this.$refs.drawercom.onFindProjectDetail(val)
+            this.$refs.drawercom.getMerchtMemberDetail(val)
         },
         restDrawer () {
             this.drawer = false
