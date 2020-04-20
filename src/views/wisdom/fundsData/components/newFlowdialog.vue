@@ -29,7 +29,7 @@
                 </div>
                 <!--抽离 还款-->
                 <div class="dialogtitle">借款信息：</div>
-                <flowcomp :flowform=ruleForm.loan v-if="changeType(1)" />
+                <flowcomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(1)" />
                 <opencomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(2)" />
                 <pointcomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(3)" />
 
@@ -83,8 +83,8 @@ import pointcomp from './typecomps/borrowInfo/pointcomp'
 import overduecomp from './typecomps/overduecomp'
 import grantratecomp from './typecomps/grantratecomp'
 import { addAccount } from './../api/index'
-import { mapState, createNamespacedHelpers } from 'vuex'
-const { mapActions, mapGetters } = createNamespacedHelpers('fundsData')
+import { mapState, createNamespacedHelpers, mapActions } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'newFlowdialog',
     components: { flowcomp, overduecomp, opencomp, grantratecomp, pointcomp, HAutocomplete },
@@ -229,7 +229,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            findPlatformslist: 'findPlatformslist',
+            findPlatformslist: 'fundsData/findPlatformslist',
             setNewTags: 'setNewTags'
         }),
         changeType (accountType) {
