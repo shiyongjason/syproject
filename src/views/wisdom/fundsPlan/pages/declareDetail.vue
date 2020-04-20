@@ -3,12 +3,12 @@
         <div class="page-body-cont">
             <span>>>ZJJH20200222001—分部总经理审批 待办</span>
             <div class="title">
-                <span>本次可申报：<i>{{applyMonth}}</i>月的预计销售及资金用款计划</span>
+                <span>本次可申报：<i>{{fundDetail.fundplanMain.applyMonth}}</i>月的预计销售及资金用款计划</span>
             </div>
             <baseInfo />
         </div>
         <div class="page-body-cont">
-            <districtEmployee />
+            <districtEmployee :fundBaseAndSale='fundDetail'/>
         </div>
         <div class="page-body-cont">
             <branchFinancial />
@@ -88,12 +88,12 @@ export default {
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
             console.log(data)
+            this.fundDetail = data
         }
     },
     mounted () {
         this.listenerFunction()
         this.getFundDetail()
-        console.log(moment('Sat Apr 18 08:00:00 CST 2020').format('YY_MM_DD HH:mm:ss'))
     }
 }
 </script>

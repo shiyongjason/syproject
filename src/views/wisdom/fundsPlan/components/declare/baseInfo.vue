@@ -103,10 +103,21 @@
 import { BaseInfoBtnTip } from '../../enums/fundPlanEnum'
 export default {
     name: 'baseInfo',
+    props: {
+        fundBaseAndSale: {
+            type: Object,
+            default: () => {
+                return {}
+            }
+        }
+    },
     data () {
         return {
             isOpen: false
         }
+    },
+    mounted () {
+        console.log(this.fundBaseAndSale)
     },
     computed: {
         /**
