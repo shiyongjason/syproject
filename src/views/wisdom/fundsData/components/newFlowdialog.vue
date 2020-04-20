@@ -29,7 +29,7 @@
                 </div>
                 <!--抽离 还款-->
                 <div class="dialogtitle">借款信息：</div>
-                <flowcomp :flowform=ruleForm.loan v-if="changeType(1)" />
+                <flowcomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(1)" />
                 <opencomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(2)" />
                 <pointcomp ref="opencomp" :flowform=ruleForm.loan v-if="changeType(3)" />
 
