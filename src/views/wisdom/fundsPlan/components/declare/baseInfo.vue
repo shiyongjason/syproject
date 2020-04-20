@@ -6,8 +6,7 @@
                 <div class="query-cont-col">
                     <el-form-item label="平台公司代码：">
                         <div class="w250">
-                            <span>1023</span>
-                            <span class="dw">元</span>
+                            <span>{{fundDetail.fundplanMain.misCode}}</span>
                         </div>
                     </el-form-item>
                 </div>
@@ -16,14 +15,14 @@
                 <div class="query-cont-col">
                     <el-form-item label="平台公司名称：">
                         <div class="w250">
-                            <span>南京万汇连环境有限公司</span>
+                            <span>{{fundDetail.fundplanMain.companyName}}</span>
                         </div>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
                     <el-form-item label="所属分部：">
                         <div class="w250">
-                            <span>南京分部</span>
+                            <span>{{fundDetail.fundplanMain.subsectionName}}</span>
                         </div>
                     </el-form-item>
                 </div>
@@ -32,7 +31,7 @@
                 <div class="query-cont-col">
                     <el-form-item label="申报填报人：">
                         <div class="w250">
-                            <span>丁一</span>
+                            <span>{{fundDetail.fundplanMain.createBy}}</span>
                         </div>
                     </el-form-item>
                 </div>
@@ -41,25 +40,25 @@
             <h3>销售数据</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-form-item label="2020年承诺额：">
+                    <el-form-item :label="`${fundDetail.fundplanSale.commitmentAnnualYear}年承诺额：`">
                         <div class="w250">
-                            <span>1023</span>
+                            <span>{{fundDetail.fundplanSale.commitmentAnnualYear || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                    <el-form-item label="2020年3月承诺额：">
+                    <el-form-item :label="`${commimentLastMonthName}承诺额：`">
                         <div class="w250">
-                            <span>200</span>
+                            <span>{{fundDetail.fundplanSale.commimentLastMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                    <el-form-item label="2020年4月承诺额：">
+                    <el-form-item :label="`${commimentNextMonthName}承诺额：`">
                         <div class="w250">
-                            <span>200</span>
+                            <span>{{fundDetail.fundplanSale.commimentNextMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -67,17 +66,17 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-form-item label="截止2020年2月底销售额：">
+                    <el-form-item :label="`截止${saleCurrentMonthName}底销售额：`">
                         <div class="w250">
-                            <span>200</span>
+                            <span>{{fundDetail.fundplanSale.totalSaleCurrentYear || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                    <el-form-item label="2020年3月实时销售额：">
+                    <el-form-item :label="`${totalSaleCurrentYearName}实时销售额：`">
                         <div class="w250">
-                            <span>200</span>
+                            <span>{{fundDetail.fundplanSale.saleCurrentMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -86,7 +85,7 @@
             <h3>借款情况</h3>
             <el-form-item label="在款余额：">
                 <div class="w250">
-                    <span>200</span>
+                    <span>-</span>
                     <span class="dw">万元</span>
                 </div>
             </el-form-item>
@@ -104,10 +103,12 @@ import { BaseInfoBtnTip } from '../../enums/fundPlanEnum'
 export default {
     name: 'baseInfo',
     props: {
-        fundBaseAndSale: {
+        fundDetail: {
             type: Object,
             default: () => {
-                return {}
+                return {
+                    fundplanSale: {}
+                }
             }
         }
     },
@@ -117,7 +118,7 @@ export default {
         }
     },
     mounted () {
-        console.log(this.fundBaseAndSale)
+        console.log(this.fundDetail)
     },
     computed: {
         /**
@@ -126,6 +127,30 @@ export default {
          */
         BaseInfoBtnTip () {
             return this.isOpen ? BaseInfoBtnTip.open : BaseInfoBtnTip.close
+        },
+        commimentLastMonthName () {
+            if (!this.fundDetail.fundplanSale.commimentLastMonthName) {
+                return 'XXXX年XX月'
+            }
+            return `${this.fundDetail.fundplanSale.commimentLastMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.commimentLastMonthName.substring(4, 6)}月`
+        },
+        commimentNextMonthName () {
+            if (!this.fundDetail.fundplanSale.commimentNextMonthName) {
+                return 'XXXX年XX月'
+            }
+            return `${this.fundDetail.fundplanSale.commimentNextMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.commimentNextMonthName.substring(4, 6)}月`
+        },
+        saleCurrentMonthName () {
+            if (!this.fundDetail.fundplanSale.saleCurrentMonthName) {
+                return 'XXXX年XX月'
+            }
+            return `${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6)}月`
+        },
+        totalSaleCurrentYearName () {
+            if (!this.fundDetail.fundplanSale.totalSaleCurrentYearName) {
+                return 'XXXX年XX月'
+            }
+            return `${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(0, 4)}年${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(4, 6)}月`
         }
     }
 }
@@ -145,10 +170,10 @@ export default {
         padding: 0 16px;
         box-sizing: border-box;
     }
-    .query-cont-col{
+    .query-cont-col {
         margin-bottom: 0px;
     }
-    .el-form .el-form-item{
+    .el-form .el-form-item {
         margin-bottom: 10px;
     }
 }

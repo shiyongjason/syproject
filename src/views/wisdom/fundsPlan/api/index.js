@@ -33,3 +33,5 @@ export const getPlanDeclare = (params) => axios.get(shy + `/fundplan/query/curre
 export const getFundPlanAll = (params) => axios.get(shy + `/fundplan/query/all`, { params })
 // 查询资金申报明细数据
 export const getFundDetail = (params) => axios.get(shy + `/fundplan/query/detail/${params}`)
+// 申请资金申报数据
+export const applyFundplan = (params) => axios.post(shy + `/fundplan/apply`, params)

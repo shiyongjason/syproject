@@ -3,15 +3,18 @@
         <div class="page-body-cont">
             <span>>>区域人员申报</span>
             <div class="title">
-                <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span>
+                <span>本次可申报：
+                    <i>{{fundDetail.fundplanMain.applyMonth.substring(0, 4)}}</i>年
+                    <i>{{fundDetail.fundplanMain.applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
+                </span>
             </div>
-            <baseInfo />
+            <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee />
+            <districtEmployee :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont center">
-            <el-button name="hosjoy-color">提 交</el-button>
+            <el-button name="hosjoy-color" @click="onApply">提 交</el-button>
             <el-button name="hosjoy-color">取 消</el-button>
         </div>
     </div>
@@ -20,18 +23,45 @@
 <script>
 import baseInfo from '../components/declare/baseInfo'
 import districtEmployee from '../components/declare/districtEmployee'
+import { getFundDetail, applyFundplan } from '../api/index'
 
 export default {
     name: 'planTotal',
     components: { baseInfo, districtEmployee },
     data () {
-        return {}
+        return {
+            fundDetail: {
+                fundplanMain: {
+                    applyMonth: 'XXXXXX'
+                }, // 基本信息
+                fundplanSale: {}, // 销售信息
+                regionManagerFundplanApprove: null, // 大区总
+                subRegionFundplanApply: {}, // 区域人员
+                subsectionFinanceFundplanApprove: null, // 分财
+                subsectionManagerFundplanApprove: null, // 分总
+                respResult: null
+            }
+        }
     },
     methods: {
-
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
+        async getFundDetail () {
+            const { data } = await getFundDetail(this.$route.query.id)
+            data.subRegionFundplanApply = {}
+            console.log(data)
+            this.fundDetail = data
+        },
+        async onApply () {
+            await applyFundplan(this.fundDetail)
+            this.$message({ message: '申报成功', type: 'success' })
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/fundsPlan/planToDeclare')
+        }
     },
     mounted () {
-
+        this.getFundDetail()
     }
 }
 </script>

@@ -3,7 +3,10 @@
         <div class="page-body-cont">
             <div class="title">
                 <!-- <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span> -->
-                <span>本次可申报：<i>{{tableData[0].applyMonth}}</i>月的预计销售及资金用款计划</span>
+                <span>本次可申报：
+                    <i>{{tableData[0].applyMonth.substring(0, 4)}}</i>年
+                    <i>{{tableData[0].applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
+                </span>
             </div>
             <div class="tips">
                 每月20日—25日提报次月资金计划，每家平台公司每月仅可提报一次
@@ -11,13 +14,15 @@
             <h3>申报列表</h3>
             <div class="p24">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120'>
-                    <!-- eslint-disable-next-line -->
+                    <template slot="applyMonth" slot-scope="scope">
+                        <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
+                    </template>
                     <template slot="applyType" slot-scope="scope">
                         <span v-if="scope.data.row.applyType === 0">未申报</span>
                         <span v-else-if="scope.data.row.applyType === 1">已申报</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" :disabled='scope.data.row.applyType === 1'>点击申报</el-button>
+                        <el-button class="orangeBtn" @click="onDeclare(scope.data.row)" :disabled='scope.data.row.applyType === 1'>点击申报</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -38,7 +43,11 @@ export default {
     data () {
         return {
             tableLabel: bankLabel,
-            tableData: [{}],
+            tableData: [
+                {
+                    applyMonth: 'XXXXXX'
+                }
+            ],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -57,6 +66,15 @@ export default {
             }
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
+            this.pagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
+        },
+        onDeclare (row) {
+            console.log(row)
+            this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
         }
     }
 }

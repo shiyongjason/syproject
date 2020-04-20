@@ -5,10 +5,10 @@
             <div class="title">
                 <span>本次可申报：<i>{{fundDetail.fundplanMain.applyMonth}}</i>月的预计销售及资金用款计划</span>
             </div>
-            <baseInfo />
+            <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundBaseAndSale='fundDetail'/>
+            <districtEmployee />
         </div>
         <div class="page-body-cont">
             <branchFinancial />
@@ -35,7 +35,6 @@ import branchFinancial from '../components/declare/branchFinancial'
 import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
 import { getFundDetail } from '../api/index'
-import moment from 'moment'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
