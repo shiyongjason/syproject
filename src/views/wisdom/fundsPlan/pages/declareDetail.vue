@@ -3,22 +3,22 @@
         <div class="page-body-cont">
             <span>>>ZJJH20200222001—分部总经理审批 待办</span>
             <div class="title">
-                <span>本次可申报：<i>{{fundDetail.fundplanMain.applyMonth}}</i>月的预计销售及资金用款计划</span>
+                <!-- <span>本次可申报：<i>{{applyMonth}}</i>月的预计销售及资金用款计划</span> -->
             </div>
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee />
+            <districtEmployee :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont">
-            <branchFinancial />
+        <!-- <div class="page-body-cont" v-if="approveRoleNode > 0">
+            <branchFinancial :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont">
-            <branchManager />
+        <div class="page-body-cont" v-if="approveRoleNode > 1">
+            <branchManager :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont" :class="shy">
-            <regionalManager />
-        </div>
+        <div class="page-body-cont" :class="shy" v-if="approveRoleNode > 2">
+            <regionalManager :fundDetail='fundDetail' />
+        </div> -->
         <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
         <div style="height: 50px"></div>
         <div class="page-body-cont center fixed">
@@ -35,6 +35,7 @@ import branchFinancial from '../components/declare/branchFinancial'
 import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
 import { getFundDetail } from '../api/index'
+import { approveRole } from '../const'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
@@ -49,7 +50,8 @@ export default {
                 subsectionManagerFundplanApprove: null,
                 respResult: null
             },
-            isBottom: false
+            isBottom: false,
+            approveRoleNode: 0
         }
     },
     computed: {
@@ -60,7 +62,11 @@ export default {
                 }
                 return ''
             }
-        }
+        },
+        // applyMonth () {
+        //     console.log(this.fundDetail.fundplanMain)
+        //     return 1
+        // }
     },
     methods: {
         backPlat (value) {
@@ -87,7 +93,15 @@ export default {
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
             console.log(data)
+            data.subRegionFundplanApply = {}
             this.fundDetail = data
+            // this.approveRoleNode = this.observeApproval()
+        },
+        observeApproval () {
+            var a = approveRole.find((item, index) => {
+                return item.key === this.fundDetail.fundplanMain.approveRole
+            })
+            return a.index
         }
     },
     mounted () {

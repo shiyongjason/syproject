@@ -83,8 +83,8 @@ import pointcomp from './typecomps/borrowInfo/pointcomp'
 import overduecomp from './typecomps/overduecomp'
 import grantratecomp from './typecomps/grantratecomp'
 import { addAccount } from './../api/index'
-import { mapState, createNamespacedHelpers } from 'vuex'
-const { mapActions, mapGetters } = createNamespacedHelpers('fundsData')
+import { mapState, createNamespacedHelpers, mapActions } from 'vuex'
+const { mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'newFlowdialog',
     components: { flowcomp, overduecomp, opencomp, grantratecomp, pointcomp, HAutocomplete },
@@ -229,7 +229,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            findPlatformslist: 'findPlatformslist',
+            findPlatformslist: 'fundsData/findPlatformslist',
             setNewTags: 'setNewTags'
         }),
         changeType (accountType) {

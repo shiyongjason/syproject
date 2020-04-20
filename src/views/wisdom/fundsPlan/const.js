@@ -9,7 +9,7 @@ export const bankLabel = [
 export const hasDeclareLabel = [
     { label: '申报月份', prop: 'applyMonth' },
     { label: '平台公司名称', prop: 'companyName' },
-    { label: '创建时间', prop: 'createTime',formatters: 'dateTime' },
+    { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
 // 资金计划汇总表
@@ -103,5 +103,24 @@ export const summarySheet = [
                 width: '150'
             }
         ]
+    }
+]
+
+export const approveRole = [
+    {
+        key: 'SUBREGION_APPLY', // 区域
+        index: 0
+    },
+    {
+        key: 'JDgroup-SegmentFinance', // 分财
+        index: 1
+    },
+    {
+        key: 'jindiaofz', // 分总
+        index: 2
+    },
+    {
+        key: 'jindiaodqz', // 区域
+        index: 3
     }
 ]

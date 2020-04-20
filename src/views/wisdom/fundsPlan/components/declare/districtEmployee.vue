@@ -41,7 +41,9 @@ export default {
         fundDetail: {
             type: Object,
             default: () => {
-                return {}
+                return {
+                    subRegionFundplanApply: {}
+                }
             }
         }
     },
