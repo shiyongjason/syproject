@@ -1,16 +1,15 @@
 <template>
     <div class="page-body approval">
         <div>
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="我的待办" name="first"></el-tab-pane>
-                <el-tab-pane label="我的已办" name="second"></el-tab-pane>
+            <el-tabs v-model="params.applyType" @tab-click="handleClick">
+                <el-tab-pane label="我的待办" name="1"></el-tab-pane>
+                <el-tab-pane label="我的已办" name="2"></el-tab-pane>
             </el-tabs>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
                     <div class="query-col-title"> 申报月份：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月">
-                        </el-date-picker>
+                        <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月" value-format='yyyy-MM'></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -27,7 +26,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onQuery()">
+                        <el-button type="primary" class="ml20" @click="onSearch()">
                             搜索
                         </el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">
@@ -58,9 +57,9 @@ export default {
     },
     data () {
         return {
-            activeName: 'first',
             tableLabel: approvalListLabel,
             params: {
+                applyType: '1',
                 applyMonth: '',
                 companyName: '',
                 subSectionCode: '',
@@ -102,7 +101,7 @@ export default {
             this.onQuery()
         },
         goApprovalList (row) {
-            this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
+            this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
         },
         backPlat () {
 

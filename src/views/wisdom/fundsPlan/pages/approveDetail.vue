@@ -8,22 +8,22 @@
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' />
+            <districtEmployee :fundDetail='fundDetail' :disabled='true' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 0">
-            <branchFinancial :fundDetail='fundDetail' />
+        <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 0 && !isBottom}" v-if="approveRoleNode >= 0">
+            <branchFinancial :fundDetail='fundDetail' :disabled='approveRoleNode > 0' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 1">
+        <div class="page-body-cont" v-if="approveRoleNode >= 1">
             <branchManager :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 2">
+        <div class="page-body-cont" v-if="approveRoleNode >= 2">
             <regionalManager :fundDetail='fundDetail' />
         </div>
         <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
         <div style="height: 50px"></div>
         <div class="page-body-cont center fixed">
-            <el-button name="hosjoy-color">提 交</el-button>
-            <el-button name="hosjoy-color">取 消</el-button>
+            <el-button name="hosjoy-color" @click="onApprove">提 交</el-button>
+            <el-button name="hosjoy-color" @click="onBack">取 消</el-button>
         </div>
     </div>
 </template>
@@ -34,8 +34,9 @@ import districtEmployee from '../components/declare/districtEmployee'
 import branchFinancial from '../components/declare/branchFinancial'
 import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
-import { getFundDetail } from '../api/index'
+import { getFundDetail, approveFundplan } from '../api/index'
 import { approveRole } from '../const'
+import { mapActions } from 'vuex'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
@@ -71,6 +72,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         backPlat (value) {
             console.log(value)
         },
@@ -96,17 +100,34 @@ export default {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
             console.log(this.fundDetail)
-            // this.approveRoleNode = this.observeApproval()
+            this.approveRoleNode = this.observeApproval()
+            console.log(this.approveRoleNode)
+            this.handleData()
+        },
+        handleData () {
+            if (this.approveRoleNode === 0) {
+                this.fundDetail.subsectionFinanceFundplanApprove = {}
+            } else if (this.approveRoleNode === 1) {
+                this.fundDetail.subsectionManagerFundplanApprove = {}
+            } else if (this.approveRoleNode === 2) {
+                this.fundDetail.regionManagerFundplanApprove = {}
+            }
         },
         observeApproval () {
-            var a = approveRole.find((item, index) => {
+            return approveRole.find((item, index) => {
                 return item.key === this.fundDetail.fundplanMain.approveRole
-            })
-            return a.index
+            }).index
+        },
+        onApprove () {
+            console.log(this.fundDetail)
+        },
+        onBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/fundsPlan/approvalList')
         }
     },
     mounted () {
-        // this.listenerFunction()
+        this.listenerFunction()
         this.getFundDetail()
     }
 }
