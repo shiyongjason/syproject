@@ -43,8 +43,10 @@ axios.interceptors.request.use(
         }
 
         // 以下两个字段是用于埋点的
-        config.headers['Request-Source'] = 4
+        config.headers['Request-Source'] = '4'
         config.headers['Backend-Request'] = 'true'
+        // 下面这个字段是一些特殊埋点时使用
+        // config.headers['Header-Buz-Params'] = JSON.stringify({})
 
         // cancelRequst(config) // 在一个请求发送前执行一下取消操作
         // config.cancelToken = new CancelToken(cancelMethod => {

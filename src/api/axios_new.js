@@ -31,6 +31,8 @@ instance.interceptors.request.use(async function (config) {
     // 以下两个字段是用于埋点的
     config.headers['Request-Source'] = 4
     config.headers['Backend-Request'] = 'true'
+    // 下面这个字段是一些特殊埋点时使用
+    // config.headers['Header-Buz-Params'] = JSON.stringify({})
 
     store.commit('LOAD_STATE', true)
     return config
