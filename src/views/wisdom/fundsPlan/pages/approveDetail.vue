@@ -8,19 +8,22 @@
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' :disabled='true' />
+            <districtEmployee :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont" v-if="approveRoleNode > 0">
-            <branchFinancial :fundDetail='fundDetail' :disabled='true' />
+            <branchFinancial :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont" v-if="approveRoleNode > 1">
-            <branchManager :fundDetail='fundDetail' :disabled='true' />
+            <branchManager :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont" v-if="approveRoleNode > 2">
-            <regionalManager :fundDetail='fundDetail' :disabled='true' />
+            <regionalManager :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont center">
-            <el-button name="hosjoy-color" @click="onBack">返 回</el-button>
+        <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
+        <div style="height: 50px"></div>
+        <div class="page-body-cont center fixed">
+            <el-button name="hosjoy-color">提 交</el-button>
+            <el-button name="hosjoy-color">取 消</el-button>
         </div>
     </div>
 </template>
@@ -33,7 +36,6 @@ import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
 import { getFundDetail } from '../api/index'
 import { approveRole } from '../const'
-import { mapActions } from 'vuex'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
@@ -48,10 +50,19 @@ export default {
                 subsectionManagerFundplanApprove: {},
                 respResult: {}
             },
+            isBottom: false,
             approveRoleNode: 0
         }
     },
     computed: {
+        shy: {
+            get: function () {
+                if (!this.isBottom) {
+                    return 'fixedAuth'
+                }
+                return ''
+            }
+        },
         applyMonth () {
             if (!this.fundDetail.fundplanMain.applyMonth) {
                 return ['XXXX', 'XX']
@@ -60,26 +71,42 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            setNewTags: 'setNewTags'
-        }),
+        backPlat (value) {
+            console.log(value)
+        },
+        onReset () {
+            this.params = { ...this.paramsTemp }
+        },
+        listenerFunction (e) {
+            window.addEventListener('scroll', this.handleScroll, true)
+        },
+        handleScroll (e) {
+            let scrollTop = document.getElementsByTagName('main')[0].scrollTop
+            let clientHeight = document.getElementsByTagName('main')[0].clientHeight
+            let scrollHeight = document.getElementsByTagName('main')[0].scrollHeight
+            console.log(scrollTop, scrollHeight)
+            if (scrollTop + clientHeight > scrollHeight - 200) {
+                this.isBottom = true
+            }
+            if (scrollTop + clientHeight <= scrollHeight - 200) {
+                this.isBottom = false
+            }
+        },
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
-            this.approveRoleNode = this.observeApproval()
+            console.log(this.fundDetail)
+            // this.approveRoleNode = this.observeApproval()
         },
         observeApproval () {
             var a = approveRole.find((item, index) => {
                 return item.key === this.fundDetail.fundplanMain.approveRole
             })
             return a.index
-        },
-        onBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/fundsPlan/planToDeclare')
         }
     },
     mounted () {
+        // this.listenerFunction()
         this.getFundDetail()
     }
 }

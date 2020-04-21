@@ -3,9 +3,7 @@
         <div class="page-body-cont">
             <div class="title">
                 <!-- <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span> -->
-                <span>本次可申报：
-                    <i>{{tableData[0].applyMonth.substring(0, 4)}}</i>年
-                    <i>{{tableData[0].applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
+                <span>本次可申报：<i>{{tableData[0].applyMonth.substring(0, 4)}}</i>年<i>{{tableData[0].applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
                 </span>
             </div>
             <div class="tips">
@@ -73,7 +71,6 @@ export default {
             }
         },
         onDeclare (row) {
-            console.log(row)
             this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
         }
     }

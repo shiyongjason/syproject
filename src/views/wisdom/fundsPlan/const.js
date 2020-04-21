@@ -124,3 +124,11 @@ export const approveRole = [
         index: 3
     }
 ]
+
+export const approvalListLabel = [
+    { label: '流程编号', prop: 'planNo' },
+    { label: '申报月份', prop: 'applyMonth' },
+    { label: '平台公司名称', prop: 'companyName' },
+    { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+    { label: '资金支持类型', prop: 'fundTypeName' }
+]
