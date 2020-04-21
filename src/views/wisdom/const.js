@@ -1,6 +1,6 @@
 export let tableLabel = [
     { prop: 'misCode', label: '公司编码', width: '100', fixed: true },
-    { prop: 'companyShortName', label: '全部', width: '120', fixed: true },
+    { prop: 'companyName', label: '全部', width: '120', fixed: true },
     {
         label: 'XXXX年度销售承诺值',
         children: [

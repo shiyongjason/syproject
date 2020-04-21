@@ -14,10 +14,10 @@
             <branchFinancial :fundDetail='fundDetail' :disabled='approveRoleNode > 0' />
         </div>
         <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 1 && !isBottom}" v-if="approveRoleNode >= 1">
-            <branchManager :fundDetail='fundDetail' />
+            <branchManager :fundDetail='fundDetail' :disabled='approveRoleNode > 1' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode >= 2">
-            <regionalManager :fundDetail='fundDetail' />
+        <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 2 && !isBottom}" v-if="approveRoleNode >= 2">
+            <regionalManager :fundDetail='fundDetail' :disabled='approveRoleNode > 2' />
         </div>
         <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
         <div style="height: 50px"></div>

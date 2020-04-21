@@ -1,9 +1,9 @@
 <template>
     <div class="page-body approval">
         <div>
-            <el-tabs v-model="params.applyType" @tab-click="handleClick">
-                <el-tab-pane label="我的待办" name="1"></el-tab-pane>
-                <el-tab-pane label="我的已办" name="2"></el-tab-pane>
+            <el-tabs v-model="params.processType" type="card" @tab-click="handleClick">
+                <el-tab-pane label="我的待办" name="0"></el-tab-pane>
+                <el-tab-pane label="我的已办" name="1"></el-tab-pane>
             </el-tabs>
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
@@ -37,8 +37,12 @@
             </div>
             <div class="page-body-cont">
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                    <template slot="applyMonth" slot-scope="scope">
+                        <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
+                    </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="goApprovalList(scope.data.row)">审批</el-button>
+                        <el-button v-show="params.processType == 0" class="orangeBtn" @click="goApprovalList(scope.data.row)">审批</el-button>
+                        <el-button v-show="params.processType == 1" class="orangeBtn" @click="shy(scope.data.row)">查看详情</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -60,6 +64,7 @@ export default {
             tableLabel: approvalListLabel,
             params: {
                 applyType: '1',
+                processType: '0',
                 applyMonth: '',
                 companyName: '',
                 subSectionCode: '',
@@ -78,7 +83,8 @@ export default {
     },
     methods: {
         handleClick (tab, event) {
-            console.log(tab, event)
+            this.tableData = []
+            this.onSearch()
         },
         onReset () {
             this.params = { ...this.paramsTemp }
@@ -103,6 +109,9 @@ export default {
         goApprovalList (row) {
             this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
         },
+        shy (row) {
+            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+        },
         backPlat () {
 
         }
@@ -118,10 +127,6 @@ export default {
     background: #ffffff;
     padding: 60px 25px 30px;
     box-sizing: border-box;
-}
-/deep/ .el-tabs__item.is-active {
-    color: #333;
-    background: transparent;
 }
 
 /deep/ .el-tabs__header {

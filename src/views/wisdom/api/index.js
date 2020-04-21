@@ -253,11 +253,14 @@ export const updateDevelopaccount = (params) => {
 export const getTycHolder = (params) => {
     return axios.get(`develop/developbasicinfo/getTycHolder/${params}`)
 }
-
+// 发展在线接口迁移
 export const getTycBasicInfo = (params) => {
     return axios.get(`develop/developbasicinfo/getTycBasicInfo/${params}`)
 }
-
 export const getTycMainStaff = (params) => {
     return axios.get(`develop/developbasicinfo/getTycMainStaff/${params}`)
+}
+// 承诺值分页
+export const getCommitmentList = (params) => {
+    return axios.get(`backend/fundplan/commitment`, { params })
 }

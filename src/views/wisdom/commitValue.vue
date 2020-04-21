@@ -28,14 +28,14 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.monthYear" type="year" placeholder="选择年">
+                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onSearch">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onSearch">导入表格</el-button>
-                    <el-button type="primary" class="ml20" @click="onSearch">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -45,6 +45,23 @@
                 </hosJoyTable>
             </div>
         </div>
+        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+            <el-form :model="form" :rules="rules" ref="form">
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='monthYear'>
+                    <el-date-picker v-model="form.monthYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    </el-date-picker>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/fundplan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
+                    <el-button type="primary" class='m0' :loading='loading'>
+                        导入表格
+                    </el-button>
+                </el-upload>
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -54,12 +71,30 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { tableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { interfaceUrl } from '@/api/config'
+import { getCommitmentList } from './api/index'
+import moment from 'moment'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            form: {
+                monthYear: ''
+            },
+            rules: {
+                monthYear: [
+                    { required: true, message: '请选择年', trigger: 'blur' }
+                ]
+            },
+            headersData: {
+                'refreshToken': sessionStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
+            accept: '.xlsx,.xls',
+            loading: false,
+            interfaceUrl: interfaceUrl,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -83,7 +118,7 @@ export default {
                 subRegionCode: '',
                 subsectionCode: '',
                 companyCode: '',
-                monthYear: '',
+                commitmentYear: moment().format('YYYY'),
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -93,7 +128,8 @@ export default {
             },
             total: {},
             tableData: [],
-            column: tableLabel
+            column: tableLabel,
+            dialogFormVisible: false
         }
     },
     computed: {
@@ -124,13 +160,28 @@ export default {
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
-            // console.log(this.column)
-            // this.column[1].label = 'shy'
+            this.selectAuthLabelShow()
             this.onQuery()
         },
-        onQuery () {
+        selectAuthLabelShow () {
+            if (this.selectAuth.areaObj.selectName) {
+                this.column[1].label = this.selectAuth.areaObj.selectName
+            } else if (this.selectAuth.branchObj.selectName) {
+                this.column[1].label = this.selectAuth.branchObj.selectName
+            } else if (this.selectAuth.regionObj.selectName) {
+                this.column[1].label = this.selectAuth.regionObj.selectName
+            } else {
+                this.column[1].label = '全部'
+            }
+            console.log(this.column)
+        },
+        async onQuery () {
             console.log('搜索')
             console.log(this.queryParams)
+            console.log(this.selectAuth)
+            const { data } = await getCommitmentList(this.queryParams)
+            console.log(data)
+            this.tableData = data.records
         },
         getList (val) {
             this.searchParams = {
@@ -138,6 +189,70 @@ export default {
                 ...val
             }
             this.onQuery()
+        },
+        onReset () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.$set(this.queryParams, 'regionCode', '')
+            this.$set(this.queryParams, 'subRegionCode', '')
+            this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'companyCode', '')
+            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'pageNumber', 1)
+            this.$set(this.queryParams, 'pageSize', 10)
+            this.selectAuth.regionObj = obj
+            this.selectAuth.branchObj = obj
+            this.selectAuth.areaObj = obj
+            this.selectAuth.platformObj = obj
+            this.onSearch()
+        },
+        isSuccess (response) {
+            this.$message({
+                message: '批量导入成功！',
+                type: 'success'
+            })
+            this.loading = false
+            this.onSearch()
+        },
+        isError (response) {
+            this.$message({
+                message: '批量导入失败，' + JSON.parse(response.message).message,
+                type: 'error'
+            })
+            this.loading = false
+        },
+        handleUpload (file) {
+            this.$refs['form'].validate((valid) => { })
+            if (!this.form.monthYear) {
+                this.$message({
+                    message: '请先选择导入年份！',
+                    type: 'warning'
+                })
+                return false
+            }
+            if (file.size / (1024 * 1024) > 100) {
+                this.$message({
+                    message: '附件要保持100M以内',
+                    type: 'warning'
+                })
+                return false
+            }
+            console.log(file)
+            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+            console.log(fileSuffix)
+            if (this.accept.lastIndexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                return false
+            }
+            this.loading = true
+        },
+        onShowImport () {
+            this.dialogFormVisible = true
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         }
     },
     async mounted () {
@@ -152,4 +267,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.upload-demo {
+    display: inline-block;
+}
 </style>

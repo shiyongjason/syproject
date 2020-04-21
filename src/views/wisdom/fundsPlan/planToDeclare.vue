@@ -18,9 +18,10 @@
                     <template slot="applyType" slot-scope="scope">
                         <span v-if="scope.data.row.applyType === 0">未申报</span>
                         <span v-else-if="scope.data.row.applyType === 1">已申报</span>
+                        <span v-else-if="scope.data.row.applyType === 2">已审批</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="onDeclare(scope.data.row)" :disabled='scope.data.row.applyType === 1'>点击申报</el-button>
+                        <el-button class="orangeBtn" @click="onDeclare(scope.data.row)" :disabled='scope.data.row.applyType !== 0'>点击申报</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -60,7 +61,7 @@ export default {
         async getPlanDeclare () {
             const params = {
                 pageNumber: 1,
-                pageSize: 5
+                pageSize: 50
             }
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
