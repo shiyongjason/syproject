@@ -3,9 +3,9 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">mis编码：</div>
+                    <div class="flex-wrap-title">MIS编码：</div>
                     <div class="flex-wrap-cont">
-                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入mis编码"></el-input>
+                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
