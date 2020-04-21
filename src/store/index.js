@@ -17,6 +17,8 @@ import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
 import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
+import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
+
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -52,7 +54,8 @@ const store = new Vuex.Store({
         crmmanage,
         developmodule,
         jinyunplatform,
-        crmauthen
+        crmauthen,
+        crmstatic
     }
 })
 
