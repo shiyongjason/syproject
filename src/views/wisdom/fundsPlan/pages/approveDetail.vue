@@ -1,29 +1,29 @@
 <template>
     <div class="page-body declareDetail">
         <div class="page-body-cont">
-            <span>>>ZJJH20200222001—分部总经理审批 待办</span>
+            <span>>>{{approveRole[approveRoleNode].currentNode}}</span>
             <div class="title">
                 <span>本次可申报：<i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
             </div>
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' />
+            <districtEmployee :fundDetail='fundDetail' :disabled='true' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 0">
-            <branchFinancial :fundDetail='fundDetail' />
+        <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 0 && !isBottom}" v-if="approveRoleNode >= 0">
+            <branchFinancial :fundDetail='fundDetail' :disabled='approveRoleNode > 0' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 1">
+        <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 1 && !isBottom}" v-if="approveRoleNode >= 1">
             <branchManager :fundDetail='fundDetail' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode > 2">
+        <div class="page-body-cont" v-if="approveRoleNode >= 2">
             <regionalManager :fundDetail='fundDetail' />
         </div>
         <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
         <div style="height: 50px"></div>
         <div class="page-body-cont center fixed">
-            <el-button name="hosjoy-color">提 交</el-button>
-            <el-button name="hosjoy-color">取 消</el-button>
+            <el-button name="hosjoy-color" @click="onApprove">提 交</el-button>
+            <el-button name="hosjoy-color" @click="onBack">取 消</el-button>
         </div>
     </div>
 </template>
@@ -34,8 +34,9 @@ import districtEmployee from '../components/declare/districtEmployee'
 import branchFinancial from '../components/declare/branchFinancial'
 import branchManager from '../components/declare/branchManager'
 import regionalManager from '../components/declare/regionalManager'
-import { getFundDetail } from '../api/index'
+import { getFundDetail, approveFundplan } from '../api/index'
 import { approveRole } from '../const'
+import { mapActions } from 'vuex'
 export default {
     name: 'declareDetail',
     components: { baseInfo, districtEmployee, branchFinancial, branchManager, regionalManager },
@@ -51,7 +52,8 @@ export default {
                 respResult: {}
             },
             isBottom: false,
-            approveRoleNode: 0
+            approveRoleNode: 0,
+            approveRole: approveRole
         }
     },
     computed: {
@@ -71,6 +73,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         backPlat (value) {
             console.log(value)
         },
@@ -96,17 +101,42 @@ export default {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
             console.log(this.fundDetail)
-            // this.approveRoleNode = this.observeApproval()
+            this.approveRoleNode = this.observeApproval().index
+            console.log(this.approveRoleNode)
+            this.handleData()
+        },
+        handleData () {
+            if (this.approveRoleNode === 0) {
+                this.fundDetail.subsectionFinanceFundplanApprove = {}
+            } else if (this.approveRoleNode === 1) {
+                this.fundDetail.subsectionManagerFundplanApprove = {}
+            } else if (this.approveRoleNode === 2) {
+                this.fundDetail.regionManagerFundplanApprove = {}
+            }
         },
         observeApproval () {
-            var a = approveRole.find((item, index) => {
+            return approveRole.find((item, index) => {
                 return item.key === this.fundDetail.fundplanMain.approveRole
             })
-            return a.index
+        },
+        async onApprove () {
+            console.log(this.fundDetail)
+            const { data } = await approveFundplan(this.fundDetail)
+            console.log(data)
+            this.$message({ message: '审批成功', type: 'success' })
+            this.onBack()
+        },
+        onBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/fundsPlan/approvalList')
         }
     },
+    beforeDestroy () {
+        console.log('销毁滚动事件')
+        window.removeEventListener("scroll", this.handleScroll, true)
+    },
     mounted () {
-        // this.listenerFunction()
+        this.listenerFunction()
         this.getFundDetail()
     }
 }
