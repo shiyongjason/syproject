@@ -208,6 +208,7 @@ export default {
             this.findProductsInfo(this.queryParams)
         },
         onReset () {
+            this.categoryId = []
             this.queryParams = { ...this.initParams }
             this.findProductsInfo()
         },

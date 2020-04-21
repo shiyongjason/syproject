@@ -16,11 +16,11 @@
                         <span style="margin-left: 20px">{{bankCardInfo.bankAccountNumber}}</span>
                     </el-form-item>
                     <el-form-item label="提现金额" prop="amount">
-                        <el-input v-model="withdrawalForm.amount"></el-input>
+                        <el-input v-model="withdrawalForm.amount" placeholder="请填写"></el-input>
                         <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | money}}元</span>
                     </el-form-item>
                     <el-form-item label="验证码" prop="smsCode">
-                        <el-input v-model="withdrawalForm.smsCode"></el-input>
+                        <el-input v-model="withdrawalForm.smsCode" placeholder="请填写"></el-input>
                         <span style="margin-left: 20px">{{phoneNumber}}</span>
                         <el-button
                             style="margin-left: 20px"
@@ -100,8 +100,8 @@ export default {
                             var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value == 0) {
                                 return callback(new Error('提现金额不能为0'))
-                            // } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
-                            //     return callback(new Error('提现金额超限'))
+                            } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
+                                return callback(new Error('提现金额超限'))
                             } else if (value && !(Reg.test(value))) {
                                 return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
                             } else if (value < 100) {
