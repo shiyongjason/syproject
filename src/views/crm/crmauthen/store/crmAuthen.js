@@ -53,7 +53,6 @@ const actions = {
     },
     async findPlatlist ({ commit }, params) {
         const { data: { data } } = await Api.getPlatList(params)
-        console.log(data)
         commit(types.PLAT_LIST, data.pageContent)
     }
 }

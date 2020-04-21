@@ -6,7 +6,7 @@ export const getChiness = (params) => {
 }
 
 export const getCompanyBosslist = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/page', { params })
+    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/page', params)
 }
 
 // CRM 认证详情
@@ -20,7 +20,7 @@ export const getBusinessDetail = (params) => {
 }
 // 获取详情统计
 export const getCrmauthenStatic = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/statistics', { params })
+    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/statistics', params)
 }
 
 // 分部列表

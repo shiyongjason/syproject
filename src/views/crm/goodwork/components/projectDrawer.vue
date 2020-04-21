@@ -26,8 +26,8 @@
                         <el-radio :label=item.key v-for="item in progressList" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="合同总额：" prop="contractAmount">
-                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
+                <el-form-item label="项目合同总额：" prop="contractAmount">
+                    <el-input v-model="form.contractAmount" placeholder="请输入项目合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备款总额：" prop="deviceAmount">
                     <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>

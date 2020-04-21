@@ -31,7 +31,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-input">
-                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr"  ref="myCascader" :clearable=true :collapse-tags=true
+                        :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
@@ -91,8 +92,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum}}</b>;体系外 <b>{{crmauthLoan.outSystemNum}}
-                </b>;白名单 <b>{{crmauthLoan.whiteListNum}}</b>;黑名单 <b>{{crmauthLoan.blackListNum}}</b></el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>;体系外 <b>{{crmauthLoan.outSystemNum||0}}
+                </b>;白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>;黑名单 <b>{{crmauthLoan.blackListNum||0}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
@@ -145,7 +146,8 @@ export default {
                 userAccount: '',
                 userName: '',
                 authenticationStatus: '',
-                createTimeOrder: ''
+                createTimeOrder: '',
+                areaIds: ''
             },
             copyParams: {},
             tableData: [],
@@ -237,14 +239,17 @@ export default {
             this.branchArr = this.branchList
         },
         onRest () {
-            this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
-            this.status = []
-            this.typeArr = []
-            this.searchList()
+            console.log(this.$refs['myCascader'])
+            this.optarr = ''
+            this.searchList(1)
         },
-        cityChange () {
-
+        cityChange (val) {
+            const cityarr = []
+            val && val.map(item => {
+                cityarr.push(item[2])
+            })
+            this.queryParams.areaIds = cityarr.join(',')
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -257,7 +262,8 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
-        async  searchList () {
+        async  searchList (val) {
+            if (val) this.queryParams.pageNumber = val
             const { ...params } = this.queryParams
             await this.findBusinesspage(params)
             this.tableData = this.businessData.records
