@@ -21,7 +21,7 @@
                         <span v-else-if="scope.data.row.applyType === 2">已审批</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button class="orangeBtn" @click="onDeclare(scope.data.row)" :disabled='scope.data.row.applyType !== 0'>点击申报</el-button>
+                        <el-button class="orangeBtn" @click="onDeclare(scope.data.row)" :disabled='scope.data.row.applyType !== 0 || isDisabled'>点击申报</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -36,9 +36,20 @@
 import { bankLabel } from './const'
 import hasDeclare from './components/hasDeclare'
 import { getPlanDeclare } from './api/index'
+import moment from 'moment'
 export default {
     name: 'fundPlanHome',
     components: { hasDeclare },
+    computed: {
+        isDisabled () {
+            let nowTimeDay = moment(this.tableData[0].serverTime).format('DD')
+            // 20日—25日可填报
+            if (nowTimeDay > 19 && nowTimeDay < 26) {
+                return false
+            }
+            return true
+        }
+    },
     data () {
         return {
             tableLabel: bankLabel,

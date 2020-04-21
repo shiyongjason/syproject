@@ -8,7 +8,7 @@
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' ref="shy" />
+            <districtEmployee ref="districtEmployee" :fundDetail='fundDetail' :required='true' />
         </div>
         <div class="page-body-cont center">
             <el-button name="hosjoy-color" @click="onApply">提 交</el-button>
@@ -52,7 +52,7 @@ export default {
             this.fundDetail = data
         },
         onApply () {
-            this.$refs['shy'].$refs['form'].validate(async (valid) => {
+            this.$refs['districtEmployee'].$refs['form'].validate(async (valid) => {
                 if (valid) {
                     await applyFundplan(this.fundDetail)
                     this.$message({ message: '申报成功', type: 'success' })
