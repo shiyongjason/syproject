@@ -11,7 +11,9 @@
             <div class="query-cont-col">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat"
+                                   placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30'
+                                   :canDoBlurMethos='false'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -28,8 +30,12 @@
                 </div>
             </div>
         </div>
+        <div class="tips">
+            <p><b>2020</b>年<b>4</b>月<span class="right">单位：万元</span></p>
+        </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="column" :data="planTotalList" align="center" :total="page.total"></hosJoyTable>
+            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
+                         :total="page.total"></hosJoyTable>
         </div>
     </div>
 </template>
@@ -41,6 +47,7 @@ import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState, mapGetters } from 'vuex'
 import { downloadPlanTotalList } from './api/index'
+
 export default {
     name: 'planTotal',
     mixins: [departmentAuth],
@@ -64,8 +71,7 @@ export default {
             },
             page: {
                 total: 0
-            },
-            column: summarySheet
+            }
         }
     },
     computed: {
@@ -74,7 +80,10 @@ export default {
         }),
         ...mapGetters({
             planTotalList: 'fundsPlan/planTotalList'
-        })
+        }),
+        columnData () {
+            return summarySheet(2019, 4)
+        }
     },
     methods: {
         backPlat (val) {
@@ -99,5 +108,23 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+    .tips {
+
+        background: #ffffff;
+        p {
+            max-width: 1000px;
+            margin: auto;
+            line-height: 100px;
+            text-align: center;
+
+            b {
+                color: red;
+                padding: 0 5px;
+            }
+            .right{
+                float: right;
+            }
+        }
+    }
 </style>
