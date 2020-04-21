@@ -1,7 +1,7 @@
 <template>
     <div class="page-body declareDetail">
         <div class="page-body-cont">
-            <span>>>ZJJH20200222001—分部总经理审批 待办</span>
+            <span>>>{{approveRole[approveRoleNode].currentNode}}</span>
             <div class="title">
                 <span>本次可申报：<i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
             </div>
@@ -13,7 +13,7 @@
         <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 0 && !isBottom}" v-if="approveRoleNode >= 0">
             <branchFinancial :fundDetail='fundDetail' :disabled='approveRoleNode > 0' />
         </div>
-        <div class="page-body-cont" v-if="approveRoleNode >= 1">
+        <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 1 && !isBottom}" v-if="approveRoleNode >= 1">
             <branchManager :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont" v-if="approveRoleNode >= 2">
@@ -52,7 +52,8 @@ export default {
                 respResult: {}
             },
             isBottom: false,
-            approveRoleNode: 0
+            approveRoleNode: 0,
+            approveRole: approveRole
         }
     },
     computed: {
@@ -100,7 +101,7 @@ export default {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
             console.log(this.fundDetail)
-            this.approveRoleNode = this.observeApproval()
+            this.approveRoleNode = this.observeApproval().index
             console.log(this.approveRoleNode)
             this.handleData()
         },
@@ -116,15 +117,23 @@ export default {
         observeApproval () {
             return approveRole.find((item, index) => {
                 return item.key === this.fundDetail.fundplanMain.approveRole
-            }).index
+            })
         },
-        onApprove () {
+        async onApprove () {
             console.log(this.fundDetail)
+            const { data } = await approveFundplan(this.fundDetail)
+            console.log(data)
+            this.$message({ message: '审批成功', type: 'success' })
+            this.onBack()
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/fundsPlan/approvalList')
         }
+    },
+    beforeDestroy () {
+        console.log('销毁滚动事件')
+        window.removeEventListener("scroll", this.handleScroll, true)
     },
     mounted () {
         this.listenerFunction()

@@ -1,7 +1,7 @@
 <template>
     <div class="page-body declareDetail">
         <div class="page-body-cont">
-            <span>>>ZJJH20200222001—分部总经理审批 待办</span>
+            <span>>>{{approveRole[approveRoleNode].nextNode}}</span>
             <div class="title">
                 <span>本次可申报：<i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
             </div>
@@ -48,7 +48,8 @@ export default {
                 subsectionManagerFundplanApprove: {},
                 respResult: {}
             },
-            approveRoleNode: 0
+            approveRoleNode: 0,
+            approveRole: approveRole
         }
     },
     computed: {
@@ -66,13 +67,12 @@ export default {
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
-            this.approveRoleNode = this.observeApproval()
+            this.approveRoleNode = this.observeApproval().index
         },
         observeApproval () {
-            var a = approveRole.find((item, index) => {
+            return approveRole.find((item, index) => {
                 return item.key === this.fundDetail.fundplanMain.approveRole
             })
-            return a.index
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])

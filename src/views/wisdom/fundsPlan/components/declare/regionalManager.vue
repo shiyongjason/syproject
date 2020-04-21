@@ -19,6 +19,20 @@
 <script>
 export default {
     name: 'regionalManager',
+    props: {
+        fundDetail: {
+            type: Object,
+            default: () => {
+                return {}
+            }
+        },
+        disabled: {
+            type: Boolean,
+            default: () => {
+                return false
+            }
+        }
+    },
     data () {
         return {
             rules: {},

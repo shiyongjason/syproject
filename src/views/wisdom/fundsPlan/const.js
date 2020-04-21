@@ -109,19 +109,27 @@ export const summarySheet = [
 export const approveRole = [
     {
         key: 'SUBREGION_APPLY', // 区域
-        index: 0
+        index: 0,
+        currentNode: '区域申报 已办',
+        nextNode: '分部财务审批 待办'
     },
     {
         key: 'JDgroup-SegmentFinance', // 分财
-        index: 1
+        index: 1,
+        currentNode: '分部财务审批 已办',
+        nextNode: '分部总经理审批 待办'
     },
     {
         key: 'jindiaofz', // 分总
-        index: 2
+        index: 2,
+        currentNode: '分部总经理审批 已办',
+        nextNode: '大区总经理审批 待办'
     },
     {
-        key: 'jindiaodqz', // 区域
-        index: 3
+        key: 'jindiaodqz', // 大区
+        index: 3,
+        currentNode: '分部总经理审批 已办',
+        nextNode: '审批完成'
     }
 ]
 
