@@ -8,21 +8,21 @@
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' :disabled='true' />
+            <districtEmployee :fundDetail='fundDetail' :disabled='true' :required='false' />
         </div>
         <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 0 && !isBottom}" v-if="approveRoleNode >= 0">
-            <branchFinancial :fundDetail='fundDetail' :disabled='approveRoleNode > 0' />
+            <branchFinancial ref="branchFinancial" :fundDetail='fundDetail' :disabled='approveRoleNode > 0' :required='!(approveRoleNode > 0)' />
         </div>
         <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 1 && !isBottom}" v-if="approveRoleNode >= 1">
-            <branchManager :fundDetail='fundDetail' :disabled='approveRoleNode > 1' />
+            <branchManager ref="branchManager" :fundDetail='fundDetail' :disabled='approveRoleNode > 1' />
         </div>
         <div class="page-body-cont" :class="{'fixedAuth':approveRoleNode === 2 && !isBottom}" v-if="approveRoleNode >= 2">
-            <regionalManager :fundDetail='fundDetail' :disabled='approveRoleNode > 2' />
+            <regionalManager ref="regionalManager" :fundDetail='fundDetail' :disabled='approveRoleNode == 3' />
         </div>
         <div v-show="!isBottom" class="page-body-cont" style="height: 396px"></div>
         <div style="height: 50px"></div>
         <div class="page-body-cont center fixed">
-            <el-button name="hosjoy-color" @click="onApprove">提 交</el-button>
+            <el-button name="hosjoy-color" @click="onApprove(approveRole[approveRoleNode].ref)" :disabled='approveRoleNode == 3'>提 交</el-button>
             <el-button name="hosjoy-color" @click="onBack">取 消</el-button>
         </div>
     </div>
@@ -59,10 +59,9 @@ export default {
     computed: {
         shy: {
             get: function () {
-                if (!this.isBottom) {
-                    return 'fixedAuth'
-                }
-                return ''
+                if (this.approveRoleNode === 0) return 'branchFinancial'
+                if (this.approveRoleNode === 1) return 'branchManager'
+                if (this.approveRoleNode === 2) return 'regionalManager'
             }
         },
         applyMonth () {
@@ -89,7 +88,6 @@ export default {
             let scrollTop = document.getElementsByTagName('main')[0].scrollTop
             let clientHeight = document.getElementsByTagName('main')[0].clientHeight
             let scrollHeight = document.getElementsByTagName('main')[0].scrollHeight
-            console.log(scrollTop, scrollHeight)
             if (scrollTop + clientHeight > scrollHeight - 200) {
                 this.isBottom = true
             }
@@ -119,12 +117,17 @@ export default {
                 return item.key === this.fundDetail.fundplanMain.approveRole
             })
         },
-        async onApprove () {
+        async onApprove (name) {
             console.log(this.fundDetail)
-            const { data } = await approveFundplan(this.fundDetail)
-            console.log(data)
-            this.$message({ message: '审批成功', type: 'success' })
-            this.onBack()
+            this.$refs[name].$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    await approveFundplan(this.fundDetail)
+                    this.$message({ message: '审批成功', type: 'success' })
+                    this.onBack()
+                } else {
+                    return false
+                }
+            })
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])

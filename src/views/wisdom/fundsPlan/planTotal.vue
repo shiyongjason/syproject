@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月">
+                    <el-date-picker v-model="params.applyMonth" type="month"  value-format='yyyyMM' placeholder="选择月">
                     </el-date-picker>
                 </div>
             </div>

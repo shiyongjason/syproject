@@ -9,7 +9,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title"> 申报月份：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月" value-format='yyyy-MM'></el-date-picker>
+                        <el-date-picker v-model="params.applyMonth" type="month" placeholder="选择月" value-format='yyyyMM'></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -63,7 +63,6 @@ export default {
         return {
             tableLabel: approvalListLabel,
             params: {
-                applyType: '1',
                 processType: '0',
                 applyMonth: '',
                 companyName: '',
@@ -84,10 +83,13 @@ export default {
     methods: {
         handleClick (tab, event) {
             this.tableData = []
-            this.onSearch()
+            this.onReset()
         },
         onReset () {
-            this.params = { ...this.paramsTemp }
+            this.$set(this.params, 'applyMonth', '')
+            this.$set(this.params, 'companyName', '')
+            this.$set(this.params, 'subSectionCode', '')
+            this.onSearch()
         },
         onCurrentChange (val) {
             this.params.pageNumber = val.pageNumber

@@ -91,7 +91,7 @@
             </el-form-item>
             <el-form-item label="待还款明细：">
                 <div class="w250">
-                    <el-button type="primary" size="small">{{BaseInfoBtnTip}}</el-button>
+                    <el-button type="primary" size="small" disabled>{{BaseInfoBtnTip}}</el-button>
                 </div>
             </el-form-item>
         </el-form>

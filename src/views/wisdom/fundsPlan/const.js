@@ -113,30 +113,34 @@ export const approveRole = [
         key: 'SUBREGION_APPLY', // 区域
         index: 0,
         currentNode: '区域申报 已办',
-        nextNode: '分部财务审批 待办'
+        nextNode: '分部财务审批 待办',
+        ref: 'branchFinancial'
     },
     {
         key: 'JDgroup-SegmentFinance', // 分财
         index: 1,
         currentNode: '分部财务审批 已办',
-        nextNode: '分部总经理审批 待办'
+        nextNode: '分部总经理审批 待办',
+        ref: 'branchManager'
     },
     {
         key: 'jindiaofz', // 分总
         index: 2,
         currentNode: '分部总经理审批 已办',
-        nextNode: '大区总经理审批 待办'
+        nextNode: '大区总经理审批 待办',
+        ref: 'regionalManager'
     },
     {
         key: 'jindiaodqz', // 大区
         index: 3,
         currentNode: '分部总经理审批 已办',
-        nextNode: '审批完成'
+        nextNode: '审批完成',
+        ref: '-'
     }
 ]
 
 export const approvalListLabel = [
-    { label: '流程编号', prop: 'planNo' },
+    { label: '流程编号', prop: 'planId' },
     { label: '申报月份', prop: 'applyMonth' },
     { label: '平台公司名称', prop: 'companyName' },
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },

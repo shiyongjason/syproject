@@ -79,7 +79,8 @@ export default {
             }
         },
         onReset () {
-            // this.$set(this.queryParams, 'companyName', '')
+            this.$set(this.queryParams, 'applyMonth', '')
+            this.$set(this.queryParams, 'companyName', '')
             this.onSearch()
         },
         onCurrentChange (val) {

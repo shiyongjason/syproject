@@ -7,7 +7,7 @@
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="分总意见：">
+            <el-form-item label="分总意见：" prop="approveAmount">
                 <div class="w250">
                     <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subsectionManagerFundplanApprove.remark" :disabled='disabled'></el-input>
                 </div>
@@ -35,8 +35,14 @@ export default {
     },
     data () {
         return {
-            rules: {},
-            districtContent: {}
+            rules: {
+                approveAmount: [
+                    { required: true, message: '请输入审批金额', trigger: 'blur' }
+                ],
+                remark: [
+                    { required: true, message: '请输入区域意见', trigger: 'blur' }
+                ]
+            }
         }
     }
 }

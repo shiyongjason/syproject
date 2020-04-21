@@ -3,15 +3,12 @@
         <div class="page-body-cont">
             <span>>>区域人员申报</span>
             <div class="title">
-                <span>本次可申报：
-                    <i>{{fundDetail.fundplanMain.applyMonth.substring(0, 4)}}</i>年
-                    <i>{{fundDetail.fundplanMain.applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
-                </span>
+                <span>本次可申报：<i>{{fundDetail.fundplanMain.applyMonth.substring(0, 4)}}</i>年<i>{{fundDetail.fundplanMain.applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划</span>
             </div>
             <baseInfo :fundDetail='fundDetail' />
         </div>
         <div class="page-body-cont">
-            <districtEmployee :fundDetail='fundDetail' />
+            <districtEmployee :fundDetail='fundDetail' ref="shy" />
         </div>
         <div class="page-body-cont center">
             <el-button name="hosjoy-color" @click="onApply">提 交</el-button>
@@ -54,10 +51,16 @@ export default {
             console.log(data)
             this.fundDetail = data
         },
-        async onApply () {
-            await applyFundplan(this.fundDetail)
-            this.$message({ message: '申报成功', type: 'success' })
-            this.onBack()
+        onApply () {
+            this.$refs['shy'].$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    await applyFundplan(this.fundDetail)
+                    this.$message({ message: '申报成功', type: 'success' })
+                    this.onBack()
+                } else {
+                    return false
+                }
+            })
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])

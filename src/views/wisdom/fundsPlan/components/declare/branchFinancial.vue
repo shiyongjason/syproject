@@ -2,18 +2,18 @@
     <div class="branchFinancial">
         <h3>分部财务核定</h3>
         <el-form :model="fundDetail.subsectionFinanceFundplanApprove" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
-            <el-form-item label="健康度指标：" prop="invoiceAmount">
+            <el-form-item label="健康度指标：" prop="healthPercentage">
                 <el-input v-model.trim="fundDetail.subsectionFinanceFundplanApprove.healthPercentage" v-isNum="fundDetail.subsectionFinanceFundplanApprove.healthPercentage" maxlength='20' placeholder="请输入健康度指标" :disabled='disabled'>
                     <template slot="append">%</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="是否有逾期：">
+            <el-form-item label="是否有逾期：" prop="isOverdue">
                 <el-radio-group v-model="fundDetail.subsectionFinanceFundplanApprove.isOverdue" :disabled='disabled'>
                     <el-radio :label="1">是</el-radio>
                     <el-radio :label="0">否</el-radio>
                 </el-radio-group>
             </el-form-item>
-            <el-form-item label="区域意见：">
+            <el-form-item label="区域意见：" prop="remark">
                 <div class="w250">
                     <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subsectionFinanceFundplanApprove.remark" :disabled='disabled'></el-input>
                 </div>
@@ -37,11 +37,27 @@ export default {
             default: () => {
                 return false
             }
+        },
+        required: {
+            type: Boolean,
+            default: () => {
+                return false
+            }
         }
     },
     data () {
         return {
-            rules: {}
+            rules: {
+                healthPercentage: [
+                    { required: this.required, message: '请输入健康度指标', trigger: 'blur' }
+                ],
+                isOverdue: [
+                    { required: this.required, message: '请选择是否有逾期', trigger: 'change' }
+                ],
+                remark: [
+                    { required: this.required, message: '请输入区域意见', trigger: 'blur' }
+                ]
+            }
         }
     }
 }
