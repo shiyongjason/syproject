@@ -203,11 +203,11 @@ export default {
                         if (this.$route.query.id) {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
                             await updateCloudSendMessage(this.sendMessage)
-                            this.$message.success('活动修改成功')
+                            this.$message.success('修改成功')
                         } else {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
                             await createCloudSendMessage(this.sendMessage)
-                            this.$message.success('活动保存成功')
+                            this.$message.success('保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
                         this.$router.push('/comfortCloud/sendMessage')
