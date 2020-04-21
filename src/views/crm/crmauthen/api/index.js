@@ -1,4 +1,4 @@
-import { ccpBaseUrl, B2bUrl } from '@/api/config'
+import { ccpBaseUrl, B2bUrl, interfaceUrl } from '@/api/config'
 import axios from 'axios'
 // 省市区
 export const getChiness = (params) => {
@@ -32,3 +32,5 @@ export const findBrandsList = (params) => {
 export const updateCrmauthen = (params) => {
     return axios.put(B2bUrl + 'merchant/api/crm/company/boss/update', params)
 }
+
+export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })

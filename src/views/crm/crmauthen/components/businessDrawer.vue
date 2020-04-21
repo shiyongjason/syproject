@@ -7,12 +7,12 @@
                         {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{onAutenSatus(businessDetail.authenticationStatus)}}</el-button>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
-                        {{businessDetail.userAccount}}
+                        {{businessDetail.userAccount||'-'}}
                     </el-form-item>
                     <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
-                           {{businessDetail.userName}}
+                           {{businessDetail.userName||'-'}}
                     </el-form-item>
-                    <el-form-item label="所属分部：" :label-width="formLabelWidth">
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="subsectionCode">
                         <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
@@ -56,7 +56,7 @@
                             <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2">
+                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2" prop="relationCompanyCode">
                         <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="客户分类：" :label-width="formLabelWidth">
@@ -72,7 +72,7 @@
                         {{businessDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
-                       {{businessDetail.authenticationBy}} {{businessDetail.authenticationPhone}}
+                       {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
                     </el-form-item>
                     <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
                         {{businessDetail.updateTime| formatterTime}}
@@ -131,12 +131,18 @@ export default {
         return {
             removeValue: true,
             branchArr: [],
-            formLabelWidth: '140px',
+            formLabelWidth: '150px',
             loading: false,
             businessDetail: {
             },
             copyDetail: {},
             rules: {
+                subsectionCode: [
+                    { required: true, message: '请选择分部', trigger: 'change' }
+                ],
+                companyType: [
+                    { required: true, message: '请选择企业类型', trigger: 'change' }
+                ],
                 countryId: [
                     { required: true, message: '请选择区', trigger: 'change' }
                 ],
@@ -145,6 +151,9 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
+                ],
+                relationCompanyCode: [
+                    { required: true, message: '请选择关联公司' }
                 ]
             },
             targetObj: {
@@ -171,7 +180,8 @@ export default {
         ...mapGetters({
             nestDdata: 'nestDdata',
             branchList: 'branchList',
-            crmauthDetail: 'crmauthen/crmauthDetail'
+            crmauthDetail: 'crmauthen/crmauthDetail',
+            platlist: 'crmauthen/platlist'
 
         }),
         cityList () {
@@ -196,8 +206,12 @@ export default {
         ...mapActions({
             findNest: 'findNest',
             findBusinessDetail: 'crmauthen/findBusinessDetail',
-            findBranch: 'findBranch'
+            findBranch: 'findBranch',
+            findPlatlist: 'crmauthen/findPlatlist'
         }),
+        onClearV () {
+            this.$refs['ruleForm'].clearValidate()
+        },
         onAutenSatus (val) {
             if (val == 1) {
                 return '未认证'
@@ -241,7 +255,7 @@ export default {
             this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId)[0].name
             const params = { ...this.businessDetail }
             params.updateBy = this.userInfo.employeeName
-            params.phone = this.userInfo.phoneNumber
+            params.updatePhone = this.userInfo.phoneNumber
             if (params.subsectionCode) {
                 params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
             }
@@ -249,10 +263,7 @@ export default {
                 if (valid) {
                     this.loading = true
                     try {
-                        if (this.type === 'merchant') {
-                            params.merchantCode = this.merchantCode
-                            await updateCrmauthen(params)
-                        }
+                        await updateCrmauthen(params)
                         this.$message({
                             message: '数据保存成功',
                             type: 'success'
@@ -282,13 +293,13 @@ export default {
                 // this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId).name
             }
         },
+        async getPlatlist () {
+            await this.findPlatlist()
+            this.merchantArr = this.platlist
+        },
         async getFindNest () {
             await this.findNest()
             this.proviceList = this.nestDdata
-        },
-        async getMerchantList () {
-            await this.findMerchant()
-            this.merchantArr = this.merchantList
         },
         async getMerchtMemberDetail (val) {
             const { data } = await getBusinessAuthen(val)
@@ -296,15 +307,19 @@ export default {
             this.businessDetail = this.crmauthDetail
             this.businessDetail.authenticationStatus = data.authenticationStatus
             this.copyDetail = deepCopy(this.businessDetail)
+            this.targetObj.selectCode = this.businessDetail.relationCompanyCode
+            this.targetObj.selectName = this.businessDetail.relationCompanyName
         },
         backFindbrand (val) {
-            this.businessDetail.merchantCode = val.value ? val.value.selectCode : ''
+            console.log(val)
+            this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
+            this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
         }
     },
     mounted () {
         this.getFindNest()
         this.onGetbranch()
-        this.getMerchantList()
+        this.getPlatlist()
     }
 }
 </script>

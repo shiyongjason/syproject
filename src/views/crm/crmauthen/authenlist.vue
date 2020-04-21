@@ -14,16 +14,16 @@
                         <el-input v-model="queryParams.userAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
-                   <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">管理员姓名：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.userName" placeholder="请输入管理员姓名" maxlength="50"></el-input>
                     </div>
                 </div>
-                     <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                            <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
@@ -31,9 +31,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-input">
-                          <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true
-                          :collapse-tags=true :show-all-levels="true" @change="cityChange"
-                          :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
@@ -48,13 +46,24 @@
                         </el-select>
                     </div>
                 </div>
-                 <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">客户分类：</div>
                     <div class="query-col-input">
-                       <el-select v-model="queryParams.customerType">
+                        <el-select v-model="queryParams.customerType">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option v-for="item in riskTypelist" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">认证状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.customerType">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in authenList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -82,19 +91,26 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum}}</b>;体系外 <b>{{crmauthLoan.outSystemNum}}
-                 </b>;白名单 <b>{{crmauthLoan.whiteListNum}}</b>;黑名单 <b>{{crmauthLoan.blackListNum}}</b></el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"  @onSortChange="onSortChange"
-             @onSizeChange="handleSizeChange"  :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
-                :isShowIndex='true'>
+            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum}}</b>;体系外 <b>{{crmauthLoan.outSystemNum}}
+                </b>;白名单 <b>{{crmauthLoan.whiteListNum}}</b>;黑名单 <b>{{crmauthLoan.blackListNum}}</b></el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+                <template slot="userAccount" slot-scope="scope">
+                   <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                </template>
+                <template slot="userName" slot-scope="scope">
+                   <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userName||'-'}}</span>
+                </template>
                 <template slot="areaname" slot-scope="scope">
-                   {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
                 </template>
-                 <template slot="companyType" slot-scope="scope">
-                   {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                <template slot="companyType" slot-scope="scope">
+                    {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
                 </template>
-                  <template slot="customerType" slot-scope="scope">
-                   {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                <template slot="customerType" slot-scope="scope">
+                    {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                </template>
+                <template slot="isAuthentication" slot-scope="scope">
+                    <span :class="scope.data.row.isAuthentication==1?'colred':'colgry'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)">查看详情</el-button>
@@ -109,7 +125,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
-import { BUS_TYPE_LIST, RISK_TYPE_LIST } from '../const'
+import { BUS_TYPE_LIST, RISK_TYPE_LIST, AUTEHEN_LIST } from '../const'
 
 export default {
     name: 'projectlist',
@@ -127,7 +143,9 @@ export default {
                 companyType: '',
                 subsectionCode: '',
                 userAccount: '',
-                userName: ''
+                userName: '',
+                authenticationStatus: '',
+                createTimeOrder: ''
             },
             copyParams: {},
             tableData: [],
@@ -140,6 +158,8 @@ export default {
                 { label: '经营区域', prop: 'areaname' },
                 { label: '企业类型', prop: 'companyType', width: '120' },
                 { label: '客户分类', prop: 'customerType', width: '120', sortable: true },
+                { label: '认证状态', prop: 'isAuthentication', width: '120' },
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: true },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: true }
             ],
             rowKey: '',
@@ -148,6 +168,7 @@ export default {
             optarr: '',
             businessTypelist: BUS_TYPE_LIST,
             riskTypelist: RISK_TYPE_LIST,
+            authenList: AUTEHEN_LIST,
             drawer: false,
             branchArr: []
         }
@@ -245,13 +266,15 @@ export default {
                 pageSize: this.businessData.size,
                 total: this.businessData.total
             }
-            await this.findCrmauthenStatic()
+            await this.findCrmauthenStatic(params)
         },
         onSortChange (val) {
             if (val.prop == 'customerType') {
                 this.queryParams.customerTypeOrder = val.order == 'ascending' ? 'asc' : 'desc'
             } else if (val.prop == 'authenticationTime') {
                 this.queryParams.authenticationTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+            } else if (val.prop == 'createTime') {
+                this.queryParams.createTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
             }
             this.searchList()
         },
@@ -262,16 +285,24 @@ export default {
         restDrawer () {
             this.drawer = false
             this.searchList()
+            this.$refs.drawercom.onClearV()
+        },
+        onLinkship (val) {
+            this.$router.push({ path: '/hmall/memberManage', query: { account: val } })
         }
     }
 }
 </script>
 <style lang="scss" scoped>
 .colred {
-    color: #ff7a45;
+    color: #ff0000;
 }
 .colgry {
     color: #ccc;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 .eltagtop {
     margin-bottom: 10px;

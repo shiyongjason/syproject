@@ -54,3 +54,8 @@ export const RISK_TYPE_LIST = [
     { key: 2, value: '黑名单' },
     { key: 3, value: '待审核' }
 ]
+
+export const AUTEHEN_LIST = [
+    { key: 1, value: '已认证' },
+    { key: 2, value: '未认证' }
+]

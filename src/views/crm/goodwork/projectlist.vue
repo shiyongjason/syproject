@@ -58,15 +58,17 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <!-- <el-select v-model="queryParams.status">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
-                            </el-option>
-                        </el-select> -->
                         <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
                             <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                   <div class="query-cont-col">
+                    <div class="query-col-title">所属分部：</div>
+                    <div class="query-col-input">
+                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -118,8 +120,7 @@ export default {
         return {
             crm_goodwork_detail: Auths.CRM_GOODWORK_DETAIL,
             categoryIdArr: [],
-            productSource: [],
-            brandList: [],
+            branchArr: [],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -205,21 +206,23 @@ export default {
                 }
             }
         },
-        ...mapGetters('crmmanage', {
-            projectData: 'projectData',
-            projectLoan: 'projectLoan'
-
+        ...mapGetters({
+            projectData: 'crmmanage/projectData',
+            projectLoan: 'crmmanage/projectLoan',
+            branchList: 'branchList'
         })
     },
     async mounted () {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
+        this.onGetbranch()
     },
 
     methods: {
-        ...mapActions('crmmanage', {
-            findProjetpage: 'findProjetpage',
-            findProjectLoan: 'findProjectLoan'
+        ...mapActions({
+            findProjetpage: 'crmmanage/findProjetpage',
+            findProjectLoan: 'crmmanage/findProjectLoan',
+            findBranch: 'findBranch'
         }),
         fundMoneys (val) {
             if (val) {
@@ -265,6 +268,10 @@ export default {
         restDrawer () {
             this.drawer = false
             this.searchList()
+        },
+        async onGetbranch () {
+            await this.findBranch()
+            this.branchArr = this.branchList
         }
     }
 }

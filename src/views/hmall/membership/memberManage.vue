@@ -125,7 +125,7 @@ export default {
                 companyName: '',
                 isAuthentication: '',
                 isEnabled: '',
-                adminAccount: '',
+                adminAccount: this.$route.query.account || '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
@@ -221,6 +221,7 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.adminAccount = ''
             this.optarr = ''
             this.options = []
             this.getFindNest()
@@ -247,9 +248,7 @@ export default {
         },
         async onFindMlist (val) {
             if (val) this.queryParams.pageNumber = val
-            console.log(123)
             await this.findMemberList(this.queryParams)
-            console.log(22)
             this.tableData = this.memberData.records
             this.paginationInfo = {
                 total: this.memberData.total,
