@@ -83,7 +83,7 @@
                 </el-form>
                 <div class="drawer-footer">
                     <div class="drawer-button">
-                        <el-button type="info" @click="()=>dialogVisible = true">设置白名单</el-button>
+                        <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
                         <el-button @click="cancelForm">取 消</el-button>
                         <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
@@ -92,24 +92,26 @@
         </el-drawer>
         <el-dialog title="设置白名单" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item label="客户分类：" prop="afterStatus">
-                    <el-radio-group v-model="businessDetail.afterStatus">
+                <el-form-item label="客户分类：" prop="customerType">
+                    <el-radio-group v-model="statusForm.customerType">
                         <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="businessDetail.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                <el-form-item label="说明：" prop="note">
+                    <el-input type="textarea" v-model.trim="statusForm.note" maxlength="200" :rows="5" show-word-limit></el-input>
                 </el-form-item>
                 <p class="page-title">记录</p>
-                <div class="page-warp">
-                    <div v-for="i in 15">
-                        <i class="el-icon-edit"></i>系统自动 在 2019-12-06 13:00:06 将 客户分类 设置为了 待审核 说明：白名单失效；
+                <div class="page-wrap">
+                    <div v-for="(i) in whiteRecordsList" :key=i.id>
+                        <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
+                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
+                          <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
                     </div>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary">确 定</el-button>
+                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -117,8 +119,9 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord } from '../api/index'
 import { deepCopy } from '@/utils/utils'
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'businessdrawer',
     props: {
@@ -129,10 +132,12 @@ export default {
     },
     data () {
         return {
+            authen_operate: Auths.CRM_WHITE_OPERATE,
             removeValue: true,
             branchArr: [],
             formLabelWidth: '150px',
             loading: false,
+            statusLoading: false,
             businessDetail: {
             },
             copyDetail: {},
@@ -160,14 +165,28 @@ export default {
                 selectName: '',
                 selectCode: ''
             },
-            statusType: [{ value: '白名单', key: 0 }, { value: '黑名单', key: 1 }, { value: '待审核', key: 2 }],
+            statusType: [{ value: '黑名单', key: 1 }, { value: '白名单', key: 2 }, { value: '待审核', key: 3 }],
             dialogVisible: false,
             proviceList: [],
             merchantArr: [],
-            statusForm: {},
+            statusForm: {
+                companyCode: '',
+                companyName: '',
+                customerType: '',
+                note: '',
+                operator: '',
+                operatorPhone: ''
+            },
+            copyStatusForm: {},
             statusRules: {
-
-            }
+                customerType: [
+                    { required: true, message: '请选择客户分类', trigger: 'change' }
+                ],
+                note: [
+                    { required: true, message: '请输入说明' }
+                ]
+            },
+            whiteRecordsList: []
         }
     },
     components: {
@@ -181,8 +200,8 @@ export default {
             nestDdata: 'nestDdata',
             branchList: 'branchList',
             crmauthDetail: 'crmauthen/crmauthDetail',
-            platlist: 'crmauthen/platlist'
-
+            platlist: 'crmauthen/platlist',
+            whiteRecords: 'crmauthen/whiteRecords'
         }),
         cityList () {
             const province = this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)
@@ -207,7 +226,9 @@ export default {
             findNest: 'findNest',
             findBusinessDetail: 'crmauthen/findBusinessDetail',
             findBranch: 'findBranch',
-            findPlatlist: 'crmauthen/findPlatlist'
+            findPlatlist: 'crmauthen/findPlatlist',
+            findWhiterecords: 'crmauthen/findWhiterecords'
+
         }),
         onClearV () {
             this.$refs['ruleForm'].clearValidate()
@@ -249,6 +270,18 @@ export default {
                 this.$emit('backEvent')
             }
         },
+        async getMerchtMemberDetail (val) {
+            const { data } = await getBusinessAuthen(val)
+            await this.findBusinessDetail({ companyCode: val })
+            this.businessDetail = this.crmauthDetail
+            this.businessDetail.authenticationStatus = data.authenticationStatus
+            this.copyDetail = deepCopy(this.businessDetail)
+            this.targetObj.selectCode = this.businessDetail.relationCompanyCode
+            this.targetObj.selectName = this.businessDetail.relationCompanyName
+            this.statusForm.customerType = ''
+            this.statusForm.note = ''
+            this.copyStatusForm = deepCopy(this.statusForm)
+        },
         onSaveDetail () {
             this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)[0].name
             this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId)[0].name
@@ -272,6 +305,41 @@ export default {
                         this.loading = false
                     } catch (error) {
                         this.loading = false
+                    }
+                }
+            })
+        },
+        async onSetWhite () {
+            this.dialogVisible = true
+            await this.findWhiterecords({ companyCode: this.businessDetail.companyCode })
+            this.whiteRecordsList = this.whiteRecords
+            this.statusForm = deepCopy(this.copyStatusForm)
+            // 设置白名单
+            this.statusForm.companyCode = this.businessDetail.companyCode
+            this.statusForm.companyName = this.businessDetail.companyName
+            this.$nextTick(() => {
+                this.$refs['statusForm'].clearValidate()
+            })
+        },
+        onPutwhite () {
+            const params = { ...this.statusForm }
+            params.operator = this.userInfo.employeeName
+            params.operatorPhone = this.userInfo.phoneNumber
+            this.$refs['statusForm'].validate(async (valid) => {
+                if (valid) {
+                    this.statusLoading = true
+                    try {
+                        await putWhiterecord(params)
+                        this.$message({
+                            message: '设置成功',
+                            type: 'success'
+                        })
+                        this.dialogVisible = false
+                        this.getMerchtMemberDetail(this.params.companyCode)
+                        // this.$emit('backEvent')
+                        this.statusLoading = false
+                    } catch (error) {
+                        this.statusLoading = false
                     }
                 }
             })
@@ -301,17 +369,8 @@ export default {
             await this.findNest()
             this.proviceList = this.nestDdata
         },
-        async getMerchtMemberDetail (val) {
-            const { data } = await getBusinessAuthen(val)
-            await this.findBusinessDetail({ companyCode: val })
-            this.businessDetail = this.crmauthDetail
-            this.businessDetail.authenticationStatus = data.authenticationStatus
-            this.copyDetail = deepCopy(this.businessDetail)
-            this.targetObj.selectCode = this.businessDetail.relationCompanyCode
-            this.targetObj.selectName = this.businessDetail.relationCompanyName
-        },
+
         backFindbrand (val) {
-            console.log(val)
             this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
             this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
         }
@@ -361,7 +420,7 @@ export default {
     border-bottom: 1px solid #e5e5e5;
     padding: 10px 0;
 }
-.page-warp {
+.page-wrap {
     max-height: 250px;
     overflow-y: scroll;
     div {
@@ -377,6 +436,10 @@ export default {
         .el-icon-edit {
             color: #eb7343;
             margin-right: 10px;
+        }
+        b{
+            color: #ff0000;
+            font-weight: 500;
         }
     }
 }
@@ -400,5 +463,8 @@ export default {
 }
 /deep/.el-autocomplete {
     width: 100% !important;
+}
+/deep/ .el-form .el-input{
+    width: 215px;
 }
 </style>

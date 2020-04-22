@@ -29,8 +29,8 @@
                 <el-form-item label="项目合同总额：" prop="contractAmount">
                     <el-input v-model="form.contractAmount" placeholder="请输入项目合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
-                <el-form-item label="设备款总额：" prop="deviceAmount">
-                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
+                <el-form-item label="设备总额：" prop="deviceAmount">
+                    <el-input v-model="form.deviceAmount" placeholder="请输入设备总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备总额">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备品类：" prop="deviceCategory">
                     <el-select v-model="form.deviceCategory" placeholder="请选择">
@@ -50,7 +50,7 @@
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
                     <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                 </el-form-item>
-                <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
+                <el-form-item label="上游接受承兑周期：" prop="upstreamPromiseMonth">
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
                个月
                 </el-form-item>
@@ -102,7 +102,7 @@
         </el-drawer>
         <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
+                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='信审'">
                     <el-radio-group v-model="statusForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
@@ -160,7 +160,7 @@ export default {
             },
             copyStatusForm: {},
             aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
             statusType: STATUS_TYPE,
             newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
@@ -198,7 +198,7 @@ export default {
                     { required: true, message: '请输入合同金额', trigger: 'blur' }
                 ],
                 deviceAmount: [
-                    { required: true, message: '请输入设备款总额', trigger: 'blur' }
+                    { required: true, message: '请输入设备总额', trigger: 'blur' }
                 ],
                 deviceCategory: [
                     { required: true, message: '请选择设备品类', trigger: 'change' }
@@ -213,7 +213,7 @@ export default {
                     { required: true, message: '请输入上游供应商名称', trigger: 'blur' }
                 ],
                 upstreamPromiseMonth: [
-                    { required: true, message: '请输入上游接受承兑时间', trigger: 'blur' }
+                    { required: true, message: '请输入上游接受承兑周期', trigger: 'blur' }
                 ],
                 predictLoanAmount: [
                     { required: true, message: '请输入预估赊销金额', trigger: 'blur' }
@@ -301,9 +301,9 @@ export default {
             } else if (status == 3) {
                 status = !!status // H5端资料收集种 显示重置按钮
             } else if (status == 4) {
-                // status = !!status // H5端待尽调 显示重置按钮和尽调  这里需要弹窗  通过 不通过
+                // status = !!status // H5端待信审 显示重置按钮和信审  这里需要弹窗  通过 不通过
                 this.dialogVisible = true
-                this.aduitTitle = '尽调'
+                this.aduitTitle = '信审'
                 this.statusForm = { ...this.copyStatusForm }
                 this.statusForm.reset = false
                 this.$nextTick(() => {

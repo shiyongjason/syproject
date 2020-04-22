@@ -34,3 +34,7 @@ export const updateCrmauthen = (params) => {
 }
 
 export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
+
+export const putWhiterecord = (params) => axios.post(B2bUrl + 'merchant/api/crm/company/white-list-record', params)
+
+export const findWhiterecord = (params) => axios.get(B2bUrl + 'merchant/api/crm/company/white-list-record/list', { params })

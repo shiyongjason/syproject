@@ -39,7 +39,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">企业类型：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.status">
+                        <el-select v-model="queryParams.companyType">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option v-for="item in businessTypelist" :key="item.key" :label="item.value" :value="item.key">
@@ -61,7 +61,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">认证状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.customerType">
+                        <el-select v-model="queryParams.authenticationStatus">
                             <el-option label="全部" value="">
                             </el-option>
                             <el-option v-for="item in authenList" :key="item.key" :label="item.value" :value="item.key">
@@ -114,7 +114,7 @@
                     <span :class="scope.data.row.isAuthentication==1?'colred':'colgry'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -127,11 +127,12 @@ import { mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
 import { BUS_TYPE_LIST, RISK_TYPE_LIST, AUTEHEN_LIST } from '../const'
-
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'projectlist',
     data () {
         return {
+            authen_detail: Auths.CRM_AUTHEN_DETAIL,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,

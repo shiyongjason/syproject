@@ -5,8 +5,8 @@ const state = {
     businessData: {},
     crmauthDetail: {},
     crmauthLoan: {},
-    platlist: []
-
+    platlist: [],
+    whiteRecords: []
 }
 
 const getters = {
@@ -19,7 +19,8 @@ const getters = {
             val.selectCode = val.companyCode
         })
         return state.platlist
-    }
+    },
+    whiteRecords: state => state.whiteRecords
 
 }
 
@@ -35,6 +36,9 @@ const mutations = {
     },
     [types.PLAT_LIST] (state, payload) {
         state.platlist = payload
+    },
+    [types.WHITE_RECORDS] (state, payload) {
+        state.whiteRecords = payload
     }
 }
 
@@ -54,6 +58,10 @@ const actions = {
     async findPlatlist ({ commit }, params) {
         const { data: { data } } = await Api.getPlatList(params)
         commit(types.PLAT_LIST, data.pageContent)
+    },
+    async findWhiterecords ({ commit }, params) {
+        const { data } = await Api.findWhiterecord(params)
+        commit(types.WHITE_RECORDS, data)
     }
 }
 export default {

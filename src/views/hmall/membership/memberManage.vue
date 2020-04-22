@@ -223,7 +223,7 @@ export default {
             this.queryParams = deepCopy(this.copyParams)
             this.queryParams.adminAccount = ''
             this.optarr = ''
-            this.options = []
+            // this.options = []
             this.getFindNest()
             this.onFindMlist(1)
         },

@@ -96,9 +96,7 @@ const actions = {
         commit(types.BRANCH_LIST, data)
     },
     async findMemberList ({ commit }, params) {
-        console.log(2)
         const { data } = await getBossMember(params)
-        console.log(2)
         commit(types.MEMBER_DATA, data)
     },
     async findMemberDetail ({ commit }, params) {
