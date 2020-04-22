@@ -72,7 +72,6 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.onSearch()
         },
         isError (response) {
             this.$message({
@@ -82,10 +81,6 @@ export default {
             this.loading = false
         },
         handleUpload (file) {
-            console.log(file)
-            console.log(file.name.lastIndexOf('.'))
-            console.log(file.name.substring(file.name.lastIndexOf('.')))
-            // TODO: 目前只有一个文件,待优化
             if (file.size / (1024 * 1024) > 100) {
                 this.$message({
                     message: '附件要保持100M以内',
