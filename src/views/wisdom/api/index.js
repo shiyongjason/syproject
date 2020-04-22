@@ -262,5 +262,5 @@ export const getTycMainStaff = (params) => {
 }
 // 承诺值分页
 export const getCommitmentList = (params) => {
-    return axios.get(`backend/fundplan/commitment`, { params })
+    return axios.get(`backend/fund-plan/commitment`, { params })
 }

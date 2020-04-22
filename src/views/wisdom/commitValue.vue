@@ -182,6 +182,7 @@ export default {
             const { data } = await getCommitmentList(this.queryParams)
             console.log(data)
             this.tableData = data.records
+            this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
         },
         getList (val) {
             this.searchParams = {
@@ -258,7 +259,6 @@ export default {
     async mounted () {
         this.onSearch()
         await this.oldBossAuth()
-        console.log(this)
         // if (this.userInfo.deptType == 2) {
         //     this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
         // }

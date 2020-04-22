@@ -5,67 +5,67 @@ export let tableLabel = [
         label: 'XXXX年度销售承诺值',
         children: [
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'januaryValue',
                 label: '1月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'februaryValue',
                 label: '2月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'marchValue',
                 label: '3月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'aprilValue',
                 label: '4月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'mayValue',
                 label: '5月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'juneValue',
                 label: '6月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'julyValue',
                 label: '7月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'augustValue',
                 label: '8月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'septemberValue',
                 label: '9月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'octoberValue',
                 label: '10月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'novemberValue',
                 label: '11月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'decemberValue',
                 label: '12月',
                 width: '100'
             },
             {
-                prop: 'salesIncomeIncludingTax',
+                prop: 'totalAnnual',
                 label: '合计',
                 width: '100'
             }
