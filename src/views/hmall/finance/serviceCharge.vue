@@ -11,7 +11,7 @@
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{bankAccountInfo.totalBalance | money}}</p>
+                        <p>{{bankAccountInfo.totalBalance | moneyShow}}</p>
                         <p>平台服务费总资产<span>（元）</span></p>
                     </div>
                 </div>
@@ -68,8 +68,8 @@ export default {
             tableLabel: [
                 { label: '客户名称', prop: 'companyName' },
                 { label: '提现时间', prop: 'withdrawTime', formatters: 'dateTime' },
-                { label: '提现金额（元）', prop: 'amount', formatters: 'money', sortable: true },
-                { label: '服务费（元）', prop: 'serviceFee', formatters: 'money', sortable: true }
+                { label: '提现金额（元）', prop: 'amount', formatters: 'moneyShow', sortable: true },
+                { label: '服务费（元）', prop: 'serviceFee', formatters: 'moneyShow', sortable: true }
             ]
         }
     },
