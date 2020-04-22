@@ -72,7 +72,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { tableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList } from './api/index'
+import { getCommitmentList, getCommitmentTotal } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -179,10 +179,17 @@ export default {
             console.log('搜索')
             console.log(this.queryParams)
             console.log(this.selectAuth)
-            const { data } = await getCommitmentList(this.queryParams)
+            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
+            // const { data } = await getCommitmentList(this.queryParams)
+            var data = await Promise.all(promiseArr).then((res) => {
+                console.log(res)
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
+            
             console.log(data)
-            this.tableData = data.records
-            this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
+            // this.tableData = data.records
+            // this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
         },
         getList (val) {
             this.searchParams = {

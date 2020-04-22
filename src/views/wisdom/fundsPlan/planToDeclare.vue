@@ -3,8 +3,7 @@
         <div class="page-body-cont">
             <div class="title">
                 <!-- <span>本次可申报：<i>2020</i>年<i>X</i>月的预计销售及资金用款计划</span> -->
-                <span>本次可申报：<i>{{tableData[0].applyMonth.substring(0, 4)}}</i>年<i>{{tableData[0].applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划
-                </span>
+                <span>本次可申报：<i>{{applyMonth.substring(0, 4)}}</i>年<i>{{applyMonth.substring(4, 6)}}</i>月的预计销售及资金用款计划</span>
             </div>
             <div class="tips">
                 每月20日—25日提报次月资金计划，每家平台公司每月仅可提报一次
@@ -53,11 +52,8 @@ export default {
     data () {
         return {
             tableLabel: bankLabel,
-            tableData: [
-                {
-                    applyMonth: 'XXXXXX'
-                }
-            ],
+            tableData: [],
+            applyMonth: moment().format('YYYYMM'),
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -76,6 +72,9 @@ export default {
             }
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
+            if (data.records.length > 0) {
+                this.applyMonth = data.records[0].applyMonth
+            }
             // this.pagination = {
             //     pageNumber: data.current,
             //     pageSize: data.size,
