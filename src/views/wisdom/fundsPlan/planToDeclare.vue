@@ -10,8 +10,8 @@
                 每月20日—25日提报次月资金计划，每家平台公司每月仅可提报一次
             </div>
             <h3>申报列表</h3>
-            <div class="p24">
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120'>
+            <div class="p24 h300">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' :isAction="true" :actionMinWidth='120' :maxHeight='300'>
                     <template slot="applyMonth" slot-scope="scope">
                         <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
                     </template>
@@ -76,11 +76,11 @@ export default {
             }
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
-            this.pagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
+            // this.pagination = {
+            //     pageNumber: data.current,
+            //     pageSize: data.size,
+            //     total: data.total
+            // }
         },
         onDeclare (row) {
             this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
@@ -105,5 +105,9 @@ export default {
 }
 .p24 {
     padding: 20px 24px 0 24px;
+}
+.h300{
+    height: 300px;
+    overflow: auto;
 }
 </style>

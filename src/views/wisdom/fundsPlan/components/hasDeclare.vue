@@ -11,8 +11,7 @@
         <div class="query-cont-col">
             <div class="query-col-title">平台公司名称：</div>
             <div class="query-col-input">
-                <el-input type="text" maxlength="20" v-model="queryParams.companyName" placeholder="请输入平台公司名称" clearable>
-                </el-input>
+                <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
             </div>
         </div>
         <div class="query-cont-col">
@@ -25,7 +24,7 @@
                     <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="shy(scope.data.row)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onApproveDeclare(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -33,10 +32,18 @@
 </template>
 
 <script>
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { hasDeclareLabel } from '../const'
+import { mapState, mapActions } from 'vuex'
 import { getFundPlanAll } from '../api/index'
 export default {
     name: 'hasDeclare',
+    components: { HAutocomplete },
+    computed: {
+        ...mapState({
+            platComList: state => state.platformData
+        })
+    },
     data () {
         return {
             tableLabel: hasDeclareLabel,
@@ -53,24 +60,33 @@ export default {
                 pageSize: 10,
                 applyType: 1 // 已申报
             },
-            searchParams: {}
+            searchParams: {},
+            selectPlatObj: {
+                selectCode: '',
+                selectName: ''
+            }
         }
     },
     mounted () {
         this.onSearch()
+        this.findPlatformslist({ showAll: true })
     },
     methods: {
-        shy (row) {
-            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
-        },
+        ...mapActions([
+            'findPlatformslist' // 平台公司
+        ]),
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
+        onApproveDeclare (row) {
+            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+        },
+        backPlat (val) {
+            this.queryParams.companyName = val.value.companyName ? val.value.companyName : ''
+        },
         async onQuery () {
-            console.log(this.searchParams)
             const { data } = await getFundPlanAll(this.searchParams)
-            console.log(data)
             this.tableData = data.records
             this.pagination = {
                 pageNumber: data.current,
@@ -81,6 +97,10 @@ export default {
         onReset () {
             this.$set(this.queryParams, 'applyMonth', '')
             this.$set(this.queryParams, 'companyName', '')
+            this.selectPlatObj = {
+                selectCode: '',
+                selectName: ''
+            }
             this.onSearch()
         },
         onCurrentChange (val) {

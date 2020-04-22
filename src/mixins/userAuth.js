@@ -16,7 +16,7 @@ export const departmentAuth = {
             'findPlatformslist', // 平台公司
             'findAuthList' // 大区、分部、区域
         ]),
-        async oldAuth () {
+        async oldBossAuth () {
             this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.deptDoc })
             this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.deptDoc })
             const data = await this.findAuthList({

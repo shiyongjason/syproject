@@ -99,7 +99,7 @@ export default {
     },
     async mounted () {
         this.paramsTemp = { ...this.params }
-        await this.oldAuth()
+        await this.oldBossAuth()
         if (this.userInfo.deptType === 2) {
             this.selectPlatObj.selectCode = this.branchList[0].crmDeptCode
             this.selectPlatObj.selectName = this.branchList[0].deptName

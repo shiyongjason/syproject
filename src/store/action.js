@@ -31,15 +31,21 @@ export default {
         const { data } = await findDepartment(params)
         for (let i of data) {
             i.value = i.deptName
-            i.selectCode = i.deptName
+            i.selectCode = i.pkDeptDoc
         }
         commit('GET_AUTHLIST', { data, deptType: params.deptType })
         return data
     },
     async findPlatformslist ({ commit }, params) {
-        if ((this.state.userInfo.deptType == 1 || this.state.userInfo.deptType == 2) && !params.subsectionCode) {
+        /**
+         * @description 根据分部查询平台公司
+         * @params 参数
+         * @subsectionCode 分部code
+         * @showAll 处理非总部账户显示所有分部
+         */
+        if ((this.state.userInfo.deptType == 1 || this.state.userInfo.deptType == 2) && !params.subsectionCode && !params.showAll) {
             commit('PLAT_FORMDATA', [])
-            return
+            return []
         }
         const { data } = await findPlatformslist(params)
         console.log(data)
@@ -48,5 +54,6 @@ export default {
             i.selectCode = i.companyCode
         }
         commit('PLAT_FORMDATA', data.data.pageContent)
+        return data.data.pageContent
     }
 }

@@ -157,7 +157,7 @@ export default {
     async mounted () {
         this.getUserTabAuth()
         this.onSearch()
-        await this.oldAuth()
+        await this.oldBossAuth()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
         }

@@ -13,15 +13,15 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title"> 平台公司名称：</div>
+                    <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请选择分部" :selectObj="selectObj.branch" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-title"> 平台公司名称：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='false'></HAutocomplete>
+                        <HAutocomplete :selectArr="platComList" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectObj.platformData" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -41,8 +41,8 @@
                         <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button v-show="params.processType == 0" class="orangeBtn" @click="goApprovalList(scope.data.row)">审批</el-button>
-                        <el-button v-show="params.processType == 1" class="orangeBtn" @click="shy(scope.data.row)">查看详情</el-button>
+                        <el-button v-show="params.processType == 0" class="orangeBtn" @click="onApprovalList(scope.data.row)">审批</el-button>
+                        <el-button v-show="params.processType == 1" class="orangeBtn" @click="onApproveDeclare(scope.data.row)">查看详情</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -54,11 +54,11 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getFundPlanAll } from './api/index'
 import { approvalListLabel } from './const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'ApprovalList',
-    components: {
-        HAutocomplete
-    },
+    components: { HAutocomplete },
+    mixins: [departmentAuth],
     data () {
         return {
             tableLabel: approvalListLabel,
@@ -73,10 +73,17 @@ export default {
             paramsTemp: {},
             tableData: [],
             pagination: {},
-            platComList: [],
-            selectPlatObj: {
-                selectCode: '',
-                selectName: ''
+            branchList: [], // 分部列表
+            platComList: [], // 平台公司列表
+            selectObj: {
+                branch: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformData: {
+                    selectCode: '',
+                    selectName: ''
+                }
             }
         }
     },
@@ -108,17 +115,35 @@ export default {
             this.paramsTemp = { ...this.params }
             this.onQuery()
         },
-        goApprovalList (row) {
+        onApprovalList (row) {
             this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
         },
-        shy (row) {
+        onApproveDeclare (row) {
             this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
         },
-        backPlat () {
-
+        async backPlat (val, dis) {
+            console.log(val)
+            if (dis === 'F') {
+                this.params.subSectionCode = val.value.selectCode ? val.value.selectCode : ''
+                if (val.value) {
+                    const data = await this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                    this.platComList = data
+                } else {
+                    this.platComList = []
+                }
+            }
+            if (dis === 'P') {
+                this.params.companyName = val.value.companyName ? val.value.companyName : ''
+            }
+        },
+        async getAuth () {
+            const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.deptDoc })
+            console.log(data)
+            this.branchList = data
         }
     },
-    mounted () {
+    async mounted () {
+        await this.getAuth()
         this.onSearch()
     }
 }

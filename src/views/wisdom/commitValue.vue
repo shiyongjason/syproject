@@ -257,7 +257,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldAuth()
+        await this.oldBossAuth()
         console.log(this)
         // if (this.userInfo.deptType == 2) {
         //     this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
