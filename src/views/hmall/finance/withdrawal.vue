@@ -17,10 +17,10 @@
                     </el-form-item>
                     <el-form-item label="提现金额" prop="amount">
                         <el-input v-model="withdrawalForm.amount" placeholder="请填写"></el-input>
-                        <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | money}}元</span>
+                        <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | moneyShow}}元</span>
                     </el-form-item>
                     <el-form-item label="验证码" prop="smsCode">
-                        <el-input v-model="withdrawalForm.smsCode" placeholder="请填写"></el-input>
+                        <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>
                         <span style="margin-left: 20px">{{phoneNumber}}</span>
                         <el-button
                             style="margin-left: 20px"
@@ -126,7 +126,7 @@ export default {
             serviceTotalProperty: '',
             tableLabel: [
                 { label: '提现时间', prop: 'withdrawTime', formatters: 'dateTime' },
-                { label: '提现金额（元）', prop: 'amount', formatters: 'money', sortable: true },
+                { label: '提现金额（元）', prop: 'amount', formatters: 'moneyShow', sortable: true },
                 { label: '操作人', prop: 'operator' },
                 { label: '状态', prop: 'status' }
             ]
