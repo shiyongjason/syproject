@@ -5,7 +5,7 @@
         </div>
         <el-collapse-transition>
             <div class="collapse-content" v-if="collapse">
-                <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+                <el-checkbox v-if="showCheckAll" :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                 <div style="margin: 15px 0;"></div>
                 <el-checkbox-group v-model="selectTh" @change="handleCheckedCitiesChange">
                     <el-checkbox v-for="(item) in defaultTh" :label="item" :key="item">{{item}}</el-checkbox>
@@ -151,6 +151,12 @@ export default {
         isfiexd: {
             type: String,
             default: 'right'
+        },
+        showCheckAll: {
+            type: Boolean,
+            default: () => {
+                return true
+            }
         }
     },
     computed: {
