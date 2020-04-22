@@ -57,13 +57,6 @@ export default {
         }
     },
     computed: {
-        shy: {
-            get: function () {
-                if (this.approveRoleNode === 0) return 'branchFinancial'
-                if (this.approveRoleNode === 1) return 'branchManager'
-                if (this.approveRoleNode === 2) return 'regionalManager'
-            }
-        },
         applyMonth () {
             if (!this.fundDetail.fundplanMain.applyMonth) {
                 return ['XXXX', 'XX']
@@ -136,7 +129,7 @@ export default {
     },
     beforeDestroy () {
         console.log('销毁滚动事件')
-        window.removeEventListener("scroll", this.handleScroll, true)
+        window.removeEventListener('scroll', this.handleScroll, true)
     },
     mounted () {
         this.listenerFunction()
