@@ -71,7 +71,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange" :showCheckAll='false'>
                     <template slot="remark" slot-scope="scope">
                         <span v-if="scope.data.row.misCode == '合计'">-</span>
                         <span v-else>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="onRemark(scope.data.row)"></i></span>
@@ -80,8 +80,8 @@
             </div>
         </div>
         <el-dialog title="备注" :visible.sync="dialogVisible" :close-on-click-modal='false' width="450px" :before-close='onCancle'>
-            <h3 style="margin-bottom: 10px;">备注：</h3>
-            <el-input type="textarea" :rows="2" placeholder="请输入内容" maxlength="1000" v-model="rowData.remark" show-word-limit></el-input>
+            <br>
+            <el-input type="textarea" :rows="8" placeholder="请输入内容" maxlength="1000" v-model="rowData.remark" show-word-limit></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancle">取 消</el-button>
                 <el-button type="primary" @click="onSure">确 定</el-button>
@@ -197,21 +197,13 @@ export default {
             }
         },
         onFieldChange (val) {
-            if (!val.includes('分部')) {
-                val.push('分部')
-                return
-            }
-            if (!val.includes('平台公司')) {
-                this.disabled = true
-                this.queryParams.companyType = 2
-                this.queryParams.loanCompanyCode = ''
-                this.queryParams.loanCompanyName = ''
-                this.queryParams.misCode = ''
-                this.removeValue = !this.removeValue
-            } else {
-                this.disabled = false
-                this.queryParams.companyType = 1
-            }
+            this.disabled = true
+            this.queryParams.companyType = 2
+            this.queryParams.loanCompanyCode = ''
+            this.queryParams.loanCompanyName = ''
+            this.queryParams.misCode = ''
+            this.removeValue = !this.removeValue
+            this.tableData = []
             this.onSearch()
         },
         onCurrentChange (val) {
@@ -233,7 +225,7 @@ export default {
             this.onFindPlatformslist(subsectionCode)
         },
         onRemark (row) {
-            this.rowData = row
+            this.rowData = { ...row }
             this.dialogVisible = true
         },
         onCancle () {
