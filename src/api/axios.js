@@ -70,7 +70,7 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return response
         }
-        if (response.data.code && response.data.code != 200) {
+        if (response.data && response.data.code && response.data.code != 200) {
             Message({
                 message: response.data.msg || response.data.message,
                 type: 'error'
