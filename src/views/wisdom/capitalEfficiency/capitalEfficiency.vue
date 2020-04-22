@@ -197,12 +197,17 @@ export default {
             }
         },
         onFieldChange (val) {
-            this.disabled = true
-            this.queryParams.companyType = 2
-            this.queryParams.loanCompanyCode = ''
-            this.queryParams.loanCompanyName = ''
-            this.queryParams.misCode = ''
-            this.removeValue = !this.removeValue
+            if (!val.includes('平台公司')) {
+                this.disabled = true
+                this.queryParams.companyType = 2
+                this.queryParams.loanCompanyCode = ''
+                this.queryParams.loanCompanyName = ''
+                this.queryParams.misCode = ''
+                this.removeValue = !this.removeValue
+            } else {
+                this.disabled = false
+                this.queryParams.companyType = 1
+            }
             this.tableData = []
             this.onSearch()
         },
