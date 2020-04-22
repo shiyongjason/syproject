@@ -115,6 +115,11 @@
             </div>
         </div>
         <div class="page-body-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                </div>
+            </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange"
                 :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">

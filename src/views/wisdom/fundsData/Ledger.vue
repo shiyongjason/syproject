@@ -62,9 +62,11 @@
             <el-tabs v-model="productType" v-if="accountType == 3" type="card" @tab-click="handleClick(2)">
                 <el-tab-pane v-if="hosAuthCheck(pointscredit_good_credit)" label="好信用" name="1"></el-tab-pane>
             </el-tabs>
-            <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <div class="fundBtn">
+                <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            </div>
             <complexTable v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
@@ -329,39 +331,45 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.add-tags-dialog {
-    padding-top: 20px;
-}
-.downloadExcel {
-    padding: 12px 20px;
-    border-radius: 4px;
-    background-color: #ff7a45;
-    color: #fff;
-}
-/deep/ .el-dialog__body {
-    min-height: 0 !important;
-}
+.amountImport {
+    .add-tags-dialog {
+        padding-top: 20px;
+    }
+    .downloadExcel {
+        padding: 12px 20px;
+        border-radius: 4px;
+        background-color: #ff7a45;
+        color: #fff;
+    }
+    /deep/ .el-dialog__body {
+        min-height: 0 !important;
+    }
 
-/deep/ .el-tabs--card > .el-tabs__header {
-    border-bottom: 0;
-}
+    /deep/ .el-tabs--card > .el-tabs__header {
+        border-bottom: 0;
+    }
 
-/deep/ .el-tabs--card .el-tabs__nav {
-    border-bottom: 1px solid #e4e7ed;
-}
-.m0 {
-    margin: 0;
-}
-/deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-    border-bottom-color: #ff7a45;
-}
-/deep/.el-table td,/deep/ .el-table th{
-    padding: 7px 0;
-}
-/deep/.el-tabs__header{
-    margin: 0 0 10px;
-}
-.page-body{
-    padding: 15px 10px 20px 10px;
+    /deep/ .el-tabs--card .el-tabs__nav {
+        border-bottom: 1px solid #e4e7ed;
+    }
+    .m0 {
+        margin: 0;
+    }
+    /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+        border-bottom-color: #ff7a45;
+    }
+    .page-body {
+        padding: 8px 0 20px 0;
+    }
+    /deep/.el-tabs__header {
+        margin: 0 0 10px;
+    }
+    /deep/.el-tabs__item {
+        height: 30px;
+        line-height: 30px;
+    }
+    .fundBtn .el-button {
+        padding: 7px 15px;
+    }
 }
 </style>

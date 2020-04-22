@@ -7,6 +7,7 @@ import { interfaceUrl, B2bUrl } from './config'
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
+const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
@@ -43,11 +44,19 @@ axios.interceptors.request.use(
             token && (config.headers['Authorization'] = `Bearer ${token}`)
             refreshToken && (config.headers['RefreshToken'] = `${refreshToken}`)
         }
+
+        // 以下两个字段是用于埋点的
+        config.headers['Request-Source'] = '4'
+        config.headers['Backend-Request'] = 'true'
+        // 下面这个字段是一些特殊埋点时使用
+        // config.headers['Header-Buz-Params'] = JSON.stringify({})
+
         // cancelRequst(config) // 在一个请求发送前执行一下取消操作
         // config.cancelToken = new CancelToken(cancelMethod => {
         //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
         // })
-        store.commit('LOAD_STATE', true)
+        const skipLoading = specialReqUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+        if (skipLoading.length === 0) store.commit('LOAD_STATE', true)
         return config
     },
     (error) => {
@@ -76,10 +85,11 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return Promise.reject(response)
         }
-        if (requestLoading == 0) store.commit('LOAD_STATE', false)
+        if (requestLoading === 0) store.commit('LOAD_STATE', false)
         return response
     },
     (error) => {
+        requestLoading--
         if (axios.isCancel(error)) {
             console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)
@@ -95,8 +105,6 @@ axios.interceptors.response.use(
             }, 1200)
             return Promise.reject(error)
         }
-
-        // console.log(error)
         // if (error.response && error.response.status) {
         //     switch (error.response.status) {
         //         case 401:
