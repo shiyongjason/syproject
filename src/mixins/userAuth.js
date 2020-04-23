@@ -25,7 +25,6 @@ export const departmentAuth = {
                 this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.deptDoc })
             ]
             await Promise.all(p).then(res => {
-                console.log(res)
                 this.region = res[0].length > 0
                 this.branch = res[1].length > 0
                 this.district = res[2].length > 0

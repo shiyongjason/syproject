@@ -117,6 +117,7 @@ export default {
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
+                subsectionOldCode: '',
                 misCode: '',
                 commitmentYear: moment().format('YYYY'),
                 totalAreaName: '',
@@ -133,10 +134,6 @@ export default {
             dialogFormVisible: false
         }
     },
-
-
-
-    
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
@@ -147,25 +144,67 @@ export default {
         })
     },
     methods: {
-        backPlat (val, dis) {
-            console.log(val, dis)
-            console.log(this.userInfo)
-            if (dis == 'D') {
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'D') {
+                this.queryParams.subsectionCode = ''
+                this.queryParams.subsectionOldCode = ''
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.branchObj = { ...obj }
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'Q') {
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
+        },
+        async backPlat (val, dis) {
+            // console.log(val, dis)
+            if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
                 this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
-            } else if (dis == 'F') {
+                // 清空分部区域
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
-                val.value.crmDeptCode && this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-            } else if (dis == 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
+                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.deptDoc
+                })
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.crmDeptCode) {
+                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
                 } else {
                     this.findPlatformslist()
                 }
-            } else if (dis == 'P') {
+                !val.value.crmDeptCode && this.linkage(dis)
+            } else if (dis === 'Q') {
+                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
+                if (val.value.selectCode) {
+                    this.findPlatformslist({ subregionCode: val.value.selectCode })
+                } else {
+                    let params = null
+                    if (this.queryParams.subsectionOldCode) {
+                        params = {
+                            subsectionCode: this.queryParams.subsectionOldCode
+                        }
+                    } 
+                    this.findPlatformslist(params)
+                }
+                !val.value.selectCode && this.linkage(dis)
+            } else if (dis === 'P') {
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
@@ -200,9 +239,6 @@ export default {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
-            console.log(data.records.length)
-
-
             if (data.records.length > 1) {
                 this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
             } else {
@@ -265,9 +301,7 @@ export default {
                 })
                 return false
             }
-            console.log(file)
             const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
-            console.log(fileSuffix)
             if (this.accept.lastIndexOf(fileSuffix) == -1) {
                 this.$message.error('格式不正确！')
                 return false

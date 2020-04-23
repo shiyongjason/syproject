@@ -98,7 +98,7 @@ export default {
     }
 }
 .tips {
-    padding: 20px 0;
+    padding: 10px 0 0 0;
     text-align: center;
     color: #ff0000;
 }

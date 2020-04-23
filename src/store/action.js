@@ -44,16 +44,17 @@ export default {
          * @subregionCode 区域code新
          * @showAll 处理非总部账户显示所有分部
          */
-        console.log(params)
-        console.log(this.state.userInfo.deptType)
-        if (!params) return
+        if (this.state.userInfo.deptType !== 0 && !params) {
+            // 非总部账号不传分部区域无法查看数据
+            commit('PLAT_FORMDATA', [])
+            return []
+        }
         if (this.state.userInfo.deptType !== 0 && (!params.subsectionCode && !params.subregionCode) && !params.showAll) {
             // 非总部账号不传分部区域无法查看数据
             commit('PLAT_FORMDATA', [])
             return []
         }
         const { data } = await findPlatformslist(params)
-        console.log(data)
         for (let i of data.data.pageContent) {
             i.value = i.companyShortName
             i.selectCode = i.companyCode

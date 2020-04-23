@@ -108,7 +108,6 @@ export default {
         },
         async onQuery () {
             const { data } = await getFundPlanAll(this.paramsTemp)
-            console.log(data)
             this.tableData = data.records
         },
         onSearch () {
@@ -122,9 +121,13 @@ export default {
             this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
         },
         async backPlat (val, dis) {
-            console.log(val)
             if (dis === 'F') {
                 this.params.subSectionCode = val.value.selectCode ? val.value.selectCode : ''
+                this.params.companyName = ''
+                this.selectObj.platformData = {
+                    selectCode: '',
+                    selectName: ''
+                }
                 if (val.value) {
                     const data = await this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
                     this.platComList = data
@@ -138,7 +141,6 @@ export default {
         },
         async getAuth () {
             const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.deptDoc })
-            console.log(data)
             this.branchList = data
         }
     },
