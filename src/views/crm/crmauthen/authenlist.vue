@@ -111,7 +111,7 @@
                     {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
-                    <span :class="scope.data.row.isAuthentication==1?'colred':'colgry'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
+                    <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
@@ -305,7 +305,7 @@ export default {
     color: #ff0000;
 }
 .colgry {
-    color: #ccc;
+    color:#06c306;
 }
 .colblue {
     color: #50b7f7;

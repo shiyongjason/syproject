@@ -143,9 +143,10 @@ export default {
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '180' },
-                { label: '项目编号', prop: 'projectNo', width: '180' },
-                { label: '赊销总额', prop: 'predictLoanAmount' },
+                { label: '项目名称', prop: 'projectName', width: '' },
+                { label: '项目编号', prop: 'projectNo', width: '150' },
+                { label: '所属分部', prop: 'deptName', width: '150' },
+                { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
@@ -252,7 +253,7 @@ export default {
             this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
-            this.tableData = this.projectData.records
+            this.tableData = this.projectData.records || []
             this.paginationInfo = {
                 pageNumber: this.projectData.current,
                 pageSize: this.projectData.size,

@@ -47,20 +47,29 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
+                    <el-checkbox-group v-model="form.upstreamPayTypearr" @change="onCRemarkTxt">
+                        <el-checkbox label="1" name="type">现金</el-checkbox>
+                        <el-checkbox label="2" name="type">承兑</el-checkbox>
+                    </el-checkbox-group>
+                     <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
+                    <el-input v-if="form.upstreamPayTypearr.indexOf('2')>0" v-model="form.payAcceptanceRemark" maxlength="200" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行"></el-input>
+                 </el-form-item>
+                </el-form-item>
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
                     <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                 </el-form-item>
-                <el-form-item label="上游接受承兑周期：" prop="upstreamPromiseMonth">
+                <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
-               个月
+                    个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
                     <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
-               个月
-               </el-form-item>
+                    个月
+                </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
                         <el-input v-model="form.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
@@ -92,8 +101,8 @@
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <template v-if="hosAuthCheck(crm_goodwork_operate)">
-                    <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                    <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
                     <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
@@ -170,7 +179,9 @@ export default {
             },
             form: {
                 projectUpload: [],
-                loanPayTypeRate: '方法定义必填'
+                loanPayTypeRate: '方法定义必填',
+                payAcceptanceRemarkTxt: '承兑方法必填',
+                upstreamPayTypearr: []
             },
             copyForm: {},
             formLabelWidth: '150px',
@@ -220,6 +231,20 @@ export default {
                 ],
                 loanMonth: [
                     { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
+                ],
+                upstreamPayTypearr: [
+                    { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
+                ],
+                payAcceptanceRemarkTxt: [
+                    { required: true },
+                    {
+                        validator: (r, v, callback) => {
+                            if (this.form.upstreamPayTypearr.indexOf('2') > 0 && !this.form.payAcceptanceRemark) {
+                                return callback(new Error('请输入承兑说明'))
+                            }
+                            return callback()
+                        }
+                    }
                 ],
                 loanPayTypeRate: [
                     { required: true },
@@ -274,20 +299,27 @@ export default {
         },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
-            this.form = { ...this.projectDetail }
+            // this.form = { ...this.projectDetail, ...{ upstreamPayTypearr: [] } }
+            this.form = { ...this.form, ...this.projectDetail }
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
             this.form.loanPayTypeRate = '方法定义必填'
+            this.form.upstreamPayTypearr = this.form.upstreamPayType ? this.form.upstreamPayType.split(',') : []
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
             console.log(value)
+        },
+        onCRemarkTxt () {
+            if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
+                this.form.payAcceptanceRemark = ''
+                this.$refs.remarkTxt.clearValidate()
+            }
         },
         onBackUpload (str) {
         },
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
-
             if (status == 2) {
                 // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
                 this.dialogVisible = true
@@ -406,6 +438,7 @@ export default {
                 }
             })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
+            this.form.upstreamPayType = this.form.upstreamPayTypearr.join(',')
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
