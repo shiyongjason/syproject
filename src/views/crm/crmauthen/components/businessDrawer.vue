@@ -336,7 +336,6 @@ export default {
                         })
                         this.dialogVisible = false
                         this.getMerchtMemberDetail(this.params.companyCode)
-                        // this.$emit('backEvent')
                         this.statusLoading = false
                     } catch (error) {
                         this.statusLoading = false
