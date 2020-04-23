@@ -35,7 +35,7 @@
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                     <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
-                    <el-button type="primary" class="ml20">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -46,15 +46,15 @@
             </div>
         </div>
         <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
-            <el-form :model="form" :rules="rules" ref="form">
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='monthYear'>
-                    <el-date-picker v-model="form.monthYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+            <el-form :model="uploadData" :rules="rules" ref="form">
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
+                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/fundplan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
@@ -72,7 +72,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { tableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal } from './api/index'
+import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -80,11 +80,11 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            form: {
-                monthYear: ''
+            uploadData: {
+                commitmentYear: ''
             },
             rules: {
-                monthYear: [
+                commitmentYear: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -117,8 +117,9 @@ export default {
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
-                companyCode: '',
+                misCode: '',
                 commitmentYear: moment().format('YYYY'),
+                totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -144,19 +145,24 @@ export default {
     methods: {
         backPlat (val, dis) {
             console.log(val, dis)
+            console.log(this.userInfo)
             if (dis == 'D') {
-                this.queryParams.regionCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
-                val.value.pkDeptDoc && this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc })
-                val.value.pkDeptDoc && this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc })
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
             } else if (dis == 'F') {
-                this.queryParams.subSectionCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
-                val.value.pkDeptDoc && this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc })
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
                 val.value.crmDeptCode && this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
             } else if (dis == 'Q') {
-                this.queryParams.subRegionCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
+                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
             } else if (dis == 'P') {
-                this.queryParams.companyCode = val.value.crmDeptCode ? val.value.companyCode : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
+        },
+        onExport () {
+            this.queryParams.totalAreaName = this.selectAuthLabelShow()
+            exportCommitment(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -173,23 +179,26 @@ export default {
             } else {
                 this.column[1].label = '全部'
             }
-            console.log(this.column)
+            return this.column[1].label
         },
         async onQuery () {
-            console.log('搜索')
-            console.log(this.queryParams)
-            console.log(this.selectAuth)
             const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
-            // const { data } = await getCommitmentList(this.queryParams)
             var data = await Promise.all(promiseArr).then((res) => {
-                console.log(res)
+                res[1].data.companyName = '合计'
+                res[0].data.records.unshift(res[1].data)
+                return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
+            this.tableData = data.records
+            console.log(data.records.length)
+
             
-            console.log(data)
-            // this.tableData = data.records
-            // this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
+            if (data.records.length > 1) {
+                this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
+            } else {
+                this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
+            }
         },
         getList (val) {
             this.searchParams = {
@@ -233,7 +242,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.form.monthYear) {
+            if (!this.uploadData.commitmentYear) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
