@@ -30,6 +30,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/crmstatic/staticlist')
+        },
+        {
+            path: 'authenlist',
+            name: 'authenlist',
+            meta: {
+                title: '企业管理',
+                tagName: '企业管理',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/crmauthen/authenlist')
         }
     ]
 }
