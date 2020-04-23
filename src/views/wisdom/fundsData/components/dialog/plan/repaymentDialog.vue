@@ -80,7 +80,7 @@
                             </el-form-item>
                         </div>
 
-                        <div class="query-cont-col">
+                        <div class="query-cont-col badCrop">
                             <el-form-item label="剩余本金金额：" :prop="`detailData[${index}].thisPaidCapital`">
                                 <!-- 本金-已还-本次还本金 -->
                                 <div class="w250">
@@ -113,7 +113,7 @@
                                 </el-input>
                             </el-form-item>
                         </div>
-                        <div class="query-cont-col">
+                        <div class="query-cont-col badCrop">
                             <el-form-item label="剩余宽限利息：" :prop="`detailData[${index}].thisPaidGraceInterest`">
                                 <!-- 总宽限期利息-已还-本次还宽限期利息 -->
                                 <div class="w250">
@@ -147,7 +147,7 @@
                                     </el-input>
                                 </el-form-item>
                             </div>
-                            <div class="query-cont-col">
+                            <div class="query-cont-col badCrop">
                                 <el-form-item label="剩余正常利息：" :prop="`detailData[${index}].thisPaidInterest`">
                                     <!-- 总利息-已还-本次还利息 -->
                                     <div class="w250">
@@ -222,7 +222,7 @@
                                     </el-input>
                                 </el-form-item>
                             </div>
-                            <div class="query-cont-col">
+                            <div class="query-cont-col badCrop">
                                 <el-form-item label="剩余逾期罚息：" :prop="`detailData[${index}].thisPaidOverDueInterest`">
                                     <!-- 总逾期利息-已还-本次还逾期 -->
                                     <div class="w250">
@@ -463,5 +463,12 @@ export default {
 }
 .dw {
     margin-left: 10px;
+}
+.badCrop {
+    color: rgba($color: #FF3030, $alpha: 0.9);
+    font-weight: 700;
+    /deep/ .el-form-item__label {
+        color: rgba($color: #FF3030, $alpha: 0.9);
+    }
 }
 </style>
