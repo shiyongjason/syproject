@@ -6,7 +6,7 @@ export const getPlanTotalList = (params) => axios.get(`develop/fund-plan/summary
 // 下载故障模板
 export function downloadPlanTotalList () {
     axios.defaults.responseType = 'blob'
-    axios.get(`/develop/fund-plan/summary/export`).then(function (response) {
+    axios.post(`/develop/fund-plan/summary/export`).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)

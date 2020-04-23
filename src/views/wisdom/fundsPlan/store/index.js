@@ -9,10 +9,14 @@ const getters = {
 }
 
 const mutations = {
+    [types.PLAN_TOTAL_LIST] (state, payload) {
+        state.planTotalList = payload
+    }
 }
 
 const actions = {
     async findPlanTotalList ({ commit }, params) {
+        console.log(1)
         const { data } = await Api.getPlanTotalList(params)
         commit(types.PLAN_TOTAL_LIST, data)
     }
