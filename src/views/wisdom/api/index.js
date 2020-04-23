@@ -268,3 +268,26 @@ export const getCommitmentList = (params) => {
 export const getCommitmentTotal = (params) => {
     return axios.get(`backend/fund-plan/commitment/total`, { params })
 }
+// 台账数据导出
+export function exportCommitment (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`backend/fund-plan/commitment/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '承诺值信息.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
