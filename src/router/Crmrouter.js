@@ -5,7 +5,7 @@ export default {
     meta: {
         title: '好橙工',
         isMenu: true,
-        icon: 'hosjoy_stay_online'
+        icon: 'hosjoy_hcg'
     },
     component: Layout,
     children: [
@@ -30,6 +30,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/crmauthen/authenlist')
+        },
+        {
+            path: 'staticlist',
+            name: 'staticlist',
+            meta: {
+                title: '好橙工台账',
+                tagName: '好橙工台账',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/crmstatic/staticlist')
         }
     ]
 }

@@ -125,7 +125,7 @@ export default {
                 companyName: '',
                 isAuthentication: '',
                 isEnabled: '',
-                adminAccount: '',
+                adminAccount: this.$route.query.account || '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
@@ -221,8 +221,9 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.adminAccount = ''
             this.optarr = ''
-            this.options = []
+            // this.options = []
             this.getFindNest()
             this.onFindMlist(1)
         },

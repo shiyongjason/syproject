@@ -6,6 +6,132 @@
   "description": "好享家后台图标管理",
   "glyphs": [
     {
+      "icon_id": "14167769",
+      "name": "hosjoy_hzh",
+      "font_class": "hosjoy_hzh",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "14167770",
+      "name": "hosjoy_hcg",
+      "font_class": "hosjoy_hcg",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "14167771",
+      "name": "hosjoy_jgzx",
+      "font_class": "hosjoy_jgzx",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "14167772",
+      "name": "hosjoy_zjzf",
+      "font_class": "hosjoy_zjzf",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "14167773",
+      "name": "hosjoy_ptgsjsc",
+      "font_class": "hosjoy_ptgsjsc",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "14167774",
+      "name": "hosjoy_shushiyun",
+      "font_class": "hosjoy_shushiyun",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "12800277",
+      "name": "leftbar_grey16_shebei@3x",
+      "font_class": "leftbar_grey_shebeix",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "12800250",
+      "name": "leftbar_grey20_home",
+      "font_class": "leftbar_grey_home",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "12800251",
+      "name": "leftbar_grey20_user",
+      "font_class": "leftbar_grey_user",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "10977936",
+      "name": "hosjoy_jindiao",
+      "font_class": "hosjoy_jindiao",
+      "unicode": "e632",
+      "unicode_decimal": 58930
+    },
+    {
+      "icon_id": "10475097",
+      "name": "hosjoy_info",
+      "font_class": "hosjoy_info",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "9911491",
+      "name": "icon_network_outage",
+      "font_class": "icon_network_outage",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "9242988",
+      "name": "hosjoy_right",
+      "font_class": "hosjoy_right1",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "9242965",
+      "name": "hosjoy_eye_close",
+      "font_class": "hosjoy_eye_close",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "9242964",
+      "name": "hosjoy_eye",
+      "font_class": "hosjoy_eye",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "9242963",
+      "name": "hosjoy_stay_online",
+      "font_class": "hosjoy_stay_online",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "9242115",
+      "name": "hosjoy_permissions",
+      "font_class": "hosjoy_permissions",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "9242112",
+      "name": "hosjoy_cloud_service",
+      "font_class": "hosjoy_cloud_service",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
       "icon_id": "9241055",
       "name": "hosjoy_date",
       "font_class": "hosjoy_date",
@@ -158,69 +284,6 @@
       "font_class": "hosjoy_set",
       "unicode": "e620",
       "unicode_decimal": 58912
-    },
-    {
-      "icon_id": "9242112",
-      "name": "hosjoy_cloud_service",
-      "font_class": "hosjoy_cloud_service",
-      "unicode": "e604",
-      "unicode_decimal": 58884
-    },
-    {
-      "icon_id": "9242115",
-      "name": "hosjoy_permissions",
-      "font_class": "hosjoy_permissions",
-      "unicode": "e605",
-      "unicode_decimal": 58885
-    },
-    {
-      "icon_id": "9242963",
-      "name": "hosjoy_stay_online",
-      "font_class": "hosjoy_stay_online",
-      "unicode": "e606",
-      "unicode_decimal": 58886
-    },
-    {
-      "icon_id": "9242964",
-      "name": "hosjoy_eye",
-      "font_class": "hosjoy_eye",
-      "unicode": "e607",
-      "unicode_decimal": 58887
-    },
-    {
-      "icon_id": "9242965",
-      "name": "hosjoy_eye_close",
-      "font_class": "hosjoy_eye_close",
-      "unicode": "e608",
-      "unicode_decimal": 58888
-    },
-    {
-      "icon_id": "9242988",
-      "name": "hosjoy_right",
-      "font_class": "hosjoy_right1",
-      "unicode": "e609",
-      "unicode_decimal": 58889
-    },
-    {
-      "icon_id": "9911491",
-      "name": "icon_network_outage",
-      "font_class": "icon_network_outage",
-      "unicode": "e621",
-      "unicode_decimal": 58913
-    },
-    {
-      "icon_id": "10475097",
-      "name": "hosjoy_info",
-      "font_class": "hosjoy_info",
-      "unicode": "e622",
-      "unicode_decimal": 58914
-    },
-    {
-      "icon_id": "10977936",
-      "name": "hosjoy_jindiao",
-      "font_class": "hosjoy_jindiao",
-      "unicode": "e632",
-      "unicode_decimal": 58930
     }
   ]
 }

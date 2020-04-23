@@ -1,27 +1,26 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
+        <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
-                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
+                <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        江苏舒适云信息技术有限公司 <span>已认证</span>
+                        {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{onAutenSatus(businessDetail.authenticationStatus)}}</el-button>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
-                        1233433443
+                        {{businessDetail.userAccount||'-'}}
                     </el-form-item>
                     <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
-                        1233433443
+                           {{businessDetail.userName||'-'}}
                     </el-form-item>
-                    <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
-                        <el-select v-model="bossDetail.subsectionCode" placeholder="请选择" :clearable=true>
+                    <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="subsectionCode">
+                        <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </el-form-item>
-
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
                             <el-form-item prop="provinceId">
-                                <el-select v-model="bossDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                                <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
                                     <el-option label="请选择" value=""></el-option>
                                     <template v-for="item in proviceList">
                                         <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
@@ -33,7 +32,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="cityId">
-                                <el-select v-model="bossDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
+                                <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                                     </el-option>
@@ -43,7 +42,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="countryId">
-                                <el-select v-model="bossDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
+                                <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                                     </el-option>
@@ -51,119 +50,78 @@
                             </el-form-item>
                         </el-col>
                     </el-form-item>
-
-                    <el-form-item label="商家类型：" prop="resource" :label-width="formLabelWidth">
-                        <el-radio-group v-model="bossDetail.merchantType">
-                            <el-radio :label="1">体系内</el-radio>
-                            <el-radio :label="2">体系外</el-radio>
+                    <el-form-item label="企业类型：" prop="companyType" :label-width="formLabelWidth">
+                        <el-radio-group v-model="businessDetail.companyType">
+                            <el-radio :label=1>体系内</el-radio>
+                            <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-
-                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth">
-                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2" prop="relationCompanyCode">
+                        <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
-                    <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                        {{bossDetail.isAuthentication==true?'已认证':'未认证'}}
-                        <template v-if="bossDetail.authenticationTime">
-                            {{bossDetail.authenticationTime | formatterTime}}
-                        </template>
-                    </el-form-item>
-                    <el-form-item label="金融风险：" :label-width="formLabelWidth">
-                        白名单
+                    <el-form-item label="客户分类：" :label-width="formLabelWidth">
+                      {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                     </el-form-item>
                     <el-form-item label="创建时间：" :label-width="formLabelWidth">
-                        {{bossDetail.registrationTime | formatterTime}}
+                        {{businessDetail.createTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="创建人：" :label-width="formLabelWidth">
-                        赵娟 15195954045
+                        {{businessDetail.createBy}} {{businessDetail.createPhone}}
                     </el-form-item>
                     <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
-                        2019-12-06 13:00:06
+                        {{businessDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
-                        赵娟 15195954045
+                       {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
                     </el-form-item>
                     <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                        {{businessDetail.updateTime| formatterTime}}
                     </el-form-item>
                     <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
+                        {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
                     </el-form-item>
                 </el-form>
-                <div class="drawer-footer" v-if="activeName=='first'">
+                <div class="drawer-footer">
                     <div class="drawer-button">
+                        <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
                         <el-button @click="cancelForm">取 消</el-button>
                         <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
-                <!-- <div class="" v-if="activeName=='second'">
-                    <el-form :model="form">
-                        <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                            江苏舒适云信息技术有限公司
-                        </el-form-item>
-                        <el-form-item label="企业类型：" :label-width="formLabelWidth">
-                            个体工商户
-                        </el-form-item>
-                        <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
-                            2716986423661687QAZ
-                        </el-form-item>
-                        <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="法人姓名：" :label-width="formLabelWidth">
-                            韦小宝
-                        </el-form-item>
-                        <el-form-item label="法人手机号：" :label-width="formLabelWidth">
-                            3778765678
-                        </el-form-item>
-                        <el-form-item label="法人身份证号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="法人身份证照片：" :label-width="formLabelWidth">
-                            <div style="float:left">
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                            <div style="float:left;margin-left:10px">
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="开户名：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="银行卡号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="联行号：" :label-width="formLabelWidth">
-                            320121199997897797979
-                        </el-form-item>
-                        <el-form-item label="开户许可证图片：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="门头照：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                        <el-form-item label="门店内景：" :label-width="formLabelWidth">
-                            <div>
-                                <img src="../../../assets/images/img_0.png" alt="">
-                            </div>
-                        </el-form-item>
-                    </el-form>
-                </div> -->
             </div>
         </el-drawer>
+        <el-dialog title="设置白名单" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
+            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
+                <el-form-item label="客户分类：" prop="customerType">
+                    <el-radio-group v-model="statusForm.customerType">
+                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="说明：" prop="note">
+                    <el-input type="textarea" v-model.trim="statusForm.note" maxlength="200" :rows="5" show-word-limit></el-input>
+                </el-form-item>
+                <p class="page-title">记录</p>
+                <div class="page-wrap">
+                    <div v-for="(i) in whiteRecordsList" :key=i.id>
+                        <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
+                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
+                          <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
+                    </div>
+                </div>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { putMerchantDetail, putMemberDetail } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord } from '../api/index'
 import { deepCopy } from '@/utils/utils'
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'businessdrawer',
     props: {
@@ -174,43 +132,22 @@ export default {
     },
     data () {
         return {
-            type: '',
+            authen_operate: Auths.CRM_WHITE_OPERATE,
             removeValue: true,
-            merchantArr: [],
-            activeName: 'first',
             branchArr: [],
-            formLabelWidth: '140px',
+            formLabelWidth: '150px',
             loading: false,
-            proviceList: [],
-            merchantCode: '',
-            memberCode: '',
-            bossDetail: {
-                // memberAccount: '',
-                // authenticationTime: '',
-                // cityId: '',
-                // cityName: '',
-                // companyName: '',
-                // countryId: '',
-                // countryName: '',
-                // isAuthentication: '',
-                // isAutoDispatch: '',
-                // isCommodity: '', // 是否商品型商家
-                // isOperational: '',
-                // merchantAccount: '',
-                // merchantType: '',
-                // provinceId: '',
-                // provinceName: '',
-                // registrationTime: '',
-                // staff: [],
-                // subsectionCode: '',
-                // subsectionName: '',
-                // updateBy: '',
-                // updateTime: '',
-                // updatePhone: ''
-
+            statusLoading: false,
+            businessDetail: {
             },
             copyDetail: {},
             rules: {
+                subsectionCode: [
+                    { required: true, message: '请选择分部', trigger: 'change' }
+                ],
+                companyType: [
+                    { required: true, message: '请选择企业类型', trigger: 'change' }
+                ],
                 countryId: [
                     { required: true, message: '请选择区', trigger: 'change' }
                 ],
@@ -219,13 +156,37 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
+                ],
+                relationCompanyCode: [
+                    { required: true, message: '请选择关联公司' }
                 ]
             },
-            memberSource: ['存量会员店', '存量平台公司', 'app注册', '商家注册', '好友推荐', '商家邀请'],
             targetObj: {
                 selectName: '',
                 selectCode: ''
-            }
+            },
+            statusType: [{ value: '黑名单', key: 1 }, { value: '白名单', key: 2 }, { value: '待审核', key: 3 }],
+            dialogVisible: false,
+            proviceList: [],
+            merchantArr: [],
+            statusForm: {
+                companyCode: '',
+                companyName: '',
+                customerType: '',
+                note: '',
+                operator: '',
+                operatorPhone: ''
+            },
+            copyStatusForm: {},
+            statusRules: {
+                customerType: [
+                    { required: true, message: '请选择客户分类', trigger: 'change' }
+                ],
+                note: [
+                    { required: true, message: '请输入说明' }
+                ]
+            },
+            whiteRecordsList: []
         }
     },
     components: {
@@ -237,20 +198,20 @@ export default {
         }),
         ...mapGetters({
             nestDdata: 'nestDdata',
-            merchantDetail: 'merchantDetail',
             branchList: 'branchList',
-            memberDetail: 'memberDetail',
-            merchantList: 'merchantList'
+            crmauthDetail: 'crmauthen/crmauthDetail',
+            platlist: 'crmauthen/platlist',
+            whiteRecords: 'crmauthen/whiteRecords'
         }),
         cityList () {
-            const province = this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)
+            const province = this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)
             if (province.length > 0) {
                 return province[0].cities
             }
             return []
         },
         areaList () {
-            const city = this.cityList.filter(item => item.cityId == this.bossDetail.cityId)
+            const city = this.cityList.filter(item => item.cityId == this.businessDetail.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -258,26 +219,33 @@ export default {
         }
     },
     watch: {
-        // merchantCode: {
-        //     handler (newV, oldV) {
-        //         console.log(newV, oldV)
-        //         if (newV) {
-        //             this.getMerchtDetail(newV)
-        //         }
-        //     },
-        //     deep: true
-        // }
+
     },
     methods: {
         ...mapActions({
             findNest: 'findNest',
-            findMerchantDetail: 'findMerchantDetail',
+            findBusinessDetail: 'crmauthen/findBusinessDetail',
             findBranch: 'findBranch',
-            findMemberDetail: 'findMemberDetail',
-            findMerchant: 'findMerchant'
+            findPlatlist: 'crmauthen/findPlatlist',
+            findWhiterecords: 'crmauthen/findWhiterecords'
+
         }),
+        onClearV () {
+            this.$refs['ruleForm'].clearValidate()
+        },
+        onAutenSatus (val) {
+            if (val == 1) {
+                return '未认证'
+            } else if (val == 2) {
+                return '认证中'
+            } else if (val == 3) {
+                return '认证成功'
+            } else if (val == 4) {
+                return '认证失败'
+            }
+        },
         handleClose () {
-            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+            if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -290,7 +258,7 @@ export default {
             }
         },
         cancelForm () {
-            if (JSON.stringify(this.bossDetail) != JSON.stringify(this.copyDetail)) {
+            if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
                     cancelButtonText: '返回',
@@ -302,13 +270,25 @@ export default {
                 this.$emit('backEvent')
             }
         },
+        async getMerchtMemberDetail (val) {
+            const { data } = await getBusinessAuthen(val)
+            await this.findBusinessDetail({ companyCode: val })
+            this.businessDetail = this.crmauthDetail
+            this.businessDetail.authenticationStatus = data.authenticationStatus
+            this.copyDetail = deepCopy(this.businessDetail)
+            this.targetObj.selectCode = this.businessDetail.relationCompanyCode
+            this.targetObj.selectName = this.businessDetail.relationCompanyName
+            this.statusForm.customerType = ''
+            this.statusForm.note = ''
+            this.copyStatusForm = deepCopy(this.statusForm)
+        },
         onSaveDetail () {
-            this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId)[0].name
-            this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId)[0].name
-            this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId)[0].name
-            const params = { ...this.bossDetail }
+            this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)[0].name
+            this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId)[0].name
+            this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId)[0].name
+            const params = { ...this.businessDetail }
             params.updateBy = this.userInfo.employeeName
-            params.phone = this.userInfo.phoneNumber
+            params.updatePhone = this.userInfo.phoneNumber
             if (params.subsectionCode) {
                 params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
             }
@@ -316,14 +296,7 @@ export default {
                 if (valid) {
                     this.loading = true
                     try {
-                        if (this.type === 'merchant') {
-                            params.merchantCode = this.merchantCode
-                            await putMerchantDetail(params)
-                        } else if (this.type === 'member') {
-                            params.memberCode = this.memberCode
-                            delete params.merchantName
-                            await putMemberDetail(params)
-                        }
+                        await updateCrmauthen(params)
                         this.$message({
                             message: '数据保存成功',
                             type: 'success'
@@ -336,62 +309,82 @@ export default {
                 }
             })
         },
+        async onSetWhite () {
+            this.dialogVisible = true
+            await this.findWhiterecords({ companyCode: this.businessDetail.companyCode })
+            this.whiteRecordsList = this.whiteRecords
+            this.statusForm = deepCopy(this.copyStatusForm)
+            // 设置白名单
+            this.statusForm.companyCode = this.businessDetail.companyCode
+            this.statusForm.companyName = this.businessDetail.companyName
+            this.$nextTick(() => {
+                this.$refs['statusForm'].clearValidate()
+            })
+        },
+        onPutwhite () {
+            const params = { ...this.statusForm }
+            params.operator = this.userInfo.employeeName
+            params.operatorPhone = this.userInfo.phoneNumber
+            this.$refs['statusForm'].validate(async (valid) => {
+                if (valid) {
+                    this.statusLoading = true
+                    try {
+                        await putWhiterecord(params)
+                        this.$message({
+                            message: '设置成功',
+                            type: 'success'
+                        })
+                        this.dialogVisible = false
+                        this.getMerchtMemberDetail(this.params.companyCode)
+                        // this.$emit('backEvent')
+                        this.statusLoading = false
+                    } catch (error) {
+                        this.statusLoading = false
+                    }
+                }
+            })
+        },
         async onGetbranch () {
             await this.findBranch()
             this.branchArr = this.branchList
         },
         onChangeList (val) {
             if (val === 1) {
-                this.bossDetail.countryId = ''
-                this.bossDetail.cityId = ''
+                this.businessDetail.countryId = ''
+                this.businessDetail.cityId = ''
                 // 获取中文
-                // this.bossDetail.provinceName = this.bossDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.bossDetail.provinceId).name
+                // this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId).name
             } else if (val === 2) {
-                this.bossDetail.countryId = ''
-                // this.bossDetail.cityName = this.bossDetail.cityId && this.cityList.filter(item => item.cityId == this.bossDetail.cityId).name
+                this.businessDetail.countryId = ''
+                // this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId).name
             } else if (val === 3) {
-                // this.bossDetail.countryName = this.bossDetail.countryId && this.areaList.filter(item => item.countryId == this.bossDetail.countryId).name
+                // this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId).name
             }
+        },
+        async getPlatlist () {
+            await this.findPlatlist()
+            this.merchantArr = this.platlist
         },
         async getFindNest () {
             await this.findNest()
             this.proviceList = this.nestDdata
         },
-        async getMerchantList () {
-            await this.findMerchant()
-            this.merchantArr = this.merchantList
-        },
-        async getMerchtMemberDetail (val, type) {
-            this.type = type
-            if (type === 'merchant') {
-                this.merchantCode = val
-                await this.findMerchantDetail({ merchantCode: val })
-                this.bossDetail = { ...this.merchantDetail }
-            } else {
-                this.memberCode = val
-                await this.findMemberDetail({ memberCode: val })
-                this.bossDetail = { ...this.memberDetail }
-                // this.getFindNest()
-                this.targetObj.selectCode = this.memberDetail.merchantCode
-                this.targetObj.selectName = this.memberDetail.merchantName
-            }
-            this.copyDetail = deepCopy(this.bossDetail)
-        },
+
         backFindbrand (val) {
-            this.bossDetail.merchantCode = val.value ? val.value.selectCode : ''
+            this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
+            this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
         }
     },
     mounted () {
         this.getFindNest()
         this.onGetbranch()
-        this.getMerchantList()
+        this.getPlatlist()
     }
 }
 </script>
 <style  lang="scss" scoped>
 /deep/ .el-drawer__body {
     overflow-y: scroll;
-    // position: relative;
 }
 .drawer-content {
     width: 100%;
@@ -422,20 +415,56 @@ export default {
         }
     }
 }
+.page-title {
+    font-size: 16px;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px 0;
+}
+.page-wrap {
+    max-height: 250px;
+    overflow-y: scroll;
+    div {
+        margin-top: 10px;
+        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ebeef5;
+        background-color: #fff;
+        overflow: hidden;
+        color: #303133;
+        transition: 0.3s;
+        .el-icon-edit {
+            color: #eb7343;
+            margin-right: 10px;
+        }
+        b{
+            color: #ff0000;
+            font-weight: 500;
+        }
+    }
+}
 /deep/ .el-tabs__item.is-active {
     background: transparent;
     color: #000;
 }
 
 /deep/.el-autocomplete {
-    width: 300px;
+    width: 100%;
     .el-input {
-        width: 300px !important;
+        width: 100% !important;
     }
 }
-/deep/.el-form .el-input {
+/deep/.el-drawer__header {
+    padding: 20px 20px;
+    border-bottom: 1px solid #e5e5e5;
 }
 .el-form-item__content .el-input {
     width: 200px !important;
+}
+/deep/.el-autocomplete {
+    width: 100% !important;
+}
+/deep/ .el-form .el-input{
+    width: 215px;
 }
 </style>
