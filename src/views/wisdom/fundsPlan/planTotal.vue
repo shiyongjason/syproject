@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.applyMonth" type="month"  value-format='yyyyMM' placeholder="选择月">
+                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="选择月">
                     </el-date-picker>
                 </div>
             </div>
@@ -18,10 +18,10 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery()">
+                    <el-button type="primary" class="ml20" @click="findPlanTotalList">
                         搜索
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onReset()">
+                    <el-button type="primary" class="ml20" @click="onReset">
                         重置
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onExport">
@@ -34,6 +34,7 @@
             <p><b>2020</b>年<b>4</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
+            {{planTotalList}}
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
                          :total="page.total"></hosJoyTable>
         </div>
@@ -45,7 +46,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { downloadPlanTotalList } from './api/index'
 
 export default {
@@ -58,12 +59,9 @@ export default {
     data () {
         return {
             params: {
-                pageSize: 10,
-                pageNumber: 1,
-                startDate: '',
-                endDate: ''
+                selectTime: '',
+                subSectionCode: ''
             },
-            paramsTemp: {},
             platComList: [],
             selectPlatObj: {
                 selectCode: '',
@@ -88,18 +86,25 @@ export default {
     methods: {
         backPlat (val) {
             console.log(val)
-            this.params.companyName = val.value.value
+            this.params.subSectionCode = val.value.subSectionCode
         },
         onReset () {
-            this.params = { ...this.paramsTemp }
+            this.params.selectTime = ''
+            this.selectPlatObj = {
+                selectCode: '',
+                selectName: ''
+            }
         },
         onExport () {
             downloadPlanTotalList()
-        }
+        },
+        ...mapActions({
+            findPlanTotalList: 'fundsPlan/findPlanTotalList'
+        })
     },
     async mounted () {
-        this.paramsTemp = { ...this.params }
         await this.oldBossAuth()
+        this.findPlanTotalList()
         if (this.userInfo.deptType === 2) {
             this.selectPlatObj.selectCode = this.branchList[0].crmDeptCode
             this.selectPlatObj.selectName = this.branchList[0].deptName
