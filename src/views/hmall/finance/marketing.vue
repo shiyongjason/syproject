@@ -191,7 +191,7 @@ export default {
                 { label: '完成时间', prop: 'completeTime', formatters: 'dateTime' },
                 { label: '订单总金额（元）', prop: 'totalAmount', formatters: 'moneyShow' },
                 { label: '订单实付（元）', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '订单实收（元）', prop: 'discountAmount', formatters: 'moneyShow' },
+                { label: '订单实收（元）', prop: 'actualReceivedAmount', formatters: 'moneyShow' },
                 { label: '券编码', prop: 'couponCode' },
                 { label: '券名称', prop: 'couponName' },
                 { label: '券类型', prop: 'couponType' },

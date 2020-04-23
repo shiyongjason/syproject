@@ -138,7 +138,7 @@ export default {
                 { label: '客户名称', prop: 'customerName' },
                 { label: '支付方式', prop: 'payWay' },
                 { label: '订单实付金额（元）', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '订单实收金额（元）', prop: 'discountAmount', formatters: 'moneyShow' },
+                { label: '订单实收金额（元）', prop: 'actualReceivedAmount', formatters: 'moneyShow' },
                 { label: '订单状态', prop: 'childOrderStatus' },
                 { label: '订单渠道', prop: 'source' },
                 { label: '自有商品', prop: 'own' },

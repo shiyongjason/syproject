@@ -70,8 +70,10 @@ function isNotBlank (value) {
 const moneyShow = function (val) {
     if (val) {
         return val.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    } else {
+    } else if (val == 0) {
         return '0.00'
+    } else {
+        return '-'
     }
 }
 
