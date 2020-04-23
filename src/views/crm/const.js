@@ -45,12 +45,17 @@ export const NEW_STATUS_TYPE = [ { key: 2, value: '审核' }, { key: 3, value: '
     { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }]
 
 export const BUS_TYPE_LIST = [
-    { key: 1, value: '体系外' },
-    { key: 2, value: '体系内' }
+    { key: 1, value: '体系内' },
+    { key: 2, value: '体系外' }
 ]
 
 export const RISK_TYPE_LIST = [
-    { key: 1, value: '白名单' },
-    { key: 2, value: '黑名单' },
-    { key: 2, value: '待审核' }
+    { key: 2, value: '白名单' },
+    { key: 1, value: '黑名单' },
+    { key: 3, value: '待审核' }
+]
+
+export const AUTEHEN_LIST = [
+    { key: 1, value: '已认证' },
+    { key: 2, value: '未认证' }
 ]

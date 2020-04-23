@@ -1,63 +1,40 @@
-import { ccpBaseUrl, B2bUrl } from '@/api/config'
+import { ccpBaseUrl, B2bUrl, interfaceUrl } from '@/api/config'
 import axios from 'axios'
 // 省市区
 export const getChiness = (params) => {
     return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
 }
-// 获取商家列表
-export const getBossMerchant = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant', { params })
+
+export const getCompanyBosslist = (params) => {
+    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/page', params)
 }
-// 获取商家详情
-export const getBossMerchantDetail = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/detail', { params })
+
+// CRM 认证详情
+export const getBusinessAuthen = (params) => {
+    return axios.get(B2bUrl + `merchant/api/crm/company/authentication-info/${params}`)
 }
-// 获取商家详情统计
-export const getBossMerchantStatic = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/merchant/statistics', { params })
+
+// CRM 认证状态
+export const getBusinessDetail = (params) => {
+    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/detail', { params })
 }
-// 更新商家详情
-export const putMerchantDetail = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/detail', params)
+// 获取详情统计
+export const getCrmauthenStatic = (params) => {
+    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/statistics', params)
 }
+
 // 分部列表
 export const findBrandsList = (params) => {
     return axios.get(B2bUrl + 'common/api/organizations/branches', { params })
 }
 
-// 启用禁用商家
-export const changeState = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/merchant/enable-status', params)
+// 更新认证企业
+export const updateCrmauthen = (params) => {
+    return axios.put(B2bUrl + 'merchant/api/crm/company/boss/update', params)
 }
-// 获取会员列表
-export const getBossMember = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/member', { params })
-}
-// 获取商家详情统计
-export const getBossMemberStatic = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/member/statistics', { params })
-}
-// 启用禁用会员
-export const changeMemberState = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/member/enable-status', params)
-}
-// 获取会员详情
-export const getBossMemberDetail = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/member/detail', { params })
-}
-// 更新会员详情
-export const putMemberDetail = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/company/boss/member/detail', params)
-}
-// 更新会员详情
-export const getMerchantList = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/list', { params })
-}
-// 账号列表
-export const getAccountList = (params) => {
-    return axios.get(B2bUrl + 'uaa/openapi/account/list', { params })
-}
-// 账号详情
-export const getAccountDetail = (params) => {
-    return axios.get(B2bUrl + `uaa/openapi/account/${params}`)
-}
+
+export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
+
+export const putWhiterecord = (params) => axios.post(B2bUrl + 'merchant/api/crm/company/white-list-record', params)
+
+export const findWhiterecord = (params) => axios.get(B2bUrl + 'merchant/api/crm/company/white-list-record/list', { params })

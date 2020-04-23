@@ -17,6 +17,7 @@ import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
+import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 
 Vue.use(Vuex)
@@ -57,6 +58,7 @@ const store = new Vuex.Store({
         crmmanage,
         developmodule,
         jinyunplatform,
+        crmauthen,
         crmstatic
     }
 })
