@@ -147,7 +147,7 @@ export default {
                 userAccount: '',
                 userName: '',
                 authenticationStatus: '',
-                createTimeOrder: '',
+                createTimeOrder: 'desc',
                 areaIds: ''
             },
             copyParams: {},
