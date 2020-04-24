@@ -49,9 +49,9 @@
                         <el-select v-model="queryParams.isAuthentication">
                             <el-option label="全部" value="">
                             </el-option>
-                            <el-option label="已认证" value="1">
+                            <el-option label="已认证" :value=true>
                             </el-option>
-                            <el-option label="未认证" value="0">
+                            <el-option label="未认证" :value=false>
                             </el-option>
                         </el-select>
                     </div>
@@ -125,7 +125,7 @@ export default {
                 companyName: '',
                 isAuthentication: '',
                 isEnabled: '',
-                adminAccount: this.$route.query.account || '',
+                adminAccount: '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
