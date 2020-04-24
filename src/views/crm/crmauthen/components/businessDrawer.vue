@@ -56,6 +56,9 @@
                             <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="relationCompanyCode">
+                        <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                    </el-form-item>
                     <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2" prop="relationCompanyCode">
                         <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
@@ -315,6 +318,7 @@ export default {
             this.whiteRecordsList = this.whiteRecords
             this.statusForm = deepCopy(this.copyStatusForm)
             // 设置白名单
+            this.statusForm.customerType = this.businessDetail.customerType
             this.statusForm.companyCode = this.businessDetail.companyCode
             this.statusForm.companyName = this.businessDetail.companyName
             this.$nextTick(() => {
