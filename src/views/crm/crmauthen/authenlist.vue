@@ -114,7 +114,7 @@
                     <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="!hosAuthCheck(authen_detail)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
