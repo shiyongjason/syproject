@@ -7,6 +7,7 @@ import { interfaceUrl, B2bUrl } from './config'
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
+const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
@@ -26,10 +27,12 @@ const cancelRequst = (config) => {
     }
 }
 
+let requestLoading = 0
 // 添加请求拦截器、取消请求
 // const CancelToken = axios.CancelToken
 axios.interceptors.request.use(
     (config) => {
+        requestLoading++
         const refreshToken = sessionStorage.getItem('refreshToken')
         // 如果是B2b请求 token不一样
         if (config.url.indexOf(B2bUrl) != -1) {
@@ -45,7 +48,8 @@ axios.interceptors.request.use(
         // config.cancelToken = new CancelToken(cancelMethod => {
         //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
         // })
-        store.commit('LOAD_STATE', true)
+        const skipLoading = specialReqUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+        if (skipLoading.length === 0) store.commit('LOAD_STATE', true)
         return config
     },
     (error) => {
@@ -55,6 +59,7 @@ axios.interceptors.request.use(
 // 添加响应拦截器
 axios.interceptors.response.use(
     (response) => {
+        requestLoading--
         response.headers.new_access_token && sessionStorage.setItem('token', response.headers.new_access_token)
         response.headers.new_refresh_token && sessionStorage.setItem('refreshToken', response.headers.new_refresh_token)
         cancelRequst(response.config)// 请求响应后，把已经完成的请求从requestArr中移除
@@ -65,7 +70,7 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return response
         }
-        if (response.data.code && response.data.code != 200) {
+        if (response.data && response.data.code && response.data.code != 200) {
             Message({
                 message: response.data.msg || response.data.message,
                 type: 'error'
@@ -73,10 +78,11 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return Promise.reject(response)
         }
-        store.commit('LOAD_STATE', false)
+        if (requestLoading === 0) store.commit('LOAD_STATE', false)
         return response
     },
     (error) => {
+        requestLoading--
         if (axios.isCancel(error)) {
             console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)
@@ -92,8 +98,6 @@ axios.interceptors.response.use(
             }, 1200)
             return Promise.reject(error)
         }
-
-        // console.log(error)
         // if (error.response && error.response.status) {
         //     switch (error.response.status) {
         //         case 401:
@@ -122,7 +126,7 @@ axios.interceptors.response.use(
             message = error.response.data.message
         }
         if (error.response.status === 400 && data.message !== '') {
-            message = data.message
+            message = data.message ? data.message : '操作失败'
         }
         Message({
             message: message,

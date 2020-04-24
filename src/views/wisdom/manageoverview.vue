@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body">
+    <div class="page-body manageoverview">
         <div class="page-body-cont query-cont">
             <div class="query-cont-col" v-if="(userInfo.deptType== deptType[0])">
                 <div class="query-col-title">大区：</div>
@@ -168,15 +168,17 @@ export default {
     }
 }
 </script>
-<style lang="scss" >
-.page-box {
-    background: #ffffff;
-}
-.red {
-    color: red !important;
-}
-.el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-    background: #ff7a45;
-    color: #ffffff;
+<style lang="scss" scoped>
+.manageoverview {
+    .page-box {
+        background: #ffffff;
+    }
+    .red {
+        color: red !important;
+    }
+    .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+        background: #ff7a45;
+        color: #ffffff;
+    }
 }
 </style>

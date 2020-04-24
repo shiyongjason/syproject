@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 // 获取菜单列表
 export const findMenuList = (params) => axios.get(`/uaa/employee/auth-list/${params}`, params)
 
