@@ -43,6 +43,7 @@
                     <el-form-item :label="`${fundDetail.fundplanSale.commitmentAnnualYear}年承诺额：`">
                         <div class="w250">
                             <span>{{fundDetail.fundplanSale.commitmentAnnual || 0}}</span>
+                            
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
