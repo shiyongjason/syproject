@@ -60,7 +60,7 @@
                         <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand($event,1)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                    <template v-if="businessDetail.companyType==2">
-                    <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" >
+                    <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" ref="isRelated">
                         <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
                             <el-radio :label=true>是</el-radio>
                             <el-radio :label=false>否</el-radio>
@@ -257,7 +257,7 @@ export default {
                 this.$refs['developOnlineCompany'].clearValidate()
             } else {
                 // this.$refs['relationCompany'].clearValidate()
-                // this.$refs['developOnlineCompany'].clearValidate()
+                this.$refs['isRelated'].clearValidate()
             }
         },
         onClearRelated () {
