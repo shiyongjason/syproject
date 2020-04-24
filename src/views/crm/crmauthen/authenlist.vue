@@ -92,14 +92,14 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>;体系外 <b>{{crmauthLoan.outSystemNum||0}}
-                </b>;白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>;黑名单 <b>{{crmauthLoan.blackListNum||0}}</b></el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>; 体系外 <b>{{crmauthLoan.outSystemNum||0}}
+                </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.blackListNum||0}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                   <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userName||'-'}}</span>
+                   <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
                     {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
@@ -241,7 +241,6 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
-            console.log(this.$refs['myCascader'])
             this.optarr = ''
             this.searchList(1)
         },
@@ -295,7 +294,7 @@ export default {
             this.$refs.drawercom.onClearV()
         },
         onLinkship (val) {
-            this.$router.push({ path: '/hmall/memberManage', query: { account: val } })
+            this.$router.push({ path: '/hmall/accountManage', query: { account: val } })
         }
     }
 }
