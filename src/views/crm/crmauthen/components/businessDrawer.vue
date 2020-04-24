@@ -4,7 +4,7 @@
             <div class="drawer-content">
                 <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{onAutenSatus(businessDetail.authenticationStatus)}}</el-button>
+                        {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{businessDetail.isAuthentication?'已认证':'未认证'}}</el-button>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                         {{businessDetail.userAccount||'-'}}
@@ -51,17 +51,25 @@
                         </el-col>
                     </el-form-item>
                     <el-form-item label="企业类型：" prop="companyType" :label-width="formLabelWidth">
-                        <el-radio-group v-model="businessDetail.companyType">
+                        <el-radio-group v-model="businessDetail.companyType" @change="onClearType">
                             <el-radio :label=1>体系内</el-radio>
                             <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <!-- <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="relationCompanyCode">
-                        <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
-                    </el-form-item> -->
-                    <el-form-item label="是否关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===2" prop="relationCompanyCode">
-                        <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                    <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="developOnlineCompanyCode"  ref="developOnlineCompany">
+                        <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand($event,1)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
+                   <template v-if="businessDetail.companyType==2">
+                    <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" >
+                        <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
+                            <el-radio :label=true>是</el-radio>
+                            <el-radio :label=false>否</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.isRelated" prop="relationCompanyCode"  ref="relationCompany">
+                        <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand($event,2)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                    </el-form-item>
+                    </template>
                     <el-form-item label="客户分类：" :label-width="formLabelWidth">
                       {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                     </el-form-item>
@@ -162,6 +170,12 @@ export default {
                 ],
                 relationCompanyCode: [
                     { required: true, message: '请选择关联公司' }
+                ],
+                developOnlineCompanyCode: [
+                    { required: true, message: '请选择平台公司' }
+                ],
+                isRelated: [
+                    { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
                 ]
             },
             targetObj: {
@@ -236,6 +250,25 @@ export default {
         onClearV () {
             this.$refs['ruleForm'].clearValidate()
         },
+        onClearType () {
+            this.targetObj.selectCode = ''
+            this.targetObj.selectName = ''
+            if (this.businessDetail.companyType == 1) {
+                this.$refs['developOnlineCompany'].clearValidate()
+            } else {
+                // this.$refs['relationCompany'].clearValidate()
+                // this.$refs['developOnlineCompany'].clearValidate()
+            }
+        },
+        onClearRelated () {
+            this.targetObj.selectCode = ''
+            this.targetObj.selectName = ''
+            this.businessDetail.relationCompanyCode = ''
+            this.businessDetail.relationCompanyName = ''
+            if (this.businessDetail.isRelated) {
+                this.$refs['relationCompany'].clearValidate()
+            }
+        },
         onAutenSatus (val) {
             if (val == 1) {
                 return '未认证'
@@ -279,8 +312,8 @@ export default {
             this.businessDetail = this.crmauthDetail
             this.businessDetail.authenticationStatus = data.authenticationStatus
             this.copyDetail = deepCopy(this.businessDetail)
-            this.targetObj.selectCode = this.businessDetail.relationCompanyCode
-            this.targetObj.selectName = this.businessDetail.relationCompanyName
+            this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
+            this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
             this.statusForm.customerType = ''
             this.statusForm.note = ''
             this.copyStatusForm = deepCopy(this.statusForm)
@@ -373,9 +406,14 @@ export default {
             this.proviceList = this.nestDdata
         },
 
-        backFindbrand (val) {
-            this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
-            this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
+        backFindbrand (val, type) {
+            if (type == 1) {
+                this.businessDetail.developOnlineCompanyCode = val.value ? val.value.selectCode : ''
+                this.businessDetail.developOnlineCompanyName = val.value ? val.value.companyName : ''
+            } else {
+                this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
+                this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
+            }
         }
     },
     mounted () {
