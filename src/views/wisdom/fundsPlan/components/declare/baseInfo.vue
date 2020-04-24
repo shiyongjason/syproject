@@ -42,7 +42,7 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`${fundDetail.fundplanSale.commitmentAnnualYear}年承诺额：`">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanSale.commitmentAnnualYear || 0}}</span>
+                            <span>{{fundDetail.fundplanSale.commitmentAnnual || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -66,7 +66,7 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-form-item :label="`截止${saleCurrentMonthName}底销售额：`">
+                    <el-form-item :label="`截止${totalSaleCurrentYearName}底销售额：`">
                         <div class="w250">
                             <span>{{fundDetail.fundplanSale.totalSaleCurrentYear || 0}}</span>
                             <span class="dw">万元</span>
@@ -74,7 +74,7 @@
                     </el-form-item>
                 </div>
                 <div class="query-cont-col">
-                    <el-form-item :label="`${totalSaleCurrentYearName}实时销售额：`">
+                    <el-form-item :label="`${saleCurrentMonthName}实时销售额：`">
                         <div class="w250">
                             <span>{{fundDetail.fundplanSale.saleCurrentMonth || 0}}</span>
                             <span class="dw">万元</span>
@@ -140,17 +140,17 @@ export default {
             }
             return `${this.fundDetail.fundplanSale.commimentNextMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.commimentNextMonthName.substring(4, 6)}月`
         },
-        saleCurrentMonthName () {
-            if (!this.fundDetail.fundplanSale.saleCurrentMonthName) {
-                return 'XXXX年XX月'
-            }
-            return `${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6)}月`
-        },
         totalSaleCurrentYearName () {
             if (!this.fundDetail.fundplanSale.totalSaleCurrentYearName) {
                 return 'XXXX年XX月'
             }
             return `${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(0, 4)}年${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(4, 6)}月`
+        },
+        saleCurrentMonthName () {
+            if (!this.fundDetail.fundplanSale.saleCurrentMonthName) {
+                return 'XXXX年XX月'
+            }
+            return `${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6)}月`
         }
     }
 }

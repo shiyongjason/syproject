@@ -15,7 +15,7 @@
             <el-form-item label="资金支持类型：" prop="fundType">
                 <div class="w250">
                     <el-select v-model="fundDetail.subRegionFundPlanApply.fundType" :disabled='disabled'>
-                        <el-option label="经验用款" value="001"></el-option>
+                        <el-option label="经营用款" value="001"></el-option>
                         <el-option label="注资款" value="002"></el-option>
                     </el-select>
                 </div>
