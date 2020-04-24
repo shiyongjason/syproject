@@ -93,9 +93,15 @@ export default {
             this.onReset()
         },
         onReset () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
             this.$set(this.params, 'applyMonth', '')
             this.$set(this.params, 'companyName', '')
             this.$set(this.params, 'subSectionCode', '')
+            this.selectObj.branch = { ...obj }
+            this.selectObj.platformData = { ...obj }
             this.onSearch()
         },
         onCurrentChange (val) {
