@@ -32,10 +32,10 @@
                     <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="区域：" prop="deptCode">
+            <el-form-item label="区域：">
                 <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">
                     <el-option label="请选择" value=""></el-option>
-                    <el-option :label="item.deptName" :value="item.deptCode" v-for="item in regionList" :key="item.deptCode"></el-option>
+                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in regionalismList" :key="item.pkDeptDoc"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="地址：" required>
@@ -225,7 +225,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            regionList: state => state.areaList,
+            regionalismList: state => state.areaList,
             devDepList: state => state.devDepList
         }),
         ...mapGetters({
@@ -340,14 +340,17 @@ export default {
         onSaveBaseFrom () {
             this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
             this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.subregionName = this.baseForm.subregionCode && this.regionalismList.filter(item => item.pkDeptDoc == this.baseForm.subregionCode)[0].deptName
             this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
             this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
             this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
             this.$refs.baseForm.validate(async (valid) => {
                 if (valid) {
                     try {
-                        await getCheckField({ 'misCode': this.baseForm.misCode,
-                            'companyShortName': this.baseForm.companyShortName })
+                        await getCheckField({
+                            'misCode': this.baseForm.misCode,
+                            'companyShortName': this.baseForm.companyShortName
+                        })
                         this.$emit('backnext')
                         this.baseForm.developAccountInfoCreateForm.accountBank = this.baseForm.companyName
                     } catch (error) {
@@ -360,6 +363,7 @@ export default {
         onSavebasic () {
             this.baseForm.companyType = this.baseForm.companyArr && this.baseForm.companyArr.toString()
             this.baseForm.mainSystem = this.baseForm.systemArr && this.baseForm.systemArr.toString()
+            this.baseForm.subregionName = this.baseForm.subregionCode && this.regionalismList.filter(item => item.pkDeptDoc == this.baseForm.subregionCode)[0].deptName
             this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
             this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
             this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
