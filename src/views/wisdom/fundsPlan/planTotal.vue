@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="选择月">
+                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="findPlanTotalList">
+                    <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -31,10 +31,9 @@
             </div>
         </div>
         <div class="tips">
-            <p><b>2020</b>年<b>4</b>月<span class="right">单位：万元</span></p>
+            <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            {{planTotalList}}
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
                          :total="page.total"></hosJoyTable>
         </div>
@@ -69,6 +68,10 @@ export default {
             },
             page: {
                 total: 0
+            },
+            paramTargetDate: {
+                year: '',
+                mouth: ''
             }
         }
     },
@@ -80,31 +83,50 @@ export default {
             planTotalList: 'fundsPlan/planTotalList'
         }),
         columnData () {
-            return summarySheet(2019, 4)
+            return summarySheet(new Date().getFullYear(), new Date().getMonth() + 1)
         }
     },
     methods: {
+        async queryAndChangeTime (params) {
+            this.paramTargetDate = {
+                year: this.params.selectTime.slice(0, 4),
+                mouth: this.params.selectTime.slice(4)
+            }
+            try {
+                await this.findPlanTotalList(params)
+            } catch (e) {
+                this.paramTargetDate = {
+                    year: new Date().getFullYear(),
+                    mouth: new Date().getMonth() + 1
+                }
+            }
+        },
         backPlat (val) {
-            console.log(val)
-            this.params.subSectionCode = val.value.subSectionCode
+            this.params.subsectionCode = val.value.selectCode
         },
         onReset () {
-            this.params.selectTime = ''
+            this.params.selectTime = new Date().getFullYear() + '' + (new Date().getMonth() + 1 > 9 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1))
             this.selectPlatObj = {
                 selectCode: '',
                 selectName: ''
             }
         },
         onExport () {
-            downloadPlanTotalList()
+            const params = {
+                subsectionCode: this.params.subSectionCode,
+                selectTime: this.params.selectTime
+            }
+            console.log(params)
+            downloadPlanTotalList(params)
         },
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList'
         })
     },
     async mounted () {
+        this.params.selectTime = this.$options.filters.formatDate(Date.now(), 'YYYYMM')
         await this.oldBossAuth()
-        this.findPlanTotalList()
+        this.queryAndChangeTime(this.params)
         if (this.userInfo.deptType === 2) {
             this.selectPlatObj.selectCode = this.branchList[0].crmDeptCode
             this.selectPlatObj.selectName = this.branchList[0].deptName

@@ -1,12 +1,12 @@
 import axios from 'axios'
 const shy = 'http://192.168.20.168:31090'
 // 资金计划汇总数据
-export const getPlanTotalList = (params) => axios.get(`develop/fund-plan/summary`, { params })
+export const getPlanTotalList = (params) => axios.get(`backend/fund-plan/summary`, { params })
 
 // 下载故障模板
-export function downloadPlanTotalList () {
+export function downloadPlanTotalList (params) {
     axios.defaults.responseType = 'blob'
-    axios.post(`/develop/fund-plan/summary/export`).then(function (response) {
+    axios.get(`backend/fund-plan/summary/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)

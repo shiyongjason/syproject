@@ -16,7 +16,7 @@ export const hasDeclareLabel = [
 export const summarySheet = function (targetYear, targetMonth) {
     return [
         {
-            prop: 'subsectionName',
+            prop: 'organizationName',
             label: '分部',
             width: '100',
             fixed: true
@@ -28,25 +28,29 @@ export const summarySheet = function (targetYear, targetMonth) {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
-                    prop: 'lastYearMonthUsed',
-                    label: `${targetYear}年${targetMonth}月实际销售`,
+                    prop: 'lastYearActualSales',
+                    label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
-                    prop: 'currentMonthPresale',
+                    prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 }
             ]
         },
@@ -54,34 +58,39 @@ export const summarySheet = function (targetYear, targetMonth) {
             label: '资金用款',
             children: [
                 {
-                    prop: 'totalBalanceOnway',
-                    label: '在款余额',
+                    prop: 'loanBalance',
+                    label: '在贷余额',
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
                     label: '逾期额',
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
-                    prop: 'preRepaymentCurrentMonth',
+                    prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
-                    prop: 'lastYearMonthUsed',
+                    prop: 'lastYearActualUse',
                     label: '去年实际用款',
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 },
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
                     width: '150',
-                    displayAs: 'money'
+                    displayAs: 'money',
+                    align: 'right'
                 }
             ]
         },
@@ -91,16 +100,22 @@ export const summarySheet = function (targetYear, targetMonth) {
                 {
                     prop: 'salePercentCurrent',
                     label: `${targetYear}年${targetMonth}月销售同比`,
+                    align: 'right',
+                    className: 'wisdom-total-background',
                     width: '150'
                 },
                 {
                     prop: 'usedPercentCurrent',
                     label: `${targetYear}年${targetMonth}月用款同比`,
+                    align: 'right',
+                    className: 'wisdom-total-background',
                     width: '150'
                 },
                 {
                     prop: 'overduePercent',
                     label: '逾期率=（逾期额/在款余额）',
+                    align: 'right',
+                    className: 'wisdom-total-background',
                     width: '150'
                 }
             ]
