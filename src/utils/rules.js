@@ -192,3 +192,11 @@ export const checkIdCard = (rule, value, callback) => {
         return callback()
     }
 }
+
+export const VerificationCode = (rule, value, callback) => {
+    const Reg = /^[\d]+$/
+    if (value && !(Reg.test(value))) {
+        return callback(new Error('验证码只能为数字'))
+    }
+    callback()
+}

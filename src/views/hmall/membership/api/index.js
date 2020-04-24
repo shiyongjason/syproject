@@ -31,11 +31,11 @@ export const changeState = (params) => {
 }
 // 获取会员列表
 export const getBossMember = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/member', { params })
+    return axios.post(B2bUrl + 'merchant/api/company/boss/member', params)
 }
 // 获取商家详情统计
 export const getBossMemberStatic = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/company/boss/member/statistics', { params })
+    return axios.post(B2bUrl + 'merchant/api/company/boss/member/statistics', params)
 }
 // 启用禁用会员
 export const changeMemberState = (params) => {

@@ -11,12 +11,14 @@ import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
-import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
+import supplier from './modules/supplier'
+// import cloudmanage from './modules/cloudManage'
 import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
+import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 
 Vue.use(Vuex)
@@ -58,6 +60,7 @@ const store = new Vuex.Store({
         crmmanage,
         developmodule,
         jinyunplatform,
+        crmauthen,
         fundsPlan,
         crmstatic
     }

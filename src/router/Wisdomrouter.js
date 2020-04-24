@@ -68,7 +68,7 @@ export default [
         meta: {
             title: '好智慧-经营分析',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_hzh'
         },
         // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
@@ -267,7 +267,7 @@ export default [
         meta: {
             title: '机构在线',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_jgzx'
         },
         component: Layout,
         children: [
