@@ -33,7 +33,10 @@ const store = new Vuex.Store({
         'isCollapse': false,
         'cachedInclude': [],
         'cachedExclude': [],
-        'devDepList': []
+        'devDepList': [],
+        // Boss后台统一权限
+        platformData: [], // 平台公司list
+        branchList: [] // 分部列表
     },
     mutations,
     actions: actions,
