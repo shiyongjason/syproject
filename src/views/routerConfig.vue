@@ -303,7 +303,6 @@ export default {
         onAddMenuSure (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // console.log(this.levObj)
                     if (this.levObj.lev == 1) this.addFirMenu()
                     if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
                     if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
