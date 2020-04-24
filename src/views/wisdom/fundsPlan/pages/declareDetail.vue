@@ -42,10 +42,10 @@ export default {
             fundDetail: {
                 fundplanMain: {}, // 基本信息
                 fundplanSale: {}, // 销售信息
-                regionManagerFundplanApprove: {},
-                subRegionFundplanApply: {},
-                subsectionFinanceFundplanApprove: {},
-                subsectionManagerFundplanApprove: {},
+                regionManagerFundPlanApprove: {},
+                subRegionFundPlanApply: {},
+                subsectionFinanceFundPlanApprove: {},
+                subsectionManagerFundPlanApprove: {},
                 respResult: {}
             },
             approveRoleNode: 0,

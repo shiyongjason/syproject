@@ -1,33 +1,33 @@
 <template>
     <div class="districtEmployee">
         <h3>区域申报内容</h3>
-        <el-form :model="fundDetail.subRegionFundplanApply" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
+        <el-form :model="fundDetail.subRegionFundPlanApply" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
             <el-form-item :label="`${yearMonth}预计资金还款：`" prop="prePaymentCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundplanApply.prePaymentCurrentMonth" v-isNum="fundDetail.subRegionFundplanApply.prePaymentCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" v-isNum="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
             <el-form-item :label="`${yearMonth}预计资金用款：`" prop="preApplyCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundplanApply.preApplyCurrentMonth" v-isNum="fundDetail.subRegionFundplanApply.preApplyCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" v-isNum="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="资金支持类型：" prop="fundType">
                 <div class="w250">
-                    <el-select v-model="fundDetail.subRegionFundplanApply.fundType" :disabled='disabled'>
+                    <el-select v-model="fundDetail.subRegionFundPlanApply.fundType" :disabled='disabled'>
                         <el-option label="经验用款" value="001"></el-option>
                         <el-option label="注资款" value="002"></el-option>
                     </el-select>
                 </div>
             </el-form-item>
             <el-form-item :label="`${yearMonth}预计销售：`" prop="preSaleCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundplanApply.preSaleCurrentMonth" v-isNum="fundDetail.subRegionFundplanApply.preSaleCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" v-isNum="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
             <el-form-item label="区域意见：" prop="remark">
                 <div class="w250">
-                    <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subRegionFundplanApply.remark" :disabled='disabled'></el-input>
+                    <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subRegionFundPlanApply.remark" :disabled='disabled'></el-input>
                 </div>
             </el-form-item>
         </el-form>
@@ -42,7 +42,7 @@ export default {
             type: Object,
             default: () => {
                 return {
-                    subRegionFundplanApply: {
+                    subRegionFundPlanApply: {
                         prePaymentCurrentMonth: ''
                     }
                 }
@@ -89,9 +89,6 @@ export default {
                 ]
             }
         }
-    },
-    mounted () {
-        console.log(this.$refs['form'])
     }
 }
 </script>
