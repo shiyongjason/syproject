@@ -1,5 +1,4 @@
 import axios from 'axios'
-const shy = 'http://192.168.20.168:31090'
 // 资金计划汇总数据
 export const getPlanTotalList = (params) => axios.get(`backend/fund-plan/summary`, { params })
 
@@ -28,12 +27,12 @@ export function downloadPlanTotalList (params) {
 }
 
 // 查询当月资金申报数据
-export const getPlanDeclare = (params) => axios.get(shy + `/fund-plan/query/current`, { params })
+export const getPlanDeclare = (params) => axios.get(`backend/fund-plan/query/current`, { params })
 // 查询资金申报数据（该区域/分部/大区/所有，代办和已办）
-export const getFundPlanAll = (params) => axios.get(shy + `/fund-plan/query/all`, { params })
+export const getFundPlanAll = (params) => axios.get(`backend/fund-plan/query/all`, { params })
 // 查询资金申报明细数据
-export const getFundDetail = (params) => axios.get(shy + `/fund-plan/query/detail/${params}`)
+export const getFundDetail = (params) => axios.get(`backend/fund-plan/query/detail/${params}`)
 // 申请资金申报数据
-export const applyFundplan = (params) => axios.post(shy + `/fund-plan/apply`, params)
+export const applyFundplan = (params) => axios.post(`backend/fund-plan/apply`, params)
 // 审批资金申报数据
-export const approveFundplan = (params) => axios.post(shy + `/fund-plan/approve`, params)
+export const approveFundplan = (params) => axios.post(`backend/fund-plan/approve`, params)
