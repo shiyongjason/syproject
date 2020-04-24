@@ -13,11 +13,12 @@ import membership from './modules/membership'
 import payment from './modules/payment'
 import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
-// import cloudmanage from './modules/cloudManage'
 import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
+import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
+
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -57,7 +58,8 @@ const store = new Vuex.Store({
         crmmanage,
         developmodule,
         jinyunplatform,
-        fundsPlan
+        fundsPlan,
+        crmstatic
     }
 })
 export default store
