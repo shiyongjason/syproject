@@ -33,10 +33,10 @@ export default {
                     applyMonth: 'XXXXXX'
                 }, // 基本信息
                 fundplanSale: {}, // 销售信息
-                regionManagerFundplanApprove: null, // 大区总
-                subRegionFundplanApply: {}, // 区域人员
-                subsectionFinanceFundplanApprove: null, // 分财
-                subsectionManagerFundplanApprove: null, // 分总
+                regionManagerFundPlanApprove: null, // 大区总
+                subRegionFundPlanApply: {}, // 区域人员
+                subsectionFinanceFundPlanApprove: null, // 分财
+                subsectionManagerFundPlanApprove: null, // 分总
                 respResult: null
             }
         }
@@ -47,8 +47,7 @@ export default {
         }),
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
-            data.subRegionFundplanApply = {}
-            console.log(data)
+            data.subRegionFundPlanApply = {}
             this.fundDetail = data
         },
         onApply () {

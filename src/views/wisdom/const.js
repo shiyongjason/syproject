@@ -1,6 +1,6 @@
 export let tableLabel = [
-    { prop: 'misCode', label: '公司编码', width: '100', fixed: true, showOverflowTooltip: true },
-    { prop: 'companyName', label: '全部', width: '120', fixed: true, showOverflowTooltip: true },
+    { prop: 'misCode', label: '公司编码', fixed: true, showOverflowTooltip: true },
+    { prop: 'companyName', label: '全部', fixed: true, showOverflowTooltip: true },
     {
         label: 'XXXX年度销售承诺值',
         children: [
@@ -79,7 +79,7 @@ export let tableLabel = [
             {
                 prop: 'totalAnnual',
                 label: '合计',
-                width: '120',
+                width: '150',
                 showOverflowTooltip: true
             }
         ]

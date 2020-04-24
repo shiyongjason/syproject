@@ -58,7 +58,7 @@ export default {
                 companyName: '',
                 pageNumber: 1,
                 pageSize: 10,
-                applyType: 1 // 已申报
+                applyType: '1,2,3' // 已申报
             },
             searchParams: {},
             selectPlatObj: {

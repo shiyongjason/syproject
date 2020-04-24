@@ -45,10 +45,10 @@ export default {
             fundDetail: {
                 fundplanMain: {}, // 基本信息
                 fundplanSale: {}, // 销售信息
-                regionManagerFundplanApprove: {},
-                subRegionFundplanApply: {},
-                subsectionFinanceFundplanApprove: {},
-                subsectionManagerFundplanApprove: {},
+                regionManagerFundPlanApprove: {},
+                subRegionFundPlanApply: {},
+                subsectionFinanceFundPlanApprove: {},
+                subsectionManagerFundPlanApprove: {},
                 respResult: {}
             },
             isBottom: false,
@@ -68,9 +68,6 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
-        backPlat (value) {
-            console.log(value)
-        },
         onReset () {
             this.params = { ...this.paramsTemp }
         },
@@ -91,18 +88,16 @@ export default {
         async getFundDetail () {
             const { data } = await getFundDetail(this.$route.query.id)
             this.fundDetail = data
-            console.log(this.fundDetail)
             this.approveRoleNode = this.observeApproval().index
-            console.log(this.approveRoleNode)
             this.handleData()
         },
         handleData () {
             if (this.approveRoleNode === 0) {
-                this.fundDetail.subsectionFinanceFundplanApprove = {}
+                this.fundDetail.subsectionFinanceFundPlanApprove = {}
             } else if (this.approveRoleNode === 1) {
-                this.fundDetail.subsectionManagerFundplanApprove = {}
+                this.fundDetail.subsectionManagerFundPlanApprove = {}
             } else if (this.approveRoleNode === 2) {
-                this.fundDetail.regionManagerFundplanApprove = {}
+                this.fundDetail.regionManagerFundPlanApprove = {}
             }
         },
         observeApproval () {
@@ -111,7 +106,6 @@ export default {
             })
         },
         async onApprove (name) {
-            console.log(this.fundDetail)
             this.$refs[name].$refs['form'].validate(async (valid) => {
                 if (valid) {
                     await approveFundplan(this.fundDetail)
@@ -128,7 +122,6 @@ export default {
         }
     },
     beforeDestroy () {
-        console.log('销毁滚动事件')
         window.removeEventListener('scroll', this.handleScroll, true)
     },
     mounted () {

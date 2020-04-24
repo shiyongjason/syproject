@@ -134,7 +134,7 @@ export const approveRole = [
         key: 'jindiaodqz', // 大区
         index: 3,
         currentNode: '分部总经理审批 已办',
-        nextNode: '审批完成',
+        nextNode: '审批通过',
         ref: '-'
     }
 ]
