@@ -27,9 +27,15 @@
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="分部：" prop="subsectionCode">
-                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择活动区域">
+                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择分部">
                     <el-option label="请选择" value=""></el-option>
                     <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="区域：" prop="deptCode">
+                <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">
+                    <el-option label="请选择" value=""></el-option>
+                    <el-option :label="item.deptName" :value="item.deptCode" v-for="item in regionList" :key="item.deptCode"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="地址：" required>
@@ -219,6 +225,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
+            regionList: state => state.areaList,
             devDepList: state => state.devDepList
         }),
         ...mapGetters({
@@ -257,10 +264,15 @@ export default {
         this.onFindNest()
         this.onFindCompanyType()
         this.onFindSystemType()
+        this.findAuthList({
+            deptType: 'Q',
+            pkDeptDoc: this.userInfo.deptDoc
+        })
     },
     methods: {
         ...mapActions({
             getDevdeplist: 'getDevdeplist',
+            findAuthList: 'findAuthList',
             findNest: 'findNest',
             findCompanyType: 'developmodule/findCompanyType',
             setNewTags: 'setNewTags'

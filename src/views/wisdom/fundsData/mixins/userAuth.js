@@ -20,7 +20,7 @@ export const departmentAuth = {
         async abc (params) {
             console.log(params)
         },
-        async oldAuth () {
+        async oldBossAuth () {
             const data = await this.findBranchList({
                 deptType: 'F',
                 pkDeptDoc: this.userInfo.deptDoc

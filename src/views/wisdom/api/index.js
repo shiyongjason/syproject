@@ -253,11 +253,41 @@ export const updateDevelopaccount = (params) => {
 export const getTycHolder = (params) => {
     return axios.get(`develop/developbasicinfo/getTycHolder/${params}`)
 }
-
+// 发展在线接口迁移
 export const getTycBasicInfo = (params) => {
     return axios.get(`develop/developbasicinfo/getTycBasicInfo/${params}`)
 }
-
 export const getTycMainStaff = (params) => {
     return axios.get(`develop/developbasicinfo/getTycMainStaff/${params}`)
+}
+// 承诺值分页
+export const getCommitmentList = (params) => {
+    return axios.get(`backend/fund-plan/commitment`, { params })
+}
+// 承诺值合计信息
+export const getCommitmentTotal = (params) => {
+    return axios.get(`backend/fund-plan/commitment/total`, { params })
+}
+// 台账数据导出
+export function exportCommitment (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`backend/fund-plan/commitment/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '承诺值信息.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
 }

@@ -36,6 +36,30 @@ export default [
                 },
                 component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
             },
+            {
+                path: 'importData',
+                name: 'importData',
+                meta: {
+                    title: '历史数据导入',
+                    tagName: '历史数据导入',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/importData.vue')
+            },
+            {
+                path: 'capitalEfficiency',
+                name: 'capitalEfficiency',
+                meta: {
+                    title: '资金效率表',
+                    tagName: '资金效率表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
+            },
             ...tabAuth
         ]
     },
@@ -146,6 +170,95 @@ export default [
                     component: '@/views/wisdom/profitStatistics'
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
+            },
+            {
+                path: 'commitValue',
+                name: 'commitValue',
+                meta: {
+                    title: '承诺值管理',
+                    tagName: '承诺值管理',
+                    isMenu: true,
+                    icon: '',
+                    component: '@/views/wisdom/commitValue'
+                },
+                component: () => import('@/views/wisdom/commitValue')
+            }
+        ]
+    },
+    {
+        path: '/fundsPlan',
+        meta: {
+            title: '销售及资金用款计划',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'planToDeclare',
+                name: 'planToDeclare',
+                meta: {
+                    title: '资金计划',
+                    tagName: '资金计划',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/planToDeclare')
+            },
+            {
+                path: 'planTotal',
+                name: 'planTotal',
+                meta: {
+                    title: '计划汇总分析表',
+                    tagName: '计划汇总分析表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/planTotal')
+            },
+            {
+                path: 'addDeclare',
+                name: 'addDeclare',
+                meta: {
+                    title: '新增申报',
+                    tagName: '新增申报',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/pages/declareAdd')
+            },
+            {
+                path: 'approvalList',
+                name: 'approvalList',
+                meta: {
+                    title: '计划审批',
+                    tagName: '计划审批',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/approvalList')
+            },
+            {
+                path: 'approveDeclare',
+                name: 'approveDeclare',
+                meta: {
+                    title: '审批详情',
+                    tagName: '审批详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/pages/declareDetail')
+            },
+            {
+                path: 'approveDetail',
+                name: 'approveDetail',
+                meta: {
+                    title: '审批详情',
+                    tagName: '审批详情',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/pages/approveDetail')
             }
         ]
     },
