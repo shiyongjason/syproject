@@ -200,7 +200,7 @@ export default {
                         params = {
                             subsectionCode: this.queryParams.subsectionOldCode
                         }
-                    } 
+                    }
                     this.findPlatformslist(params)
                 }
                 !val.value.selectCode && this.linkage(dis)
