@@ -22,7 +22,7 @@
                             </el-input>
                         </el-form-item>
                     </div>
-                    <div class="query-cont-col">
+                    <div class="query-cont-col badCrop">
                         <el-form-item label="欠收本金：" prop="thisPaidCapitalSur">
                             <!-- 总本金-已还-本次还本金金额thisPaidCapital -->
                             <div class="w250">
@@ -83,7 +83,7 @@
                             </el-input>
                         </el-form-item>
                     </div>
-                    <div class="query-cont-col">
+                    <div class="query-cont-col badCrop">
                         <el-form-item label="剩余宽限利息：" prop="thisPaidGraceInterestSur">
                             <!-- 剩余宽限期利息=总宽限期利息-已还-本次收取宽限利息 -->
                             <div class="w250">
@@ -117,7 +117,7 @@
                             </el-input>
                         </el-form-item>
                     </div>
-                    <div class="query-cont-col">
+                    <div class="query-cont-col badCrop">
                         <el-form-item label="剩余正常利息：" prop="thisPaidInterestSur">
                             <!-- 总利息-已还-本次还利息 -->
                             <span>{{(+thisPaidInterestSur + detailData[0].normalInterestPranayama).toFixed(2)}}</span>
@@ -190,7 +190,7 @@
                                 </el-input>
                             </el-form-item>
                         </div>
-                        <div class="query-cont-col">
+                        <div class="query-cont-col badCrop">
                             <el-form-item label="剩余逾期罚息:" prop="thisPaidOverDueInterestSur">
                                 <!-- 总逾期-已还-本次还逾期 -->
                                 <div class="w250">
@@ -451,5 +451,12 @@ export default {
 .smalltitle {
     line-height: 30px;
     margin-left: 27px;
+}
+.badCrop {
+    color: rgba($color: #FF3030, $alpha: 0.9);
+    font-weight: 700;
+    /deep/ .el-form-item__label {
+        color: rgba($color: #FF3030, $alpha: 0.9);
+    }
 }
 </style>

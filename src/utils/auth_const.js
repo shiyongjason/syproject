@@ -131,6 +131,8 @@ export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
 // 好智慧-利润统计 导出
 export const AUTH_PROFIT_STATISTICS_EXPORT = 10580
 
+// 好智慧-资金数据 台账导出
+export const WISDOM_ACCOUNT_EXPORT = 10700
 // 好智慧-资金数据 新增流贷台账
 export const WISDOM_FLOWTOBORROW_FUNDSDATA_ADD = 10710
 // 好智慧-资金数据 流贷-好信用

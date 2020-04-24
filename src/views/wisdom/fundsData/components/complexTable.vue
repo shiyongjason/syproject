@@ -581,6 +581,7 @@ export default {
                         {
                             prop: 'loan_supplier',
                             label: '供货商名称',
+                            showOverflowTooltip: true,
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
@@ -958,6 +959,7 @@ export default {
                         {
                             prop: 'loan_supplier',
                             label: '供货商名称',
+                            showOverflowTooltip: true,
                             sort: 3,
                             width: '150',
                             render: (h, scope) => {
@@ -1253,6 +1255,7 @@ export default {
                 {
                     prop: 'loan_supplier',
                     label: '供货商名称',
+                    showOverflowTooltip: true,
                     sort: 2,
                     width: '150'
                 },
@@ -2264,5 +2267,10 @@ export default {
 /deep/ .el-table__body-wrapper::-webkit-scrollbar-thumb {
     min-height: 20px;
     background-color: rgba(33, 37, 43, 0.26);
+}
+// 台账专属表格样式
+/deep/.el-table td,
+/deep/ .el-table th {
+    padding: 7px 0;
 }
 </style>
