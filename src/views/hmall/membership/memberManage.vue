@@ -125,7 +125,7 @@ export default {
                 companyName: '',
                 isAuthentication: '',
                 isEnabled: '',
-                adminAccount: this.$route.query.account || '',
+                adminAccount: '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
