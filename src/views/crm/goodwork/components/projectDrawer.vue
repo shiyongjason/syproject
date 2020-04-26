@@ -52,9 +52,9 @@
                         <el-checkbox label="1" name="type">现金</el-checkbox>
                         <el-checkbox label="2" name="type">承兑</el-checkbox>
                     </el-checkbox-group>
-                     <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                    <el-input v-if="form.upstreamPayTypearr.indexOf('2')>0" v-model="form.payAcceptanceRemark" maxlength="200" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行"></el-input>
-                 </el-form-item>
+                    <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
+                        <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" v-model="form.payAcceptanceRemark" maxlength="200" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行"></el-input>
+                    </el-form-item>
                 </el-form-item>
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
                     <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
@@ -239,7 +239,7 @@ export default {
                     { required: true },
                     {
                         validator: (r, v, callback) => {
-                            if (this.form.upstreamPayTypearr.indexOf('2') > 0 && !this.form.payAcceptanceRemark) {
+                            if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
                                 return callback(new Error('请输入承兑说明'))
                             }
                             return callback()
@@ -354,9 +354,9 @@ export default {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
             this.statusForm.reset = false
-            await saveStatus({ projectId: this.form.id,
+            await saveStatus({                projectId: this.form.id,
                 status: status,
-                updateBy: this.userInfo.employeeName })
+                updateBy: this.userInfo.employeeName            })
             this.$message({
                 message: `${statusTxt}成功`,
                 type: 'success'

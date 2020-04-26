@@ -64,10 +64,10 @@
                         </el-select>
                     </div>
                 </div>
-                   <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
@@ -85,10 +85,10 @@
             </div>
         </div>
         <div class="page-body-cont">
-             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                 <template slot="predictLoanAmount" slot-scope="scope">
+                <template slot="predictLoanAmount" slot-scope="scope">
                     {{fundMoneys(scope.data.row.predictLoanAmount)}}
                 </template>
                 <template slot="type" slot-scope="scope">
