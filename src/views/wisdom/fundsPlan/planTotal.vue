@@ -35,7 +35,11 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total"></hosJoyTable>
+                         :total="page.total">
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
+            </hosJoyTable>
         </div>
     </div>
 </template>
@@ -89,6 +93,14 @@ export default {
         }
     },
     methods: {
+        goDetail (id, go) {
+            go && this.$router.push({
+                path: '/fundsPlan/approveDeclare',
+                query: {
+                    id: id
+                }
+            })
+        },
         async queryAndChangeTime (params) {
             if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
@@ -159,5 +171,9 @@ export default {
                 float: right;
             }
         }
+    }
+    .light {
+        color: #FF7A45;
+        cursor: pointer;
     }
 </style>
