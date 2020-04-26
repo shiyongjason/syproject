@@ -53,7 +53,7 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getFundPlanAll } from './api/index'
-import { approvalListLabel } from './const'
+import { approvalListLabel, approvalListHasDoneLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'ApprovalList',
@@ -62,6 +62,8 @@ export default {
     data () {
         return {
             tableLabel: approvalListLabel,
+            tableLabelNotToDo: approvalListLabel,
+            tableLabelHasDone: approvalListHasDoneLabel,
             params: {
                 processType: '0',
                 applyMonth: '',
@@ -90,6 +92,11 @@ export default {
     methods: {
         handleClick (tab, event) {
             this.tableData = []
+            if (this.params.processType == 0) {
+                this.tableLabel = this.tableLabelNotToDo
+            } else {
+                this.tableLabel = this.tableLabelHasDone
+            }
             this.onReset()
         },
         onReset () {
