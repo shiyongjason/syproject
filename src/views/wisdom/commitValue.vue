@@ -54,7 +54,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
