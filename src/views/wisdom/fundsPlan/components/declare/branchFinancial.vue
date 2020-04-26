@@ -3,7 +3,7 @@
         <h3>分部财务核定</h3>
         <el-form :model="fundDetail.subsectionFinanceFundPlanApprove" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
             <el-form-item label="健康度指标：" prop="healthPercentage">
-                <el-input v-model.trim="fundDetail.subsectionFinanceFundPlanApprove.healthPercentage" v-isNum="fundDetail.subsectionFinanceFundPlanApprove.healthPercentage" maxlength='20' placeholder="请输入健康度指标" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subsectionFinanceFundPlanApprove.healthPercentage" v-isNum:4="fundDetail.subsectionFinanceFundPlanApprove.healthPercentage" maxlength='20' placeholder="请输入健康度指标" :disabled='disabled'>
                     <template slot="append">%</template>
                 </el-input>
             </el-form-item>
