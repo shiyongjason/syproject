@@ -47,6 +47,7 @@ import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { downloadPlanTotalList } from './api/index'
+import moment from 'moment'
 
 export default {
     name: 'planTotal',
@@ -80,24 +81,26 @@ export default {
             branchList: state => state.branchList
         }),
         ...mapGetters({
-            planTotalList: 'fundsPlan/planTotalList'
+            planTotalList: 'fundsPlan/planTotalList',
+            targetTime: 'fundsPlan/targetTime'
         }),
         columnData () {
-            return summarySheet(new Date().getFullYear(), new Date().getMonth() + 1)
+            return summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth)
         }
     },
     methods: {
         async queryAndChangeTime (params) {
+            if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
-                year: this.params.selectTime.slice(0, 4),
-                mouth: this.params.selectTime.slice(4)
+                year: params.selectTime.slice(0, 4),
+                mouth: params.selectTime.slice(4)
             }
             try {
                 await this.findPlanTotalList(params)
             } catch (e) {
                 this.paramTargetDate = {
-                    year: new Date().getFullYear(),
-                    mouth: new Date().getMonth() + 1
+                    year: params.selectTime.slice(0, 4),
+                    mouth: params.selectTime.slice(4)
                 }
             }
         },
@@ -120,11 +123,14 @@ export default {
             downloadPlanTotalList(params)
         },
         ...mapActions({
-            findPlanTotalList: 'fundsPlan/findPlanTotalList'
+            findPlanTotalList: 'fundsPlan/findPlanTotalList',
+            findTargetTime: 'fundsPlan/findTargetTime'
         })
     },
     async mounted () {
-        this.params.selectTime = this.$options.filters.formatDate(Date.now(), 'YYYYMM')
+        await this.findTargetTime()
+        // console.log(this.targetTime)
+        this.params.selectTime = this.targetTime
         await this.oldBossAuth()
         this.queryAndChangeTime(this.params)
         if (this.userInfo.deptType === 2) {
