@@ -3,7 +3,7 @@
         <h3>分部总经理审批</h3>
         <el-form :model="fundDetail.subsectionManagerFundPlanApprove" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
             <el-form-item label="分总审批金额：" prop="approveAmount">
-                <el-input v-model.trim="fundDetail.subsectionManagerFundPlanApprove.approveAmount" v-isNum:6="fundDetail.subsectionManagerFundPlanApprove.approveAmount" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subsectionManagerFundPlanApprove.approveAmount" v-isNum:2="fundDetail.subsectionManagerFundPlanApprove.approveAmount" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>

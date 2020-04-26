@@ -3,12 +3,12 @@
         <h3>区域申报内容</h3>
         <el-form :model="fundDetail.subRegionFundPlanApply" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
             <el-form-item :label="`${yearMonth}预计资金还款：`" prop="prePaymentCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" v-isNum:6="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" v-isNum:2="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
             <el-form-item :label="`${yearMonth}预计资金用款：`" prop="preApplyCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" v-isNum:6="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" v-isNum:2="fundDetail.subRegionFundPlanApply.preApplyCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
@@ -21,7 +21,7 @@
                 </div>
             </el-form-item>
             <el-form-item :label="`${yearMonth}预计销售：`" prop="preSaleCurrentMonth">
-                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" v-isNum:6="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
+                <el-input v-model.trim="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" v-isNum:2="fundDetail.subRegionFundPlanApply.preSaleCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>

@@ -1,9 +1,9 @@
 <template>
     <div class="page-body declareDetail">
         <div class="page-body-cont">
-            <span>>>{{approveRole[approveRoleNode].currentNode}}</span>
+            <span>>>{{fundDetail.fundplanMain.planId}}-{{approveRole[approveRoleNode].nextNode}}</span>
             <div class="title">
-                <span>本次可申报：<i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
+                <span><i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
             </div>
             <baseInfo :fundDetail='fundDetail' />
         </div>
