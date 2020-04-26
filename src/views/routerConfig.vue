@@ -5,7 +5,7 @@
                 <div class="h-page-title">
                     <div>路由配置</div>
                     <!-- <el-button @click="clearCache">清缓存</el-button> -->
-                    <el-dropdown split-button type="primary"  trigger="click" @click="popupMenu(1)">
+                    <el-dropdown split-button type="primary" trigger="click" @click="popupMenu(1)">
                         添加一级菜单
                         <el-dropdown-menu slot="dropdown">
                             <el-dropdown-item v-for="(item, index) in tableList" :key="index">
@@ -38,7 +38,7 @@
                                         <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
                                             <div @click="onEdit(1, item)">{{item.authName}}</div>
                                             <el-button @click="popupMenu(2, item, index)" type="success">添加</el-button>
-                                            <el-button v-show="item.authName" @click="shy(item)" class="orangeBtn">删除</el-button>
+                                            <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
                                         </td>
                                         <td :rowspan="computedRowspan(itema.childAuthList, 1)" v-if="indexb==0">
                                             <div>
@@ -47,14 +47,14 @@
                                                     <span class="point">{{itema.authName}}</span>
                                                 </div>
                                                 <el-button @click="popupMenu(3, itema, index, indexa)" type="success">添加</el-button>
-                                                <el-button v-show="itema.authName" @click="shy(itema)" class="orangeBtn">删除</el-button>
+                                                <el-button v-show="itema.authName" @click="onDelete(itema)" class="orangeBtn">删除</el-button>
                                             </div>
                                         </td>
                                         <td>
                                             <div>
                                                 <!-- {{indexb}}{{itema.childAuthList.length}} -->
                                                 <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
-                                                <el-button v-show="itemb.authName" @click="shy(itemb)" class="orangeBtn">删除</el-button>
+                                                <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
                                             </div>
                                         </td>
                                         <template v-if="itemb.authTypes && itemb.authTypes.length == 2">
@@ -182,7 +182,7 @@
                             </td>
                             <td>
                                 <el-button @click="onResourceSure(index)">保 存</el-button>
-                                <el-button @click="shy(value)" class="orangeBtn">删除</el-button>
+                                <el-button @click="onDelete(value)" class="orangeBtn">删除</el-button>
                             </td>
                             <td>
                                 <el-button type="success" @click="addAuthList" v-show="index + 1 == list.length">添加</el-button>
@@ -202,7 +202,7 @@
 </template>
 
 <script>
-import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache } from './auth/api'
+import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache, deleteAuth } from './auth/api'
 export default {
     data () {
         return {
@@ -351,7 +351,7 @@ export default {
             this.dialogSeedVisible = true
         },
         popupMenu (lev, item, index, indexa) {
-            // 初始化shy
+            // 初始化
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
@@ -498,9 +498,19 @@ export default {
             this.fieldVisible = false
             this.init()
         },
-        shy (item) {
-            console.log(item)
-            this.$message.error(`暂不支持`)
+        onDelete (item) {
+            this.$confirm('此操作将永久删除一级菜单以及下面挂载的子菜单, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteAuth(item.authCode)
+                await this.init()
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => { })
         }
     }
 }
