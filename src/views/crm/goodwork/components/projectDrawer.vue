@@ -235,17 +235,17 @@ export default {
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
                 ],
-                payAcceptanceRemarkTxt: [
-                    { required: true },
-                    {
-                        validator: (r, v, callback) => {
-                            if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
-                                return callback(new Error('请输入承兑说明'))
-                            }
-                            return callback()
-                        }
-                    }
-                ],
+                // payAcceptanceRemarkTxt: [
+                //     { required: true },
+                //     {
+                //         validator: (r, v, callback) => {
+                //             if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
+                //                 return callback(new Error('请输入承兑说明'))
+                //             }
+                //             return callback()
+                //         }
+                //     }
+                // ],
                 loanPayTypeRate: [
                     { required: true },
                     {
