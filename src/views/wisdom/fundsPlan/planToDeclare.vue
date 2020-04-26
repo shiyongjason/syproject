@@ -64,12 +64,11 @@ export default {
     },
     mounted () {
         this.getPlanDeclare()
-        this.getServeTime()
     },
     methods: {
         async getServeTime () {
             const { data } = await getServeTime()
-            this.applyMonth = data.businessDate
+            this.applyMonth = moment(data.businessDate).add(1, 'M').format('YYYYMMDD')
         },
         async getPlanDeclare () {
             const params = {
@@ -78,14 +77,7 @@ export default {
             }
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
-            if (data.records.length > 0) {
-                this.applyMonth = data.records[0].applyMonth
-            }
-            // this.pagination = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     total: data.total
-            // }
+            this.getServeTime()
         },
         onDeclare (row) {
             this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
