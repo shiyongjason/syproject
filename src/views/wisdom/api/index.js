@@ -262,16 +262,16 @@ export const getTycMainStaff = (params) => {
 }
 // 承诺值分页
 export const getCommitmentList = (params) => {
-    return axios.get(`backend/fund-plan/commitment`, { params })
+    return axios.get(`backend/api/fund-plan/commitment`, { params })
 }
 // 承诺值合计信息
 export const getCommitmentTotal = (params) => {
-    return axios.get(`backend/fund-plan/commitment/total`, { params })
+    return axios.get(`backend/api/fund-plan/commitment/total`, { params })
 }
 // 台账数据导出
 export function exportCommitment (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`backend/fund-plan/commitment/export`, { params }).then(function (response) {
+    axios.get(`backend/api/fund-plan/commitment/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
