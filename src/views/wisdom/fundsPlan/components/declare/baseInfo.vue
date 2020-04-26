@@ -31,7 +31,7 @@
                 <div class="query-cont-col">
                     <el-form-item label="申报填报人：">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanMain.createBy}}</span>
+                            <span>{{fundDetail.fundplanMain.applyType ? fundDetail.fundplanMain.createBy : userInfo.employeeName}}</span>
                         </div>
                     </el-form-item>
                 </div>
@@ -100,6 +100,7 @@
 
 <script>
 import { BaseInfoBtnTip } from '../../enums/fundPlanEnum'
+import { mapState } from 'vuex'
 export default {
     name: 'baseInfo',
     props: {
@@ -117,10 +118,10 @@ export default {
             isOpen: false
         }
     },
-    mounted () {
-        console.log(this.fundDetail)
-    },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         /**
          * @return {string}
          * 按钮文案
