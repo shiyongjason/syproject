@@ -35,14 +35,14 @@
 <script>
 import { bankLabel } from './const'
 import hasDeclare from './components/hasDeclare'
-import { getPlanDeclare } from './api/index'
+import { getPlanDeclare, getServeTime } from './api/index'
 import moment from 'moment'
 export default {
     name: 'fundPlanHome',
     components: { hasDeclare },
     computed: {
         isDisabled () {
-            let nowTimeDay = moment(this.tableData[0].serverTime).format('DD')
+            let nowTimeDay = moment(this.applyMonth).format('DD')
             // 20日—25日可填报
             if (nowTimeDay > 19 && nowTimeDay < 26) {
                 return false
@@ -64,8 +64,13 @@ export default {
     },
     mounted () {
         this.getPlanDeclare()
+        this.getServeTime()
     },
     methods: {
+        async getServeTime () {
+            const { data } = await getServeTime()
+            this.applyMonth = data.businessDate
+        },
         async getPlanDeclare () {
             const params = {
                 pageNumber: 1,
@@ -106,7 +111,7 @@ export default {
 .p24 {
     padding: 20px 24px 0 24px;
 }
-.h300{
+.h300 {
     height: 300px;
     overflow: auto;
 }
