@@ -17,6 +17,7 @@ export const summarySheet = function (targetYear, targetMonth) {
     return [
         {
             prop: 'organizationName',
+            slot: 'organizationName',
             label: '分部',
             width: '100',
             fixed: true
@@ -159,5 +160,14 @@ export const approvalListLabel = [
     { label: '申报月份', prop: 'applyMonth' },
     { label: '平台公司名称', prop: 'companyName' },
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+    { label: '资金支持类型', prop: 'fundTypeName' }
+]
+
+export const approvalListHasDoneLabel = [
+    { label: '流程编号', prop: 'planId' },
+    { label: '申报月份', prop: 'applyMonth' },
+    { label: '平台公司名称', prop: 'companyName' },
+    { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+    { label: '审批节点', prop: 'approveRoleName' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
