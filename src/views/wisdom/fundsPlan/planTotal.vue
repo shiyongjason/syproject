@@ -94,7 +94,7 @@ export default {
     },
     methods: {
         goDetail (id, go) {
-            go && this.$router.push({
+            go && id && this.$router.push({
                 path: '/fundsPlan/approveDeclare',
                 query: {
                     id: id
