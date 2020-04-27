@@ -55,7 +55,7 @@ export default {
                     { required: this.required, message: '请选择是否有逾期', trigger: 'change' }
                 ],
                 remark: [
-                    { required: this.required, message: '请输入区域意见', trigger: 'blur' }
+                    { required: this.required, message: '请输入分部财务意见', trigger: 'blur' }
                 ]
             }
         }

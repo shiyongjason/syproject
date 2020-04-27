@@ -47,6 +47,11 @@
         </div>
         <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
+                <el-form-item label="导入模板下载：" label-width="200px">
+                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
+                        承诺值导入模板导出
+                    </a>
+                </el-form-item>
                 <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
                     <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>

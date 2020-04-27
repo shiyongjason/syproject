@@ -40,7 +40,7 @@ export default {
                     { required: true, message: '请输入审批金额', trigger: 'blur' }
                 ],
                 remark: [
-                    { required: true, message: '请输入区域意见', trigger: 'blur' }
+                    { required: true, message: '请输入分总意见', trigger: 'blur' }
                 ]
             }
         }
