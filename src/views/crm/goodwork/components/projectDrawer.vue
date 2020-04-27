@@ -5,7 +5,7 @@
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
-                 <el-form-item label="分部：">
+                <el-form-item label="分部：">
                     <el-input v-model="form.deptName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
@@ -56,7 +56,7 @@
                         <el-checkbox label="2" name="type">承兑</el-checkbox>
                     </el-checkbox-group>
                     <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                        <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" v-model="form.payAcceptanceRemark" maxlength="200" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行"></el-input>
+                        <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
                     </el-form-item>
                 </el-form-item>
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
