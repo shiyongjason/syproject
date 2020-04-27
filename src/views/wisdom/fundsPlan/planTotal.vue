@@ -145,10 +145,6 @@ export default {
         this.params.selectTime = this.targetTime
         await this.oldBossAuth()
         this.queryAndChangeTime(this.params)
-        if (this.userInfo.deptType === 2) {
-            this.selectPlatObj.selectCode = this.branchList[0].crmDeptCode
-            this.selectPlatObj.selectName = this.branchList[0].deptName
-        }
     }
 }
 </script>
