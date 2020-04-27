@@ -98,7 +98,7 @@
                     {{scope.data.row.type&&statusList[scope.data.row.status-2]['value']}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="!hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
