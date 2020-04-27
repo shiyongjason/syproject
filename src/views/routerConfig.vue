@@ -182,7 +182,7 @@
                             </td>
                             <td>
                                 <el-button @click="onResourceSure(index)">保 存</el-button>
-                                <el-button @click="onDelete(value)" class="orangeBtn">删除</el-button>
+                                <!-- <el-button class="orangeBtn">删除</el-button> -->
                             </td>
                             <td>
                                 <el-button type="success" @click="addAuthList" v-show="index + 1 == list.length">添加</el-button>

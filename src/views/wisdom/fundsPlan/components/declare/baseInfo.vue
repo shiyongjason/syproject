@@ -133,10 +133,16 @@ export default {
             if (!this.fundDetail.fundplanSale.commimentLastMonthName) {
                 return 'XXXX年XX月'
             }
+            if (this.fundDetail.fundplanSale.commimentLastMonthName.substring(4, 6) == '00') {
+                return 'XXXX年XX月'
+            }
             return `${this.fundDetail.fundplanSale.commimentLastMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.commimentLastMonthName.substring(4, 6)}月`
         },
         commimentNextMonthName () {
             if (!this.fundDetail.fundplanSale.commimentNextMonthName) {
+                return 'XXXX年XX月'
+            }
+            if (this.fundDetail.fundplanSale.commimentNextMonthName.substring(4, 6) == '00') {
                 return 'XXXX年XX月'
             }
             return `${this.fundDetail.fundplanSale.commimentNextMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.commimentNextMonthName.substring(4, 6)}月`
@@ -145,10 +151,16 @@ export default {
             if (!this.fundDetail.fundplanSale.totalSaleCurrentYearName) {
                 return 'XXXX年XX月'
             }
+            if (this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(4, 6) == '00') {
+                return 'XXXX年XX月'
+            }
             return `${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(0, 4)}年${this.fundDetail.fundplanSale.totalSaleCurrentYearName.substring(4, 6)}月`
         },
         saleCurrentMonthName () {
             if (!this.fundDetail.fundplanSale.saleCurrentMonthName) {
+                return 'XXXX年XX月'
+            }
+            if (this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6) == '00') {
                 return 'XXXX年XX月'
             }
             return `${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6)}月`
