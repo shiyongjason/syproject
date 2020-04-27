@@ -120,12 +120,14 @@ export default {
             this.params.subsectionCode = val.value.selectCode
         },
         onReset () {
-            this.params.selectTime = new Date().getFullYear() + '' + (new Date().getMonth() + 1 > 9 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1))
             this.selectPlatObj = {
                 selectCode: '',
                 selectName: ''
             }
             this.params.subsectionCode = ''
+            this.params.selectTime = this.targetTime
+            this.queryAndChangeTime(this.params)
+            console.log(1)
         },
         onExport () {
             const params = {
