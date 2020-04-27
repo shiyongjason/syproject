@@ -7,7 +7,7 @@
                     <template slot="append">万元</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="分总意见：" prop="approveAmount">
+            <el-form-item label="分总意见：" prop="remark">
                 <div class="w250">
                     <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subsectionManagerFundPlanApprove.remark" :disabled='disabled'></el-input>
                 </div>
