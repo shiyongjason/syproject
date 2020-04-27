@@ -5,6 +5,9 @@
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
+                 <el-form-item label="分部：">
+                    <el-input v-model="form.deptName" disabled></el-input>
+                </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
                 </el-form-item>
