@@ -37,7 +37,7 @@
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
                          :total="page.total">
                 <template slot="organizationName" slot-scope="scope">
-                    <a :class="scope.data.row.cellType === 1 ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
             </hosJoyTable>
         </div>
@@ -64,7 +64,7 @@ export default {
         return {
             params: {
                 selectTime: '',
-                subSectionCode: ''
+                subsectionCode: ''
             },
             platComList: [],
             selectPlatObj: {
@@ -125,13 +125,13 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+            this.params.subsectionCode = ''
         },
         onExport () {
             const params = {
-                subsectionCode: this.params.subSectionCode,
+                subsectionCode: this.params.subsectionCode,
                 selectTime: this.params.selectTime
             }
-            console.log(params)
             downloadPlanTotalList(params)
         },
         ...mapActions({
