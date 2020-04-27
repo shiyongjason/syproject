@@ -5,6 +5,9 @@
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
+                 <el-form-item label="分部：">
+                    <el-input v-model="form.deptName" disabled></el-input>
+                </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
                 </el-form-item>
@@ -354,9 +357,11 @@ export default {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
             this.statusForm.reset = false
-            await saveStatus({                projectId: this.form.id,
-                status: status,
-                updateBy: this.userInfo.employeeName            })
+            await saveStatus(
+                { projectId: this.form.id,
+                    status: status,
+                    updateBy: this.userInfo.employeeName }
+            )
             this.$message({
                 message: `${statusTxt}成功`,
                 type: 'success'
