@@ -357,9 +357,11 @@ export default {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
             this.statusForm.reset = false
-            await saveStatus({                projectId: this.form.id,
-                status: status,
-                updateBy: this.userInfo.employeeName            })
+            await saveStatus(
+                { projectId: this.form.id,
+                    status: status,
+                    updateBy: this.userInfo.employeeName }
+            )
             this.$message({
                 message: `${statusTxt}成功`,
                 type: 'success'
