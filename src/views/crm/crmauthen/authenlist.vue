@@ -162,10 +162,10 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经营区域', prop: 'areaname', width: '150' },
                 { label: '企业类型', prop: 'companyType', width: '100' },
-                { label: '客户分类', prop: 'customerType', width: '100', sortable: true },
+                { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication', width: '100' },
-                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: true },
-                { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: true }
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
