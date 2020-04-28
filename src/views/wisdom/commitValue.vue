@@ -259,7 +259,7 @@ export default {
             }
             this.onQuery()
         },
-        onReset () {
+        async onReset () {
             let obj = {
                 selectCode: '',
                 selectName: ''
@@ -276,6 +276,7 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
+            await this.oldBossAuth()
             this.onSearch()
         },
         isSuccess (response) {
