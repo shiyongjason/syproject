@@ -50,7 +50,10 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
+                <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
+                    <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
+                </el-form-item>
+                                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                     <el-checkbox-group v-model="form.upstreamPayTypearr" @change="onCRemarkTxt">
                         <el-checkbox label="1" name="type">现金</el-checkbox>
                         <el-checkbox label="2" name="type">承兑</el-checkbox>
@@ -59,11 +62,8 @@
                         <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
                     </el-form-item>
                 </el-form-item>
-                <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
-                    <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
-                </el-form-item>
                 <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
-                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                     个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
@@ -187,7 +187,7 @@ export default {
                 upstreamPayTypearr: []
             },
             copyForm: {},
-            formLabelWidth: '150px',
+            formLabelWidth: '160px',
             progressList: PROCESS_LIST,
             typeList: TYPE_LIST,
             deviceCategoryList: DEVICE_LIST,
