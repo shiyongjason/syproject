@@ -37,7 +37,7 @@
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
                          :total="page.total">
                 <template slot="organizationName" slot-scope="scope">
-                    <a :class="scope.data.row.cellType === 1 ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
             </hosJoyTable>
         </div>
@@ -64,7 +64,7 @@ export default {
         return {
             params: {
                 selectTime: '',
-                subSectionCode: ''
+                subsectionCode: ''
             },
             platComList: [],
             selectPlatObj: {
@@ -120,18 +120,20 @@ export default {
             this.params.subsectionCode = val.value.selectCode
         },
         onReset () {
-            this.params.selectTime = new Date().getFullYear() + '' + (new Date().getMonth() + 1 > 9 ? new Date().getMonth() + 1 : '0' + (new Date().getMonth() + 1))
             this.selectPlatObj = {
                 selectCode: '',
                 selectName: ''
             }
+            this.params.subsectionCode = ''
+            this.params.selectTime = this.targetTime
+            this.queryAndChangeTime(this.params)
+            console.log(1)
         },
         onExport () {
             const params = {
-                subsectionCode: this.params.subSectionCode,
+                subsectionCode: this.params.subsectionCode,
                 selectTime: this.params.selectTime
             }
-            console.log(params)
             downloadPlanTotalList(params)
         },
         ...mapActions({
