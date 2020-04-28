@@ -29,28 +29,28 @@ export const summarySheet = function (targetYear, targetMonth) {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'lastYearActualSales',
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateSales',
-                    label: `${targetYear}年${targetMonth}月预计销售`,
+                    label: `${targetYear}年${targetMonth}月预计销售1111`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 }
             ]
@@ -62,35 +62,35 @@ export const summarySheet = function (targetYear, targetMonth) {
                     prop: 'loanBalance',
                     label: '在贷余额',
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
                     label: '逾期额',
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'lastYearActualUse',
                     label: '去年实际用款',
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
                     width: '150',
-                    displayAs: 'money',
+                    displayAs: 'fundMoney',
                     align: 'right'
                 }
             ]

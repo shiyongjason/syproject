@@ -229,6 +229,8 @@ export default {
                 this.column[1].label = this.selectAuth.branchObj.selectName
             } else if (this.selectAuth.regionObj.selectName) {
                 this.column[1].label = this.selectAuth.regionObj.selectName
+            } else if (this.selectAuth.platformObj.selectName) {
+                this.column[1].label = this.selectAuth.platformObj.selectName
             } else {
                 this.column[1].label = '全部'
             }
