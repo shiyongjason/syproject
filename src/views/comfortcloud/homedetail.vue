@@ -119,19 +119,19 @@
                             <template v-else>-</template>
                         </span>
                         <span>目标温度：
-                            <template v-if="this.activeList.targetTemperature">
+                            <template v-if="this.activeList.bigSwitch && this.activeList.targetTemperature">
                                 {{this.activeList.targetTemperature + '℃' }}
                             </template>
                             <template v-else>-</template>
                         </span>
                         <span>模式：
-                            <template v-if="this.activeList.comfortType">
+                            <template v-if="this.activeList.bigSwitch && this.activeList.comfortType">
                                 {{this.activeList.comfortType === 1 ? '制冷': '制热'}}
                             </template>
                             <template v-else>-</template>
                         </span>
                         <span>目标湿度：
-                            <template v-if="this.activeList.targetHumidity">
+                            <template v-if="this.activeList.bigSwitch && this.activeList.targetHumidity">
                                 {{this.activeList.targetHumidity + '%'}}
                             </template>
                             <template v-else>-</template>
