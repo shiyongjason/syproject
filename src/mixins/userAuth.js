@@ -20,9 +20,9 @@ export const departmentAuth = {
         ]),
         async oldBossAuth () {
             const p = [
-                this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.deptDoc }),
-                this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.deptDoc }),
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.deptDoc })
+                this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc }),
+                this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }),
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.pkDeptDoc })
             ]
             await Promise.all(p).then(res => {
                 this.region = res[0].length > 0

@@ -153,7 +153,7 @@ export default {
             }
         },
         async getAuth () {
-            const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.deptDoc })
+            const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc })
             this.branchList = data
         }
     },
