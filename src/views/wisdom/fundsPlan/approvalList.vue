@@ -109,6 +109,7 @@ export default {
             this.$set(this.params, 'subSectionCode', '')
             this.selectObj.branch = { ...obj }
             this.selectObj.platformData = { ...obj }
+            this.platComList = []
             this.onSearch()
         },
         onCurrentChange (val) {
