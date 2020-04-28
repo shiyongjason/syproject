@@ -279,10 +279,16 @@ export default {
         onSortChange (val) {
             if (val.prop == 'customerType') {
                 this.queryParams.customerTypeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.authenticationTimeOrder = ''
+                this.queryParams.createTimeOrder = ''
             } else if (val.prop == 'authenticationTime') {
                 this.queryParams.authenticationTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.customerTypeOrder = ''
+                this.queryParams.createTimeOrder = ''
             } else if (val.prop == 'createTime') {
                 this.queryParams.createTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.authenticationTimeOrder = ''
+                this.queryParams.customerTypeOrder = ' '
             }
             this.searchList()
         },
