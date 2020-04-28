@@ -249,7 +249,6 @@ export default {
     methods: {
         async init () {
             const { data } = await getAuth()
-            console.log(data)
             this.tableList = this.handlerTableList(data, 0)
         },
         // 计算table合并行数
