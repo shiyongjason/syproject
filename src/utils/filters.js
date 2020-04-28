@@ -66,6 +66,17 @@ function isNotBlank (value) {
     return value || '-'
 }
 
+// 用于金额显示，千分位格式，保留两位小数，0返回0.00
+const moneyShow = function (val) {
+    if (val) {
+        return val.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val == 0) {
+        return '0.00'
+    } else {
+        return '-'
+    }
+}
+
 export default {
     formatterTime,
     formatterTimes,
@@ -73,5 +84,6 @@ export default {
     formatDateDuration,
     money,
     isNotBlank,
-    fundMoney
+    fundMoney,
+    moneyShow
 }

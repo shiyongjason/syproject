@@ -42,7 +42,6 @@
                     <el-form-item :label="`${fundDetail.fundplanSale.commitmentAnnualYear}年承诺额：`">
                         <div class="w250">
                             <span>{{fundDetail.fundplanSale.commitmentAnnual || 0}}</span>
-
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -50,7 +49,8 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`${commimentLastMonthName}承诺额：`">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanSale.commimentLastMonth || 0}}</span>
+                            <span v-if="!fundDetail.fundplanSale.commimentLastMonthName">-</span>
+                            <span v-else>{{fundDetail.fundplanSale.commimentLastMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -58,7 +58,8 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`${commimentNextMonthName}承诺额：`">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanSale.commimentNextMonth || 0}}</span>
+                            <span v-if="!fundDetail.fundplanSale.commimentNextMonthName">-</span>
+                            <span v-else>{{fundDetail.fundplanSale.commimentNextMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -68,7 +69,8 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`截止${totalSaleCurrentYearName}底销售额：`">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanSale.totalSaleCurrentYear || 0}}</span>
+                            <span v-if="!fundDetail.fundplanSale.totalSaleCurrentYearName">-</span>
+                            <span v-else>{{fundDetail.fundplanSale.totalSaleCurrentYear || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
@@ -76,7 +78,8 @@
                 <div class="query-cont-col">
                     <el-form-item :label="`${saleCurrentMonthName}实时销售额：`">
                         <div class="w250">
-                            <span>{{fundDetail.fundplanSale.saleCurrentMonth || 0}}</span>
+                            <span v-if="!fundDetail.fundplanSale.saleCurrentMonthName">-</span>
+                            <span v-else>{{fundDetail.fundplanSale.saleCurrentMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
                     </el-form-item>
