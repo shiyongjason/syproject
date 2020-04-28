@@ -60,7 +60,7 @@ export default {
     data () {
         return {
             queryParams: {
-                username: '',
+                username: this.$route.query.account || '',
                 pageSize: 10,
                 pageNumber: 1,
                 createTimeStart: '',
