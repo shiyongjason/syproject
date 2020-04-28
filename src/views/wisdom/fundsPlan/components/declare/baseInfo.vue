@@ -79,7 +79,6 @@
                     <el-form-item :label="`${saleCurrentMonthName}实时销售额：`">
                         <div class="w250">
                             <span v-if="!fundDetail.fundplanSale.saleCurrentMonthName">-</span>
-                            <span v-else-if="fundDetail.fundplanSale.saleCurrentMonthName == '202000'">后台出错</span>
                             <span v-else>{{fundDetail.fundplanSale.saleCurrentMonth || 0}}</span>
                             <span class="dw">万元</span>
                         </div>
