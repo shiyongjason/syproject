@@ -47,7 +47,7 @@ export const summarySheet = function (targetYear, targetMonth) {
                     align: 'right'
                 },
                 {
-                    prop: 'preBorrowCurrentMonth',
+                    prop: 'estimateSales',
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
                     displayAs: 'money',
