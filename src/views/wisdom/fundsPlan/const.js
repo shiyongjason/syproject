@@ -48,7 +48,7 @@ export const summarySheet = function (targetYear, targetMonth) {
                 },
                 {
                     prop: 'estimateSales',
-                    label: `${targetYear}年${targetMonth}月预计销售1111`,
+                    label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
