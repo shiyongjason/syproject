@@ -12,7 +12,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat"
-                                   placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30'
+                                   placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
                                    :canDoBlurMethos='false'></HAutocomplete>
                 </div>
             </div>
@@ -127,7 +127,6 @@ export default {
             this.params.subsectionCode = ''
             this.params.selectTime = this.targetTime
             this.queryAndChangeTime(this.params)
-            console.log(1)
         },
         onExport () {
             const params = {
