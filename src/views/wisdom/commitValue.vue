@@ -263,16 +263,17 @@ export default {
                 selectName: ''
             }
             this.$set(this.queryParams, 'regionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'companyCode', '')
+            this.$set(this.queryParams, 'subsectionOldCode', '')
+            this.$set(this.queryParams, 'subRegionCode', '')
+            this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
-            this.selectAuth.regionObj = obj
-            this.selectAuth.branchObj = obj
-            this.selectAuth.areaObj = obj
-            this.selectAuth.platformObj = obj
+            this.selectAuth.regionObj = { ...obj }
+            this.selectAuth.branchObj = { ...obj }
+            this.selectAuth.areaObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
             this.onSearch()
         },
         isSuccess (response) {
@@ -323,9 +324,6 @@ export default {
     async mounted () {
         this.onSearch()
         await this.oldBossAuth()
-        // if (this.userInfo.deptType == 2) {
-        //     this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
-        // }
     }
 }
 </script>
