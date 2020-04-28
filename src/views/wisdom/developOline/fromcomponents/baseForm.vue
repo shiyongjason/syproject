@@ -266,7 +266,7 @@ export default {
         this.onFindSystemType()
         this.findAuthList({
             deptType: 'Q',
-            pkDeptDoc: this.userInfo.deptDoc
+            pkDeptDoc: this.userInfo.pkDeptDoc
         })
     },
     methods: {

@@ -176,8 +176,8 @@ export default {
             // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.deptDoc })
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
@@ -185,7 +185,7 @@ export default {
                 this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.deptDoc
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
                 })
                 // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
                 if (val.value.crmDeptCode) {
@@ -263,16 +263,17 @@ export default {
                 selectName: ''
             }
             this.$set(this.queryParams, 'regionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'companyCode', '')
+            this.$set(this.queryParams, 'subsectionOldCode', '')
+            this.$set(this.queryParams, 'subRegionCode', '')
+            this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
-            this.selectAuth.regionObj = obj
-            this.selectAuth.branchObj = obj
-            this.selectAuth.areaObj = obj
-            this.selectAuth.platformObj = obj
+            this.selectAuth.regionObj = { ...obj }
+            this.selectAuth.branchObj = { ...obj }
+            this.selectAuth.areaObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
             this.onSearch()
         },
         isSuccess (response) {
@@ -323,9 +324,6 @@ export default {
     async mounted () {
         this.onSearch()
         await this.oldBossAuth()
-        // if (this.userInfo.deptType == 2) {
-        //     this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
-        // }
     }
 }
 </script>
