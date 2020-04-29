@@ -8,10 +8,12 @@ import layout from '@/views/layout/store/index.js'
 import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
+import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
-import supplier from './modules/supplier'
 import userRealreport from './modules/userRealreport'
+import supplier from './modules/supplier'
+// import cloudmanage from './modules/cloudManage'
 import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
 import cloudmanage from '@/views/comfortcloud/store/cloudManage'
@@ -35,9 +37,10 @@ const store = new Vuex.Store({
         'cachedInclude': [],
         'cachedExclude': [],
         'devDepList': [],
-        // Boss后台统一权限
-        platformData: [], // 平台公司list
-        branchList: [] // 分部列表
+        platformData: [], // Boss后台统一权限 平台公司list
+        regionList: [], // 大区列表
+        branchList: [], // 分部列表
+        areaList: [] // 区域列表
     },
     mutations,
     actions: actions,
@@ -58,8 +61,8 @@ const store = new Vuex.Store({
         developmodule,
         jinyunplatform,
         crmauthen,
+        fundsPlan,
         crmstatic
     }
 })
-
 export default store
