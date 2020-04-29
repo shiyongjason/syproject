@@ -18,9 +18,10 @@ switch (env) {
         // ossUrl = 'http://hbp-gateway-dev.hosjoy.com:8089/'
         // iframeUrl = 'http://devcrm.hosjoy.com/'
         // jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        // ccpBaseUrl = 'http://192.168.20.248:8021/'
-        // B2bUrl = 'http://192.168.20.248:40000/'
-        // fileUploadUrl = 'http://192.168.20.248:30000/'
+        // B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
+        // ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        // fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
+        // iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
