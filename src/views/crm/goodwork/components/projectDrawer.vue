@@ -103,29 +103,23 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <template v-if="hosAuthCheck(crm_goodwork_shenpi)">
+                    <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&form.status==2">
                         <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                         <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
                     </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
-                    </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_qianyue)">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
-                    </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_fangkuan)">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
-                    </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_huikuan)">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
-                    </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_baocun)">
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&form.status==4">
                         <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_qianyue)&&form.status==6">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_fangkuan)&&form.status==7">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_huikuan)&&form.status==8">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+
                     <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
                         <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     </template>
@@ -437,6 +431,7 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
+            console.log('newval', newVal)
             if (newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
