@@ -164,7 +164,14 @@ export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
 
 // 好程工 权限功能  109000
 export const CRM_GOODWORK_DETAIL = 109111
-export const CRM_GOODWORK_OPERATE = 109112
+// export const CRM_GOODWORK_OPERATE = 109112
+export const CRM_GOODWORK_SHENPI = 109112 // 审批
+export const CRM_GOODWORK_XINSHEN = 109113 // 信审
+export const CRM_GOODWORK_QIANYUE = 109114 // 签约
+export const CRM_GOODWORK_FANGKUAN = 109115 // 放款
+export const CRM_GOODWORK_HUIKUAN = 109116 // 全部回款
+export const CRM_GOODWORK_BAOCUN = 109117 // 保存
+export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
 
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
