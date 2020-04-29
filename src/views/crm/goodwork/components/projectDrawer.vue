@@ -124,7 +124,7 @@
                         <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-button v-if="hosAuthCheck(crm_goodwork_baocun)" type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
             </div>
         </el-drawer>
