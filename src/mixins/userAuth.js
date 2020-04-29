@@ -7,34 +7,37 @@ export const departmentAuth = {
     },
     data () {
         return {
-            platForm: true,
-            branch: true
+            region: true,
+            branch: true,
+            district: true,
+            platForm: true
         }
     },
     methods: {
         ...mapActions([
             'findPlatformslist', // 平台公司
-            'findBranchList' // 分部
+            'findAuthList' // 大区、分部、区域
         ]),
-        async onFindPlatformslist (subsectionCode) {
-            this.findPlatformslist({ subsectionCode })
-        },
-        async oldAuth () {
-            const data = await this.findBranchList({
-                deptType: 'F',
-                pkDeptDoc: this.userInfo.deptDoc
+        async oldBossAuth () {
+            const p = [
+                this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc }),
+                this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }),
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.pkDeptDoc })
+            ]
+            await Promise.all(p).then(res => {
+                this.region = res[0].length > 0
+                this.branch = res[1].length > 0
+                this.district = res[2].length > 0
+                // 0总部 1大区 2分部
+                switch (this.userInfo.deptType) {
+                    case 0:
+                        this.findPlatformslist()
+                        break
+                    default:
+                }
+            }).catch(err => {
+                this.$message.error(`error:${err}`)
             })
-            // 0总部 1大区 2分部
-            switch (this.userInfo.deptType) {
-                case 0:
-                    this.onFindPlatformslist()
-                    break
-                case 2:
-                    this.branch = false
-                    this.onFindPlatformslist(data[0].crmDeptCode)
-                    break
-                default:
-            }
         }
     }
 }

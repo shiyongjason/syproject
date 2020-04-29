@@ -62,6 +62,7 @@ export default {
                 companyShortName: '', // 公司简称
                 // subsectionName: '', //分部名称
                 subsectionCode: '', // 分部code
+                subregionCode: '', // 分部区域code
                 provinceName: '', // 省
                 cityName: '', // 市
                 areaName: '', // 区

@@ -1,6 +1,6 @@
 import {
     LOAD_STATE, IS_SAVING, USER_INFO, TAGS_INFO, SET_NEW_TAGS, IS_COLLAPSE, MENU_LIST, IS_FIRST, ADD_CACHED_INCLUDE,
-    REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE, DEVDEP_LIST, GET_BRANCH, PLAT_FORMDATA
+    REMOVE_CACHED_INCLUDE, ADD_CACHED_EXCLUDE, REMOVE_CACHED_EXCLUDE, DEVDEP_LIST, GET_AUTHLIST, PLAT_FORMDATA
 } from './const'
 
 export default {
@@ -44,8 +44,10 @@ export default {
     [DEVDEP_LIST] (state, payload) {
         state.devDepList = payload
     },
-    [GET_BRANCH] (state, payload) {
-        state.branchList = payload
+    [GET_AUTHLIST] (state, payload) {
+        if (payload.deptType === 'D') state.regionList = payload.data
+        if (payload.deptType === 'F') state.branchList = payload.data
+        if (payload.deptType === 'Q') state.areaList = payload.data
     },
     [PLAT_FORMDATA] (state, payload) {
         state.platformData = payload

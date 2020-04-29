@@ -91,9 +91,11 @@ export default {
         handleSelect (item) {
             this.selectItem.selectName = item.value
             this.selectItem.selectCode = item.selectCode
-            this.$emit('back-event', {
-                value: item
-            })
+            setTimeout(() => {
+                this.$emit('back-event', {
+                    value: item
+                })
+            }, 500)
         },
         blurInput (item) {
             if (!this.canDoBlurMethos) {

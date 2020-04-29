@@ -240,7 +240,7 @@ const router = new Router({
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
-        for (let i = 0;i < data.length;i++) {
+        for (let i = 0; i < data.length; i++) {
             index.push(data[i].path.replace('/', ''))
             if (data[i].children) {
                 if (data[i].children.length > 0) {
@@ -266,7 +266,6 @@ async function getMenu (to, next, isMakeIndex, query) {
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
     let resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
-    // 开发环境菜单配置
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
         menu = routerMapping

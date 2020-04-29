@@ -17,13 +17,10 @@ export const departmentAuth = {
             'findPlatformslist', // 平台公司
             'findBranchList' // 分部
         ]),
-        async abc (params) {
-            console.log(params)
-        },
-        async oldAuth () {
+        async oldBossAuth () {
             const data = await this.findBranchList({
                 deptType: 'F',
-                pkDeptDoc: this.userInfo.deptDoc
+                pkDeptDoc: this.userInfo.pkDeptDoc
             })
             // 0总部 1大区 2分部
             switch (this.userInfo.deptType) {
