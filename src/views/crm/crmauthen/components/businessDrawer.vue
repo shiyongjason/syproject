@@ -4,13 +4,13 @@
             <div class="drawer-content">
                 <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        {{businessDetail.companyName}} &emsp;<el-button size="mini" round type="primary">{{businessDetail.isAuthentication?'已认证':'未认证'}}</el-button>
+                        {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                         {{businessDetail.userAccount||'-'}}
                     </el-form-item>
                     <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
-                           {{businessDetail.userName||'-'}}
+                        {{businessDetail.userName||'-'}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="subsectionCode">
                         <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
@@ -20,7 +20,7 @@
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
                             <el-form-item prop="provinceId">
-                                <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)">
+                                <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)" class="selectInput">
                                     <el-option label="请选择" value=""></el-option>
                                     <template v-for="item in proviceList">
                                         <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
@@ -32,7 +32,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="cityId">
-                                <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)">
+                                <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)" class="selectInput">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
                                     </el-option>
@@ -42,7 +42,7 @@
                         <el-col class="line" :span="1">-</el-col>
                         <el-col :span="6">
                             <el-form-item prop="countryId">
-                                <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)">
+                                <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)" class="selectInput">
                                     <el-option label="请选择" value=""></el-option>
                                     <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
                                     </el-option>
@@ -56,22 +56,22 @@
                             <el-radio :label=2>体系外</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="developOnlineCompanyCode"  ref="developOnlineCompany">
+                    <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="developOnlineCompanyCode" ref="developOnlineCompany">
                         <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand($event,1)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
-                   <template v-if="businessDetail.companyType==2">
-                    <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" >
-                        <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
-                            <el-radio :label=true>是</el-radio>
-                            <el-radio :label=false>否</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.isRelated" prop="relationCompanyCode"  ref="relationCompany">
-                        <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand($event,2)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
-                    </el-form-item>
+                    <template v-if="businessDetail.companyType==2">
+                        <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" ref="isRelated">
+                            <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
+                                <el-radio :label=true>是</el-radio>
+                                <el-radio :label=false>否</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.isRelated" prop="relationCompanyCode" ref="relationCompany">
+                            <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand($event,2)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                        </el-form-item>
                     </template>
                     <el-form-item label="客户分类：" :label-width="formLabelWidth">
-                      {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
+                        {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                     </el-form-item>
                     <el-form-item label="创建时间：" :label-width="formLabelWidth">
                         {{businessDetail.createTime | formatterTime}}
@@ -83,7 +83,7 @@
                         {{businessDetail.authenticationTime | formatterTime}}
                     </el-form-item>
                     <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
-                       {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
+                        {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
                     </el-form-item>
                     <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
                         {{businessDetail.updateTime| formatterTime}}
@@ -115,14 +115,14 @@
                 <div class="page-wrap">
                     <div v-for="(i) in whiteRecordsList" :key=i.id>
                         <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
-                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
-                          <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
+                        <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
+                        <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
                     </div>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
+                <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -144,6 +144,7 @@ export default {
     data () {
         return {
             authen_operate: Auths.CRM_WHITE_OPERATE,
+            authen_baocun: Auths.CRM_WHITE_BAOCUN,
             removeValue: true,
             branchArr: [],
             formLabelWidth: '150px',
@@ -257,7 +258,7 @@ export default {
                 this.$refs['developOnlineCompany'].clearValidate()
             } else {
                 // this.$refs['relationCompany'].clearValidate()
-                // this.$refs['developOnlineCompany'].clearValidate()
+                this.$refs['isRelated'].clearValidate()
             }
         },
         onClearRelated () {
@@ -475,11 +476,11 @@ export default {
         color: #303133;
         transition: 0.3s;
         .el-icon-edit {
-            color: #eb7343;
+            color: #FF7A45;
             margin-right: 10px;
         }
-        b{
-            color: #ff0000;
+        b {
+            color: #FF7A45;
             font-weight: 500;
         }
     }
@@ -505,7 +506,24 @@ export default {
 /deep/.el-autocomplete {
     width: 100% !important;
 }
-/deep/ .el-form .el-input{
+/deep/ .el-form .el-input {
     width: 215px;
+}
+/deep/ .selectInput {
+    .el-input {
+        width: 160px;
+    }
+}
+.authTag {
+    border-radius: 8px;
+    padding:2px 8px;
+    color:#fff ;
+    opacity: 0.8;
+}
+.tagGreen{
+    background: #52C41A;
+}
+.tagOrg{
+        background: #FF7A45;
 }
 </style>

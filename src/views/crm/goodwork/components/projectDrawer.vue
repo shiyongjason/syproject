@@ -5,6 +5,9 @@
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
+                <el-form-item label="分部：">
+                    <el-input v-model="form.deptName" disabled></el-input>
+                </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
                 </el-form-item>
@@ -47,20 +50,20 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
+                    <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
+                </el-form-item>
                 <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                     <el-checkbox-group v-model="form.upstreamPayTypearr" @change="onCRemarkTxt">
                         <el-checkbox label="1" name="type">现金</el-checkbox>
                         <el-checkbox label="2" name="type">承兑</el-checkbox>
                     </el-checkbox-group>
-                     <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                    <el-input v-if="form.upstreamPayTypearr.indexOf('2')>0" v-model="form.payAcceptanceRemark" maxlength="200" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行"></el-input>
-                 </el-form-item>
-                </el-form-item>
-                <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
-                    <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
+                    <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
+                        <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
+                    </el-form-item>
                 </el-form-item>
                 <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
-                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                     个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
@@ -100,12 +103,28 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <template v-if="hosAuthCheck(crm_goodwork_operate)">
+                    <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&form.status==2">
                         <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&form.status==4">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_qianyue)&&form.status==6">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_fangkuan)&&form.status==7">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_huikuan)&&form.status==8">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+
+                    <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
                         <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-button v-if="hosAuthCheck(crm_goodwork_baocun)" type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
             </div>
         </el-drawer>
@@ -140,7 +159,7 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
-import { CRM_GOODWORK_OPERATE } from '@/utils/auth_const'
+import * as newAuth from '@/utils/auth_const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -154,7 +173,13 @@ export default {
     },
     data () {
         return {
-            crm_goodwork_operate: CRM_GOODWORK_OPERATE,
+            crm_goodwork_shenpi: newAuth.CRM_GOODWORK_SHENPI,
+            crm_goodwork_xinshen: newAuth.CRM_GOODWORK_XINSHEN, // 信审
+            crm_goodwork_qianyue: newAuth.CRM_GOODWORK_QIANYUE, // 签约
+            crm_goodwork_fangkuan: newAuth.CRM_GOODWORK_FANGKUAN, // 放款
+            crm_goodwork_huikuan: newAuth.CRM_GOODWORK_HUIKUAN, // 回款
+            crm_goodwork_baocun: newAuth.CRM_GOODWORK_BAOCUN, // 保存
+            crm_goodwork_chongzhi: newAuth.CRM_GOODWORK_CHOINGZHI, // 重置
             loading: false,
             statusTxt: '',
             dialogVisible: false,
@@ -184,7 +209,7 @@ export default {
                 upstreamPayTypearr: []
             },
             copyForm: {},
-            formLabelWidth: '150px',
+            formLabelWidth: '160px',
             progressList: PROCESS_LIST,
             typeList: TYPE_LIST,
             deviceCategoryList: DEVICE_LIST,
@@ -235,17 +260,17 @@ export default {
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
                 ],
-                payAcceptanceRemarkTxt: [
-                    { required: true },
-                    {
-                        validator: (r, v, callback) => {
-                            if (this.form.upstreamPayTypearr.indexOf('2') > 0 && !this.form.payAcceptanceRemark) {
-                                return callback(new Error('请输入承兑说明'))
-                            }
-                            return callback()
-                        }
-                    }
-                ],
+                // payAcceptanceRemarkTxt: [
+                //     { required: true },
+                //     {
+                //         validator: (r, v, callback) => {
+                //             if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
+                //                 return callback(new Error('请输入承兑说明'))
+                //             }
+                //             return callback()
+                //         }
+                //     }
+                // ],
                 loanPayTypeRate: [
                     { required: true },
                     {
@@ -354,9 +379,11 @@ export default {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
             this.statusForm.reset = false
-            await saveStatus({ projectId: this.form.id,
-                status: status,
-                updateBy: this.userInfo.employeeName })
+            await saveStatus(
+                { projectId: this.form.id,
+                    status: status,
+                    updateBy: this.userInfo.employeeName }
+            )
             this.$message({
                 message: `${statusTxt}成功`,
                 type: 'success'
@@ -404,6 +431,7 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
+            console.log('newval', newVal)
             if (newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {

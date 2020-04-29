@@ -94,7 +94,9 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>; 体系外 <b>{{crmauthLoan.outSystemNum||0}}
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+             @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
+             ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
                 </template>
@@ -155,15 +157,15 @@ export default {
             paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'userAccount' },
-                { label: '管理员姓名', prop: 'userName' },
-                { label: '所属分部', prop: 'subsectionName', width: '180' },
-                { label: '经营区域', prop: 'areaname' },
-                { label: '企业类型', prop: 'companyType', width: '120' },
-                { label: '客户分类', prop: 'customerType', width: '120', sortable: true },
-                { label: '认证状态', prop: 'isAuthentication', width: '120' },
-                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: true },
-                { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: true }
+                { label: '管理员账号', prop: 'userAccount', width: '120' },
+                { label: '管理员姓名', prop: 'userName', width: '120' },
+                { label: '所属分部', prop: 'subsectionName', width: '150' },
+                { label: '经营区域', prop: 'areaname', width: '150' },
+                { label: '企业类型', prop: 'companyType', width: '100' },
+                { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
+                { label: '认证状态', prop: 'isAuthentication', width: '100' },
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -277,10 +279,16 @@ export default {
         onSortChange (val) {
             if (val.prop == 'customerType') {
                 this.queryParams.customerTypeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.authenticationTimeOrder = ''
+                this.queryParams.createTimeOrder = ''
             } else if (val.prop == 'authenticationTime') {
                 this.queryParams.authenticationTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.customerTypeOrder = ''
+                this.queryParams.createTimeOrder = ''
             } else if (val.prop == 'createTime') {
                 this.queryParams.createTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
+                this.queryParams.authenticationTimeOrder = ''
+                this.queryParams.customerTypeOrder = ' '
             }
             this.searchList()
         },
