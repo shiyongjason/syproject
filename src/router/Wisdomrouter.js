@@ -188,7 +188,7 @@ export default [
     {
         path: '/fundsPlan',
         meta: {
-            title: '销售及资金用款计划',
+            title: '资金用款计划',
             isMenu: true,
             icon: 'hosjoy_operation'
         },
@@ -198,8 +198,8 @@ export default [
                 path: 'planToDeclare',
                 name: 'planToDeclare',
                 meta: {
-                    title: '资金计划',
-                    tagName: '资金计划',
+                    title: '计划申报',
+                    tagName: '计划申报',
                     isMenu: true,
                     icon: ''
                 },
