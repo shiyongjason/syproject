@@ -53,7 +53,7 @@
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
                     <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                 </el-form-item>
-                                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
+                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                     <el-checkbox-group v-model="form.upstreamPayTypearr" @change="onCRemarkTxt">
                         <el-checkbox label="1" name="type">现金</el-checkbox>
                         <el-checkbox label="2" name="type">承兑</el-checkbox>
@@ -103,8 +103,30 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <template v-if="hosAuthCheck(crm_goodwork_operate)">
+                    <template v-if="hosAuthCheck(crm_goodwork_shenpi)">
                         <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_qianyue)">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_fangkuan)">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_huikuan)">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_baocun)">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
                         <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
@@ -143,7 +165,7 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
-import { CRM_GOODWORK_OPERATE } from '@/utils/auth_const'
+import * as newAuth from '@/utils/auth_const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -157,7 +179,13 @@ export default {
     },
     data () {
         return {
-            crm_goodwork_operate: CRM_GOODWORK_OPERATE,
+            crm_goodwork_shenpi: newAuth.CRM_GOODWORK_SHENPI,
+            crm_goodwork_xinshen: newAuth.CRM_GOODWORK_XINSHEN, // 信审
+            crm_goodwork_qianyue: newAuth.CRM_GOODWORK_QIANYUE, // 签约
+            crm_goodwork_fangkuan: newAuth.CRM_GOODWORK_FANGKUAN, // 放款
+            crm_goodwork_huikuan: newAuth.CRM_GOODWORK_HUIKUAN, // 回款
+            crm_goodwork_baocun: newAuth.CRM_GOODWORK_BAOCUN, // 保存
+            crm_goodwork_chongzhi: newAuth.CRM_GOODWORK_CHOINGZHI, // 重置
             loading: false,
             statusTxt: '',
             dialogVisible: false,
