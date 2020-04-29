@@ -175,3 +175,4 @@ export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
 
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
+export const CRM_WHITE_BAOCUN = 109213

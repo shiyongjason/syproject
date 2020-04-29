@@ -122,7 +122,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
+                <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -144,6 +144,7 @@ export default {
     data () {
         return {
             authen_operate: Auths.CRM_WHITE_OPERATE,
+            authen_baocun: Auths.CRM_WHITE_BAOCUN,
             removeValue: true,
             branchArr: [],
             formLabelWidth: '150px',
