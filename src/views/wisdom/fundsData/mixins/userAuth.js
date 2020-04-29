@@ -17,9 +17,6 @@ export const departmentAuth = {
             'findPlatformslist', // 平台公司
             'findBranchList' // 分部
         ]),
-        async abc (params) {
-            console.log(params)
-        },
         async oldBossAuth () {
             const data = await this.findBranchList({
                 deptType: 'F',
