@@ -25,7 +25,14 @@
                             </span>
                         </el-form-item>
                         <el-form-item>
-                            <el-button name="hosjoy-color" @click="onLogin" :disabled="!checked">登录</el-button>
+                            <el-button
+                                name="hosjoy-color"
+                                @click="onLogin"
+                                :disabled="!checked"
+                                v-loading.fullscreen.lock="fullscreenLoading"
+                                element-loading-text="处理中" element-loading-spinner="el-icon-loading"
+                                element-loading-background="rgba(0, 0, 0, 0.5)"
+                            >登录</el-button>
                         </el-form-item>
                     </el-form>
 
@@ -35,6 +42,7 @@
     </div>
 </template>
 <script>
+import store from '@/store/index'
 import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
@@ -66,7 +74,8 @@ export default {
             isLogin: true,
             userInfo: '',
             src: iframeUrl,
-            iframeWin: {}
+            iframeWin: {},
+            fullscreenLoading: false
         }
     },
     methods: {
@@ -80,6 +89,7 @@ export default {
         async onLogin () {
             this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
+                    this.fullscreenLoading = true
                     const { data } = await login(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
@@ -117,6 +127,7 @@ export default {
                     }
                     break
                 }
+                this.fullscreenLoading = false
                 let path = index.join('/')
                 if (!path) {
                     path = '/'
