@@ -1,5 +1,5 @@
 <template>
-    <div class="tags-wrapper page-body amountImport">
+    <div class="tags-wrapper page-body amountImport" v-watermark="$store.state.userInfo.employeeName">
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>
@@ -158,7 +158,6 @@ export default {
         //     })
         // },
         findPlatformslistByBranchList () {
-            console.log(this.$store.state.userInfo)
             let subsectionCode = this.queryParams.subsectionCode
             this.findPlatformslist({ subsectionCode })
         },
