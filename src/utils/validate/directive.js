@@ -111,7 +111,7 @@ export default {
 
                 let div = document.createElement('div')
                 div.style.pointerEvents = 'none'
-                div.style.top = '100px'
+                div.style.top = '200px'
                 div.style.left = '20px'
                 div.style.position = 'fixed'
                 div.style.zIndex = '9999'
