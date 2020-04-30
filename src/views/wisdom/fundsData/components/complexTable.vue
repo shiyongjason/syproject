@@ -1295,6 +1295,7 @@ export default {
                 },
                 {
                     label: '应收利息（正常+宽限）',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
