@@ -88,24 +88,33 @@
             <h3>借款情况</h3>
             <el-form-item label="在款余额：">
                 <div class="w250">
-                    <span>-</span>
+                    <span>{{fundDetail.respFundPlanLoan?fundDetail.respFundPlanLoan.currentBalance:'-'}}</span>
                     <span class="dw">万元</span>
                 </div>
             </el-form-item>
             <el-form-item label="待还款明细：">
                 <div class="w250">
-                    <el-button type="primary" size="small" disabled>{{BaseInfoBtnTip}}</el-button>
+                    <el-button type="primary" size="small" @click="showRepaid">展开明细列表</el-button>
                 </div>
             </el-form-item>
         </el-form>
+        <el-dialog title="待还款明细" :visible.sync="isOpen" :close-on-click-modal='false'>
+            <div class="page-body-cont">
+                <hosJoyTable ref="hosjoyTable" :showPagination='true' border stripe :column="columnData" :data="tableData" align="center" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination='getList'>
+                </hosJoyTable>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import { BaseInfoBtnTip } from '../../enums/fundPlanEnum'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapState } from 'vuex'
+import { repaidToDetailTable } from '../../const'
+import { getLoanDetail } from '../../api'
 export default {
     name: 'baseInfo',
+    components: { hosJoyTable },
     props: {
         fundDetail: {
             type: Object,
@@ -118,20 +127,20 @@ export default {
     },
     data () {
         return {
-            isOpen: false
+            isOpen: false,
+            pagination: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            },
+            tableData: [],
+            columnData: repaidToDetailTable
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        /**
-         * @return {string}
-         * 按钮文案
-         */
-        BaseInfoBtnTip () {
-            return this.isOpen ? BaseInfoBtnTip.open : BaseInfoBtnTip.close
-        },
         commimentLastMonthName () {
             if (!this.fundDetail.fundplanSale.commimentLastMonthName) {
                 return 'XXXX年XX月'
@@ -168,6 +177,39 @@ export default {
             }
             return `${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(0, 4)}年${this.fundDetail.fundplanSale.saleCurrentMonthName.substring(4, 6)}月`
         }
+    },
+    methods: {
+        showRepaid () {
+            this.onSearch()
+            this.isOpen = true
+        },
+        async onSearch () {
+            const params = {
+                misCode: this.fundDetail.fundplanMain.misCode,
+                ...this.pagination
+            }
+            const { data } = await getLoanDetail(params)
+            this.tableData = data.records
+            this.tableData.map(i => {
+                if (i.loanDateNum) {
+                    i.loanDate = `${i.loanDateNum}${i.loanDateType === 1 ? '个月' : '天'}`
+                } else {
+                    i.loanDate = `-`
+                }
+            })
+            this.pagination = {
+                total: data.total,
+                pageNumber: data.current,
+                pageSize: data.size
+            }
+        },
+        getList (val) {
+            this.pagination = {
+                ...this.pagination,
+                ...val
+            }
+            this.onSearch()
+        }
     }
 }
 </script>
@@ -191,6 +233,9 @@ export default {
     }
     .el-form .el-form-item {
         margin-bottom: 10px;
+    }
+    /deep/ .el-pagination__editor.el-input {
+        width: 50px !important;
     }
 }
 </style>

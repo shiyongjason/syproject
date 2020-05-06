@@ -114,10 +114,10 @@ export const summarySheet = function (targetYear, targetMonth) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期额/在款余额）',
+                    label: '逾期率=（逾期额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '150'
+                    width: '200'
                 }
             ]
         }
@@ -170,4 +170,12 @@ export const approvalListHasDoneLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '审批节点', prop: 'approveRoleName' },
     { label: '资金支持类型', prop: 'fundTypeName' }
+]
+
+export const repaidToDetailTable = [
+    { label: '台账编号', prop: 'standingBookNo' },
+    { label: '还款时间', width: '150', prop: 'endTime' },
+    { label: '待还款金额（万元）', width: '150', prop: 'currentBalance', displayAs: 'fundMoney' },
+    { label: '资金类型', prop: 'accountTypeName' },
+    { label: '借款期限', prop: 'loanDate' }
 ]
