@@ -78,8 +78,6 @@ export default {
             const { data } = await getPlanDeclare(params)
             this.tableData = data.records
             this.getServeTime()
-
-            
         },
         onDeclare (row) {
             this.$router.push({ path: '/fundsPlan/addDeclare', query: { id: row.planId } })
