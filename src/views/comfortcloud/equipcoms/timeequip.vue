@@ -17,9 +17,22 @@
                 </el-button>
             </div>
         </div>
-        <div class="echart-wrap">
-            <div class="firstchart" id="firstchart" style="height:500px"></div>
-            <div class="twochart" id="twochart" style="height:500px"></div>
+        <div class="tab-container">
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="所有设备" name="first" class="echart-wrap">
+                    <div class="chart-flex2" id="firstChart" style="height:500px"></div>
+                    <div class="chart-flex1" id="secondChart" style="height:500px"></div>
+                </el-tab-pane>
+                <el-tab-pane label="中央空调控制器（物联）" name="second">
+                    <Chart :lineOption="{}" :barOption="{}"></Chart>
+                </el-tab-pane>
+                <el-tab-pane label="中央空调控制器（零颗米）" name="third">
+                </el-tab-pane>
+                <el-tab-pane label="地暖控制器" name="fourth">
+                </el-tab-pane>
+                <el-tab-pane label="智能温控阀" name="fifth">
+                </el-tab-pane>
+            </el-tabs>
         </div>
         <div class="page-body-cont query-cont">
             <h3 class="home-detail-title">家庭设备明细</h3>
@@ -66,10 +79,15 @@
 import echarts from 'echarts'
 import moment from 'moment'
 import { mapActions, mapGetters } from 'vuex'
+import Chart from './chart'
 export default {
     props: ['totalTime'],
+    components: {
+        Chart
+    },
     data () {
         return {
+            activeName: 'first',
             tabindex: 0,
             tableLabel: [
                 { label: '管理员手机号', prop: 'phone' },
@@ -142,6 +160,15 @@ export default {
                     }
                 }
             }
+        },
+        tableLabelSwitch () {
+            return ''
+        },
+        tablePaginationList () {
+            return ''
+        },
+        tablePaginationSwitch () {
+            return ''
         }
     },
     mounted () {
@@ -181,8 +208,6 @@ export default {
             this.drawbar(this.smartData)
         },
         drawLine (data) {
-            // 基于准备好的dom，初始化echarts实例
-            this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
             var charts = {
                 unit: '单位',
@@ -232,7 +257,6 @@ export default {
                 lineY.push(dataL)
             }
             var option = {
-                // backgroundColor: '#cccccc',
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -259,9 +283,6 @@ export default {
                     boundaryGap: false,
                     data: charts.lineX,
                     axisLabel: {
-                        // textStyle: {
-                        //     color: 'rgb(0,253,255,0.6)'
-                        // },
                         formatter: function (params) {
                             return params.split(' ')[0]
                         }
@@ -272,30 +293,13 @@ export default {
                     type: 'value',
                     axisLabel: {
                         formatter: '{value}'
-                        // textStyle: {
-                        //     color: 'rgb(0,253,255,0.6)'
-                        // }
-                    },
-                    splitLine: {
-                        // x轴的颜色
-                        // lineStyle: {
-                        //     color: 'rgb(23,255,243,0.3)'
-                        // }
-                    },
-                    axisLine: {
-                        // y轴坐标颜色
-                        // lineStyle: {
-                        //     color: 'rgb(0,253,255,0.6)'
-                        // }
                     }
                 },
                 series: lineY
             }
-            this.myChart.setOption(option)
+            this.drawChart(option, 'firstChart')
         },
         drawbar (data) {
-            // 基于准备好的dom，初始化echarts实例
-            this.myChart = echarts.init(document.getElementById('twochart'))
             var charts = {
                 lineY: [],
                 lineX: []
@@ -350,7 +354,14 @@ export default {
                     data: charts.lineX
                 }]
             }
-            this.myChart.setOption(option)
+            this.drawChart(option, 'secondChart')
+        },
+        handleClick () {
+            console.log(1)
+        },
+        drawChart (option, id) {
+            const chartDom = document.getElementById(id)
+            echarts.init(chartDom).setOption(option)
         }
     }
 }
@@ -358,10 +369,12 @@ export default {
 <style lang="scss" scoped>
 .echart-wrap {
     display: flex;
-    .firstchart {
+    padding: 20px 10px;
+    min-height: 500px;
+    .chart-flex2 {
         flex: 2;
     }
-    .twochart {
+    .chart-flex1 {
         flex: 1;
     }
 }
@@ -376,5 +389,13 @@ export default {
 }
 .home-detail-title {
     padding-bottom: 20px;
+}
+/deep/ .el-tabs__item.is-active {
+    color: #333;
+    background: transparent;
+}
+
+/deep/ .el-tabs__header {
+    margin: 0
 }
 </style>
