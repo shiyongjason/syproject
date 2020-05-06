@@ -114,7 +114,7 @@ export default {
                 div.style.top = '200px'
                 div.style.left = '20px'
                 div.style.position = 'fixed'
-                div.style.zIndex = '9999'
+                div.style.zIndex = '1999'
                 div.style.width = document.documentElement.clientWidth - 50 + 'px'
                 div.style.height = document.documentElement.clientHeight - 100 + 'px'
                 div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
