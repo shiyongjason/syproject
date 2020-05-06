@@ -42,7 +42,6 @@
     </div>
 </template>
 <script>
-import store from '@/store/index'
 import { login, getUserdata, findMenuList } from './api/index'
 import jwtDecode from 'jwt-decode'
 import { Phone } from '@/utils/rules'
