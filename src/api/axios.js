@@ -7,7 +7,7 @@ import { interfaceUrl, B2bUrl } from './config'
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
-const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }]
+const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }, { method: 'post', url: '/ets/api/event-tracks' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
