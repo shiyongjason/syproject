@@ -154,6 +154,30 @@ export default {
             component: () => import('@/views/comfortcloud/smartPlay/smartPlayEdit.vue')
         },
         {
+            path: 'comfortEncyclopedia',
+            name: 'comfortEncyclopedia',
+            meta: {
+                title: '舒适小百科',
+                tagName: '舒适小百科',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortEncyclopedia/comfortEncyclopedia.vue')
+        },
+        {
+            path: 'comfortEncyclopediaEdit',
+            name: 'comfortEncyclopediaEdit',
+            meta: {
+                title: '文章编辑',
+                tagName: '文章编辑',
+                parentName: '智能玩法',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortEncyclopedia/comfortEncyclopediaEdit.vue')
+        },
+        {
             path: 'sendMessage',
             name: 'sendMessage',
             meta: {
