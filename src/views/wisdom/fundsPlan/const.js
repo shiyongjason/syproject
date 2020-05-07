@@ -81,7 +81,7 @@ export const summarySheet = function (targetYear, targetMonth) {
                 },
                 {
                     prop: 'lastYearActualUse',
-                    label: '去年实际用款',
+                    label: `${targetYear - 1}年${targetMonth}月实际用款`,
                     width: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
