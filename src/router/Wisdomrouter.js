@@ -17,8 +17,8 @@ export default [
                 path: 'standingBook',
                 name: 'standingBook',
                 meta: {
-                    title: '资金借款台账',
-                    tagName: '资金借款台账',
+                    title: '资金支持明细表',
+                    tagName: '资金支持明细表',
                     parentName: '好智慧-资金数据',
                     isMenu: true,
                     icon: ''
