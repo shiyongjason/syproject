@@ -1,5 +1,5 @@
 <template>
-    <el-container class="body-container">
+    <el-container class="body-container" v-watermark="$store.state.userInfo.employeeName">
         <el-header class="header">
             <NavMenuHead @editPassword="editPasswordShow"/>
         </el-header>
