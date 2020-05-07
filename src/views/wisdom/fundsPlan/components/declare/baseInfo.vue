@@ -86,7 +86,7 @@
                 </div>
             </div>
             <h3>借款情况</h3>
-            <el-form-item label="在款余额：">
+            <el-form-item label="在贷余额：">
                 <div class="w250">
                     <span v-if="!fundDetail.respFundPlanLoan">-</span>
                     <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | fundMoney}}</span>
