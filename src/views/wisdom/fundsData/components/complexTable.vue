@@ -40,7 +40,14 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
-import { WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA, WISDOM_EXPOSURE_FUNDSDATA_UPDATA, WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA } from '@/utils/auth_const'
+import {
+    WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
+    WISDOM_EXPOSURE_FUNDSDATA_UPDATA,
+    WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA,
+    WISDOM_FLOWTOBORROW_SHOW_LINE,
+    WISDOM_EXPOSURE_SHOW_LINE,
+    WISDOM_POINTSCREDIT_SHOW_LINE
+} from '@/utils/auth_const'
 export default {
     name: 'complexTable',
     components: { hosJoyTable, remarkDialog, fileInfoDialog, misDialog, supplierDialog, AnnualInterestRateDialog, billingDialog, repaymentDialog, pointsCreditBillingDialog, regulatingBreathingDialog },
@@ -468,6 +475,7 @@ export default {
                 {
                     prop: 'loan_manualInterest',
                     label: '手动调息',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     width: '100',
                     render: (h, scope) => {
                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
@@ -497,6 +505,7 @@ export default {
                     prop: 'account_remark',
                     label: '备注',
                     width: '200',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     render: (h, scope) => {
                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                         return render ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
@@ -847,6 +856,7 @@ export default {
                 },
                 {
                     prop: 'loan_manualInterest',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
@@ -872,6 +882,7 @@ export default {
                 },
                 {
                     prop: 'account_remark',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
@@ -1125,6 +1136,7 @@ export default {
                 },
                 {
                     prop: 'loan_manualInterest',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '手动调息',
                     width: '100',
                     render: (h, scope) => {
@@ -1150,6 +1162,7 @@ export default {
                 },
                 {
                     prop: 'account_remark',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '备注',
                     width: '200',
                     render: (h, scope) => {
@@ -1282,6 +1295,7 @@ export default {
                 },
                 {
                     label: '应收利息（正常+宽限）',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
@@ -1320,6 +1334,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_interestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     label: '累计应收正常利息',
                     sort: 5,
                     width: '150',
@@ -1357,6 +1372,7 @@ export default {
                 {
                     prop: 'paymentStatic_graceInterestAmount',
                     label: '累计应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
@@ -1387,6 +1403,7 @@ export default {
                 {
                     prop: 'paymentStatic_overDueInterestAmount',
                     label: '应收逾期罚息',
+                    isHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 2,
                     width: '150',
                     render: (h, scope) => {
@@ -1468,6 +1485,7 @@ export default {
                 },
                 {
                     label: '应收利息（正常+宽限）',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
@@ -1476,6 +1494,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_interestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '累计应收正常利息',
                     sort: 5,
                     width: '150',
@@ -1503,6 +1522,7 @@ export default {
                 },
                 {
                     label: '累计应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     sort: 9,
                     width: '150',
                     render: (h, scope) => {
@@ -1527,6 +1547,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '累计应收逾期罚息',
                     sort: 12,
                     width: '150',
@@ -1566,6 +1587,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_interestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 6,
                     width: '150',
@@ -1575,6 +1597,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_graceInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 9,
                     width: '150',
@@ -1602,6 +1625,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 13,
                     width: '150',
@@ -1648,6 +1672,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_interestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 21,
                     width: '150',
@@ -1657,6 +1682,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_graceInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 24,
                     width: '150',
@@ -1684,6 +1710,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 28,
                     width: '150',
@@ -1730,6 +1757,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_interestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 36,
                     width: '150',
@@ -1739,6 +1767,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_graceInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 39,
                     width: '150',
@@ -1766,6 +1795,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 43,
                     width: '150',
@@ -1878,6 +1908,7 @@ export default {
                 },
                 {
                     label: '累计应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 4,
                     width: '150',
                     render: (h, scope) => {
@@ -1902,6 +1933,7 @@ export default {
                 },
                 {
                     label: '累计应收逾期罚息',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 7,
                     width: '150',
                     render: (h, scope) => {
@@ -1939,6 +1971,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 6,
                     width: '150',
                     render: (h, scope) => {
@@ -1963,6 +1996,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 10,
                     width: '150',
@@ -2009,6 +2043,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 18,
                     width: '150',
                     render: (h, scope) => {
@@ -2033,6 +2068,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 22,
                     width: '150',
@@ -2079,6 +2115,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 30,
                     width: '150',
                     render: (h, scope) => {
@@ -2103,6 +2140,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_overDueInterestAmount',
+                    isHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 34,
                     width: '150',
@@ -2133,12 +2171,11 @@ export default {
     },
     methods: {
         handleExpand (scope, expandSellrr) {
+            console.log(expandSellrr)
             this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
             if (this.column[scope.$index]._expand) {
-                this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr)
-                this.column[scope.$index].children.sort((a, b) => {
-                    return a.sort - b.sort
-                })
+                this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr.filter(i => !i.isHidden === true))
+                this.column[scope.$index].children.sort((a, b) => a.sort - b.sort)
             } else {
                 this.column[scope.$index].children = this.column[scope.$index].children.filter(_ => !expandSellrr.includes(_))
                 this.changeTable = false
