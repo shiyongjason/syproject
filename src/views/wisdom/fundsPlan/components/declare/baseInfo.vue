@@ -113,6 +113,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapState } from 'vuex'
 import { repaidToDetailTable } from '../../const'
 import { getLoanDetail } from '../../api'
+import moment from 'moment'
 export default {
     name: 'baseInfo',
     components: { hosJoyTable },
@@ -197,12 +198,18 @@ export default {
             const { data } = await getLoanDetail(params)
             this.tableData = data.records
             this.tableData.map(i => {
+                if (i.endTime) {
+                    i.endTime = moment(i.endTime).format('YYYY-MM-DD')
+                } else {
+                    i.endTime = '-'
+                }
                 if (i.loanDateNum) {
                     i.loanDate = `${i.loanDateNum}${i.loanDateType === 1 ? '个月' : '天'}`
                 } else {
                     i.loanDate = `-`
                 }
             })
+            console.log(this.tableData)
             this.pagination = {
                 total: data.total,
                 pageNumber: data.current,
