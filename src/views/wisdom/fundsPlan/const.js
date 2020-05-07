@@ -174,7 +174,7 @@ export const approvalListHasDoneLabel = [
 
 export const repaidToDetailTable = [
     { label: '台账编号', prop: 'standingBookNo' },
-    { label: '还款时间', width: '150', prop: 'endTime' },
+    { label: '还款时间', width: '100', prop: 'endTime' },
     { label: '待还款金额（万元）', width: '150', prop: 'currentBalance', displayAs: 'fundMoney' },
     { label: '资金类型', prop: 'accountTypeName' },
     { label: '借款期限', prop: 'loanDate' }

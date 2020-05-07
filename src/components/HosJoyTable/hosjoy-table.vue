@@ -1,7 +1,7 @@
 <template>
     <div class="hosjoy-table">
         <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
-                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName" :height='height'>
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -65,7 +65,8 @@ export default {
             }
         },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
-        actionWidth: { type: String, default: '' }
+        actionWidth: { type: String, default: '' },
+        height: { type: String, default: '' }
     },
     components: {
         hosjoyColumn

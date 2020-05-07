@@ -88,7 +88,8 @@
             <h3>借款情况</h3>
             <el-form-item label="在款余额：">
                 <div class="w250">
-                    <span>{{fundDetail.respFundPlanLoan?fundDetail.respFundPlanLoan.currentBalance:'-'}}</span>
+                    <span v-if="!fundDetail.respFundPlanLoan">-</span>
+                    <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | fundMoney}}</span>
                     <span class="dw">万元</span>
                 </div>
             </el-form-item>
@@ -98,9 +99,9 @@
                 </div>
             </el-form-item>
         </el-form>
-        <el-dialog title="待还款明细" :visible.sync="isOpen" :close-on-click-modal='false'>
-            <div class="page-body-cont">
-                <hosJoyTable ref="hosjoyTable" :showPagination='true' border stripe :column="columnData" :data="tableData" align="center" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination='getList'>
+        <el-dialog title="待还款明细" :visible.sync="isOpen" :close-on-click-modal='false' width="50%">
+            <div class="page-body-cont h400">
+                <hosJoyTable ref="hosjoyTable" :showPagination='true' border stripe :column="columnData" :data="tableData" align="center" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination='getList' height='577'>
                 </hosJoyTable>
             </div>
         </el-dialog>
@@ -180,8 +181,13 @@ export default {
     },
     methods: {
         showRepaid () {
+            this.onReset()
             this.onSearch()
             this.isOpen = true
+        },
+        onReset () {
+            this.$set(this.pagination, 'pageNumber', 1)
+            this.$set(this.pagination, 'pageSize', 10)
         },
         async onSearch () {
             const params = {
@@ -236,6 +242,9 @@ export default {
     }
     /deep/ .el-pagination__editor.el-input {
         width: 50px !important;
+    }
+    /deep/ .el-pagination__jump{
+        margin-left: 10px;
     }
 }
 </style>
