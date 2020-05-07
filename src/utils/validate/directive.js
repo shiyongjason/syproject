@@ -94,5 +94,33 @@ export default {
                 })
             }
         })
+
+        Vue.directive('watermark', (el, binding) => {
+            function addWaterMarker (str, parentNode) {
+                let can = document.createElement('canvas')
+                can.width = 280
+                can.height = 210
+
+                let cans = can.getContext('2d')
+                cans.rotate(-20 * Math.PI / 180)
+                cans.font = '20px Vedana'
+                cans.fillStyle = 'rgba(200, 200, 200, .1)'
+                cans.textAlign = 'left'
+                cans.textBaseline = 'Middle'
+                cans.fillText(str, can.width / 3, can.height / 2)
+
+                let div = document.createElement('div')
+                div.style.pointerEvents = 'none'
+                div.style.top = '200px'
+                div.style.left = '20px'
+                div.style.position = 'fixed'
+                div.style.zIndex = '1999'
+                div.style.width = document.documentElement.clientWidth - 50 + 'px'
+                div.style.height = document.documentElement.clientHeight - 100 + 'px'
+                div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
+                parentNode.appendChild(div)
+            }
+            addWaterMarker(binding.value, el)
+        })
     }
 }
