@@ -172,6 +172,7 @@ export const CRM_GOODWORK_FANGKUAN = 109115 // 放款
 export const CRM_GOODWORK_HUIKUAN = 109116 // 全部回款
 export const CRM_GOODWORK_BAOCUN = 109117 // 保存
 export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
+export const CRM_GOODWORK_WANSHAN = 109119 // 重置
 
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
