@@ -44,7 +44,6 @@
                                         <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                             <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
                                                 <div @click="onEdit(1, item)">{{item.authName}}</div>
-                                                <div>{{index + ' ' + indexa + ' ' + indexb + ' ' + indexc}}</div>
                                                 <el-button @click="popupMenu(2, item, index)" type="success">添加</el-button>
                                                 <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
                                             </td>
@@ -66,8 +65,8 @@
                                             </td>
                                             <td>
                                                 <div>
-                                                    <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemc.authName}}</div>
-                                                    <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
+                                                    <div @click="onEdit(4, itema, index, indexa, indexb)">{{itemc.authName}}</div>
+                                                    <el-button v-show="itemc.authName" @click="onDelete(itemc)" class="orangeBtn">删除</el-button>
                                                 </div>
                                             </td>
 
@@ -200,18 +199,10 @@ export default {
         },
         // 计算table合并行数
         computedRowspan (list, len) {
-            // if (level == 0) {
-            //     let len = 0
-            //     list.forEach(item => {
-            //         len += item.childAuthList.length
-            //     })
-            //     return len
-            // }
             len += list.length
-            console.log(len)
             list.forEach(item => {
                 if (item.childAuthList && item.childAuthList.length > 0) {
-                    this.computedRowspan(item.childAuthList, len)
+                    len = this.computedRowspan(item.childAuthList, len) - 1
                 }
             })
             return len
