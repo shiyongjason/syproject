@@ -24,10 +24,10 @@
                                 <td width="" rowspan="2">四级菜单</td>
                                 <td width="" colspan="2">权限</td>
                             </tr>
-                            <!-- <tr>
+                            <tr>
                                 <td width="">敏感字段</td>
                                 <td width="">敏感操作</td>
-                            </tr> -->
+                            </tr>
                         </thead>
                         <tbody>
                             <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
@@ -44,32 +44,102 @@
                                         <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                             <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
                                                 <div @click="onEdit(1, item)">{{item.authName}}</div>
-                                                <el-button @click="popupMenu(2, item, index)" type="success">添加</el-button>
+                                                <el-button @click="popupMenu(2, item)" type="success">添加</el-button>
                                                 <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
                                             </td>
                                             <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
                                                 <div>
-                                                    <div @click="onEdit(2, item, index, indexa)">
+                                                    <div @click="onEdit(2, itema, item)">
                                                         <span class="point">{{itema.authName}}</span>
                                                     </div>
-                                                    <el-button @click="popupMenu(3, itema, index, indexa)" type="success">添加</el-button>
+                                                    <el-button @click="popupMenu(3, itema, itemb)" type="success">添加</el-button>
                                                     <el-button v-show="itema.authName" @click="onDelete(itema)" class="orangeBtn">删除</el-button>
                                                 </div>
                                             </td>
                                             <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
                                                 <div>
-                                                    <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
-                                                    <el-button @click="popupMenu(4, itemb, index, indexa, indexb)" type="success">添加</el-button>
+                                                    <div @click="onEdit(3, itemb, itema)">{{itemb.authName}}</div>
+                                                    <el-button @click="popupMenu(4, itemb, itema)" type="success">添加</el-button>
                                                     <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div>
-                                                    <div @click="onEdit(4, itema, index, indexa, indexb)">{{itemc.authName}}</div>
+                                                    <div @click="onEdit(4, itemc, itemb)">{{itemc.authName}}</div>
                                                     <el-button v-show="itemc.authName" @click="onDelete(itemc)" class="orangeBtn">删除</el-button>
                                                 </div>
                                             </td>
-
+                                            <!-- 敏感字段和敏感操作 -->
+                                            <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
+                                                <template v-if="itemc.authTypes[0].authType == 0">
+                                                    <td width="300">
+                                                        <div>敏感字段</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                    <td width="300">
+                                                        <div>敏感操作</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                </template>
+                                                <template v-else>
+                                                    <td width="300">
+                                                        <div>敏感字段</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                    <td width="300">
+                                                        <div>敏感操作</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                </template>
+                                            </template>
+                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length == 1">
+                                                <template v-if="itemc.authTypes[0].authType == 0">
+                                                    <td width="300">
+                                                        <div>敏感字段</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                    <td width="300">
+                                                        <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
+                                                    </td>
+                                                </template>
+                                                <template v-else>
+                                                    <td width="300">
+                                                        <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
+                                                    </td>
+                                                    <td width="300">
+                                                        <div>敏感操作</div>
+                                                        <div class="el-radio-group">
+                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                        </div>
+                                                    </td>
+                                                </template>
+                                            </template>
+                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length > 2">
+                                                <td width="300">
+                                                    数据异常
+                                                </td>
+                                                <td width="300">
+                                                    数据异常
+                                                </td>
+                                            </template>
+                                            <template v-else>
+                                                <td width="300">
+                                                    <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
+                                                </td>
+                                                <td width="300">
+                                                    <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
+                                                </td>
+                                            </template>
                                         </tr>
                                     </template>
                                 </template>
@@ -193,9 +263,6 @@ export default {
         async init () {
             const { data } = await getAuth()
             this.tableList = this.handlerTableList(data, 0)
-            this.tableList.map(i => {
-                i.childAuthList = this.handlerTableList(i.childAuthList, 0)
-            })
         },
         // 计算table合并行数
         computedRowspan (list, len) {
@@ -219,15 +286,7 @@ export default {
                         return authType
                     })
                 }
-                // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
-                // if (item.authTypeList && item.authTypeList.length == 1) {
-                //     if (item.authTypeList[0].authType == 1) {
-                //         item.authTypeList.splice(0, 0, {})
-                //     } else {
-                //         item.authTypeList.push({})
-                //     }
-                // }
-                if (level < 2) {
+                if (level < 3) {
                     if (item.childAuthList && item.childAuthList.length == 0) {
                         item.childAuthList = [{
                             authTypes: item.authTypes
@@ -249,69 +308,33 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     this.addMenuCommon(this.levObj.lev)
-                    // if (this.levObj.lev == 1) this.addFirMenu()
-                    // if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
-                    // if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
-                    // if (this.levObj.lev == 4) this.addFourMenu(this.levObj.index, this.levObj.indexa, this.levObj.indexb)
                 }
             })
         },
-        onEdit (lev, it, index, indexa, indexb) {
-            if (lev == 1) {
-                this.title = '编辑一级菜单'
-                this.form.authName = it.authName
-                this.form.authUri = it.authUri
-                this.form.sort = it.sort
-                this.levObj = {
-                    lev,
-                    authCode: it.authCode
-                }
+        onEdit (lev, it, parent) {
+            this.form.authName = it.authName
+            this.form.authUri = it.authUri
+            this.form.sort = it.sort
+            this.levObj = {
+                lev,
+                authCode: it.authCode,
+                parent
             }
-            if (lev == 2) {
-                // console.log(lev, it, index, indexa)
-                this.form.authName = it.childAuthList[indexa].authName
-                this.form.authUri = it.childAuthList[indexa].authUri
-                this.form.sort = it.childAuthList[indexa].sort
-                this.levObj = {
-                    lev,
-                    authCode: it.childAuthList[indexa].authCode,
-                    parent: it,
-                    index
-                }
-                // console.log(this.levObj)
-                this.title = '编辑二级菜单'
-            }
-            if (lev == 3) {
-                this.form.authName = it.childAuthList[indexb].authName
-                this.form.authUri = it.childAuthList[indexb].authUri
-                this.form.sort = it.childAuthList[indexb].sort
-                this.levObj = {
-                    lev,
-                    authCode: it.childAuthList[indexb].authCode,
-                    parent: it,
-                    index,
-                    indexa
-                }
-                // console.log(lev, it, index, indexa, indexb)
-                this.title = '编辑三级菜单'
-            }
+            this.title = `编辑${lev}级菜单`
             this.dialogSeedVisible = true
         },
-        popupMenu (lev, item, index, indexa, indexb) {
+        popupMenu (lev, parent, item) {
             // 初始化
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
             this.levObj = {
                 lev,
-                parent: item,
-                index,
-                indexa,
-                indexb
+                parent
             }
+            console.log(this.levObj)
             if (this.levObj.parent && !this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
-                // console.log(this.levObj)
                 return
             }
             if (lev == 1) this.title = '添加一级菜单'
@@ -333,61 +356,6 @@ export default {
                 authUri: this.form.authUri,
                 parentCode: this.levObj.parent ? this.levObj.parent.authCode : 0,
                 remark: `${level}级菜单`,
-                sort: this.form.sort
-            }
-            if (this.levObj.authCode) {
-                params.authCode = this.levObj.authCode
-                await editAuth(params)
-            } else {
-                await addAuth(params)
-            }
-            this.dialogSeedVisible = false
-            this.init()
-        },
-        async addFirMenu () {
-            const params = {
-                authName: this.form.authName,
-                authUri: this.form.authUri,
-                parentCode: 0,
-                remark: '一级菜单',
-                sort: this.form.sort ? this.form.sort : this.tableList.length
-            }
-            if (this.levObj.authCode) {
-                params.authCode = this.levObj.authCode
-                await editAuth(params)
-            } else {
-                await addAuth(params)
-            }
-            this.dialogSeedVisible = false
-            this.init()
-        },
-        async addSecMenu () {
-            const params = {
-                authName: this.form.authName,
-                authUri: this.form.authUri,
-                parentCode: this.levObj.parent.authCode,
-                remark: '二级菜单',
-                sort: this.form.sort
-            }
-            if (this.levObj.authCode) {
-                params.authCode = this.levObj.authCode
-                await editAuth(params)
-            } else {
-                await addAuth(params)
-            }
-            this.dialogSeedVisible = false
-            this.init()
-        },
-        async addTirMenu () {
-            if (!this.levObj.parent.id) {
-                this.$message.warning('上级菜单不存在')
-                return
-            }
-            const params = {
-                authName: this.form.authName,
-                authUri: this.form.authUri,
-                parentCode: this.levObj.parent.authCode,
-                remark: '三级菜单',
                 sort: this.form.sort
             }
             if (this.levObj.authCode) {
@@ -437,19 +405,18 @@ export default {
         addAuthList () {
             this.list.push({})
         },
-        async addSensitive (index, indexa, obj, childObj, indexb, type) {
-            console.log(index, indexa, obj, childObj, indexb, type)
-            // console.log(this.tableList[index].childAuthList[indexa].childAuthList)
-            if (!obj.authCode) {
+        async addSensitive (itemc, itemb, itema, type) {
+            console.log(itemc, itemb, itema, type)
+            if (!itema.authCode) {
                 this.$message.warning('权限配置菜单不存在')
                 return
             }
-            const authCode = obj.childAuthList[indexb].authCode ? obj.childAuthList[indexb].authCode : obj.authCode
+            const authCode = itemc.authCode ? itemc.authCode : itemb.authCode ? itemb.authCode : itema.authCode
             const params = {
                 authCode,
                 authType: type
             }
-            // console.log(params)
+            console.log(params)
             await addAuthType(params)
             this.init()
         },
