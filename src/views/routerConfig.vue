@@ -499,7 +499,8 @@ export default {
             this.init()
         },
         onDelete (item) {
-            this.$confirm('此操作将永久删除一级菜单以及下面挂载的子菜单, 是否继续?', '提示', {
+            console.log(item)
+            this.$confirm(`此操作将永久删除 ${item.authName} 菜单以及下面挂载的子菜单, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -213,9 +213,9 @@ const routerMapping = [
         ]
     },
     ...Wisdomrouter,
-    Bestrouter,
+    ...Bestrouter,
     ...B2brouter,
-    Jyrouter,
+    ...Jyrouter,
     Cloudrouter,
     Crmrouter
 ]
@@ -268,7 +268,8 @@ async function getMenu (to, next, isMakeIndex, query) {
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
-        menu = routerMapping
+        // menu = routerMapping
+        menu = makeMenus(routerMapping, resourceList)
     } else {
         menu = makeMenus(routerMapping, resourceList)
     }
