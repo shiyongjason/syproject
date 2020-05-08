@@ -24,7 +24,7 @@
                     <div class="chart-flex1" id="secondChart" style="height:500px"></div>
                 </el-tab-pane>
                 <el-tab-pane label="中央空调控制器（物联）" name="second">
-                    <Chart :lineOption="{}" :barOption="{}"></Chart>
+                    <Chart :lineOption="tempLineOption" :barOption="tempBarOption"></Chart>
                 </el-tab-pane>
                 <el-tab-pane label="中央空调控制器（零颗米）" name="third">
                 </el-tab-pane>
@@ -111,7 +111,9 @@ export default {
                 phone: '',
                 startDate: '',
                 endDate: ''
-            }
+            },
+            tempLineOption: {},
+            tempBarOption: {}
         }
     },
     computed: {
@@ -297,6 +299,7 @@ export default {
                 },
                 series: lineY
             }
+            this.tempLineOption = option
             this.drawChart(option, 'firstChart')
         },
         drawbar (data) {
@@ -354,6 +357,7 @@ export default {
                     data: charts.lineX
                 }]
             }
+            this.tempBarOption = option
             this.drawChart(option, 'secondChart')
         },
         handleClick () {

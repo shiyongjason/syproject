@@ -1,7 +1,14 @@
 <template>
     <div class="tags-wrapper page-body">
         <div class="page-body-cont query-cont spanflex">
-            <span>告警监控</span>
+            <span>告警分析</span>
+        </div>
+        <div class="page-body-cont" style="overflow: hidden">
+            <div class="ring-chart" ref="ringChartOption" style="height: 300px;width: 300px;float: left"></div>
+            <div class="line-chart" ref="lineChartOption" style="height: 300px;width: 300px;float: left"></div>
+        </div>
+        <div class="page-body-cont query-cont spanflex">
+            <span>告警明细</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -27,7 +34,6 @@
                 </div>
             </div>
         </div>
-
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudAlarmList" :pagination="cloudAlarmPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                 <template slot="downlineInterval" slot-scope="scope">
@@ -41,6 +47,22 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { downloadCloudAlarmList } from '../api/index'
+import echarts from 'echarts'
+const ringChartOption = {
+    series: [
+        {
+            name: '告警离线时长分布',
+            type: 'pie',
+            radius: ['0', '85%'],
+            label: {
+                show: false,
+                position: 'center'
+            },
+            data: []
+        }
+    ]
+}
+const lineChartOption = {}
 
 export default {
     name: 'alarm',
@@ -92,6 +114,8 @@ export default {
     },
     async mounted () {
         this.onQuery()
+        echarts.init(this.$refs.ringChartOption).setOption(ringChartOption)
+        echarts.init(this.$refs.lineChartOption).setOption(lineChartOption)
     }
 }
 </script>

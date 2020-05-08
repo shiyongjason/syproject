@@ -1,7 +1,7 @@
 <template>
     <div class="chart-wrap">
-        <div class="chart-flex2" id="firstChart" style="height:500px"></div>
-        <div class="chart-flex1" id="secondChart" style="height:500px"></div>
+        <div class="chart-flex2" id="firstChart" ref="firstChart" style="height:500px"></div>
+        <div class="chart-flex1" id="secondChart" ref="secondChart" style="height:500px"></div>
     </div>
 </template>
 
@@ -18,13 +18,18 @@ export default {
     },
     methods: {
         drawChart (option, id) {
-            const chartDom = document.getElementById(id)
-            echarts.init(chartDom).setOption(option)
+            const chartDom = this.$refs[id]
+            echarts.init(chartDom).setOption(option, true)
         }
     },
-    mounted () {
-        this.drawChart(this.lineOption, 'firstChart')
-        this.drawChart(this.barOption, 'firstChart')
+    watch: {
+        lineOption (newVal, oldVal) {
+            console.log(newVal)
+            this.drawChart(newVal, 'firstChart')
+        },
+        barOption (newVal, oldVal) {
+            this.drawChart(newVal, 'secondChart')
+        }
     }
 }
 </script>

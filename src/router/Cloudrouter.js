@@ -118,6 +118,18 @@ export default {
             component: () => import('@/views/comfortcloud/alarm/alarm.vue')
         },
         {
+            path: 'cloudComfortableScene',
+            name: 'cloudComfortableScene',
+            meta: {
+                title: '舒适度场景',
+                tagName: '舒适度场景',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortableScene/comfortableScene.vue')
+        },
+        {
             path: 'equipmentError',
             name: 'equipmentError',
             meta: {
@@ -200,6 +212,18 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/sendMessage/sendMessageEdit.vue')
+        },
+        {
+            path: 'userFeedback',
+            name: 'userFeedback',
+            meta: {
+                title: '用户反馈',
+                tagName: '用户反馈',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/userFeedback/userFeedback.vue')
         }
     ]
 }
