@@ -20,115 +20,59 @@
                             <tr>
                                 <td width="" rowspan="2">一级菜单</td>
                                 <td width="" rowspan="2">二级菜单</td>
-                                <!-- 三级页面做到操作按钮上！！！-->
                                 <td width="" rowspan="2">三级菜单</td>
+                                <td width="" rowspan="2">四级菜单</td>
                                 <td width="" colspan="2">权限</td>
                             </tr>
-                            <tr>
+                            <!-- <tr>
                                 <td width="">敏感字段</td>
                                 <td width="">敏感操作</td>
-                            </tr>
+                            </tr> -->
                         </thead>
                         <tbody>
                             <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
-                            <!-- 需求：展开与搜索（有空改修改） -->
+                            <!-- SHY-AMEND 需求：展开与搜索（有空改修改） -->
+                            <!-- 
+                                item  一级菜单
+                                itema 二级菜单
+                                itemb 三级菜单
+                                itemc 四级菜单
+                             -->
                             <template v-for="(item, index) in tableList">
                                 <template v-for="(itema, indexa) in item.childAuthList">
-                                    <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
-                                        <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
-                                            <div @click="onEdit(1, item)">{{item.authName}}</div>
-                                            <el-button @click="popupMenu(2, item, index)" type="success">添加</el-button>
-                                            <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
-                                        </td>
-                                        <td :rowspan="computedRowspan(itema.childAuthList, 1)" v-if="indexb==0">
-                                            <div>
-                                                <!-- {{item.childAuthList.length}}{{indexa}} -->
-                                                <div @click="onEdit(2, item, index, indexa)">
-                                                    <span class="point">{{itema.authName}}</span>
+                                    <template v-for="(itemb, indexb) in itema.childAuthList">
+                                        <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
+                                            <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
+                                                <div @click="onEdit(1, item)">{{item.authName}}</div>
+                                                <div>{{index + ' ' + indexa + ' ' + indexb + ' ' + indexc}}</div>
+                                                <el-button @click="popupMenu(2, item, index)" type="success">添加</el-button>
+                                                <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
+                                            </td>
+                                            <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
+                                                <div>
+                                                    <div @click="onEdit(2, item, index, indexa)">
+                                                        <span class="point">{{itema.authName}}</span>
+                                                    </div>
+                                                    <el-button @click="popupMenu(3, itema, index, indexa)" type="success">添加</el-button>
+                                                    <el-button v-show="itema.authName" @click="onDelete(itema)" class="orangeBtn">删除</el-button>
                                                 </div>
-                                                <el-button @click="popupMenu(3, itema, index, indexa)" type="success">添加</el-button>
-                                                <el-button v-show="itema.authName" @click="onDelete(itema)" class="orangeBtn">删除</el-button>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <!-- {{indexb}}{{itema.childAuthList.length}} -->
-                                                <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
-                                                <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
-                                            </div>
-                                        </td>
-                                        <template v-if="itemb.authTypes && itemb.authTypes.length == 2">
-                                            <template v-if="itemb.authTypes[0].authType == 0">
-                                                <td width="300">
-                                                    <div>敏感字段</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                                <td width="300">
-                                                    <div>敏感操作</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[1])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                            </template>
-                                            <template v-else>
-                                                <td width="300">
-                                                    <div>敏感字段</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                                <td width="300">
-                                                    <div>敏感操作</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[1])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                            </template>
-                                            <!-- </template> -->
-                                        </template>
-                                        <template v-else-if="itemb.authTypes && itemb.authTypes.length == 1">
-                                            <template v-if="itemb.authTypes[0].authType == 0">
-                                                <td width="300">
-                                                    <div>敏感字段</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 1)" type="success">添加</el-button>
-                                                </td>
-                                            </template>
-                                            <template v-else>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 0)" type="success">添加</el-button>
-                                                </td>
-                                                <td width="300">
-                                                    <div>敏感操作</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemb.authTypes[0])" type="primary">配置</el-button>
-                                                    </div>
-                                                </td>
-                                            </template>
-                                        </template>
-                                        <template v-else-if="itemb.authTypes && itemb.authTypes.length > 2">
-                                            <td width="300">
-                                                数据异常
                                             </td>
-                                            <td width="300">
-                                                数据异常
+                                            <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
+                                                <div>
+                                                    <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemb.authName}}</div>
+                                                    <el-button @click="popupMenu(4, itemb, index, indexa, indexb)" type="success">添加</el-button>
+                                                    <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
+                                                </div>
                                             </td>
-                                        </template>
-                                        <template v-else>
-                                            <td width="300">
-                                                <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 0)" type="success">添加</el-button>
+                                            <td>
+                                                <div>
+                                                    <div @click="onEdit(3, itema, index, indexa, indexb)">{{itemc.authName}}</div>
+                                                    <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
+                                                </div>
                                             </td>
-                                            <td width="300">
-                                                <el-button @click="addSensitive(index, indexa, itema, itemb, indexb, 1)" type="success">添加</el-button>
-                                            </td>
-                                        </template>
-                                    </tr>
+
+                                        </tr>
+                                    </template>
                                 </template>
                             </template>
                         </tbody>
@@ -250,17 +194,27 @@ export default {
         async init () {
             const { data } = await getAuth()
             this.tableList = this.handlerTableList(data, 0)
+            this.tableList.map(i => {
+                i.childAuthList = this.handlerTableList(i.childAuthList, 0)
+            })
         },
         // 计算table合并行数
-        computedRowspan (list, level) {
-            if (level == 0) {
-                let len = 0
-                list.forEach(item => {
-                    len += item.childAuthList.length
-                })
-                return len
-            }
-            return list.length
+        computedRowspan (list, len) {
+            // if (level == 0) {
+            //     let len = 0
+            //     list.forEach(item => {
+            //         len += item.childAuthList.length
+            //     })
+            //     return len
+            // }
+            len += list.length
+            console.log(len)
+            list.forEach(item => {
+                if (item.childAuthList && item.childAuthList.length > 0) {
+                    this.computedRowspan(item.childAuthList, len)
+                }
+            })
+            return len
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
@@ -303,9 +257,11 @@ export default {
         onAddMenuSure (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    if (this.levObj.lev == 1) this.addFirMenu()
-                    if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
-                    if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
+                    this.addMenuCommon(this.levObj.lev)
+                    // if (this.levObj.lev == 1) this.addFirMenu()
+                    // if (this.levObj.lev == 2) this.addSecMenu(this.levObj.index)
+                    // if (this.levObj.lev == 3) this.addTirMenu(this.levObj.index, this.levObj.indexa)
+                    // if (this.levObj.lev == 4) this.addFourMenu(this.levObj.index, this.levObj.indexa, this.levObj.indexb)
                 }
             })
         },
@@ -350,30 +306,52 @@ export default {
             }
             this.dialogSeedVisible = true
         },
-        popupMenu (lev, item, index, indexa) {
+        popupMenu (lev, item, index, indexa, indexb) {
             // 初始化
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
-            // console.log(lev, item, index, indexa)
             this.levObj = {
                 lev,
                 parent: item,
                 index,
-                indexa
+                indexa,
+                indexb
             }
-            if (lev == 1) this.title = '添加一级菜单'
-            if (lev == 2) this.title = '添加二级菜单'
             if (this.levObj.parent && !this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
                 // console.log(this.levObj)
                 return
             }
+            if (lev == 1) this.title = '添加一级菜单'
+            if (lev == 2) this.title = '添加二级菜单'
             if (lev == 3) this.title = '添加三级菜单'
+            if (lev == 4) this.title = '添加四级菜单'
             this.dialogSeedVisible = true
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
+        },
+        async addMenuCommon (level) {
+            if (level !== 1 && !this.levObj.parent.id) {
+                this.$message.warning('上级菜单不存在')
+                return
+            }
+            const params = {
+                authName: this.form.authName,
+                authUri: this.form.authUri,
+                parentCode: this.levObj.parent ? this.levObj.parent.authCode : 0,
+                remark: `${level}级菜单`,
+                sort: this.form.sort
+            }
+            if (this.levObj.authCode) {
+                params.authCode = this.levObj.authCode
+                await editAuth(params)
+            } else {
+                await addAuth(params)
+            }
+            this.dialogSeedVisible = false
+            this.init()
         },
         async addFirMenu () {
             const params = {
@@ -389,14 +367,10 @@ export default {
             } else {
                 await addAuth(params)
             }
-            // console.log(params)
             this.dialogSeedVisible = false
             this.init()
         },
-        async addSecMenu (index) {
-            // console.log(index)
-            // console.log(this.tableList[index].childAuthList)
-            // console.log(this.levObj.parent.authCode)
+        async addSecMenu () {
             const params = {
                 authName: this.form.authName,
                 authUri: this.form.authUri,
@@ -413,19 +387,16 @@ export default {
             this.dialogSeedVisible = false
             this.init()
         },
-        async addTirMenu (index, indexa) {
-            // console.log(index, indexa)
-            // console.log(this.tableList[index].childAuthList[indexa])
+        async addTirMenu () {
             if (!this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
-                // console.log(this.levObj)
                 return
             }
             const params = {
                 authName: this.form.authName,
                 authUri: this.form.authUri,
                 parentCode: this.levObj.parent.authCode,
-                remark: '三级页面',
+                remark: '三级菜单',
                 sort: this.form.sort
             }
             if (this.levObj.authCode) {
