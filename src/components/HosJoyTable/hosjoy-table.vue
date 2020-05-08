@@ -1,7 +1,7 @@
 <template>
     <div class="hosjoy-table">
         <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
-                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName" :height='height'>
+                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -19,7 +19,7 @@
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot && !item.isHidden" v-bind="$attrs" :column="item"
+                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item"
                                :key='index'></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
@@ -65,8 +65,7 @@ export default {
             }
         },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
-        actionWidth: { type: String, default: '' },
-        height: { type: String, default: '' }
+        actionWidth: { type: String, default: '' }
     },
     components: {
         hosjoyColumn

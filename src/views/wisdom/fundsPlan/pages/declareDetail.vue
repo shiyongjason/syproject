@@ -77,7 +77,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/fundsPlan/planToDeclare')
+            this.$router.push(`/fundsPlan/${this.$route.query.source}`)
         }
     },
     mounted () {

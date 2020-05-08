@@ -132,7 +132,13 @@ export default {
             this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
         },
         onApproveDeclare (row) {
-            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+            this.$router.push({
+                path: '/fundsPlan/approveDeclare',
+                query: {
+                    id: row.planId,
+                    source: 'approvalList'
+                }
+            })
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
