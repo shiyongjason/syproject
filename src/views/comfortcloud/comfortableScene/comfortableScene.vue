@@ -18,6 +18,13 @@
                 </el-button>
             </div>
         </div>
+        <div class="page-body-cont chart-wrapper">
+            <div class="ring-chart" ref="ringChartOption" style="height: 400px;width: 500px;float: left"></div>
+            <div class="line-chart" ref="lineChartOption" style="height: 400px;width: 600px;float: left"></div>
+        </div>
+        <div class="page-body-cont query-cont spanflex">
+            <span>家庭设备明细</span>
+        </div>
         <!-- 报表 -->
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -51,6 +58,9 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import echarts from 'echarts'
+import { lineChartOption, ringChartOption } from './const'
+import moment from 'moment'
 
 export default {
     name: 'comfortable',
@@ -93,6 +103,7 @@ export default {
     },
     mounted () {
         this.onSearch()
+        this.onFindRuntimeR()
     },
     methods: {
         ...mapActions({
@@ -143,7 +154,26 @@ export default {
                 ...this.echartsParams
             }
             this.totalTime = await this.findCloudHomeComfortStatisticsList(params)
-
+            echarts.init(this.$refs.ringChartOption).setOption(ringChartOption(this.handleData(this.shy)))
+            echarts.init(this.$refs.lineChartOption).setOption(lineChartOption(this.shy))
+        },
+        handleData (data) {
+            let legend = []
+            let xAxis = []
+            data.map((i, d) => {
+                i.name = i.comfortName
+                i.type = 'line'
+                legend.push(i.comfortName)
+                let valueArr = []
+                i.comfortReports.map((v) => {
+                    if (d === 0) {
+                        xAxis.push(moment(v.dateTime).format('MM-DD'))
+                    }
+                    valueArr.push(v.value)
+                })
+                i.data = valueArr
+            })
+            return { legend, xAxis, series: data }
         }
     }
 }
@@ -166,5 +196,13 @@ export default {
         flex: 1;
         align-items: center;
     }
+}
+.spanflex {
+    font-size: 16px;
+    padding-bottom: 10px;
+}
+.chart-wrapper {
+    display: flex;
+    justify-content: space-around;
 }
 </style>

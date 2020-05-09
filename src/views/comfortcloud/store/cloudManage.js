@@ -138,6 +138,9 @@ const mutations = {
     },
     [cloud.CLOUD_HOME_COMFORT_SCENE_PAGINATION] (state, payload) {
         state.comfortableSceneListPagination = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS] (state, payload) {
+        state.getCloudHomeComfortStatisticsList = payload
     }
 }
 
@@ -257,7 +260,7 @@ const actions = {
     async findCloudHomeComfortStatisticsList ({ commit }, params) {
         const { data } = await Api.getCloudHomeComfortStatisticsList(params)
         console.log(data)
-        // commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
         return data.data.totalRunHours
     }
 }
