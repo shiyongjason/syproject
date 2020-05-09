@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item) in tableList">
+                        <template v-for="(item, index) in tableList">
                             <template v-for="(itema, indexa) in item.childAuthList">
                                 <template v-for="(itemb, indexb) in itema.childAuthList">
                                     <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
@@ -154,6 +154,7 @@ export default {
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
         this.tableList = this.handlerTableList(data, 0)
+        console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
