@@ -3,9 +3,9 @@
         <div class="page-body-cont query-cont spanflex">
             <span>告警分析</span>
         </div>
-        <div class="page-body-cont" style="overflow: hidden">
-            <div class="ring-chart" ref="ringChartOption" style="height: 300px;width: 300px;float: left"></div>
-            <div class="line-chart" ref="lineChartOption" style="height: 300px;width: 300px;float: left"></div>
+        <div class="page-body-cont chart-wrapper">
+            <div class="ring-chart" ref="ringChartOption" style="height: 400px;width: 300px;float: left"></div>
+            <div class="line-chart" ref="lineChartOption" style="height: 400px;width: 700px;float: left"></div>
         </div>
         <div class="page-body-cont query-cont spanflex">
             <span>告警明细</span>
@@ -49,20 +49,67 @@ import { mapActions, mapGetters } from 'vuex'
 import { downloadCloudAlarmList } from '../api/index'
 import echarts from 'echarts'
 const ringChartOption = {
+    title: {
+        text: '告警离线时长分布',
+        left: 'center'
+    },
+    legend: {
+        left: 'center',
+        top: '40',
+        data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+    },
     series: [
         {
             name: '告警离线时长分布',
             type: 'pie',
-            radius: ['0', '85%'],
+            radius: ['0', '60%'],
             label: {
                 show: false,
                 position: 'center'
             },
-            data: []
+            data: [ // #4472c3 #4472c3 #4472c3 #4472c3 #4472c3
+                { value: 37686, name: '直接访问', itemStyle: { color: '#4472c3' } },
+                { value: 4534, name: '邮件营销', itemStyle: { color: '#FEC109' } },
+                { value: 8349, name: '联盟广告', itemStyle: { color: '#209FFF' } },
+                { value: 7569, name: '视频广告', itemStyle: { color: '#FFBF6A' } }
+            ]
         }
     ]
 }
-const lineChartOption = {}
+const lineChartOption = {
+    title: {
+        text: '离线告警次数分布',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            lineStyle: {
+                color: '#ddd'
+            }
+        },
+        padding: [5, 10],
+        textStyle: {
+            color: '#ffffff'
+        },
+        extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
+    },
+    xAxis: {
+        type: 'category',
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: 'bar',
+        showBackground: true,
+        backgroundStyle: {
+            color: 'rgba(220, 220, 220, 0.8)'
+        }
+    }]
+}
 
 export default {
     name: 'alarm',
@@ -125,4 +172,8 @@ export default {
     font-size: 16px;
     padding-bottom: 10px;
 }
+    .chart-wrapper {
+        display: flex;
+        justify-content: space-around;
+    }
 </style>
