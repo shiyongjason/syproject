@@ -26,7 +26,10 @@ const state = {
     cloudDeviceDetailPagination: {},
     cloudHomeDetailList: [],
     cloudHomeDetailPagination: {},
-    cloudHomeDetailDict: []
+    cloudHomeDetailDict: [],
+    comfortableSceneList: [],
+    comfortableSceneListPagination: {},
+    getCloudHomeComfortStatisticsList: []
 }
 
 const getters = {
@@ -129,6 +132,12 @@ const mutations = {
     },
     [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
         state.cloudHomeDetailDict = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE] (state, payload) {
+        state.comfortableSceneList = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE_PAGINATION] (state, payload) {
+        state.comfortableSceneListPagination = payload
     }
 }
 
@@ -235,6 +244,21 @@ const actions = {
     async findCloudHomeDetailSearchDict ({ commit }, params) {
         const { data } = await Api.getCloudHomeDetailSearchDict(params)
         commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
+    },
+    async findComfortableSceneList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeComfortReportList(params)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE, data.data.content)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE_PAGINATION, {
+            pageNumber: data.data.number + 1,
+            pageSize: data.data.size,
+            total: data.data.totalElements
+        })
+    },
+    async findCloudHomeComfortStatisticsList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeComfortStatisticsList(params)
+        console.log(data)
+        // commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
+        return data.data.totalRunHours
     }
 }
 export default {

@@ -3,22 +3,23 @@
         <div class="page-body-cont query-cont spanflex">
             <span>舒适度场景</span>
         </div>
-        <div class="smart-time">
+        <div class="page-body-cont smart-time">
             <div>
                 <h3>总运行时长: {{totalTime ? totalTime : '0'}} 小时</h3>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="params.startDate" :picker-options="pickerOptionsStart">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="echartsParams.startDate" :picker-options="pickerOptionsStart('echartsParams')">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="params.endDate" :picker-options="pickerOptionsEnd">>
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="echartsParams.endDate" :picker-options="pickerOptionsEnd('echartsParams')">>
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindRuntimeR()">
                     查询
                 </el-button>
             </div>
         </div>
-        <div class="query-cont-row">
+        <!-- 报表 -->
+        <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
@@ -28,81 +29,120 @@
             <div class="query-cont-col">
                 <div class="query-col-title">注册时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker type="date" :editable="false" :clearable="false"  v-model="homeParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerHomeDetailStart">
+                    <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('homeParams')">
                     </el-date-picker>
                     <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" :editable="false" :clearable="false"  v-model="homeParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerHomeDetailEnd">
+                    <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('homeParams')">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" @click="findCloudHomeDetailList(homeParams)">
+                <el-button type="primary" @click="onSearch">
                     查询
                 </el-button>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="[]" :pagination="{}"
-                        @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="paginationData" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
             </basicTable>
         </div>
     </div>
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
+
 export default {
     name: 'comfortable',
     data () {
         return {
-            homeParams: {},
-            params: {},
+            echartsParams: {
+                startDate: '',
+                endDate: ''
+            },
+            searchParams: {},
+            homeParams: {
+                startDate: '',
+                endDate: '',
+                phone: ''
+            },
             totalTime: '',
             tableLabel: [
-                { label: '统计时间', prop: 'phone' },
+                { label: '统计时间', prop: 'date' },
                 { label: '手机号', prop: 'phone' },
-                { label: '所在房间', prop: 'phone' },
-                { label: '总运行时长（h）', prop: 'phone' },
-                { label: '恒温恒湿时长（h）', prop: 'phone' },
-                { label: '智能调温时长（h)', prop: 'phone' },
-                { label: '智能除湿时长（h)', prop: 'phone' }
+                { label: '所在房间', prop: 'roomName' },
+                { label: '总运行时长（h）', prop: 'totalElapsedTime' },
+                { label: '恒温恒湿时长（h）', prop: 'coldElapsedTime' },
+                { label: '智能调温时长（h)', prop: 'hotElapsedTime' },
+                { label: '智能除湿时长（h)', prop: 'loseWetElapsedTime' }
             ]
         }
     },
     computed: {
-        pickerOptionsStart () {
+        ...mapState({
+            tableData: state => {
+                return state.cloudmanage.comfortableSceneList
+            },
+            paginationData: state => {
+                return state.cloudmanage.comfortableSceneListPagination
+            },
+            shy: state => {
+                return state.cloudmanage.getCloudHomeComfortStatisticsList
+            }
+        })
+    },
+    mounted () {
+        this.onSearch()
+    },
+    methods: {
+        ...mapActions({
+            findComfortableSceneList: 'findComfortableSceneList',
+            findCloudHomeComfortStatisticsList: 'findCloudHomeComfortStatisticsList'
+        }),
+        pickerOptionsStart (key) {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.smartparams.endDate
+                    let endDateVal = this[key].endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
         },
-        pickerOptionsEnd () {
+        pickerOptionsEnd (key) {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.smartparams.startDate
+                    let beginDateVal = this[key].startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
-        }
-    },
-    methods: {
+        },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.paginationData.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.paginationData.pageSize = val
+            this.onQuery()
+        },
+        onSearch () {
+            this.searchParams = { ...this.homeParams }
             this.onQuery()
         },
         onQuery () {
-            console.log(1)
+            const params = {
+                ...this.searchParams,
+                ...this.paginationData
+            }
+            this.findComfortableSceneList(params)
         },
-        onFindRuntimeR () {
+        async onFindRuntimeR () {
+            const params = {
+                ...this.echartsParams
+            }
+            this.totalTime = await this.findCloudHomeComfortStatisticsList(params)
 
         }
     }
@@ -110,21 +150,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .spanflex {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 10px;
-        span {
-            flex: 1;
-        }
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    span {
+        flex: 1;
     }
-    .smart-time {
+}
+.smart-time {
+    display: flex;
+    padding: 30px 12px;
+    div {
         display: flex;
-        padding: 30px 12px;
-        div {
-            display: flex;
-            flex: 1;
-            align-items: center;
-        }
+        flex: 1;
+        align-items: center;
     }
+}
 </style>

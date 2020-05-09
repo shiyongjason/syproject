@@ -185,3 +185,11 @@ export function getCloudHomeDetailList (params) {
 export function getCloudHomeDetailSearchDict (params) {
     return axios.get(iotUrl + `/api/device/statistics/species`, { params })
 }
+// 家庭明细分页查询
+export function getCloudHomeComfortReportList (params) {
+    return axios.get(iotUrl + `/api/statistics/comfort/report`, { params })
+}
+// 舒适度场景统计报表
+export function getCloudHomeComfortStatisticsList (params) {
+    return axios.get(iotUrl + `/api/statistics/comfort/statistics`, { params })
+}
