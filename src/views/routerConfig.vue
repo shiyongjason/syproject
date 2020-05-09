@@ -32,12 +32,10 @@
                         <tbody>
                             <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
                             <!-- SHY-AMEND 需求：展开与搜索（有空改修改） -->
-                            <!-- 
-                                item  一级菜单
-                                itema 二级菜单
-                                itemb 三级菜单
-                                itemc 四级菜单
-                             -->
+                            <!--  item  一级菜单
+                                  itema 二级菜单
+                                  itemb 三级菜单
+                                  itemc 四级菜单-->
                             <template v-for="(item, index) in tableList">
                                 <template v-for="(itema, indexa) in item.childAuthList">
                                     <template v-for="(itemb, indexb) in itema.childAuthList">
