@@ -29,7 +29,8 @@ const state = {
     cloudHomeDetailDict: [],
     comfortableSceneList: [],
     comfortableSceneListPagination: {},
-    getCloudHomeComfortStatisticsList: []
+    getCloudHomeComfortStatisticsList: [],
+    cloudAlarmChart: {}
 }
 
 const getters = {
@@ -56,7 +57,8 @@ const getters = {
     cloudDeviceDetailPagination: state => state.cloudDeviceDetailPagination,
     cloudHomeDetailList: state => state.cloudHomeDetailList,
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
-    cloudHomeDetailDict: state => state.cloudHomeDetailDict
+    cloudHomeDetailDict: state => state.cloudHomeDetailDict,
+    cloudAlarmChart: state => state.cloudAlarmChart
 
 }
 
@@ -141,6 +143,9 @@ const mutations = {
     },
     [cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS] (state, payload) {
         state.getCloudHomeComfortStatisticsList = payload
+    },
+    [cloud.CLOUD_ALARM_CHART] (state, payload) {
+        state.cloudAlarmChart = payload
     }
 }
 
@@ -262,6 +267,10 @@ const actions = {
         console.log(data)
         commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
         return data.data.totalRunHours
+    },
+    async findCloudAlarmChart ({ commit }, params) {
+        const { data } = await Api.getCloudAlarmChart(params)
+        commit(cloud.CLOUD_ALARM_CHART, data.data)
     }
 }
 export default {
