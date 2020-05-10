@@ -30,7 +30,8 @@ const state = {
     comfortableSceneList: [],
     comfortableSceneListPagination: {},
     getCloudHomeComfortStatisticsList: [],
-    cloudAlarmChart: {}
+    cloudAlarmChart: {},
+    cloudSendMessageDetailChart: {}
 }
 
 const getters = {
@@ -58,7 +59,8 @@ const getters = {
     cloudHomeDetailList: state => state.cloudHomeDetailList,
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
     cloudHomeDetailDict: state => state.cloudHomeDetailDict,
-    cloudAlarmChart: state => state.cloudAlarmChart
+    cloudAlarmChart: state => state.cloudAlarmChart,
+    cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart
 
 }
 
@@ -146,6 +148,10 @@ const mutations = {
     },
     [cloud.CLOUD_ALARM_CHART] (state, payload) {
         state.cloudAlarmChart = payload
+    },
+    [cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART] (state, payload) {
+        console.log(payload)
+        state.cloudSendMessageDetailChart = payload
     }
 }
 
@@ -271,6 +277,11 @@ const actions = {
     async findCloudAlarmChart ({ commit }, params) {
         const { data } = await Api.getCloudAlarmChart(params)
         commit(cloud.CLOUD_ALARM_CHART, data.data)
+    },
+    async findCloudSendMessageDetailChart ({ commit }, params) {
+        const { data } = await Api.getCloudSendMessageDetailChart(params)
+        console.log(data)
+        commit(cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART, data.data)
     }
 }
 export default {

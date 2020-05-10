@@ -214,6 +214,18 @@ export default {
             component: () => import('@/views/comfortcloud/sendMessage/sendMessageEdit.vue')
         },
         {
+            path: 'sendMessageDetail',
+            name: 'sendMessageDetail',
+            meta: {
+                title: '推送效果',
+                tagName: '推送效果',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/sendMessage/sendMessageDetail.vue')
+        },
+        {
             path: 'userFeedback',
             name: 'userFeedback',
             meta: {

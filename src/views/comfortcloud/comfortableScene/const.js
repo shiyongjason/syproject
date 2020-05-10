@@ -31,7 +31,7 @@ export const lineChartOption = function (source) {
                 itemStyle: {
                     normal: {
                         color: function (params) {
-                            var colorList = ['#cca272', '#74608f', '#d7a02b', '#c8ba23',]
+                            var colorList = ['#cca272', '#74608f', '#d7a02b', '#c8ba23']
                             return colorList[params.dataIndex]
                         }
                     }
@@ -43,7 +43,6 @@ export const lineChartOption = function (source) {
             }
         ]
     }
-
 }
 
 export const ringChartOption = function (data) {

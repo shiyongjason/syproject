@@ -42,7 +42,9 @@
                         <el-button class="orangeBtn" @click="goEdit('edit',scope.data.row.id)">编辑</el-button>
                         <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                     </template>
-                    <template v-else>-</template>
+                    <template v-else>
+                        <el-button class="orangeBtn" @click="goDetail(scope.data.row.id)">效果</el-button>
+                    </template>
                 </template>
             </basicTable>
         </div>
@@ -130,7 +132,6 @@ export default {
             onQuery: 'findCloudSendMessageList'
         }),
         onSortChange (val) {
-            console.log(val)
             if (val.prop === 'pushTime') {
                 if (val.order) {
                     this.queryParams.pushTimeSortType = val.order === 'descending' ? '2' : '1'
@@ -147,6 +148,14 @@ export default {
                 this.queryParams.pushTimeSortType = ''
             }
             this.onQuery(this.queryParams)
+        },
+        goDetail (id) {
+            this.$router.push({
+                path: '/comfortCloud/sendMessageDetail',
+                query: {
+                    id: id
+                }
+            })
         }
     },
     mounted () {

@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import echarts from 'echarts'
 import { lineChartOption, ringChartOption } from './const'
 import moment from 'moment'

@@ -193,7 +193,11 @@ export function getCloudHomeComfortReportList (params) {
 export function getCloudHomeComfortStatisticsList (params) {
     return axios.get(iotUrl + `/api/statistics/comfort/statistics`, { params })
 }
-
+// 告警监控图表
 export function getCloudAlarmChart (params) {
     return axios.get(iotUrl + `/api/device/upline-downline-alarm/alarm-analysis`, { params })
+}
+// 消息推送 效果
+export function getCloudSendMessageDetailChart (params) {
+    return axios.get(iotUrl + `/api//push-message/result/${params.id}`)
 }
