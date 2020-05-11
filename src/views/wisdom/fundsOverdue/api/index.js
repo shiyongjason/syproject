@@ -1,6 +1,8 @@
 import axios from 'axios'
-// 资金计划汇总数据
-export const getPlanTotalList = (params) => axios.get(`backend/api/fund-plan/summary`, { params })
+// 平台公司逾期汇总列表
+export const getCompanyOverdueList = (params) => axios.get(`backend/api/company/overdue/summary`, { params })
+// 平台公司逾期汇总合计
+export const getCompanyOverdueListTotal = (params) => axios.get(`backend/api/company/overdue/summary/total`, { params })
 
 // 下载故障模板
 export function downloadPlanTotalList (params) {

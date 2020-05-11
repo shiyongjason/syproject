@@ -81,7 +81,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { platformSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-// import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
+import { getCompanyOverdueList, getCompanyOverdueListTotal } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -134,6 +134,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            searchParams: {},
             page: {
                 sizes: [10, 20, 50, 100],
                 total: 0
@@ -228,14 +229,15 @@ export default {
             this.onQuery()
         },
         async onQuery () {
-            // const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
-            // var data = await Promise.all(promiseArr).then((res) => {
-            //     res[1].data.companyName = '合计'
-            //     res[0].data.records.unshift(res[1].data)
-            //     return res[0].data
-            // }).catch((error) => {
-            //     this.$message.error(`error:${error}`)
-            // })
+            const promiseArr = [getCompanyOverdueList(this.queryParams), getCompanyOverdueListTotal(this.queryParams)]
+            var data = await Promise.all(promiseArr).then((res) => {
+                console.log(res)
+                // res[1].data.companyName = '合计'
+                // res[0].data.records.unshift(res[1].data)
+                // return res[0].data
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
             // this.tableData = data.records
             // if (data.records.length > 1) {
             //     this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
