@@ -148,6 +148,7 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.username = ''
             this.onFindAccountList(1)
         },
         async onFindAccountList (val) {
