@@ -3,7 +3,7 @@
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                 <el-form-item label="经销商：">
-                  {{form.companyName}} <el-button size="mini" @click="onLinkBus(form)">查看详情</el-button>
+                  {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
                     <el-input v-model="form.deptName" disabled></el-input>
