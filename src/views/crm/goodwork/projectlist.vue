@@ -324,7 +324,7 @@ export default {
                 this.dialogRecord = this.projectRecord
             } else {
                 this.title = '工地打卡记录'
-                await this.findPunchlist({ createBy: val.createBy, projectId: val.id })
+                await this.findPunchlist({ projectId: val.id })
                 this.plantList = this.punchList
             }
 
