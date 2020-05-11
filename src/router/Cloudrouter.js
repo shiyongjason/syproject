@@ -46,6 +46,18 @@ export default {
             component: () => import('@/views/comfortcloud/homeManage.vue')
         },
         {
+            path: 'effectiveHome',
+            name: 'effectiveHome',
+            meta: {
+                title: '有效家庭',
+                tagName: '有效家庭',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/homeManage/effectiveHome.vue')
+        },
+        {
             path: 'homedetail',
             name: 'homedetail',
             meta: {

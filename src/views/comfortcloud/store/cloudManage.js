@@ -31,7 +31,9 @@ const state = {
     comfortableSceneListPagination: {},
     getCloudHomeComfortStatisticsList: [],
     cloudAlarmChart: {},
-    cloudSendMessageDetailChart: {}
+    cloudSendMessageDetailChart: {},
+    cloudUserFeedbackList: [],
+    cloudUserFeedbackPagination: {}
 }
 
 const getters = {
@@ -60,7 +62,9 @@ const getters = {
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
     cloudHomeDetailDict: state => state.cloudHomeDetailDict,
     cloudAlarmChart: state => state.cloudAlarmChart,
-    cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart
+    cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart,
+    cloudUserFeedbackList: state => state.cloudUserFeedbackList,
+    cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination
 
 }
 
@@ -150,8 +154,13 @@ const mutations = {
         state.cloudAlarmChart = payload
     },
     [cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART] (state, payload) {
-        console.log(payload)
         state.cloudSendMessageDetailChart = payload
+    },
+    [cloud.CLOUD_USER_FEEDBACK_LIST] (state, payload) {
+        state.cloudUserFeedbackList = payload
+    },
+    [cloud.CLOUD_USER_FEEDBACK_PAGINATION] (state, payload) {
+        state.cloudUserFeedbackPagination = payload
     }
 }
 
@@ -280,8 +289,21 @@ const actions = {
     },
     async findCloudSendMessageDetailChart ({ commit }, params) {
         const { data } = await Api.getCloudSendMessageDetailChart(params)
-        console.log(data)
         commit(cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART, data.data)
+    },
+    async findUserFeedbackList ({ commit }, params) {
+        const { data } = await Api.getCloudUserFeedback(params)
+        console.log({
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+        commit(cloud.CLOUD_USER_FEEDBACK_LIST, data.data.records)
+        commit(cloud.CLOUD_USER_FEEDBACK_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {

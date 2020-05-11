@@ -5,6 +5,10 @@ import { iotUrl } from '@/api/config'
 export function findHomeGeneralSituation (params) {
     return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
 }
+// 家庭概况
+export function findEffectiveHome (params) {
+    return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
+}
 
 // 房屋详情
 export function findHomeGeneralDetails (homeId) {
@@ -199,5 +203,9 @@ export function getCloudAlarmChart (params) {
 }
 // 消息推送 效果
 export function getCloudSendMessageDetailChart (params) {
-    return axios.get(iotUrl + `/api//push-message/result/${params.id}`)
+    return axios.get(iotUrl + `/api/push-message/result/${params.id}`)
+}
+// 用户反馈列表
+export function getCloudUserFeedback (params) {
+    return axios.get(iotUrl + `/uc/user/feedback-page`, { params })
 }

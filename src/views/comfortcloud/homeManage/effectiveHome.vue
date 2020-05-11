@@ -1,8 +1,8 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont spanflex">
-            <span>家庭概览</span>
-            <span>家庭数量：{{pagination.familySum}}个 有效家庭：{{pagination.effectSum}}个</span>
+            <span>有效家庭</span>
+<!--            <span>家庭数量：{{pagination.familySum}}个 有效家庭：{{pagination.effectSum}}个</span>-->
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -15,10 +15,14 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="date" value-format='yyyy-MM-dd'
+                                    placeholder="开始日期"
+                                    :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="date" value-format='yyyy-MM-dd'
+                                    placeholder="结束日期"
+                                    :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -34,7 +38,9 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination"
+                        @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true"
+                        :actionMinWidth='80'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">详情</el-button>
                 </template>
@@ -42,11 +48,13 @@
         </div>
     </div>
 </template>
+
 <script>
 import { mapState } from 'vuex'
-import { findHomeGeneralSituation } from './api/index'
+import { findEffectiveHome } from '../api'
+
 export default {
-    name: 'homemanage',
+    name: 'effectiveHome',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -107,23 +115,19 @@ export default {
             ]
         }
     },
-    watch: {
-
-    },
+    watch: {},
     mounted () {
         this.tableData = []
         this.onSearch()
     },
     methods: {
         async onQuery () {
-            const { data } = await findHomeGeneralSituation(this.queryParams)
+            const { data } = await findEffectiveHome(this.queryParams)
             this.tableData = data.data.pageContent
             this.pagination = {
                 pageNumber: data.data.pageNumber,
                 pageSize: data.data.pageSize,
-                total: data.data.totalElements,
-                familySum: data.data.attachData.totalHomeCount,
-                effectSum: data.data.attachData.effectiveHomeCount
+                total: data.data.totalElements
             }
         },
         onSearch () {
@@ -154,19 +158,10 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
-.spanflex {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    span {
-        flex: 1;
-        &:first-child {
-            font-size: 16px;
-        }
-        &:last-child {
-            text-align: right;
-        }
+<style scoped lang="scss">
+    .spanflex {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
     }
-}
 </style>
