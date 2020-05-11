@@ -4,57 +4,7 @@
             <div class="page-body-cont">
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                     <el-tab-pane label="品牌授权审核" name="first">
-                        <div class="page-body-cont query-cont">
-                            <div class="query-cont-col">
-                                <div class="query-col-title">商家名称：</div>
-                                <div class="query-col-input">
-                                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="query-cont-col">
-                                <div class="query-col-title">品牌名称：</div>
-                                <div class="query-col-input">
-                                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
-                                    </el-input>
-                                </div>
-                            </div>
-                            <div class="query-cont-col">
-                                <div class="query-col-title">开启时间：</div>
-                                <div class="query-col-input">
-                                    <el-date-picker v-model="queryParams.minApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                                    </el-date-picker>
-                                    <span class="ml10 mr10">-</span>
-                                    <el-date-picker v-model="queryParams.maxApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                                    </el-date-picker>
-                                </div>
-                            </div>
-                            <div class="query-cont-col">
-                                <div class="flex-wrap-title">审核状态：</div>
-                                <div class="flex-wrap-cont">
-                                    <el-select v-model="queryParams.auditStatus" style="width: 100%">
-                                        <el-option label="全部" value=""></el-option>
-                                        <el-option label="待审核" value="0"></el-option>
-                                        <el-option label="审核通过" value="1"></el-option>
-                                        <el-option label="审核不通过" value="2"></el-option>
-                                    </el-select>
-                                </div>
-                            </div>
-                            <div class="query-cont-col">
-                                <div class="query-col-title">
-                                    <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                                    <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="page-body-cont">
-                            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                                <template slot="action" slot-scope="scope">
-                                    <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
-                                    <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
-                                </template>
-                            </basicTable>
-                        </div>
+                        <brandAuthorization />
                     </el-tab-pane>
                     <el-tab-pane label="品牌授权管理" name="second">
                         <div class="page-body-cont query-cont">
@@ -111,86 +61,20 @@
                     </el-tab-pane>
                 </el-tabs>
             </div>
-            <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center :close-on-click-modal="false">
-                <el-form class="base" :inline="true">
-                    <div>
-                        <el-form-item label="品牌名称：">
-                            {{dialogMsg.brandName}}
-                        </el-form-item>
-                    </div>
-                    <div>
-                        <el-form-item label="代理区域：">
-                            <div v-for="(item, index) in dialogMsg.brandAreaPoList" :key="index">
-                                {{item.provinceName}}
-                                {{item.cityName}}
-                                {{item.areaName}}
-                            </div>
-                        </el-form-item>
-                    </div>
-                    <div>
-                        <el-form-item label="代理证书：">
-                            <div class="proxyCert">
-                                <template v-for="(item, index) in dialogMsg.certificatePoList">
-                                    <a :href="item.pictureUrl" target="_blank" :key="index">
-                                        <img :src="item.pictureUrl" alt="">
-                                    </a>
-                                </template>
-                            </div>
-                        </el-form-item>
-                    </div>
-                    <div>
-                        <el-form-item label="审核状态：">
-                            <span v-if="dialogMsg.auditStatus == 0 || dialogMsg.auditStatus == 3">待审核</span>
-                            <span v-if="dialogMsg.auditStatus == 1">审核通过</span>
-                            <span v-if="dialogMsg.auditStatus == 2">审核不通过</span>
-                        </el-form-item>
-                    </div>
-                    <div>
-                        <el-form-item label="审核备注：">
-                            {{dialogMsg.remark}}
-                        </el-form-item>
-                    </div>
-                </el-form>
-                <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest">
-                    <div v-if="dialogParams.type === 'review'">
-                        <h2>审核意见</h2>
-                        <div>
-                            <el-form-item label="审核结果" prop="auditResult">
-                                <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
-                                <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
-                            </el-form-item>
-                        </div>
-                        <div class="remark">
-                            <el-form-item label="备注原因">
-                                <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
-                            </el-form-item>
-                        </div>
-                    </div>
-                    <div class="suggest-btn">
-                        <el-form-item v-if="dialogParams.type === 'review'">
-                            <el-button name="hosjoy-color" @click="createCouponReview">确认</el-button>
-                            <el-button name="white-color" @click="dialogParams.show = false">取消</el-button>
-                        </el-form-item>
-                        <el-form-item v-if="dialogParams.type === 'watch'">
-                            <el-button name="white-color" @click="dialogParams.show = false">关闭</el-button>
-                        </el-form-item>
-                    </div>
-                </el-form>
-            </el-dialog>
         </div>
     </div>
 </template>
 
 <script>
 import { findBrandAreaList, findBrandArea, auditBrandArea } from './api/index'
-// import brandAuthorization from './components/brandAuthorization'
+import brandAuthorization from './components/brandAuthorization'
 import { mapState } from 'vuex'
 import { Message } from 'element-ui'
-// import moment from 'moment'
+
 export default {
     name: 'brandAreaAudit',
     components: {
-        // brandAuthorization
+        brandAuthorization
     },
     data () {
         return {
@@ -347,7 +231,7 @@ export default {
         }
     },
     mounted () {
-        this.onQuery()
+        // this.onQuery()
     }
 }
 </script>
