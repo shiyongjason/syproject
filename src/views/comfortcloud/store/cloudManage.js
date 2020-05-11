@@ -33,7 +33,10 @@ const state = {
     cloudAlarmChart: {},
     cloudSendMessageDetailChart: {},
     cloudUserFeedbackList: [],
-    cloudUserFeedbackPagination: {}
+    cloudUserFeedbackPagination: {},
+    cloudComfortEncyclopediaList: [],
+    cloudComfortEncyclopediaListPagination: {},
+    cloudComfortEncyclopediaDetail: {}
 }
 
 const getters = {
@@ -161,6 +164,18 @@ const mutations = {
     },
     [cloud.CLOUD_USER_FEEDBACK_PAGINATION] (state, payload) {
         state.cloudUserFeedbackPagination = payload
+        state.cloudSendMessageDetailChart = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaList = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaListPagination = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
+        state.cloudComfortEncyclopediaDetail = payload
     }
 }
 
@@ -304,6 +319,21 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async findCloudComfortEncyclopediaList ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaList(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST, data.data.records)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findComfortEncyclopediaDetail ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaDetail(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
     }
 }
 export default {

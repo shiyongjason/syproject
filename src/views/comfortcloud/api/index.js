@@ -209,3 +209,23 @@ export function getCloudSendMessageDetailChart (params) {
 export function getCloudUserFeedback (params) {
     return axios.get(iotUrl + `/uc/user/feedback-page`, { params })
 }
+// 舒适小百科列表 boss端
+export function getComfortEncyclopediaList (params) {
+    return axios.get(iotUrl + `/api/comfy-encyclopedia/boss`, { params })
+}
+// 舒适小百科详情
+export function getComfortEncyclopediaDetail (articleId) {
+    return axios.get(iotUrl + `/api/comfy-encyclopedia/${articleId}`)
+}
+// boss端新增一条舒适百科
+export function createCloudComfortEncyclopedia (params) {
+    return axios.post(iotUrl + `/api/comfy-encyclopedia/boss`, params)
+}
+// boss端编辑一条舒适百科
+export function updateCloudComfortEncyclopedia (params) {
+    return axios.put(iotUrl + `/api/comfy-encyclopedia/boss`, params)
+}
+// boss端删除一条舒适百科
+export function deleteCloudComfortEncyclopedia (params) {
+    return axios.delete(iotUrl + `/api/comfy-encyclopedia/boss`, { data: params })
+}
