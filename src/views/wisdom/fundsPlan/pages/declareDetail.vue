@@ -1,7 +1,8 @@
 <template>
     <div class="page-body declareDetail">
         <div class="page-body-cont">
-            <span>>>{{fundDetail.fundplanMain.planId}}-{{approveRole[approveRoleNode].nextNode}}</span>
+            <span v-if="fundDetail.fundplanMain.applyType === 3">>>{{fundDetail.fundplanMain.planId}}-审批通过</span>
+            <span v-else>>>{{fundDetail.fundplanMain.planId}}-{{approveRole[approveRoleNode].nextNode}}</span>
             <div class="title">
                 <span><i>{{applyMonth[0]}}</i>年<i>{{applyMonth[1]}}</i>月的预计销售及资金用款计划</span>
             </div>
@@ -76,7 +77,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/fundsPlan/planToDeclare')
+            this.$router.push(`/fundsPlan/${this.$route.query.source}`)
         }
     },
     mounted () {
