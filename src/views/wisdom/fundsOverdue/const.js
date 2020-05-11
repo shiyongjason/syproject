@@ -215,21 +215,22 @@ export const branchSummarySheet = function () {
 // 平台公司逾期汇总表
 export const platformSummarySheet = function () {
     return [
-        { prop: 'misCode', label: '公司编码', showOverflowTooltip: true },
-        { prop: 'companyName', label: '公司名称', showOverflowTooltip: true },
-        { prop: 'companyName', label: '分部', showOverflowTooltip: true },
+        { prop: 'misCode', label: '公司编码', showOverflowTooltip: true, fixed: true },
+        { prop: 'loanCompanyName', label: '公司名称', showOverflowTooltip: true, fixed: true },
+        { prop: 'regionName', label: '大区', showOverflowTooltip: true, fixed: true },
+        { prop: 'subsectionName', label: '分部', showOverflowTooltip: true, fixed: true },
         {
             label: '销售',
             children: [
                 {
-                    prop: 'januaryValue',
+                    prop: 'lastYearSales',
                     label: '19年',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'februaryValue',
+                    prop: 'currentSales',
                     label: '20年',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -237,99 +238,106 @@ export const platformSummarySheet = function () {
                 }
             ]
         },
-        { prop: 'companyName', label: '欠款笔数', showOverflowTooltip: true },
-        { prop: 'companyName', label: '剩余笔数', showOverflowTooltip: true },
+        { prop: 'arrearsCount', label: '欠款笔数', showOverflowTooltip: true },
+        { prop: 'capitalAmount', label: '剩余笔数', showOverflowTooltip: true },
         {
             label: '2020年度还款计划',
             children: [
                 {
-                    prop: 'januaryValue',
+                    prop: 'januaryRepayment',
                     label: '1月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'februaryValue',
+                    prop: 'februaryRepayment',
                     label: '2月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'marchValue',
+                    prop: 'marchRepayment',
                     label: '3月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'aprilValue',
+                    prop: 'aprilRepayment',
                     label: '4月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'mayValue',
+                    prop: 'mayRepayment',
                     label: '5月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'juneValue',
+                    prop: 'juneRepayment',
                     label: '6月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'julyValue',
+                    prop: 'julyRepayment',
                     label: '7月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'augustValue',
+                    prop: 'augustRepayment',
                     label: '8月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'septemberValue',
+                    prop: 'septemberRepayment',
                     label: '9月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'octoberValue',
+                    prop: 'octoberRepayment',
                     label: '10月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'novemberValue',
+                    prop: 'novemberRepayment',
                     label: '11月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'decemberValue',
+                    prop: 'decemberRepayment',
                     label: '12月',
+                    width: '100',
+                    displayAs: 'fundMoney',
+                    showOverflowTooltip: true
+                },
+                {
+                    prop: 'total',
+                    label: '合计',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 }
             ]
         },
-        { prop: 'companyName', label: '计划还款占比', showOverflowTooltip: true },
-        { prop: 'companyName', label: '无计划金额', showOverflowTooltip: true }
+        { prop: 'planProportion', label: '计划还款占比', showOverflowTooltip: true },
+        { prop: 'noRepaymentPlanAmount', label: '无计划金额', showOverflowTooltip: true }
     ]
 }
 // 逾期增量明细表
@@ -446,4 +454,20 @@ export const overdueDetailTable = function () {
         { prop: 'companyName', label: '计划占比', showOverflowTooltip: true },
         { prop: 'companyName', label: '无还款计划金额', showOverflowTooltip: true }
     ]
+}
+// 还款计划
+export const annualRepaymentPlan = {
+    januaryRepayment: '0',
+    februaryRepayment: '0',
+    marchRepayment: '0',
+    aprilRepayment: '0',
+    mayRepayment: '0',
+    juneRepayment: '0',
+    julyRepayment: '0',
+    augustRepayment: '0',
+    septemberRepayment: '0',
+    octoberRepayment: '0',
+    novemberRepayment: '0',
+    decemberRepayment: '0',
+    total: '0'
 }

@@ -40,13 +40,13 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick(1)">
+            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
                 <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
                 <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
             </el-tabs>
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -78,7 +78,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet } from './const'
+import { platformSummarySheet, annualRepaymentPlan } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getCompanyOverdueList, getCompanyOverdueListTotal } from './api/index'
@@ -129,15 +129,13 @@ export default {
                 subsectionCode: '',
                 subsectionOldCode: '',
                 misCode: '',
-                year: moment().format('YYYY'),
-                totalAreaName: '',
-                pageNumber: 1,
-                pageSize: 10
+                year: moment().format('YYYY')
             },
             searchParams: {},
             page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
+                total: 0,
+                pageSize: 10,
+                pageNumber: 1
             },
             total: {},
             tableData: [],
@@ -224,27 +222,50 @@ export default {
         onExport () {
             // exportCommitment(this.queryParams)
         },
+        handleClick () {
+            this.tableData = []
+            this.onReset()
+        },
         onSearch () {
-            this.searchParams = { ...this.queryParams }
+            this.searchParams = {
+                ...this.queryParams,
+                ...this.page
+            }
             this.onQuery()
         },
         async onQuery () {
-            console.log(this.queryParams)
-            const promiseArr = [getCompanyOverdueList(this.queryParams), getCompanyOverdueListTotal(this.queryParams)]
+            console.log(this.searchParams)
+            const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 console.log(res)
-                // res[1].data.companyName = '合计'
-                // res[0].data.records.unshift(res[1].data)
-                // return res[0].data
+                res[1].data.misCode = '合计'
+                res[0].data.records.unshift(res[1].data)
+                return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            // this.tableData = data.records
-            // if (data.records.length > 1) {
-            //     this.column[2].label = `${data.records[0].year}年度销售承诺值`
-            // } else {
-            //     this.column[2].label = `${this.queryParams.year}年度销售承诺值`
-            // }
+            this.tableData = this.handleData(data.records)
+            this.page = {
+                total: data.total,
+                pageSize: data.size,
+                pageNumber: data.current
+            }
+        },
+        handleData (arr = []) {
+            return arr.map(i => {
+                if (!i.annualRepaymentPlan) {
+                    i = {
+                        ...i,
+                        ...annualRepaymentPlan
+                    }
+                } else {
+                    i = {
+                        ...i,
+                        ...i.annualRepaymentPlan
+                    }
+                }
+                return i
+            })
         },
         getList (val) {
             this.searchParams = {
