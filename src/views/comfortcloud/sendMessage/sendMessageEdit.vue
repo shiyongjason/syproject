@@ -202,10 +202,12 @@ export default {
                     try {
                         if (this.$route.query.id) {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
+                            this.sendMessage.operateAccount = this.userInfo.phoneNumber
                             await updateCloudSendMessage(this.sendMessage)
                             this.$message.success('修改成功')
                         } else {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
+                            this.sendMessage.operateAccount = this.userInfo.phoneNumber
                             await createCloudSendMessage(this.sendMessage)
                             this.$message.success('保存成功')
                         }

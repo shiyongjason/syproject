@@ -88,7 +88,7 @@ export default {
                 pageNumber: 1
             },
             smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, { key: 'sensor', name: '传感器' }, { key: 'smartAppliance', name: '智能家电' },
-                { key: 'switchPanel', name: '开关面板' }],
+                { key: 'switchPanel', name: '开关面板' }, { key: 'lvs', name: '腾亚智能新风机' }],
             smartData: {}
         }
     },
