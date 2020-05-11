@@ -28,7 +28,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -40,9 +40,9 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tabs v-model="tableType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane label="存量汇总表" name="0"></el-tab-pane>
-                <el-tab-pane label="增量汇总表" name="1"></el-tab-pane>
+            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick(1)">
+                <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
+                <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
             </el-tabs>
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
@@ -57,8 +57,8 @@
                         承诺值导入模板导出
                     </a>
                 </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='year'>
+                    <el-date-picker v-model="uploadData.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -89,12 +89,11 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            tableType: '0',
             uploadData: {
-                commitmentYear: ''
+                year: ''
             },
             rules: {
-                commitmentYear: [
+                year: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -124,12 +123,13 @@ export default {
                 }
             },
             queryParams: {
+                state: '1',
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
                 subsectionOldCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
+                year: moment().format('YYYY'),
                 totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
@@ -229,6 +229,7 @@ export default {
             this.onQuery()
         },
         async onQuery () {
+            console.log(this.queryParams)
             const promiseArr = [getCompanyOverdueList(this.queryParams), getCompanyOverdueListTotal(this.queryParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 console.log(res)
@@ -240,9 +241,9 @@ export default {
             })
             // this.tableData = data.records
             // if (data.records.length > 1) {
-            //     this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
+            //     this.column[2].label = `${data.records[0].year}年度销售承诺值`
             // } else {
-            //     this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
+            //     this.column[2].label = `${this.queryParams.year}年度销售承诺值`
             // }
         },
         getList (val) {
@@ -262,7 +263,7 @@ export default {
             this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'year', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -289,7 +290,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
+            if (!this.uploadData.year) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
