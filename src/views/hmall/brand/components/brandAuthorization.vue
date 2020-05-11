@@ -46,84 +46,95 @@
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="action" slot-scope="scope">
-                    <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDialog(scope.data.row, 'review')">审核</el-button>
-                    <el-button v-else class="orangeBtn" @click="showDialog(scope.data.row, 'watch')">查看</el-button>
+                    <el-button v-if="scope.data.row.auditStatus == 0 || scope.data.row.auditStatus == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
+                    <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center :close-on-click-modal="false">
-            <el-form class="base" :inline="true">
-                <div>
-                    <el-form-item label="品牌名称：">
-                        {{dialogMsg.brandName}}
-                    </el-form-item>
-                </div>
-                <div>
-                    <el-form-item label="代理区域：">
-                        <div v-for="(item, index) in dialogMsg.brandAreaPoList" :key="index">
-                            {{item.provinceName}}
-                            {{item.cityName}}
-                            {{item.areaName}}
-                        </div>
-                    </el-form-item>
-                </div>
-                <div>
-                    <el-form-item label="代理证书：">
-                        <div class="proxyCert">
-                            <template v-for="(item, index) in dialogMsg.certificatePoList">
-                                <a :href="item.pictureUrl" target="_blank" :key="index">
-                                    <img :src="item.pictureUrl" alt="">
-                                </a>
-                            </template>
-                        </div>
-                    </el-form-item>
-                </div>
-                <div>
-                    <el-form-item label="审核状态：">
-                        <span v-if="dialogMsg.auditStatus == 0 || dialogMsg.auditStatus == 3">待审核</span>
-                        <span v-if="dialogMsg.auditStatus == 1">审核通过</span>
-                        <span v-if="dialogMsg.auditStatus == 2">审核不通过</span>
-                    </el-form-item>
-                </div>
-                <div>
-                    <el-form-item label="审核备注：">
-                        {{dialogMsg.remark}}
-                    </el-form-item>
-                </div>
-            </el-form>
-            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest">
-                <div v-if="dialogParams.type === 'review'">
-                    <h2>审核意见</h2>
-                    <div>
-                        <el-form-item label="审核结果" prop="auditResult">
-                            <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
-                            <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
-                        </el-form-item>
+        <el-drawer
+            title="我是标题"
+            :visible.sync="drawerShow"
+            direction="rtl"
+            size='650px'>
+            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="120px">
+                <el-form-item label="供应商：" class="mb5">
+                    {{drawerMsg.title}}
+                </el-form-item>
+                <el-form-item label="品牌名称：" class="mb5">
+                    {{drawerMsg.title}}
+                </el-form-item>
+                <el-form-item label="到期日：" class="mb5">
+                    {{drawerMsg.title}}
+                </el-form-item>
+                <el-form-item label="代理证书：" class="mb5">
+                    <div class="proxyCert">
+                        <template v-for="(item, index) in drawerMsg.certificatePoList">
+                            <a :href="item.pictureUrl" target="_blank" :key="index">
+                                <img :src="item.pictureUrl" alt="">
+                            </a>
+                        </template>
                     </div>
-                    <div class="remark">
-                        <el-form-item label="备注原因">
-                            <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
-                        </el-form-item>
+                </el-form-item>
+                <el-form-item label="关联类目：" class="mb5">
+                </el-form-item>
+                <div class="category-box">
+                    <div class="category-item">
+                        <div class="category-item-title">一级类目</div>
+                        <ul class="category-item-ul">
+                            <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categoryFirst" :key="item.key" @click="onFirst(item, index)" class="category-item-li">
+                                <span class="category-item-span">{{item.value}}</span>
+                                <i class="iconfont icon-hosjoy_right"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-item-title">二级类目</div>
+                        <ul class="category-item-ul">
+                            <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categorySecond" :key="item.key" @click="onSecond(item, index)" class="category-item-li">
+                                <span class="category-item-span">{{item.value}}</span>
+                                <i class="iconfont icon-hosjoy_right"></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-item-title">三级类目</div>
+                        <ul class="category-item-ul">
+                            <li :class="item.selected ? 'selected' : ''" v-for="item in categoryThird" :key="item.key" class="category-item-li">
+                                <span class="category-item-span">{{item.value}}</span>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="suggest-btn">
-                    <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button name="hosjoy-color" @click="createCouponReview">确认</el-button>
-                        <el-button name="white-color" @click="dialogParams.show = false">取消</el-button>
+                <p class="audit-opinion">审核意见</p>
+                <!-- <template v-if="drawerMsg.type === 'review'"> -->
+                    <el-form-item label="审核结果：" prop="auditResult">
+                        <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
+                        <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
                     </el-form-item>
-                    <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button name="white-color" @click="dialogParams.show = false">关闭</el-button>
+                    <el-form-item label="备注原因：">
+                        <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                     </el-form-item>
-                </div>
+                <!-- </template> -->
+                <!-- <template v-else> -->
+                    <el-form-item label="审核结果：" class="mb5">
+                        {{drawerMsg.brandName}}
+                    </el-form-item>
+                    <el-form-item label="备注原因：" class="mb5">
+                        {{drawerMsg.remark}}
+                    </el-form-item>
+                <!-- </template> -->
             </el-form>
-        </el-dialog>
+            <div class="drawer-bottom">
+                <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
+                <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">提交</el-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 
 <script>
-import { findBrandArea, auditBrandArea } from '../api/index'
+import { auditBrandArea } from '../api/index'
 import { mapState, mapActions } from 'vuex'
-import { Message } from 'element-ui'
 export default {
     name: 'brandAreaAudit',
     data () {
@@ -148,13 +159,28 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            dialogParams: {
-                show: false,
+            drawerShow: false,
+            drawerMsg: {
                 title: '',
                 type: ''
             },
-            dialogMsg: {},
-            suggest: {},
+            categoryFirst: [
+                {
+                    key: '1',
+                    value: '类目一',
+                    selected: false
+                },
+                {
+                    key: '2',
+                    value: '类目二'
+                }
+            ],
+            categorySecond: [],
+            categoryThird: [],
+            suggest: {
+                auditResult: '',
+                auditRemark: ''
+            },
             rules: {
                 auditResult: [
                     { required: true, message: '审核结果不能为空！' }
@@ -167,7 +193,8 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapState('brand', {
-            userInfo: state => state.userInfo
+            brandAuthorizationInfo: 'brandAuthorizationInfo',
+            brandAreaInfo: 'brandAreaInfo'
         }),
         pickerOptionsStart () {
             return {
@@ -192,11 +219,9 @@ export default {
     },
     methods: {
         ...mapActions('brand', [
-            'findBrandAreaList'
+            'findBrandAreaList',
+            'findBrandArea'
         ]),
-        handleClick (tab) {
-            console.log(tab)
-        },
         onQuery () {
             const { ...params } = { ...this.queryParams }
             this.searchParams = params
@@ -204,49 +229,37 @@ export default {
         },
         onReset () {
             this.queryParams = this.initParams
-            this.$set(this.queryParams, 'merchantName', '')
-            this.$set(this.queryParams, 'brandName', '')
-            this.$set(this.queryParams, 'auditStatus', '')
-            this.$set(this.queryParams, 'minApproveTime', '')
-            this.$set(this.queryParams, 'maxApproveTime', '')
-            this.$set(this.paginationData, 'pageNumber', 1)
-            this.$set(this.paginationData, 'pageSize', 10)
+            this.paginationData = {
+                pageNumber: 1,
+                pageSize: 10
+            }
             this.onQuery()
         },
         async search () {
-            console.log(111)
             const searchParams = {
                 ...this.searchParams,
                 ...this.paginationData
             }
-            if (!searchParams.minApproveTime) searchParams.minApproveTime = null
-            if (!searchParams.maxApproveTime) searchParams.maxApproveTime = null
-            this.findBrandAreaList({ params: searchParams })
-            // const { data } = await this.findBrandAreaList({ params: searchParams })
-            // data.records.map((v) => {
-            //     if (v.auditStatus == 0 || v.auditStatus == 3) v.auditStatusTransform = '待审核'
-            //     if (v.auditStatus == 1) v.auditStatusTransform = '审核通过'
-            //     if (v.auditStatus == 2) v.auditStatusTransform = '审核不通过'
-            // })
-            // this.tableData = data.records
-            // this.paginationData = {
-            //     pageNumber: data.current,
-            //     pageSize: data.size,
-            //     total: data.total
-            // }
+            await this.findBrandAreaList({ params: searchParams })
+            this.tableData = this.brandAuthorizationInfo.records
+            this.paginationData = {
+                pageNumber: this.brandAuthorizationInfo.current,
+                pageSize: this.brandAuthorizationInfo.size,
+                total: this.brandAuthorizationInfo.total
+            }
         },
-        async showDialog (scope, type) {
-            const { data } = await findBrandArea({ id: scope.id })
-            this.dialogMsg = data
+        async showDrawer (scope, type) {
+            await this.findBrandArea({ id: scope.id })
+            this.drawerMsg = this.brandAreaInfo
             this.suggest = {}
             if (type === 'review') {
-                this.dialogParams.title = '品牌区域审核'
-                this.dialogParams.type = type
+                this.drawerMsg.title = '品牌区域审核'
+                this.drawerMsg.type = type
             } else if (type === 'watch') {
-                this.dialogParams.title = '查看品牌区域'
-                this.dialogParams.type = type
+                this.drawerMsg.title = '查看品牌区域'
+                this.drawerMsg.type = type
             }
-            this.dialogParams.show = true
+            this.drawerShow = true
             this.$nextTick(() => {
                 this.$refs['suggest'].clearValidate()
             })
@@ -263,24 +276,61 @@ export default {
         createCouponReview () {
             this.auditBrandArea()
         },
+        handleClose () {
+            this.drawerShow = false
+        },
+        onFirst (item, index) {
+            this.categoryFirst.map(item => {
+                item.selected = false
+            })
+            this.categoryFirst[index].selected = true
+            this.categorySecond = []
+            this.categoryThird = []
+            for (let i = 0; i < 3; i++) {
+                this.categorySecond.push({
+                    key: `${index + 1}${i + 1}`,
+                    value: `${index + 1}的子类目${i + 1}`,
+                    selected: false
+                })
+            }
+        },
+        onSecond (item, index) {
+            this.categorySecond.map(item => {
+                item.selected = false
+            })
+            this.categorySecond[index].selected = true
+            this.categoryThird = []
+            for (let i = 0; i < 3; i++) {
+                this.categoryThird.push({
+                    key: `${index + 1}${i + 1}`,
+                    value: `${index + 1}的子子类目${i + 1}`,
+                    selected: false
+                })
+            }
+        },
+        onConfirm () {
+            this.auditBrandArea()
+        },
+        onCancel () {
+            this.drawerShow = false
+            // this.$refs['suggest'].resetForm()
+        },
         async auditBrandArea () {
             this.$refs['suggest'].validate(async (valid) => {
                 if (valid) {
                     const form = {
                         updateBy: this.userInfo.employeeName,
-                        // updateTime: moment().format('YYYY-MM-DD HH:mm:ss'),
                         auditStatus: +this.suggest.auditResult,
-                        // brandId: this.dialogMsg.brandId,
-                        id: this.dialogMsg.id,
+                        id: this.drawerMsg.id,
                         remark: this.suggest.auditRemark
                     }
-                    if (!this.dialogMsg.brandAreaPoList) this.dialogMsg.brandAreaPoList = []
-                    if (this.dialogMsg.brandAreaPoList.length === 0) {
-                        Message({ message: '代理区域不能为空', type: 'error' })
+                    if (!this.drawerMsg.brandAreaPoList) this.drawerMsg.brandAreaPoList = []
+                    if (this.drawerMsg.brandAreaPoList.length === 0) {
+                        this.$message({ message: '代理区域不能为空', type: 'error' })
                         return
                     }
                     await auditBrandArea(form)
-                    this.dialogParams.show = false
+                    this.drawer.show = false
                     this.onQuery()
                 } else {
                     return false
@@ -300,11 +350,84 @@ export default {
     display: flex;
     img {
         display: block;
-        width: 50px;
-        height: 50px;
+        width: 100px;
+        height: 100px;
     }
 }
 .remark {
     padding-top: 20px;
+}
+.mb5 {
+    margin-bottom: 5px;
+}
+/deep/ .el-drawer__header {
+    padding: 20px 24px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e5ea;
+}
+.category-box {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 14px;
+    .category-item {
+        width: 25%;
+        .category-item-title {
+            margin-bottom: 5px;
+        }
+        .category-item-ul {
+            padding: 8px 0;
+            height: 180px;
+            overflow: overlay;
+            border: 1px solid rgba(229, 229, 234, 1);
+        }
+        .category-item-li {
+            padding: 0 20px;
+            height: 36px;
+            line-height: 36px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .category-item-span {
+                float: left;
+                width: 90%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .category-item-i {
+                float: right;
+                font-size: 9px;
+            }
+            &:hover {
+                color: #000;
+                background: rgba(242, 242, 244, 1);
+            }
+            &.selected {
+                color: #000;
+                background: rgba(242, 242, 244, 1);
+            }
+        }
+        .icon-hosjoy_right {
+            width: 7px;
+            height: 7px;
+            border-top: 2px solid rgb(66, 65, 65);
+            border-right: 2px solid rgb(66, 65, 65);
+            transform: rotate(45deg);
+        }
+    }
+}
+.audit-opinion {
+    margin-top: 10px;
+}
+.drawer-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 12px 24px;
+    border-top: 1px solid #E5E5EA;
+    text-align: right;
 }
 </style>
