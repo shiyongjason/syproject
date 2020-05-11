@@ -3,14 +3,14 @@
         <div class="page-body-cont">
             <el-form ref="smartPlayForm" :model="smartPlayForm" :rules="rules" label-width="110px">
                 <div class="page-body-title">
-                    <h3>智能玩法编辑</h3>
+                    <h3>舒适小百科编辑</h3>
                 </div>
-                <el-form-item label="玩法标题：" prop="title">
-                    <el-input v-model.trim="smartPlayForm.title" show-word-limit placeholder="输入玩法标题" maxlength='50' class="newTitle"></el-input>
+                <el-form-item label="文章标题：" prop="title">
+                    <el-input v-model.trim="smartPlayForm.title" show-word-limit placeholder="输入文章标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="列表图片：" prop="iconUrl" ref="iconUrl">
+                <el-form-item label="列表图片：" prop="picture" ref="picture">
                     <!--logoUrl-->
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="smartPlayForm.iconUrl" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="smartPlayForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
                     <div class="upload-tips">
                         <!-- 尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB -->
                         建议尺寸：993*993或1:1比例图片，1M以内，支持jpeg,png和jpg格式
@@ -21,11 +21,11 @@
                     </el-date-picker>
                 </el-form-item>
                 <div class="page-body-title">
-                    <h3>玩法内容</h3>
+                    <h3>文章内容</h3>
                 </div>
-                <el-form-item label="详情：" prop="content">
+                <el-form-item label="详情：" prop="body">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor @blur="$refs['smartPlayForm'].validateField('content')" tabindex="0" hidefocus="true" ref="editors" v-model="smartPlayForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor @blur="$refs['smartPlayForm'].validateField('body')" tabindex="0" hidefocus="true" ref="editors" v-model="smartPlayForm.body" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveSmartPlay" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
@@ -47,16 +47,16 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { createCloudSmartPlay, updateCloudSmartPlay } from '../api'
+import { createCloudComfortEncyclopedia, updateCloudComfortEncyclopedia } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'smartPlayEdit',
     data () {
         return {
             smartPlayForm: {
-                content: '',
+                body: '',
                 effectiveTime: '',
-                iconUrl: '',
+                picture: '',
                 title: ''
             },
             menus: [
@@ -84,19 +84,19 @@ export default {
             videoimageUrl: '',
             rules: {
                 title: [
-                    { required: true, message: '请输入玩法标题', trigger: 'blur' }
+                    { required: true, message: '请输入文章标题', trigger: 'blur' }
                 ],
-                iconUrl: [
+                picture: [
                     { required: true, message: '请选择列表图片' }
                 ],
                 effectiveTime: [
                     { required: true, message: '请选择生效时间', trigger: 'blur' }
                 ],
-                content: [
+                body: [
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入玩法'))
+                                return callback(new Error('请输入舒适小百科'))
                             }
                             return callback()
                         },
@@ -109,10 +109,8 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
-        }),
-        ...mapGetters({
-            cloudSmartPlayPostDetail: 'cloudSmartPlayPostDetail'
+            userInfo: state => state.userInfo,
+            cloudComfortEncyclopediaDetail: state => state.cloudmanage.cloudComfortEncyclopediaDetail
         }),
         videoUpload () {
             return {
@@ -155,9 +153,9 @@ export default {
         }
     },
     watch: {
-        'smartPlayForm.iconUrl' (val) {
+        'smartPlayForm.picture' (val) {
             this.$nextTick(() => {
-                if (val) this.$refs['iconUrl'].clearValidate()
+                if (val) this.$refs['picture'].clearValidate()
             })
         }
     },
@@ -170,11 +168,11 @@ export default {
         ...mapActions(
             {
                 setNewTags: 'setNewTags',
-                findCloudSmartPlayPostDetail: 'findCloudSmartPlayPostDetail'
+                findComfortEncyclopediaDetail: 'findComfortEncyclopediaDetail'
             }
         ),
         readUrl (val) {
-            this.smartPlayForm.iconUrl = val.imageUrl
+            this.smartPlayForm.picture = val.imageUrl
         },
         videoUrl (val) {
             this.$message.success('视频上传成功')
@@ -196,12 +194,12 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/smartPlay')
+            this.$router.push('/comfortCloud/comfortEncyclopedia')
         },
         async getActivityDetail (id) {
-            await this.findCloudSmartPlayPostDetail(id)
-            this.cloudSmartPlayPostDetail.effectiveTime = this.$root.$options.filters.formatDate(this.cloudSmartPlayPostDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
-            this.smartPlayForm = { ...this.cloudSmartPlayPostDetail }
+            await this.findComfortEncyclopediaDetail(id)
+            this.cloudComfortEncyclopediaDetail.effectiveTime = this.$root.$options.filters.formatDate(this.cloudComfortEncyclopediaDetail.effectiveTime, 'YYYY-MM-DD HH:mm:ss')
+            this.smartPlayForm = { ...this.cloudComfortEncyclopediaDetail }
         },
         onSaveSmartPlay () {
             this.loading = true
@@ -209,17 +207,17 @@ export default {
                 if (valid) {
                     try {
                         if (this.$route.query.id) {
-                            this.smartPlayForm.operateUserName = this.userInfo.employeeName
-                            await updateCloudSmartPlay(this.smartPlayForm)
-                            this.$message.success('活动修改成功')
+                            this.smartPlayForm.operator = this.userInfo.employeeName
+                            await updateCloudComfortEncyclopedia(this.smartPlayForm)
+                            this.$message.success('文章修改成功')
                         } else {
-                            this.smartPlayForm.operateUserName = this.userInfo.employeeName
-                            await createCloudSmartPlay(this.smartPlayForm)
-                            this.$message.success('活动保存成功')
+                            this.smartPlayForm.operator = this.userInfo.employeeName
+                            await createCloudComfortEncyclopedia(this.smartPlayForm)
+                            this.$message.success('文章保存成功')
                         }
-                        this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/smartPlay')
                         this.loading = false
+                        this.setNewTags((this.$route.fullPath).split('?')[0])
+                        this.$router.push('/comfortCloud/comfortEncyclopedia')
                     } catch (error) {
                         this.loading = false
                     }

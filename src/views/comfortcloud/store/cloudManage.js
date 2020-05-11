@@ -31,7 +31,10 @@ const state = {
     comfortableSceneListPagination: {},
     getCloudHomeComfortStatisticsList: [],
     cloudAlarmChart: {},
-    cloudSendMessageDetailChart: {}
+    cloudSendMessageDetailChart: {},
+    cloudComfortEncyclopediaList: [],
+    cloudComfortEncyclopediaListPagination: {},
+    cloudComfortEncyclopediaDetail: {}
 }
 
 const getters = {
@@ -150,8 +153,18 @@ const mutations = {
         state.cloudAlarmChart = payload
     },
     [cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART] (state, payload) {
-        console.log(payload)
         state.cloudSendMessageDetailChart = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaList = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaListPagination = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
+        state.cloudComfortEncyclopediaDetail = payload
     }
 }
 
@@ -270,7 +283,6 @@ const actions = {
     },
     async findCloudHomeComfortStatisticsList ({ commit }, params) {
         const { data } = await Api.getCloudHomeComfortStatisticsList(params)
-        console.log(data)
         commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
         return data.data.totalRunHours
     },
@@ -280,8 +292,22 @@ const actions = {
     },
     async findCloudSendMessageDetailChart ({ commit }, params) {
         const { data } = await Api.getCloudSendMessageDetailChart(params)
-        console.log(data)
         commit(cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART, data.data)
+    },
+    async findCloudComfortEncyclopediaList ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaList(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST, data.data.records)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findComfortEncyclopediaDetail ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaDetail(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
     }
 }
 export default {

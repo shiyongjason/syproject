@@ -183,7 +183,7 @@ export default {
             meta: {
                 title: '文章编辑',
                 tagName: '文章编辑',
-                parentName: '智能玩法',
+                parentName: '舒适小百科',
                 isMenu: false,
                 icon: ''
             },

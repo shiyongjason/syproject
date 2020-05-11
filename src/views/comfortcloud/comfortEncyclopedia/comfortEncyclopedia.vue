@@ -1,11 +1,11 @@
 <template>
     <div class="tags-wrapper page-body">
         <div class="page-body-cont query-cont spanflex">
-            <span>智能玩法</span>
+            <span>舒适小百科</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">玩法标题：</div>
+                <div class="query-col-title">输入百科文章标题：</div>
                 <div class="query-col-input">
                                         <el-input type="text"
                                                   v-model="queryParams.title" maxlength="20" placeholder="输入玩法标题"></el-input>
@@ -16,14 +16,14 @@
                     <el-button type="primary" class="ml20" @click="onQuery(queryParams)">查询</el-button>
                 </div>
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="gotoCreatePlay">新建玩法</el-button>
+                    <el-button type="primary" class="ml20" @click="gotoCreatePlay">新建文章</el-button>
                 </div>
             </div>
         </div>
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudSmartPlayList" :pagination="cloudSmartPlayPagination" @onCurrentChange='onCurrentChange'
+            <basicTable :tableLabel="tableLabel" :tableData="cloudComfortEncyclopediaList" :pagination="cloudComfortEncyclopediaListPagination" @onCurrentChange='onCurrentChange'
                         isShowIndex @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
                 <template slot="title" slot-scope="scope">
                     <p @click="onShowHome(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
@@ -45,7 +45,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { iotUrl } from '@/api/config'
 import H5Preview from '../../../components/h5Preview/index'
-import { deleteCloudSmartPlay } from '../api/index'
+import { deleteCloudComfortEncyclopedia } from '../api/index'
 export default {
     name: 'smartPlay',
     components: {
@@ -64,7 +64,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '玩法标题', prop: 'title' },
+                { label: '文章标题', prop: 'title' },
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '生效时间', prop: 'effectiveTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' }
@@ -74,17 +74,15 @@ export default {
         }
     },
     computed: {
-        ...mapGetters({
-            cloudSmartPlayList: 'cloudSmartPlayList',
-            cloudSmartPlayPagination: 'cloudSmartPlayPagination'
-        }),
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            cloudComfortEncyclopediaList: state => state.cloudmanage.cloudComfortEncyclopediaList,
+            cloudComfortEncyclopediaListPagination: state => state.cloudmanage.cloudComfortEncyclopediaListPagination
         })
     },
     methods: {
         ...mapActions({
-            onQuery: 'findCloudSmartPlayList'
+            onQuery: 'findCloudComfortEncyclopediaList'
         }),
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -96,12 +94,12 @@ export default {
         },
         gotoCreatePlay () {
             this.$router.push({
-                path: '/comfortCloud/smartPlayEdit'
+                path: '/comfortCloud/comfortEncyclopediaEdit'
             })
         },
         goEdit (id) {
             this.$router.push({
-                path: '/comfortCloud/smartPlayEdit',
+                path: '/comfortCloud/comfortEncyclopediaEdit',
                 query: {
                     id: id
                 }
@@ -124,7 +122,7 @@ export default {
                 type: 'warning'
             }).then(async () => {
                 try {
-                    await deleteCloudSmartPlay(params)
+                    await deleteCloudComfortEncyclopedia(params)
                     this.$message.success('删除成功')
                     this.onQuery(this.queryParams)
                 } catch (e) {
@@ -133,7 +131,7 @@ export default {
             })
         },
         onShowHome (val) {
-            this.H5Preview = iotUrl + '/iot/smartPlayDetail/?articleId=' + val.id
+            this.H5Preview = iotUrl + '/iot/articledetail/?articleId=' + val.id
         }
     },
     mounted () {
