@@ -13,7 +13,7 @@
                     <div class="pdfimg"  v-if="(item.fileUrl).indexOf('.pdf') != -1">
                         <img :src="pdfbase">
                     </div>
-                    <el-image v-else :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
+                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
                 </div>
             </template>
         </template>
