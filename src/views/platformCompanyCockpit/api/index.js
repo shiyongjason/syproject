@@ -5,10 +5,6 @@ import { ccpBaseUrl, ossUrl, interfaceUrl } from '@/api/config'
 export const getVerifica = (params) => axios.get('/uaa/api/verification-code', params)
 // 修改密码
 export const editPassword = (params) => axios.post('/uaa/api/account/change-password', params)
-// 省市区
-export const provinces = (params) => {
-    return axios.post(ossUrl + 'api/http/3041', params)
-}
 // 省
 export const getProvinces = () => {
     return axios.get(ccpBaseUrl + 'common/region/provinces/nesting')
