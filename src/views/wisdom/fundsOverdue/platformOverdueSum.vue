@@ -35,7 +35,12 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: queryParams.state}'>
+                        <el-button type="primary" class='ml20' :loading='loading'>
+                            导入表格
+                        </el-button>
+                    </el-upload>
+                    <!-- <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button> -->
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -51,7 +56,7 @@
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+        <!-- <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
                     <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
@@ -71,7 +76,7 @@
                 </el-upload>
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
             </div>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
@@ -82,7 +87,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { platformSummarySheet, annualRepaymentPlan, total } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCompanyOverdueList, getCompanyOverdueListTotal } from './api/index'
+import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -220,7 +225,7 @@ export default {
             }
         },
         onExport () {
-            // exportCommitment(this.queryParams)
+            exportCompanyOverdueExcel(this.searchParams)
         },
         handleClick () {
             this.tableData = []
@@ -312,14 +317,6 @@ export default {
             this.loading = false
         },
         handleUpload (file) {
-            this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.year) {
-                this.$message({
-                    message: '请先选择导入年份！',
-                    type: 'warning'
-                })
-                return false
-            }
             if (file.size / (1024 * 1024) > 100) {
                 this.$message({
                     message: '附件要保持100M以内',
