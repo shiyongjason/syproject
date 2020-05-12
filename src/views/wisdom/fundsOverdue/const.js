@@ -471,3 +471,17 @@ export const annualRepaymentPlan = {
     decemberRepayment: '0',
     total: '0'
 }
+// 如果为空后台返回为null，需要多一层判断（后台规范！！！！）
+export const total = {
+    annualRepaymentPlan: null,
+    arrearsCount: null,
+    capitalAmount: null,
+    currentSales: null,
+    lastYearSales: null,
+    loanCompanyName: null,
+    misCode: null,
+    noRepaymentPlanAmount: null,
+    planProportion: null,
+    regionName: null,
+    subsectionName: null
+}

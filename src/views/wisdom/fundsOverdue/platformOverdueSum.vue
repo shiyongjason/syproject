@@ -14,7 +14,8 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
+                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
@@ -78,7 +79,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan } from './const'
+import { platformSummarySheet, annualRepaymentPlan, total } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getCompanyOverdueList, getCompanyOverdueListTotal } from './api/index'
@@ -128,7 +129,7 @@ export default {
                 subRegionCode: '',
                 subsectionCode: '',
                 subsectionOldCode: '',
-                misCode: '',
+                companyName: '',
                 year: moment().format('YYYY')
             },
             searchParams: {},
@@ -188,7 +189,6 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
@@ -216,7 +216,7 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
         },
         onExport () {
@@ -238,6 +238,9 @@ export default {
             const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 console.log(res)
+                if (!res[1].data) {
+                    res[1].data = total
+                }
                 res[1].data.misCode = '合计'
                 res[0].data.records.unshift(res[1].data)
                 return res[0].data
@@ -281,9 +284,8 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'misCode', '')
+            this.$set(this.queryParams, 'companyName', '')
             this.$set(this.queryParams, 'year', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
