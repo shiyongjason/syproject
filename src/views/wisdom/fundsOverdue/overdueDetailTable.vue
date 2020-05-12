@@ -60,7 +60,11 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                        <el-button type="primary" class='ml20' :loading='loading'>
+                            导入表格
+                        </el-button>
+                    </el-upload>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -72,27 +76,6 @@
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
-            <el-form :model="uploadData" :rules="rules" ref="form">
-                <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
-                    </a>
-                </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        导入表格
-                    </el-button>
-                </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -103,7 +86,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal } from './api/index'
+import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -149,7 +132,6 @@ export default {
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
                 misCode: '',
                 payStartTime: '',
                 payEndTime: '',
@@ -157,8 +139,8 @@ export default {
                 overdueEndTime: '',
                 actualPayStartTime: '',
                 actualPayEndTime
-                
-                : ''
+
+                    : ''
             },
             page: {
                 total: 0,
@@ -221,10 +203,11 @@ export default {
                 this.queryParams.misCode = ''
                 this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
             }
+            // else if (dis === 'Q') {
+            //     this.queryParams.misCode = ''
+            //     this.selectAuth.platformObj = { ...obj }
+            // }
         },
         async backPlat (val, dis) {
             // console.log(val, dis)
@@ -236,7 +219,6 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
@@ -249,26 +231,26 @@ export default {
                 }
                 !val.value.crmDeptCode && this.linkage(dis)
             } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
-                    }
-                    this.findPlatformslist(params)
-                }
-                !val.value.selectCode && this.linkage(dis)
+                // this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
+                // if (val.value.selectCode) {
+                //     this.findPlatformslist({ subregionCode: val.value.selectCode })
+                // } else {
+                //     let params = null
+                //     if (this.queryParams.subsectionOldCode) {
+                //         params = {
+                //             subsectionCode: this.queryParams.subsectionOldCode
+                //         }
+                //     }
+                //     this.findPlatformslist(params)
+                // }
+                // !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            // exportCommitment(this.searchParams)
+            exportCompanyOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -306,15 +288,19 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'payStartTime', '')
+            this.$set(this.queryParams, 'payEndTime', '')
+            this.$set(this.queryParams, 'overdueStartTime', '')
+            this.$set(this.queryParams, 'overdueEndTime', '')
+            this.$set(this.queryParams, 'actualPayStartTime', '')
+            this.$set(this.queryParams, 'actualPayEndTime', '')
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.areaObj = { ...obj }
+            // this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
             await this.oldBossAuth()
             this.onSearch()
@@ -335,14 +321,6 @@ export default {
             this.loading = false
         },
         handleUpload (file) {
-            this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
-                this.$message({
-                    message: '请先选择导入年份！',
-                    type: 'warning'
-                })
-                return false
-            }
             if (file.size / (1024 * 1024) > 100) {
                 this.$message({
                     message: '附件要保持100M以内',
@@ -356,12 +334,6 @@ export default {
                 return false
             }
             this.loading = true
-        },
-        onShowImport () {
-            this.dialogFormVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
         }
     },
     async mounted () {
