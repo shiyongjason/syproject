@@ -14,7 +14,8 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
+                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
@@ -26,10 +27,35 @@
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
+                <div class="query-cont-col">
+                    <div class="query-col-title">合同到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('payEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('payStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">宽限期到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('overdueEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('overdueStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">实际还款日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('actualPayEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('actualPayStartTime')">
+                        </el-date-picker>
+                    </div>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
@@ -42,7 +68,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -77,7 +103,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-// import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
+import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -125,14 +151,19 @@ export default {
                 subsectionCode: '',
                 subsectionOldCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
-                pageNumber: 1,
-                pageSize: 10
+                payStartTime: '',
+                payEndTime: '',
+                overdueStartTime: '',
+                overdueEndTime: '',
+                actualPayStartTime: '',
+                actualPayEndTime
+                
+                : ''
             },
             page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
             tableData: [],
@@ -152,6 +183,26 @@ export default {
         }
     },
     methods: {
+        pickerOptionsStart (val) {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams[val]
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (val) {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams[val]
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -217,27 +268,29 @@ export default {
             }
         },
         onExport () {
-            // exportCommitment(this.queryParams)
+            // exportCommitment(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            // const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
-            // var data = await Promise.all(promiseArr).then((res) => {
-            //     res[1].data.companyName = '合计'
-            //     res[0].data.records.unshift(res[1].data)
-            //     return res[0].data
-            // }).catch((error) => {
-            //     this.$message.error(`error:${error}`)
-            // })
-            // this.tableData = data.records
-            // if (data.records.length > 1) {
-            //     this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
-            // } else {
-            //     this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
-            // }
+            const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
+            var data = await Promise.all(promiseArr).then((res) => {
+                console.log(res)
+                res[1].data.standingBookNo = '合计'
+                res[0].data.records.unshift(res[1].data)
+                return res[0].data
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
+            console.log(data)
+            this.tableData = data.records
+            this.page = {
+                total: data.total,
+                pageSize: data.size,
+                pageNumber: data.current
+            }
         },
         getList (val) {
             this.searchParams = {

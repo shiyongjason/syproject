@@ -343,107 +343,107 @@ export const platformSummarySheet = function () {
 // 逾期增量明细表
 export const overdueDetailTable = function () {
     return [
-        { prop: 'misCode', label: '借款单位', fixed: true, showOverflowTooltip: true },
-        { prop: 'companyName', label: '公司编码', fixed: true, showOverflowTooltip: true },
-        { prop: 'companyName', label: '公司名称', fixed: true, showOverflowTooltip: true },
-        { prop: 'companyName', label: '大区', fixed: true, showOverflowTooltip: true },
-        { prop: 'companyName', label: '分部', fixed: true, showOverflowTooltip: true },
-        { prop: 'companyName', label: '借款金额', showOverflowTooltip: true },
-        { prop: 'companyName', label: '合同到期日', showOverflowTooltip: true },
-        { prop: 'companyName', label: '应还本金', showOverflowTooltip: true },
-        { prop: 'companyName', label: '宽限期到期日', showOverflowTooltip: true },
-        { prop: 'companyName', label: '实际还款日', showOverflowTooltip: true },
-        { prop: 'companyName', label: '已还本金', showOverflowTooltip: true },
-        { prop: 'companyName', label: '当前逾期合计', showOverflowTooltip: true },
+        { prop: 'standingBookNo', label: '借款编号', fixed: true, showOverflowTooltip: true },
+        { prop: 'misCode', label: '公司编码', fixed: true, showOverflowTooltip: true },
+        { prop: 'loanCompanyName', label: '公司名称', fixed: true, showOverflowTooltip: true },
+        { prop: 'regionName', label: '大区', fixed: true, showOverflowTooltip: true },
+        { prop: 'subsectionName', label: '分部', fixed: true, showOverflowTooltip: true },
+        { prop: 'loanAmount', label: '借款金额', showOverflowTooltip: true },
+        { prop: 'payTime', label: '合同到期日', showOverflowTooltip: true },
+        { prop: 'capitalAmount', label: '应还本金', showOverflowTooltip: true },
+        { prop: 'overdueTime', label: '宽限期到期日', showOverflowTooltip: true },
+        { prop: 'actualPayTime', label: '实际还款日', showOverflowTooltip: true },
+        { prop: 'amountPaid', label: '已还本金', showOverflowTooltip: true },
+        { prop: 'overdueTotal', label: '当前逾期合计', showOverflowTooltip: true },
         {
             label: '2020年度还款计划',
             children: [
                 {
-                    prop: 'januaryValue',
+                    prop: 'januaryRepayment',
                     label: '1月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'februaryValue',
+                    prop: 'februaryRepayment',
                     label: '2月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'marchValue',
+                    prop: 'marchRepayment',
                     label: '3月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'aprilValue',
+                    prop: 'aprilRepayment',
                     label: '4月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'mayValue',
+                    prop: 'mayRepayment',
                     label: '5月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'juneValue',
+                    prop: 'juneRepayment',
                     label: '6月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'julyValue',
+                    prop: 'julyRepayment',
                     label: '7月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'augustValue',
+                    prop: 'augustRepayment',
                     label: '8月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'septemberValue',
+                    prop: 'septemberRepayment',
                     label: '9月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'octoberValue',
+                    prop: 'octoberRepayment',
                     label: '10月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'novemberValue',
+                    prop: 'novemberRepayment',
                     label: '11月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'decemberValue',
+                    prop: 'decemberRepayment',
                     label: '12月',
                     width: '100',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'decemberValue',
+                    prop: 'total',
                     label: '合计',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -451,8 +451,8 @@ export const overdueDetailTable = function () {
                 }
             ]
         },
-        { prop: 'companyName', label: '计划占比', showOverflowTooltip: true },
-        { prop: 'companyName', label: '无还款计划金额', showOverflowTooltip: true }
+        { prop: 'planProportion', label: '计划占比', showOverflowTooltip: true },
+        { prop: 'noRepaymentPlanAmount', label: '无还款计划金额', showOverflowTooltip: true }
     ]
 }
 // 还款计划
@@ -472,7 +472,7 @@ export const annualRepaymentPlan = {
     total: '0'
 }
 // 如果为空后台返回为null，需要多一层判断（后台规范！！！！）
-export const total = {
+export const platformSummarySheetTotal = {
     annualRepaymentPlan: null,
     arrearsCount: null,
     capitalAmount: null,
@@ -484,4 +484,34 @@ export const total = {
     planProportion: null,
     regionName: null,
     subsectionName: null
+}
+export const overdueDetailTableTotal = {
+    actualPayTime: null,
+    amountPaid: null,
+    aprilRepayment: null,
+    augustRepayment: null,
+    capitalAmount: null,
+    decemberRepayment: null,
+    februaryRepayment: null,
+    januaryRepayment: null,
+    julyRepayment: null,
+    juneRepayment: null,
+    loanAmount: null,
+    loanCompanyName: null,
+    marchRepayment: null,
+    mayRepayment: null,
+    misCode: null,
+    noRepaymentPlanAmount: null,
+    novemberRepayment: null,
+    octoberRepayment: null,
+    overdueTime: null,
+    overdueTotal: null,
+    payTime: null,
+    planProportion: null,
+    regionName: null,
+    septemberRepayment: null,
+    standingBookNo: null,
+    subsectionName: null,
+    total: null,
+    year: 2020
 }

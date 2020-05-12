@@ -27,7 +27,7 @@
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time">
+                <div class="query-cont-col flex-box-time" v-if="false">
                     <div class="query-col-title">年份：</div>
                     <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
@@ -84,7 +84,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan, total } from './const'
+import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
@@ -98,11 +98,11 @@ export default {
             uploadData: {
                 year: ''
             },
-            rules: {
-                year: [
-                    { required: true, message: '请选择年', trigger: 'blur' }
-                ]
-            },
+            // rules: {
+            //     year: [
+            //         { required: true, message: '请选择年', trigger: 'blur' }
+            //     ]
+            // },
             headersData: {
                 'refreshToken': sessionStorage.getItem('refreshToken'),
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
@@ -239,12 +239,11 @@ export default {
             this.onQuery()
         },
         async onQuery () {
-            console.log(this.searchParams)
             const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 console.log(res)
                 if (!res[1].data) {
-                    res[1].data = total
+                    res[1].data = platformSummarySheetTotal
                 }
                 res[1].data.misCode = '合计'
                 res[0].data.records.unshift(res[1].data)

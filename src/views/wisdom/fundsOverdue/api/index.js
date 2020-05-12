@@ -34,3 +34,7 @@ export function exportCompanyOverdueExcel (params) {
         axios.defaults.responseType = 'json'
     })
 }
+// 逾期增量明细列表
+export const getOverdueIncrementDetailList = (params) => axios.get(`backend/api/company/overdue/increment/details`, { params })
+// 逾期增量明细合计
+export const getOverdueIncrementDetailTotal = (params) => axios.get(`backend/api/company/overdue/increment/details/total`, { params })
