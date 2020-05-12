@@ -134,7 +134,6 @@ export default {
             this.onFindAccountList()
         },
         onSortChange (val) {
-            console.log(val)
             if (val.prop === 'createTime') {
                 this.queryParams.registerTimeOrderBy = val.order === 'ascending' ? 'asc' : 'desc'
             }
