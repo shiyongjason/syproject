@@ -23,6 +23,12 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <!--                <div class="query-col-title">有效家庭：</div>-->
+                <div class="query-col-input">
+                    <el-checkbox v-model="effectiveHome">有效家庭</el-checkbox>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
@@ -82,8 +88,10 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 platformType: '',
+                effectiveHome: 0,
                 searchNum: ''
             },
+            effectiveHome: false,
             searchParams: {},
             tableData: [],
             pagination: {
@@ -108,7 +116,9 @@ export default {
         }
     },
     watch: {
-
+        effectiveHome (val) {
+            val ? this.queryParams.effectiveHome = 1 : this.queryParams.effectiveHome = 0
+        }
     },
     mounted () {
         this.tableData = []
