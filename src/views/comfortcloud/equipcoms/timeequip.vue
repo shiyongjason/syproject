@@ -7,10 +7,12 @@
                 <h3>总运行时长: {{totalTime ? totalTime : '0'}} 小时</h3>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate" :picker-options="pickerOptionsStart">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate"
+                                :picker-options="pickerOptionsStart" :clearable="false" :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate" :picker-options="pickerOptionsEnd">>
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
+                                :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindRuntimeR()">
                     查询
@@ -18,19 +20,26 @@
             </div>
         </div>
         <div class="tab-container">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="所有设备" name="first" class="echart-wrap">
-                    <div class="chart-flex2" id="firstChart" style="height:500px"></div>
-                    <div class="chart-flex1" id="secondChart" style="height:500px"></div>
+            <el-tabs v-model="homeParams.runTimeModuleName" @tab-click="handleClick">
+                <el-tab-pane label="所有设备" name="all" class="echart-wrap">
+                    <div class="chart-flex2" id="allLine" style="height:500px"></div>
+                    <div class="chart-flex1" id="allBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="中央空调控制器（物联）" name="second">
-                    <Chart :lineOption="tempLineOption" :barOption="tempBarOption"></Chart>
+                <el-tab-pane label="中央空调控制器（物联）" name="Op" class="echart-wrap">
+                    <div class="chart-flex2" id="OpLine" style="height:500px"></div>
+                    <div class="chart-flex1" id="OpBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="中央空调控制器（零颗米）" name="third">
+                <el-tab-pane label="中央空调控制器（零颗米）" name="Co" class="echart-wrap">
+                    <div class="chart-flex2" id="CoLine" style="height:500px"></div>
+                    <div class="chart-flex1" id="CoBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="地暖控制器" name="fourth">
+                <el-tab-pane label="物联地暖" name="Ap" class="echart-wrap">
+                    <div class="chart-flex2" id="ApLine" style="height:500px"></div>
+                    <div class="chart-flex1" id="ApBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="智能温控阀" name="fifth">
+                <el-tab-pane label="智能温控阀" name="Rt" class="echart-wrap">
+                    <div class="chart-flex2" id="RtLine" style="height:500px"></div>
+                    <div class="chart-flex1" id="RtBar" style="height:500px"></div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -46,31 +55,39 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">创建时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" :editable="false" :clearable="false"  v-model="homeParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerHomeDetailStart">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate"
+                                        value-format="yyyy-MM-dd" placeholder="开始日期"
+                                        :picker-options="pickerHomeDetailStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" :editable="false" :clearable="false"  v-model="homeParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerHomeDetailEnd">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.endDate"
+                                        value-format="yyyy-MM-dd" placeholder="结束日期"
+                                        :picker-options="pickerHomeDetailEnd">
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="homeParams.runTimeModuleName === 'all'">
                     <div class="query-col-title">设备种类：</div>
                     <div class="query-col-input">
                         <el-select v-model="homeParams.type" clearable>
-                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict" :key="item.type"></el-option>
+                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict"
+                                       :key="item.type"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" @click="findCloudHomeDetailList(homeParams)">
+                    <el-button type="primary" @click="onQuery">
                         查询
                     </el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="cloudHomeDetailList" :pagination="cloudHomeDetailPagination"
-                        @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+<!--            @onSortChange="onSortChange"-->
+            <basicTable :tableLabel="tableLabelSwitch" :tableData="tablePaginationListSwitch"
+                        :pagination="cloudHomeDetailPagination"
+                        isShowIndex @onCurrentChange='onCurrentChange'
+                        @onSizeChange='onSizeChange'>
             </basicTable>
         </div>
     </div>
@@ -79,41 +96,34 @@
 import echarts from 'echarts'
 import moment from 'moment'
 import { mapActions, mapGetters } from 'vuex'
-import Chart from './chart'
+import * as Const from './const'
+
 export default {
     props: ['totalTime'],
-    components: {
-        Chart
-    },
     data () {
         return {
             activeName: 'first',
             tabindex: 0,
-            tableLabel: [
-                { label: '管理员手机号', prop: 'phone' },
-                { label: '家庭名称', prop: 'homeName' },
-                { label: '设备种类', prop: 'typeName' },
-                { label: '设备数量', prop: 'count' },
-                { label: '总运行时长（小时）', prop: 'totalRunTime' },
-                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' }
-            ],
             smartparams: {
                 startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
                 endDate: moment().format('YYYY-MM-DD'),
-                moduleName: 'smartHost'
+                runTimeModuleName: 'all'
             },
-            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, { key: 'sensor', name: '传感器' }, { key: 'smartAppliance', name: '智能家电' },
-                { key: 'switchPanel', name: '开关面板' }],
+            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, {
+                key: 'sensor',
+                name: '传感器'
+            }, { key: 'smartAppliance', name: '智能家电' },
+            { key: 'switchPanel', name: '开关面板' }],
             smartData: {},
             homeParams: {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
                 startDate: '',
-                endDate: ''
-            },
-            tempLineOption: {},
-            tempBarOption: {}
+                endDate: '',
+                type: '',
+                runTimeModuleName: 'all'
+            }
         }
     },
     computed: {
@@ -121,6 +131,10 @@ export default {
             cloudRuntimeReport: 'cloudRuntimeReport',
             cloudHomeDetailList: 'cloudHomeDetailList',
             cloudHomeDetailPagination: 'cloudHomeDetailPagination',
+            cloudHomeOpDetailList: 'cloudHomeOpDetailList',
+            cloudHomeCoDetailList: 'cloudHomeCoDetailList',
+            cloudHomeApDetailList: 'cloudHomeApDetailList',
+            cloudHomeRtDetailList: 'cloudHomeRtDetailList',
             cloudHomeDetailDict: 'cloudHomeDetailDict'
         }),
         pickerOptionsStart () {
@@ -164,17 +178,50 @@ export default {
             }
         },
         tableLabelSwitch () {
-            return ''
+            let temp
+            switch (this.homeParams.runTimeModuleName) {
+                case 'all':
+                    temp = Const.totalTableLabel
+                    break
+                case 'Op':
+                    temp = Const.wuLianTableLabel
+                    break
+                case 'Co':
+                    temp = Const.zeroKeMiTableLabel
+                    break
+                case 'Ap':
+                    temp = Const.floorTableLabel
+                    break
+                case 'Rt':
+                    temp = Const.smartTableLabel
+                    break
+            }
+            return temp
         },
-        tablePaginationList () {
-            return ''
-        },
-        tablePaginationSwitch () {
-            return ''
+        tablePaginationListSwitch () {
+            let temp = []
+            switch (this.homeParams.runTimeModuleName) {
+                case 'all':
+                    temp = this.cloudHomeDetailList
+                    break
+                case 'Op':
+                    temp = this.cloudHomeOpDetailList
+                    break
+                case 'Co':
+                    temp = this.cloudHomeCoDetailList
+                    break
+                case 'Ap':
+                    temp = this.cloudHomeApDetailList
+                    break
+                case 'Rt':
+                    temp = this.cloudHomeRtDetailList
+                    break
+            }
+            return temp
         }
     },
     mounted () {
-        this.onFindRuntimeR()
+        this.onFindRuntimeR('allLine', 'allBar')
         this.findCloudHomeDetailList(this.homeParams)
         this.findCloudHomeDetailSearchDict()
     },
@@ -182,6 +229,10 @@ export default {
         ...mapActions({
             findRuntimeReport: 'findRuntimeReport',
             findCloudHomeDetailList: 'findCloudHomeDetailList',
+            findCloudHomeOpDetailList: 'findCloudHomeOpDetailList',
+            findCloudHomeCoDetailList: 'findCloudHomeCoDetailList',
+            findCloudHomeApDetailList: 'findCloudHomeApDetailList',
+            findCloudHomeRtDetailList: 'findCloudHomeRtDetailList',
             findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict'
         }),
         onSortChange (val) {
@@ -190,26 +241,40 @@ export default {
                 this.findCloudHomeDetailList(this.homeParams)
             }
         },
+        onQuery () {
+            switch (this.homeParams.runTimeModuleName) {
+                case 'all':
+                    this.findCloudHomeDetailList(this.homeParams)
+                    break
+                case 'Op':
+                    this.findCloudHomeOpDetailList(this.homeParams)
+                    break
+                case 'Co':
+                    this.findCloudHomeCoDetailList(this.homeParams)
+                    break
+                case 'Ap':
+                    this.findCloudHomeApDetailList(this.homeParams)
+                    break
+                case 'Rt':
+                    this.findCloudHomeRtDetailList(this.homeParams)
+                    break
+            }
+        },
         onCurrentChange (val) {
             this.homeParams.pageNumber = val.pageNumber
-            this.findCloudHomeDetailList(this.homeParams)
+            this.onQuery()
         },
         onSizeChange (val) {
             this.homeParams.pageSize = val
-            this.findCloudHomeDetailList(this.homeParams)
+            this.onQuery()
         },
-        onTabs (val, name) {
-            this.tabindex = val
-            this.smartparams.moduleName = name
-            this.onFindRuntimeR(this.smartparams)
-        },
-        async onFindRuntimeR () {
+        async onFindRuntimeR (line, bar) {
             await this.findRuntimeReport(this.smartparams)
             this.smartData = this.cloudRuntimeReport
-            this.drawLine(this.smartData)
-            this.drawbar(this.smartData)
+            this.drawLine(this.smartData, line)
+            this.drawbar(this.smartData, bar)
         },
-        drawLine (data) {
+        drawLine (data, id) {
             // 绘制图表
             var charts = {
                 unit: '单位',
@@ -299,10 +364,9 @@ export default {
                 },
                 series: lineY
             }
-            this.tempLineOption = option
-            this.drawChart(option, 'firstChart')
+            this.drawChart(option, id)
         },
-        drawbar (data) {
+        drawbar (data, id) {
             var charts = {
                 lineY: [],
                 lineX: []
@@ -357,11 +421,37 @@ export default {
                     data: charts.lineX
                 }]
             }
-            this.tempBarOption = option
-            this.drawChart(option, 'secondChart')
+            this.drawChart(option, id)
         },
         handleClick () {
-            console.log(1)
+            this.smartparams.runTimeModuleName = this.homeParams.runTimeModuleName
+            this.onFindRuntimeR(this.smartparams.runTimeModuleName + 'Line',
+                this.smartparams.runTimeModuleName + 'Bar')
+            Object.assign(this.homeParams, {
+                pageSize: 10,
+                pageNumber: 1,
+                phone: '',
+                type: '',
+                startDate: '',
+                endDate: ''
+            })
+            switch (this.homeParams.runTimeModuleName) {
+                case 'all':
+                    this.findCloudHomeDetailList(this.homeParams)
+                    break
+                case 'Op':
+                    this.findCloudHomeOpDetailList(this.homeParams)
+                    break
+                case 'Co':
+                    this.findCloudHomeCoDetailList(this.homeParams)
+                    break
+                case 'Ap':
+                    this.findCloudHomeApDetailList(this.homeParams)
+                    break
+                case 'Rt':
+                    this.findCloudHomeRtDetailList(this.homeParams)
+                    break
+            }
         },
         drawChart (option, id) {
             const chartDom = document.getElementById(id)
@@ -371,35 +461,41 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.echart-wrap {
-    display: flex;
-    padding: 20px 10px;
-    min-height: 500px;
-    .chart-flex2 {
-        flex: 2;
-    }
-    .chart-flex1 {
-        flex: 1;
-    }
-}
-.smart-time {
-    display: flex;
-    padding: 30px 12px;
-    div {
+    .echart-wrap {
         display: flex;
-        flex: 1;
-        align-items: center;
-    }
-}
-.home-detail-title {
-    padding-bottom: 20px;
-}
-/deep/ .el-tabs__item.is-active {
-    color: #333;
-    background: transparent;
-}
+        padding: 20px 10px;
+        min-height: 500px;
 
-/deep/ .el-tabs__header {
-    margin: 0
-}
+        .chart-flex2 {
+            flex: 2;
+        }
+
+        .chart-flex1 {
+            flex: 1;
+        }
+    }
+
+    .smart-time {
+        display: flex;
+        padding: 30px 12px;
+
+        div {
+            display: flex;
+            flex: 1;
+            align-items: center;
+        }
+    }
+
+    .home-detail-title {
+        padding-bottom: 20px;
+    }
+
+    /deep/ .el-tabs__item.is-active {
+        color: #333;
+        background: transparent;
+    }
+
+    /deep/ .el-tabs__header {
+        margin: 0
+    }
 </style>

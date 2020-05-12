@@ -26,6 +26,14 @@ const state = {
     cloudDeviceDetailPagination: {},
     cloudHomeDetailList: [],
     cloudHomeDetailPagination: {},
+    cloudHomeOpDetailList: [],
+    cloudHomeOpDetailPagination: {},
+    cloudHomeCoDetailList: [],
+    cloudHomeCoDetailPagination: {},
+    cloudHomeApDetailList: [],
+    cloudHomeApDetailPagination: {},
+    cloudHomeRtDetailList: [],
+    cloudHomeRtDetailPagination: {},
     cloudHomeDetailDict: [],
     comfortableSceneList: [],
     comfortableSceneListPagination: {},
@@ -63,6 +71,14 @@ const getters = {
     cloudDeviceDetailPagination: state => state.cloudDeviceDetailPagination,
     cloudHomeDetailList: state => state.cloudHomeDetailList,
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
+    cloudHomeOpDetailList: state => state.cloudHomeOpDetailList,
+    cloudHomeOpDetailPagination: state => state.cloudHomeOpDetailPagination,
+    cloudHomeCoDetailList: state => state.cloudHomeCoDetailList,
+    cloudHomeCoDetailPagination: state => state.cloudHomeCoDetailPagination,
+    cloudHomeApDetailList: state => state.cloudHomeApDetailList,
+    cloudHomeApDetailPagination: state => state.cloudHomeApDetailPagination,
+    cloudHomeRtDetailList: state => state.cloudHomeRtDetailList,
+    cloudHomeRtDetailPagination: state => state.cloudHomeRtDetailPagination,
     cloudHomeDetailDict: state => state.cloudHomeDetailDict,
     cloudAlarmChart: state => state.cloudAlarmChart,
     cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart,
@@ -140,6 +156,30 @@ const mutations = {
     },
     [cloud.CLOUD_HOME_DETAIL_PAGINATION] (state, payload) {
         state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_OP_DETAIL_LIST] (state, payload) {
+        state.cloudHomeOpDetailList = payload
+    },
+    [cloud.CLOUD_HOME_OP_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_CO_DETAIL_LIST] (state, payload) {
+        state.cloudHomeCoDetailList = payload
+    },
+    [cloud.CLOUD_HOME_CO_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeCoDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_AP_DETAIL_LIST] (state, payload) {
+        state.cloudHomeApDetailList = payload
+    },
+    [cloud.CLOUD_HOME_AP_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_RT_DETAIL_LIST] (state, payload) {
+        state.cloudHomeRtDetailList = payload
+    },
+    [cloud.CLOUD_HOME_RT_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeRtDetailPagination = payload
     },
     [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
         state.cloudHomeDetailDict = payload
@@ -273,6 +313,42 @@ const actions = {
     async findCloudHomeDetailList ({ commit }, params) {
         const { data } = await Api.getCloudHomeDetailList(params)
         commit(cloud.CLOUD_HOME_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeOpDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceAirDetail(params)
+        commit(cloud.CLOUD_HOME_OP_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeCoDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceAirDetail(params)
+        commit(cloud.CLOUD_HOME_CO_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeApDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceFloorHeartDetail(params)
+        commit(cloud.CLOUD_HOME_AP_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeRtDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceTempCtlValveDetail(params)
+        commit(cloud.CLOUD_HOME_RT_DETAIL_LIST, data.data.records)
         commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
             pageNumber: data.data.current,
             pageSize: data.data.size,

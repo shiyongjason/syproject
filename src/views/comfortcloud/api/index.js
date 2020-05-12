@@ -229,3 +229,15 @@ export function updateCloudComfortEncyclopedia (params) {
 export function deleteCloudComfortEncyclopedia (params) {
     return axios.delete(iotUrl + `/api/comfy-encyclopedia/boss`, { data: params })
 }
+// 设备统计 空调
+export function getDeviceAirDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/air/details`, { params })
+}
+// 设备统计 地暖
+export function getDeviceFloorHeartDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/floor-heart/details`, { params })
+}
+// 设备统计 智能温控阀
+export function getDeviceTempCtlValveDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/temp-ctl-valve/details`, { params })
+}

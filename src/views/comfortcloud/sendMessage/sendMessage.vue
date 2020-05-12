@@ -72,7 +72,7 @@ export default {
                 { label: '目标用户', prop: 'target' },
                 { label: '推送数', prop: 'pushCount' },
                 { label: '送达数', prop: 'receivedCount' },
-                { label: '推送状态', prop: 'status' },
+                // { label: '推送状态', prop: 'status' },
                 { label: '推送时间', prop: 'pushTime', formatters: 'dateTime', sortable: true }
             ]
         }

@@ -18,12 +18,12 @@
                 <div class="query-col-title">问题类型：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.type">
-                        <el-option label="全部" value="0"></el-option>
-                        <el-option label="设备配网" value="1"></el-option>
-                        <el-option label="设备离线" value="2"></el-option>
-                        <el-option label="设备控制" value="3"></el-option>
-                        <el-option label="场景相关" value="4"></el-option>
-                        <el-option label="其他" value="5"></el-option>
+                        <el-option label="全部" value="全部"></el-option>
+                        <el-option label="设备配网" value="设备配网"></el-option>
+                        <el-option label="设备离线" value="设备离线"></el-option>
+                        <el-option label="设备控制" value="设备控制"></el-option>
+                        <el-option label="场景相关" value="场景相关"></el-option>
+                        <el-option label="其他" value="其他"></el-option>
                     </el-select>
                 </div>
             </div>
