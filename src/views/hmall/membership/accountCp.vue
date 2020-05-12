@@ -29,23 +29,27 @@
                 <h3>基本信息</h3>
                 <div class="account-title"><i>注册时间</i> {{moment(account.createTime).format('YYYY-MM-DD HH:mm')}}</div>
                 <div class="account-title"><i>账号来源</i> {{account.source}}</div>
-               <h3>B2b企业</h3>
-                <div class="account-box" v-for="(item,index) in account.b2bCompanyList" :key="index">
-                    <p>{{item.companyName}} <em>{{item.isAuthentication?'已认证':'未认证'}}</em></p>
-                    <ul>
-                        <li v-for="(val,index) in item.roles" :key="index">{{val}}</li>
-                    </ul>
+                <h3>B2b企业</h3>
+                <div v-if="account.b2bCompanyList.length>0">
+                    <div class="account-box" v-for="(item,index) in account.b2bCompanyList" :key="index">
+                        <p>{{item.companyName}} <em>{{item.isAuthentication?'已认证':'未认证'}}</em></p>
+                        <ul>
+                            <li v-for="(val,index) in item.roles" :key="index">{{val}}</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="account-box" v-if="account.b2bCompanyList&&account.b2bCompanyList.length==0">
                     <p>暂无B2b企业</p>
                 </div>
 
                 <h3>1.0企业</h3>
-                <div class="account-box" v-for="(item,index) in account.crmCompanyList" :key="index">
-                    <p>{{item.companyName}} <em>{{item.isAuthentication?'已认证':'未认证'}}</em></p>
-                    <ul>
-                        <li v-for="(val,index) in item.roles" :key="index">{{val}}</li>
-                    </ul>
+                <div v-if="account.crmCompanyList.length>0">
+                    <div class="account-box" v-for="(item,index) in account.crmCompanyList" :key="index">
+                        <p>{{item.companyName}} <em>{{item.isAuthentication?'已认证':'未认证'}}</em></p>
+                        <ul>
+                            <li v-for="(val,index) in item.roles" :key="index">{{val}}</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="account-box" v-if="account.crmCompanyList&&account.crmCompanyList.length==0">
                     <p>暂无1.0企业</p>
@@ -78,7 +82,11 @@ export default {
     },
     data () {
         return {
-            account: {},
+            account: {
+                b2bCompanyList: [],
+                crmCompanyList: [],
+                wxUserList: []
+            },
             moment
         }
     },
@@ -96,7 +104,7 @@ export default {
         },
         async onFindAccountDetail (val) {
             await this.findAccountDetail(val)
-            this.account = this.accountDetail
+            this.account = { ...this.accountDetail }
             console.log(this.account)
         }
     },
