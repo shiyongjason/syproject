@@ -52,11 +52,12 @@
             </basicTable>
         </div>
         <el-drawer
+            class="brand-drawer"
             title="我是标题"
             :visible.sync="drawerShow"
             direction="rtl"
-            size='650px'>
-            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="120px">
+            size='580px'>
+            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
                 <el-form-item label="供应商：" class="mb5">
                     {{drawerMsg.title}}
                 </el-form-item>
@@ -76,35 +77,35 @@
                     </div>
                 </el-form-item>
                 <el-form-item label="关联类目：" class="mb5">
+                    <div class="category-box">
+                        <div class="category-item">
+                            <div class="category-item-title">一级类目</div>
+                            <ul class="category-item-ul">
+                                <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categoryFirst" :key="item.key" @click="onFirst(item, index)" class="category-item-li">
+                                    <span class="category-item-span">{{item.value}}</span>
+                                    <i class="iconfont icon-hosjoy_right"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-item-title">二级类目</div>
+                            <ul class="category-item-ul">
+                                <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categorySecond" :key="item.key" @click="onSecond(item, index)" class="category-item-li">
+                                    <span class="category-item-span">{{item.value}}</span>
+                                    <i class="iconfont icon-hosjoy_right"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-item">
+                            <div class="category-item-title">三级类目</div>
+                            <ul class="category-item-ul">
+                                <li :class="item.selected ? 'selected' : ''" v-for="item in categoryThird" :key="item.key" class="category-item-li">
+                                    <span class="category-item-span">{{item.value}}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </el-form-item>
-                <div class="category-box">
-                    <div class="category-item">
-                        <div class="category-item-title">一级类目</div>
-                        <ul class="category-item-ul">
-                            <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categoryFirst" :key="item.key" @click="onFirst(item, index)" class="category-item-li">
-                                <span class="category-item-span">{{item.value}}</span>
-                                <i class="iconfont icon-hosjoy_right"></i>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-item-title">二级类目</div>
-                        <ul class="category-item-ul">
-                            <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categorySecond" :key="item.key" @click="onSecond(item, index)" class="category-item-li">
-                                <span class="category-item-span">{{item.value}}</span>
-                                <i class="iconfont icon-hosjoy_right"></i>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="category-item">
-                        <div class="category-item-title">三级类目</div>
-                        <ul class="category-item-ul">
-                            <li :class="item.selected ? 'selected' : ''" v-for="item in categoryThird" :key="item.key" class="category-item-li">
-                                <span class="category-item-span">{{item.value}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
                 <p class="audit-opinion">审核意见</p>
                 <!-- <template v-if="drawerMsg.type === 'review'"> -->
                     <el-form-item label="审核结果：" prop="auditResult">
@@ -167,7 +168,7 @@ export default {
             categoryFirst: [
                 {
                     key: '1',
-                    value: '类目一',
+                    value: '类目一sdasdasd',
                     selected: false
                 },
                 {
@@ -350,8 +351,8 @@ export default {
     display: flex;
     img {
         display: block;
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
     }
 }
 .remark {
@@ -360,10 +361,17 @@ export default {
 .mb5 {
     margin-bottom: 5px;
 }
-/deep/ .el-drawer__header {
-    padding: 20px 24px;
-    margin-bottom: 0;
-    border-bottom: 1px solid #e5e5ea;
+.brand-drawer {
+    color: #000000;
+    /deep/ .el-form-item__label {
+        color: #000000;
+    }
+    /deep/ .el-drawer__header {
+        color: #000000;
+        padding: 20px 24px;
+        margin-bottom: 0;
+        border-bottom: 1px solid #e5e5ea;
+    }
 }
 .category-box {
     width: 100%;
@@ -372,7 +380,7 @@ export default {
     align-items: center;
     font-size: 14px;
     .category-item {
-        width: 25%;
+        width: 30%;
         .category-item-title {
             margin-bottom: 5px;
         }
