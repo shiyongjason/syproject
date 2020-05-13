@@ -122,15 +122,15 @@ export default [
                 component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
             },
             {
-                path: 'brandAuthorizationManagement',
-                name: 'brandAuthorizationManagement',
+                path: 'brandAudit',
+                name: 'brandAudit',
                 meta: {
                     title: '品牌授权审核',
                     tagName: '品牌授权审核',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/brand/brandAuthorizationManagement.vue')
+                component: () => import('@/views/hmall/brand/brandAudit.vue')
             },
             {
                 path: 'marketStore',
