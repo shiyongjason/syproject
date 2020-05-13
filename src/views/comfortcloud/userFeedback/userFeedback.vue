@@ -142,7 +142,7 @@ export default {
         }
     },
     mounted () {
-        this.findUserFeedbackList()
+        this.findUserFeedbackList(this.queryParams)
     }
 }
 </script>

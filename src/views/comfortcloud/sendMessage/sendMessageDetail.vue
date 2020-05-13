@@ -6,7 +6,7 @@
         </div>
         <div class="container page-body-cont">
             <div class="wrapper-chart">
-                <div class="time">2019-09-05 - 2019-09-05</div>
+                <div class="time">{{Date.now() | formatDate('YYYY-MM-DD')}} - {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}}</div>
                 <div class="chart" ref="barChart" style="width: 580px;height: 400px"></div>
             </div>
             <div class="tips">
@@ -14,7 +14,26 @@
                     消息详情
                 </div>
                 <div>
-                    {{cloudSendMessageDetailChart.content}}
+                    <p>
+                        消息主题：{{cloudSendMessageDetailChart.theme}}
+                    </p>
+                    <p>
+                        目标用户：
+                        <span v-if="cloudSendMessageDetailChart.target == 1">所有用户</span>
+                        <span v-if="cloudSendMessageDetailChart.target == 2">有效家庭的管理员</span>
+                    </p>
+                    <p>
+                        消息通知内容：{{cloudSendMessageDetailChart.content}}
+                    </p>
+                    <p>
+                        点击后打开：
+                        <span v-if="cloudSendMessageDetailChart.redirectType == 1">应用</span>
+                        <span v-if="cloudSendMessageDetailChart.redirectType == 2">应用内页面</span>
+                        <span v-if="cloudSendMessageDetailChart.redirectType == 3">h5页面</span>
+                    </p>
+                    <p>
+                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate}}
+                    </p>
                 </div>
             </div>
         </div>
@@ -27,7 +46,7 @@ import { mapActions, mapGetters } from 'vuex'
 const barOption = {
     xAxis: {
         type: 'category',
-        data: ['目标用户', '送达用户', '打开用户', '转化率']
+        data: ['目标用户', '送达用户', '打开用户', '清除用户']
     },
     yAxis: {
         type: 'value'

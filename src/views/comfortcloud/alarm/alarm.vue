@@ -64,7 +64,17 @@ const ringChartOption = {
         radius: ['0', '60%'],
         label: {
             show: false,
-            position: 'center'
+            position: 'center',
+            normal: {
+                show: true,
+                position: 'inner', // 标签的位置
+                textStyle: {
+                    fontWeight: 100,
+                    fontSize: 12 // 文字的字体大小
+                },
+                formatter: '{d}%'
+
+            }
         },
         data: [ // #4472c3 #4472c3 #4472c3 #4472c3 #4472c3
             { value: 0, name: '30分钟内', selfLabel: 'innerThirtyCount', itemStyle: { color: '#4472c3' } },
@@ -115,6 +125,18 @@ const lineChartOption = {
         showBackground: true,
         backgroundStyle: {
             color: 'rgba(220, 220, 220, 0.8)'
+        },
+        itemStyle: {
+            normal: {
+                label: {
+                    show: true, // 开启显示
+                    position: 'top', // 在上方显示
+                    textStyle: { // 数值样式
+                        color: 'black',
+                        fontSize: 12
+                    }
+                }
+            }
         }
     }
 }
