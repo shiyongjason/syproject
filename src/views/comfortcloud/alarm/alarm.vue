@@ -1,7 +1,14 @@
 <template>
     <div class="tags-wrapper page-body">
         <div class="page-body-cont query-cont spanflex">
-            <span>告警监控</span>
+            <span>告警分析</span>
+        </div>
+        <div class="page-body-cont chart-wrapper">
+            <div class="ring-chart" ref="ringChartOption" style="height: 420px;width: 300px;float: left"></div>
+            <div class="line-chart" ref="lineChartOption" style="height: 420px;width: 720px;float: left"></div>
+        </div>
+        <div class="page-body-cont query-cont spanflex">
+            <span>告警明细</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -27,7 +34,6 @@
                 </div>
             </div>
         </div>
-
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudAlarmList" :pagination="cloudAlarmPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                 <template slot="downlineInterval" slot-scope="scope">
@@ -41,12 +47,84 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import { downloadCloudAlarmList } from '../api/index'
+import echarts from 'echarts'
+const ringChartOption = {
+    title: {
+        text: '告警离线时长分布',
+        left: 'center'
+    },
+    legend: {
+        left: 'center',
+        top: '40',
+        data: ['30分钟内', '30-60分钟', '60-90分钟', '90-120分钟', '超120分钟']
+    },
+    series: {
+        name: '告警离线时长分布',
+        type: 'pie',
+        radius: ['0', '60%'],
+        label: {
+            show: false,
+            position: 'center'
+        },
+        data: [ // #4472c3 #4472c3 #4472c3 #4472c3 #4472c3
+            { value: 0, name: '30分钟内', selfLabel: 'innerThirtyCount', itemStyle: { color: '#4472c3' } },
+            { value: 0, name: '30-60分钟', selfLabel: 'thirtyToSixtyCount', itemStyle: { color: '#FEC109' } },
+            { value: 0, name: '60-90分钟', selfLabel: 'sixtyToNinetyCount', itemStyle: { color: '#209FFF' } },
+            { value: 0, name: '90-120分钟', selfLabel: 'ninetyToOneHundredAndTwentyCount', itemStyle: { color: '#FFBF6A' } },
+            { value: 0, name: '超120分钟', selfLabel: 'overOneHundredAndTwentyCount', itemStyle: { color: '#ffbff5' } }
+        ]
+    }
+}
+const lineChartOption = {
+    title: {
+        text: '离线告警次数分布',
+        left: 'center'
+    },
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            lineStyle: {
+                color: '#ddd'
+            }
+        },
+        padding: [5, 10],
+        textStyle: {
+            color: '#ffffff'
+        },
+        extraCssText: 'box-shadow: 0 0 5px rgba(0,0,0,0.3)'
+    },
+    xAxis: {
+        type: 'category',
+        data: [],
+        axisLabel: {
+            interval: 0, // 强制文字产生间隔
+            rotate: 36, // 文字逆时针旋转45°
+            textStyle: { // 文字样式
+                color: 'black',
+                fontSize: 10,
+                fontFamily: 'Microsoft YaHei'
+            }
+        }
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: {
+        data: [],
+        type: 'bar',
+        showBackground: true,
+        backgroundStyle: {
+            color: 'rgba(220, 220, 220, 0.8)'
+        }
+    }
+}
 
 export default {
     name: 'alarm',
     computed: {
         ...mapGetters({
             cloudAlarmList: 'cloudAlarmList',
+            cloudAlarmChart: 'cloudAlarmChart',
             cloudAlarmPagination: 'cloudAlarmPagination'
         })
     },
@@ -73,7 +151,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudAlarmList: 'findCloudAlarmList'
+            findCloudAlarmList: 'findCloudAlarmList',
+            findCloudAlarmChart: 'findCloudAlarmChart'
         }),
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -92,6 +171,24 @@ export default {
     },
     async mounted () {
         this.onQuery()
+        await this.findCloudAlarmChart()
+        ringChartOption.series.data.forEach((value) => {
+            if (this.cloudAlarmChart[value.selfLabel]) {
+                value.value = this.cloudAlarmChart[value.selfLabel]
+            }
+        })
+        // this.cloudAlarmChart.countMap.forEach((value, index) => {
+        //     lineChartOption.xAxis.data.push(this.cloudAlarmChart.countMap[index])
+        //     console.log(index,value)
+        //     lineChartOption.series.data.push(value)
+        // })
+        for (let key in this.cloudAlarmChart.countMap) {
+            lineChartOption.xAxis.data.push(key)
+            lineChartOption.series.data.push(this.cloudAlarmChart.countMap[key])
+        }
+        console.log(lineChartOption)
+        echarts.init(this.$refs.ringChartOption).setOption(ringChartOption)
+        echarts.init(this.$refs.lineChartOption).setOption(lineChartOption)
     }
 }
 </script>
@@ -101,4 +198,8 @@ export default {
     font-size: 16px;
     padding-bottom: 10px;
 }
+    .chart-wrapper {
+        display: flex;
+        justify-content: space-around;
+    }
 </style>
