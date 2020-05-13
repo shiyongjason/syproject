@@ -290,7 +290,7 @@ export default {
                     if (index === 0) charts.lineX.push(value1.dateTime)
                 })
             })
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97']
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,35,67', 'rgba(25,135,67']
             var lineY = []
             // 根据数据条数 渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
