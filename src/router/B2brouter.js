@@ -125,8 +125,8 @@ export default [
                 path: 'brandAuthorizationManagement',
                 name: 'brandAuthorizationManagement',
                 meta: {
-                    title: '品牌授权管理',
-                    tagName: '品牌授权管理',
+                    title: '品牌授权审核',
+                    tagName: '品牌授权审核',
                     isMenu: true,
                     icon: ''
                 },
