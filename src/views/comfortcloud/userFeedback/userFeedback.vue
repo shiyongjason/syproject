@@ -158,6 +158,7 @@ export default {
     }
     .wrapper-image {
         width: 100px;
+        height: 100px;
         margin-top: 20px;
         margin-right: 20px;
         /deep/.el-image-viewer__wrapper{
