@@ -151,7 +151,10 @@ export default {
     data () {
         return {
             cascader: [],
-            props: { multiple: true },
+            props: {
+                multiple: true,
+                emitPath: false
+            },
             options: [{
                 value: 1,
                 label: '东南',
