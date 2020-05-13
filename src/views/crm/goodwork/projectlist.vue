@@ -104,7 +104,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
             </basicTable>
         </div>
