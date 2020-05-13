@@ -70,7 +70,11 @@ export default {
     name: 'userFeedback',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                type: '全部',
+                startDate: '',
+                endDate: ''
+            },
             tableLabel: [
                 { label: '反馈人账号', prop: 'phone' },
                 { label: '问题类型', prop: 'type' },
