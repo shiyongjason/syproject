@@ -33,17 +33,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/brand/brand.vue')
             },
-            // {
-            //     path: 'shopManager',
-            //     name: 'shopManager',
-            //     meta: {
-            //         title: '商品库管理SPU',
-            //         tagName: '商品库管理SPU',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopManager/shopManager.vue')
-            // },
             {
                 path: 'selectCategory',
                 name: 'selectCategory',
@@ -55,28 +44,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
-            // {
-            //     path: 'platform',
-            //     name: 'platform',
-            //     meta: {
-            //         title: '商家功能管理',
-            //         tagName: '商家功能管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/platform/platform.vue')
-            // },
-            // {
-            //     path: 'shopReviewList',
-            //     name: 'shopReviewList',
-            //     meta: {
-            //         title: '平台公司商品审核列表',
-            //         tagName: '平台公司商品审核列表',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopReview/shopReviewList.vue')
-            // },
             {
                 path: 'attribute',
                 name: 'attribute',
@@ -110,17 +77,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/coupon/coupon.vue')
             },
-            // {
-            //     path: 'member',
-            //     name: 'member',
-            //     meta: {
-            //         title: '会员审核列表',
-            //         tagName: '会员审核列表',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/memberStore/member.vue')
-            // },
             {
                 path: 'memberPull',
                 name: 'memberPull',
@@ -132,17 +88,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/memberStore/memberPull.vue')
             },
-            // {
-            //     path: 'publicShop',
-            //     name: 'publicShop',
-            //     meta: {
-            //         title: '共享商品管理',
-            //         tagName: '共享商品管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopManager/publicShop.vue')
-            // },
             {
                 path: 'activeReview',
                 name: 'activeReview',
@@ -165,29 +110,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
             },
-            // {
-            //     path: 'merchantReview',
-            //     name: 'merchantReview',
-            //     meta: {
-            //         title: '商户审核列表',
-            //         tagName: '商户审核列表',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopReview/merchantReview.vue')
-            // },
-            // 这期不做
-            // {
-            //     path: 'memberManagement',
-            //     name: 'memberManagement',
-            //     meta: {
-            //         title: '会员管理',
-            //         tagName: '会员管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/memberManagement.vue')
-            // },
             {
                 path: 'brandAreaAudit',
                 name: 'brandAreaAudit',
@@ -214,8 +136,8 @@ export default [
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
-                    title: '商家商品库',
-                    tagName: '商家商品库',
+                    title: '商品管理',
+                    tagName: '商品管理',
                     isMenu: true,
                     icon: ''
                 },
