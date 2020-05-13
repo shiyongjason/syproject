@@ -5,7 +5,7 @@
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">输入百科文章标题：</div>
+                <div class="query-col-title">文章标题：</div>
                 <div class="query-col-input">
                                         <el-input type="text"
                                                   v-model="queryParams.title" maxlength="20" placeholder="输入百科文章标题"></el-input>
@@ -112,9 +112,9 @@ export default {
             }
             let tips = ''
             if (row.status == 1) {
-                tips = '该玩法还在生效中，删除后客户端无法查询，是否继续删除？'
+                tips = '该文章还在生效中，删除后客户端无法查询，是否继续删除？'
             } else {
-                tips = '该玩法还未生效，是否继续删除？'
+                tips = '该文章还未生效，是否继续删除？'
             }
             this.$confirm(tips, '提示', {
                 confirmButtonText: '确定',
