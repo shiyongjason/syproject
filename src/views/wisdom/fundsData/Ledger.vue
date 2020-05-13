@@ -44,7 +44,7 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane v-if="tabAuth('台账汇总表')" label="台账汇总表" name="0"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('台账汇总表')" label="资金支持余额汇总表" name="0"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('流贷台账')" label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('敞口台账')" label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('分授信台账')" label="分授信" name="3"></el-tab-pane>
@@ -94,7 +94,7 @@ export default {
         }),
         ...mapGetters(['platformData', 'tableData']),
         accountName () {
-            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
+            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}明细`
         }
     },
     data () {
@@ -136,7 +136,7 @@ export default {
         this.onSearch()
         await this.oldBossAuth()
         if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            this.queryParams.subsectionCode = this.branchList[0] ? this.branchList[0].crmDeptCode : ''
         }
     },
     methods: {
@@ -158,7 +158,6 @@ export default {
         //     })
         // },
         findPlatformslistByBranchList () {
-            console.log(this.$store.state.userInfo)
             let subsectionCode = this.queryParams.subsectionCode
             this.findPlatformslist({ subsectionCode })
         },

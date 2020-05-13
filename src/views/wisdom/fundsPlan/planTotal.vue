@@ -51,6 +51,7 @@ import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { downloadPlanTotalList } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 import moment from 'moment'
 
 export default {
@@ -97,7 +98,8 @@ export default {
             go && id && this.$router.push({
                 path: '/fundsPlan/approveDeclare',
                 query: {
-                    id: id
+                    id: id,
+                    source: 'planTotal'
                 }
             })
         },
@@ -146,6 +148,16 @@ export default {
         this.params.selectTime = this.targetTime
         await this.oldBossAuth()
         this.queryAndChangeTime(this.params)
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('planTotal')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'approveDeclare') {
+            clearCache('planTotal')
+        }
+        next()
     }
 }
 </script>
