@@ -365,8 +365,6 @@ export default {
                 },
                 series: lineY
             }
-            console.log(option, id)
-            debugger
             this.drawChart(option, id)
         },
         drawbar (data, id) {
