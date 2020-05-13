@@ -325,7 +325,7 @@ export default {
             this.$emit('backEvent')
         },
         onLinkBus (val) {
-            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName, code: val.companyCode } })
+            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
         },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
