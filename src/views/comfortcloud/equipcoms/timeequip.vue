@@ -14,7 +14,8 @@
                 <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
                                 :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onFindRuntimeR()">
+                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.runTimeModuleName + 'Line',
+                smartparams.runTimeModuleName + 'Bar')">
                     查询
                 </el-button>
             </div>
@@ -364,6 +365,8 @@ export default {
                 },
                 series: lineY
             }
+            console.log(option, id)
+            debugger
             this.drawChart(option, id)
         },
         drawbar (data, id) {
@@ -455,7 +458,7 @@ export default {
         },
         drawChart (option, id) {
             const chartDom = document.getElementById(id)
-            echarts.init(chartDom).setOption(option)
+            echarts.init(chartDom).setOption(option, true)
         }
     }
 }
