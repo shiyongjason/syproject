@@ -169,8 +169,8 @@ export default [
                 path: 'spuauditlist',
                 name: 'spuauditlist',
                 meta: {
-                    title: 'SPU审核列表',
-                    tagName: 'SPU审核列表',
+                    title: '商品审核',
+                    tagName: '商品审核',
                     isMenu: true,
                     icon: ''
                 },
