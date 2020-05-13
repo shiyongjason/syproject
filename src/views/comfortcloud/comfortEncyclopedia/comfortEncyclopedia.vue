@@ -8,7 +8,7 @@
                 <div class="query-col-title">输入百科文章标题：</div>
                 <div class="query-col-input">
                                         <el-input type="text"
-                                                  v-model="queryParams.title" maxlength="20" placeholder="输入玩法标题"></el-input>
+                                                  v-model="queryParams.title" maxlength="20" placeholder="输入百科文章标题"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">

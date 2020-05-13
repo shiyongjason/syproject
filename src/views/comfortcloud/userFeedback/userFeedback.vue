@@ -70,7 +70,11 @@ export default {
     name: 'userFeedback',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                type: '全部',
+                startDate: '',
+                endDate: ''
+            },
             tableLabel: [
                 { label: '反馈人账号', prop: 'phone' },
                 { label: '问题类型', prop: 'type' },
@@ -96,7 +100,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.queryParams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() >= new Date(endDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -107,7 +111,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.queryParams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -138,7 +142,7 @@ export default {
         }
     },
     mounted () {
-        this.findUserFeedbackList()
+        this.findUserFeedbackList(this.queryParams)
     }
 }
 </script>
@@ -154,6 +158,7 @@ export default {
     }
     .wrapper-image {
         width: 100px;
+        height: 100px;
         margin-top: 20px;
         margin-right: 20px;
         /deep/.el-image-viewer__wrapper{
