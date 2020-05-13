@@ -14,22 +14,17 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
-                </div>
-                <div class="query-cont-col flex-box-time" v-if="false">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
@@ -42,31 +37,10 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
-            <el-form :model="uploadData" :rules="rules" ref="form">
-                <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
-                    </a>
-                </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        导入表格
-                    </el-button>
-                </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -77,7 +51,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { branchSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCompanyOverdueList, getCompanyOverdueListTotal } from './api/index'
+import { getBranchOverdueList, getCompanyOverdueListTotal, exportBranchOverdueDetailExcel } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -85,14 +59,6 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            uploadData: {
-                commitmentYear: ''
-            },
-            rules: {
-                commitmentYear: [
-                    { required: true, message: '请选择年', trigger: 'blur' }
-                ]
-            },
             headersData: {
                 'refreshToken': sessionStorage.getItem('refreshToken'),
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
@@ -125,14 +91,14 @@ export default {
                 subsectionOldCode: '',
                 misCode: '',
                 commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             searchParams: {},
             page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
             tableData: [],
@@ -217,14 +183,14 @@ export default {
             }
         },
         onExport () {
-            // exportCommitment(this.queryParams)
+            // exportBranchOverdueDetailExcel(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getCompanyOverdueList(this.queryParams), getCompanyOverdueListTotal(this.queryParams)]
+            const promiseArr = [getBranchOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 console.log(res)
                 // res[1].data.companyName = '合计'
@@ -283,14 +249,6 @@ export default {
             this.loading = false
         },
         handleUpload (file) {
-            this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
-                this.$message({
-                    message: '请先选择导入年份！',
-                    type: 'warning'
-                })
-                return false
-            }
             if (file.size / (1024 * 1024) > 100) {
                 this.$message({
                     message: '附件要保持100M以内',
@@ -332,5 +290,13 @@ export default {
     position: absolute;
     top: -16px;
     right: 0;
+}
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
 }
 </style>

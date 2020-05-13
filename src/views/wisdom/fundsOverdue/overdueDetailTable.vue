@@ -357,4 +357,12 @@ export default {
     top: -16px;
     right: 0;
 }
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
+}
 </style>

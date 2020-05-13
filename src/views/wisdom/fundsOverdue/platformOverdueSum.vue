@@ -165,6 +165,7 @@ export default {
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
+                console.log(val)
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({
                     deptType: 'Q',
@@ -323,5 +324,13 @@ export default {
     position: absolute;
     top: -16px;
     right: 0;
+}
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
 }
 </style>
