@@ -360,9 +360,9 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.maxCreateTime)
+                    let beginDateVal = this.searchParams.maxCreateTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() >  new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -370,9 +370,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.minCreateTime)
+                    let beginDateVal = this.searchParams.minCreateTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
