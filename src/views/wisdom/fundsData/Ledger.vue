@@ -34,39 +34,17 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
                 </div>
+                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
+                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                </div>
                 <!-- <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div> -->
             </div><br>
-            <!-- 按钮权限 v-if="hosAuthCheck(reCheckAuth)"-->
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
-                    还款明细表模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-借款信息导入模板.xlsx" download="资金台账-借款信息导入模板.xlsx">
-                    借款模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        借款信息导入
-                    </el-button>
-                </el-upload>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData'>
-                    <el-button type="primary" class="m0" :loading='loading'>
-                        还款明细表信息导入
-                    </el-button>
-                </el-upload>
-            </div>
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane v-if="tabAuth('台账汇总表')" label="台账汇总表" name="0"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('台账汇总表')" label="资金支持余额汇总表" name="0"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('流贷台账')" label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('敞口台账')" label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('分授信台账')" label="分授信" name="3"></el-tab-pane>
@@ -84,9 +62,11 @@
             <el-tabs v-model="productType" v-if="accountType == 3" type="card" @tab-click="handleClick(2)">
                 <el-tab-pane v-if="hosAuthCheck(pointscredit_good_credit)" label="好信用" name="1"></el-tab-pane>
             </el-tabs>
-            <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
-            <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            <div class="fundBtn">
+                <el-button v-if="accountType == '1' && hosAuthCheck(addFundsData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+                <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
+            </div>
             <complexTable v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
@@ -96,10 +76,10 @@
 import { interfaceUrl } from '@/api/config'
 import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
-import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD } from '@/utils/auth_const'
+import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD, WISDOM_ACCOUNT_EXPORT } from '@/utils/auth_const'
+import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-// import { tabAuthPath } from '@/router/const'
 import { departmentAuth } from './mixins/userAuth'
 import { createNamespacedHelpers } from 'vuex'
 const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
@@ -114,7 +94,7 @@ export default {
         }),
         ...mapGetters(['platformData', 'tableData']),
         accountName () {
-            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
+            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}明细`
         }
     },
     data () {
@@ -122,10 +102,6 @@ export default {
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -151,15 +127,16 @@ export default {
             exposure_good_credit: WISDOM_EXPOSURE_GOOD_CREDIT,
             exposure_orange: WISDOM_EXPOSURE_ORANGE,
             pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
+            account_export: WISDOM_ACCOUNT_EXPORT,
             hasNoneAuth: false
         }
     },
     async mounted () {
         this.getUserTabAuth()
         this.onSearch()
-        await this.oldAuth()
+        await this.oldBossAuth()
         if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            this.queryParams.subsectionCode = this.branchList[0] ? this.branchList[0].crmDeptCode : ''
         }
     },
     methods: {
@@ -181,7 +158,6 @@ export default {
         //     })
         // },
         findPlatformslistByBranchList () {
-            console.log(this.$store.state.userInfo)
             let subsectionCode = this.queryParams.subsectionCode
             this.findPlatformslist({ subsectionCode })
         },
@@ -326,6 +302,15 @@ export default {
             return router && router.some(i => {
                 return i.path == param
             })
+        },
+        onExport () {
+            const params = {
+                misCode: this.queryParams.misCode,
+                loanCompanyName: this.queryParams.loanCompanyName,
+                subsectionCode: this.queryParams.subsectionCode,
+                standingBookNo: this.queryParams.standingBookNo
+            }
+            downloadCloudAlarmList(params)
         }
     },
     activated () {
@@ -345,30 +330,45 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.add-tags-dialog {
-    padding-top: 20px;
-}
-.downloadExcel {
-    padding: 12px 20px;
-    border-radius: 4px;
-    background-color: #ff7a45;
-    color: #fff;
-}
-/deep/ .el-dialog__body {
-    min-height: 0 !important;
-}
+.amountImport {
+    .add-tags-dialog {
+        padding-top: 20px;
+    }
+    .downloadExcel {
+        padding: 12px 20px;
+        border-radius: 4px;
+        background-color: #ff7a45;
+        color: #fff;
+    }
+    /deep/ .el-dialog__body {
+        min-height: 0 !important;
+    }
 
-/deep/ .el-tabs--card > .el-tabs__header {
-    border-bottom: 0;
-}
+    /deep/ .el-tabs--card > .el-tabs__header {
+        border-bottom: 0;
+    }
 
-/deep/ .el-tabs--card .el-tabs__nav {
-    border-bottom: 1px solid #e4e7ed;
-}
-.m0 {
-    margin: 0;
-}
-/deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
-    border-bottom-color: #ff7a45;
+    /deep/ .el-tabs--card .el-tabs__nav {
+        border-bottom: 1px solid #e4e7ed;
+    }
+    .m0 {
+        margin: 0;
+    }
+    /deep/ .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
+        border-bottom-color: #ff7a45;
+    }
+    .page-body {
+        padding: 8px 0 20px 0;
+    }
+    /deep/.el-tabs__header {
+        margin: 0 0 10px;
+    }
+    /deep/.el-tabs__item {
+        height: 30px;
+        line-height: 30px;
+    }
+    .fundBtn .el-button {
+        padding: 7px 15px;
+    }
 }
 </style>

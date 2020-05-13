@@ -1,6 +1,7 @@
 <template>
     <div class="hosjoy-table">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :span-method="this.merge ? this.mergeMethod : this.spanMethod">
+        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
+                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -8,14 +9,18 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
+            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod"
+                             align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" align="center" :prop="item.prop" :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth" :class-name="item.className">
+                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
+                                 :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth"
+                                 :class-name="item.className">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item" :key='index'></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item"
+                               :key='index'></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
@@ -24,13 +29,16 @@
             </el-table-column>
         </el-table>
         <div class="pages">
-            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum"
+                           :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs"
+                           @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
         </div>
     </div>
 </template>
 
 <script>
 import hosjoyColumn from './hosjoy-column'
+
 export default {
     props: {
         isShowselection: { type: Boolean, default: () => false },
@@ -50,7 +58,12 @@ export default {
         pageNumber: { type: Number, default: 1 },
         /** 每页数量 */
         pageSize: { type: Number, default: 10 },
-        pageSizes: { type: Array, default () { return [10, 20, 50, 100] } },
+        pageSizes: {
+            type: Array,
+            default () {
+                return [10, 20, 50, 100]
+            }
+        },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
         actionWidth: { type: String, default: '' }
     },
@@ -88,6 +101,14 @@ export default {
         }
     },
     methods: {
+        tableRowClassName ({ row }) {
+            if (row.cellType === 2) {
+                return 'branch-total-row'
+            } else if (row.cellType === 3) {
+                return 'total-row'
+            }
+            return ''
+        },
         handleSizeChange (val) {
             this.$emit('pagination', {
                 pageNumber: this.currentPage,
@@ -180,22 +201,50 @@ export default {
 
 </script>
 <style scoped>
-.hosjoy-table >>> .el-table .cell {
-    font-size: 12px;
-}
-/* .hosjoy-table >>> .el-table .caret-wrapper {
-    height: 20px;
-} */
-.hosjoy-table >>> .el-table th {
-    color: #000000;
-    font-size: 12px;
-    font-weight: 400;
-}
-.pages {
-    text-align: right;
-    margin-top: 20px;
-}
-.pages .el-pagination {
-    text-align: right;
-}
+    .hosjoy-table >>> .el-table .cell {
+        font-size: 12px;
+    }
+
+    /* .hosjoy-table >>> .el-table .caret-wrapper {
+        height: 20px;
+    } */
+    .hosjoy-table >>> .el-table th {
+        color: #000000;
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .pages {
+        text-align: right;
+        margin-top: 20px;
+    }
+
+    .pages .el-pagination {
+        text-align: right;
+    }
+
+    .hosjoy-table >>> .el-table .branch-total-row {
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+    .hosjoy-table >>> .el-table__row--striped.branch-total-row  td{
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+    .hosjoy-table >>> .el-table .total-row {
+        background: rgb(253, 233, 217);
+        font-weight: bold;
+    }
+    /*.hosjoy-table >>> .el-table .branch-total-row .wisdom-total-background,.hosjoy-table >>> .el-table .branch-total-row .wisdom-total-background:hover {*/
+    /*    background: rgb(235, 241, 222);*/
+    /*    font-weight: bold;*/
+    /*}*/
+
+    /*.hosjoy-table >>> .el-table .wisdom-total-background {*/
+    /*    background: rgb(220, 230, 241);*/
+    /*}*/
+    /*.hosjoy-table >>> .el-table .total-row .wisdom-total-background, .hosjoy-table >>> .el-table .total-row .wisdom-total-background:hover  {*/
+    /*    background: rgb(253, 233, 217);*/
+    /*    font-weight: bold;*/
+    /*}*/
 </style>

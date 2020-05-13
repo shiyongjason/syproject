@@ -131,6 +131,8 @@ export const JINYUN_AMOUNT_IMPORT_RE_CHECK = 10562
 // 好智慧-利润统计 导出
 export const AUTH_PROFIT_STATISTICS_EXPORT = 10580
 
+// 好智慧-资金数据 台账导出
+export const WISDOM_ACCOUNT_EXPORT = 10700
 // 好智慧-资金数据 新增流贷台账
 export const WISDOM_FLOWTOBORROW_FUNDSDATA_ADD = 10710
 // 好智慧-资金数据 流贷-好信用
@@ -155,7 +157,29 @@ export const WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA = 10810
 export const WISDOM_EXPOSURE_FUNDSDATA_UPDATA = 10820
 // 好智慧-资金数据 新增分授信台账
 export const WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA = 10830
+// 好智慧-资金数据 流贷
+export const WISDOM_FLOWTOBORROW_SHOW_LINE = 10840
+// 好智慧-资金数据 敞口
+export const WISDOM_EXPOSURE_SHOW_LINE = 10850
+// 好智慧-资金数据 分授信
+export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
+
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
 
 export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
+
+// 好程工 权限功能  109000
+export const CRM_GOODWORK_DETAIL = 109111
+// export const CRM_GOODWORK_OPERATE = 109112
+export const CRM_GOODWORK_SHENPI = 109112 // 审批
+export const CRM_GOODWORK_XINSHEN = 109113 // 信审
+export const CRM_GOODWORK_QIANYUE = 109114 // 签约
+export const CRM_GOODWORK_FANGKUAN = 109115 // 放款
+export const CRM_GOODWORK_HUIKUAN = 109116 // 全部回款
+export const CRM_GOODWORK_BAOCUN = 109117 // 保存
+export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
+
+export const CRM_AUTHEN_DETAIL = 109211
+export const CRM_WHITE_OPERATE = 109212
+export const CRM_WHITE_BAOCUN = 109213

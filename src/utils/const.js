@@ -48,3 +48,25 @@ export const MONTH_DATA = [
         value: '12'
     }
 ]
+export const PAY_METHOD_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '快捷支付（信用卡）', value: 21 },
+    { label: '快捷支付（储蓄卡）', value: 22 },
+    { label: '微信支付', value: 40 },
+    { label: '微信支付（小程序）', value: 42 },
+    { label: '支付宝支付', value: 50 },
+    { label: '账期支付', value: 1 },
+    { label: '公司转账', value: 2 },
+    { label: '余额支付', value: 10 }
+]
+
+export const PAY_METHOD_MAP = new Map([
+    [21, '快捷支付（信用卡）'],
+    [22, '快捷支付（储蓄卡）'],
+    [40, '微信支付'],
+    [42, '微信支付（小程序）'],
+    [50, '支付宝支付'],
+    [1, '账期支付'],
+    [2, '公司转账'],
+    [10, '余额支付']
+])

@@ -5,6 +5,9 @@
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
+                <el-form-item label="分部：">
+                    <el-input v-model="form.deptName" disabled></el-input>
+                </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
                 </el-form-item>
@@ -26,11 +29,11 @@
                         <el-radio :label=item.key v-for="item in progressList" :key="item.key">{{item.value}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="合同总额：" prop="contractAmount">
-                    <el-input v-model="form.contractAmount" placeholder="请输入合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
+                <el-form-item label="项目合同总额：" prop="contractAmount">
+                    <el-input v-model="form.contractAmount" placeholder="请输入项目合同总额" maxlength="18" v-isNum:2="form.contractAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
-                <el-form-item label="设备款总额：" prop="deviceAmount">
-                    <el-input v-model="form.deviceAmount" placeholder="请输入设备款总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备款总额">￥</template></el-input>
+                <el-form-item label="设备总额：" prop="deviceAmount">
+                    <el-input v-model="form.deviceAmount" placeholder="请输入设备总额" maxlength="18" v-isNum:2="form.deviceAmount"><template slot="append" placeholder="请输入设备总额">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="设备品类：" prop="deviceCategory">
                     <el-select v-model="form.deviceCategory" placeholder="请选择">
@@ -50,17 +53,26 @@
                 <el-form-item label="上游供应商名称：" prop="upstreamSupplierName">
                     <el-input v-model="form.upstreamSupplierName" maxlength="50" placeholder="请输入上游供应商名称"></el-input>
                 </el-form-item>
-                <el-form-item label="上游接受承兑时间：" prop="upstreamPromiseMonth">
-                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
-               个月
+                <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
+                    <el-checkbox-group v-model="form.upstreamPayTypearr" @change="onCRemarkTxt">
+                        <el-checkbox label="1" name="type">现金</el-checkbox>
+                        <el-checkbox label="2" name="type">承兑</el-checkbox>
+                    </el-checkbox-group>
+                    <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
+                        <el-input v-if="form.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
+                    </el-form-item>
+                </el-form-item>
+                <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
+                    <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
+                    个月
                 </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
                     <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
                 <el-form-item label="预估赊销周期：" prop="loanMonth">
                     <el-input-number v-model="form.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
-               个月
-               </el-form-item>
+                    个月
+                </el-form-item>
                 <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
                     <el-form-item label="预付款比例">
                         <el-input v-model="form.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
@@ -91,16 +103,34 @@
             </el-form>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
-                    <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
+                    <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&form.status==2">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&form.status==4">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_qianyue)&&form.status==6">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_fangkuan)&&form.status==7">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+                    <template v-if="hosAuthCheck(crm_goodwork_huikuan)&&form.status==8">
+                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                    </template>
+
+                    <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
+                        <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态</el-button>
+                    </template>
                     <el-button @click="cancelForm">取 消</el-button>
-                    <el-button type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-button v-if="hosAuthCheck(crm_goodwork_baocun)" type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
             </div>
         </el-drawer>
         <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='尽调'">
+                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='信审'">
                     <el-radio-group v-model="statusForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
@@ -129,6 +159,7 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import * as newAuth from '@/utils/auth_const'
 export default {
     name: 'projectdrawer',
     props: {
@@ -142,6 +173,13 @@ export default {
     },
     data () {
         return {
+            crm_goodwork_shenpi: newAuth.CRM_GOODWORK_SHENPI,
+            crm_goodwork_xinshen: newAuth.CRM_GOODWORK_XINSHEN, // 信审
+            crm_goodwork_qianyue: newAuth.CRM_GOODWORK_QIANYUE, // 签约
+            crm_goodwork_fangkuan: newAuth.CRM_GOODWORK_FANGKUAN, // 放款
+            crm_goodwork_huikuan: newAuth.CRM_GOODWORK_HUIKUAN, // 回款
+            crm_goodwork_baocun: newAuth.CRM_GOODWORK_BAOCUN, // 保存
+            crm_goodwork_chongzhi: newAuth.CRM_GOODWORK_CHOINGZHI, // 重置
             loading: false,
             statusTxt: '',
             dialogVisible: false,
@@ -156,7 +194,7 @@ export default {
             },
             copyStatusForm: {},
             aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '尽调' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
             statusType: STATUS_TYPE,
             newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
@@ -166,10 +204,12 @@ export default {
             },
             form: {
                 projectUpload: [],
-                loanPayTypeRate: '方法定义必填'
+                loanPayTypeRate: '方法定义必填',
+                payAcceptanceRemarkTxt: '承兑方法必填',
+                upstreamPayTypearr: []
             },
             copyForm: {},
-            formLabelWidth: '150px',
+            formLabelWidth: '160px',
             progressList: PROCESS_LIST,
             typeList: TYPE_LIST,
             deviceCategoryList: DEVICE_LIST,
@@ -194,7 +234,7 @@ export default {
                     { required: true, message: '请输入合同金额', trigger: 'blur' }
                 ],
                 deviceAmount: [
-                    { required: true, message: '请输入设备款总额', trigger: 'blur' }
+                    { required: true, message: '请输入设备总额', trigger: 'blur' }
                 ],
                 deviceCategory: [
                     { required: true, message: '请选择设备品类', trigger: 'change' }
@@ -209,7 +249,7 @@ export default {
                     { required: true, message: '请输入上游供应商名称', trigger: 'blur' }
                 ],
                 upstreamPromiseMonth: [
-                    { required: true, message: '请输入上游接受承兑时间', trigger: 'blur' }
+                    { required: true, message: '请输入上游接受承兑周期', trigger: 'blur' }
                 ],
                 predictLoanAmount: [
                     { required: true, message: '请输入预估赊销金额', trigger: 'blur' }
@@ -217,6 +257,20 @@ export default {
                 loanMonth: [
                     { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
                 ],
+                upstreamPayTypearr: [
+                    { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
+                ],
+                // payAcceptanceRemarkTxt: [
+                //     { required: true },
+                //     {
+                //         validator: (r, v, callback) => {
+                //             if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
+                //                 return callback(new Error('请输入承兑说明'))
+                //             }
+                //             return callback()
+                //         }
+                //     }
+                // ],
                 loanPayTypeRate: [
                     { required: true },
                     {
@@ -270,20 +324,27 @@ export default {
         },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
-            this.form = { ...this.projectDetail }
+            // this.form = { ...this.projectDetail, ...{ upstreamPayTypearr: [] } }
+            this.form = { ...this.form, ...this.projectDetail }
             this.form.projectUpload = this.form.attachmentUrl ? JSON.parse(this.form.attachmentUrl) : []
             this.form.loanPayTypeRate = '方法定义必填'
+            this.form.upstreamPayTypearr = this.form.upstreamPayType ? this.form.upstreamPayType.split(',') : []
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
             console.log(value)
+        },
+        onCRemarkTxt () {
+            if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
+                this.form.payAcceptanceRemark = ''
+                this.$refs.remarkTxt.clearValidate()
+            }
         },
         onBackUpload (str) {
         },
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
-
             if (status == 2) {
                 // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
                 this.dialogVisible = true
@@ -297,9 +358,9 @@ export default {
             } else if (status == 3) {
                 status = !!status // H5端资料收集种 显示重置按钮
             } else if (status == 4) {
-                // status = !!status // H5端待尽调 显示重置按钮和尽调  这里需要弹窗  通过 不通过
+                // status = !!status // H5端待信审 显示重置按钮和信审  这里需要弹窗  通过 不通过
                 this.dialogVisible = true
-                this.aduitTitle = '尽调'
+                this.aduitTitle = '信审'
                 this.statusForm = { ...this.copyStatusForm }
                 this.statusForm.reset = false
                 this.$nextTick(() => {
@@ -318,9 +379,11 @@ export default {
                 // status = !!status + 1 //  H5端 合作完成   显示重置
             }
             this.statusForm.reset = false
-            await saveStatus({ projectId: this.form.id,
-                status: status,
-                updateBy: this.userInfo.employeeName })
+            await saveStatus(
+                { projectId: this.form.id,
+                    status: status,
+                    updateBy: this.userInfo.employeeName }
+            )
             this.$message({
                 message: `${statusTxt}成功`,
                 type: 'success'
@@ -368,6 +431,7 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
+            console.log('newval', newVal)
             if (newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
@@ -402,6 +466,7 @@ export default {
                 }
             })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
+            this.form.upstreamPayType = this.form.upstreamPayTypearr.join(',')
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {

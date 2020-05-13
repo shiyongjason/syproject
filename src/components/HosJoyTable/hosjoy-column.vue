@@ -32,6 +32,16 @@ function money (money) {
     }
     return '-'
 }
+function fundMoney (money) {
+    if (money === 0) {
+        return 0
+    }
+    if (money) {
+        const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return res
+    }
+    return '-'
+}
 export default {
     name: 'hosjoyColumn',
     props: {
@@ -45,7 +55,8 @@ export default {
     data () {
         return {
             functions: {
-                money: money
+                money: money,
+                fundMoney: fundMoney
             }
         }
     },
