@@ -21,6 +21,8 @@ const mutations = {
     [types.PLAN_TOTAL_LIST] (state, payload) {
         state.planTotalList = payload.map(value => {
             value.salePercentCurrent += '%'
+            value.usedPercentCurrent += '%'
+            value.overduePercent += '%'
             return value
         })
     },

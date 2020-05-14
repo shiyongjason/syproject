@@ -51,14 +51,15 @@
                         <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
                         </el-date-picker>
                     </div>
-                    <el-button type="primary" @click="onFindTableList()">搜索
+                    <el-button type="primary" @click="onSearch()">搜索
                     </el-button>
                     <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="onExport()">导出
                     </el-button>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload
+                    :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -120,6 +121,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            queryParams: {},
             branchList: [],
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
@@ -144,7 +146,11 @@ export default {
                 }
             },
             tableData: [],
-            paginationData: {},
+            paginationData: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            },
             interfaceUrl: interfaceUrl,
             companyList: [],
             cityList: [],
@@ -166,16 +172,15 @@ export default {
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
         this.onFindBranchList(this.userInfo.oldDeptCode)
-        this.onFindTableList()
+        this.onSearch()
         this.getCompanyList()
         this.getCityList()
     },
-    watch: {
-        // 'searchParams.subsectionCode' (newV, oldV) {
-        //     this.cityData.params.subsectionCode = newV
-        // }
-    },
     methods: {
+        onSearch () {
+            this.queryParams = { ...this.searchParams }
+            this.onFindTableList()
+        },
         uploadProcess (event, file, fileList) {
             this.uploadLoading = true
         },
@@ -208,16 +213,9 @@ export default {
             }
         },
         async onFindTableList () {
-            const { data } = await findTableList(this.searchParams)
+            const { data } = await findTableList(this.queryParams)
             console.log(data)
             this.tableData = data.data.list
-            // this.tableData && this.tableData.map(value => {
-            //     value.balanceTarget = (value.balanceTarget).toFixed(2)
-            //     value.minimumTarget = (value.minimumTarget).toFixed(2)
-            //     value.performanceTarget = (value.performanceTarget).toFixed(2)
-            //     value.sprintTarget = (value.sprintTarget).toFixed(2)
-            //     return value
-            // })
             this.paginationData = {
                 pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNum,
@@ -229,28 +227,25 @@ export default {
             this.branchList = data.data
         },
         backFindmiscode (val) {
-            this.searchParams.misCode = val.value.misCode
+            this.queryParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
-            console.log(val)
-            this.searchParams.cityCode = val.value.cityCode
+            this.queryParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
-            console.log(val)
-            this.searchParams.pageSize = val
+            this.queryParams.pageSize = val
             this.onFindTableList()
         },
         handleCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.onFindTableList()
         },
         onCurrentChange (val) {
-            console.log(222)
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.onFindTableList()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.queryParams.pageSize = val
             this.onFindTableList()
         },
         onFieldChange (val) {
@@ -258,10 +253,8 @@ export default {
         },
         onExport () {
             var url = ''
-            // delete this.searchParams.pageNumber
-            // delete this.searchParams.pageSize
-            for (var key in this.searchParams) {
-                url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
+            for (var key in this.queryParams) {
+                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             location.href = interfaceUrl + 'rms/companyTarget/export?' + url
         },
