@@ -19,10 +19,7 @@
                     </div>
                     <div class="flex-row">岗位：
                         <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions"
-                                :key="item.id"
-                                :label="item.positionName"
-                                :value="item.positionCode"></el-option>
+                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -61,13 +58,11 @@
                                             <td :key="authTypeIndex + '_authType'" width="300">
                                                 <div v-if="itemAuthType.id">
                                                     <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemb.have" class="mr10">
-                                                        {{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}
+                                                        {{ itemAuthType.authType == 0 ? '敏感字段' :itemAuthType.authType == 1 ? '敏感操作':'数据范围' }}
                                                     </el-checkbox>
                                                     <div class="el-radio-group">
-                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''"
-                                                            @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
-                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''"
-                                                            @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
                                                     </div>
                                                 </div>
                                                 <div v-else></div>
@@ -91,7 +86,7 @@
         </div>
         <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
             <div class="h-dialog">
-                <table class="tablelist textCenter">
+                <!-- <table class="tablelist textCenter">
                     <thead>
                         <tr>
                             <td width="30%">菜单</td>
@@ -106,7 +101,11 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> -->
+                <div>
+                    <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]">
+                    </el-tree>
+                </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelFieldConfig()">取 消</el-button>
@@ -123,6 +122,27 @@ export default {
     name: 'role',
     data () {
         return {
+            data: [{
+                id: 1,
+                label: '一级 2',
+                children: [{
+                    id: 3,
+                    label: '二级 2-1'
+                }, {
+                    id: 2,
+                    label: '二级 2-2'
+                }]
+            }, {
+                id: 2,
+                label: '一级 2',
+                children: [{
+                    id: 3,
+                    label: '二级 2-1'
+                }, {
+                    id: 2,
+                    label: '二级 2-2'
+                }]
+            }],
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
             fieldVisible: false, // 敏感字段弹出层显示控制
@@ -329,7 +349,7 @@ export default {
             this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
             this.newItem = item
             // 弹出层title和authName
-            this.layerTitle = item.authType == 0 ? '敏感字段' : '敏感操作'
+            this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
         },
         onCancelFieldConfig () {
