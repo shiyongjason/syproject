@@ -22,7 +22,6 @@
                 </el-form-item>
                 <div class="page-body-title">
                     <h3>文章内容</h3>
-                    {{smartPlayForm.body}}
                 </div>
                 <el-form-item label="详情：" prop="body">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
@@ -49,6 +48,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { createCloudComfortEncyclopedia, updateCloudComfortEncyclopedia } from '../api'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'smartPlayEdit',
     data () {
