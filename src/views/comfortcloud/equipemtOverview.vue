@@ -44,6 +44,7 @@ export default {
     methods: {
         onTopbox (target) {
             this.equipshow = target
+
         },
         ...mapActions({
             findCloudDeviceCount: 'findCloudDeviceCount'
