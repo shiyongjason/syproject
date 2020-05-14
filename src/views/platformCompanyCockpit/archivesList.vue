@@ -362,7 +362,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.searchParams.maxCreateTime
                     if (beginDateVal) {
-                        return time.getTime() >  new Date(beginDateVal).getTime()
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -592,7 +592,11 @@ export default {
     max-height: 600px;
     overflow-y: scroll;
 }
-.addbutton{ margin-bottom: 16px; text-align: right}
-/deep/.el-dialog__wrapper .el-textarea .el-input__count{color:#c3c6cc}
-
+.addbutton {
+    margin-bottom: 16px;
+    text-align: right;
+}
+/deep/.el-dialog__wrapper .el-textarea .el-input__count {
+    color: #c3c6cc;
+}
 </style>

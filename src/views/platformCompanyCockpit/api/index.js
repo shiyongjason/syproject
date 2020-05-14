@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ccpBaseUrl, ossUrl, interfaceUrl } from '@/api/config'
+import { ccpBaseUrl, interfaceUrl } from '@/api/config'
 
 // 生成验证码
 export const getVerifica = (params) => axios.get('/uaa/api/verification-code', params)
