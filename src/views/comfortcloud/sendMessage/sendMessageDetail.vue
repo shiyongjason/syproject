@@ -26,10 +26,7 @@
                         消息通知内容：{{cloudSendMessageDetailChart.content}}
                     </p>
                     <p>
-                        点击后打开：
-                        <span v-if="cloudSendMessageDetailChart.redirectType == 1">应用</span>
-                        <span v-if="cloudSendMessageDetailChart.redirectType == 2">应用内页面</span>
-                        <span v-if="cloudSendMessageDetailChart.redirectType == 3">h5页面</span>
+                        点击后打开：{{cloudSendMessageDetailChart.clickRedirect}}
                     </p>
                     <p>
                         推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate}}

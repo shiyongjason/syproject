@@ -7,10 +7,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">反馈时间： </div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker :editable="false" v-model="queryParams.startDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker :editable="false" v-model="queryParams.endDate" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -165,6 +165,9 @@ export default {
             width: 100%;
             height: 100%;
         }
+    }
+    /deep/.el-icon-circle-close{
+        color: #ffffff;
     }
     .dialog {
         position: fixed;

@@ -96,7 +96,7 @@ export default {
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入舒适小百科'))
+                                return callback(new Error('请输入文章内容'))
                             }
                             return callback()
                         },
