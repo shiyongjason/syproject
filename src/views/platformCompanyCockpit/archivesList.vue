@@ -360,9 +360,9 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.maxCreateTime)
+                    let beginDateVal = this.searchParams.maxCreateTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -370,9 +370,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.minCreateTime)
+                    let beginDateVal = this.searchParams.minCreateTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -592,7 +592,11 @@ export default {
     max-height: 600px;
     overflow-y: scroll;
 }
-.addbutton{ margin-bottom: 16px; text-align: right}
-/deep/.el-dialog__wrapper .el-textarea .el-input__count{color:#c3c6cc}
-
+.addbutton {
+    margin-bottom: 16px;
+    text-align: right;
+}
+/deep/.el-dialog__wrapper .el-textarea .el-input__count {
+    color: #c3c6cc;
+}
 </style>
