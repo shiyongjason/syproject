@@ -46,7 +46,8 @@ const barOption = {
         data: ['目标用户', '送达用户', '打开用户', '清除用户']
     },
     yAxis: {
-        type: 'value'
+        type: 'value',
+        name: '单位：人次'
     },
     tooltip: {
         trigger: 'axis',
