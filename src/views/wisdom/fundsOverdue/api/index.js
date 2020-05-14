@@ -62,21 +62,19 @@ export function exportCompanyOverdueDetailExcel (params) {
         axios.defaults.responseType = 'json'
     })
 }
-// 分部逾期汇总列表
+// 分部逾期汇总列表&合计
 export const getBranchOverdueList = (params) => axios.get(`backend/api/subsection/overdue/summary`, { params })
-// // 分部逾期汇总合计
-// export const getCompanyOverdueListTotal = (params) => axios.get(`backend/api/company/overdue/summary/total`, { params })
 // 分部逾期汇总导出
 export function exportBranchOverdueDetailExcel (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`backend/api/company/overdue/increment/export`, { params }).then(function (response) {
+    axios.get(`backend/api/subsection/overdue/summary/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 console.log(params)
                 const a = document.createElement('a')
-                a.download = `逾期增量明细表.xlsx`
+                a.download = `分部逾期汇总表.xlsx`
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
