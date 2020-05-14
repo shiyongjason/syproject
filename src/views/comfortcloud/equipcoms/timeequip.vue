@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">创建时间：</div>
+                    <div class="query-col-title">统计日期：</div>
                     <div class="query-col-input">
                         <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate"
                                         value-format="yyyy-MM-dd" placeholder="开始日期"
