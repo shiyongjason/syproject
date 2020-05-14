@@ -48,7 +48,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { createCloudComfortEncyclopedia, updateCloudComfortEncyclopedia } from '../api'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
     name: 'smartPlayEdit',
     data () {

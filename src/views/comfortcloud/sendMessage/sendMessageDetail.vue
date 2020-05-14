@@ -2,11 +2,17 @@
     <div class="page-body">
         <div class="title">
             统计说明
-            <span>?</span>
+            <el-tooltip class="item" effect="dark" placement="right-start">
+                <span>?</span>
+                <div slot="content">
+                    目标用户：计划发送消息的目标用户的数量<br/>送达用户：消息实际下发到应用的数量<br/>打开用户：用户打开消息通知的消息数量<br/>清除用户：用户清除消息通知的消息数量
+                </div>
+            </el-tooltip>
         </div>
         <div class="container page-body-cont">
             <div class="wrapper-chart">
-                <div class="time">{{Date.now() | formatDate('YYYY-MM-DD')}} - {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}}</div>
+                <div class="time">
+                     {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}} - {{ Date.now() | formatDate('YYYY-MM-DD')}}</div>
                 <div class="chart" ref="barChart" style="width: 580px;height: 400px"></div>
             </div>
             <div class="tips">
@@ -29,7 +35,7 @@
                         点击后打开：{{cloudSendMessageDetailChart.clickRedirect}}
                     </p>
                     <p>
-                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate}}
+                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </p>
                 </div>
             </div>
@@ -46,7 +52,8 @@ const barOption = {
         data: ['目标用户', '送达用户', '打开用户', '清除用户']
     },
     yAxis: {
-        type: 'value'
+        type: 'value',
+        name: '单位：人次'
     },
     tooltip: {
         trigger: 'axis',
@@ -97,7 +104,6 @@ export default {
         // getCloudSendMessageDetailChart
         this.id = this.$route.query.id
         await this.findCloudSendMessageDetailChart({ id: this.id })
-        console.log(this.cloudSendMessageDetailChart)
         barOption.series.data = [
             this.cloudSendMessageDetailChart.pushCount,
             this.cloudSendMessageDetailChart.receivedCount,
@@ -121,6 +127,7 @@ export default {
         display: inline-block;
         text-align: center;
         font-size: 12px;
+        cursor: pointer;
     }
 }
     .container{
@@ -130,6 +137,16 @@ export default {
         }
         .sub-title{
             padding: 20px 0;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        p{
+            padding: 6px;
+            font-size: 14px;
+            color: #666666;
+            font-weight: 200;
+            line-height: 17px;
+            box-sizing: border-box;
         }
     }
 </style>

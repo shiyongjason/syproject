@@ -26,19 +26,19 @@
                     <div class="chart-flex2" id="allLine" style="height:500px"></div>
                     <div class="chart-flex1" id="allBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="中央空调控制器（物联）" name="Op" class="echart-wrap">
+                <el-tab-pane label="中央空调控制器WC-03" name="Op" class="echart-wrap">
                     <div class="chart-flex2" id="OpLine" style="height:500px"></div>
                     <div class="chart-flex1" id="OpBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="中央空调控制器（零颗米）" name="Co" class="echart-wrap">
+                <el-tab-pane label="中央空调控制器LC-305" name="Co" class="echart-wrap">
                     <div class="chart-flex2" id="CoLine" style="height:500px"></div>
                     <div class="chart-flex1" id="CoBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="物联地暖" name="Ap" class="echart-wrap">
+                <el-tab-pane label="地暖智控面板LH-306" name="Ap" class="echart-wrap">
                     <div class="chart-flex2" id="ApLine" style="height:500px"></div>
                     <div class="chart-flex1" id="ApBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="智能温控阀" name="Rt" class="echart-wrap">
+                <el-tab-pane label="智能温控阀LR-307" name="Rt" class="echart-wrap">
                     <div class="chart-flex2" id="RtLine" style="height:500px"></div>
                     <div class="chart-flex1" id="RtBar" style="height:500px"></div>
                 </el-tab-pane>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">创建时间：</div>
+                    <div class="query-col-title">统计日期：</div>
                     <div class="query-col-input">
                         <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate"
                                         value-format="yyyy-MM-dd" placeholder="开始日期"
@@ -342,7 +342,7 @@ export default {
                 grid: {
                     top: '10%',
                     left: '3%',
-                    right: '3%',
+                    right: '8%',
                     bottom: '3%',
                     containLabel: true
                 },

@@ -1,13 +1,21 @@
 import axios from 'axios'
-import { ossUrl, interfaceUrl } from '@/api/config'
+import { ccpBaseUrl, interfaceUrl } from '@/api/config'
 
 // 生成验证码
 export const getVerifica = (params) => axios.get('/uaa/api/verification-code', params)
 // 修改密码
 export const editPassword = (params) => axios.post('/uaa/api/account/change-password', params)
-// 省市区
-export const provinces = (params) => {
-    return axios.post(ossUrl + 'api/http/3041', params)
+// 省
+export const getProvinces = () => {
+    return axios.get(ccpBaseUrl + 'common/region/provinces/nesting')
+}
+// 市
+export const getCities = (provinceId) => {
+    return axios.get(ccpBaseUrl + `common/region/provinces/${provinceId}/cities`)
+}
+// 区
+export const getAreas = (cityId) => {
+    return axios.get(ccpBaseUrl + `common/region/cities/${cityId}/countries`)
 }
 // 查询平台公司
 export const findPaltList = (params) => {

@@ -45,6 +45,6 @@ export const editAuth = (params) => axios.put(`/uaa/api/auth`, params)
 // 清空缓存
 export const clearCache = (params) => axios.get(`/api/auth/refresh`)
 // 同步机构
-export const syncOrg = (params) => axios.post(`/backend/organizations/sync-jinyun`, params)
+export const syncOrg = (params) => axios.post(`/backend/api/organizations/sync-jinyun`, params)
 // 删除权限
 export const deleteAuth = (authCode) => axios.delete(`/uaa/api/auth/${authCode}`)

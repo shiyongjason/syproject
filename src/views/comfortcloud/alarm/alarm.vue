@@ -111,6 +111,8 @@ const lineChartOption = {
             rotate: 36, // 文字逆时针旋转45°
             textStyle: { // 文字样式
                 color: 'black',
+                borderWidth: 10,
+                borderColor: '#fff',
                 fontSize: 10,
                 fontFamily: 'Microsoft YaHei'
             }
@@ -204,11 +206,12 @@ export default {
         //     console.log(index,value)
         //     lineChartOption.series.data.push(value)
         // })
+        lineChartOption.xAxis.data = []
+        lineChartOption.series.data = []
         for (let key in this.cloudAlarmChart.countMap) {
             lineChartOption.xAxis.data.push(key)
             lineChartOption.series.data.push(this.cloudAlarmChart.countMap[key])
         }
-        console.log(lineChartOption)
         echarts.init(this.$refs.ringChartOption).setOption(ringChartOption)
         echarts.init(this.$refs.lineChartOption).setOption(lineChartOption)
     }
