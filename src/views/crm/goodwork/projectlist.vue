@@ -114,7 +114,7 @@
                 <el-timeline>
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
                         <el-card>
-                            <p><span>操作人：</span> {{item.createBy}}</p>
+                            <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
                             <p><span>操作内容：</span> {{item.remark}}</p>
                         </el-card>
                     </el-timeline-item>
