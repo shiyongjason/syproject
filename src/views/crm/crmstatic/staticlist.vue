@@ -16,6 +16,9 @@
                     <template slot="dataCollectValue" slot-scope="scope">
                         {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
                     </template>
+                        <template slot="infoToBeImprovedValue" slot-scope="scope">
+                        {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
+                    </template>
                     <template slot="trustTrialValue" slot-scope="scope">
                         {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
                     </template>
@@ -74,6 +77,7 @@ export default {
                 { label: '合计', prop: 'totalValue' },
                 { label: '蓄水阶段', prop: 'retainValue' },
                 { label: '资料收集', prop: 'dataCollectValue' },
+                { label: '信息待完善', prop: 'infoToBeImprovedValue' },
                 { label: '信审阶段', prop: 'trustTrialValue' },
                 { label: '待签约', prop: 'toBeSignedValue' },
                 { label: '待放款', prop: 'pendingLoanValue' },
