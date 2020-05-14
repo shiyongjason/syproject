@@ -35,7 +35,7 @@
                         点击后打开：{{cloudSendMessageDetailChart.clickRedirect}}
                     </p>
                     <p>
-                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate}}
+                        推送时间：{{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                     </p>
                 </div>
             </div>
