@@ -6,14 +6,14 @@ export const ORDER_STATUS_OPTIONS = [
     { label: '待收货', value: '30' },
     { label: '已完成', value: '40' },
     { label: '退款中', value: '60' },
-    { label: '已取消', value: '50' }
+    { label: '已退款', value: '70' }
 ]
 export const ORDER_STATUS_MAP = new Map([
     [20, '待发货'],
     [30, '待收货'],
     [40, '已完成'],
-    [50, '已取消'],
-    [60, '退款中']
+    [60, '退款中'],
+    [70, '已退款']
 ])
 // 商品状态
 export const PRODUCT_STATUS_OPTIONS = [
@@ -21,7 +21,7 @@ export const PRODUCT_STATUS_OPTIONS = [
     { label: '待收货', value: '30' },
     { label: '已完成', value: '40' },
     { label: '退款中', value: '60' },
-    { label: '已取消', value: '50' }
+    { label: '已退款', value: '70' }
 ]
 export const PRODUCT_STATUS_MAP = new Map([
     [20, '待发货'],
