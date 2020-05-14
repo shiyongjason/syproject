@@ -38,3 +38,5 @@ export const applyFundplan = (params) => axios.post(`backend/api/fund-plan/apply
 export const approveFundplan = (params) => axios.post(`backend/api/fund-plan/approve`, params)
 // 获取系统时间
 export const getServeTime = () => axios.get(`backend/api/fund-plan/businessDate`)
+// 借款明细
+export const getLoanDetail = (params) => axios.get(`backend/api/fund-plan/query/loan-detail`, { params })

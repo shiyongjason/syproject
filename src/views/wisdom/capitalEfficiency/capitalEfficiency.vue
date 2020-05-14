@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body" v-watermark="$store.state.userInfo.employeeName">
+    <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">

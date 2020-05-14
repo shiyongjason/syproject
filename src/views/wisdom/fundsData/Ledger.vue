@@ -1,5 +1,5 @@
 <template>
-    <div class="tags-wrapper page-body amountImport" v-watermark="$store.state.userInfo.employeeName">
+    <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>

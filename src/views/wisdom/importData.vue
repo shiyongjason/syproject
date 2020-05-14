@@ -1,6 +1,6 @@
 <template>
     <div class="page-body">
-        <div class="page-body-cont query-cont" v-watermark="$store.state.userInfo.employeeName">
+        <div class="page-body-cont query-cont">
             <h2>2019年线下台账导入</h2>
             <div class="query-cont-col">
                 <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
