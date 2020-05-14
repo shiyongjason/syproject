@@ -87,7 +87,6 @@ import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
-import moment from 'moment'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
@@ -138,9 +137,7 @@ export default {
                 overdueStartTime: '',
                 overdueEndTime: '',
                 actualPayStartTime: '',
-                actualPayEndTime
-
-                    : ''
+                actualPayEndTime: ''
             },
             page: {
                 total: 0,
@@ -358,7 +355,7 @@ export default {
     right: 0;
 }
 /deep/.el-table__header .repaymentStyle {
-    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
     color: #fff !important;
 }
 /deep/.el-table__row .repaymentStyle {

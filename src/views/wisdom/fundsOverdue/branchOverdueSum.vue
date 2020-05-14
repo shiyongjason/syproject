@@ -183,7 +183,7 @@ export default {
             }
         },
         onExport () {
-            // exportBranchOverdueDetailExcel(this.queryParams)
+            exportBranchOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
