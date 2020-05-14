@@ -88,9 +88,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                <template slot="companyName" slot-scope="scope">
-                    <span class="colblue" @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">{{scope.data.row.companyName}}</span>
-                </template>
+
                 <template slot="predictLoanAmount" slot-scope="scope">
                     {{fundMoneys(scope.data.row.predictLoanAmount)}}
                 </template>
