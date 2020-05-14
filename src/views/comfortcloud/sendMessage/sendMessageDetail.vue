@@ -2,8 +2,11 @@
     <div class="page-body">
         <div class="title">
             统计说明
-            <el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
+            <el-tooltip class="item" effect="dark" placement="right-start">
                 <span>?</span>
+                <div slot="content">
+                    目标用户：计划发送消息的目标用户的数量<br/>送达用户：消息实际下发到应用的数量<br/>打开用户：用户打开消息通知的消息数量<br/>清除用户：用户清除消息通知的消息数量
+                </div>
             </el-tooltip>
         </div>
         <div class="container page-body-cont">
@@ -125,6 +128,7 @@ export default {
         display: inline-block;
         text-align: center;
         font-size: 12px;
+        cursor: pointer;
     }
 }
     .container{
