@@ -143,7 +143,7 @@ export default {
                 authenticationTimeOrder: '',
                 customerType: '',
                 customerTypeOrder: '',
-                companyName: '',
+                companyName: this.$route.query.name || '',
                 companyType: '',
                 subsectionCode: '',
                 userAccount: '',
@@ -216,6 +216,9 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.getFindbranch()
+        if (this.$route.query.name) {
+            this.onLookauthen(this.$route.query.code)
+        }
     },
     methods: {
         ...mapActions('crmauthen', {
