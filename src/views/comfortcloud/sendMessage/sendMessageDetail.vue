@@ -104,7 +104,6 @@ export default {
         // getCloudSendMessageDetailChart
         this.id = this.$route.query.id
         await this.findCloudSendMessageDetailChart({ id: this.id })
-        console.log(this.cloudSendMessageDetailChart)
         barOption.series.data = [
             this.cloudSendMessageDetailChart.pushCount,
             this.cloudSendMessageDetailChart.receivedCount,
@@ -138,6 +137,16 @@ export default {
         }
         .sub-title{
             padding: 20px 0;
+            font-weight: 500;
+            font-size: 16px;
+        }
+        p{
+            padding: 6px;
+            font-size: 14px;
+            color: #666666;
+            font-weight: 200;
+            line-height: 17px;
+            box-sizing: border-box;
         }
     }
 </style>
