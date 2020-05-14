@@ -388,7 +388,7 @@ export default {
                 { projectId: this.form.id,
                     status: status,
                     updateBy: this.userInfo.employeeName,
-                    createByMobile: this.userInfo.moblie }
+                    createByMobile: this.userInfo.phoneNumber }
             )
             this.$message({
                 message: `${statusTxt}成功`,
