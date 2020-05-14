@@ -33,16 +33,15 @@
         <el-form-item label="地址：">
             <template v-if="isEdit">
                 <el-select v-if="addressPrivince" v-model="platformBasicInfoPO.addressPrivince" placeholder="请选择省份" @change="onProvince">
-                    <el-option v-for="item in addressPrivince" :key="item.id" :label="item.cityName" :value="item.cityId+''">
+                    <el-option v-for="item in addressPrivince" :key="item.id" :label="item.name" :value="item.provinceId+''">
                     </el-option>
-                    <!-- <el-option label="item.cityName" value="330000"></el-option> -->
                 </el-select>
                 <el-select v-model="platformBasicInfoPO.addressCity" placeholder="请选择市" style="margin:0 10px" @change="onCity">
-                    <el-option v-for="item in addressCity" :key="item.id" :label="item.cityName" :value="item.cityId+''">
+                    <el-option v-for="item in addressCity" :key="item.id" :label="item.name" :value="item.cityId+''">
                     </el-option>
                 </el-select>
                 <el-select v-model="platformBasicInfoPO.addressDistrict" placeholder="请选择区">
-                    <el-option v-for="item in addressDistrict" :key="item.id" :label="item.cityName" :value="item.cityId+''">
+                    <el-option v-for="item in addressDistrict" :key="item.id" :label="item.name" :value="item.countryId+''">
                     </el-option>
                 </el-select>
                 <div>
@@ -70,7 +69,7 @@
             <span v-else>{{platformBasicInfoPO.districtId?platformBasicInfoPO.districtId:'-'}}</span>
         </el-form-item>
         <el-form-item label="档案位置：">
-            <el-input v-if="isEdit" v-model="platformBasicInfoPO.archiveLocation" placeholder="请输入纸质档案所在位置" type='textarea' :rows="6" style="width:700px" show-word-limit  maxlength="520"></el-input>
+            <el-input v-if="isEdit" v-model="platformBasicInfoPO.archiveLocation" placeholder="请输入纸质档案所在位置" type='textarea' :rows="6" style="width:700px" show-word-limit maxlength="520"></el-input>
             <span v-else>{{platformBasicInfoPO.archiveLocation?platformBasicInfoPO.archiveLocation:'-'}}</span>
         </el-form-item>
     </div>
@@ -78,7 +77,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { provinces, findPaltList, findBranchListNew } from '../api/index.js'
+import { findPaltList, findBranchListNew, getProvinces, getCities, getAreas } from '../api/index.js'
 export default {
     name: 'platformBasicInfoPO',
     props: ['value', 'isEdit'],
@@ -117,7 +116,7 @@ export default {
         },
         async backPlat (val) {
             // 平台公司名称点击后事件
-            console.log(val)
+            // console.log(val)
             if (val && val.value && !val.value.value) {
                 this.platformBasicInfoPO.companyName = ''
             }
@@ -149,31 +148,14 @@ export default {
             this.addressCity = []
             this.addressDistrict = []
             if (parentId) {
-                this.provinces({ parentId }, 1)
+                this.getCities(parentId)
             }
         },
         onCity (parentId) {
             this.$set(this.platformBasicInfoPO, 'addressDistrict', '')
             this.addressDistrict = []
             if (parentId) {
-                this.provinces({ parentId }, 2)
-            }
-        },
-        async provinces (params = { parentId: 0 }, city = 0) {
-            const { data } = await provinces(params)
-            switch (city) {
-                case 0:
-                    this.addressPrivince = data.citys
-                    this.addressPrivince.unshift({ cityId: '', cityName: '请选择省', id: 0 })
-                    break
-                case 1:
-                    this.addressCity = data.citys
-                    this.addressCity.unshift({ cityId: '', cityName: '请选择市', id: 0 })
-                    break
-                case 2:
-                    this.addressDistrict = data.citys
-                    this.addressDistrict.unshift({ cityId: '', cityName: '请选择区', id: 0 })
-                    break
+                this.getAreas(parentId)
             }
         },
         async findPaltList () {
@@ -189,6 +171,21 @@ export default {
             // 平台分部
             const { data } = await findBranchListNew()
             this.branchList = data.data
+        },
+        async getProvinces () {
+            const { data } = await getProvinces()
+            this.addressPrivince = data
+            this.addressPrivince.unshift({ provinceId: '', name: '请选择省', id: 0 })
+        },
+        async getCities (provinceId) {
+            const { data } = await getCities(provinceId)
+            this.addressCity = data
+            this.addressCity.unshift({ cityId: '', name: '请选择市', id: 0 })
+        },
+        async getAreas (cityId) {
+            const { data } = await getAreas(cityId)
+            this.addressDistrict = data
+            this.addressDistrict.unshift({ countryId: '', name: '请选择区', id: 0 })
         }
     },
     watch: {
@@ -202,7 +199,7 @@ export default {
         }
     },
     mounted () {
-        this.provinces()
+        this.getProvinces()
         this.findPaltList()
         this.findBranchListNew()
     }
@@ -215,10 +212,10 @@ export default {
     border-top: none;
     padding: 70px;
 }
-.showlayout>>>.el-form-item__label:before{
-    content:'' !important
+.showlayout >>> .el-form-item__label:before {
+    content: "" !important;
 }
-.showlayout>>>.el-form-item__error{
-   display: none !important
+.showlayout >>> .el-form-item__error {
+    display: none !important;
 }
 </style>
