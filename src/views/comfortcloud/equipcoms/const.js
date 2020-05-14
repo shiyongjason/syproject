@@ -49,7 +49,7 @@ export const floorTableLabel = [
 ]
 export const smartTableLabel = [
     { label: '手机号', prop: 'phone' },
-    { label: '网关', prop: 'phone' },
+    { label: '网关', prop: 'iotId' },
     { label: '设备名称', prop: 'typeName' },
     { label: '设备ID', prop: 'subIotId' },
     { label: '所在房间', prop: 'roomName' },
