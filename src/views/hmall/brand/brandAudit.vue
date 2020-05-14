@@ -53,21 +53,21 @@
         </div>
         <el-drawer
             class="brand-drawer"
-            title="我是标题"
+            :title="drawerMsg.title"
             :visible.sync="drawerShow"
             direction="rtl"
             size='580px'>
             <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
-                <el-form-item label="供应商：" class="mb5">
+                <el-form-item label="供应商：" class="mb-5">
                     {{drawerMsg.title}}
                 </el-form-item>
-                <el-form-item label="品牌名称：" class="mb5">
+                <el-form-item label="品牌名称：" class="mb-5">
                     {{drawerMsg.title}}
                 </el-form-item>
-                <el-form-item label="到期日：" class="mb5">
+                <el-form-item label="到期日：" class="mb-5">
                     {{drawerMsg.title}}
                 </el-form-item>
-                <el-form-item label="代理证书：" class="mb5">
+                <el-form-item label="代理证书：" class="mb-5">
                     <div class="proxyCert">
                         <template v-for="(item, index) in drawerMsg.certificatePoList">
                             <a :href="item.pictureUrl" target="_blank" :key="index">
@@ -76,63 +76,53 @@
                         </template>
                     </div>
                 </el-form-item>
-                <el-form-item label="关联类目：" class="mb5">
-                    <div class="category-box">
-                        <div class="category-item">
-                            <div class="category-item-title">一级类目</div>
-                            <ul class="category-item-ul">
-                                <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categoryFirst" :key="item.key" @click="onFirst(item, index)" class="category-item-li">
-                                    <span class="category-item-span">{{item.value}}</span>
-                                    <i class="iconfont icon-hosjoy_right"></i>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="category-item">
-                            <div class="category-item-title">二级类目</div>
-                            <ul class="category-item-ul">
-                                <li :class="item.selected ? 'selected' : ''" v-for="(item, index) in categorySecond" :key="item.key" @click="onSecond(item, index)" class="category-item-li">
-                                    <span class="category-item-span">{{item.value}}</span>
-                                    <i class="iconfont icon-hosjoy_right"></i>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="category-item">
-                            <div class="category-item-title">三级类目</div>
-                            <ul class="category-item-ul">
-                                <li :class="item.selected ? 'selected' : ''" v-for="item in categoryThird" :key="item.key" class="category-item-li">
-                                    <span class="category-item-span">{{item.value}}</span>
-                                </li>
-                            </ul>
-                        </div>
+                <el-form-item label="关联类目：" class="mb-5">
+                    <div>
+                        <span class="category-tip">一级类目</span>
+                        <span class="category-tip">二级类目</span>
+                        <span class="category-tip">三级类目</span>
                     </div>
+                    <el-cascader-panel
+                        v-model="cascaderPanel"
+                        @change="cascaderPanelChange"
+                        :options="options"
+                        :props="props">
+                    </el-cascader-panel>
                 </el-form-item>
-                <el-form-item label="售卖区域：" class="mb5">
-                    <el-cascader
-                    v-model="cascader"
-                    @change="cascaderChange"
-                    @expand-change="expandChange"
-    :options="options"
-    :props="props"
-    clearable></el-cascader>
-                    {{drawerMsg.title}}
-                </el-form-item>                <p class="audit-opinion">审核意见</p>
-                <!-- <template v-if="drawerMsg.type === 'review'"> -->
-                    <el-form-item label="审核结果：" prop="auditResult">
+                <el-form-item label="售卖区域：" class="mb-5">
+                    {{this.cascaderPanel.join(";")}}
+                    <!-- <el-cascader
+                        v-model="cascader"
+                        @change="cascaderChange"
+                        :options="options"
+                        :props="props"
+                        clearable>
+                    </el-cascader> -->
+                </el-form-item>
+                <p class="audit-opinion">审核意见</p>
+                <template v-if="drawerMsg.type === 'review'">
+                    <el-form-item label="审核结果：" prop="auditResult" >
                         <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
                         <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
                     </el-form-item>
                     <el-form-item label="备注原因：">
                         <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                     </el-form-item>
-                <!-- </template> -->
-                <!-- <template v-else> -->
-                    <el-form-item label="审核结果：" class="mb5">
+                </template>
+                <template v-else>
+                    <el-form-item label="审核结果：" class="mb-5">
                         {{drawerMsg.brandName}}
                     </el-form-item>
-                    <el-form-item label="备注原因：" class="mb5">
-                        {{drawerMsg.remark}}
+                    <el-form-item label="备注原因：" class="mb-5">
+                        {{drawerMsg.brandName}}
                     </el-form-item>
-                <!-- </template> -->
+                    <el-form-item label="审核人：" class="mb-5">
+                        {{drawerMsg.brandName}}
+                    </el-form-item>
+                    <el-form-item label="审核时间：" class="mb-5">
+                        {{drawerMsg.brandName}}
+                    </el-form-item>
+                </template>
             </el-form>
             <div class="drawer-bottom">
                 <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
@@ -150,56 +140,203 @@ export default {
     name: 'brandAudit',
     data () {
         return {
-            cascader: [],
+            cascaderPanel: ['江苏省', '安徽省淮南市'],
             props: {
-                multiple: true,
                 emitPath: false
             },
             options: [{
-                value: 1,
-                label: '东南',
+                value: 'zhinan',
+                label: '指南',
                 children: [{
-                    value: 2,
-                    label: '上海',
-                    children: [
-                        { value: 3, label: '普陀' },
-                        { value: 4, label: '黄埔' },
-                        { value: 5, label: '徐汇' }
-                    ]
+                    value: 'shejiyuanze',
+                    label: '设计原则',
+                    children: [{
+                        value: 'yizhi',
+                        label: '一致'
+                    }, {
+                        value: 'fankui',
+                        label: '反馈'
+                    }, {
+                        value: 'xiaolv',
+                        label: '效率'
+                    }, {
+                        value: 'kekong',
+                        label: '可控'
+                    }]
                 }, {
-                    value: 7,
-                    label: '江苏',
-                    children: [
-                        { value: 8, label: '南京' },
-                        { value: 9, label: '苏州' },
-                        { value: 10, label: '无锡' }
-                    ]
-                }, {
-                    value: 12,
-                    label: '浙江',
-                    children: [
-                        { value: 13, label: '杭州' },
-                        { value: 14, label: '宁波' },
-                        { value: 15, label: '嘉兴' }
-                    ]
+                    value: 'daohang',
+                    label: '导航',
+                    children: [{
+                        value: 'cexiangdaohang',
+                        label: '侧向导航'
+                    }, {
+                        value: 'dingbudaohang',
+                        label: '顶部导航'
+                    }]
                 }]
             }, {
-                value: 17,
-                label: '西北',
+                value: 'zujian',
+                label: '组件',
                 children: [{
-                    value: 18,
-                    label: '陕西',
-                    children: [
-                        { value: 19, label: '西安' },
-                        { value: 20, label: '延安' }
-                    ]
+                    value: 'basic',
+                    label: 'Basic',
+                    children: [{
+                        value: 'layout',
+                        label: 'Layout 布局'
+                    }, {
+                        value: 'color',
+                        label: 'Color 色彩'
+                    }, {
+                        value: 'typography',
+                        label: 'Typography 字体'
+                    }, {
+                        value: 'icon',
+                        label: 'Icon 图标'
+                    }, {
+                        value: 'button',
+                        label: 'Button 按钮'
+                    }]
                 }, {
-                    value: 21,
-                    label: '新疆维吾尔族自治区',
-                    children: [
-                        { value: 22, label: '乌鲁木齐' },
-                        { value: 23, label: '克拉玛依' }
-                    ]
+                    value: 'form',
+                    label: 'Form',
+                    children: [{
+                        value: 'radio',
+                        label: 'Radio 单选框'
+                    }, {
+                        value: 'checkbox',
+                        label: 'Checkbox 多选框'
+                    }, {
+                        value: 'input',
+                        label: 'Input 输入框'
+                    }, {
+                        value: 'input-number',
+                        label: 'InputNumber 计数器'
+                    }, {
+                        value: 'select',
+                        label: 'Select 选择器'
+                    }, {
+                        value: 'cascader',
+                        label: 'Cascader 级联选择器'
+                    }, {
+                        value: 'switch',
+                        label: 'Switch 开关'
+                    }, {
+                        value: 'slider',
+                        label: 'Slider 滑块'
+                    }, {
+                        value: 'time-picker',
+                        label: 'TimePicker 时间选择器'
+                    }, {
+                        value: 'date-picker',
+                        label: 'DatePicker 日期选择器'
+                    }, {
+                        value: 'datetime-picker',
+                        label: 'DateTimePicker 日期时间选择器'
+                    }, {
+                        value: 'upload',
+                        label: 'Upload 上传'
+                    }, {
+                        value: 'rate',
+                        label: 'Rate 评分'
+                    }, {
+                        value: 'form',
+                        label: 'Form 表单'
+                    }]
+                }, {
+                    value: 'data',
+                    label: 'Data',
+                    children: [{
+                        value: 'table',
+                        label: 'Table 表格'
+                    }, {
+                        value: 'tag',
+                        label: 'Tag 标签'
+                    }, {
+                        value: 'progress',
+                        label: 'Progress 进度条'
+                    }, {
+                        value: 'tree',
+                        label: 'Tree 树形控件'
+                    }, {
+                        value: 'pagination',
+                        label: 'Pagination 分页'
+                    }, {
+                        value: 'badge',
+                        label: 'Badge 标记'
+                    }]
+                }, {
+                    value: 'notice',
+                    label: 'Notice',
+                    children: [{
+                        value: 'alert',
+                        label: 'Alert 警告'
+                    }, {
+                        value: 'loading',
+                        label: 'Loading 加载'
+                    }, {
+                        value: 'message',
+                        label: 'Message 消息提示'
+                    }, {
+                        value: 'message-box',
+                        label: 'MessageBox 弹框'
+                    }, {
+                        value: 'notification',
+                        label: 'Notification 通知'
+                    }]
+                }, {
+                    value: 'navigation',
+                    label: 'Navigation',
+                    children: [{
+                        value: 'menu',
+                        label: 'NavMenu 导航菜单'
+                    }, {
+                        value: 'tabs',
+                        label: 'Tabs 标签页'
+                    }, {
+                        value: 'breadcrumb',
+                        label: 'Breadcrumb 面包屑'
+                    }, {
+                        value: 'dropdown',
+                        label: 'Dropdown 下拉菜单'
+                    }, {
+                        value: 'steps',
+                        label: 'Steps 步骤条'
+                    }]
+                }, {
+                    value: 'others',
+                    label: 'Others',
+                    children: [{
+                        value: 'dialog',
+                        label: 'Dialog 对话框'
+                    }, {
+                        value: 'tooltip',
+                        label: 'Tooltip 文字提示'
+                    }, {
+                        value: 'popover',
+                        label: 'Popover 弹出框'
+                    }, {
+                        value: 'card',
+                        label: 'Card 卡片'
+                    }, {
+                        value: 'carousel',
+                        label: 'Carousel 走马灯'
+                    }, {
+                        value: 'collapse',
+                        label: 'Collapse 折叠面板'
+                    }]
+                }]
+            }, {
+                value: 'ziyuan',
+                label: '资源',
+                children: [{
+                    value: 'axure',
+                    label: 'Axure Components'
+                }, {
+                    value: 'sketch',
+                    label: 'Sketch Templates'
+                }, {
+                    value: 'jiaohu',
+                    label: '组件交互文档'
                 }]
             }],
             tableLabel: [
@@ -227,19 +364,6 @@ export default {
                 title: '',
                 type: ''
             },
-            categoryFirst: [
-                {
-                    key: '1',
-                    value: '类目一sdasdasd',
-                    selected: false
-                },
-                {
-                    key: '2',
-                    value: '类目二'
-                }
-            ],
-            categorySecond: [],
-            categoryThird: [],
             suggest: {
                 auditResult: '',
                 auditRemark: ''
@@ -281,13 +405,6 @@ export default {
         }
     },
     methods: {
-        cascaderChange (value) {
-            console.log(this.cascader)
-            console.log(value)
-        },
-        expandChange (value) {
-            console.log(value)
-        },
         ...mapActions('brand', [
             'findBrandAreaList',
             'findBrandArea'
@@ -318,16 +435,19 @@ export default {
                 total: this.brandAuthorizationInfo.total
             }
         },
+        cascaderPanelChange () {
+
+        },
         async showDrawer (scope, type) {
             await this.findBrandArea({ id: scope.id })
             this.drawerMsg = this.brandAreaInfo
             this.suggest = {}
             if (type === 'review') {
-                this.drawerMsg.title = '品牌区域审核'
-                this.drawerMsg.type = type
+                this.drawerMsg.title = '品牌资质审核'
+                this.drawerMsg.type = 'watch'
             } else if (type === 'watch') {
-                this.drawerMsg.title = '查看品牌区域'
-                this.drawerMsg.type = type
+                this.drawerMsg.title = '品牌资质查看'
+                this.drawerMsg.type = 'review'
             }
             this.drawerShow = true
             this.$nextTick(() => {
@@ -346,44 +466,12 @@ export default {
         createCouponReview () {
             this.auditBrandArea()
         },
-        handleClose () {
-            this.drawerShow = false
-        },
-        onFirst (item, index) {
-            this.categoryFirst.map(item => {
-                item.selected = false
-            })
-            this.categoryFirst[index].selected = true
-            this.categorySecond = []
-            this.categoryThird = []
-            for (let i = 0; i < 3; i++) {
-                this.categorySecond.push({
-                    key: `${index + 1}${i + 1}`,
-                    value: `${index + 1}的子类目${i + 1}`,
-                    selected: false
-                })
-            }
-        },
-        onSecond (item, index) {
-            this.categorySecond.map(item => {
-                item.selected = false
-            })
-            this.categorySecond[index].selected = true
-            this.categoryThird = []
-            for (let i = 0; i < 3; i++) {
-                this.categoryThird.push({
-                    key: `${index + 1}${i + 1}`,
-                    value: `${index + 1}的子子类目${i + 1}`,
-                    selected: false
-                })
-            }
-        },
         onConfirm () {
             this.auditBrandArea()
         },
         onCancel () {
             this.drawerShow = false
-            // this.$refs['suggest'].resetForm()
+            this.$refs['suggest'].resetForm()
         },
         async auditBrandArea () {
             this.$refs['suggest'].validate(async (valid) => {
@@ -400,7 +488,7 @@ export default {
                         return
                     }
                     await auditBrandArea(form)
-                    this.drawer.show = false
+                    this.drawerShow = false
                     this.onQuery()
                 } else {
                     return false
@@ -427,7 +515,7 @@ export default {
 .remark {
     padding-top: 20px;
 }
-.mb5 {
+.mb-5 {
     margin-bottom: 5px;
 }
 .brand-drawer {
@@ -441,63 +529,19 @@ export default {
         margin-bottom: 0;
         border-bottom: 1px solid #e5e5ea;
     }
-}
-.category-box {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 14px;
-    .category-item {
-        width: 30%;
-        .category-item-title {
-            margin-bottom: 5px;
-        }
-        .category-item-ul {
-            padding: 8px 0;
-            height: 180px;
-            overflow: overlay;
-            border: 1px solid rgba(229, 229, 234, 1);
-        }
-        .category-item-li {
-            padding: 0 20px;
-            height: 36px;
-            line-height: 36px;
-            color: #666;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .category-item-span {
-                float: left;
-                width: 90%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-            .category-item-i {
-                float: right;
-                font-size: 9px;
-            }
-            &:hover {
-                color: #000;
-                background: rgba(242, 242, 244, 1);
-            }
-            &.selected {
-                color: #000;
-                background: rgba(242, 242, 244, 1);
-            }
-        }
-        .icon-hosjoy_right {
-            width: 7px;
-            height: 7px;
-            border-top: 2px solid rgb(66, 65, 65);
-            border-right: 2px solid rgb(66, 65, 65);
-            transform: rotate(45deg);
-        }
+    /deep/ .el-cascader-menu {
+        min-width: 160px;
+    }
+    .category-tip {
+        box-sizing: border-box;
+        display: inline-block;
+        width: 160px;
+        padding-left: 5px;
     }
 }
 .audit-opinion {
     margin-top: 10px;
+    padding-left: 5px;
 }
 .drawer-bottom {
     position: absolute;
