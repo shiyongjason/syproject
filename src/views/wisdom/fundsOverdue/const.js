@@ -1,13 +1,13 @@
 // 分部逾期汇总表
 export const branchSummarySheet = function () {
     return [
-        { prop: 'misCode', label: '分部', showOverflowTooltip: true },
-        { prop: 'companyName', label: '存量逾期', showOverflowTooltip: true },
+        { prop: 'subsectionName', label: '分部', showOverflowTooltip: true, fixed: true },
+        { prop: 'stockOverdue', label: '存量逾期', showOverflowTooltip: true },
         {
             label: '存量逾期-2020年度还款计划',
             children: [
                 {
-                    prop: 'januaryValue',
+                    prop: 'stockJanuaryRepayment',
                     label: '1月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -15,7 +15,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'februaryValue',
+                    prop: 'stockFebruaryRepayment',
                     label: '2月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -23,7 +23,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'marchValue',
+                    prop: 'stockMarchRepayment',
                     label: '3月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -31,7 +31,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'aprilValue',
+                    prop: 'stockAprilRepayment',
                     label: '4月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -39,7 +39,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'mayValue',
+                    prop: 'stockMayRepayment',
                     label: '5月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -47,7 +47,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'juneValue',
+                    prop: 'stockJuneRepayment',
                     label: '6月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -55,7 +55,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'julyValue',
+                    prop: 'stockJulyRepayment',
                     label: '7月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -63,7 +63,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'augustValue',
+                    prop: 'stockAugustRepayment',
                     label: '8月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -71,7 +71,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'septemberValue',
+                    prop: 'stockSeptemberRepayment',
                     label: '9月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -79,7 +79,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'octoberValue',
+                    prop: 'stockOctoberRepayment',
                     label: '10月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -87,7 +87,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'novemberValue',
+                    prop: 'stockNovemberRepayment',
                     label: '11月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -95,7 +95,7 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'decemberValue',
+                    prop: 'stockDecemberRepayment',
                     label: '12月',
                     width: '100',
                     displayAs: 'fundMoney',
@@ -103,14 +103,22 @@ export const branchSummarySheet = function () {
                     className: 'repaymentStyle'
                 },
                 {
-                    prop: 'totalAnnual',
+                    prop: 'stockTotal',
+                    label: '合计',
+                    width: '100',
+                    displayAs: 'fundMoney',
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
+                },
+                {
+                    prop: 'stockPlanProportion',
                     label: '计划率',
                     width: '150',
                     displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'totalAnnual',
+                    prop: 'stockNoRepaymentPlanAmount',
                     label: '无计划金额',
                     width: '150',
                     displayAs: 'fundMoney',
@@ -118,103 +126,122 @@ export const branchSummarySheet = function () {
                 }
             ]
         },
-        { prop: 'companyName', label: '增量逾期', showOverflowTooltip: true },
+        { prop: 'incrementOverdue', label: '增量逾期', showOverflowTooltip: true },
         {
             label: '增量逾期-2020年度还款计划',
             children: [
                 {
-                    prop: 'januaryValue',
+                    prop: 'incrementJanuaryRepayment',
                     label: '1月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'februaryValue',
+                    prop: 'incrementFebruaryRepayment',
                     label: '2月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'marchValue',
+                    prop: 'incrementMarchRepayment',
                     label: '3月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'aprilValue',
+                    prop: 'incrementAprilRepayment',
                     label: '4月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'mayValue',
+                    prop: 'incrementMayRepayment',
                     label: '5月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'juneValue',
+                    prop: 'incrementJuneRepayment',
                     label: '6月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'julyValue',
+                    prop: 'incrementJulyRepayment',
                     label: '7月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'augustValue',
+                    prop: 'incrementAugustRepayment',
                     label: '8月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'septemberValue',
+                    prop: 'incrementSeptemberRepayment',
                     label: '9月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'octoberValue',
+                    prop: 'incrementOctoberRepayment',
                     label: '10月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'novemberValue',
+                    prop: 'incrementNovemberRepayment',
                     label: '11月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'decemberValue',
+                    prop: 'incrementDecemberRepayment',
                     label: '12月',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 },
                 {
-                    prop: 'totalAnnual',
+                    prop: 'incrementTotal',
+                    label: '合计',
+                    width: '100',
+                    displayAs: 'fundMoney',
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
+                },
+                {
+                    prop: 'incrementProportion',
                     label: '计划率',
                     width: '150',
-                    displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
-                    prop: 'totalAnnual',
+                    prop: 'incrementNoRepaymentPlanAmount',
                     label: '无计划金额',
                     width: '150',
                     displayAs: 'fundMoney',

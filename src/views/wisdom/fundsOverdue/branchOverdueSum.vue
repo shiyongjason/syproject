@@ -29,7 +29,6 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -50,8 +49,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { branchSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { interfaceUrl } from '@/api/config'
-import { getBranchOverdueList, getCompanyOverdueListTotal, exportBranchOverdueDetailExcel } from './api/index'
+import { getBranchOverdueList, exportBranchOverdueDetailExcel } from './api/index'
 import moment from 'moment'
 export default {
     name: 'commitValue',
@@ -59,13 +57,6 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
-            accept: '.xlsx,.xls',
-            loading: false,
-            interfaceUrl: interfaceUrl,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -90,9 +81,7 @@ export default {
                 subsectionCode: '',
                 subsectionOldCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
-                pageNumber: 1,
-                pageSize: 10
+                commitmentYear: moment().format('YYYY')
             },
             searchParams: {},
             page: {
@@ -101,8 +90,7 @@ export default {
                 pageSize: 10
             },
             total: {},
-            tableData: [],
-            dialogFormVisible: false
+            tableData: []
         }
     },
     computed: {
@@ -190,21 +178,14 @@ export default {
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getBranchOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
-                console.log(res)
-                // res[1].data.companyName = '合计'
-                // res[0].data.records.unshift(res[1].data)
-                // return res[0].data
-            }).catch((error) => {
-                this.$message.error(`error:${error}`)
+            // 不分页
+            const { data } = await getBranchOverdueList(this.searchParams)
+            console.log(data)
+            this.tableData = data
+            this.tableData.map(i => {
+                i.incrementProportion += '%'
+                i.stockPlanProportion += '%'
             })
-            // this.tableData = data.records
-            // if (data.records.length > 1) {
-            //     this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
-            // } else {
-            //     this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
-            // }
         },
         getList (val) {
             this.searchParams = {
@@ -232,42 +213,6 @@ export default {
             this.selectAuth.platformObj = { ...obj }
             await this.oldBossAuth()
             this.onSearch()
-        },
-        isSuccess (response) {
-            this.$message({
-                message: '批量导入成功！',
-                type: 'success'
-            })
-            this.loading = false
-            this.onSearch()
-        },
-        isError (response) {
-            this.$message({
-                message: '批量导入失败，' + JSON.parse(response.message).message,
-                type: 'error'
-            })
-            this.loading = false
-        },
-        handleUpload (file) {
-            if (file.size / (1024 * 1024) > 100) {
-                this.$message({
-                    message: '附件要保持100M以内',
-                    type: 'warning'
-                })
-                return false
-            }
-            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
-            if (this.accept.lastIndexOf(fileSuffix) == -1) {
-                this.$message.error('格式不正确！')
-                return false
-            }
-            this.loading = true
-        },
-        onShowImport () {
-            this.dialogFormVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
         }
     },
     async mounted () {
@@ -292,7 +237,7 @@ export default {
     right: 0;
 }
 /deep/.el-table__header .repaymentStyle {
-    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
     color: #fff !important;
 }
 /deep/.el-table__row .repaymentStyle {
