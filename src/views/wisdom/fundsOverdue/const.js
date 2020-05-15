@@ -256,8 +256,8 @@ export const platformSummarySheet = function () {
     return [
         { prop: 'misCode', label: '公司编码', showOverflowTooltip: true, fixed: true },
         { prop: 'loanCompanyName', label: '公司名称', showOverflowTooltip: true, fixed: true },
-        { prop: 'regionName', label: '大区', showOverflowTooltip: true, fixed: true },
         { prop: 'subsectionName', label: '分部', showOverflowTooltip: true, fixed: true },
+        { prop: 'regionName', label: '大区', showOverflowTooltip: true, fixed: true },
         {
             label: '销售',
             children: [
@@ -397,8 +397,8 @@ export const overdueDetailTable = function () {
         { prop: 'standingBookNo', label: '借款编号', fixed: true, showOverflowTooltip: true },
         { prop: 'misCode', label: '公司编码', fixed: true, showOverflowTooltip: true },
         { prop: 'loanCompanyName', label: '公司名称', fixed: true, showOverflowTooltip: true },
-        { prop: 'regionName', label: '大区', fixed: true, showOverflowTooltip: true },
         { prop: 'subsectionName', label: '分部', fixed: true, showOverflowTooltip: true },
+        { prop: 'regionName', label: '大区', fixed: true, showOverflowTooltip: true },
         { prop: 'loanAmount', label: '借款金额', showOverflowTooltip: true },
         { prop: 'payTime', label: '合同到期日', showOverflowTooltip: true },
         { prop: 'capitalAmount', label: '应还本金', showOverflowTooltip: true },
@@ -547,34 +547,4 @@ export const platformSummarySheetTotal = {
     planProportion: null,
     regionName: null,
     subsectionName: null
-}
-export const overdueDetailTableTotal = {
-    actualPayTime: null,
-    amountPaid: null,
-    aprilRepayment: null,
-    augustRepayment: null,
-    capitalAmount: null,
-    decemberRepayment: null,
-    februaryRepayment: null,
-    januaryRepayment: null,
-    julyRepayment: null,
-    juneRepayment: null,
-    loanAmount: null,
-    loanCompanyName: null,
-    marchRepayment: null,
-    mayRepayment: null,
-    misCode: null,
-    noRepaymentPlanAmount: null,
-    novemberRepayment: null,
-    octoberRepayment: null,
-    overdueTime: null,
-    overdueTotal: null,
-    payTime: null,
-    planProportion: null,
-    regionName: null,
-    septemberRepayment: null,
-    standingBookNo: null,
-    subsectionName: null,
-    total: null,
-    year: 2020
 }

@@ -182,7 +182,7 @@ export default {
         async onQuery () {
             // 不分页
             const { data } = await getBranchOverdueList(this.searchParams)
-            console.log(data)
+            // console.log(data)
             this.tableData = data
             this.tableData.map(i => {
                 i.incrementProportion += '%'
