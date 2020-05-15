@@ -3,7 +3,7 @@ import instance from '@/api/axios_new.js'
 
 // 品牌列表
 export const findBrandList = (params) => {
-    return instance.get(B2bUrl + 'product/api/brands', {
+    return instance.get(B2bUrl + 'product/api/brands/page', {
         params
     })
 }

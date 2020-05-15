@@ -17,7 +17,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.brandName"
+                            v-model="queryParams.name"
                             maxlength="50"
                             placeholder="请输入品牌名称"></el-input>
                     </div>
@@ -72,16 +72,16 @@
                 <el-form-item label="品牌编号" v-if="this.status === 'modify'">
                     {{form.brandCode}}
                 </el-form-item>
-                <el-form-item prop="brandName" label="品牌名称">
+                <el-form-item prop="name" label="品牌名称">
                     <el-input
-                        v-model="form.brandName"
+                        v-model="form.name"
                         maxlength="10"
                         style="width: 300px"
                         placeholder="请输入品牌中文名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="brandNameEn" label="英文名称">
+                <el-form-item prop="englishName" label="英文名称">
                     <el-input
-                        v-model="form.brandNameEn"
+                        v-model="form.englishName"
                         placeholder="请输入英文名称"
                         maxlength="25"
                         style="width: 300px"></el-input>
@@ -117,7 +117,7 @@
 
 <script>
 import brandTable from './components/brandTable'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { findBrandList, createBrand, updateBrand, findBrandDetails } from './api/index'
 import { BRAND_STATUS } from './const'
@@ -130,7 +130,7 @@ export default {
     data () {
         return {
             queryParams: {
-                brandName: '',
+                name: '',
                 brandCode: '',
                 pageNumber: 1,
                 pageSize: 10,
@@ -142,8 +142,8 @@ export default {
             paginationData: {},
             dialogBrandEdit: false,
             form: {
-                brandName: '',
-                brandNameEn: '',
+                name: '',
+                englishName: '',
                 logoUrl: '',
                 describes: ''
             },
@@ -152,10 +152,10 @@ export default {
             modifyId: 0,
             status: 'add',
             rules: {
-                brandName: [
+                name: [
                     { required: true, whitespace: true, message: '请输入品牌中文名称', trigger: 'blur' }
                 ],
-                brandNameEn: [
+                englishName: [
                     { required: false, whitespace: true },
                     { validator: IsChinese, trigger: 'blur', whitespace: true }
                 ],
@@ -168,6 +168,9 @@ export default {
         }
     },
     computed: {
+        ...mapState('brand', {
+            brandListInfo: 'brandListInfo'
+        }),
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -185,6 +188,10 @@ export default {
         })
     },
     methods: {
+        ...mapActions('brand', [
+            'findBrandList',
+            'findBrandArea'
+        ]),
         updateBrandChange (col) {
             this.modifyId = col.id
             this.findBrandDetails()
@@ -230,8 +237,8 @@ export default {
             const { data } = await findBrandDetails(this.modifyId)
             this.form = {
                 brandCode: data.brandCode,
-                brandName: data.brandName,
-                brandNameEn: data.brandNameEn,
+                name: data.name,
+                englishName: data.englishName,
                 logoUrl: data.logoUrl,
                 describes: data.describes
             }
@@ -243,12 +250,12 @@ export default {
         },
         async onQuery () {
             const { ...params } = this.queryParams
-            const { data } = await findBrandList(params)
-            this.tableData = data.records
+            await findBrandList(params)
+            this.tableData = this.brandListInfo.records
             this.paginationData = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                totalElements: data.total
+                pageNumber: this.brandListInfo.current,
+                pageSize: this.brandListInfo.size,
+                totalElements: this.brandListInfo.total
             }
         },
         openMark (status) {
