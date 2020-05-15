@@ -60,7 +60,7 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-upload v-if="hosAuthCheck(OVERDUE_DETAIL_TABLE_IMPORT)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                    <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
                         <el-button type="primary" class='ml20' :loading='loading'>
                             导入表格
                         </el-button>
