@@ -2,6 +2,9 @@
     <div class="drawer-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
+                <el-form-item label="项目提交人：">
+                    {{form.createBy}}
+                </el-form-item>
                 <el-form-item label="经销商：">
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
