@@ -278,7 +278,7 @@ export default {
         drawLine (data, id) {
             // 绘制图表
             var charts = {
-                unit: '单位',
+                unit: '单位/小时',
                 names: [],
                 lineX: [],
                 value: []

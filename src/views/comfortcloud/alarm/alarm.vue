@@ -108,17 +108,18 @@ const lineChartOption = {
         data: [],
         axisLabel: {
             interval: 0, // 强制文字产生间隔
-            rotate: 36, // 文字逆时针旋转45°
+            rotate: 28, // 文字逆时针旋转45°
             textStyle: { // 文字样式
                 color: 'black',
                 borderWidth: 10,
                 borderColor: '#fff',
-                fontSize: 10,
+                fontSize: 9,
                 fontFamily: 'Microsoft YaHei'
             }
         }
     },
     yAxis: {
+        name: '单位/次',
         type: 'value'
     },
     series: {
