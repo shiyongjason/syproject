@@ -244,6 +244,9 @@ export default {
     methods: {
         async init () {
             const { data } = await getAuth()
+            var shy = JSON.parse(JSON.stringify(data))
+            this.handleData(shy)
+            console.log(shy)
             this.tableList = this.handlerTableList(data, 0)
         },
         // 计算table合并行数
@@ -255,6 +258,25 @@ export default {
                 }
             })
             return len
+        },
+        handleData (data) {
+            data.map(i => {
+                if (i.childAuthList.length === 0) {
+                    i.authTypes = this.compare(i.authTypes)
+                } else {
+                    this.handleData(i.childAuthList)
+                }
+            })
+        },
+        compare (authTypes) {
+            if (authTypes.length === 0) {
+                return [
+                    { id: '', authType: 0 },
+                    { id: '', authType: 1 },
+                    { id: '', authType: 2 },
+                ]
+            }
+
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
