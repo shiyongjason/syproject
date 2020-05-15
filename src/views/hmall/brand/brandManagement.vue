@@ -2,38 +2,24 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">商家名称：</div>
+                <div class="query-col-title">供应商：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
+                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入供应商">
                     </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">品牌名称：</div>
+                <div class="query-col-title">品牌：</div>
                 <div class="query-col-input">
                     <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
                     </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">开启时间：</div>
+                <div class="query-col-title">商品类目：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.minApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.maxApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="flex-wrap-title">审核状态：</div>
-                <div class="flex-wrap-cont">
-                    <el-select v-model="queryParams.auditStatus" style="width: 100%">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="审核通过" value="1"></el-option>
-                        <el-option label="审核不通过" value="2"></el-option>
-                    </el-select>
+                    <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange">
+                    </el-cascader>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -56,18 +42,39 @@
             :title="drawerMsg.title"
             :visible.sync="drawerShow"
             direction="rtl"
-            size='580px'>
-            <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
-                <el-form-item label="供应商：" class="mb-5">
+            size='630px'>
+            <el-form ref="editForm" :rules="rules" :model="editForm" class="editForm" label-width="100px">
+                <el-form-item label="供应商：">
                     {{drawerMsg.title}}
                 </el-form-item>
-                <el-form-item label="品牌名称：" class="mb-5">
+                <el-form-item label="品牌名称：">
                     {{drawerMsg.title}}
                 </el-form-item>
-                <el-form-item label="到期日：" class="mb-5">
-                    {{drawerMsg.title}}
+                <el-form-item label="到期日：">
+                    <el-date-picker v-model="editForm.expirationTime" type="date" value-format='yyyy-MM-dd' format="yyyy-MM-dd" placeholder="请选择到期日" @change="datePickerChange" >
+                    </el-date-picker>
                 </el-form-item>
-                <el-form-item label="代理证书：" class="mb-5">
+                <el-form-item label="代理证书：" ref="reqPictures" class="mb60">
+                    <el-upload :action="uploadInfo.action" :data="uploadInfo.data" :name="uploadAttr.name" :list-type="uploadAttr.listType" :show-file-list="uploadAttr.showFileList" :on-success="handleSuccess" :accept="uploadAttr.accept" :before-upload="beforeUpload"
+                        v-if="drawerMsg.certificatePoList.length !== 5">
+                        <i class="el-icon-plus"></i>
+                    </el-upload>
+                    <div class="picture-content">
+                        <ul>
+                            <li v-for="(item, index) in drawerMsg.certificatePoList" :key="index">
+                                <div class="mask"></div>
+                                <div class="mask-btn">
+                                    <span @click="onRemove(index)">删除图片</span>
+                                </div>
+                                <img :src="item.pictureUrl">
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="picture-prompt">
+                        <p>最多上传5张，750x750， 不超过2M，仅支持jpeg、jpg、png格式</p>
+                    </div>
+                </el-form-item>
+                <!-- <el-form-item label="代理证书：">
                     <div class="proxyCert">
                         <template v-for="(item, index) in drawerMsg.certificatePoList">
                             <a :href="item.pictureUrl" target="_blank" :key="index">
@@ -75,8 +82,8 @@
                             </a>
                         </template>
                     </div>
-                </el-form-item>
-                <el-form-item label="关联类目：" class="mb-5">
+                </el-form-item> -->
+                <el-form-item label="关联类目：">
                     <div>
                         <span class="category-tip">一级类目</span>
                         <span class="category-tip">二级类目</span>
@@ -89,44 +96,26 @@
                         :props="props">
                     </el-cascader-panel>
                 </el-form-item>
-                <el-form-item label="售卖区域：" class="mb-5">
-                    {{this.cascaderPanel.join(";")}}
-                    <!-- <el-cascader
+                <el-form-item label="售卖区域：">
+                    <el-cascader
                         v-model="cascader"
                         @change="cascaderChange"
                         :options="options"
                         :props="props"
+                        collapse-tags
                         clearable>
-                    </el-cascader> -->
+                    </el-cascader>
                 </el-form-item>
-                <p class="audit-opinion">审核意见</p>
-                <template v-if="drawerMsg.type === 'review'">
-                    <el-form-item label="审核结果：" prop="auditResult" >
-                        <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
-                        <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
-                    </el-form-item>
-                    <el-form-item label="备注原因：">
-                        <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
-                    </el-form-item>
-                </template>
-                <template v-else>
-                    <el-form-item label="审核结果：" class="mb-5">
-                        {{drawerMsg.brandName}}
-                    </el-form-item>
-                    <el-form-item label="备注原因：" class="mb-5">
-                        {{drawerMsg.brandName}}
-                    </el-form-item>
-                    <el-form-item label="审核人：" class="mb-5">
-                        {{drawerMsg.brandName}}
-                    </el-form-item>
-                    <el-form-item label="审核时间：" class="mb-5">
-                        {{drawerMsg.brandName}}
-                    </el-form-item>
-                </template>
+                <el-form-item label="最近维护人：" label-width="120px" class="mb-5">
+                    {{drawerMsg.title}}
+                </el-form-item>
+                <el-form-item label="最近维护时间：" label-width="120px" class="mb-5">
+                    {{drawerMsg.title}}
+                </el-form-item>
             </el-form>
             <div class="drawer-bottom">
-                <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
-                <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">提交</el-button>
+                <el-button name="white-color" @click="onCancel">取消</el-button>
+                <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">保存</el-button>
             </div>
         </el-drawer>
     </div>
@@ -135,13 +124,87 @@
 <script>
 import { auditBrandArea } from './api/index'
 import { mapState, mapActions } from 'vuex'
+import { fileUploadUrl } from '@/api/config'
 
 export default {
     name: 'brandAudit',
     data () {
         return {
+            uploadAttr: {
+                name: 'multiFile',
+                listType: 'picture-card',
+                showFileList: false,
+                limit: 5,
+                dialogImageUrl: '',
+                accept: 'image/jpeg, image/jpg, image/png'
+            },
+            categoryList: [{
+                value: 'zhinan',
+                label: '指南',
+                children: [{
+                    value: 'shejiyuanze',
+                    label: '设计原则',
+                    children: [{
+                        value: 'yizhi',
+                        label: '一致'
+                    }, {
+                        value: 'fankui',
+                        label: '反馈'
+                    }]
+                }, {
+                    value: 'daohang',
+                    label: '导航',
+                    children: [{
+                        value: 'cexiangdaohang',
+                        label: '侧向导航'
+                    }, {
+                        value: 'dingbudaohang',
+                        label: '顶部导航'
+                    }]
+                }]
+            }, {
+                value: 'zujian',
+                label: '组件',
+                children: [{
+                    value: 'basic',
+                    label: 'Basic',
+                    children: [{
+                        value: 'layout',
+                        label: 'Layout 布局'
+                    }, {
+                        value: 'color',
+                        label: 'Color 色彩'
+                    }]
+                }, {
+                    value: 'others',
+                    label: 'Others',
+                    children: [{
+                        value: 'dialog',
+                        label: 'Dialog 对话框'
+                    }, {
+                        value: 'tooltip',
+                        label: 'Tooltip 文字提示'
+                    }]
+                }]
+            }, {
+                value: 'ziyuan',
+                label: '资源',
+                children: [{
+                    value: 'axure',
+                    label: 'Axure Components'
+                }, {
+                    value: 'sketch',
+                    label: 'Sketch Templates'
+                }, {
+                    value: 'jiaohu',
+                    label: '组件交互文档'
+                }]
+            }],
+            categoryIdArr: [],
+            cascader: [],
             cascaderPanel: ['江苏省', '安徽省淮南市'],
             props: {
+                multiple: true,
                 emitPath: false
             },
             options: [{
@@ -341,11 +404,11 @@ export default {
             }],
             tableLabel: [
                 { label: '供应商', prop: 'merchantName' },
-                { label: '申请品牌', prop: 'brandName' },
-                { label: '申请类目', prop: 'category' },
-                { label: '申请时间', prop: 'approveTime' },
-                { label: '审核状态', prop: 'auditStatusTransform' },
-                { label: '审核时间', prop: 'brandName' }
+                { label: '授权品牌', prop: 'brandName' },
+                { label: '授权类目', prop: 'category' },
+                { label: '到期日', prop: 'approveTime' },
+                { label: '最近维护人', prop: 'auditStatusTransform' },
+                { label: '最近维护时间', prop: 'brandName' }
             ],
             tableData: [],
             initParams: {},
@@ -364,11 +427,14 @@ export default {
             drawerShow: false,
             drawerMsg: {
                 title: '',
-                type: ''
+                type: '',
+                certificatePoList: []
             },
-            suggest: {
+            editForm: {
+                expirationTime: '',
                 auditResult: '',
-                auditRemark: ''
+                auditRemark: '',
+                certificatePoList: []
             },
             rules: {
                 auditResult: [
@@ -378,6 +444,15 @@ export default {
         }
     },
     computed: {
+        uploadInfo () {
+            return {
+                action: fileUploadUrl + '/files/upload',
+                data: {
+                    updateUid: 'Hosjoy'
+                },
+                accept: 'image/jpeg, image/jpg, image/png'
+            }
+        },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -437,13 +512,45 @@ export default {
                 total: this.brandAuthorizationInfo.total
             }
         },
-        cascaderPanelChange () {
+        onRemove (index) {
+            // this.form.reqSpuBo.reqPictureList.splice(index, 1)
+        },
+        handleSuccess (file, fileList) {
+            // const imgObj = {
+            //     isDefault: 0,
+            //     pictureUrl: file.data.accessUrl,
+            //     sort: ''
+            // }
+            // this.form.reqSpuBo.reqPictureList.push(imgObj)
+        },
+        beforeUpload (file) {
+            if (this.uploadAttr.accept.indexOf(file.type) > -1) {
 
+            } else {
+                this.$message.error('上传文件格式不正确!')
+                return false
+            }
+            const fileSize = file.size / 1024 / 1024 < 2
+            if (!fileSize) {
+                this.$message.error('上传图片大小不能超过 2MB!')
+            }
+            return fileSize
+        },
+        datePickerChange (value) {
+            console.log(value)
+        },
+        productCategoryChange (val) {
+            this.queryParams.categoryId = val[val.length - 1]
+        },
+        cascaderChange () {
+
+        },
+        cascaderPanelChange (val) {
+            this.queryParams.categoryId = val
         },
         async showDrawer (scope, type) {
             await this.findBrandArea({ id: scope.id })
             this.drawerMsg = this.brandAreaInfo
-            this.suggest = {}
             if (type === 'review') {
                 this.drawerMsg.title = '品牌资质审核'
                 this.drawerMsg.type = 'watch'
@@ -453,7 +560,7 @@ export default {
             }
             this.drawerShow = true
             this.$nextTick(() => {
-                this.$refs['suggest'].clearValidate()
+                this.$refs['editForm'].clearValidate()
             })
         },
         onSizeChange (val) {
@@ -473,16 +580,16 @@ export default {
         },
         onCancel () {
             this.drawerShow = false
-            this.$refs['suggest'].resetForm()
+            this.$refs['editForm'].resetForm()
         },
         async auditBrandArea () {
-            this.$refs['suggest'].validate(async (valid) => {
+            this.$refs['editForm'].validate(async (valid) => {
                 if (valid) {
                     const form = {
                         updateBy: this.userInfo.employeeName,
-                        auditStatus: +this.suggest.auditResult,
+                        auditStatus: +this.editForm.auditResult,
                         id: this.drawerMsg.id,
-                        remark: this.suggest.auditRemark
+                        remark: this.editForm.auditRemark
                     }
                     if (!this.drawerMsg.brandAreaPoList) this.drawerMsg.brandAreaPoList = []
                     if (this.drawerMsg.brandAreaPoList.length === 0) {
@@ -521,6 +628,7 @@ export default {
     margin-bottom: 5px;
 }
 .brand-drawer {
+  box-sizing: border-box;
     color: #000000;
     /deep/ .el-form-item__label {
         color: #000000;
@@ -534,11 +642,72 @@ export default {
     /deep/ .el-cascader-menu {
         min-width: 160px;
     }
+    /deep/ .el-cascader-panel {
+        width: 490px;
+    }
     .category-tip {
         box-sizing: border-box;
         display: inline-block;
         width: 160px;
         padding-left: 5px;
+    }
+    .mask {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        border-radius: 4px;
+        background: #000;
+        opacity: 0.65;
+        z-index: -1;
+    }
+    .mask-btn {
+        position: absolute;
+        width: 78px;
+        height: 78px;
+        border-radius: 4px;
+        z-index: -1;
+        span {
+            float: left;
+            cursor: pointer;
+            margin-left: 14px;
+            padding: 0px 6px;
+            height: 22px;
+            line-height: 22px;
+            color: #fff;
+            font-size: 12px;
+            border-radius: 4px;
+            background: $hosjoyColor;
+
+            &:nth-child(1) {
+                margin-top: 22px;
+            }
+            &:nth-child(2) {
+                margin-top: 14px;
+            }
+
+            &:hover {
+                background: $hosjoyColorHover;
+            }
+            &:active {
+                background: $hosjoyColorActive;
+            }
+        }
+    }
+    .picture-content {
+        li {
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            margin-right: 10px;
+        }
+        img {
+            width: 78px;
+            height: 78px;
+            max-width: 80px;
+            max-height: 80px;
+            z-index: 4;
+            vertical-align: middle;
+        }
     }
 }
 .audit-opinion {

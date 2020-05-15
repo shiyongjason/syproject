@@ -133,6 +133,17 @@ export default [
                 component: () => import('@/views/hmall/brand/brandAudit.vue')
             },
             {
+                path: 'brandManagement',
+                name: 'brandManagement',
+                meta: {
+                    title: '品牌授权管理',
+                    tagName: '品牌授权管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/brand/brandManagement.vue')
+            },
+            {
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
