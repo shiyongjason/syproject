@@ -168,7 +168,6 @@ export default {
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
-                console.log(val)
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({
                     deptType: 'Q',
@@ -217,7 +216,6 @@ export default {
         async onQuery () {
             const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                console.log(res)
                 if (!res[1].data) {
                     res[1].data = platformSummarySheetTotal
                 }

@@ -259,14 +259,12 @@ export default {
         async onQuery () {
             const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                console.log(res)
                 res[1].data.standingBookNo = '合计'
                 res[0].data.records.unshift(res[1].data)
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            console.log(data)
             this.tableData = data.records
             this.page = {
                 total: data.total,
