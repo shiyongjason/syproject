@@ -39,14 +39,14 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <div v-if="queryParams.state == 1">
+                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
                         <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
                             <el-button type="primary" class='ml20' :loading='loading'>
                                 导入表格
                             </el-button>
                         </el-upload>
                     </div>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -69,12 +69,15 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
 import moment from 'moment'
+import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
+            platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
             headersData: {
                 'refreshToken': sessionStorage.getItem('refreshToken'),
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
@@ -326,7 +329,7 @@ export default {
     right: 0;
 }
 /deep/.el-table__header .repaymentStyle {
-    background-color: rgba($color: #c65911, $alpha: 1.0) !important;
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
     color: #fff !important;
 }
 /deep/.el-table__row .repaymentStyle {

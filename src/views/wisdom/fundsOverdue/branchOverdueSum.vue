@@ -29,7 +29,7 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -51,12 +51,14 @@ import { branchSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { getBranchOverdueList, exportBranchOverdueDetailExcel } from './api/index'
 import moment from 'moment'
+import { BRANCH_OVERDUE_SUM_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            branchOverdueSumExport: BRANCH_OVERDUE_SUM_EXPORT,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
