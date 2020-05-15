@@ -79,6 +79,7 @@ export default {
             totalTime: '',
             tableLabel: [
                 { label: '统计时间', prop: 'date' },
+                { label: '家庭名称', prop: 'homeName' },
                 { label: '手机号', prop: 'phone' },
                 { label: '所在房间', prop: 'roomName' },
                 { label: '总运行时长（h）', prop: 'totalElapsedTime' },
