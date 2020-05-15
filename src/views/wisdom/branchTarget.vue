@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onQuery()">
+                    <el-button type="primary" class="ml20" @click="onQuery({queryParams, pageNumber: 1})">
                         搜索
                     </el-button>
                     <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
@@ -106,7 +106,7 @@ export default {
                     message: '批量导入成功！',
                     type: 'success'
                 })
-                this.onQuery()
+                this.onQuery(this.queryParamsTemp)
             }
             this.uploadLoading = false
         },
@@ -120,13 +120,13 @@ export default {
         downloadXlsx () {
             location.href = '/excelTemplate/分部目标导入模板.xlsx'
         },
-        onQuery () {
-            this.queryParamsTemp = Object.assign({}, this.queryParams)
-            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(this.queryParamsTemp.date, 'YYYY')
-            this.findBrandTargetTable()
+        onQuery (params) {
+            this.queryParamsTemp = Object.assign({}, params)
+            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            this.findBrandTargetTable(params)
         },
-        async findBrandTargetTable () {
-            const params = Object.assign({}, this.queryParams)
+        async findBrandTargetTable (parentParams) {
+            const params = Object.assign({}, parentParams)
             params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
             if (!params.subsectionCode) {
                 params.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
@@ -150,29 +150,28 @@ export default {
             }
         },
         onSizeChange (val) {
-            console.log(val)
-            this.queryParams.pageSize = val
-            this.onQuery()
+            this.queryParamsTemp.pageSize = val
+            this.onQuery(this.queryParamsTemp)
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onQuery(this.queryParamsTemp)
         }
     },
     mounted () {
         this.findBranchListNew()
-        this.onQuery()
+        this.onQuery(this.queryParams)
     }
 }
 </script>
 
 <style scoped>
-.download {
-    text-decoration: none;
-    color: #ffffff;
-    background: #f88825;
-    line-height: 38px;
-    border-radius: 4px;
-    padding: 0 12px;
-}
+    .download {
+        text-decoration: none;
+        color: #ffffff;
+        background: #f88825;
+        line-height: 38px;
+        border-radius: 4px;
+        padding: 0 12px;
+    }
 </style>
