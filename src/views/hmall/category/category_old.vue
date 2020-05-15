@@ -25,12 +25,14 @@
                 @cell-click="onCellSelected"
                 @expand-cell-click="onExpandCell"
                 @tree-icon-click="onExpandCell">
-                <template slot="sorting" slot-scope="scope">
-                    <el-input v-model="input" maxlength="10" placeholder="请输入内容" v-model.number="scope.row.level"></el-input>
-                </template>
                 <template slot="operations" slot-scope="scope">
                     <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
+                    <span class="action mr10" @click="onMove(scope.row, -1)" v-if="!scope.row.isFirst">上移</span>
+                    <span class="action mr10 disabled" v-if="scope.row.isFirst">上移</span>
+                    <span class="action mr10" @click="onMove(scope.row, 1)" v-if="!scope.row.isLast">下移</span>
+                    <span class="action mr10 disabled" v-if="scope.row.isLast">下移</span>
                     <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
+                    <span class="action mr10" @click="onShowBrands(scope.row)" v-if="scope.row.level === 2">关联品牌</span>
                 </template>
             </tree-table>
         </div>
@@ -62,29 +64,56 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <el-drawer
-            class="page-body-drawer"
-            title="参数详情"
-            :visible.sync="setVisible"
-            direction="rtl"
-            size='900px'>
-            <setParameters />
-        </el-drawer>
+        <el-dialog title="设置参数" :visible.sync="paramsVisible" width="960px">
+            <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
+            <el-transfer
+                v-model="selectedParams"
+                :data="paramsList"
+                :titles="paramsTitle"
+                :props="{'key': 'parameterId', 'label': 'parameterName','isRequired': 'isRequired'}" class="settingParams">
+                <div slot-scope="{ option }">
+                    {{option.parameterName}}
+                    <div @click.stop.prevent="onIsRequired(option.parameterId)" style="float: right;width: 80px" v-if="selectedParams.indexOf(option.parameterId)>-1">
+                        <label class="el-checkbox el-transfer-panel__item">
+                           <span class="el-checkbox__input" :class="option.isRequired ? 'is-checked' : ''">
+                                <span class="el-checkbox__inner"></span><span style="vertical-align: text-top;margin-left: 8px">必填</span>
+                           </span>
+                        </label>
+                    </div>
+                </div>
+                <span>必填</span>
+            </el-transfer>
+            <div class="mt10 center-btn">
+                <el-button @click="paramsVisible = false">取消</el-button>
+                <el-button type="primary" @click="onLinkParams">保存</el-button>
+            </div>
+        </el-dialog>
+        <el-dialog title="关联品牌" :visible.sync="brandsVisible" :before-close="brandClose" class="settingParams">
+            <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
+            <el-transfer
+                v-model="selectedBrands"
+                :data="brandsList"
+                :titles="brandsTitle"
+                filterable
+                filter-placeholder="请输入品牌名称"
+                :props="{'key': 'brandId', 'label': 'brandName'}" ref="brandRef"></el-transfer>
+            <div class="mt10 center-btn">
+                <el-button @click="brandsVisible = false">取消</el-button>
+                <el-button type="primary" @click="onLinkBrands">保存</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import {
-    findAllCategory, updateCategory, createCategory, linkParams, findLinkParams
+    findAllCategory, updateCategory, createCategory,
+    moveCategory, linkParams, linkBrands, findLinkParams, findLinkBrands
 } from './api/index.js'
 import { mapState } from 'vuex'
-import setParameters from './component/setParameters'
 
 export default {
     name: 'category-list',
-    components: {
-        setParameters
-    },
     data () {
         return {
             data: [],
@@ -108,13 +137,6 @@ export default {
                     minWidth: '50px'
                 },
                 {
-                    title: '排序',
-                    headerAlign: 'center',
-                    minWidth: '100px',
-                    type: 'template',
-                    template: 'sorting'
-                },
-                {
                     title: '维护人',
                     key: 'updateBy',
                     align: 'center',
@@ -130,7 +152,7 @@ export default {
                 {
                     title: '操作',
                     headerAlign: 'center',
-                    minWidth: '100px',
+                    minWidth: '200px',
                     type: 'template',
                     template: 'operations'
                 }
@@ -140,6 +162,7 @@ export default {
             isEdit: false,
             editVisible: false,
             paramsVisible: false,
+            brandsVisible: false,
             rules: {
                 categoryName: [
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
@@ -153,25 +176,7 @@ export default {
                 categoryName: ''
             },
             expandCell: [],
-            isSaving: false,
-            setVisible: true,
-            attributeVisible: false,
-            attributeForm: {
-                name: '',
-                type: '',
-                required: ''
-            },
-            attributeFormRules: {
-                name: [
-                    { required: true, message: '审核结果不能为空！' }
-                ],
-                type: [
-                    { required: true, message: '审核结果不能为空！' }
-                ],
-                required: [
-                    { required: true, message: '审核结果不能为空！' }
-                ]
-            }
+            isSaving: false
         }
     },
     computed: {
@@ -186,6 +191,11 @@ export default {
                     value.isRequired = !value.isRequired
                 }
             })
+        },
+        brandClose () {
+            this.$refs.brandRef.clearQuery('left')
+            this.$refs.brandRef.clearQuery('right')
+            this.brandsVisible = false
         },
         onCellSelected (row, rowIndex, column, columnIndex, $event) {
             this.current = row
@@ -253,8 +263,19 @@ export default {
             }
             this.isSaving = false
         },
+        async onMove (row, direction) {
+            await moveCategory({
+                id: row.id,
+                moveValue: direction,
+                updateBy: this.userInfo.employeeName
+            })
+            this.$message({
+                message: '类目移动成功',
+                type: 'success'
+            })
+            this.refresh()
+        },
         async onShowParams (row) {
-            this.setVisible = true
             this.current = row
             this.paramsVisible = true
             const { data: paramsList } = await findLinkParams({
@@ -267,6 +288,61 @@ export default {
             })
             this.paramsList = selectedParams.concat(paramsList)
             this.selectedParams = selectedParams.map(item => item.parameterId)
+        },
+        async onShowBrands (row) {
+            this.current = row
+            this.brandsVisible = true
+            const { data: brandsList } = await findLinkBrands({
+                categoryId: this.current.id,
+                isRelation: 0
+            })
+            const { data: selectedBrands } = await findLinkBrands({
+                categoryId: this.current.id,
+                isRelation: 1
+            })
+            this.brandsList = selectedBrands.concat(brandsList)
+            this.brandsList = this.brandsList.map(item => {
+                if (item.brandNameEn) {
+                    item.brandName = item.brandName + item.brandNameEn
+                }
+                return item
+            })
+            this.selectedBrands = selectedBrands.map(item => item.brandId)
+        },
+        async onLinkParams () {
+            let tempParams = this.selectedParams.map(value => {
+                let temp = null
+                this.paramsList.forEach(value1 => {
+                    if (value1.parameterId === value) {
+                        value1.isRequired ? temp = 1 : temp = 0
+                    }
+                })
+                return {
+                    parameterId: value,
+                    isRequired: temp
+                }
+            })
+            await linkParams({
+                categoryId: this.current.id,
+                parameterIdList: [],
+                parameterIsRequired: tempParams
+            })
+            this.$message({
+                message: '设置参数成功！',
+                type: 'success'
+            })
+            this.paramsVisible = false
+        },
+        async onLinkBrands () {
+            await linkBrands({
+                categoryId: this.current.id,
+                brandIdList: this.selectedBrands
+            })
+            this.$message({
+                message: '关联品牌成功！',
+                type: 'success'
+            })
+            this.brandsVisible = false
         },
         tableRowStyle (row, rowIndex) {
             return this.current.id === row.id ? {

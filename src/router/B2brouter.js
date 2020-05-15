@@ -22,6 +22,17 @@ export default [
                 component: () => import('@/views/hmall/category/category.vue')
             },
             {
+                path: 'category_old',
+                name: 'category_old',
+                meta: {
+                    title: '类目管理老',
+                    tagName: '类目管理老',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/category/category_old.vue')
+            },
+            {
                 path: 'brand',
                 name: 'brand',
                 meta: {
