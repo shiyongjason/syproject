@@ -69,34 +69,18 @@
                                             </td>
                                             <!-- 敏感字段和敏感操作 -->
                                             <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
-                                                <template v-if="itemc.authTypes[0].authType == 0">
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
-                                                <template v-else>
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
+                                                <td width="300">
+                                                    <div>敏感字段</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                    </div>
+                                                </td>
+                                                <td width="300">
+                                                    <div>敏感操作</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
+                                                    </div>
+                                                </td>
                                             </template>
                                             <template v-else-if="itemc.authTypes && itemc.authTypes.length == 1">
                                                 <template v-if="itemc.authTypes[0].authType == 0">
@@ -377,6 +361,7 @@ export default {
                 authTypeId: this.configObj.id,
                 resourceName: this.list[i].resourceName,
                 resourceKey: this.list[i].resourceKey,
+                resourceType: this.configObj.authType,
                 sort: this.list[i].sort,
                 resourceAddress: this.list[i].resourceAddress
             }
