@@ -60,12 +60,12 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                    <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
                         <el-button type="primary" class='ml20' :loading='loading'>
                             导入表格
                         </el-button>
                     </el-upload>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -87,12 +87,15 @@ import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
+import { OVERDUE_DETAIL_TABLE_EXPORT, OVERDUE_DETAIL_TABLE_IMPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            overdueDetailTableExport: OVERDUE_DETAIL_TABLE_EXPORT,
+            overdueDetailTableImport: OVERDUE_DETAIL_TABLE_IMPORT,
             tableType: '0',
             uploadData: {
                 commitmentYear: ''

@@ -142,7 +142,6 @@ export default [
                 },
                 component: () => import('@/views/wisdom/platformTarget')
             },
-
             {
                 path: 'platcompanyinfo',
                 name: 'platcompanyinfo',
@@ -155,7 +154,6 @@ export default [
                 },
                 component: () => import('@/views/wisdom/platcompanyinfo')
             },
-
             {
                 path: 'platformSale',
                 name: 'platformSale',
