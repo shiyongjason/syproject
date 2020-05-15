@@ -3,8 +3,8 @@
         <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
-                    <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                        {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span>
+                    <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
+                       <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                         {{businessDetail.userAccount||'-'}}
@@ -96,7 +96,7 @@
                     <div class="drawer-button">
                         <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
                         <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary"  v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                        <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
             </div>
@@ -476,11 +476,11 @@ export default {
         color: #303133;
         transition: 0.3s;
         .el-icon-edit {
-            color: #FF7A45;
+            color: #ff7a45;
             margin-right: 10px;
         }
         b {
-            color: #FF7A45;
+            color: #ff7a45;
             font-weight: 500;
         }
     }
@@ -516,14 +516,22 @@ export default {
 }
 .authTag {
     border-radius: 8px;
-    padding:2px 8px;
-    color:#fff ;
+    padding: 2px 8px;
+    color: #fff;
     opacity: 0.8;
+    display: inline-block;
+    height: 23px;
+    line-height: 23px;
 }
-.tagGreen{
-    background: #52C41A;
+.tagGreen {
+    background: #52c41a;
 }
-.tagOrg{
-        background: #FF7A45;
+.tagOrg {
+    background: #ff7a45;
+}
+.nameall {
+    /deep/ .el-form-item__content {
+        word-break: keep-all;
+    }
 }
 </style>
