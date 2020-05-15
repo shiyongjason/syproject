@@ -325,7 +325,7 @@ export default {
             this.$emit('backEvent')
         },
         onLinkBus (val) {
-            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName, code: val.companyCode } })
+            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
         },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
@@ -387,7 +387,8 @@ export default {
             await saveStatus(
                 { projectId: this.form.id,
                     status: status,
-                    updateBy: this.userInfo.employeeName }
+                    updateBy: this.userInfo.employeeName,
+                    createByMobile: this.userInfo.phoneNumber }
             )
             this.$message({
                 message: `${statusTxt}成功`,

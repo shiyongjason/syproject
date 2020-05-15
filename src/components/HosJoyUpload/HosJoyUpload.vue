@@ -49,7 +49,7 @@
             </el-upload>
 
         </div>
-        <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog">
+        <el-dialog title="提示" :visible.sync="deleteVisible" width="500px" class="deldialog"  :modal=false>
             <span>您确定删除这一条数据吗？</span>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="deleteVisible = false">取 消</el-button>
@@ -348,4 +348,7 @@ export default {
 .elupload{overflow: hidden;height: 120px;margin-top: 13px;}
 .pdfimg{width: 130px;height: 120px;text-align: center;display: flex;align-items: center;justify-content: center;}
 .pdfimg img{width: 76%}
+.el-dialog__wrapper{
+    z-index: 12000 !important;
+}
 </style>
