@@ -143,7 +143,7 @@ export default {
                 authenticationTimeOrder: '',
                 customerType: '',
                 customerTypeOrder: '',
-                companyName: this.$route.query.name || '',
+                companyName: this.$route.params.name || '',
                 companyType: '',
                 subsectionCode: '',
                 userAccount: '',
@@ -216,8 +216,8 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.getFindbranch()
-        if (this.$route.query.name) {
-            this.onLookauthen(this.$route.query.code)
+        if (this.$route.params.name) {
+            this.onLookauthen(this.$route.params.code)
         }
     },
     methods: {
@@ -246,6 +246,7 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.companyName = ''
             this.optarr = ''
             this.searchList(1)
         },

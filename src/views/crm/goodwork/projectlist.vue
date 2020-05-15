@@ -88,9 +88,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                <template slot="companyName" slot-scope="scope">
-                    <span class="colblue" @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">{{scope.data.row.companyName}}</span>
-                </template>
+
                 <template slot="predictLoanAmount" slot-scope="scope">
                     {{fundMoneys(scope.data.row.predictLoanAmount)}}
                 </template>
@@ -104,7 +102,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
             </basicTable>
         </div>
@@ -114,7 +112,7 @@
                 <el-timeline>
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
                         <el-card>
-                            <p><span>操作人：</span> {{item.createBy}}</p>
+                            <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
                             <p><span>操作内容：</span> {{item.remark}}</p>
                         </el-card>
                     </el-timeline-item>
