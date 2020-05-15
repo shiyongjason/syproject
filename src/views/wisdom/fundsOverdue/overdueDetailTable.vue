@@ -266,6 +266,9 @@ export default {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
+            this.tableData.map(i => {
+                i.planProportion += '%'
+            })
             this.page = {
                 total: data.total,
                 pageSize: data.size,
