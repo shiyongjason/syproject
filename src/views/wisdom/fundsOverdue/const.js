@@ -2,6 +2,7 @@
 export const branchSummarySheet = function () {
     return [
         { prop: 'subsectionName', label: '分部', showOverflowTooltip: true, fixed: true },
+        { prop: 'regionName', label: '大区', showOverflowTooltip: true, fixed: true },
         { prop: 'stockOverdue', label: '存量逾期', showOverflowTooltip: true },
         {
             label: '存量逾期-2020年度还款计划',
@@ -515,7 +516,7 @@ export const overdueDetailTable = function () {
             ]
         },
         { prop: 'planProportion', label: '计划占比', showOverflowTooltip: true },
-        { prop: 'noRepaymentPlanAmount', label: '无还款计划金额', showOverflowTooltip: true }
+        { prop: 'noRepaymentPlanAmount', label: '无还款计划金额', displayAs: 'fundMoney', showOverflowTooltip: true }
     ]
 }
 // 还款计划
