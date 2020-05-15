@@ -25,14 +25,12 @@
                 @cell-click="onCellSelected"
                 @expand-cell-click="onExpandCell"
                 @tree-icon-click="onExpandCell">
+                <template slot="sorting" slot-scope="scope">
+                    <el-input v-model="input" maxlength="10" placeholder="请输入内容" v-model.number="scope.row.level"></el-input>
+                </template>
                 <template slot="operations" slot-scope="scope">
                     <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
-                    <span class="action mr10" @click="onMove(scope.row, -1)" v-if="!scope.row.isFirst">上移</span>
-                    <span class="action mr10 disabled" v-if="scope.row.isFirst">上移</span>
-                    <span class="action mr10" @click="onMove(scope.row, 1)" v-if="!scope.row.isLast">下移</span>
-                    <span class="action mr10 disabled" v-if="scope.row.isLast">下移</span>
                     <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
-                    <span class="action mr10" @click="onShowBrands(scope.row)" v-if="scope.row.level === 2">关联品牌</span>
                 </template>
             </tree-table>
         </div>
@@ -88,27 +86,13 @@
                 <el-button type="primary" @click="onLinkParams">保存</el-button>
             </div>
         </el-dialog>
-        <el-dialog title="关联品牌" :visible.sync="brandsVisible" :before-close="brandClose" class="settingParams">
-            <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
-            <el-transfer
-                v-model="selectedBrands"
-                :data="brandsList"
-                :titles="brandsTitle"
-                filterable
-                filter-placeholder="请输入品牌名称"
-                :props="{'key': 'brandId', 'label': 'brandName'}" ref="brandRef"></el-transfer>
-            <div class="mt10 center-btn">
-                <el-button @click="brandsVisible = false">取消</el-button>
-                <el-button type="primary" @click="onLinkBrands">保存</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
 <script>
 import {
     findAllCategory, updateCategory, createCategory,
-    moveCategory, linkParams, linkBrands, findLinkParams, findLinkBrands
+    moveCategory, linkParams, findLinkParams
 } from './api/index.js'
 import { mapState } from 'vuex'
 
@@ -137,6 +121,13 @@ export default {
                     minWidth: '50px'
                 },
                 {
+                    title: '排序',
+                    headerAlign: 'center',
+                    minWidth: '100px',
+                    type: 'template',
+                    template: 'sorting'
+                },
+                {
                     title: '维护人',
                     key: 'updateBy',
                     align: 'center',
@@ -152,7 +143,7 @@ export default {
                 {
                     title: '操作',
                     headerAlign: 'center',
-                    minWidth: '200px',
+                    minWidth: '100px',
                     type: 'template',
                     template: 'operations'
                 }
@@ -162,7 +153,6 @@ export default {
             isEdit: false,
             editVisible: false,
             paramsVisible: false,
-            brandsVisible: false,
             rules: {
                 categoryName: [
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
@@ -191,11 +181,6 @@ export default {
                     value.isRequired = !value.isRequired
                 }
             })
-        },
-        brandClose () {
-            this.$refs.brandRef.clearQuery('left')
-            this.$refs.brandRef.clearQuery('right')
-            this.brandsVisible = false
         },
         onCellSelected (row, rowIndex, column, columnIndex, $event) {
             this.current = row
@@ -289,26 +274,6 @@ export default {
             this.paramsList = selectedParams.concat(paramsList)
             this.selectedParams = selectedParams.map(item => item.parameterId)
         },
-        async onShowBrands (row) {
-            this.current = row
-            this.brandsVisible = true
-            const { data: brandsList } = await findLinkBrands({
-                categoryId: this.current.id,
-                isRelation: 0
-            })
-            const { data: selectedBrands } = await findLinkBrands({
-                categoryId: this.current.id,
-                isRelation: 1
-            })
-            this.brandsList = selectedBrands.concat(brandsList)
-            this.brandsList = this.brandsList.map(item => {
-                if (item.brandNameEn) {
-                    item.brandName = item.brandName + item.brandNameEn
-                }
-                return item
-            })
-            this.selectedBrands = selectedBrands.map(item => item.brandId)
-        },
         async onLinkParams () {
             let tempParams = this.selectedParams.map(value => {
                 let temp = null
@@ -332,17 +297,6 @@ export default {
                 type: 'success'
             })
             this.paramsVisible = false
-        },
-        async onLinkBrands () {
-            await linkBrands({
-                categoryId: this.current.id,
-                brandIdList: this.selectedBrands
-            })
-            this.$message({
-                message: '关联品牌成功！',
-                type: 'success'
-            })
-            this.brandsVisible = false
         },
         tableRowStyle (row, rowIndex) {
             return this.current.id === row.id ? {

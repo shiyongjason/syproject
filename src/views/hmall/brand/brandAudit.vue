@@ -52,7 +52,7 @@
             </basicTable>
         </div>
         <el-drawer
-            class="brand-drawer"
+            class="page-body-drawer"
             :title="drawerMsg.title"
             :visible.sync="drawerShow"
             direction="rtl"
@@ -124,7 +124,7 @@
                     </el-form-item>
                 </template>
             </el-form>
-            <div class="drawer-bottom">
+            <div class="drawer-footer">
                 <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
                 <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">提交</el-button>
             </div>

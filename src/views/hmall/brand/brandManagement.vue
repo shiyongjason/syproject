@@ -38,7 +38,7 @@
             </basicTable>
         </div>
         <el-drawer
-            class="brand-drawer"
+            class="page-body-drawer brand-drawer"
             :title="drawerMsg.title"
             :visible.sync="drawerShow"
             direction="rtl"
@@ -113,7 +113,7 @@
                     {{drawerMsg.title}}
                 </el-form-item>
             </el-form>
-            <div class="drawer-bottom">
+            <div class="drawer-footer">
                 <el-button name="white-color" @click="onCancel">取消</el-button>
                 <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">保存</el-button>
             </div>
@@ -628,16 +628,10 @@ export default {
     margin-bottom: 5px;
 }
 .brand-drawer {
-  box-sizing: border-box;
+    box-sizing: border-box;
     color: #000000;
     /deep/ .el-form-item__label {
         color: #000000;
-    }
-    /deep/ .el-drawer__header {
-        color: #000000;
-        padding: 20px 24px;
-        margin-bottom: 0;
-        border-bottom: 1px solid #e5e5ea;
     }
     /deep/ .el-cascader-menu {
         min-width: 160px;
@@ -713,13 +707,5 @@ export default {
 .audit-opinion {
     margin-top: 10px;
     padding-left: 5px;
-}
-.drawer-bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 12px 24px;
-    border-top: 1px solid #E5E5EA;
-    text-align: right;
 }
 </style>

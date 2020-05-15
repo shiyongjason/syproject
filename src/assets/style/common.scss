@@ -602,3 +602,29 @@ a.isLink {
 }
 .popover-p{ line-height: 30px;cursor: pointer; }
 .popover-p:hover{ line-height: 30px;color: #F56C6C;}
+
+/*******************  抽屉侧滑 start *******************************/
+// 头部添加下划线，主体添加滚动，底部添加绝对定位
+.page-body-drawer {
+    .el-drawer__header {
+        color: #000000;
+        padding: 20px 24px;
+        margin-bottom: 0;
+        border-bottom: 1px solid #e5e5ea;
+    }
+    .el-drawer__body {
+        padding-bottom: 65px;
+        overflow-y: auto;
+    }
+    .drawer-footer {
+        background-color: #fff;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 12px 24px;
+        border-top: 1px solid #E5E5EA;
+        text-align: right;
+    }
+}
+
+/*******************  抽屉侧滑 end *******************************/
