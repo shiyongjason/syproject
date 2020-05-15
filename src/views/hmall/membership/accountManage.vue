@@ -135,7 +135,7 @@ export default {
         },
         onSortChange (val) {
             if (val.prop === 'createTime') {
-                this.queryParams.registerTimeOrderBy = val.order === 'descending' ? 'desc' : 'asc'
+                this.queryParams.registerTimeOrderBy = val.order === 'ascending' ? 'asc' : 'desc'
             }
             this.onFindAccountList()
         },
@@ -148,6 +148,7 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.username = ''
             this.onFindAccountList(1)
         },
         async onFindAccountList (val) {

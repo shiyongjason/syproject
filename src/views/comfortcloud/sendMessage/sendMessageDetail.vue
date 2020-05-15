@@ -12,7 +12,9 @@
         <div class="container page-body-cont">
             <div class="wrapper-chart">
                 <div class="time">
-                     {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}} - {{ Date.now() | formatDate('YYYY-MM-DD')}}</div>
+                    {{cloudSendMessageDetailChart.pushTime | formatDate('YYYY-MM-DD')}} - {{ Date.now() |
+                    formatDate('YYYY-MM-DD')}}
+                </div>
                 <div class="chart" ref="barChart" style="width: 580px;height: 400px"></div>
             </div>
             <div class="tips">
@@ -46,6 +48,7 @@
 <script>
 import echarts from 'echarts'
 import { mapActions, mapGetters } from 'vuex'
+
 const barOption = {
     xAxis: {
         type: 'category',
@@ -79,6 +82,32 @@ const barOption = {
             normal: {
                 color: '#00ccff'
             }
+        },
+        markPoint: {
+            data: [
+                {
+                    name: '送达率',
+                    value: 0,
+                    xAxis: 1,
+                    yAxis: 0,
+                    itemStyle: {
+                        color: '#00ccff'
+                    }
+                },
+                {
+                    name: '打开率',
+                    value: 0,
+                    xAxis: 2,
+                    yAxis: 0,
+                    itemStyle: {
+                        color: '#00ccff'
+                    }
+                }
+            ],
+            label: {
+                color: '#ffffff',
+                fontSize: 10
+            }
         }
     }
 }
@@ -110,37 +139,48 @@ export default {
             this.cloudSendMessageDetailChart.openedCount,
             this.cloudSendMessageDetailChart.deletedCount
         ]
+        barOption.series.markPoint.data[0].value =
+            this.cloudSendMessageDetailChart.receivedPercent + '%'
+        barOption.series.markPoint.data[0].yAxis = this.cloudSendMessageDetailChart.receivedCount
+        barOption.series.markPoint.data[1].value =
+            this.cloudSendMessageDetailChart.openedPercent + '%'
+        barOption.series.markPoint.data[1].yAxis = this.cloudSendMessageDetailChart.openedCount
         echarts.init(this.$refs.barChart).setOption(barOption)
     }
 }
 </script>
 
 <style scoped lang="scss">
-.title{
-    padding: 20px 12px;
-    span{
-        border: 1px solid #666666;
-        border-radius: 50%;
-        color: #666666;
-        width: 16px;
-        height: 16px;
-        display: inline-block;
-        text-align: center;
-        font-size: 12px;
-        cursor: pointer;
+    .title {
+        padding: 20px 12px;
+
+        span {
+            border: 1px solid #666666;
+            border-radius: 50%;
+            color: #666666;
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            text-align: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
     }
-}
-    .container{
+
+    .container {
         display: flex;
+
         .wrapper-chart {
             margin: 20px;
         }
-        .sub-title{
+
+        .sub-title {
             padding: 20px 0;
             font-weight: 500;
             font-size: 16px;
         }
-        p{
+
+        p {
             padding: 6px;
             font-size: 14px;
             color: #666666;

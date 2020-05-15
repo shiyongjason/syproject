@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { iotUrl } from '@/api/config'
 import H5Preview from '../../../components/h5Preview/index'
 import { deleteCloudComfortEncyclopedia } from '../api/index'
