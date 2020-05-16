@@ -68,7 +68,10 @@
                                                 </div>
                                             </td>
                                             <!-- 敏感字段和敏感操作 -->
-                                            <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
+                                            <!-- <template v-for="">
+
+                                            </template> -->
+                                            <!-- <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
                                                 <td width="300">
                                                     <div>敏感字段</div>
                                                     <div class="el-radio-group">
@@ -121,7 +124,7 @@
                                                 <td width="300">
                                                     <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
                                                 </td>
-                                            </template>
+                                            </template> -->
                                         </tr>
                                     </template>
                                 </template>
@@ -247,7 +250,7 @@ export default {
             var shy = JSON.parse(JSON.stringify(data))
             this.handleData(shy)
             console.log(shy)
-            this.tableList = this.handlerTableList(data, 0)
+            this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数
         computedRowspan (list, len) {
@@ -269,14 +272,23 @@ export default {
             })
         },
         compare (authTypes) {
+            const arr = [
+                { id: '', authType: 0 },
+                { id: '', authType: 1 },
+                { id: '', authType: 2 }
+            ]
             if (authTypes.length === 0) {
-                return [
-                    { id: '', authType: 0 },
-                    { id: '', authType: 1 },
-                    { id: '', authType: 2 },
-                ]
+                return arr
             }
-
+            arr.map(i => {
+                const a = authTypes.filter(it => {
+                    return it.authType === i.authType
+                })
+                if (a.length === 0) {
+                    authTypes.push(i)
+                }
+            })
+            return authTypes.sort((a, b) => a.authType - b.authType)
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
