@@ -44,6 +44,7 @@ function fundMoney (money) {
         return res
     }
     return '-'
+    
 }
 export default {
     name: 'hosjoyColumn',
