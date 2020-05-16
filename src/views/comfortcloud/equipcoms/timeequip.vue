@@ -274,6 +274,11 @@ export default {
             this.smartData = this.cloudRuntimeReport
             this.drawLine(this.smartData, line)
             this.drawbar(this.smartData, bar)
+            this.$emit('queryTotalTime', {
+                startDate: this.smartparams.startDate,
+                endDate: this.smartparams.endDate,
+                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
+            })
         },
         drawLine (data, id) {
             // 绘制图表
@@ -454,7 +459,7 @@ export default {
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.runTimeModuleName
+                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
             })
         },
         drawChart (option, id) {
