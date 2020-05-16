@@ -453,6 +453,11 @@ export default {
                     this.findCloudHomeRtDetailList(this.homeParams)
                     break
             }
+            this.$emit('queryTotalTime', {
+                startDate: this.smartparams.startDate,
+                endDate: this.smartparams.endDate,
+                type: this.homeParams.runTimeModuleName
+            })
         },
         drawChart (option, id) {
             const chartDom = document.getElementById(id)
