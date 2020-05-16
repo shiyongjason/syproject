@@ -380,7 +380,7 @@ export default {
                 color: ['#1c9a4c'],
                 grid: {
                     left: '3%',
-                    right: '3%',
+                    right: '13%',
                     top: '3%',
                     bottom: '3%',
                     containLabel: true
@@ -394,17 +394,15 @@ export default {
                         show: false
                     }
                 },
-                xAxis: [{
-                    axisTick: {
-                        show: false
-                    },
+                xAxis: {
+                    name: '单位/小时',
                     type: 'value',
                     // max: 100,
                     splitNumber: 5,
                     axisLabel: {
                         formatter: '{value}'
                     }
-                }],
+                },
                 series: [{
                     name: '销量',
                     type: 'bar',
@@ -473,7 +471,7 @@ export default {
         min-height: 500px;
 
         .chart-flex2 {
-            flex: 2;
+            flex: 1.8;
         }
 
         .chart-flex1 {

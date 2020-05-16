@@ -55,7 +55,7 @@ export const ringChartOption = function (data) {
         },
         grid: {
             left: '3%',
-            right: '3%',
+            right: '8%',
             bottom: '10',
             containLabel: true
         },
@@ -65,6 +65,7 @@ export const ringChartOption = function (data) {
             data: data.xAxis
         },
         yAxis: {
+            name: '单位/小时',
             type: 'value'
         },
         series: data.series
