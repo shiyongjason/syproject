@@ -7,7 +7,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.brandCode"
+                            v-model="queryParams.code"
                             maxlength="50"
                             placeholder="请输入品牌编码"></el-input>
                     </div>
@@ -70,7 +70,7 @@
             :close-on-click-modal="false">
             <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
                 <el-form-item label="品牌编号" v-if="this.status === 'modify'">
-                    {{form.brandCode}}
+                    {{form.code}}
                 </el-form-item>
                 <el-form-item prop="name" label="品牌名称">
                     <el-input
@@ -97,12 +97,12 @@
                         尺寸300x300,2m以内，支持jpg、jpeg、png`
                     </div>
                 </el-form-item>
-                <el-form-item prop="describes" label="品牌描述">
+                <el-form-item prop="description" label="品牌描述">
                     <el-input
                         type="textarea"
                         maxlength="100"
                         placeholder="100字以内"
-                        v-model="form.describes"
+                        v-model="form.description"
                         style="width: 300px;"
                         :rows="5"></el-input>
                 </el-form-item>
@@ -119,7 +119,7 @@
 import brandTable from './components/brandTable'
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
-import { findBrandList, createBrand, updateBrand, findBrandDetails } from './api/index'
+import { createBrand, updateBrand } from './api/index'
 import { BRAND_STATUS } from './const'
 import { IsChinese } from '@/rules'
 export default {
@@ -131,7 +131,7 @@ export default {
         return {
             queryParams: {
                 name: '',
-                brandCode: '',
+                code: '',
                 pageNumber: 1,
                 pageSize: 10,
                 updateBy: '',
@@ -144,8 +144,9 @@ export default {
             form: {
                 name: '',
                 englishName: '',
+                id: '',
                 logoUrl: '',
-                describes: ''
+                description: ''
             },
             tempForm: {},
             formLabelWidth: '150px',
@@ -169,7 +170,8 @@ export default {
     },
     computed: {
         ...mapState('brand', {
-            brandListInfo: 'brandListInfo'
+            brandListInfo: 'brandListInfo',
+            brandDetail: 'brandDetail'
         }),
         uploadInfo () {
             return {
@@ -190,11 +192,12 @@ export default {
     methods: {
         ...mapActions('brand', [
             'findBrandList',
-            'findBrandArea'
+            'findBrandArea',
+            'findBrandDetail'
         ]),
         updateBrandChange (col) {
             this.modifyId = col.id
-            this.findBrandDetails()
+            this.findBrandDetailAsync()
             this.isSaving = false
         },
         submitForm (formName) {
@@ -217,11 +220,12 @@ export default {
         },
         async saveBrand () {
             let { ...params } = this.form
-            params.createBy = this.userInfo.employeeName
+            params.operator = this.userInfo.employeeName
             if (this.status === 'add') {
                 await createBrand(params)
             } else if (this.status === 'modify') {
-                await updateBrand(this.modifyId, params)
+                params.id = this.modifyId
+                await updateBrand(params)
             }
             this.dialogBrandEdit = false
             this.$message({
@@ -233,14 +237,14 @@ export default {
         readUrl (val) {
             this.form.logoUrl = val.imageUrl
         },
-        async findBrandDetails () {
-            const { data } = await findBrandDetails(this.modifyId)
+        async findBrandDetailAsync () {
+            await this.findBrandDetail(this.modifyId)
             this.form = {
-                brandCode: data.brandCode,
-                name: data.name,
-                englishName: data.englishName,
-                logoUrl: data.logoUrl,
-                describes: data.describes
+                code: this.brandDetail.code,
+                name: this.brandDetail.name,
+                englishName: this.brandDetail.englishName,
+                logoUrl: this.brandDetail.logoUrl,
+                description: this.brandDetail.description
             }
             this.status = 'modify'
             this.dialogBrandEdit = true
@@ -250,7 +254,7 @@ export default {
         },
         async onQuery () {
             const { ...params } = this.queryParams
-            await findBrandList(params)
+            await this.findBrandList(params)
             this.tableData = this.brandListInfo.records
             this.paginationData = {
                 pageNumber: this.brandListInfo.current,
