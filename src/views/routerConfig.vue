@@ -18,10 +18,10 @@
                     <table class="tablelist">
                         <thead>
                             <tr>
-                                <td width="" rowspan="2">一级菜单</td>
-                                <td width="" rowspan="2">二级菜单</td>
-                                <td width="" rowspan="2">三级菜单</td>
-                                <td width="" rowspan="2">四级菜单</td>
+                                <td width="15%" rowspan="2">一级菜单</td>
+                                <td width="15%" rowspan="2">二级菜单</td>
+                                <td width="15%" rowspan="2">三级菜单</td>
+                                <td width="15%" rowspan="2">四级菜单</td>
                                 <td width="" colspan="3">权限</td>
                             </tr>
                             <tr>

@@ -31,10 +31,10 @@
                 <table class="tablelist">
                     <thead>
                         <tr>
-                            <td width="">一级菜单</td>
-                            <td width="">二级菜单</td>
-                            <td width="">三级菜单</td>
-                            <td width="" colspan=3>权限</td>
+                            <td width="15%">一级菜单</td>
+                            <td width="15%">二级菜单</td>
+                            <td width="15%">三级菜单</td>
+                            <td width="" colspan=4>权限</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,6 +153,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
+        var shy = [JSON.parse(JSON.stringify(data))[0]]
+        this.handleData(shy)
+        console.log(shy)
         this.tableList = this.handlerTableList(data, 0)
         console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
@@ -177,13 +180,13 @@ export default {
                     })
                 }
                 // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
-                if (item.authTypeList && item.authTypeList.length == 1) {
-                    if (item.authTypeList[0].authType == 1) {
-                        item.authTypeList.splice(0, 0, {})
-                    } else {
-                        item.authTypeList.push({})
-                    }
-                }
+                // if (item.authTypeList && item.authTypeList.length == 1) {
+                //     if (item.authTypeList[0].authType == 1) {
+                //         item.authTypeList.splice(0, 0, {})
+                //     } else {
+                //         item.authTypeList.push({})
+                //     }
+                // }
                 if (level < 3) {
                     if (!item.childAuthList) {
                         item.childAuthList = [{
@@ -196,6 +199,34 @@ export default {
                 level = 0
                 return item
             })
+        },
+        handleData (data) {
+            data.map(i => {
+                if (!i.childAuthList || i.childAuthList.length === 0) {
+                    i.authTypeList = this.compare(i.authTypeList)
+                } else {
+                    this.handleData(i.childAuthList)
+                }
+            })
+        },
+        compare (authTypeList) {
+            const arr = [
+                { id: '', authType: 0 },
+                { id: '', authType: 1 },
+                { id: '', authType: 2 }
+            ]
+            if (!authTypeList || authTypeList.length === 0) {
+                return arr
+            }
+            arr.map(i => {
+                const a = authTypeList.filter(it => {
+                    return it.authType === i.authType
+                })
+                if (a.length === 0) {
+                    authTypeList.push(i)
+                }
+            })
+            return authTypeList.sort((a, b) => a.authType - b.authType)
         },
         // 计算table合并行数
         computedRowspan (list, len) {
