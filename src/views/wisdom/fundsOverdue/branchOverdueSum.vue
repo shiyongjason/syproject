@@ -223,7 +223,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        // await this.oldBossAuth()
+        await this.oldBossAuth()
     }
 }
 </script>

@@ -227,7 +227,7 @@ export default {
             })
             this.tableData = this.handleData(data.records)
             this.tableData.map(i => {
-                i.planProportion += '%'
+                if (i.planProportion) i.planProportion += '%'
             })
             this.page = {
                 total: data.total,
