@@ -115,7 +115,6 @@ export const branchSummarySheet = function () {
                     prop: 'stockPlanProportion',
                     label: '计划率',
                     width: '150',
-                    displayAs: 'fundMoney',
                     showOverflowTooltip: true
                 },
                 {
@@ -279,7 +278,7 @@ export const platformSummarySheet = function () {
             ]
         },
         { prop: 'arrearsCount', label: '欠款笔数', showOverflowTooltip: true },
-        { prop: 'capitalAmount', label: '剩余笔数', showOverflowTooltip: true },
+        { prop: 'capitalAmount', label: '剩余欠款', showOverflowTooltip: true },
         {
             label: '2020年度还款计划',
             children: [
