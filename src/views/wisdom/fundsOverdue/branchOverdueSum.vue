@@ -185,7 +185,9 @@ export default {
             // console.log(data)
             this.tableData = data
             this.tableData.map(i => {
+                i.incrementProportion *= 100
                 i.incrementProportion += '%'
+                i.stockPlanProportion *= 100
                 i.stockPlanProportion += '%'
             })
         },
