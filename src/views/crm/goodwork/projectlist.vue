@@ -68,7 +68,7 @@
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
 </template>
 <script>
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
@@ -207,10 +207,13 @@ export default {
                 }
             }
         },
+        ...mapState({
+            userInfo: state => state.userInfo,
+            branchList: 'branchList'
+        }),
         ...mapGetters({
             projectData: 'crmmanage/projectData',
-            projectLoan: 'crmmanage/projectLoan',
-            branchList: 'branchList'
+            projectLoan: 'crmmanage/projectLoan'
         })
     },
     async mounted () {
@@ -218,12 +221,11 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
     },
-
     methods: {
         ...mapActions({
             findProjetpage: 'crmmanage/findProjetpage',
             findProjectLoan: 'crmmanage/findProjectLoan',
-            findBranch: 'findBranch'
+            findBranch: 'findAuthList'
         }),
         fundMoneys (val) {
             if (val) {
@@ -271,7 +273,8 @@ export default {
             this.searchList()
         },
         async onGetbranch () {
-            await this.findBranch()
+            await this.findBranch({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc })
+            console.log(this.branchList)
             this.branchArr = this.branchList
         }
     }

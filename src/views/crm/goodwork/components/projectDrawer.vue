@@ -9,7 +9,10 @@
                     <el-input v-model="form.companyName" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="分部：">
-                    <el-input v-model="form.deptName" disabled></el-input>
+                      <el-select v-model="form.companyCode" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchList" :key="item.organizationCode"></el-option>
+                        </el-select>
+                    <!-- <el-input v-model="form.deptName" disabled></el-input> -->
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
@@ -304,8 +307,9 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters('crmmanage', {
-            projectDetail: 'projectDetail'
+        ...mapGetters({
+            projectDetail: 'crmmanage/projectDetail',
+            branchList: 'branchList'
         })
     },
     watch: {

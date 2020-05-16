@@ -48,3 +48,7 @@ export const clearCache = (params) => axios.get(`/api/auth/refresh`)
 export const syncOrg = (params) => axios.post(`/backend/organizations/sync-jinyun`, params)
 // 删除权限
 export const deleteAuth = (authCode) => axios.delete(`/uaa/api/auth/${authCode}`)
+
+// 大区和分部
+export const getRegionsubs = (params) => axios.get(`/uaa/department/region-subsections`, { params })
+export const getJobSubs = (params) => axios.get(`/uaa/employee/subsection/${params.jobNumber}/${params.authCode}`)
