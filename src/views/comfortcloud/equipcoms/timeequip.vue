@@ -34,7 +34,7 @@
                     <div class="chart-flex2" id="CoLine" style="height:500px"></div>
                     <div class="chart-flex1" id="CoBar" style="height:500px"></div>
                 </el-tab-pane>
-                <el-tab-pane label="地暖智控面板LH-306" name="Ap" class="echart-wrap">
+                <el-tab-pane label="地暖智控面板WH-04" name="Ap" class="echart-wrap">
                     <div class="chart-flex2" id="ApLine" style="height:500px"></div>
                     <div class="chart-flex1" id="ApBar" style="height:500px"></div>
                 </el-tab-pane>
