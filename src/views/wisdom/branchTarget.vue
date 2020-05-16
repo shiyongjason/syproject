@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onQuery({queryParams, pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
                         搜索
                     </el-button>
                     <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
