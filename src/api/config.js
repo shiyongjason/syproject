@@ -14,13 +14,12 @@ var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.
 // var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : 'production')
 switch (env) {
     case 'development':
-        interfaceUrl = 'https://staging-hbp.hosjoy.com/'
-        ossUrl = 'https://staging-route.hosjoy.com/'
-        iframeUrl = 'https://staging-boss.hosjoy.com/'
-        jinyun = 'https://staging-jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
-        ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
-        fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
+        ossUrl = 'http://192.168.20.248:8089/'
+        iframeUrl = 'http://devcrm.hosjoy.com/'
+        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        B2bUrl = 'http://192.168.20.248:40000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         // interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
         // ossUrl = 'https://testroute.hosjoy.com:4832/'
