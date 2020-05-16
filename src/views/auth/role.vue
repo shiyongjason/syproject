@@ -65,7 +65,7 @@
                                                 <td :key="authTypeIndex + '_authType'" width="300">
                                                     <div v-if="itemAuthType.id">
                                                         <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have" class="mr10">
-                                                            {{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}
+                                                            {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
                                                             <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
@@ -153,11 +153,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        var shy = [JSON.parse(JSON.stringify(data))[0]]
+        var shy = JSON.parse(JSON.stringify(data))
         this.handleData(shy)
-        console.log(shy)
-        this.tableList = this.handlerTableList(data, 0)
-        console.log(this.tableList)
+        this.tableList = this.handlerTableList(shy, 0)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
