@@ -22,11 +22,12 @@
                                 <td width="" rowspan="2">二级菜单</td>
                                 <td width="" rowspan="2">三级菜单</td>
                                 <td width="" rowspan="2">四级菜单</td>
-                                <td width="" colspan="2">权限</td>
+                                <td width="" colspan="3">权限</td>
                             </tr>
                             <tr>
                                 <td width="">敏感字段</td>
                                 <td width="">敏感操作</td>
+                                <td width="">敏感数据</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -68,63 +69,17 @@
                                                 </div>
                                             </td>
                                             <!-- 敏感字段和敏感操作 -->
-                                            <!-- <template v-for="">
-
-                                            </template> -->
-                                            <!-- <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
-                                                <td width="300">
-                                                    <div>敏感字段</div>
+                                            <template v-for="(i, d) in itemc.authTypes">
+                                                <td v-if="i.id" :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
+                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '敏感数据'  }}</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
                                                     </div>
                                                 </td>
-                                                <td width="300">
-                                                    <div>敏感操作</div>
-                                                    <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
-                                                    </div>
+                                                <td v-else :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
+                                                    <el-button @click="addSensitive(itemc, itemb, itema, i.authType)" type="success">添加</el-button>
                                                 </td>
                                             </template>
-                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length == 1">
-                                                <template v-if="itemc.authTypes[0].authType == 0">
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
-                                                    </td>
-                                                </template>
-                                                <template v-else>
-                                                    <td width="300">
-                                                        <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
-                                            </template>
-                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length > 2">
-                                                <td width="300">
-                                                    数据异常
-                                                </td>
-                                                <td width="300">
-                                                    数据异常
-                                                </td>
-                                            </template>
-                                            <template v-else>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
-                                                </td>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
-                                                </td>
-                                            </template> -->
                                         </tr>
                                     </template>
                                 </template>
@@ -410,7 +365,7 @@ export default {
             this.init()
         },
         onShowFieldConfig (item) {
-            // console.log(item)
+            console.log(item)
             // 初始化
             this.list = [{}]
             if (item.authResourceList.length > 0) {
