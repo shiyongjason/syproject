@@ -103,6 +103,9 @@ export default {
         })
     },
     mounted () {
+        // 默认七天前
+        this.echartsParams.startDate = moment().subtract(7, 'days').format('YYYY-MM-DD')
+        this.echartsParams.endDate = moment().format('YYYY-MM-DD')
         this.onSearch()
         this.onFindRuntimeR()
     },
