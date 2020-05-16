@@ -33,16 +33,10 @@ function money (money) {
     return '-'
 }
 function fundMoney (money) {
-    if (money === null) {
-        return 0
-    }
-    if (money === 0) {
-        return 0
-    }
-    if (money) {
-        const res = money.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
-    }
+    if (money === null) return 0
+    if (money === 0) return 0
+    if (Number.isInteger(money)) return parseInt(money)
+    if (money) return money.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     return '-'
 }
 export default {
