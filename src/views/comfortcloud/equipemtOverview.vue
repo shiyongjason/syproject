@@ -14,7 +14,7 @@
         </div>
         <div class="cloud-echart">
             <smartequip v-if="equipshow ==='left'" />
-            <timeequip :totalTime="cloudDeviceCount.runTimeCount"  v-if="equipshow ==='right'"/>
+            <timeequip :totalTime="cloudDeviceCount.runTimeCount" @queryTotalTime="queryTotalTime"  v-if="equipshow ==='right'"/>
         </div>
 
     </div>
@@ -47,7 +47,10 @@ export default {
         },
         ...mapActions({
             findCloudDeviceCount: 'findCloudDeviceCount'
-        })
+        }),
+        queryTotalTime (params) {
+            this.findCloudDeviceCount(params)
+        }
     },
     mounted () {
         this.findCloudDeviceCount()
