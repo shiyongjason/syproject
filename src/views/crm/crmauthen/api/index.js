@@ -17,7 +17,7 @@ export const getBusinessAuthen = (params) => {
 
 // CRM 认证状态
 export const getBusinessDetail = (params) => {
-    return axios.get(B2bUrl + 'merchant/api/crm/company/boss/detail', { params })
+    return axios.get('memeber/api/crm/company/boss/detail', { params })
 }
 // 获取详情统计
 export const getCrmauthenStatic = (params) => {

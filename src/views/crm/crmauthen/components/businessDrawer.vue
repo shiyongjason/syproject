@@ -13,7 +13,7 @@
                         {{businessDetail.userName||'-'}}
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="subsectionCode">
-                        <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
+                        <el-select v-model="businessDetail.pkDeptdoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </el-form-item>
