@@ -83,14 +83,17 @@
             :visible.sync="setVisible"
             direction="rtl"
             size='900px'>
-            <setParameters />
+            <setParameters
+                ref="setting"
+                :categoryId="current.id"
+            />
         </el-drawer>
     </div>
 </template>
 
 <script>
 import {
-    updateCategory, createCategory, findLinkParams
+    updateCategory, createCategory
 } from './api/index.js'
 import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
@@ -106,8 +109,6 @@ export default {
             data: [],
             brandsTitle: ['未添加品牌', '已添加品牌'],
             paramsTitle: ['未选参数', '已选参数'],
-            selectedParams: [],
-            paramsList: [],
             columns: [
                 {
                     title: '类目名称',
@@ -157,7 +158,9 @@ export default {
                 }
             ],
             // 当前选中的类目，所有的操作都基于这个数据
-            current: {},
+            current: {
+                id: 0
+            },
             isEdit: false,
             editVisible: false,
             rules: {
@@ -236,6 +239,21 @@ export default {
             }
         },
 
+        // 表格行样式
+        tableRowStyle (row, rowIndex) {
+            return this.current.id === row.id ? {
+                'background-color': '#bec9ef'
+            } : {}
+        },
+
+        onShowParams (row) {
+            this.current = row
+            this.setVisible = true
+            this.$nextTick(() => {
+                this.$refs['setting'].findSpecificationsAsync()
+            })
+        },
+
         // 输入框排序接口
         async inputBlur (event) {
             this.$forceUpdate()
@@ -303,6 +321,9 @@ export default {
                 id: ''
             }
             this.isSaving = false
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         onShowEdit (row) {
             this.current = row
@@ -318,26 +339,9 @@ export default {
                 sort: this.current.sort
             }
             this.isSaving = false
-        },
-        async onShowParams (row) {
-            this.setVisible = true
-            this.current = row
-            const { data: paramsList } = await findLinkParams({
-                categoryId: this.current.id,
-                isSetupthe: 0
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
             })
-            const { data: selectedParams } = await findLinkParams({
-                categoryId: this.current.id,
-                isSetupthe: 1
-            })
-            this.paramsList = selectedParams.concat(paramsList)
-            this.selectedParams = selectedParams.map(item => item.parameterId)
-        },
-        // 表格行样式
-        tableRowStyle (row, rowIndex) {
-            return this.current.id === row.id ? {
-                'background-color': '#bec9ef'
-            } : {}
         },
 
         // 递归处理数据

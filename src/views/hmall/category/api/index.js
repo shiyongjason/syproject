@@ -18,3 +18,10 @@ export const linkBrands = (params) => axios.post(B2bUrl + 'product/api/categorie
 export const findLinkParams = (params) => axios.get(B2bUrl + 'product/api/categories/setupthe', { params })
 // 获取关联的品牌
 export const findLinkBrands = (params) => axios.get(B2bUrl + 'product/api/categories/relation', { params })
+
+// 查询类目规格参数
+export const findSpecifications = (params) => axios.get(B2bUrl + `product/api/categories/specifications/${params.categoryId}`)
+// 新增类目规格参数
+export const createSpecifications = (params) => axios.post(B2bUrl + `product/api/categories/specifications`, params)
+// 更新类目规格参数
+export const updateSpecifications = (params) => axios.put(B2bUrl + `product/api/categories/specifications`, params)
