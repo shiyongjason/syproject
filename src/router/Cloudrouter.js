@@ -118,6 +118,18 @@ export default {
             component: () => import('@/views/comfortcloud/alarm/alarm.vue')
         },
         {
+            path: 'cloudComfortableScene',
+            name: 'cloudComfortableScene',
+            meta: {
+                title: '舒适度场景',
+                tagName: '舒适度场景',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortableScene/comfortableScene.vue')
+        },
+        {
             path: 'equipmentError',
             name: 'equipmentError',
             meta: {
@@ -154,6 +166,30 @@ export default {
             component: () => import('@/views/comfortcloud/smartPlay/smartPlayEdit.vue')
         },
         {
+            path: 'comfortEncyclopedia',
+            name: 'comfortEncyclopedia',
+            meta: {
+                title: '舒适小百科',
+                tagName: '舒适小百科',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortEncyclopedia/comfortEncyclopedia.vue')
+        },
+        {
+            path: 'comfortEncyclopediaEdit',
+            name: 'comfortEncyclopediaEdit',
+            meta: {
+                title: '文章编辑',
+                tagName: '文章编辑',
+                parentName: '舒适小百科',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/comfortEncyclopedia/comfortEncyclopediaEdit.vue')
+        },
+        {
             path: 'sendMessage',
             name: 'sendMessage',
             meta: {
@@ -176,6 +212,30 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/comfortcloud/sendMessage/sendMessageEdit.vue')
+        },
+        {
+            path: 'sendMessageDetail',
+            name: 'sendMessageDetail',
+            meta: {
+                title: '推送效果',
+                tagName: '推送效果',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/sendMessage/sendMessageDetail.vue')
+        },
+        {
+            path: 'userFeedback',
+            name: 'userFeedback',
+            meta: {
+                title: '用户反馈',
+                tagName: '用户反馈',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/userFeedback/userFeedback.vue')
         }
     ]
 }
