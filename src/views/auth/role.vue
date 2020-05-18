@@ -322,7 +322,9 @@ export default {
                             status: authType.status
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
-                        authType.status == 1 && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                        if (authType.status == 1 && authType.authType == 2) {
+                            resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                        }
                     })
                 }
                 if (item.childAuthList) {
