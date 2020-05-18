@@ -250,7 +250,9 @@ export default {
         ...mapGetters({
             projectData: 'crmmanage/projectData',
             projectLoan: 'crmmanage/projectLoan',
-            crmdepList: 'crmmanage/crmdepList'
+            crmdepList: 'crmmanage/crmdepList',
+            punchList: 'crmmanage/punchList',
+            projectRecord: 'crmmanage/projectRecord'
         })
     },
     async mounted () {
@@ -264,7 +266,10 @@ export default {
         ...mapActions({
             findProjetpage: 'crmmanage/findProjetpage',
             findProjectLoan: 'crmmanage/findProjectLoan',
-            findCrmdeplist: 'crmmanage/findCrmdeplist'
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
+            findProjectrecord: 'crmmanage/findProjectrecord',
+            findPunchlist: 'crmmanage/findPunchlist'
+
         }),
         fundMoneys (val) {
             if (val) {
