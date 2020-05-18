@@ -21,12 +21,16 @@
                 :selectable="false"
                 :expand-type="false"
                 :row-style="tableRowStyle"
-                children-prop="categoryList"
+                children-prop="subCategoryList"
                 @cell-click="onCellSelected"
                 @expand-cell-click="onExpandCell"
-                @tree-icon-click="onExpandCell">
-                <template slot="sorting" slot-scope="scope">
-                    <el-input v-model="input" maxlength="10" placeholder="请输入内容" v-model.number="scope.row.level"></el-input>
+                @tree-icon-click="onExpandCell"
+                >
+                <template slot="sort" slot-scope="scope">
+                    <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @blur="inputBlur"></el-input>
+                </template>
+                <template slot="picture">
+                    <img src="">
                 </template>
                 <template slot="operations" slot-scope="scope">
                     <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
@@ -42,19 +46,30 @@
                 label-width="150px">
                 <div class="edit-form-item">
                     <span class="mr20">
-                        <label class="item-label">类目编号：</label>{{ this.form.categoryCode ? this.form.categoryCode : '--' }}
+                        <label class="item-label">类目编号：</label>{{ this.form.code ? this.form.code : '--' }}
                     </span>
                     <span><label class="item-label">类目层级：</label>{{ this.form.level }}</span>
                 </div>
                 <div class="edit-form-item">
                     <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
                 </div>
-                <el-form-item label="类目名称" prop="categoryName" v-if="editVisible">
+                <el-form-item label="类目名称" prop="name" v-if="editVisible">
                     <el-input
                         class="form-input"
-                        v-model="form.categoryName"
+                        v-model="form.name"
                         placeholder="请输入类目名称"
                         maxlength="25"></el-input>
+                </el-form-item>
+                <el-form-item prop="logoUrl" label="品牌logo" v-if="form.level === 3">
+                    <!--logoUrl-->
+                    <SingleUpload
+                        :upload="uploadInfo"
+                        :imageUrl="imageUrl"
+                        ref="uploadImg"
+                        @back-event="readUrl"/>
+                    <div class="upload-tips">
+                        尺寸300x300,2m以内，支持jpg、jpeg、png`
+                    </div>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="editVisible = false">取消</el-button>
@@ -75,9 +90,10 @@
 
 <script>
 import {
-    findAllCategory, updateCategory, createCategory, linkParams, findLinkParams
+    updateCategory, createCategory, findLinkParams
 } from './api/index.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
 import setParameters from './component/setParameters'
 
 export default {
@@ -90,19 +106,17 @@ export default {
             data: [],
             brandsTitle: ['未添加品牌', '已添加品牌'],
             paramsTitle: ['未选参数', '已选参数'],
-            selectedBrands: [],
             selectedParams: [],
-            brandsList: [],
             paramsList: [],
             columns: [
                 {
                     title: '类目名称',
-                    key: 'categoryName',
-                    width: '400px'
+                    key: 'name',
+                    width: '350px'
                 },
                 {
                     title: '类目编码',
-                    key: 'categoryCode',
+                    key: 'code',
                     align: 'center',
                     headerAlign: 'center',
                     minWidth: '50px'
@@ -112,7 +126,14 @@ export default {
                     headerAlign: 'center',
                     minWidth: '100px',
                     type: 'template',
-                    template: 'sorting'
+                    template: 'sort'
+                },
+                {
+                    title: '图片',
+                    headerAlign: 'center',
+                    minWidth: '100px',
+                    type: 'template',
+                    template: 'picture'
                 },
                 {
                     title: '维护人',
@@ -122,10 +143,10 @@ export default {
                 },
                 {
                     title: '维护时间',
-                    key: 'updateTime',
+                    key: 'lastModifyTime',
                     align: 'center',
                     headerAlign: 'center',
-                    minWidth: '200px'
+                    minWidth: '150px'
                 },
                 {
                     title: '操作',
@@ -139,10 +160,12 @@ export default {
             current: {},
             isEdit: false,
             editVisible: false,
-            paramsVisible: false,
             rules: {
-                categoryName: [
+                name: [
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
+                ],
+                logoUrl: [
+                    { required: true, message: '请上传品牌logo' }
                 ]
             },
             form: {
@@ -150,12 +173,12 @@ export default {
                 level: 1,
                 parentCode: '',
                 parentName: '',
-                categoryName: ''
+                name: ''
             },
             expandCell: [],
             isSaving: false,
-            setVisible: true,
-            attributeVisible: false,
+
+            setVisible: false,
             attributeForm: {
                 name: '',
                 type: '',
@@ -177,19 +200,33 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        ...mapState('category', {
+            categoriesTree: 'categoriesTree'
+        }),
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'image/jpeg, image/jpg, image/png'
+            }
+        },
+        imageUrl () {
+            return this.form.logoUrl
+        }
     },
     methods: {
-        onIsRequired (id) {
-            this.paramsList.forEach((value, index) => {
-                if (value.parameterId === id) {
-                    value.isRequired = !value.isRequired
-                }
-            })
-        },
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+
         onCellSelected (row, rowIndex, column, columnIndex, $event) {
             this.current = row
         },
+
+        // 展开的样式，用于刷新试图后不重置
         onExpandCell (row, rowIndex, $event) {
             if (row._isFold) {
                 const index = this.expandCell.indexOf(row.id)
@@ -198,6 +235,26 @@ export default {
                 this.expandCell.push(row.id)
             }
         },
+
+        // 输入框排序接口
+        async inputBlur (event) {
+            this.$forceUpdate()
+            await updateCategory({
+                id: this.current.id,
+                name: this.current.name,
+                parentId: this.form.parentId,
+                sort: event.target.value,
+                operator: this.userInfo.employeeName
+            })
+            this.refresh()
+        },
+
+        // 上传的回调
+        readUrl (val) {
+            this.form.logoUrl = val.imageUrl
+        },
+
+        // 新增和编辑类目
         onEditCategory () {
             if (this.isSaving) {
                 return
@@ -206,11 +263,19 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.isEdit) {
-                        this.form.updateBy = this.userInfo.employeeName
-                        await updateCategory(this.form)
+                        await updateCategory({
+                            id: this.form.id,
+                            name: this.form.name,
+                            parentId: this.form.parentId,
+                            sort: this.form.sort,
+                            operator: this.userInfo.employeeName
+                        })
                     } else {
-                        this.form.createBy = this.userInfo.employeeName
-                        await createCategory(this.form)
+                        await createCategory({
+                            name: this.form.name,
+                            parentId: this.form.parentId,
+                            operator: this.userInfo.employeeName
+                        })
                     }
                     this.$message({
                         message: this.isEdit ? '类目修改成功' : '类目添加成功',
@@ -230,11 +295,11 @@ export default {
             this.isEdit = false
             // 判断level是否存在是处理没有选中任何类目的情况下，做新增操作
             this.form = {
-                parentName: type === 'child' ? this.current.categoryName : this.current.pcategoryName,
+                parentName: type === 'child' ? this.current.name : this.current.pcategoryName,
                 parentId: type === 'child' ? this.current.id : this.current.parentId,
                 level: this.current.level ? (type === 'child' ? this.current.level * 1 + 1 : this.current.level * 1) : 1,
-                categoryName: '',
-                categoryCode: '',
+                name: '',
+                code: '',
                 id: ''
             }
             this.isSaving = false
@@ -247,16 +312,16 @@ export default {
                 parentName: this.current.pcategoryName,
                 parentId: this.current.parentId,
                 level: this.current.level * 1,
-                categoryName: this.current.categoryName,
-                categoryCode: this.current.categoryCode,
-                id: this.current.id
+                name: this.current.name,
+                code: this.current.code,
+                id: this.current.id,
+                sort: this.current.sort
             }
             this.isSaving = false
         },
         async onShowParams (row) {
             this.setVisible = true
             this.current = row
-            this.paramsVisible = true
             const { data: paramsList } = await findLinkParams({
                 categoryId: this.current.id,
                 isSetupthe: 0
@@ -268,17 +333,20 @@ export default {
             this.paramsList = selectedParams.concat(paramsList)
             this.selectedParams = selectedParams.map(item => item.parameterId)
         },
+        // 表格行样式
         tableRowStyle (row, rowIndex) {
             return this.current.id === row.id ? {
                 'background-color': '#bec9ef'
             } : {}
         },
-        resolveData (data, parentIsFold = true) {
-            // 设置数组第一个值和最后一个值标志，主要用于判断上移和下移是否可用
-            return data.map((item, index) => {
-                item.isFirst = index === 0
-                item.isLast = index === data.length - 1
-                item.updateTime = this.$root.$options.filters.formatterTime(item.updateTime)
+
+        // 递归处理数据
+        resolveData (data, parentIsFold = true, pcategoryName = '') {
+            return data.map((item, index, arr) => {
+                item.lastModifyTime = this.$root.$options.filters.formatterTime(item.lastModifyTime)
+                item.pcategoryName = pcategoryName
+
+                // 下面两个判断用于保持展开样式的
                 if (this.expandCell.includes(item.id)) {
                     item._isFold = false
                     item._isHide = false
@@ -286,15 +354,16 @@ export default {
                 if (!parentIsFold) {
                     item._isHide = false
                 }
-                if (item.categoryList && item.categoryList.length > 0) {
-                    this.resolveData(item.categoryList, item._isFold)
+
+                if (item.subCategoryList && item.subCategoryList.length > 0) {
+                    this.resolveData(item.subCategoryList, item._isFold, item.name)
                 }
                 return item
             })
         },
         async refresh () {
-            const { data } = await findAllCategory()
-            this.data = this.resolveData(data)
+            await this.findAllCategory()
+            this.data = this.resolveData(this.categoriesTree)
         }
     },
     mounted () {
