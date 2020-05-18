@@ -67,7 +67,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -86,7 +86,7 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
 
                 <template slot="predictLoanAmount" slot-scope="scope">
@@ -165,7 +165,9 @@ export default {
                 projectNo: '',
                 typeList: '',
                 originType: 1,
-                deptDocList: ''
+                deptDoc: '',
+                jobNumber: '',
+                authCode: ''
             },
             status: [],
             typeArr: [],
@@ -256,8 +258,8 @@ export default {
         })
     },
     async mounted () {
-        console.log(JSON.parse(sessionStorage.getItem('authCodeArr')))
-        this.queryParams.deptDocList = sessionStorage.getItem('authCodeArr') ? JSON.parse(sessionStorage.getItem('authCodeArr')).toString() : ''
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
@@ -300,16 +302,16 @@ export default {
             this.queryParams.categoryId = val
         },
         onChooseDep () {
-            this.queryParams.deptDocList = []
-            const depList = []
-            if (!this.queryParams.subsectionCode) {
-                this.branchArr.map(val => {
-                    depList.push(val.pkDeptDoc)
-                })
-                this.queryParams.deptDocList = depList.join(',')
-            } else {
-                this.queryParams.deptDocList = this.queryParams.subsectionCode
-            }
+            // this.queryParams.deptDocList = []
+            // const depList = []
+            // if (!this.queryParams.subsectionCode) {
+            //     this.branchArr.map(val => {
+            //         depList.push(val.pkDeptDoc)
+            //     })
+            //     this.queryParams.deptDocList = depList.join(',')
+            // } else {
+            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
+            // }
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
