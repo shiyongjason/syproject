@@ -5,14 +5,19 @@ const state = {
     projectData: {},
     projectDetail: {},
     projectLoan: {},
-    crmdepList: []
+    crmdepList: [],
+    projectRecord: [],
+    punchList: []
+
 }
 
 const getters = {
     projectData: state => state.projectData,
     projectDetail: state => state.projectDetail,
     projectLoan: state => state.projectLoan,
-    crmdepList: state => state.crmdepList
+    crmdepList: state => state.crmdepList,
+    projectRecord: state => state.projectRecord,
+    punchList: state => state.punchList
 
 }
 
@@ -28,6 +33,12 @@ const mutations = {
     },
     [types.CRM_DEPLIST] (state, payload) {
         state.crmdepList = payload
+    },
+    [types.PROJECT_RECORD] (state, payload) {
+        state.projectRecord = payload
+    },
+    [types.PROJECT_PUNCH] (state, payload) {
+        state.punchList = payload
     }
 }
 
@@ -47,6 +58,15 @@ const actions = {
     async findCrmdeplist ({ commit }, params) {
         const { data } = await Api.findCrmdep(params)
         commit(types.CRM_DEPLIST, data)
+    },
+    async findProjectrecord ({ commit }, params) {
+        const { data } = await Api.getProjectrecord(params)
+        commit(types.PROJECT_RECORD, data)
+    },
+    async findPunchlist ({ commit }, params) {
+        console.log(params)
+        const { data } = await Api.getPunchlist(params)
+        commit(types.PROJECT_PUNCH, data)
     }
 }
 export default {

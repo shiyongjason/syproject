@@ -15,3 +15,6 @@ export const saveStatus = (params) => axios.post(`/memeber/openapi/project/statu
 export const updateAudit = (params) => axios.post(`/memeber/openapi/project/audit`, params)
 
 export const getProjectloan = (params) => axios.get(`/memeber/openapi/project/loan`, { params })
+
+export const getProjectrecord = (params) => axios.get(`/memeber/openapi/project/audit/${params}`)
+export const getPunchlist = (params) => axios.get(`/memeber/api/punch/list`, { params })
