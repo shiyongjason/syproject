@@ -1,12 +1,13 @@
 import { ccpBaseUrl, B2bUrl, interfaceUrl } from '@/api/config'
 import axios from 'axios'
+
 // 省市区
 export const getChiness = (params) => {
     return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
 }
 
 export const getCompanyBosslist = (params) => {
-    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/page', params)
+    return axios.post('memeber/api/crm/company/boss/page', params)
 }
 
 // CRM 认证详情

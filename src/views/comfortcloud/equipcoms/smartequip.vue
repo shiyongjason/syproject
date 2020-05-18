@@ -178,7 +178,7 @@ export default {
         drawLine (data) {
             // 绘制图表
             var charts = {
-                unit: '单位',
+                unit: '单位/台',
                 names: [],
                 lineX: [],
                 value: []

@@ -19,10 +19,7 @@
                     </div>
                     <div class="flex-row">岗位：
                         <el-select v-model="positionCodeList" multiple placeholder="岗位信息暂未配置" style="width: 90%;">
-                            <el-option v-for="item in postOptions"
-                                :key="item.id"
-                                :label="item.positionName"
-                                :value="item.positionCode"></el-option>
+                            <el-option v-for="item in postOptions" :key="item.id" :label="item.positionName" :value="item.positionCode"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -36,7 +33,7 @@
                         <tr>
                             <td width="">一级菜单</td>
                             <td width="">二级菜单</td>
-                            <td width="" colspan=3>权限</td>
+                            <td width="" colspan=4>权限</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,13 +58,11 @@
                                             <td :key="authTypeIndex + '_authType'" width="300">
                                                 <div v-if="itemAuthType.id">
                                                     <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemb.have" class="mr10">
-                                                        {{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}
+                                                        {{ itemAuthType.authType == 0 ? '敏感字段' :itemAuthType.authType == 1 ? '敏感操作':itemAuthType.authType == 2? '数据范围' :'1'}}
                                                     </el-checkbox>
                                                     <div class="el-radio-group">
-                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''"
-                                                            @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
-                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''"
-                                                            @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,[itema,itemb])" :disabled="!itemAuthType.have">配置</button>
                                                     </div>
                                                 </div>
                                                 <div v-else></div>
@@ -75,6 +70,7 @@
                                         </template>
                                     </template>
                                     <template v-else>
+                                        <td width="300"></td>
                                         <td width="300"></td>
                                         <td width="300"></td>
                                     </template>
@@ -91,7 +87,7 @@
         </div>
         <el-dialog :title="layerTitle" :visible.sync="fieldVisible" width="40%" :close-on-click-modal='false' :before-close="onCancelFieldConfig">
             <div class="h-dialog">
-                <table class="tablelist textCenter">
+                <table class="tablelist textCenter" v-if="layerType!=2">
                     <thead>
                         <tr>
                             <td width="30%">菜单</td>
@@ -107,28 +103,51 @@
                         </tr>
                     </tbody>
                 </table>
+                <table class="tablelist textCenter" v-else>
+                    <thead>
+                        <tr>
+                            <td width="30%">筛选项</td>
+                            <td width="70%">数据范围</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>所属分部</td>
+                            <td>
+                                <div class="treetable">
+                                    <el-tree :data="reData" ref="treetable" :default-checked-keys="checkedkeys" show-checkbox node-key="pkDeptDoc" default-expand-all highlight-current :props="{label:'deptName'}">
+                                    </el-tree>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelFieldConfig()">取 消</el-button>
-                <el-button type="primary" @click="fieldVisible = false">保 存</el-button>
+                <el-button type="primary" @click="fieldVisible = false,onGetnodes()">保 存</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getRegionsubs } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
     data () {
         return {
+            reData: [],
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
             fieldVisible: false, // 敏感字段弹出层显示控制
-            fieldConfig: [], // 敏感字段弹出层可选项列表
+            fieldConfig: [], // 敏感字段弹出层可选项列表或者 数据范围权限
             layerTitle: '', // 弹出层标题
             layerAuthName: '', // 弹出层列表中的表格名称
+            layerType: '',
+            subsectionCodes: [],
+            authCode: '',
             roleInfo: {
                 deptName: '',
                 mobile: '',
@@ -138,12 +157,14 @@ export default {
             jobNumber: '',
             postOptions: [],
             positionCodeList: [],
-            dingCode: ''
+            dingCode: '',
+            checkedkeys: []
         }
     },
     computed: {
         ...mapState({
-            isCollapse: state => state.isCollapse
+            isCollapse: state => state.isCollapse,
+            userInfo: state => state.userInfo
         })
     },
     async mounted () {
@@ -158,8 +179,26 @@ export default {
         this.positionCodeList = this.roleInfo.positionCodeList
         const { data: postOptions } = await findpostList('')
         this.postOptions = postOptions
+        this.onGetRegionsubs()
     },
     methods: {
+        async onGetRegionsubs () {
+            const { data } = await getRegionsubs()
+            this.reData = data
+        },
+        onGetnodes () {
+            const nodeList = this.$refs.treetable.getCheckedNodes()
+            const subArr = []
+            nodeList && nodeList.map(val => {
+                if (val.deptCode.indexOf('F') > -1) {
+                    subArr.push(val.pkDeptDoc)
+                }
+            })
+            const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
+            this.newItem.employeeSubsections = employeeSubsections
+            console.log(this.newItem)
+            this.$refs.treetable.setCheckedKeys([])
+        },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
@@ -173,12 +212,22 @@ export default {
                     })
                 }
                 // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
-                if (item.authTypeList && item.authTypeList.length == 1) {
-                    if (item.authTypeList[0].authType == 1) {
-                        item.authTypeList.splice(0, 0, {})
-                    } else {
-                        item.authTypeList.push({})
+                if (item.authTypeList && item.authTypeList.length < 3) {
+                    for (let i = 0; i < 3; i++) {
+                        if (item.authTypeList[i] && item.authTypeList[i].authType == i) {
+
+                        } else {
+                            item.authTypeList.splice(i, 0, { authType: '' })
+                        }
                     }
+
+                    // if (item.authTypeList[0].authType == 2) {
+                    //     item.authTypeList.splice(0, 0, {})
+                    // } else if (item.authTypeList[0].authType == 1) {
+                    //     item.authTypeList.splice(0, 0, {})
+                    // } else {
+                    //     item.authTypeList.push({})
+                    // }
                 }
                 if (level < 2) {
                     if (!item.childAuthList) {
@@ -272,6 +321,8 @@ export default {
                             authTypeId: authType.id,
                             status: authType.status
                         })
+                        // 全选 0 时候 不传任何  1 时候传配置的数据范围
+                        authType.status == 1 && resourceObj.employeeSubsections.push(authType.employeeSubsections)
                     })
                 }
                 if (item.childAuthList) {
@@ -279,14 +330,27 @@ export default {
                 }
             })
         },
+        // 获取选中 所有 have=true 的每一层的authCode 组成数组， 然后取最后一个code 作为数据范围的菜单code
+        handlerCodeFilter (itemArr, authCodeArr) {
+            itemArr.filter(item => item.have).forEach(item => {
+                if (item.authCode) {
+                    authCodeArr.push(item.authCode)
+                }
+                if (item.childAuthList) {
+                    this.handlerCodeFilter(item.childAuthList, authCodeArr)
+                }
+            })
+        },
         async onSaveRole () {
             let resourceObj = {
                 resourceIds: [],
                 authCodes: [],
-                authTypeList: []
+                authTypeList: [],
+                employeeSubsections: []
             }
             this.handlerRoleFilter(JSON.parse(JSON.stringify(this.tableList)), resourceObj)
             const params = {
+                employeeSubsections: resourceObj.employeeSubsections,
                 resourceIds: resourceObj.resourceIds,
                 authCodes: resourceObj.authCodes,
                 authTypeList: resourceObj.authTypeList,
@@ -314,7 +378,15 @@ export default {
                 this.$router.push({ path: '/auth/organization' })
             }
         },
-        onShowFieldConfig (val, item) {
+        onShowFieldConfig (val, item, itemArr) {
+            // 获取数据范围最底层的菜单authcode
+            const authCodeArr = []
+            itemArr && itemArr.map(val => {
+                val.authCode && authCodeArr.push(val.authCode)
+            })
+            this.authCode = authCodeArr
+            // 调用接口获取绑定的数据范围Code
+            // this.onGetJobsubs({ jobNumber: this.userInfo.jobNumber, authCode: this.authCode[this.authCode.length - 1] })
             // 当选择全部的时候，设置所有的配置都是选中状态
             if (val == 0) {
                 item.authResourceList && item.authResourceList.filter(item => {
@@ -326,13 +398,24 @@ export default {
             this.fieldVisible = !!val
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
-            this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            if (item.authType == 2) {
+                console.log(1, item.employeeSubsections)
+                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
+            } else {
+                this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            }
             this.newItem = item
             // 弹出层title和authName
-            this.layerTitle = item.authType == 0 ? '敏感字段' : '敏感操作'
+            this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
+            this.layerType = item.authType
         },
         onCancelFieldConfig () {
+            if (this.layerType == 2) {
+                this.$refs.treetable.setCheckedKeys([])
+            }
+            this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
             this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
             this.fieldVisible = false
         }
@@ -484,6 +567,10 @@ export default {
 }
 .h-dialog {
     margin-top: 20px;
+    .treetable {
+        height: 350px;
+        overflow: scroll;
+    }
     .el-checkbox {
         margin-left: 10px;
     }

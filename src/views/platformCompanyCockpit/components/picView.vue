@@ -5,10 +5,10 @@
                 <div class="default-pre-view-mask">
                     <i class="el-icon-zoom-in" style="color:#fff" @click="open(index,item)"></i>
                 </div>
-                <div class="pdfimg"  v-if="(item.fileUrl).indexOf('.pdf') != -1">
+                <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
                     <img :src="pdfbase">
                 </div>
-                <el-image v-else :ref="`preview_${index}`" :lazy="true" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
+                <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
             </div>
         </template>
         <template v-else>
@@ -70,8 +70,8 @@ export default {
         width: 120px;
         height: 120px;
         border-radius: 6px;
-        background-color: rgba(0,0,0,.5);
-        transition: opacity .3s;
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: opacity 0.3s;
         i {
             font-size: 21px;
             padding: 9px;
@@ -91,6 +91,15 @@ export default {
         box-sizing: border-box;
     }
 }
-.pdfimg{width: 130px;height: 120px;text-align: center;display: flex;align-items: center;justify-content: center;}
-.pdfimg img{width: 76%}
+.pdfimg {
+    width: 130px;
+    height: 120px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pdfimg img {
+    width: 76%;
+}
 </style>
