@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getRegionsubs, getJobSubs } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getRegionsubs } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -412,7 +412,9 @@ export default {
             this.layerType = item.authType
         },
         onCancelFieldConfig () {
-            this.$refs.treetable.setCheckedKeys([])
+            if (this.layerType == 2) {
+                this.$refs.treetable.setCheckedKeys([])
+            }
             this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
             this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
             this.fieldVisible = false

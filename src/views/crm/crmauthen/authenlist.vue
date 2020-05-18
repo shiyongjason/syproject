@@ -231,13 +231,15 @@ export default {
         }),
         onChooseDep () {
             this.queryParams.deptDocList = ''
-            const depList = []
+            let depList = []
             if (!this.queryParams.subsectionCode) {
                 this.branchArr.map(val => {
                     depList.push(val.pkDeptDoc)
                 })
+                this.queryParams.deptDocList = depList.join(',')
+            } else {
+                this.queryParams.deptDocList = this.queryParams.subsectionCode
             }
-            this.queryParams.deptDocList = depList.splice(',')
         },
         async getFindNest () {
             await this.findNest()

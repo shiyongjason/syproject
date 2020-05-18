@@ -254,15 +254,16 @@ export default {
             this.queryParams.categoryId = val
         },
         onChooseDep () {
-            console.log(this.queryParams.subsectionCode)
             this.queryParams.deptDocList = []
             const depList = []
             if (!this.queryParams.subsectionCode) {
                 this.branchArr.map(val => {
                     depList.push(val.pkDeptDoc)
                 })
+                this.queryParams.deptDocList = depList.join(',')
+            } else {
+                this.queryParams.deptDocList = this.queryParams.subsectionCode
             }
-            this.queryParams.deptDocList = depList.splice(',')
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
