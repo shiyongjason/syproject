@@ -23,7 +23,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -145,13 +145,14 @@ export default {
                 customerTypeOrder: '',
                 companyName: this.$route.params.name || '',
                 companyType: '',
-                subsectionCode: '',
                 userAccount: '',
                 userName: '',
                 authenticationStatus: '',
                 createTimeOrder: 'desc',
                 areaIds: '',
-                deptDocList: ''
+                deptDoc: '',
+                jobNumber: '',
+                authCode: ''
             },
             copyParams: {},
             tableData: [],
@@ -214,7 +215,8 @@ export default {
         })
     },
     async mounted () {
-        this.queryParams.deptDocList = sessionStorage.getItem('authCodeArr') ? JSON.parse(sessionStorage.getItem('authCodeArr')).toString() : ''
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
@@ -233,16 +235,7 @@ export default {
             findNest: 'findNest'
         }),
         onChooseDep () {
-            this.queryParams.deptDocList = ''
-            let depList = []
-            if (!this.queryParams.subsectionCode) {
-                this.branchArr.map(val => {
-                    depList.push(val.pkDeptDoc)
-                })
-                this.queryParams.deptDocList = depList.join(',')
-            } else {
-                this.queryParams.deptDocList = this.queryParams.subsectionCode
-            }
+
         },
         async getFindNest () {
             await this.findNest()
