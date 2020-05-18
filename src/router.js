@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList, tracking, getAuthInfo } from '@/views/layout/api'
+import { findMenuList, tracking } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import axios from 'axios'
@@ -350,9 +350,9 @@ router.beforeEach(async (to, from, next) => {
     const authPath = to && to.path.split('/')
     const authhasCode = resourceList && resourceList.filter(val => val.url == authPath[authPath.length - 1])
     console.log(resourceList,authPath,authhasCode)
-    const { data } = authhasCode.length>0 && await getAuthInfo(authhasCode[0].authCode)
+    // const { data } = authhasCode.length>0 && await getAuthInfo(authhasCode[0].authCode)
     sessionStorage.setItem('authCode',authhasCode.length>0?JSON.stringify(authhasCode[0].authCode):'')
-    sessionStorage.setItem('authCodeArr',JSON.stringify(data))
+    // sessionStorage.setItem('authCodeArr',JSON.stringify(data))
     next()
 })
 export default router
