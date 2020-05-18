@@ -344,7 +344,7 @@ export default {
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
-            console.log(value)
+
         },
         onCRemarkTxt () {
             if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
@@ -446,7 +446,6 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
-            console.log('newval', newVal)
             if (newVal == 2 || newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
@@ -454,7 +453,6 @@ export default {
             }
         },
         isShowRest (val) {
-            console.log('val', val)
             const newVal = val && Object.keys(val)[0]
             if (newVal == 2) {
                 return false
