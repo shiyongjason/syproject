@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/views/layout/Default.vue'
-import { findMenuList, tracking } from '@/views/layout/api'
+import { findMenuList, tracking, getAuthInfo } from '@/views/layout/api'
 import store from '@/store/index'
 import { makeMenus, handleMenuResources } from '@/utils/auth'
 import axios from 'axios'
@@ -237,6 +237,7 @@ const router = new Router({
         }
     ]
 })
+let resourceList = []
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
@@ -264,7 +265,7 @@ function makeIndex (data, next, query) {
 async function getMenu (to, next, isMakeIndex, query) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
-    let resourceList = []
+    resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
@@ -273,6 +274,7 @@ async function getMenu (to, next, isMakeIndex, query) {
         menu = makeMenus(routerMapping, resourceList)
     }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
+
     router.addRoutes(menu)
     if (isMakeIndex) {
         makeIndex(menu, next, query)
@@ -307,6 +309,7 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     }
+
     if (userInfo && !isFirst) {
         tracking({
             type: 2,
@@ -343,6 +346,13 @@ router.beforeEach(async (to, from, next) => {
             axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
         }
     }
+    // 获取数据权限
+    const authPath = to && to.path.split('/')
+    const authhasCode = resourceList && resourceList.filter(val => val.url == authPath[authPath.length - 1])
+    console.log(resourceList,authPath,authhasCode)
+    const { data } = authhasCode.length>0 && await getAuthInfo(authhasCode[0].authCode)
+    sessionStorage.setItem('authCode',authhasCode.length>0?JSON.stringify(authhasCode[0].authCode):'')
+    sessionStorage.setItem('authCodeArr',JSON.stringify(data))
     next()
 })
 export default router

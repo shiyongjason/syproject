@@ -14,7 +14,7 @@
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="subsectionCode">
                         <el-select v-model="businessDetail.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
@@ -216,7 +216,7 @@ export default {
         }),
         ...mapGetters({
             nestDdata: 'nestDdata',
-            branchList: 'branchList',
+            branchList: 'crmmanage/crmdepList',
             crmauthDetail: 'crmauthen/crmauthDetail',
             platlist: 'crmauthen/platlist',
             whiteRecords: 'crmauthen/whiteRecords'
@@ -243,7 +243,7 @@ export default {
         ...mapActions({
             findNest: 'findNest',
             findBusinessDetail: 'crmauthen/findBusinessDetail',
-            findBranch: 'findBranch',
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
             findPlatlist: 'crmauthen/findPlatlist',
             findWhiterecords: 'crmauthen/findWhiterecords'
 
@@ -327,7 +327,7 @@ export default {
             params.updateBy = this.userInfo.employeeName
             params.updatePhone = this.userInfo.phoneNumber
             if (params.subsectionCode) {
-                params.subsectionName = this.branchArr.find(v => v.organizationCode == params.subsectionCode).organizationName || ''
+                params.subsectionName = this.branchArr.find(v => v.pkDeptDoc == params.subsectionCode).deptName || ''
             }
             this.$refs['ruleForm'].validate(async (valid) => {
                 if (valid) {
@@ -382,7 +382,7 @@ export default {
             })
         },
         async onGetbranch () {
-            await this.findBranch()
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.branchList
         },
         onChangeList (val) {

@@ -4,6 +4,8 @@ export function getProject (params) {
     return axios.get(`/memeber/openapi/project/page`, { params })
 }
 
+export const findCrmdep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
+
 export const getProjectDetail = (params) => axios.get(`/memeber/openapi/project/${params}`)
 
 export const putProjectDetail = (params) => axios.put(`/memeber/openapi/project`, params)

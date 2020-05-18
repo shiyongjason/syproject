@@ -67,7 +67,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true  @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -85,11 +85,11 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="predictLoanAmount" slot-scope="scope">
-                    {{fundMoneys(scope.data.row.predictLoanAmount)}}
+                    {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
@@ -134,7 +134,8 @@ export default {
                 projectName: '',
                 projectNo: '',
                 typeList: '',
-                originType: 1
+                originType: 1,
+                deptDocList: ''
             },
             status: [],
             typeArr: [],
@@ -208,15 +209,17 @@ export default {
             }
         },
         ...mapState({
-            userInfo: state => state.userInfo,
-            branchList: 'branchList'
+            userInfo: state => state.userInfo
         }),
         ...mapGetters({
             projectData: 'crmmanage/projectData',
-            projectLoan: 'crmmanage/projectLoan'
+            projectLoan: 'crmmanage/projectLoan',
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     async mounted () {
+        console.log(JSON.parse(sessionStorage.getItem('authCodeArr')))
+        this.queryParams.deptDocList = sessionStorage.getItem('authCodeArr') ? JSON.parse(sessionStorage.getItem('authCodeArr')).toString() : ''
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
@@ -225,7 +228,7 @@ export default {
         ...mapActions({
             findProjetpage: 'crmmanage/findProjetpage',
             findProjectLoan: 'crmmanage/findProjectLoan',
-            findBranch: 'findAuthList'
+            findCrmdeplist: 'crmmanage/findCrmdeplist'
         }),
         fundMoneys (val) {
             if (val) {
@@ -250,6 +253,17 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
+        onChooseDep () {
+            console.log(this.queryParams.subsectionCode)
+            this.queryParams.deptDocList = []
+            const depList = []
+            if (!this.queryParams.subsectionCode) {
+                this.branchArr.map(val => {
+                    depList.push(val.pkDeptDoc)
+                })
+            }
+            this.queryParams.deptDocList = depList.splice(',')
+        },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
@@ -273,9 +287,8 @@ export default {
             this.searchList()
         },
         async onGetbranch () {
-            await this.findBranch({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc })
-            console.log(this.branchList)
-            this.branchArr = this.branchList
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            this.branchArr = this.crmdepList
         }
     }
 }

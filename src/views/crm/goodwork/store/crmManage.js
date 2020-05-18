@@ -4,13 +4,16 @@ import * as Api from './../api'
 const state = {
     projectData: {},
     projectDetail: {},
-    projectLoan: {}
+    projectLoan: {},
+    crmdepList: []
 }
 
 const getters = {
     projectData: state => state.projectData,
     projectDetail: state => state.projectDetail,
-    projectLoan: state => state.projectLoan
+    projectLoan: state => state.projectLoan,
+    crmdepList: state => state.crmdepList
+
 }
 
 const mutations = {
@@ -22,6 +25,9 @@ const mutations = {
     },
     [types.PROJECT_LOAN] (state, payload) {
         state.projectLoan = payload
+    },
+    [types.CRM_DEPLIST] (state, payload) {
+        state.crmdepList = payload
     }
 }
 
@@ -37,6 +43,10 @@ const actions = {
     async findProjectLoan ({ commit }, params) {
         const { data } = await Api.getProjectloan(params)
         commit(types.PROJECT_LOAN, data)
+    },
+    async findCrmdeplist ({ commit }, params) {
+        const { data } = await Api.findCrmdep(params)
+        commit(types.CRM_DEPLIST, data)
     }
 }
 export default {

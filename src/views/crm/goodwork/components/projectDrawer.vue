@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item label="分部：">
                       <el-select v-model="form.companyCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchList" :key="item.organizationCode"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     <!-- <el-input v-model="form.deptName" disabled></el-input> -->
                 </el-form-item>
@@ -309,7 +309,7 @@ export default {
         }),
         ...mapGetters({
             projectDetail: 'crmmanage/projectDetail',
-            branchList: 'branchList'
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     watch: {
