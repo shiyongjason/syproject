@@ -9,7 +9,7 @@
                   {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
-                      <el-select v-model="form.companyCode" placeholder="请选择" :clearable=true>
+                      <el-select v-model="form.pkDeptdoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     <!-- <el-input v-model="form.deptName" disabled></el-input> -->
