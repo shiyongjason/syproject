@@ -307,6 +307,17 @@ export default {
             })
         },
         closeDialog () {
+            this.attributeForm = {
+                k: '',
+                isCombobox: '',
+                isRequired: '',
+                unit: '',
+                options: [
+                    {
+                        option: ''
+                    }
+                ]
+            }
             this.$refs['attributeForm'].resetFields()
             this.attributeVisible = false
         },

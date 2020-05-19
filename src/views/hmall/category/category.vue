@@ -27,10 +27,10 @@
                 @tree-icon-click="onExpandCell"
                 >
                 <template slot="sort" slot-scope="scope">
-                    <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @blur="inputBlur"></el-input>
+                    <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @change="inputChange(scope.row.sort)" @focus="inputFocus(scope.row)"></el-input>
                 </template>
-                <template slot="picture">
-                    <img src="">
+                <template slot="imgUrl" slot-scope="scope">
+                    <img :src="scope.row.imgUrl" class="img-table" v-if="scope.row.level === 3">
                 </template>
                 <template slot="operations" slot-scope="scope">
                     <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
@@ -134,7 +134,7 @@ export default {
                     headerAlign: 'center',
                     minWidth: '100px',
                     type: 'template',
-                    template: 'picture'
+                    template: 'imgUrl'
                 },
                 {
                     title: '维护人',
@@ -176,7 +176,8 @@ export default {
                 level: 1,
                 parentCode: '',
                 parentName: '',
-                name: ''
+                name: '',
+                imgUrl: ''
             },
             expandCell: [],
             isSaving: false,
@@ -254,15 +255,20 @@ export default {
             })
         },
 
+        inputFocus (row) {
+            this.current = row
+        },
+
         // 输入框排序接口
-        async inputBlur (event) {
+        async inputChange (value) {
             this.$forceUpdate()
             await updateCategory({
                 id: this.current.id,
                 name: this.current.name,
                 parentId: this.form.parentId,
-                sort: event.target.value,
-                operator: this.userInfo.employeeName
+                sort: value,
+                operator: this.userInfo.employeeName,
+                imgUrl: this.form.imgUrl
             })
             this.refresh()
         },
@@ -286,13 +292,15 @@ export default {
                             name: this.form.name,
                             parentId: this.form.parentId,
                             sort: this.form.sort,
-                            operator: this.userInfo.employeeName
+                            operator: this.userInfo.employeeName,
+                            imgUrl: this.form.imgUrl
                         })
                     } else {
                         await createCategory({
                             name: this.form.name,
-                            parentId: this.form.parentId,
-                            operator: this.userInfo.employeeName
+                            parentId: this.form.parentId || 0,
+                            operator: this.userInfo.employeeName,
+                            imgUrl: this.form.imgUrl
                         })
                     }
                     this.$message({
@@ -313,12 +321,13 @@ export default {
             this.isEdit = false
             // 判断level是否存在是处理没有选中任何类目的情况下，做新增操作
             this.form = {
-                parentName: type === 'child' ? this.current.name : this.current.pcategoryName,
-                parentId: type === 'child' ? this.current.id : this.current.parentId,
+                parentName: type === 'child' ? this.current.name : this.current.pcategoryName || '',
+                parentId: type === 'child' ? this.current.id : this.current.parentId || '',
                 level: this.current.level ? (type === 'child' ? this.current.level * 1 + 1 : this.current.level * 1) : 1,
                 name: '',
                 code: '',
-                id: ''
+                id: '',
+                imgUrl: ''
             }
             this.isSaving = false
             this.$nextTick(() => {
@@ -336,7 +345,8 @@ export default {
                 name: this.current.name,
                 code: this.current.code,
                 id: this.current.id,
-                sort: this.current.sort
+                sort: this.current.sort,
+                imgUrl: this.current.imgUrl || ''
             }
             this.isSaving = false
             this.$nextTick(() => {
@@ -416,6 +426,10 @@ export default {
     }
     span.action{
         cursor: pointer;
+    }
+    .img-table {
+        width: 80px;
+        height: 80px;
     }
 </style>
 <style>
