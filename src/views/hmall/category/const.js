@@ -14,6 +14,6 @@ export const SETTING_REQUIRED_MAP = new Map([
 ])
 
 export const SETTING_TYPE_MAP = new Map([
-    [1, '输入框'],
-    [2, '选择框']
+    [0, '输入框'],
+    [1, '下拉框']
 ])

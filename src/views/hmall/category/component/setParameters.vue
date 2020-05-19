@@ -24,18 +24,18 @@
                   :actionMinWidth='120'
               >
                   <template slot="isRequired" slot-scope="scope">
-                      {{ requiredMap.get(scope.data.row.isRequired) || '-' }}
+                      {{ isRequired.get(scope.data.row.isRequired) || '-' }}
                   </template>
                   <template slot="type" slot-scope="scope">
                       {{ typeMap.get(scope.data.row.isCombobox) || '-' }}
                   </template>
                   <template slot="style" slot-scope="scope">
-                      <template v-if="scope.data.row.isCombobox">
+                      <template v-if="scope.data.row.isCombobox === 0">
                           <el-input placeholder="请输入内容" disabled>
                               <template v-if="scope.data.row.unit" slot="append">{{scope.data.row.unit}}</template>
                           </el-input>
                       </template>
-                      <template v-else>
+                      <template v-if="scope.data.row.isCombobox === 1">
                           <el-select v-model="scope.data.row.style" placeholder="请选择"></el-select>
                       </template>
                   </template>
@@ -64,7 +64,7 @@
                 <el-form-item label="属性类型：" prop="isCombobox">
                      <el-select v-model="attributeForm.isCombobox" placeholder="请选择">
                          <el-option
-                            label="选择框"
+                            label="下拉框"
                             :value="1">
                         </el-option>
                          <el-option
@@ -92,7 +92,7 @@
                         ></span>
                         <span
                             class="ml10 el-icon-circle-plus-outline form-add-remove"
-                            v-if="attributeForm.options.length < 10"
+                            v-if="attributeForm.options.length < 10 && index + 1 === attributeForm.options.length"
                             @click="addOption(item)"
                         ></span>
                     </el-form-item>
@@ -143,7 +143,7 @@ export default {
             ],
             specificationsReq: [],
             multiSelection: [],
-            requiredMap: SETTING_REQUIRED_MAP,
+            isRequired: SETTING_REQUIRED_MAP,
             typeMap: SETTING_TYPE_MAP,
             attributeVisible: false,
             editObj: {},
@@ -198,6 +198,7 @@ export default {
             this.attributeInfo.title = '属性新增'
             this.attributeVisible = true
         },
+        // 编辑时保存行对象，用于保存时查询index
         onEdit (row) {
             this.attributeInfo.type = 'edit'
             this.attributeInfo.title = '属性编辑'
@@ -206,6 +207,7 @@ export default {
             this.attributeVisible = true
         },
 
+        // 添加下拉框选项
         addOption (item) {
             // const index = this.attributeForm.options.indexOf(item)
             this.attributeForm.options.push({
@@ -213,6 +215,7 @@ export default {
             })
         },
 
+        // 删除下拉框选项
         removeOption (item) {
             const index = this.attributeForm.options.indexOf(item)
             this.attributeForm.options.splice(index, 1)
