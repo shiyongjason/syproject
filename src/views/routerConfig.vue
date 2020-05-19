@@ -71,9 +71,9 @@
                                             <!-- 敏感字段和敏感操作 -->
                                             <template v-for="(i, d) in itemc.authTypes">
                                                 <td v-if="i.id" :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
-                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '敏感数据'  }}</div>
+                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '已添加敏感数据'  }}</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
+                                                        <el-button v-if="i.authType != 2" class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td v-else :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
