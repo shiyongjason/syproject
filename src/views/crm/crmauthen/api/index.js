@@ -31,7 +31,7 @@ export const findBrandsList = (params) => {
 
 // 更新认证企业
 export const updateCrmauthen = (params) => {
-    return axios.put(B2bUrl + 'merchant/api/crm/company/boss/update', params)
+    return axios.put('memeber/api/crm/company/boss/update', params)
 }
 
 export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
