@@ -51,7 +51,7 @@
                         <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
                         </el-date-picker>
                     </div>
-                    <el-button type="primary" @click="onSearch()">搜索
+                    <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">搜索
                     </el-button>
                     <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="onExport()">导出
                     </el-button>
@@ -172,16 +172,12 @@ export default {
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
         this.onFindBranchList(this.userInfo.oldDeptCode)
-        this.onSearch()
+        this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
     },
     methods: {
-        onSearch () {
-            this.queryParams = { ...this.searchParams }
-            this.onFindTableList()
-        },
-        uploadProcess (event, file, fileList) {
+        uploadProcess () {
             this.uploadLoading = true
         },
         isSuccess (response) {
@@ -195,7 +191,7 @@ export default {
                     message: '批量导入成功！',
                     type: 'success'
                 })
-                this.onFindTableList()
+                this.onFindTableList(this.searchParams)
             }
             this.uploadLoading = false
         },
@@ -212,9 +208,9 @@ export default {
                 return 'red'
             }
         },
-        async onFindTableList () {
-            const { data } = await findTableList(this.queryParams)
-            console.log(data)
+        async onFindTableList (params) {
+            this.queryParamsTemp = { ...params }
+            const { data } = await findTableList(params)
             this.tableData = data.data.list
             this.paginationData = {
                 pageSize: data.data.pageSize,
@@ -233,28 +229,28 @@ export default {
             this.queryParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onFindTableList()
+            this.queryParamsTemp.pageSize = val
+            this.onFindTableList(this.queryParamsTemp)
         },
         handleCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onFindTableList()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onFindTableList(this.queryParamsTemp)
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onFindTableList()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onFindTableList(this.queryParamsTemp)
         },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onFindTableList()
+            this.queryParamsTemp.pageSize = val
+            this.onFindTableList(this.queryParamsTemp)
         },
         onFieldChange (val) {
             this.$emit('onFieldChange', val)
         },
         onExport () {
             var url = ''
-            for (var key in this.queryParams) {
-                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+            for (var key in this.searchParams) {
+                url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
             }
             location.href = interfaceUrl + 'rms/companyTarget/export?' + url
         },
@@ -262,7 +258,6 @@ export default {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
         },
         async  getCompanyList () {
-            // this.companyData.params.companyCode = this.userInfo.companyCode
             const { data } = await getCompany({ companyCode: this.userInfo.oldDeptCode })
             this.companyList = data.data
             this.companyList && this.companyList.map(item => {
