@@ -59,6 +59,7 @@
             class="page-body-drawer brand-drawer"
             :title="drawerMsg.title"
             :visible.sync="drawerShow"
+            :before-close="onCancel"
             direction="rtl"
             size='580px'>
             <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
@@ -91,10 +92,12 @@
                         :props="categoryProps">
                     </el-cascader-panel>
                 </el-form-item>
-                <el-form-item label="售卖区域：" class="mb-5">
+                <el-form-item label="售卖区域：" class="mb-5 area-cascader">
                     <el-cascader
                         :options="areaOptions"
                         :props="areaProps"
+                        v-model="drawerMsg.areaArr"
+                        disabled
                     >
                     </el-cascader>
                 </el-form-item>
@@ -110,16 +113,16 @@
                 </template>
                 <template v-else>
                     <el-form-item label="审核结果：" class="mb-5">
-                        {{drawerMsg.brandName}}
+                        {{ auditStatusMap.get(drawerMsg.status) || '-'}}
                     </el-form-item>
                     <el-form-item label="备注原因：" class="mb-5">
-                        {{drawerMsg.brandName}}
+                        {{drawerMsg.remark || '-'}}
                     </el-form-item>
                     <el-form-item label="审核人：" class="mb-5">
-                        {{drawerMsg.brandName}}
+                        {{drawerMsg.auditBy}}
                     </el-form-item>
                     <el-form-item label="审核时间：" class="mb-5">
-                        {{drawerMsg.brandName}}
+                        {{drawerMsg.auditTime}}
                     </el-form-item>
                 </template>
             </el-form>
@@ -134,13 +137,12 @@
 <script>
 import { auditBrandArea } from './api/index'
 import { AUDIT_STATUS_MAP } from './const'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'brandAudit',
     data () {
         return {
-            cascaderPanel: ['江苏省', '安徽省淮南市'],
             categoryProps: {
                 emitPath: false,
                 multiple: true
@@ -149,7 +151,7 @@ export default {
             areaProps: {
                 multiple: true
             },
-            areaOptions: [],
+            // areaOptions: [],
             tableLabel: [
                 { label: '供应商', prop: 'merchantName' },
                 { label: '申请品牌', prop: 'brandName' },
@@ -200,6 +202,9 @@ export default {
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
         }),
+        ...mapGetters('brand', {
+            areaOptions: 'areaOptions'
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -224,7 +229,8 @@ export default {
     methods: {
         ...mapActions('brand', [
             'findBrandAreaList',
-            'findBrandAreaDetail'
+            'findBrandAreaDetail',
+            'getChiness'
         ]),
         ...mapActions('category', [
             'findAllCategory'
@@ -250,7 +256,9 @@ export default {
                     })
                 }
             })
-            console.log(this.categoryOptions)
+
+            // 获取省市区
+            await this.getChiness()
         },
         onQuery () {
             const { ...params } = { ...this.queryParams }
@@ -285,10 +293,16 @@ export default {
             await this.findBrandAreaDetail({ id: scope.id })
             this.drawerMsg = {
                 ...this.brandAreaInfo,
-                categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || []
+                categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || [],
+                areaArr: this.brandAreaInfo.brandAuthorizationSalesAreaList.map(item => {
+                    return [item.provinceId, item.cityId, item.areaId]
+                })
             }
             console.log(this.drawerMsg)
-            this.suggest = {}
+            this.suggest = {
+                auditResult: '',
+                auditRemark: ''
+            }
             if (type === 'review') {
                 this.drawerMsg.title = '品牌资质审核'
                 this.drawerMsg.type = 'review'
@@ -310,31 +324,28 @@ export default {
             this.paginationData = page
             this.search()
         },
-        createCouponReview () {
-            this.auditBrandArea()
-        },
         onConfirm () {
-            this.auditBrandArea()
+            this.auditBrandAreaAsync()
         },
         onCancel () {
             this.drawerShow = false
-            this.$refs['suggest'].resetForm()
+            this.$refs['suggest'].resetFields()
         },
-        async auditBrandArea () {
+        async auditBrandAreaAsync () {
             this.$refs['suggest'].validate(async (valid) => {
                 if (valid) {
-                    const form = {
-                        updateBy: this.userInfo.employeeName,
-                        status: +this.suggest.auditResult,
+                    let req = {
                         id: this.drawerMsg.id,
-                        remark: this.suggest.auditRemark
+                        remark: this.suggest.auditRemark || '',
+                        status: this.suggest.auditResult,
+                        auditBy: this.userInfo.employeeName,
+                        auditPhone: this.userInfo.phoneNumber
                     }
-                    if (!this.drawerMsg.brandAreaPoList) this.drawerMsg.brandAreaPoList = []
-                    if (this.drawerMsg.brandAreaPoList.length === 0) {
-                        this.$message({ message: '代理区域不能为空', type: 'error' })
-                        return
-                    }
-                    await auditBrandArea(form)
+                    await auditBrandArea(req)
+                    this.$message({
+                        type: 'success',
+                        message: '操作成功'
+                    })
                     this.drawerShow = false
                     this.onQuery()
                 } else {
@@ -379,6 +390,15 @@ export default {
     }
     /deep/ .el-cascader-menu {
         min-width: 160px;
+    }
+    .area-cascader {
+        /deep/ .el-cascader__tags {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        /deep/ .el-cascader {
+            max-height: 200px;
+        }
     }
     .category-tip {
         box-sizing: border-box;

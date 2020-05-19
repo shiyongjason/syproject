@@ -32,24 +32,33 @@ export const brandDisable = (params) => {
 09-24 品牌区域
 By sunhuiyong
 */
-// 查询品牌区域列表
-export const findBrandAreaList = (params) => {
-    return axios.get(B2bUrl + 'product/api/brands/authorization/page', params)
-}
+
 // 新增品牌区域
 export const addBrandArea = (params) => {
     return axios.post(B2bUrl + 'product/api/brandarea/add', params)
 }
-// 查询品牌区域
-export const findBrandAreaDetail = (params) => {
-    return axios.get(B2bUrl + `product/api/brands/authorization/${params.id}`)
-}
+
 // 修改品牌区域
 export const updateBrandArea = (params) => {
     return axios.post(B2bUrl + 'product/api/brandarea/update', params)
 }
 
+/*
+商品改造
+*/
+// 查询品牌审核列表
+export const findBrandAreaList = (params) => {
+    return axios.get(B2bUrl + 'product/api/brands/authorization/page', params)
+}
+// 查询品牌审核详情
+export const findBrandAreaDetail = (params) => {
+    return axios.get(B2bUrl + `product/api/brands/authorization/${params.id}`)
+}
 // 审核品牌区域
 export const auditBrandArea = (params) => {
-    return axios.post(B2bUrl + 'product/api/brandarea/audit', params)
+    return axios.put(B2bUrl + 'product/api/brands/authorization/audit', params)
+}
+// 省市区
+export const getChiness = () => {
+    return axios.get(B2bUrl + 'merchant/openapi/region/provinces/nesting')
 }

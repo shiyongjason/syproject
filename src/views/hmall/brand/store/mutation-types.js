@@ -6,3 +6,5 @@ export const BRAND_AREA_INFO = 'BRAND_AREA_INFO'
 export const BRAND_LIST_INFO = 'BRAND_LIST_INFO'
 // 品牌详情
 export const BRAND_DETAIL = 'BRAND_DETAIL'
+// 品牌详情
+export const CHINESE_AREA = 'CHINESE_AREA'
