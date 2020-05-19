@@ -31,14 +31,14 @@
                 <table class="tablelist">
                     <thead>
                         <tr>
-                            <td width="">一级菜单</td>
-                            <td width="">二级菜单</td>
-                            <td width="">三级菜单</td>
-                            <td width="" colspan=3>权限</td>
+                            <td width="15%">一级菜单</td>
+                            <td width="15%">二级菜单</td>
+                            <td width="15%">三级菜单</td>
+                            <td width="" colspan=4>权限</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item) in tableList">
+                        <template v-for="(item, index) in tableList">
                             <template v-for="(itema, indexa) in item.childAuthList">
                                 <template v-for="(itemb, indexb) in itema.childAuthList">
                                     <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
@@ -65,7 +65,7 @@
                                                 <td :key="authTypeIndex + '_authType'" width="300">
                                                     <div v-if="itemAuthType.id">
                                                         <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have" class="mr10">
-                                                            {{ itemAuthType.authType == 0 ? '敏感字段' : '敏感操作' }}
+                                                            {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
                                                         </el-checkbox>
                                                         <div class="el-radio-group">
                                                             <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -153,7 +153,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        this.tableList = this.handlerTableList(data, 0)
+        var shy = JSON.parse(JSON.stringify(data))
+        this.handleData(shy)
+        this.tableList = this.handlerTableList(shy, 0)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
@@ -161,8 +163,13 @@ export default {
         this.positionCodeList = this.roleInfo.positionCodeList
         const { data: postOptions } = await findpostList('')
         this.postOptions = postOptions
+        this.getOrganizationTree()
     },
     methods: {
+        async getOrganizationTree () {
+            const { data } = await getOrganizationTree()
+            this.organizationTree = data
+        },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
@@ -176,13 +183,13 @@ export default {
                     })
                 }
                 // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
-                if (item.authTypeList && item.authTypeList.length == 1) {
-                    if (item.authTypeList[0].authType == 1) {
-                        item.authTypeList.splice(0, 0, {})
-                    } else {
-                        item.authTypeList.push({})
-                    }
-                }
+                // if (item.authTypeList && item.authTypeList.length == 1) {
+                //     if (item.authTypeList[0].authType == 1) {
+                //         item.authTypeList.splice(0, 0, {})
+                //     } else {
+                //         item.authTypeList.push({})
+                //     }
+                // }
                 if (level < 3) {
                     if (!item.childAuthList) {
                         item.childAuthList = [{
@@ -195,6 +202,34 @@ export default {
                 level = 0
                 return item
             })
+        },
+        handleData (data) {
+            data.map(i => {
+                if (!i.childAuthList || i.childAuthList.length === 0) {
+                    i.authTypeList = this.compare(i.authTypeList)
+                } else {
+                    this.handleData(i.childAuthList)
+                }
+            })
+        },
+        compare (authTypeList) {
+            const arr = [
+                { id: '', authType: 0 },
+                { id: '', authType: 1 },
+                { id: '', authType: 2 }
+            ]
+            if (!authTypeList || authTypeList.length === 0) {
+                return arr
+            }
+            arr.map(i => {
+                const a = authTypeList.filter(it => {
+                    return it.authType === i.authType
+                })
+                if (a.length === 0) {
+                    authTypeList.push(i)
+                }
+            })
+            return authTypeList.sort((a, b) => a.authType - b.authType)
         },
         // 计算table合并行数
         computedRowspan (list, len) {

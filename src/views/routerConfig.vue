@@ -18,26 +18,25 @@
                     <table class="tablelist">
                         <thead>
                             <tr>
-                                <td width="" rowspan="2">一级菜单</td>
-                                <td width="" rowspan="2">二级菜单</td>
-                                <td width="" rowspan="2">三级菜单</td>
-                                <td width="" rowspan="2">四级菜单</td>
-                                <td width="" colspan="2">权限</td>
+                                <td width="15%" rowspan="2">一级菜单</td>
+                                <td width="15%" rowspan="2">二级菜单</td>
+                                <td width="15%" rowspan="2">三级菜单</td>
+                                <td width="15%" rowspan="2">四级菜单</td>
+                                <td width="" colspan="3">权限</td>
                             </tr>
                             <tr>
                                 <td width="">敏感字段</td>
                                 <td width="">敏感操作</td>
+                                <td width="">敏感数据</td>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
                             <!-- SHY-AMEND 需求：展开与搜索（有空改修改） -->
-                            <!-- 
-                                item  一级菜单
-                                itema 二级菜单
-                                itemb 三级菜单
-                                itemc 四级菜单
-                             -->
+                            <!--  item  一级菜单
+                                  itema 二级菜单
+                                  itemb 三级菜单
+                                  itemc 四级菜单-->
                             <template v-for="(item, index) in tableList">
                                 <template v-for="(itema, indexa) in item.childAuthList">
                                     <template v-for="(itemb, indexb) in itema.childAuthList">
@@ -70,74 +69,15 @@
                                                 </div>
                                             </td>
                                             <!-- 敏感字段和敏感操作 -->
-                                            <template v-if="itemc.authTypes && itemc.authTypes.length == 2">
-                                                <template v-if="itemc.authTypes[0].authType == 0">
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
-                                                <template v-else>
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[1])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
-                                            </template>
-                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length == 1">
-                                                <template v-if="itemc.authTypes[0].authType == 0">
-                                                    <td width="300">
-                                                        <div>敏感字段</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                    <td width="300">
-                                                        <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
-                                                    </td>
-                                                </template>
-                                                <template v-else>
-                                                    <td width="300">
-                                                        <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
-                                                    </td>
-                                                    <td width="300">
-                                                        <div>敏感操作</div>
-                                                        <div class="el-radio-group">
-                                                            <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[0])" type="primary">配置</el-button>
-                                                        </div>
-                                                    </td>
-                                                </template>
-                                            </template>
-                                            <template v-else-if="itemc.authTypes && itemc.authTypes.length > 2">
-                                                <td width="300">
-                                                    数据异常
+                                            <template v-for="(i, d) in itemc.authTypes">
+                                                <td v-if="i.id" :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
+                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '敏感数据'  }}</div>
+                                                    <div class="el-radio-group">
+                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
+                                                    </div>
                                                 </td>
-                                                <td width="300">
-                                                    数据异常
-                                                </td>
-                                            </template>
-                                            <template v-else>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(itemc, itemb, itema, 0)" type="success">添加</el-button>
-                                                </td>
-                                                <td width="300">
-                                                    <el-button @click="addSensitive(itemc, itemb, itema, 1)" type="success">添加</el-button>
+                                                <td v-else :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
+                                                    <el-button @click="addSensitive(itemc, itemb, itema, i.authType)" type="success">添加</el-button>
                                                 </td>
                                             </template>
                                         </tr>
@@ -262,7 +202,10 @@ export default {
     methods: {
         async init () {
             const { data } = await getAuth()
-            this.tableList = this.handlerTableList(data, 0)
+            var shy = JSON.parse(JSON.stringify(data))
+            this.handleData(shy)
+            console.log(shy)
+            this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数
         computedRowspan (list, len) {
@@ -273,6 +216,34 @@ export default {
                 }
             })
             return len
+        },
+        handleData (data) {
+            data.map(i => {
+                if (i.childAuthList.length === 0) {
+                    i.authTypes = this.compare(i.authTypes)
+                } else {
+                    this.handleData(i.childAuthList)
+                }
+            })
+        },
+        compare (authTypes) {
+            const arr = [
+                { id: '', authType: 0 },
+                { id: '', authType: 1 },
+                { id: '', authType: 2 }
+            ]
+            if (authTypes.length === 0) {
+                return arr
+            }
+            arr.map(i => {
+                const a = authTypes.filter(it => {
+                    return it.authType === i.authType
+                })
+                if (a.length === 0) {
+                    authTypes.push(i)
+                }
+            })
+            return authTypes.sort((a, b) => a.authType - b.authType)
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
@@ -379,6 +350,7 @@ export default {
                 authTypeId: this.configObj.id,
                 resourceName: this.list[i].resourceName,
                 resourceKey: this.list[i].resourceKey,
+                resourceType: this.configObj.authType,
                 sort: this.list[i].sort,
                 resourceAddress: this.list[i].resourceAddress
             }
@@ -393,7 +365,7 @@ export default {
             this.init()
         },
         onShowFieldConfig (item) {
-            // console.log(item)
+            console.log(item)
             // 初始化
             this.list = [{}]
             if (item.authResourceList.length > 0) {
