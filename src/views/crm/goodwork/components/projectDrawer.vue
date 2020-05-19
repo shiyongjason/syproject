@@ -2,9 +2,8 @@
     <div class="drawer-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
-                <el-form-item label="项目提交人：">
-                    {{form.createBy}}
-                </el-form-item>
+
+                  <p class="drawer-by">项目提交人：{{form.createBy}}</p>
                 <el-form-item label="经销商：">
                   {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
@@ -507,6 +506,11 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+.drawer-by{
+    color: #b9b7b7;
+    padding: 0px 0 15px 50px;
+    font-size: 13px;
+}
 .project-form {
     padding: 10px 10px 150px 10px;
 }
