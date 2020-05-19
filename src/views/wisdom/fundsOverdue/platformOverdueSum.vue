@@ -228,7 +228,7 @@ export default {
             this.tableData = this.handleData(data.records)
             this.tableData.map(i => {
                 if (i.planProportion != null) {
-                    i.planProportion *= 100
+                    // i.planProportion *= 100
                     if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
                     i.planProportion += '%'
                 }
