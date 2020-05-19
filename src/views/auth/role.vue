@@ -187,17 +187,19 @@ export default {
             this.reData = data
         },
         onGetnodes () {
-            const nodeList = this.$refs.treetable.getCheckedNodes()
-            const subArr = []
-            nodeList && nodeList.map(val => {
-                if (val.deptCode.indexOf('F') > -1) {
-                    subArr.push(val.pkDeptDoc)
-                }
-            })
-            const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
-            this.newItem.employeeSubsections = employeeSubsections
-            console.log(this.newItem)
-            this.$refs.treetable.setCheckedKeys([])
+            if (this.layerType == 2) {
+                const nodeList = this.$refs.treetable.getCheckedNodes()
+                const subArr = []
+                nodeList && nodeList.map(val => {
+                    if (val.deptCode.indexOf('F') > -1) {
+                        subArr.push(val.pkDeptDoc)
+                    }
+                })
+                const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
+                this.newItem.employeeSubsections = employeeSubsections
+                console.log(this.newItem)
+                this.$refs.treetable.setCheckedKeys([])
+            }
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
