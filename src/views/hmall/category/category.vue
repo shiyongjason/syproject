@@ -60,8 +60,8 @@
                         placeholder="请输入类目名称"
                         maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item prop="logoUrl" label="品牌logo" v-if="form.level === 3">
-                    <!--logoUrl-->
+                <el-form-item prop="imgUrl" label="品牌logo" v-if="form.level === 3">
+                    <!--imgUrl-->
                     <SingleUpload
                         :upload="uploadInfo"
                         :imageUrl="imageUrl"
@@ -167,7 +167,7 @@ export default {
                 name: [
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
                 ],
-                logoUrl: [
+                imgUrl: [
                     { required: true, message: '请上传品牌logo' }
                 ]
             },
@@ -217,7 +217,7 @@ export default {
             }
         },
         imageUrl () {
-            return this.form.logoUrl
+            return this.form.imgUrl
         }
     },
     methods: {
@@ -269,7 +269,7 @@ export default {
 
         // 上传的回调
         readUrl (val) {
-            this.form.logoUrl = val.imageUrl
+            this.form.imgUrl = val.imageUrl
         },
 
         // 新增和编辑类目

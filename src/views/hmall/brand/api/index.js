@@ -34,15 +34,15 @@ By sunhuiyong
 */
 // 查询品牌区域列表
 export const findBrandAreaList = (params) => {
-    return axios.get(B2bUrl + 'product/api/brandarea', params)
+    return axios.get(B2bUrl + 'product/api/brands/authorization/page', params)
 }
 // 新增品牌区域
 export const addBrandArea = (params) => {
     return axios.post(B2bUrl + 'product/api/brandarea/add', params)
 }
 // 查询品牌区域
-export const findBrandArea = (params) => {
-    return axios.get(B2bUrl + 'product/api/brandarea/query', { params })
+export const findBrandAreaDetail = (params) => {
+    return axios.get(B2bUrl + `product/api/brands/authorization/${params.id}`)
 }
 // 修改品牌区域
 export const updateBrandArea = (params) => {

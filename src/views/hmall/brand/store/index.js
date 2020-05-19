@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findBrandList, findBrandAreaList, findBrandArea, findBrandDetail } from '../api'
+import { findBrandList, findBrandAreaList, findBrandAreaDetail, findBrandDetail } from '../api'
 
 const state = {
     brandListInfo: {},
@@ -37,8 +37,8 @@ const actions = {
         const { data } = await findBrandAreaList(params)
         commit(types.BRAND_AUTHORIZATION_INFO, data)
     },
-    async findBrandArea ({ commit }, params) {
-        const { data } = await findBrandArea(params)
+    async findBrandAreaDetail ({ commit }, params) {
+        const { data } = await findBrandAreaDetail(params)
         commit(types.BRAND_AREA_INFO, data)
     },
     async findBrandDetail ({ commit }, params) {

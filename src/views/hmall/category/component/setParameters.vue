@@ -24,7 +24,7 @@
                   :actionMinWidth='120'
               >
                   <template slot="isRequired" slot-scope="scope">
-                      {{ isRequired.get(scope.data.row.isRequired) || '-' }}
+                      {{ isRequiredMap.get(scope.data.row.isRequired) || '-' }}
                   </template>
                   <template slot="type" slot-scope="scope">
                       {{ typeMap.get(scope.data.row.isCombobox) || '-' }}
@@ -143,7 +143,7 @@ export default {
             ],
             specificationsReq: [],
             multiSelection: [],
-            isRequired: SETTING_REQUIRED_MAP,
+            isRequiredMap: SETTING_REQUIRED_MAP,
             typeMap: SETTING_TYPE_MAP,
             attributeVisible: false,
             editObj: {},
