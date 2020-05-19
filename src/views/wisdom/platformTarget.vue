@@ -58,7 +58,8 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload
+                    :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -120,6 +121,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            queryParams: {},
             branchList: [],
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
@@ -144,7 +146,11 @@ export default {
                 }
             },
             tableData: [],
-            paginationData: {},
+            paginationData: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            },
             interfaceUrl: interfaceUrl,
             companyList: [],
             cityList: [],
@@ -217,11 +223,10 @@ export default {
             this.branchList = data.data
         },
         backFindmiscode (val) {
-            this.searchParams.misCode = val.value.misCode
+            this.queryParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
-            console.log(val)
-            this.searchParams.cityCode = val.value.cityCode
+            this.queryParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
             this.queryParamsTemp.pageSize = val
