@@ -9,7 +9,7 @@
                   {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
-                      <el-select v-model="form.pkDeptdoc" placeholder="请选择" :clearable=true>
+                      <el-select v-model="form.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     <!-- <el-input v-model="form.deptName" disabled></el-input> -->
@@ -481,6 +481,9 @@ export default {
             })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
             this.form.upstreamPayType = this.form.upstreamPayTypearr.join(',')
+            if (this.form.pkDeptDoc) {
+                this.form.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.form.pkDeptDoc).deptName || ''
+            }
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
