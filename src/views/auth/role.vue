@@ -197,7 +197,6 @@ export default {
                 })
                 const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
                 this.newItem.employeeSubsections = employeeSubsections
-                console.log(this.newItem)
                 this.$refs.treetable.setCheckedKeys([])
             }
         },
@@ -325,7 +324,8 @@ export default {
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
                         if (authType.status == 1 && authType.authType == 2) {
-                            resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            console.log(authType.employeeSubsections)
+                            authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
                         }
                     })
                 }
@@ -403,7 +403,6 @@ export default {
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2) {
-                console.log(1, item.employeeSubsections)
                 this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
