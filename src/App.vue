@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" v-watermark="$store.state.userInfo.employeeName">
         <router-view/>
     </div>
 </template>

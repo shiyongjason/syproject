@@ -1,8 +1,195 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 // 非菜单，权限控制二级菜单下的tab权限
 import { tabAuth } from './const'
 
 export default [
+    {
+        path: '/funds',
+        meta: {
+            title: '好智慧',
+            isMenu: true,
+            icon: 'hosjoy_operation'
+        },
+        component: Layout,
+        children: [
+            {
+                path: 'jointVentureBusiness',
+                name: 'jointVentureBusiness',
+                meta: {
+                    title: '合资业务经营分析',
+                    tagName: '合资业务经营分析',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'manageoverview',
+                        name: 'manageoverview',
+                        meta: {
+                            title: '经营概览',
+                            tagName: '经营概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/manageoverview')
+                    },
+                    {
+                        path: 'branchTarget',
+                        name: 'branchTarget',
+                        meta: {
+                            title: '分部目标管理',
+                            tagName: '分部目标管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/branchTarget')
+                    },
+                    {
+                        path: 'platformTarget',
+                        name: 'platformTarget',
+                        meta: {
+                            title: '平台目标管理',
+                            tagName: '平台目标管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/platformTarget')
+                    },
+                    {
+                        path: 'platcompanyinfo',
+                        name: 'platcompanyinfo',
+                        meta: {
+                            title: '平台公司基本信息',
+                            tagName: '平台公司基本信息',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/platcompanyinfo')
+                    },
+
+                    {
+                        path: 'platformSale',
+                        name: 'platformSale',
+                        meta: {
+                            title: '平台销售分析',
+                            tagName: '平台销售分析',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/platformSale')
+                    },
+                    {
+                        path: 'branchSale',
+                        name: 'branchSale',
+                        meta: {
+                            title: '分部销售分析',
+                            tagName: '分部销售分析',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/branchSale')
+                    },
+                    {
+                        path: 'categorySale',
+                        name: 'categorySale',
+                        meta: {
+                            title: '品类销售分析',
+                            tagName: '品类销售分析',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/categorySale')
+                    },
+                    {
+                        path: 'profitStatistics',
+                        name: 'profitStatistics',
+                        meta: {
+                            title: '利润统计',
+                            tagName: '利润统计',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/profitStatistics')
+                    },
+                    {
+                        path: 'commitValue',
+                        name: 'commitValue',
+                        meta: {
+                            title: '承诺值管理',
+                            tagName: '承诺值管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/commitValue')
+                    }
+                ]
+            },
+            {
+                path: 'fundsDataAnalysis',
+                name: 'fundsDataAnalysis',
+                meta: {
+                    title: '资金数据分析',
+                    tagName: '资金数据分析',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'standingBook',
+                        name: 'standingBook',
+                        meta: {
+                            title: '资金支持明细表',
+                            tagName: '资金支持明细表',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsData/Ledger.vue')
+                    },
+                    {
+                        path: 'newFlowdialog',
+                        name: 'newFlowdialog',
+                        meta: {
+                            title: '新增台账',
+                            tagName: '新增台账',
+                            parentName: '好智慧-资金数据',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
+                    },
+                    {
+                        path: 'importData',
+                        name: 'importData',
+                        meta: {
+                            title: '历史数据导入',
+                            tagName: '历史数据导入',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/importData.vue')
+                    },
+                    {
+                        path: 'capitalEfficiency',
+                        name: 'capitalEfficiency',
+                        meta: {
+                            title: '资金效率表',
+                            tagName: '资金效率表',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
+                    },
+                    ...tabAuth
+                ]
+            }
+        ]
+    },
     {
         path: '/fundsData',
         meta: {
@@ -70,7 +257,6 @@ export default [
             isMenu: true,
             icon: 'hosjoy_hzh'
         },
-        // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
         children: [
             {
@@ -109,7 +295,6 @@ export default [
                 },
                 component: () => import('@/views/wisdom/platformTarget')
             },
-
             {
                 path: 'platcompanyinfo',
                 name: 'platcompanyinfo',

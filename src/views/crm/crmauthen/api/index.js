@@ -1,8 +1,8 @@
-import { ccpBaseUrl, B2bUrl, interfaceUrl } from '@/api/config'
+import { B2bUrl, interfaceUrl } from '@/api/config'
 import axios from 'axios'
 // 省市区
 export const getChiness = (params) => {
-    return axios.get(ccpBaseUrl + 'common/region/provinces/nesting', { params })
+    return axios.get(B2bUrl + 'common/region/provinces/nesting', { params })
 }
 
 export const getCompanyBosslist = (params) => {

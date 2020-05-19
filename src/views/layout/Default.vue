@@ -13,7 +13,7 @@
                 <div :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
                     <H-tags></H-tags>
                 </div>
-                <keep-alive :include="cachedInclude" :exclude="cachedExclude">
+                <keep-alive :include="/./">
                     <router-view></router-view>
                 </keep-alive>
             </el-main>
