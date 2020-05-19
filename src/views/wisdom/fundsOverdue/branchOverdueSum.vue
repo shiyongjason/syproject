@@ -185,12 +185,16 @@ export default {
             // console.log(data)
             this.tableData = data
             this.tableData.map(i => {
-                i.incrementProportion *= 100
-                if (i.incrementProportion !== 0) i.incrementProportion = i.incrementProportion.toFixed(2)
-                i.incrementProportion += '%'
-                i.stockPlanProportion *= 100
-                if (i.stockPlanProportion !== 0) i.stockPlanProportion = i.stockPlanProportion.toFixed(2)
-                i.stockPlanProportion += '%'
+                if (i.incrementProportion != null) {
+                    i.incrementProportion *= 100
+                    if (i.incrementProportion !== 0) i.incrementProportion = i.incrementProportion.toFixed(2)
+                    i.incrementProportion += '%'
+                }
+                if (i.stockPlanProportion != null) {
+                    i.stockPlanProportion *= 100
+                    if (i.stockPlanProportion !== 0) i.stockPlanProportion = i.stockPlanProportion.toFixed(2)
+                    i.stockPlanProportion += '%'
+                }
             })
         },
         getList (val) {
