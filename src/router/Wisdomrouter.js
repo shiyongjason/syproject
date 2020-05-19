@@ -60,6 +60,42 @@ export default [
                 },
                 component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
             },
+            {
+                path: 'branchOverdueSum',
+                name: 'branchOverdueSum',
+                meta: {
+                    title: '分部逾期汇总表',
+                    tagName: '分部逾期汇总表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/branchOverdueSum.vue')
+            },
+            {
+                path: 'platformOverdueSum',
+                name: 'platformOverdueSum',
+                meta: {
+                    title: '平台公司逾期汇总表',
+                    tagName: '平台公司逾期汇总表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/platformOverdueSum.vue')
+            },
+            {
+                path: 'overdueDetailTable',
+                name: 'overdueDetailTable',
+                meta: {
+                    title: '逾期增量明细表',
+                    tagName: '逾期增量明细表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
+            },
             ...tabAuth
         ]
     },

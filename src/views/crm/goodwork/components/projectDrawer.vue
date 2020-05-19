@@ -2,11 +2,17 @@
     <div class="drawer-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
+                <el-form-item label="项目提交人：">
+                    {{form.createBy}}
+                </el-form-item>
                 <el-form-item label="经销商：">
                   {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
-                    <el-input v-model="form.deptName" disabled></el-input>
+                      <el-select v-model="form.pkDeptdoc" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    <!-- <el-input v-model="form.deptName" disabled></el-input> -->
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
@@ -303,8 +309,9 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters('crmmanage', {
-            projectDetail: 'projectDetail'
+        ...mapGetters({
+            projectDetail: 'crmmanage/projectDetail',
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     watch: {
@@ -325,7 +332,7 @@ export default {
             this.$emit('backEvent')
         },
         onLinkBus (val) {
-            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName, code: val.companyCode } })
+            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
         },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
@@ -337,7 +344,7 @@ export default {
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
-            console.log(value)
+
         },
         onCRemarkTxt () {
             if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
@@ -387,7 +394,8 @@ export default {
             await saveStatus(
                 { projectId: this.form.id,
                     status: status,
-                    updateBy: this.userInfo.employeeName }
+                    updateBy: this.userInfo.employeeName,
+                    createByMobile: this.userInfo.phoneNumber }
             )
             this.$message({
                 message: `${statusTxt}成功`,
@@ -438,7 +446,6 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
-            console.log('newval', newVal)
             if (newVal == 2 || newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
@@ -446,7 +453,6 @@ export default {
             }
         },
         isShowRest (val) {
-            console.log('val', val)
             const newVal = val && Object.keys(val)[0]
             if (newVal == 2) {
                 return false

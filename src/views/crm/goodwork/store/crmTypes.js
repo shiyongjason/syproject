@@ -4,6 +4,7 @@ export const PROJECT_DETAIL = 'PROJECT_DETAIL'
 
 export const PROJECT_LOAN = 'PROJECT_LOAN'
 
+export const CRM_DEPLIST = 'CRM_DEPLIST'
 export const PROJECT_RECORD = 'PROJECT_RECORD'
 
 export const PROJECT_PUNCH = 'PROJECT_PUNCH'

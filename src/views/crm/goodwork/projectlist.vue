@@ -67,8 +67,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -85,14 +85,12 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
-                <template slot="companyName" slot-scope="scope">
-                    <span class="colblue" @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">{{scope.data.row.companyName}}</span>
-                </template>
+
                 <template slot="predictLoanAmount" slot-scope="scope">
-                    {{fundMoneys(scope.data.row.predictLoanAmount)}}
+                    {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
@@ -104,7 +102,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
             </basicTable>
         </div>
@@ -114,7 +112,7 @@
                 <el-timeline>
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
                         <el-card>
-                            <p><span>操作人：</span> {{item.createBy}}</p>
+                            <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
                             <p><span>操作内容：</span> {{item.remark}}</p>
                         </el-card>
                     </el-timeline-item>
@@ -140,7 +138,7 @@
 </template>
 <script>
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
@@ -166,7 +164,10 @@ export default {
                 projectName: '',
                 projectNo: '',
                 typeList: '',
-                originType: 1
+                originType: 1,
+                deptDoc: '',
+                jobNumber: '',
+                authCode: ''
             },
             status: [],
             typeArr: [],
@@ -245,27 +246,32 @@ export default {
                 }
             }
         },
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         ...mapGetters({
             projectData: 'crmmanage/projectData',
             projectLoan: 'crmmanage/projectLoan',
-            projectRecord: 'crmmanage/projectRecord',
+            crmdepList: 'crmmanage/crmdepList',
             punchList: 'crmmanage/punchList',
-            branchList: 'branchList'
+            projectRecord: 'crmmanage/projectRecord'
         })
     },
     async mounted () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
     },
-
     methods: {
         ...mapActions({
             findProjetpage: 'crmmanage/findProjetpage',
             findProjectLoan: 'crmmanage/findProjectLoan',
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
             findProjectrecord: 'crmmanage/findProjectrecord',
-            findPunchlist: 'crmmanage/findPunchlist',
-            findBranch: 'findBranch'
+            findPunchlist: 'crmmanage/findPunchlist'
+
         }),
         fundMoneys (val) {
             if (val) {
@@ -294,6 +300,18 @@ export default {
         },
         productCategoryChange (val) {
             this.queryParams.categoryId = val
+        },
+        onChooseDep () {
+            // this.queryParams.deptDocList = []
+            // const depList = []
+            // if (!this.queryParams.subsectionCode) {
+            //     this.branchArr.map(val => {
+            //         depList.push(val.pkDeptDoc)
+            //     })
+            //     this.queryParams.deptDocList = depList.join(',')
+            // } else {
+            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
+            // }
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
@@ -335,8 +353,8 @@ export default {
             this.imgVisible = true
         },
         async onGetbranch () {
-            await this.findBranch()
-            this.branchArr = this.branchList
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            this.branchArr = this.crmdepList
         }
     }
 }
