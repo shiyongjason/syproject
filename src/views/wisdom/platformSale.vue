@@ -349,6 +349,7 @@ export default {
             // if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) return
             // eslint-disable-next-line
             this.queryParamsTemp = { ...params }
+            // eslint-disable-next-line
             let start = /^\-?[0-9]*$/.test(this.queryParams.signScaleStart)
             // eslint-disable-next-line
             let end = /^\-?[0-9]*$/.test(this.queryParams.signScaleEnd)
