@@ -69,15 +69,15 @@
                 <el-form-item label="品牌名称：" class="mb-5">
                     {{drawerMsg.brandName}}
                 </el-form-item>
-                <el-form-item label="到期日：" class="mb-5">
-                    {{drawerMsg.expiryDate}}
-                </el-form-item>
                 <el-form-item label="代理证书：" class="mb-5">
                     <div class="proxyCert">
                         <a :href="drawerMsg.certification" target="_blank">
                         <img :src="drawerMsg.certification" alt="">
                         </a>
                     </div>
+                </el-form-item>
+                <el-form-item label="到期日：" class="mb-5">
+                    {{drawerMsg.expiryDate}}
                 </el-form-item>
                 <el-form-item label="关联类目：" class="mb-5">
                     <div>
@@ -147,11 +147,9 @@ export default {
                 emitPath: false,
                 multiple: true
             },
-            categoryOptions: [],
             areaProps: {
                 multiple: true
             },
-            // areaOptions: [],
             tableLabel: [
                 { label: '供应商', prop: 'merchantName' },
                 { label: '申请品牌', prop: 'brandName' },
@@ -199,11 +197,14 @@ export default {
             brandAuthorizationInfo: 'brandAuthorizationInfo',
             brandAreaInfo: 'brandAreaInfo'
         }),
+        ...mapGetters('brand', {
+            areaOptions: 'areaOptions'
+        }),
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
         }),
-        ...mapGetters('brand', {
-            areaOptions: 'areaOptions'
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
         }),
         pickerOptionsStart () {
             return {
@@ -236,27 +237,8 @@ export default {
             'findAllCategory'
         ]),
         async init () {
+            // 获取全类目
             await this.findAllCategory()
-            this.categoryOptions = this.categoriesTree.map(item1 => {
-                return {
-                    value: item1.id + '',
-                    label: item1.name,
-                    children: item1.subCategoryList.map(item2 => {
-                        return {
-                            value: item2.id + '',
-                            label: item2.name,
-                            children: item2.subCategoryList.map(item3 => {
-                                return {
-                                    value: item3.id + '',
-                                    label: item3.name
-                                    // disabled: true
-                                }
-                            })
-                        }
-                    })
-                }
-            })
-
             // 获取省市区
             await this.getChiness()
         },
@@ -298,7 +280,6 @@ export default {
                     return [item.provinceId, item.cityId, item.areaId]
                 })
             }
-            console.log(this.drawerMsg)
             this.suggest = {
                 auditResult: '',
                 auditRemark: ''

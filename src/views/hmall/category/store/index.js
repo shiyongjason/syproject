@@ -3,14 +3,33 @@ import * as types from './mutation-types'
 import { findAllCategory, findSpecifications } from '../api'
 
 const state = {
-    categoriesTree: {},
+    categoriesTree: [],
     specificationsInfo: {
         specifications: []
     }
 }
 
 const getters = {
-
+    categoryOptions: state => {
+        return state.categoriesTree.map(item1 => {
+            return {
+                value: item1.id + '',
+                label: item1.name,
+                children: item1.subCategoryList.map(item2 => {
+                    return {
+                        value: item2.id + '',
+                        label: item2.name,
+                        children: item2.subCategoryList.map(item3 => {
+                            return {
+                                value: item3.id + '',
+                                label: item3.name
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
 }
 
 const mutations = {

@@ -53,14 +53,14 @@
                 <div class="edit-form-item">
                     <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
                 </div>
-                <el-form-item label="类目名称" prop="name" v-if="editVisible">
+                <el-form-item label="类目名称" prop="name：" v-if="editVisible">
                     <el-input
                         class="form-input"
                         v-model="form.name"
                         placeholder="请输入类目名称"
                         maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item prop="imgUrl" label="品牌logo" v-if="form.level === 3">
+                <el-form-item prop="imgUrl" label="品牌logo：" v-if="form.level === 3">
                     <!--imgUrl-->
                     <SingleUpload
                         :upload="uploadInfo"
