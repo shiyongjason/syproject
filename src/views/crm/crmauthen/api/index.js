@@ -21,7 +21,7 @@ export const getBusinessDetail = (params) => {
 }
 // 获取详情统计
 export const getCrmauthenStatic = (params) => {
-    return axios.post(B2bUrl + 'merchant/api/crm/company/boss/statistics', params)
+    return axios.post('memeber/api/crm/company/boss/statistics', params)
 }
 
 // 分部列表
