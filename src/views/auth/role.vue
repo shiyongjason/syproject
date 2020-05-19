@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -163,8 +163,13 @@ export default {
         this.positionCodeList = this.roleInfo.positionCodeList
         const { data: postOptions } = await findpostList('')
         this.postOptions = postOptions
+        this.getOrganizationTree()
     },
     methods: {
+        async getOrganizationTree () {
+            const { data } = await getOrganizationTree()
+            this.organizationTree = data
+        },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
