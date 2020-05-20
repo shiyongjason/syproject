@@ -18,16 +18,14 @@ export const departmentAuth = {
             'findPlatformslist', // 平台公司
             'findAuthList' // 大区、分部、区域
         ]),
-        async oldBossAuth () {
-            const p = [
-                this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc }),
-                this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }),
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.pkDeptDoc })
-            ]
-            await Promise.all(p).then(res => {
-                this.region = res[0].length > 0
-                this.branch = res[1].length > 0
-                this.district = res[2].length > 0
+        async newBossAuth (arr = ['D', 'F', 'Q']) {
+            let p1 = []
+            arr.map(i => p1.push(this.findAuthList({ deptType: i, pkDeptDoc: this.userInfo.pkDeptDoc })))
+            // 0总部 1大区 2分部 3区域
+            await Promise.all(p1).then(res => {
+                this.region = this.userInfo.deptType < 2
+                this.branch = this.userInfo.deptType < 3
+                this.district = this.userInfo.deptType < 4
                 // 0总部 1大区 2分部
                 switch (this.userInfo.deptType) {
                     case 0:

@@ -146,7 +146,7 @@ export default {
         await this.findTargetTime()
         // console.log(this.targetTime)
         this.params.selectTime = this.targetTime
-        await this.oldBossAuth()
+        await this.newBossAuth()
         this.queryAndChangeTime(this.params)
     },
     beforeRouteEnter (to, from, next) {
