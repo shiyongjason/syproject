@@ -340,17 +340,17 @@ export default [
                 },
                 component: () => import('@/views/hmall/category/category.vue')
             },
-            {
-                path: 'category_old',
-                name: 'category_old',
-                meta: {
-                    title: '类目管理老',
-                    tagName: '类目管理老',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/category/category_old.vue')
-            },
+            // {
+            //     path: 'category_old',
+            //     name: 'category_old',
+            //     meta: {
+            //         title: '类目管理老',
+            //         tagName: '类目管理老',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/category/category_old.vue')
+            // },
             {
                 path: 'brand',
                 name: 'brand',
@@ -374,17 +374,17 @@ export default [
                 },
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
-            {
-                path: 'attribute',
-                name: 'attribute',
-                meta: {
-                    title: '参数属性管理',
-                    tagName: '参数属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/attribute/attribute.vue')
-            },
+            // {
+            //     path: 'attribute',
+            //     name: 'attribute',
+            //     meta: {
+            //         title: '参数属性管理',
+            //         tagName: '参数属性管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/attribute/attribute.vue')
+            // },
             {
                 path: 'order',
                 name: 'order',
@@ -517,17 +517,17 @@ export default [
                 },
                 component: () => import('@/views/hmall/spumanage/spuauditlist')
             },
-            {
-                path: 'skuset',
-                name: 'skuset',
-                meta: {
-                    title: 'SKU属性管理',
-                    tagName: 'SKU属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/skuset')
-            },
+            // {
+            //     path: 'skuset',
+            //     name: 'skuset',
+            //     meta: {
+            //         title: 'SKU属性管理',
+            //         tagName: 'SKU属性管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/spumanage/skuset')
+            // },
             {
                 path: 'eventMange',
                 name: 'eventMange',

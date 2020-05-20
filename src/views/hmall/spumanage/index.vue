@@ -44,12 +44,6 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <!-- <el-select v-model="queryParams.merchantCode">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
-                            </el-option>
-                        </el-select> -->
                         <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
                     </div>
                 </div>
@@ -71,23 +65,6 @@
                         <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">维护时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
-                    </div>
-                </div> -->
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">维护人：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.operator" placeholder="请输入维护人姓名">
-                        </el-input>
-                    </div>
-                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="searchList()">
