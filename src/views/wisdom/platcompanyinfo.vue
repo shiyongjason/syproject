@@ -2,9 +2,11 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0] || userInfo.deptType===deptType[1]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+
                         <el-select v-model="searchParams.subsectionCode" placeholder="选择分部">
                             <el-option v-for="item in depArr" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
                             </el-option>
@@ -50,19 +52,20 @@
     </div>
 </template>
 <script>
-import { findBranchList, findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
+import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { departmentAuth } from '@/mixins/userAuth'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 
 export default {
+    mixins: [departmentAuth],
     data () {
         return {
             deptType: DEPT_TYPE,
-            depArr: [],
             provinceDataList: [],
             cityList: [],
             platList: [],
@@ -96,7 +99,8 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList
         })
     },
     async  mounted () {
@@ -174,19 +178,6 @@ export default {
                 pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNumber,
                 total: data.data.totalElements
-            }
-        },
-        async findBranchList (value) {
-            const { data } = await findBranchList({ crmDeptCode: value })
-            this.depArr = data.data
-            if (this.depArr.length > 0) {
-                if (this.userInfo.deptType == 0) {
-                    this.depArr.splice(0, 0, {
-                        crmDeptCode: '',
-                        deptname: '全部'
-                    })
-                }
-                this.searchParams.subsectionCode = this.depArr[0].crmDeptCode
             }
         },
         async findProvinceAndCity (code, subsectionCode) {

@@ -386,38 +386,8 @@ export default {
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType  很久的
-        // deptType 看下表示含义
-        // console.log(this.userInfo.organizationType)
-        await this.onFindRegionList() // 大区
-        await this.onFindBranchList() // 分部
-        if (this.userInfo.deptType === this.deptType[1]) {
-            this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.oldDeptCode
-            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.deptType === this.deptType[0]) {
-            this.onFindPaltList() // 平台公司
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            this.regionDisabled = true
-            this.branchDisabled = true
-            this.regionInput = false
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-            this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
-            let region = this.branchList.find((val) => {
-                return val.crmDeptCode === this.queryParams.subsectionCode
-            })
-            await this.onFindRegion(region.pkFathedept) // 根据分部找大区
-        }
-        // if (this.userInfo.deptType !== this.deptType[1] && this.userInfo.deptType !== this.deptType[2] && this.userInfo.deptType !== this.deptType[0]) {
-        //     console.log(4)
-        //     this.regionDisabled = true
-        //     this.branchDisabled = true
-        //     this.platDisabled = true
-        //     return true
-        // }
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
-        // this.queryCompanyByParams({subsectionCodeList: []}) // 平台公司
     }
 }
 </script>
