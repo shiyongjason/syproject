@@ -2,19 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlatcode" :remove-value='removeValue' :placeholder="'选择平台公司'"></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="选择平台公司" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -45,7 +42,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">品牌：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
+                        <HAutocomplete :selectArr="brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -104,11 +101,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getPaltCategory, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum, findBranchList } from './api/index.js'
+import { getPaltCategory, getPaltbarnd, getPaltSys, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE, DEPT_TYPE } from './store/const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'brandSale',
+    mixins: [departmentAuth],
     data: function () {
         return {
             deptType: DEPT_TYPE,
@@ -145,6 +144,16 @@ export default {
                     }
                 }
             },
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
             branchLoading: true,
             onLineStatus: ['1'],
             queryParams: {
@@ -168,31 +177,48 @@ export default {
                 current: 1
             },
             tableData: [],
-            branchList: [],
             brandList: [],
             sysList: [],
-            platList: [],
             bustype: BUS_TYPE,
             removeValue: false
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
     components: {
         HAutocomplete
     },
-    watch: {
-        async 'queryParams.subsectionCode' (newV, oldV) {
-            const code = newV
-            this.platList = await this.findPaltList(code)
-            this.queryParams.companyCode = ''
-            this.removeValue = !this.removeValue
-        }
-    },
     methods: {
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.crmDeptCode) {
+                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.crmDeptCode && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
         async getPlatCategory (params) {
             this.queryParamsTemp = { ...params }
             if (!params.startTime || !params.endTime) {
@@ -211,22 +237,6 @@ export default {
                 pageNumber: data.data.current
             }
             // this.regionList.pop()
-        },
-        async findBranchList (value) {
-            // const { data } = await findDepList({ organizationType: 1 })
-            const { data } = await findBranchList({ crmDeptCode: value })
-            if (data.data) {
-                this.branchList = data.data
-            }
-            if (this.branchList.length > 0) {
-                if (this.userInfo.deptType == 0) {
-                    this.branchList.splice(0, 0, {
-                        crmDeptCode: '',
-                        deptname: '全部'
-                    })
-                }
-                this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
-            }
         },
         onCurrentChange (val) {
             this.queryParamsTemp.current = val.pageNumber
@@ -252,18 +262,6 @@ export default {
         brandListBackPlat (value) {
             this.queryParams.brandId = value.value.selectCode ? value.value.selectCode : ''
         },
-        async findPaltList (subsectionCode) {
-            const params = {
-                subsectionCode: subsectionCode
-            }
-            const { data } = await findPaltList(params)
-            for (let i of data.data.pageContent) {
-                i.value = i.companyName
-                i.selectCode = i.companyCode
-            }
-            this.platList = data.data.pageContent
-            return this.platList
-        },
         backPlatcode (value) {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         },
@@ -287,20 +285,10 @@ export default {
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        // console.log(this.userInfo.organizationType)
-        let oldDeptCode = ''
-        if (this.userInfo.deptType == 1) {
-            oldDeptCode = this.userInfo.oldDeptCode
-        }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         await this.getPaltbarnd()
         await this.getPaltSys()
-        if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
-        }
         await this.getPlatCategory(this.queryParams)
-        // this.platList = await this.findPaltList(this.queryParams.subsectionCode)
+        await this.newBossAuth(['F', 'P'])
     }
 }
 </script>
