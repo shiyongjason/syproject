@@ -187,17 +187,18 @@ export default {
             this.reData = data
         },
         onGetnodes () {
-            const nodeList = this.$refs.treetable.getCheckedNodes()
-            const subArr = []
-            nodeList && nodeList.map(val => {
-                if (val.deptCode.indexOf('F') > -1) {
-                    subArr.push(val.pkDeptDoc)
-                }
-            })
-            const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
-            this.newItem.employeeSubsections = employeeSubsections
-            console.log(this.newItem)
-            this.$refs.treetable.setCheckedKeys([])
+            if (this.layerType == 2) {
+                const nodeList = this.$refs.treetable.getCheckedNodes()
+                const subArr = []
+                nodeList && nodeList.map(val => {
+                    if (val.deptCode.indexOf('F') > -1) {
+                        subArr.push(val.pkDeptDoc)
+                    }
+                })
+                const employeeSubsections = { authCode: this.authCode[this.authCode.length - 1], subsectionCodes: subArr }
+                this.newItem.employeeSubsections = employeeSubsections
+                this.$refs.treetable.setCheckedKeys([])
+            }
         },
         // 对后端返回的数据进行处理
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
@@ -323,7 +324,8 @@ export default {
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
                         if (authType.status == 1 && authType.authType == 2) {
-                            resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            console.log(authType.employeeSubsections)
+                            authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
                         }
                     })
                 }
@@ -401,7 +403,6 @@ export default {
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2) {
-                console.log(1, item.employeeSubsections)
                 this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
