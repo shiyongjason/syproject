@@ -45,7 +45,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">品牌：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="backPlat" :placeholder="'全部'"></HAutocomplete>
+                        <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -238,6 +238,7 @@ export default {
         },
         async getPaltbarnd () {
             const { data } = await getPaltbarnd()
+            console.log(data)
             this.brandList = data.data
             this.brandList && this.brandList.map(item => {
                 item.value = item.brandName
@@ -248,7 +249,7 @@ export default {
             const { data } = await getPaltSys()
             this.sysList = data.data
         },
-        backPlat (value) {
+        brandListBackPlat (value) {
             this.queryParams.brandId = value.value.selectCode ? value.value.selectCode : ''
         },
         async findPaltList (subsectionCode) {
