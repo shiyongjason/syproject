@@ -5,6 +5,7 @@ const state = {
     projectData: {},
     projectDetail: {},
     projectLoan: {},
+    crmdepList: [],
     projectRecord: [],
     punchList: []
 
@@ -14,6 +15,7 @@ const getters = {
     projectData: state => state.projectData,
     projectDetail: state => state.projectDetail,
     projectLoan: state => state.projectLoan,
+    crmdepList: state => state.crmdepList,
     projectRecord: state => state.projectRecord,
     punchList: state => state.punchList
 
@@ -28,6 +30,9 @@ const mutations = {
     },
     [types.PROJECT_LOAN] (state, payload) {
         state.projectLoan = payload
+    },
+    [types.CRM_DEPLIST] (state, payload) {
+        state.crmdepList = payload
     },
     [types.PROJECT_RECORD] (state, payload) {
         state.projectRecord = payload
@@ -49,6 +54,10 @@ const actions = {
     async findProjectLoan ({ commit }, params) {
         const { data } = await Api.getProjectloan(params)
         commit(types.PROJECT_LOAN, data)
+    },
+    async findCrmdeplist ({ commit }, params) {
+        const { data } = await Api.findCrmdep(params)
+        commit(types.CRM_DEPLIST, data)
     },
     async findProjectrecord ({ commit }, params) {
         const { data } = await Api.getProjectrecord(params)
