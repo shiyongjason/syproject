@@ -154,7 +154,7 @@ export default {
             this.queryParamsTemp.pageNumber = val.pageNumber
             this.onQuery(this.queryParamsTemp)
         },
-        async backPlat (val) {
+        backPlat (val) {
             this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
         }
     },

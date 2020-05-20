@@ -2,13 +2,10 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
-                            <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -85,11 +82,13 @@
 <script>
 import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
+    mixins: [departmentAuth],
     data () {
         return {
             uploadLoading: false,
@@ -120,7 +119,10 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            branchList: [],
+            branchObj: {
+                selectCode: '',
+                selectName: ''
+            },
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
                 otherParams: {
@@ -156,7 +158,8 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList
         })
     },
     mounted () {
@@ -165,7 +168,6 @@ export default {
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        this.onFindBranchList(this.userInfo.oldDeptCode)
         this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
@@ -212,15 +214,10 @@ export default {
                 total: data.data.total
             }
         },
-        async onFindBranchList (value) {
-            const { data } = await findSubsectionList({ companyCode: value })
-            this.branchList = data.data
-        },
         backFindmiscode (val) {
             this.searchParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
-            console.log(val)
             this.searchParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
@@ -267,6 +264,9 @@ export default {
                 item.value = item.cityName
                 item.selectCode = item.cityCode
             })
+        },
+        backPlat (val) {
+            this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
         }
     }
 }
