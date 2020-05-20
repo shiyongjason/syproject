@@ -86,7 +86,7 @@
 import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
@@ -165,12 +165,17 @@ export default {
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        this.onFindBranchList(this.userInfo.oldDeptCode)
+        // this.onFindBranchList(this.userInfo.oldDeptCode)
+        // 新的分部接口
+
         this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
     },
     methods: {
+        ...mapActions({
+            findAuthList: 'findAuthList'
+        }),
         uploadProcess () {
             this.uploadLoading = true
         },
@@ -213,8 +218,9 @@ export default {
             }
         },
         async onFindBranchList (value) {
-            const { data } = await findSubsectionList({ companyCode: value })
-            this.branchList = data.data
+            // const { data } = await findSubsectionList({ companyCode: value })
+            // this.branchList = data.data
+            await this.findAuthList()
         },
         backFindmiscode (val) {
             this.searchParams.misCode = val.value.misCode
