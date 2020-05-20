@@ -5,12 +5,7 @@
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in depArr" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlatBranch" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -80,6 +75,10 @@ export default {
                 subsectionCode: ''
                 // sortInfos: [{ 'field': 'updateTime', 'sort': 'desc' }]
             },
+            branchObj: {
+                selectCode: '',
+                selectName: ''
+            },
             tableData: [],
             paginationData: {},
             paltData: {
@@ -104,19 +103,15 @@ export default {
         })
     },
     async  mounted () {
-        let oldDeptCode = ''
-        if (this.userInfo.deptType == 1) {
-            oldDeptCode = this.userInfo.oldDeptCode
-        }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         this.provinceDataList = await this.findProvinceAndCity(0)
+        this.findCompanyList(this.searchParams)
         // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
         if (this.userInfo.deptType == 2) {
             const code = this.userInfo.oldDeptCode
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
             // this.findProvinceAndCity(0, code)
             this.platList = await this.findPaltList(code)
-            this.findCompanyList(this.searchParams)
+
         } else if (this.userInfo.deptType == 0) {
             this.findCompanyList(this.searchParams)
             this.platList = await this.findPaltList()
@@ -128,22 +123,6 @@ export default {
         })
     },
     watch: {
-        async 'searchParams.subsectionCode' (newV, oldV) {
-            const code = newV
-            this.$refs.HAutocomplete.clearInput()
-            this.searchParams.provinceCode = ''
-            this.searchParams.cityCode = ''
-            this.searchParams.companyCode = ''
-            this.platList = await this.findPaltList(code)
-            if (code) {
-                // this.platList = await this.findPaltList(code)
-                // this.provinceDataList = await this.findProvinceAndCity(0, code)
-            } else {
-                this.$refs.HAutocomplete.clearInput()
-                // this.provinceDataList = []
-            }
-            // this.cityList = []
-        },
         async 'searchParams.provinceCode' (newV, oldV) {
             const code = newV
             this.searchParams.cityCode = ''
@@ -202,6 +181,13 @@ export default {
         },
         backPlat (value) {
             this.searchParams.companyCode = value.value.companyCode ? value.value.companyCode : ''
+        },
+        async backPlatBranch (value) {
+            this.searchParams.subsectionCode = value.value.pkDeptDoc ? value.value.pkDeptDoc : ''
+            this.searchParams.provinceCode = ''
+            this.searchParams.cityCode = ''
+            this.searchParams.companyCode = ''
+            this.platList = await this.findPaltList(this.searchParams.subsectionCode)
         },
         exportTable () {
             var url = ''

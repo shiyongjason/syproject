@@ -23,7 +23,7 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
                             <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
                                 批量导入
                             </el-button>
@@ -84,8 +84,9 @@ export default {
             branchList: state => state.branchList
         }),
         exportHref () {
-            let url = interfaceUrl + 'rms/subsectiontarget/export?'
-            for (var key in this.queryParamsTemp) {
+            const { temp } = this.queryParamsTemp
+            let url = interfaceUrl + 'rms/subsection/target/export?'
+            for (var key in temp) {
                 if (this.queryParamsTemp[key]) {
                     url += (key + '=' + this.queryParamsTemp[key] + '&')
                 }
@@ -134,10 +135,6 @@ export default {
         async findBrandTargetTable (parentParams) {
             const params = Object.assign({}, parentParams)
             params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
-            if (!params.subsectionCode) {
-                params.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-                this.queryParamsTemp.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-            }
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
