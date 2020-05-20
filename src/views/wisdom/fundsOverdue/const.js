@@ -383,7 +383,8 @@ export const platformSummarySheet = function () {
                     label: '合计',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 }
             ]
         },
@@ -510,7 +511,8 @@ export const overdueDetailTable = function () {
                     label: '合计',
                     width: '100',
                     displayAs: 'fundMoney',
-                    showOverflowTooltip: true
+                    showOverflowTooltip: true,
+                    className: 'repaymentStyle'
                 }
             ]
         },
