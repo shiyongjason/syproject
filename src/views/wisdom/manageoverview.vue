@@ -5,7 +5,7 @@
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
                     <el-select v-model="formData.regionCode" placeholder="选择" :clearable=true>
-                        <el-option v-for="item in regionList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
+                        <el-option v-for="item in regionList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                         </el-option>
                     </el-select>
                 </div>
@@ -14,7 +14,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="formData.subsectionCode" placeholder="选择" :clearable=true>
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
+                        <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                         </el-option>
                     </el-select>
                 </div>
@@ -44,7 +44,6 @@
                 <el-tab-pane :lazy='true' v-if="hosAuthCheck(secondAuth)" label="上线" name="second">
                     <addchild v-if="'second' === activeName" ref="addchild" :params="formData" />
                 </el-tab-pane>
-
                 <el-tab-pane :lazy='true' v-if="hosAuthCheck(fourthAuth)" label="利润" name="fourth">
                     <profitchild :params="formData" />
                 </el-tab-pane>
@@ -54,12 +53,12 @@
     </div>
 </template>
 <script>
-import { findBranchList, findRegionList } from './api/index.js'
+// import { findBranchList, findRegionList } from './api/index.js'
 import overallchild from './components/overallchild'
 import addchild from './components/addchild'
 import salechild from './components/salechild'
 import profitchild from './components/profitchild'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_MANAGE_OVERVIEW_SURVEY, AUTH_MANAGE_OVERVIEW_MARKET, AUTH_MANAGE_OVERVIEW_ONLINE, AUTH_MANAGE_OVERVIEW_PROFIT } from '@/utils/auth_const'
 export default {
@@ -77,8 +76,8 @@ export default {
                 subsectionCode: ''
             },
             activeName: 'first',
-            branchList: [],
-            regionList: [],
+            // branchList: [],
+            // regionList: [],
             deptType: DEPT_TYPE
         }
     },
@@ -90,7 +89,10 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList, // 大区
+            branchList: state => state.branchList, // 分部
+            areaList: state => state.areaList // 区域
         }),
         pickerOptionsStart () {
             return {
@@ -115,13 +117,12 @@ export default {
     },
     watch: {
         async 'formData.regionCode' (newV, oldV) {
-            console.log(2, newV, oldV)
             if (newV) {
                 this.formData.subsectionCode = this.userInfo.deptType === this.deptType[2] ? this.userInfo.oldDeptCode : ''
-                this.branchList = await this.onFindBranchList(newV)
+                await this.onFindBranchList(newV)
             } else {
                 this.formData.subsectionCode = ''
-                this.branchList = await this.onFindBranchList()
+                await this.onFindBranchList()
             }
         }
     },
@@ -129,32 +130,40 @@ export default {
         this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
         console.log(this.userInfo.deptType, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
-        if (this.userInfo.deptType === this.deptType[1]) {
-            this.formData.regionCode = this.userInfo.oldDeptCode
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            this.formData.regionCode = this.userInfo.oldDeptCode
-            this.formData.subsectionCode = this.userInfo.oldDeptCode
-            // this.formData.subsectionCode = this.userInfo.companyCode
-        } else if (this.userInfo.deptType === this.deptType[0]) {
-            this.branchList = await this.onFindBranchList()
-        }
+        // if (this.userInfo.deptType === this.deptType[1]) {
+        //     this.formData.regionCode = this.userInfo.oldDeptCode
+        // } else if (this.userInfo.deptType === this.deptType[2]) {
+        //     this.formData.regionCode = this.userInfo.oldDeptCode
+        //     this.formData.subsectionCode = this.userInfo.oldDeptCode
+        //     // this.formData.subsectionCode = this.userInfo.companyCode
+        // } else if (this.userInfo.deptType === this.deptType[0]) {
+        //     await this.onFindBranchList()
+        // }
         this.onFindRegionList()
+        this.onFindBranchList()
 
         // Watermark.set(this.userInfo.name)
     },
     methods: {
+        ...mapActions({
+            findAuthList: 'findAuthList'
+        }),
         async onFindRegionList () {
-            const { data } = await findRegionList()
-            // 数据问题，暂时这么改，后期再看是否要改数据库
-            data.data.map((val, index) => {
-                if (val.deptname != '西南大区' && val.deptname != '华中大区') {
-                    this.regionList.push(val)
-                }
-            })
+            // 新的大区接口
+            await this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc })
+            // const { data } = await findRegionList()
+            // // 数据问题，暂时这么改，后期再看是否要改数据库
+            // data.data.map((val, index) => {
+            //     if (val.deptname != '西南大区' && val.deptname != '华中大区') {
+            //         this.regionList.push(val)
+            //     }
+            // })
         },
         async onFindBranchList (value) {
-            const { data } = await findBranchList({ crmDeptCode: value })
-            return data.data ? data.data : ''
+            // const { data } = await findBranchList({ crmDeptCode: value })
+            await this.findAuthList({ deptType: 'F', pkDeptDoc: value || this.userInfo.pkDeptDoc })
+
+            // return data.data ? data.data : ''
         },
         onSearchForm () {
             if (this.activeName === 'first') {

@@ -21,7 +21,7 @@
                     </el-tooltip>
                 </div>
                 <div>
-                    <strong>{{summaryData.allSales| money(true)}}
+                    <strong>{{summaryData.allSales|money(true)}}
 
                     </strong>
                     <span>
@@ -208,7 +208,7 @@ export default {
         async getSummary () {
             const { data } = await getSummary(this.params)
             this.summaryData = data.data
-            this.summaryData.allSales = parseFloat(this.summaryData.allSales).toFixed(0)
+            this.summaryData.allSales = this.summaryData.allSales ? parseFloat(this.summaryData.allSales).toFixed(0) : 0
         },
         backoverAll () {
             this.getStatistics()
