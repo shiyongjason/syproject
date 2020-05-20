@@ -2,7 +2,7 @@ import { B2bUrl } from '@/api/config'
 import axios from 'axios'
 // 省市区
 export const getChiness = (params) => {
-    return axios.get(B2bUrl + 'common/region/provinces/nesting', { params })
+    return axios.get(B2bUrl + 'merchant/openapi/region/provinces/nesting', { params })
 }
 // 获取商家列表
 export const getBossMerchant = (params) => {
