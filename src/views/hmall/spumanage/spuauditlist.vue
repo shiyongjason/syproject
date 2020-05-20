@@ -252,7 +252,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'product/api/spu/boos/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'product/api/spu/boss/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onChangeStatus (val) {
