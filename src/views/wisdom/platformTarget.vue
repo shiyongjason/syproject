@@ -80,7 +80,7 @@
     </div>
 </template>
 <script>
-import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
+import { findTableList, getCompany, getCityList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
