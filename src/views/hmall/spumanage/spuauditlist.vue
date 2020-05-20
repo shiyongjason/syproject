@@ -8,51 +8,6 @@
                         <el-input v-model="queryParams.spuCode" placeholder="请输入商品编码" maxlength="50"></el-input>
                     </div>
                 </div>
-
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品型号：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品状态：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.auditStatus">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="待审核" value="0">
-                            </el-option>
-                            <el-option label="通过" value="1">
-                            </el-option>
-                            <el-option label="未通过" value="2">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">商品来源：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.source">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" clearable v-for="item in productSource">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div> -->
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品类目：</div>
-                    <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品名称：</div>
                     <div class="query-col-input">
@@ -60,25 +15,56 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">商品品牌：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品类目：</div>
+                    <div class="query-col-input">
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品型号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
+                    </div>
+                </div>
+
+                <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <!-- <el-select v-model="queryParams.merchantCode">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
-                            </el-option>
-                        </el-select> -->
                         <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue' />
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">提交时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.submitStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.submitEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.createTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">审核状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.auditStatus" style="width: 100%">
+                            <el-option
+                                v-for="item in auditStatusOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-input">
+                        <el-checkbox v-model="queryParams.checked">自营</el-checkbox>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -89,29 +75,32 @@
                         <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
+                        <el-button type="primary" class="ml20"          @click="onChangeStatus(1)">批量审核</el-button>
+                        <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
                     </div>
-                </div>
-
-            </div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <!-- <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量审核</el-button> -->
-                    <!-- <el-button type="primary" class="ml20" @click="onExport()">
-                        导出
-                    </el-button> -->
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="false" :isAction="true" :actionWidth=150 ::rowKey="rowKey"
-                :isShowIndex='true'>
+            <basicTable
+                :tableData="tableData"
+                :tableLabel="tableLabel"
+                :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+                @onSizeChange="handleSizeChange"
+                :multiSelection.sync='multiSelection'
+                :isMultiple="true"
+                :isAction="true"
+                :actionWidth=150
+                :rowKey="rowKey"
+                :isShowIndex='true'
+            >
                 <template slot="spuName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.spuName}}
                 </template>
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}
                 </template>
-                <template slot="status" slot-scope="scope">
+                <template slot="auditStatus" slot-scope="scope">
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
@@ -119,46 +108,51 @@
                 </template>
             </basicTable>
         </div>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { findProducts, findBossSource } from './api/index'
-import { mapState, mapActions } from 'vuex'
+import { AUDIT_STATUS } from './const'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
+import { B2bUrl } from '@/api/config'
 export default {
+    components: {
+        HAutocomplete
+    },
     name: 'spuauditlist',
     data () {
         return {
             productSource: [],
+            auditStatusOptions: AUDIT_STATUS,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
                 spuCode: '',
                 spuName: '',
-                specification: '',
+                model: '',
                 categoryId: '',
                 brandId: '',
-                integrity: '',
                 auditStatus: '',
                 source: 1,
                 merchantCode: '',
-                submitStartTime: '',
-                submitEndTime: ''
-
+                // createTimeStart: '',
+                // createTimeEnd: '',
+                checked: true
             },
             copyParams: {},
             tableData: [],
             paginationInfo: {},
-            tableLabel: [{ label: '商品编码spu', prop: 'spuCode' },
+            tableLabel: [
+                { label: 'SPU编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuName', width: '150' },
                 { label: '品牌', prop: 'brandName', width: '200' },
-                { label: '型号', prop: 'specification', width: '200' },
-                { label: '来源', prop: 'merchantName' },
-                { label: '状态', prop: 'status' },
-                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' }
+                { label: '商品类目', prop: 'category', width: '200' },
+                { label: '型号', prop: 'model', width: '200' },
+                { label: '审核状态', prop: 'auditStatus' },
+                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '商品来源', prop: 'merchantName' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -168,14 +162,18 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo,
-            userInfo2: state => state.hmall.userInfo,
-            categoryList: state => state.hmall.categoryList
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
+        }),
+        ...mapState('spumanage', {
+            productsAuditListInfo: 'productsAuditListInfo'
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.submitEndTime
+                    let beginDateVal = this.queryParams.createTimeEnd
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal)
                     }
@@ -185,7 +183,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.submitStartTime
+                    let beginDateVal = this.queryParams.createTimeStart
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal)
                     }
@@ -193,31 +191,36 @@ export default {
             }
         }
     },
-    components: {
-        HAutocomplete
-    },
+
     async mounted () {
-        const { data } = await findBossSource({ withBoss: 0 })
-        this.productSource = data
+        this.findAllCategory()
+        // const { data } = await findBossSource({ withBoss: 0 })
+        // this.productSource = data
         // TODO 模糊搜索组件
         this.productSource && this.productSource.map(item => {
             item.value = item.sourceName
             item.selectCode = item.sourceCode
         })
-        this.findCategoryList()
+        this.productSource = []
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
+    activated () {
+        this.searchList()
+    },
     methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('spumanage', [
+            'findAuditProducts'
+        ]),
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
             this.removeValue = true
             this.searchList()
         },
-        ...mapActions({
-            findCategoryList: 'findCategoryList'
-        }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.searchList()
@@ -227,30 +230,30 @@ export default {
             this.searchList()
         },
         productCategoryChange (val) {
-            this.queryParams.categoryId = val
+            this.queryParams.categoryId = val[val.length - 1]
         },
-        async  searchList () {
+        async searchList () {
             const { ...params } = this.queryParams
             if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
-            const { data } = await findProducts(params)
-            this.tableData = data.records
+            await this.findAuditProducts(params)
+            this.tableData = this.productsAuditListInfo.records
             this.paginationInfo = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
+                pageNumber: this.productsAuditListInfo.current,
+                pageSize: this.productsAuditListInfo.size,
+                total: this.productsAuditListInfo.total
             }
             this.removeValue = false
         },
         onExport () {
-            // window.location = B2bUrl + 'product/api/boss/products/export?status=' + this.queryParams.status +
-            //     '&startDate=' + this.queryParams.startDate +
-            //     '&endDate=' + this.queryParams.endDate +
-            //     '&categoryId=' + this.queryParams.categoryId +
-            //     '&sourceCode=' + this.queryParams.sourceCode +
-            //     '&productName=' + this.queryParams.productName +
-            //     '&productCode=' + this.queryParams.productCode +
-            //     '&updateBy=' + this.queryParams.updateBy +
-            //     '&brandName=' + this.queryParams.brandName
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无商品审核数据可导出！')
+            } else {
+                let url = ''
+                for (let key in this.queryParams) {
+                    url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                }
+                location.href = B2bUrl + 'product/api/spu/boos/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
+            }
         },
         onChangeStatus (val) {
 
@@ -261,9 +264,6 @@ export default {
         backFindcode (val) {
             this.queryParams.merchantCode = val.value.selectCode
         }
-    },
-    activated () {
-        this.searchList()
     },
     beforeRouteEnter (to, from, next) {
         newCache('spuauditlist')

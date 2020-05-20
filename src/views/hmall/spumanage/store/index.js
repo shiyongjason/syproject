@@ -1,54 +1,28 @@
 
 import * as types from './mutation-types'
-// import { findAllCategory, findSpecifications } from '../api'
+import { findAuditProducts } from '../api'
 
 const state = {
-    categoriesTree: [],
+    productsAuditListInfo: {},
     specificationsInfo: {
         specifications: []
     }
 }
 
 const getters = {
-    categoryOptions: state => {
-        return state.categoriesTree.map(item1 => {
-            return {
-                value: item1.id + '',
-                label: item1.name,
-                children: item1.subCategoryList.map(item2 => {
-                    return {
-                        value: item2.id + '',
-                        label: item2.name,
-                        children: item2.subCategoryList.map(item3 => {
-                            return {
-                                value: item3.id + '',
-                                label: item3.name
-                            }
-                        })
-                    }
-                })
-            }
-        })
-    }
 }
 
 const mutations = {
-    [types.CATEGORIES_TREE] (state, payload) {
-        state.categoriesTree = payload
-    },
-    [types.SPECIFICATIONS_INFO] (state, payload) {
-        state.specificationsInfo = payload
+    [types.PRODUCTS_AUDIT_TREE] (state, payload) {
+        state.productsAuditListInfo = payload
     }
 }
 
 const actions = {
-    async findAllCategory ({ commit }, params) {
-        const { data } = await findAllCategory(params)
-        commit(types.CATEGORIES_TREE, data)
-    },
-    async findSpecifications ({ commit }, params) {
-        const { data } = await findSpecifications(params)
-        commit(types.SPECIFICATIONS_INFO, data)
+    // 商品审核分页列表
+    async findAuditProducts ({ commit }, params) {
+        const { data } = await findAuditProducts(params)
+        commit(types.PRODUCTS_AUDIT_TREE, data)
     }
 }
 

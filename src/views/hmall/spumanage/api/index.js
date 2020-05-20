@@ -1,9 +1,6 @@
 import axios from 'axios'
 import { B2bUrl, interfaceUrl } from '@/api/config'
 
-// 商品列表
-// export const findProducts = (params) => axios.get(B2bUrl + 'product/api/boss/products/', { params })
-export const findProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/page', { params })
 // 商品上下架
 export const updateProductStatus = (params) => axios.put(B2bUrl + 'product/api/boss/products/status', params)
 // 获取商品来源
@@ -69,9 +66,7 @@ export const auditSpu = (params) => axios.put(`product/api/spu/boss/audit`, para
 // 下拉可选品牌
 export const getBrands = (params) => axios.get(`product/api/brands/select-brands`, { params })
 
-/**
- * 2020-05 商品改造
- */
+/* 2020-05 商品改造 start */
 // 新建商品spu
 export const saveSpu = (params) => axios.post(B2bUrl + 'product/api/spu', params)
 // 模糊查询品牌
@@ -80,3 +75,8 @@ export const findBrands = (params) => {
 }
 // 根据2级类目 查询 所有属性
 export const findSpuAttr = (params) => axios.get(B2bUrl + `product/api/categories/specifications/${params.categoryId}`)
+
+// 商品审核列表
+export const findAuditProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/audit-page', { params })
+
+/* 2020-05 商品改造 end */
