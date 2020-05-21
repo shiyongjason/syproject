@@ -42,10 +42,7 @@
                     <strong>{{companyData.companyNum?parseFloat(companyData.companyNum).toFixed(0):0}}</strong>
                     <span>在线平台／家</span>
                 </div>
-                <div>
-                    <strong>{{companyData.shopNum?parseFloat(companyData.shopNum).toFixed(0):0}}</strong>
-                    <span>在线会员店／家</span>
-                </div>
+
             </div>
             <div class="overall-l-bottom">
                 <div class="tooltip">
@@ -68,7 +65,7 @@
                 ></div>
                 <div class="overallinfo">
                     <div><i>{{companyData.provinceNum?companyData.provinceNum:0}}</i>省,<i>{{companyData.cityNum?companyData.cityNum:0}}</i>城市</div>
-                    <div><i>{{companyData.companyNum?companyData.companyNum:0}}</i>平台公司,<i>{{companyData.shopNum?companyData.shopNum:0}}</i>会员店</div>
+                    <div><i>{{companyData.companyNum?companyData.companyNum:0}}</i>平台公司</div>
                     <div>在线规模<i>{{companyData.onlineScale|money(true)}}</i>万</div>
                     <div>平均规模<i>{{companyData.avgScale|money(true)}}</i>万</div>
                 </div>
@@ -77,7 +74,7 @@
         <div class="overall-right">
             <div class="overall-r-top">
                 <div class="sale-title"><span>前12个月销售趋势</span><span>统计时间：{{this.yearMonth[0]}}～{{this.yearMonth[this.yearMonth.length-1]}}
-                        <br>统计区域：{{saleData.statisticalArea == 0 ? '全国' : saleData.organizationShortName}}</span>
+                        <br>统计区域：{{saleData.organizationShortName}}</span>
                 </div>
                 <div
                     id="myChart"
@@ -85,7 +82,7 @@
                 ></div>
             </div>
             <div class="overall-r-bottom">
-                <div class="sale-title"><span>{{saleData.statisticalArea == 0 ? '全国' : saleData.organizationShortName}}销售占比</span><span>统计时间：{{params.startDate}}～{{params.endDate}}<br>统计区域：{{saleData.statisticalArea == 0 ? '全国' : saleData.organizationShortName}}</span></div>
+                <div class="sale-title"><span>{{ saleData.organizationShortName}}销售占比</span><span>统计时间：{{params.startDate}}～{{params.endDate}}<br>统计区域：{{saleData.organizationShortName}}</span></div>
                 <div class="piediv">
                     <div
                         class="piediv-fl"
