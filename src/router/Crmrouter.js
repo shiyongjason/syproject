@@ -41,6 +41,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/crmstatic/staticlist')
+        },
+        {
+            path: 'datatemp',
+            name: 'datatemp',
+            meta: {
+                title: '材料清单配置',
+                tagName: '材料清单配置',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/riskManage/dataTemplate.vue')
         }
     ]
 }
