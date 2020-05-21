@@ -25,7 +25,7 @@
                 <el-form-item label="点击后打开：" prop="redirectType">
                     <el-radio-group v-model="sendMessage.redirectType">
                         <el-radio :label="sendMessageRedirectType.app">应用</el-radio>
-                        <el-radio :label="sendMessageRedirectType.appUrl">应用内制定页面</el-radio>
+                        <el-radio :label="sendMessageRedirectType.appUrl">应用内指定页面</el-radio>
                         <el-radio :label="sendMessageRedirectType.h5Url">URL</el-radio>
                     </el-radio-group>
                 </el-form-item>
@@ -202,10 +202,12 @@ export default {
                     try {
                         if (this.$route.query.id) {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
+                            this.sendMessage.operateAccount = this.userInfo.phoneNumber
                             await updateCloudSendMessage(this.sendMessage)
                             this.$message.success('修改成功')
                         } else {
                             this.sendMessage.operateUserName = this.userInfo.employeeName
+                            this.sendMessage.operateAccount = this.userInfo.phoneNumber
                             await createCloudSendMessage(this.sendMessage)
                             this.$message.success('保存成功')
                         }
