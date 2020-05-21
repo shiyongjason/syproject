@@ -63,7 +63,7 @@ export const auditSpu = (params) => axios.put(`product/api/spu/boss/audit`, para
 
 /* 2020-05 商品改造 start */
 // 新建商品spu
-export const saveSpu = (params) => axios.post(B2bUrl + 'product/api/spu', params)
+export const saveSpuTemplate = (params) => axios.post(B2bUrl + 'product/api/spu/template', params)
 // 模糊查询品牌
 export const findBrands = (params) => {
     return axios.get(B2bUrl + 'product/api/brands/search', { params })
@@ -88,5 +88,8 @@ export const templateDisable = (params) => axios.put(B2bUrl + 'product/api/spu/t
 
 // 批量启用spu模板
 export const templateEnable = (params) => axios.put(B2bUrl + 'product/api/spu/template/enable', params)
+
+// 查询spu详情
+export const findSpudetail = (params) => axios.get(B2bUrl + `product/api/template/${params.spuTemplateId}`)
 
 /* 2020-05 商品改造 end */

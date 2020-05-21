@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.brandName" filterable placeholder="请选择">
+                        <el-select v-model="queryParams.brandId" filterable placeholder="请选择">
                             <el-option
                             v-for="item in brandOptions"
                             :key="item.value"
@@ -103,8 +103,8 @@ export default {
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品名称', prop: 'name', width: '200' },
                 { label: '型号', prop: 'model' },
-                { label: '类目', prop: 'categoryName', width: '200' },
-                { label: '维护人', prop: 'updateBy' },
+                { label: '类目', prop: 'categoryPathName', width: '200' },
+                { label: '维护人', prop: 'operator' },
                 { label: '维护时间', prop: 'lastModifyTime', width: '200' },
                 { label: '状态', prop: 'isEnable' }
             ],
@@ -134,9 +134,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+    // activated () {
+    //     this.searchList()
+    // },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -196,13 +196,7 @@ export default {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'add' } })
         },
         onEditSpu (val) {
-            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuCode: val.spuCode, status: val.status } })
-        },
-        backFindcode (val) {
-            this.queryParams.merchantCode = val.value.selectCode
-        },
-        backFindbrand (val) {
-            this.queryParams.brandName = val.value.selectCode
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
         }
     },
     beforeRouteEnter (to, from, next) {

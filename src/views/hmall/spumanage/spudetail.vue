@@ -10,13 +10,13 @@
                     {{form.spuCode}}
                 </el-form-item>
                 <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'|| operate=='audit'">
-                    {{categoryIdName}}
+                    {{form.categoryIdName}}
                 </el-form-item>
                 <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'" ref="brandId">
-                    {{brandName}}
+                    {{form.brandName}}
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification" style="width: 460px;" ref="specification" v-if="operate=='modify'||operate=='audit'">
-                    <el-input v-model="form.specification" :disabled="operate=='modify'||operate=='audit'"></el-input>
+                <el-form-item label="商品型号：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
+                    <el-input v-model="form.model" :disabled="operate=='modify'||operate=='audit'"></el-input>
                 </el-form-item>
                 <!-- 更新或者审核 end  -->
 
@@ -24,16 +24,23 @@
                     <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
                 </el-form-item>
                 <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
-                    <!-- <HAutocomplete ref="HAutocomplete" :selectArr="relationBrand" v-if="relationBrand" @back-event="backFindBrand"  /> -->
+                    <el-select v-model="form.brandId" filterable placeholder="请选择">
+                        <el-option
+                        v-for="item in brandOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="商品型号：" prop="specification" style="width: 460px;" ref="specification">
+                <el-form-item label="商品型号：" prop="model" style="width: 460px;">
                     <el-input placeholder="" maxlength="50" v-model="form.model">
                     </el-input>
                 </el-form-item>
 
                 <el-form-item label="商品名称：" style="width: 460px;">
-                    <el-input placeholder="" maxlength="100" v-model="form.spuName" :disabled="operate=='audit'">
-                        <template slot="prepend">{{(brandName ? brandName : '')}}</template>
+                    <el-input placeholder="" maxlength="100" v-model="form.name" :disabled="operate=='audit'">
+                        <template slot="prepend">{{brandName}}</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="reqPictureList" ref="reqPictureList">
@@ -120,23 +127,18 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { findSpuAttr, saveSpu, findSpudetails, putSpu, auditSpu, findBrands } from './api/index'
+import { findSpuAttr, saveSpuTemplate, findSpudetail, putSpu, auditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'spudetail',
     data () {
         return {
             form: {
-                id: '',
                 brandId: '',
                 categoryId: '',
                 createBy: '',
-                merchantCode: 'top',
-                merchantName: 'BOSS',
-                specification: '',
-                spuCode: this.$route.query.spuCode,
-                spuName: '',
+                model: '',
+                name: '',
                 status: '',
                 updateBy: '',
                 reqDetailList: [{
@@ -171,14 +173,14 @@ export default {
                 categoryId: [
                     { required: true, whitespace: true, message: '请选择商品类目' }
                 ],
-                specification: [
+                model: [
                     { required: true, whitespace: true, message: '请填写规格/型号', trigger: 'blur' }
                 ],
                 productName: [
                     { required: true, whitespace: true, message: '请填写商品名称', trigger: 'blur' }
                 ],
                 brandId: [
-                    { required: true, whitespace: true, message: '请选择商品品牌' }
+                    { type: 'number', required: true, whitespace: true, message: '请选择商品品牌' }
                 ],
                 reqPictureList: [
                     { required: true, message: '请选择商品主图' }
@@ -187,7 +189,6 @@ export default {
             pictureContainer: [], // 图片列表
             operate: this.$route.query.type,
             categorySelect: [],
-            brandName: '',
             relationBrand: [],
             deepForm: {},
             categoryIdName: '',
@@ -209,18 +210,10 @@ export default {
             specList: []
         }
     },
-    components: {
-        HAutocomplete
-    },
     watch: {
         pictureContainer (val) {
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
-            })
-        },
-        'form.specification' (val) {
-            this.$nextTick(() => {
-                if (val) this.$refs['specification'].clearValidate()
             })
         },
         'form.brandId' (val) {
@@ -233,9 +226,16 @@ export default {
         ...mapGetters('category', {
             categoryOptions: 'categoryOptions'
         }),
+        ...mapGetters('brand', {
+            brandOptions: 'brandOptions'
+        }),
         ...mapState({
             userInfo: state => state.userInfo
         }),
+
+        brandName () {
+            return this.brandOptions.find(v => v.value === this.form.brandId) ? this.brandOptions.find(v => v.value === this.form.brandId).label : ''
+        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -257,24 +257,38 @@ export default {
         uploadImgName () {
             return 'multiFile'
         },
-        spuBo () {
+        spuTemplateBo () {
             return {
                 brandId: this.form.brandId || '',
-                categoryId: this.form.categoryId[2] || '',
+                categoryId: this.form.categoryId || '',
                 detail: this.form.reqDetailList[0].content || '',
-                id: this.form.id || '',
+                id: this.$route.query.spuId || '',
                 imgUrls: this.form.reqPictureList.map(v => v.pictureUrl).join() || '',
-                merchantCode: 'top',
-                merchantName: 'BOSS',
+                isEnable: this.form.isEnable || '',
                 model: this.form.model || '',
-                name: this.form.name || ''
+                name: this.form.name || '',
+                specifications: this.form.specifications || [],
+                operator: this.userInfo.employeeName
             }
         }
 
     },
+    async mounted () {
+        this.findAllCategory()
+        this.findAllBrands()
+    },
+    activated () {
+        if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
+            this.findSpuDetailAsync(this.$route.query.spuTemplateId)
+        }
+        // this.deepForm = deepCopy(this.form)
+    },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
+        ]),
+        ...mapActions('brand', [
+            'findAllBrands'
         ]),
         ...mapActions({
             findCategoryList: 'findCategoryList',
@@ -290,17 +304,6 @@ export default {
         async findSpuAttr (categoryId) {
             const { data: { specifications } } = await findSpuAttr({ categoryId })
             this.form.reqParameterList = deepCopy(specifications)
-        },
-
-        // 模糊查询品牌
-        async findRelationBrand (val) {
-            this.form.brandId = ''
-            const { data } = await findBrands({ brandName: '' })
-            const brandList = []
-            data && data.forEach(item => {
-                brandList.push({ value: item.name, selectCode: item.code })
-            })
-            this.relationBrand = brandList
         },
 
         // 品牌选中后的回调
@@ -354,13 +357,12 @@ export default {
             this.$refs['formmain'].validate(async (valid) => {
                 if (valid) {
                     if (this.operate == 'add') {
-                        // await saveSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName })
-                        console.log(this.form)
-                        // this.$message({
-                        //     type: 'success',
-                        //     message: '商品新建成功！'
-                        // })
-                        // this.$router.push({ path: '/hmall/spumange' })
+                        await saveSpuTemplate(this.spuTemplateBo)
+                        this.$message({
+                            type: 'success',
+                            message: '商品新建成功！'
+                        })
+                        this.$router.push({ path: '/hmall/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpu({ ...this.form, status: val || this.$route.query.status, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
                         this.$message({
@@ -414,41 +416,10 @@ export default {
         },
 
         // 查询spu的详情
-        async _findSpudetails () {
-            const { data } = await findSpudetails({ spuCode: this.form.spuCode })
-            this.form.specification = data.specification
-            this.form.spuName = data.spuName
-            this.form.brandId = data.brandId
-            this.brandName = data.brandName
-            this.form.id = data.id
-            this.categoryIdName = data.categoryNames
-            this.form.categoryId = data.categoryId
-            this.form.reqDetailList = data.spuDetailList
-            const oneToThreeCategorys = data.oneToThreeCategorys.reverse()
-            oneToThreeCategorys && oneToThreeCategorys.map(val => {
-                this.categoryIdArr.push(val.id)
-            })
-            this.categoryId = this.categoryIdArr[1]
-            const parameterList = data.parameterList
-            parameterList && parameterList.map(val => {
-                val.parameterId = val.id
-            })
-            this.form.reqParameterList = parameterList
-            this.pictureContainer = []
-            data.spuPictureList && data.spuPictureList.forEach((value, index) => {
-                this.pictureContainer.push({
-                    url: value.pictureUrl
-                })
-            })
+        async findSpuDetailAsync (spuTemplateId) {
+            const { data } = await findSpudetail({ spuTemplateId })
+            console.log(data)
         }
-    },
-    async mounted () {
-        this.findAllCategory()
-        // if (this.form.spuCode) {
-        //     this._findSpudetails()
-        // }
-        // this.deepForm = deepCopy(this.form)
-        this.findRelationBrand('')
     }
 }
 </script>

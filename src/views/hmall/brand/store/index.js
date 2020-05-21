@@ -31,7 +31,7 @@ const getters = {
                     }
                 })
             }
-        })
+        }) || []
     },
     cityOptions: state => {
         return state.chineseArea.map(item1 => {
@@ -45,7 +45,7 @@ const getters = {
                     }
                 })
             }
-        })
+        }) || []
     },
     // 品牌下拉选择器
     brandOptions: state => {
@@ -54,7 +54,7 @@ const getters = {
                 value: item.id,
                 label: item.name
             }
-        })
+        }) || []
     }
 }
 
