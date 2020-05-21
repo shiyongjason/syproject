@@ -120,7 +120,7 @@ export default [
                             isMenu: true,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/bazaar/marketStore.vue')
+                        component: () => import('@/views/hmall/spumanage/marketStore.vue')
                     }
                 ]
             },
@@ -482,7 +482,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/bazaar/marketStore.vue')
+                component: () => import('@/views/hmall/spumanage/marketStore.vue')
             },
             {
                 path: 'spumange',

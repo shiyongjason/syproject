@@ -3,9 +3,23 @@
         <div class="page-body">
             <div class="page-body-cont query-cont">
                 <div class="query-cont-col">
-                    <div class="query-col-title">商家名称：</div>
+                    <div class="query-col-title">SPU编码：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
+                        <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品名称：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品品牌：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
                         </el-input>
                     </div>
                 </div>
@@ -20,20 +34,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
-                        </el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
-                        </el-input>
-                    </div>
-                </div>
+
                 <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
@@ -42,10 +43,28 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">商品状态：</div>
+                    <div class="query-col-title">上架状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.onMarket" style="width: 100%">
-                            <el-option :label='item.name' :value='item.value' :key="index" v-for="(item, index) in statusArr"></el-option>
+                            <el-option
+                                v-for="item in shelfStatus"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">是否共享：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.onMarket" style="width: 100%">
+                            <el-option
+                                v-for="item in shareStatus"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
                         </el-select>
                     </div>
                 </div>
@@ -102,11 +121,13 @@
 <script>
 import { findBazaarLists, findCategory } from './api/index'
 import { B2bUrl } from '@/api/config'
+import { SHELF_STATUS, SHARE_STATUS } from './const'
 export default {
     name: 'marketStore',
     data () {
         return {
-            statusArr: [{ name: '全部', value: '' }, { name: '上架', value: 1 }, { name: '下架', value: 2 }],
+            shelfStatus: SHELF_STATUS,
+            shareStatus: SHARE_STATUS,
             tableLabel: [
                 { label: '商品编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuFullName' },

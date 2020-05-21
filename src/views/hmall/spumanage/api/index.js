@@ -79,4 +79,11 @@ export const findSpuAttr = (params) => axios.get(B2bUrl + `product/api/categorie
 // 商品审核列表
 export const findAuditProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/audit-page', { params })
 
+/* ------------商品审核---------- */
+// 集市商品列表
+export const findBazaarList = (params) => axios.get(B2bUrl + 'product/api/market', { params })
+// 集市商品列表
+export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu', { params })
+/* ------------商品审核---------- */
+
 /* 2020-05 商品改造 end */
