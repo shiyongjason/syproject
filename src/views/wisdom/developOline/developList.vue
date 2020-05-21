@@ -5,7 +5,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
+                        <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                         </el-option>
                     </el-select>
                 </div>
@@ -246,7 +246,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import {
     developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
     updateDevelopsginInfo, triggerApply
@@ -313,7 +313,7 @@ export default {
                 selectName: ''
             },
             cityList: [],
-            branchList: [],
+            // branchList: [],
             platComList: [],
             provinceDataList: [],
             page: {
@@ -460,10 +460,16 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList, // 大区
+            branchList: state => state.branchList, // 分部
+            areaList: state => state.areaList // 区域
         })
     },
     methods: {
+        ...mapActions({
+            findAuthList: 'findAuthList'
+        }),
         isSuccess (response) {
             this.$message({
                 message: '批量导入成功！',
@@ -602,9 +608,10 @@ export default {
         },
         async findBranchListNew (val = '') {
             // 平台分部
-            const { data } = await findBranchList({ crmDeptCode: val })
-            this.branchList = data.data
-            this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
+            await this.findAuthList({ deptType: 'F', pkDeptDoc: val || this.userInfo.pkDeptDoc })
+            // const { data } = await findBranchList({ crmDeptCode: val })
+            // this.branchList = data.data
+            // this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
         async getSubsectionCode (val) {
             this.platComList = []

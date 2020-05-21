@@ -6,7 +6,7 @@
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
+                            <el-option v-for="item in regionList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                             </el-option>
                         </el-select>
                     </div>
@@ -15,7 +15,7 @@
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.subsectionCode" clearable placeholder="全部" :disabled="branchDisabled" @change='getSubsectionCode'>
-                            <el-option v-for="item in branchList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
+                            <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                             </el-option>
                         </el-select>
                     </div>
@@ -89,7 +89,7 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
 import platformSaleTable from './components/platformSaleTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -179,9 +179,9 @@ export default {
                 pageNumber: 1
             },
             tableData: [],
-            regionList: [], // 大区
-            branchList: [], // 分部
-            platList: [], // 平台公司
+            // regionList: [], // 大区
+            // branchList: [], // 分部
+            // platList: [], // 平台公司
             regionDisabled: false,
             branchDisabled: false,
             platDisabled: false,
@@ -191,7 +191,10 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList, // 大区
+            branchList: state => state.branchList, // 分部
+            areaList: state => state.areaList // 区域
         }),
         exportHref () {
             let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
@@ -208,10 +211,13 @@ export default {
         HAutocomplete
     },
     methods: {
+        ...mapActions({
+            findAuthList: 'findAuthList'
+        }),
         async onFindRegionList () {
-            const { data } = await findRegionList()
-            this.regionList = data.data
-            // this.regionList.pop()
+            // const { data } = await findRegionList()
+            // this.regionList = data.data
+            await this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc })
         },
         async onFindRegion (val) {
             const { data } = await findRegionList({ pkDeptdoc: val })
@@ -220,12 +226,7 @@ export default {
             }
         },
         async onFindBranchList (value) {
-            console.log(value)
-            const { data } = await findBranchList({ crmDeptCode: value })
-            this.branchList = data.data ? data.data : []
-            this.branchList.map((val, index) => {
-                this.subsectionCodeList.push(val.crmDeptCode)
-            })
+            await this.findAuthList({ deptType: 'F', pkDeptDoc: value || this.userInfo.pkDeptDoc })
         },
         async onFindPaltList (subsectionCode) {
             const params = { subsectionCode }
@@ -252,18 +253,12 @@ export default {
             this.queryParams.companyCode = ''
             this.subsectionCodeList = []
             await this.onFindBranchList(this.queryParams.regionCode)
-            this.queryParams.subsectionCode = ''
-            await this.queryCompanyByParams({ subsectionCodeList: this.subsectionCodeList }) // 根据大区获取平台公司
         },
         async getSubsectionCode () {
             // console.log('选择分部，获取平台公司')
             this.removeValue = !this.removeValue
             this.queryParams.companyCode = ''
-            if (this.queryParams.subsectionCode) {
-                await this.onFindPaltList(this.queryParams.subsectionCode)
-            } else {
-                await this.queryCompanyByParams({ subsectionCodeList: this.subsectionCodeList }) // 根据大区获取平台公司
-            }
+            await this.onFindPaltList(this.queryParams.subsectionCode)
         },
         async getPlatformSale (value) {
             const { data } = await getPlatformSale(value)
@@ -386,6 +381,25 @@ export default {
         }
     },
     async mounted () {
+        await this.onFindRegionList() // 大区
+        await this.onFindBranchList() // 分部
+        if (this.userInfo.deptType === this.deptType[1]) {
+            this.regionDisabled = true
+            this.queryParams.regionCode = this.userInfo.oldDeptCode
+            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
+        } else if (this.userInfo.deptType === this.deptType[0]) {
+            this.onFindPaltList() // 平台公司
+        } else if (this.userInfo.deptType === this.deptType[2]) {
+            this.regionDisabled = true
+            this.branchDisabled = true
+            this.regionInput = false
+            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
+            this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
+            let region = this.branchList.find((val) => {
+                return val.crmDeptCode === this.queryParams.subsectionCode
+            })
+            await this.onFindRegion(region.pkFathedept) // 根据分部找大区
+        }
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
     }
