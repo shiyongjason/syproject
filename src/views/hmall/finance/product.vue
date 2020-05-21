@@ -79,7 +79,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.productStatus">
+                        <el-select v-model="queryParams.orderProductStatus">
                             <el-option v-for="item in productStatusOptions" :label="item.label" :value="item.value" :key="item.key"></el-option>
                         </el-select>
                     </div>
@@ -149,7 +149,7 @@ export default {
                 source: '',
                 startPayTime: '',
                 endPayTime: '',
-                productStatus: ''
+                orderProductStatus: ''
             },
             categoryId: [],
             categoryOptions: []
