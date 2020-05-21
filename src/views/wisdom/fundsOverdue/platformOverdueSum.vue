@@ -1,0 +1,344 @@
+<template>
+    <div class="page-body">
+        <div class="page-body-cont query-cont">
+            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
+                <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
+                <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
+            </el-tabs>
+            <div class="query-cont-row">
+                <div class="query-cont-col" v-if="region">
+                    <div class="query-col-title">大区：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
+                <div class="query-cont-col" v-if="false">
+                    <div class="query-col-title">区域：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col flex-box-time" v-if="false">
+                    <div class="query-col-title">年份：</div>
+                    <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    </el-date-picker>
+                </div>
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
+                        <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
+                            <el-button type="primary" class='ml20' :loading='loading'>
+                                导入表格
+                            </el-button>
+                        </el-upload>
+                    </div>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                </div>
+            </div>
+        </div>
+        <div class="page-body-cont">
+            <div class="page-table overdueTable">
+                <div class="util">单位：万元</div>
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                </hosJoyTable>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
+import { departmentAuth } from '@/mixins/userAuth'
+import { interfaceUrl } from '@/api/config'
+import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
+import moment from 'moment'
+import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
+export default {
+    name: 'commitValue',
+    mixins: [departmentAuth],
+    components: { hosJoyTable, HAutocomplete },
+    data: function () {
+        return {
+            platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
+            platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
+            headersData: {
+                'refreshToken': sessionStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
+            accept: '.xlsx,.xls',
+            loading: false,
+            interfaceUrl: interfaceUrl,
+            selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                areaObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
+            queryParams: {
+                state: '1',
+                regionCode: '',
+                subRegionCode: '',
+                subsectionCode: '',
+                subsectionOldCode: '',
+                companyName: '',
+                year: moment().format('YYYY')
+            },
+            searchParams: {},
+            page: {
+                total: 0,
+                pageSize: 10,
+                pageNumber: 1
+            },
+            total: {},
+            tableData: [],
+            dialogFormVisible: false
+        }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList,
+            branchList: state => state.branchList,
+            areaList: state => state.areaList,
+            platformData: state => state.platformData
+        }),
+        column () {
+            return platformSummarySheet()
+        }
+    },
+    methods: {
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'D') {
+                this.queryParams.subsectionCode = ''
+                this.queryParams.subsectionOldCode = ''
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.branchObj = { ...obj }
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'Q') {
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
+        },
+        async backPlat (val, dis) {
+            // console.log(val, dis)
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                // 清空分部区域
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
+                })
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.crmDeptCode) {
+                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.crmDeptCode && this.linkage(dis)
+            } else if (dis === 'Q') {
+                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
+                if (val.value.selectCode) {
+                    this.findPlatformslist({ subregionCode: val.value.selectCode })
+                } else {
+                    let params = null
+                    if (this.queryParams.subsectionOldCode) {
+                        params = {
+                            subsectionCode: this.queryParams.subsectionOldCode
+                        }
+                    }
+                    this.findPlatformslist(params)
+                }
+                !val.value.selectCode && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+            }
+        },
+        onExport () {
+            exportCompanyOverdueExcel(this.searchParams)
+        },
+        handleClick () {
+            this.tableData = []
+            this.onReset()
+        },
+        onSearch () {
+            this.searchParams = {
+                ...this.queryParams,
+                ...this.page
+            }
+            this.onQuery()
+        },
+        async onQuery () {
+            const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
+            var data = await Promise.all(promiseArr).then((res) => {
+                if (!res[1].data) {
+                    res[1].data = platformSummarySheetTotal
+                }
+                res[1].data.misCode = '合计'
+                res[0].data.records.unshift(res[1].data)
+                return res[0].data
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
+            this.tableData = this.handleData(data.records)
+            this.tableData.map(i => {
+                if (i.planProportion != null) {
+                    // i.planProportion *= 100
+                    if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
+                    i.planProportion += '%'
+                }
+            })
+            this.page = {
+                total: data.total,
+                pageSize: data.size,
+                pageNumber: data.current
+            }
+        },
+        handleData (arr = []) {
+            return arr.map(i => {
+                if (!i.annualRepaymentPlan) {
+                    i = {
+                        ...i,
+                        ...annualRepaymentPlan
+                    }
+                } else {
+                    i = {
+                        ...i,
+                        ...i.annualRepaymentPlan
+                    }
+                }
+                return i
+            })
+        },
+        getList (val) {
+            this.searchParams = {
+                ...this.searchParams,
+                ...val
+            }
+            this.onQuery()
+        },
+        async onReset () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.$set(this.queryParams, 'regionCode', '')
+            this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'subRegionCode', '')
+            this.$set(this.queryParams, 'companyName', '')
+            this.$set(this.queryParams, 'year', moment().format('YYYY'))
+            this.$set(this.queryParams, 'pageNumber', 1)
+            this.$set(this.queryParams, 'pageSize', 10)
+            this.selectAuth.regionObj = { ...obj }
+            this.selectAuth.branchObj = { ...obj }
+            this.selectAuth.areaObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
+            await this.oldBossAuth()
+            this.onSearch()
+        },
+        isSuccess (response) {
+            this.$message({
+                message: '批量导入成功！',
+                type: 'success'
+            })
+            this.loading = false
+            this.onSearch()
+        },
+        isError (response) {
+            this.$message({
+                message: '批量导入失败，' + JSON.parse(response.message).message,
+                type: 'error'
+            })
+            this.loading = false
+        },
+        handleUpload (file) {
+            if (file.size / (1024 * 1024) > 100) {
+                this.$message({
+                    message: '附件要保持100M以内',
+                    type: 'warning'
+                })
+                return false
+            }
+            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
+            if (this.accept.lastIndexOf(fileSuffix) == -1) {
+                this.$message.error('格式不正确！')
+                return false
+            }
+            this.loading = true
+        }
+    },
+    async mounted () {
+        this.onSearch()
+        await this.oldBossAuth()
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+.upload-demo {
+    display: inline-block;
+}
+.overdueTable {
+    position: relative;
+    margin-top: 10px;
+}
+.util {
+    font-size: 10px;
+    position: absolute;
+    top: -16px;
+    right: 0;
+}
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
+}
+</style>
