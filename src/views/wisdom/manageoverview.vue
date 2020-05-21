@@ -71,7 +71,7 @@ export default {
             formData: {
                 endDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
                 startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
-                companyCode: '',
+                // companyCode: '',
                 regionCode: '',
                 subsectionCode: ''
             },
@@ -127,7 +127,7 @@ export default {
         }
     },
     async mounted () {
-        this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
+        // this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
         console.log(this.userInfo.deptType, this.deptType)
         // 如果 当前人大区 -1  总部 0  其他 1
         // if (this.userInfo.deptType === this.deptType[1]) {
