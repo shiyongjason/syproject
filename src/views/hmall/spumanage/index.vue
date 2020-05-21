@@ -3,66 +3,34 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">SPU编码：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入SPU编码" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <!-- <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input> -->
-                         <HAutocomplete :placeholder="'输入商品品牌'" @back-event="backFindbrand" :selectArr="brandList" v-if="brandList"  :remove-value='removeValue'/>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品完整度：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.integrity">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="完整" value="1">
-                            </el-option>
-                            <el-option label="不完整" value="0">
+                        <el-select v-model="queryParams.brandName" filterable placeholder="请选择">
+                            <el-option
+                            v-for="item in brandOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                             </el-option>
                         </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品状态：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.status">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="禁用" value="2">
-                            </el-option>
-                            <el-option label="启用" value="1">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品来源：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.merchantCode" placeholder="输入商品来源" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品名称：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.name" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -83,12 +51,6 @@
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量禁用</el-button>
                     <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量启用</el-button>
-                    <!-- <el-button type="primary" class="ml20" @click="onExport()">
-                        导出
-                    </el-button> -->
-                    <!-- <el-button type="primary" class="ml20" @click="dialogFormVisible = true">
-                        导入
-                    </el-button> -->
                 </div>
             </div>
         </div>
@@ -108,13 +70,11 @@
                 </template>
             </basicTable>
         </div>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapState, mapActions } from 'vuex'
+import { changeSpustatus } from './api/index'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
 export default {
@@ -123,103 +83,51 @@ export default {
         return {
             categoryIdArr: [],
             productSource: [],
-            brandList: [],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                spuCode: '',
-                spuName: '',
-                brandName: '',
-                specification: '',
-                categoryId: '',
                 brandId: '',
-                integrity: '',
-                status: '',
-                source: 0,
-                startTime: '',
-                endTime: '',
-                operator: '',
-                merchantCode: ''
+                categoryId: '',
+                model: '',
+                name: ''
             },
             copyParams: {},
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: 'SPU编码', prop: 'spuCode' },
                 { label: '品牌', prop: 'brandName' },
-                { label: '商品名称', prop: 'spuName', width: '200' },
-                { label: '型号', prop: 'specification' },
-                { label: '类目', prop: 'categoryNames', width: '200' },
-                { label: '完整度', prop: 'integrity' },
+                { label: '商品名称', prop: 'name', width: '200' },
+                { label: '型号', prop: 'model' },
+                { label: '类目', prop: 'categoryName', width: '200' },
                 { label: '来源', prop: 'merchantName' },
                 { label: '维护人', prop: 'updateBy' },
-                { label: '维护时间', prop: 'updateTime', width: '200' },
-                { label: '状态', prop: 'status' }
+                { label: '维护时间', prop: 'lastModifyTime', width: '200' },
+                { label: '状态', prop: 'isEnable' }
             ],
             rowKey: '',
-            multiSelection: [],
-            removeValue: false
+            multiSelection: []
         }
-    },
-    components: {
-        HAutocomplete
     },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
-                    if (beginDateVal) {
-                        return time.getTime() > beginDateVal
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() < beginDateVal
-                    }
-                }
-            }
-        },
         ...mapState({
-            userInfo: state => state.userInfo,
-            userInfo2: state => state.hmall.userInfo,
-            categoryList: state => state.hmall.categoryList
+            userInfo: state => state.userInfo
+        }),
+        ...mapState('spumanage', {
+            productsTemplateInfo: 'productsTemplateInfo'
+        }),
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
+        }),
+        ...mapGetters('brand', {
+            brandOptions: 'brandOptions'
         })
+    },
 
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('spumange')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'spudetail') {
-            clearCache('spumange')
-        }
-        next()
-    },
     async mounted () {
-        const { data } = await findBossSource({ withBoss: 1 })
-        this.productSource = data
-        // TODO 模糊搜索组件
-        this.productSource && this.productSource.map(item => {
-            item.value = item.sourceName
-            item.selectCode = item.sourceCode
-        })
-        const { data: brand } = await getBrands()
-        this.brandList = brand
-        const brandList = []
-        // TODO 模糊搜索组件
-        this.brandList && this.brandList.map((item, index) => {
-            brandList.push({ value: item, selectCode: item })
-        })
-        this.brandList = brandList
-        this.findCategoryList()
+        this.findAllCategory()
+        this.findAllBrands()
+
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
@@ -227,15 +135,20 @@ export default {
         this.searchList()
     },
     methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('brand', [
+            'findAllBrands'
+        ]),
+        ...mapActions('spumanage', [
+            'findProductsTemplate'
+        ]),
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
-            this.removeValue = true
             this.searchList()
         },
-        ...mapActions({
-            findCategoryList: 'findCategoryList'
-        }),
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.searchList()
@@ -245,26 +158,17 @@ export default {
             this.searchList()
         },
         productCategoryChange (val) {
-            this.queryParams.categoryId = val
+            this.queryParams.categoryId = val[val.length - 1]
         },
-        async  searchList () {
-            // this.removeValue = false
-            const { ...params } = this.queryParams
-            if (params.startTime) {
-                params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
-            }
-            if (params.endTime) {
-                params.endTime = this.$root.$options.filters.formatterTime(params.endTime)
-            }
-            if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
-            const { data } = await findProducts(params)
-            this.tableData = data.records
+        async searchList () {
+            await this.findProductsTemplate(this.queryParams)
+            this.tableData = this.productsTemplateInfo.records
+            console.log(this.tableData)
             this.paginationInfo = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
+                pageNumber: this.productsTemplateInfo.current,
+                pageSize: this.productsTemplateInfo.size,
+                total: this.productsTemplateInfo.total
             }
-            this.removeValue = false
         },
         async onChangeStatus (status) {
             let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
@@ -312,6 +216,16 @@ export default {
         backFindbrand (val) {
             this.queryParams.brandName = val.value.selectCode
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('spumange')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'spudetail') {
+            clearCache('spumange')
+        }
+        next()
     }
 }
 </script>

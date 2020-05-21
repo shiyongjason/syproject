@@ -1,13 +1,14 @@
 
 import * as types from './mutation-types'
-import { findAuditProducts, findBazaarLists } from '../api'
+import { findAuditProducts, findBazaarLists, findProductsTemplate } from '../api'
 
 const state = {
     productsAuditListInfo: {},
     specificationsInfo: {
         specifications: []
     },
-    productsBazaarListInfo: {}
+    productsBazaarListInfo: {},
+    productsTemplateInfo: {}
 }
 
 const getters = {
@@ -19,6 +20,9 @@ const mutations = {
     },
     [types.PRODUCTS_BAZAAR_INFO] (state, payload) {
         state.productsBazaarListInfo = payload
+    },
+    [types.PRODUCTS_TEMPLATE_INFO] (state, payload) {
+        state.productsTemplateInfo = payload
     }
 }
 
@@ -32,6 +36,11 @@ const actions = {
     async findBazaarLists ({ commit }, params) {
         const { data } = await findBazaarLists(params)
         commit(types.PRODUCTS_BAZAAR_INFO, data)
+    },
+    // 商品审核分页列表
+    async findProductsTemplate ({ commit }, params) {
+        const { data } = await findProductsTemplate(params)
+        commit(types.PRODUCTS_TEMPLATE_INFO, data)
     }
 }
 

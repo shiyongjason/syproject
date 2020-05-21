@@ -24,7 +24,7 @@
                     <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
                 </el-form-item>
                 <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="relationBrand" v-if="relationBrand" @back-event="backFindBrand"  />
+                    <!-- <HAutocomplete ref="HAutocomplete" :selectArr="relationBrand" v-if="relationBrand" @back-event="backFindBrand"  /> -->
                 </el-form-item>
                 <el-form-item label="商品型号：" prop="specification" style="width: 460px;" ref="specification">
                     <el-input placeholder="" maxlength="50" v-model="form.model">

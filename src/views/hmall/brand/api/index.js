@@ -1,7 +1,7 @@
 import { B2bUrl } from '@/api/config'
 import axios from 'axios'
 
-// 品牌列表
+// 品牌分页列表
 export const findBrandList = (params) => {
     return axios.get(B2bUrl + 'product/api/brands/page', {
         params
@@ -27,20 +27,9 @@ export const brandEnable = (params) => {
 export const brandDisable = (params) => {
     return axios.put(B2bUrl + 'product/api/brands/disable', params)
 }
-
-/*
-09-24 品牌区域
-By sunhuiyong
-*/
-
-// 新增品牌区域
-export const addBrandArea = (params) => {
-    return axios.post(B2bUrl + 'product/api/brandarea/add', params)
-}
-
-// 修改品牌区域
-export const updateBrandArea = (params) => {
-    return axios.post(B2bUrl + 'product/api/brandarea/update', params)
+// 所有品牌数组
+export const findAllBrands = () => {
+    return axios.get(B2bUrl + 'product/api/brands/list')
 }
 
 /*

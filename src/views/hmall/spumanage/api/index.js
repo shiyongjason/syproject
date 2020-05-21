@@ -63,9 +63,6 @@ export const findSpudetails = (params) => axios.get('product/api/spu/spu-edit-in
 // 查询spu详情
 export const auditSpu = (params) => axios.put(`product/api/spu/boss/audit`, params)
 
-// 下拉可选品牌
-export const getBrands = (params) => axios.get(`product/api/brands/select-brands`, { params })
-
 /* 2020-05 商品改造 start */
 // 新建商品spu
 export const saveSpu = (params) => axios.post(B2bUrl + 'product/api/spu', params)
@@ -84,5 +81,8 @@ export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu/b
 
 // (集市)商品批量下架
 export const offShlef = (params) => axios.put(B2bUrl + 'product/api/spu/off-shelves', params)
+
+// spu模板库列表
+export const findProductsTemplate = (params) => axios.get(B2bUrl + 'product/api/spu/template/page', { params })
 
 /* 2020-05 商品改造 end */

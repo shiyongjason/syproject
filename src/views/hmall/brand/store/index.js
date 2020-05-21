@@ -1,12 +1,13 @@
 
 import * as types from './mutation-types'
-import { findBrandList, findBrandAreaList, findBrandAreaDetail, findBrandDetail, getChiness } from '../api'
+import { findBrandList, findBrandAreaList, findBrandAreaDetail, findBrandDetail, getChiness, findAllBrands } from '../api'
 
 const state = {
     brandListInfo: {},
     brandAuthorizationInfo: {},
     brandAreaInfo: {},
     brandDetail: {},
+    brandAllArray: [],
     chineseArea: []
 }
 
@@ -45,6 +46,15 @@ const getters = {
                 })
             }
         })
+    },
+    // 品牌下拉选择器
+    brandOptions: state => {
+        return state.brandAllArray.map(item => {
+            return {
+                value: item.id,
+                label: item.name
+            }
+        })
     }
 }
 
@@ -60,6 +70,9 @@ const mutations = {
     },
     [types.BRAND_DETAIL] (state, payload) {
         state.brandDetail = payload
+    },
+    [types.BRAND_ALL_ARRAY] (state, payload) {
+        state.brandAllArray = payload
     },
     [types.CHINESE_AREA] (state, payload) {
         state.chineseArea = payload
@@ -82,6 +95,10 @@ const actions = {
     async findBrandDetail ({ commit }, params) {
         const { data } = await findBrandDetail(params)
         commit(types.BRAND_DETAIL, data)
+    },
+    async findAllBrands ({ commit }) {
+        const { data } = await findAllBrands()
+        commit(types.BRAND_ALL_ARRAY, data || [])
     },
     async getChiness ({ commit }, params) {
         const { data } = await getChiness(params)
