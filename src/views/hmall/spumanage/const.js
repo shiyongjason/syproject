@@ -12,13 +12,15 @@ export const SHELF_STATUS = [
 
 export const SHARE_STATUS = [
     { label: '全部', value: '' },
-    { label: '下架', value: false },
-    { label: '上架', value: true }
+    { label: '否', value: false },
+    { label: '是', value: true }
 ]
 
-export const AUDIT_STATUS_MAP = new Map([
-    [0, '待审核'],
-    [1, '审核通过'],
-    [2, '审核未通过'],
-    [3, '过期失效']
+export const SHELF_STATUS_MAP = new Map([
+    [false, '下架'],
+    [true, '上架']
+])
+export const SHARE_STATUS_MAP = new Map([
+    [false, '否'],
+    [true, '是']
 ])

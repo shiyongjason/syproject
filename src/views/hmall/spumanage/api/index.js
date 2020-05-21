@@ -79,11 +79,10 @@ export const findSpuAttr = (params) => axios.get(B2bUrl + `product/api/categorie
 // 商品审核列表
 export const findAuditProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/audit-page', { params })
 
-/* ------------商品审核---------- */
-// 集市商品列表
-export const findBazaarList = (params) => axios.get(B2bUrl + 'product/api/market', { params })
-// 集市商品列表
-export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu', { params })
-/* ------------商品审核---------- */
+// (集市)商品管理列表
+export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu/boss/manage-page', { params })
+
+// (集市)商品批量下架
+export const offShlef = (params) => axios.put(B2bUrl + 'product/api/spu/off-shelves', params)
 
 /* 2020-05 商品改造 end */

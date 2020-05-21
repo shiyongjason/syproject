@@ -111,7 +111,7 @@
 import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP } from './const'
 import { PAY_METHOD_OPTIONS } from '@/utils/const'
 import { findProductCategory } from '../shopManager/api/index'
-import { mapGetters, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
     data () {

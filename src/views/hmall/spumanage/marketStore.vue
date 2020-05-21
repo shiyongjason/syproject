@@ -24,28 +24,23 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">商品类目：</div>
-                    <div class="flex-wrap-cont">
-                        <el-select v-model="queryParams.categoryId" style="width: 100%">
-                            <el-option label="全部" value=""></el-option>
-                            <template v-for="(item, index) in category">
-                                <el-option :label='item.categoryName' :value='item.id' :key="index"></el-option>
-                            </template>
-                        </el-select>
+                    <div class="query-col-title">商品类目：</div>
+                    <div class="query-col-input">
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
 
                 <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.specification" placeholder="请输入商品型号">
+                        <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">上架状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.onMarket" style="width: 100%">
+                        <el-select v-model="queryParams.isOnShelf" style="width: 100%">
                             <el-option
                                 v-for="item in shelfStatus"
                                 :key="item.value"
@@ -58,7 +53,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">是否共享：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.onMarket" style="width: 100%">
+                        <el-select v-model="queryParams.isShared" style="width: 100%">
                             <el-option
                                 v-for="item in shareStatus"
                                 :key="item.value"
@@ -74,43 +69,33 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
+                        <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
+                        <el-button type="primary" class="ml20" @click="onOffShelves()">批量下架</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                        <el-button type="primary" class="ml20" @click="onImport()">导出</el-button>
                     </div>
                 </div>
             </div>
             <div class="page-body-cont">
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
-                    <template slot='skuRebateBoList' slot-scope="scope">
-                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-                            <div slot="content">
-                                <span v-if="scope.data.row.skuRebateBoList.length>0">
-                                    <p v-for="(item,index) in scope.data.row.skuRebateBoList" :key="index">
-                                        <i v-if="item.type==1" style="font-style:normal">直接返利{{item.discount}}%</i>
-                                        <i v-if="item.type==2" style="font-style:normal">满{{item.reachValue}}元返{{item.discount}}%</i>
-                                        <i v-if="item.type==3" style="font-style:normal">满{{item.reachValue}}件返{{item.discount}}%</i>
-                                    </p>
-                                </span>
-                                <span v-else>-</span>
-                            </div>
-                            <span>{{discountFunc(scope.data.row.skuRebateBoList)}}</span>
-                        </el-tooltip>
+                <basicTable
+                    :tableLabel="tableLabel"
+                    :tableData="tableData"
+                    :isPagination='true'
+                    :pagination='paginationInfo'
+                    @onSizeChange="onSizeChange"
+                    @onCurrentChange="onCurrentChange"
+                    isAction
+                    isMultiple
+                    :multiSelection.sync='multiSelection'
+                >
+                    <template slot="isOnShelf" slot-scope="scope">
+                        {{ shelfStatusMap.get(scope.data.row.isOnShelf) }}
                     </template>
-                    <template slot='commission' slot-scope="scope">
-                        <el-tooltip class="item" effect="dark" content="Top Center 提示文字" placement="top">
-                            <div slot="content">
-                                <span v-if="scope.data.row.commissionBoList.length>0">
-                                    <p v-for="(item,index) in scope.data.row.commissionBoList" :key="index">
-                                        <i style="font-style:normal">{{item.skuName}}佣金{{item.commission}}%</i>
-                                    </p>
-                                </span>
-                                <span v-else>-</span>
-                            </div>
-                            <span>{{commissionFunc(scope.data.row.commissionBoList)}}</span>
-                        </el-tooltip>
+                    <template slot="isShared" slot-scope="scope">
+                        {{ shareStatusMap.get(scope.data.row.isShared) }}
                     </template>
-                    <template slot='onMarket' slot-scope="scope">
-                        {{scope.data.row.onMarket==1?'上架':'下架'}}
+                    <template slot="action" slot-scope="scope">
+                        <!-- <el-button class="orangeBtn" @click="">查看</el-button> -->
+                        <el-button class="orangeBtn" v-if="scope.data.row.isOnShelf " @click="onOffShelves(scope.data.row.spuId)">下架</el-button>
                     </template>
                 </basicTable>
             </div>
@@ -119,129 +104,118 @@
 </template>
 
 <script>
-import { findBazaarLists, findCategory } from './api/index'
+import { offShlef } from './api/index'
 import { B2bUrl } from '@/api/config'
-import { SHELF_STATUS, SHARE_STATUS } from './const'
+import { SHELF_STATUS, SHARE_STATUS, SHELF_STATUS_MAP, SHARE_STATUS_MAP } from './const'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
     name: 'marketStore',
     data () {
         return {
             shelfStatus: SHELF_STATUS,
             shareStatus: SHARE_STATUS,
-            tableLabel: [
-                { label: '商品编码', prop: 'spuCode' },
-                { label: '商品名称', prop: 'spuFullName' },
-                { label: '品牌', prop: 'brandName' },
-                { label: '型号', prop: 'specification' },
-                { label: '商品类目', prop: 'categoryNames' },
-                { label: '商家名称', prop: 'merchantName' },
-                { label: '建议零售价', prop: 'retailPrice' },
-                { label: '销售价格', prop: 'sellPrice', event: true },
-                { label: '返利', prop: 'skuRebateBoList' },
-                { label: '佣金', prop: 'commission' },
-                { label: '商品库存', prop: 'inventory', colorLeave: { bound: 0, notReach: 'red', reach: '' } },
-                { label: '状态', prop: 'onMarket' }
-            ],
-            tableData: [],
-            searchParams: {},
+            shelfStatusMap: SHELF_STATUS_MAP,
+            shareStatusMap: SHARE_STATUS_MAP,
+            categoryIdArr: [],
+            initParams: {},
             queryParams: {
-                merchantName: '',
+                pageNumber: 1,
+                pageSize: 10,
+                spuCode: '',
                 spuName: '',
-                source: '',
                 brandName: '',
                 categoryId: '',
-                onMarket: '',
-                specification: '',
+                model: '',
+                merchantName: '',
+                isOnShelf: '',
+                isShared: '',
                 isOwnOperated: false
             },
-            paginationData: {
+            tableLabel: [
+                { label: '商品编码', prop: 'spuCode' },
+                { label: '商品名称', prop: 'spuName' },
+                { label: '品牌', prop: 'brandName' },
+                { label: '商品类目', prop: 'category' },
+                { label: '型号', prop: 'model' },
+                // { label: '销售价格', prop: 'categoryNames' },
+                { label: '上架状态', prop: 'isOnShelf' },
+                { label: '是否共享', prop: 'isShared' },
+                { label: '商品来源', prop: 'merchantName' }
+            ],
+            tableData: [],
+            paginationInfo: {
                 pageNumber: 1,
                 pageSize: 10
-                // total: 100
             },
-            category: []
+            multiSelection: []
         }
     },
-    methods: {
-        discountFunc (val) {
-            const arr = val.map(item => item.discount)
-            let result = [arr[0]]
-            for (let i = 1, len = arr.length; i < len; i++) {
-                arr[i] !== arr[i - 1] && result.push(arr[i])
-            }
-            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
-            else return result[0] + '%'
-        },
-        commissionFunc (val) {
-            const arr = val.map(item => item.commission)
-            let result = [arr[0]]
-            for (let i = 1, len = arr.length; i < len; i++) {
-                arr[i] !== arr[i - 1] && result.push(arr[i])
-            }
-            if (result.length > 1) return (result[0] + '%~' + result[result.length - 1] + '%')
-            else return result[0] + '%'
-        },
-        onQuery () {
-            const { ...params } = { ...this.queryParams }
-            this.searchParams = params
-            this.search()
-        },
-        onReset () {
-            this.$set(this.queryParams, 'merchantName', '')
-            this.$set(this.queryParams, 'spuName', '')
-            this.$set(this.queryParams, 'brandName', '')
-            this.$set(this.queryParams, 'source', '')
-            this.$set(this.queryParams, 'categoryId', '')
-            this.$set(this.queryParams, 'onMarket', '')
-            this.$set(this.queryParams, 'specification', '')
-            this.$set(this.paginationData, 'pageNumber', 1)
-            this.$set(this.paginationData, 'pageSize', 10)
-            this.$set(this.queryParams, 'isOwnOperated', false)
-            this.onQuery()
-        },
-        async search () {
-            const searchParams = {
-                ...this.searchParams,
-                ...this.paginationData
-            }
-            if (searchParams.pageSize == 0) searchParams.pageSize = 10
-            const { data } = await findBazaarLists(searchParams)
-            this.paginationData.pageNumber = data.current
-            this.paginationData.pageSize = data.size
-            this.paginationData.total = data.total
-            data.records.map(item => {
-                item.spuFullName = item.brandName + item.spuName
-            })
-            this.tableData = data.records
-        },
-        onSizeChange (val) {
-            this.paginationData.pageSize = val
-            this.search()
-        },
-        onCurrentChange (val) {
-            const { ...page } = val
-            this.paginationData = page
-            this.search()
-        },
-        async findCategory () {
-            const { data } = await findCategory()
-            this.category = data
-        },
-        onImport () {
-            window.location = B2bUrl + 'product/api/spu/spu-export?merchantName=' + this.queryParams.merchantName +
-                '&spuName=' + this.queryParams.spuName +
-                '&source=' + this.queryParams.source +
-                '&brandName=' + this.queryParams.brandName +
-                '&categoryId=' + this.queryParams.categoryId +
-                '&onMarket=' + this.queryParams.onMarket +
-                '&specification=' + this.queryParams.specification +
-                '&isOwnOperated=' + this.queryParams.isOwnOperated +
-                '&access_token=' + sessionStorage.getItem('tokenB2b')
-        }
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
+        }),
+        ...mapState('spumanage', {
+            productsBazaarListInfo: 'productsBazaarListInfo'
+        })
     },
     mounted () {
         this.onQuery()
-        this.findCategory()
+        this.findAllCategory()
+        this.initParams = { ...this.queryParams }
+    },
+    methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('spumanage', [
+            'findBazaarLists'
+        ]),
+        productCategoryChange (val) {
+            this.queryParams.categoryId = val[val.length - 1]
+        },
+        onQuery () {
+            this.search()
+        },
+        onReset () {
+            this.queryParams = { ...this.initParams }
+        },
+        // 下架，分单个下架和批量下架
+        async onOffShelves (spuId) {
+            console.log(spuId ? [spuId] : this.multiSelection)
+            // await offShlef({ spuIdList: spuId ? [spuId] : this.multiSelection })
+            this.$message.success('操作成功')
+        },
+        onExport () {
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无商品信息可导出！')
+            } else {
+                let url = ''
+                for (let key in this.queryParams) {
+                    url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                }
+                location.href = B2bUrl + 'product/api/spu/boss/manage-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
+            }
+        },
+        onSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.search()
+        },
+        onCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.search()
+        },
+        async search () {
+            await this.findBazaarLists(this.queryParams)
+            this.tableData = this.productsBazaarListInfo.records
+            this.paginationInfo = {
+                pageNumber: this.productsBazaarListInfo.current,
+                pageSize: this.productsBazaarListInfo.size,
+                total: this.productsBazaarListInfo.total
+            }
+        }
     }
 }
 </script>
