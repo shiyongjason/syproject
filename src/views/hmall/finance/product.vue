@@ -110,8 +110,8 @@
                 <template slot="childOrderStatus" slot-scope="scope">
                     {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
                 </template>
-                <template slot="childOrderStatus" slot-scope="scope">
-                    {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
+                <template slot="orderProductStatus" slot-scope="scope">
+                    {{ productStatusMap.get(scope.data.row.orderProductStatus) }}
                 </template>
             </basicTable>
         </div>
@@ -205,7 +205,7 @@ export default {
                 { label: '商品类目', prop: 'category' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '订单状态', prop: 'childOrderStatus' },
-                { label: '商品状态', prop: 'productStatus' },
+                { label: '商品状态', prop: 'orderProductStatus' },
                 { label: '订单渠道', prop: 'source' }
             ]
         }
