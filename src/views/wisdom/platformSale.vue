@@ -63,7 +63,7 @@
                     <div class="line ml5 mr5">-</div>
                     <el-date-picker v-model="queryParams.onlineTimeEnd" :editable="false" :picker-options="onlineTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery('btn')">
+                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
                         查询
                     </el-button>
                     <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
@@ -322,14 +322,14 @@ export default {
         },
         async onSizeChange (val) {
             this.platformLoading = true
-            this.queryParams.pageSize = val
-            await this.onQuery()
+            this.queryParamsTemp.pageSize = val
+            await this.onQuery(this.queryParamsTemp)
             this.platformLoading = false
         },
         async onCurrentChange (val) {
             this.platformLoading = true
-            this.queryParams.pageNumber = val
-            await this.onQuery()
+            this.queryParamsTemp.pageNumber = val
+            await this.onQuery(this.queryParamsTemp)
             this.platformLoading = false
         },
         async onChoose () {
@@ -342,11 +342,13 @@ export default {
                 return
             }
             this.total.type = 0
-            await this.onQuery()
+            await this.onQuery(this.queryParams)
             this.getPlatformSaleSum()
         },
-        async onQuery (event) {
+        async onQuery (params, event) {
             // if (this.userInfo.organizationType !== -1 && this.userInfo.organizationType !== 0 && this.userInfo.organizationType !== 1) return
+            // eslint-disable-next-line
+            this.queryParamsTemp = { ...params }
             // eslint-disable-next-line
             let start = /^\-?[0-9]*$/.test(this.queryParams.signScaleStart)
             // eslint-disable-next-line
@@ -358,7 +360,7 @@ export default {
                 })
                 return
             }
-            if (this.queryParams.saleTimeStart === null || this.queryParams.saleTimeEnd === null) {
+            if (params.saleTimeStart === null || params.saleTimeEnd === null) {
                 this.$message({
                     message: '时间不能为空哦',
                     type: 'warning'
@@ -375,9 +377,9 @@ export default {
                     arr.push(value.key)
                 }
             })
-
-            this.queryParams.onLineStatus = arr.join(',')
-            await this.getPlatformSale(this.queryParams)
+            const temp = { ...params }
+            temp.onLineStatus = arr.join(',')
+            await this.getPlatformSale(temp)
 
             if (event === 'btn') {
                 this.getPlatformSaleSum()
@@ -414,7 +416,7 @@ export default {
         //     this.platDisabled = true
         //     return true
         // }
-        await this.onQuery()
+        await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
         // this.queryCompanyByParams({subsectionCodeList: []}) // 平台公司
     }

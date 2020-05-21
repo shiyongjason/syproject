@@ -2,11 +2,16 @@
     <div class="drawer-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
+
+                  <p class="drawer-by">项目提交人：{{form.createBy}}</p>
                 <el-form-item label="经销商：">
-                    <el-input v-model="form.companyName" disabled></el-input>
+                  {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
-                    <el-input v-model="form.deptName" disabled></el-input>
+                      <el-select v-model="form.pkDeptDoc" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    <!-- <el-input v-model="form.deptName" disabled></el-input> -->
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
@@ -66,6 +71,10 @@
                     <el-input-number v-model="form.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
                     个月
                 </el-form-item>
+                <el-form-item label="预估借款时间：" prop="estimatedLoanTime">
+                    <el-date-picker v-model="form.estimatedLoanTime" value-format="yyyy-MM-dd" type="date" placeholder="选择日期">
+                    </el-date-picker>
+                </el-form-item>
                 <el-form-item label="预估赊销金额：" prop="predictLoanAmount">
                     <el-input v-model="form.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
                 </el-form-item>
@@ -104,20 +113,23 @@
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&form.status==2">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                         <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
                     </template>
+                    <!-- <template  v-if="hosAuthCheck(crm_goodwork_wanshan)&&form.status==10">
+                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">信息待完善</el-button>
+                    </template> -->
                     <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&form.status==4">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(crm_goodwork_qianyue)&&form.status==6">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="info" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(crm_goodwork_fangkuan)&&form.status==7">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(crm_goodwork_huikuan)&&form.status==8">
-                        <el-button type="info" v-if="isShowBtn(statusList[form.status-1])" @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
+                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">{{form.status&&statusList[form.status-1][form.status]}}</el-button>
                     </template>
 
                     <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
@@ -134,6 +146,7 @@
                     <el-radio-group v-model="statusForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
+                        <el-radio :label=2 v-if="aduitTitle=='审核'">退回</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
@@ -180,6 +193,7 @@ export default {
             crm_goodwork_huikuan: newAuth.CRM_GOODWORK_HUIKUAN, // 回款
             crm_goodwork_baocun: newAuth.CRM_GOODWORK_BAOCUN, // 保存
             crm_goodwork_chongzhi: newAuth.CRM_GOODWORK_CHOINGZHI, // 重置
+            crm_goodwork_wanshan: newAuth.CRM_GOODWORK_WANSHAN, // 重置
             loading: false,
             statusTxt: '',
             dialogVisible: false,
@@ -194,7 +208,8 @@ export default {
             },
             copyStatusForm: {},
             aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }],
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
             statusType: STATUS_TYPE,
             newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
@@ -257,20 +272,12 @@ export default {
                 loanMonth: [
                     { required: true, message: '请输入预估赊销周期', trigger: 'blur' }
                 ],
+                estimatedLoanTime: [
+                    { required: true, message: '请选择预估借款时间', trigger: 'change' }
+                ],
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }
                 ],
-                // payAcceptanceRemarkTxt: [
-                //     { required: true },
-                //     {
-                //         validator: (r, v, callback) => {
-                //             if (this.form.upstreamPayTypearr.indexOf('2') > -1 && !this.form.payAcceptanceRemark) {
-                //                 return callback(new Error('请输入承兑说明'))
-                //             }
-                //             return callback()
-                //         }
-                //     }
-                // ],
                 loanPayTypeRate: [
                     { required: true },
                     {
@@ -301,8 +308,9 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters('crmmanage', {
-            projectDetail: 'projectDetail'
+        ...mapGetters({
+            projectDetail: 'crmmanage/projectDetail',
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     watch: {
@@ -322,6 +330,9 @@ export default {
         handleClose () {
             this.$emit('backEvent')
         },
+        onLinkBus (val) {
+            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
+        },
         async onFindProjectDetail (val) {
             await this.findProjectDetail(val)
             // this.form = { ...this.projectDetail, ...{ upstreamPayTypearr: [] } }
@@ -332,7 +343,7 @@ export default {
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
-            console.log(value)
+
         },
         onCRemarkTxt () {
             if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
@@ -382,7 +393,8 @@ export default {
             await saveStatus(
                 { projectId: this.form.id,
                     status: status,
-                    updateBy: this.userInfo.employeeName }
+                    updateBy: this.userInfo.employeeName,
+                    createByMobile: this.userInfo.phoneNumber }
             )
             this.$message({
                 message: `${statusTxt}成功`,
@@ -395,6 +407,8 @@ export default {
                 this.statusType = this.newstatusType
             } else if (val == 6 || val == 7 || val == 8) {
                 this.statusType = this.newstatusType.slice(0, val - 3)
+            } else if (val == 10) {
+                this.statusType = this.newstatusType.slice(0, 1)
             } else {
                 this.statusType = this.newstatusType.slice(0, val - 2)
             }
@@ -431,8 +445,7 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
-            console.log('newval', newVal)
-            if (newVal == 3 || newVal == 5 || newVal == 9) {
+            if (newVal == 2 || newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
                 return true
@@ -467,6 +480,9 @@ export default {
             })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
             this.form.upstreamPayType = this.form.upstreamPayTypearr.join(',')
+            if (this.form.pkDeptDoc) {
+                this.form.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.form.pkDeptDoc).deptName || ''
+            }
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -490,6 +506,11 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+.drawer-by{
+    color: #b9b7b7;
+    padding: 0px 0 15px 50px;
+    font-size: 13px;
+}
 .project-form {
     padding: 10px 10px 150px 10px;
 }
