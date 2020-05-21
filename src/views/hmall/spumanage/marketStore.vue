@@ -184,9 +184,9 @@ export default {
         },
         // 下架，分单个下架和批量下架
         async onOffShelves (spuId) {
-            console.log(spuId ? [spuId] : this.multiSelection)
-            // await offShlef({ spuIdList: spuId ? [spuId] : this.multiSelection })
+            await offShlef({ spuIdList: spuId ? [spuId] : this.multiSelection.map(v => v.spuId) })
             this.$message.success('操作成功')
+            this.search()
         },
         onExport () {
             if (this.tableData.length <= 0) {
