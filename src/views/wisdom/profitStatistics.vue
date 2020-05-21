@@ -50,7 +50,6 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <!-- table show-summary :summary-method="getSummaries"-->
                 <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
@@ -465,7 +464,7 @@ export default {
         this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
         this.getList()
-        await this.newBossAuth(['F'])
+        await this.newBossAuth(['F', 'P'])
     }
 }
 </script>

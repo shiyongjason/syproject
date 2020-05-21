@@ -55,7 +55,8 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload
+                    :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -146,7 +147,11 @@ export default {
                 }
             },
             tableData: [],
-            paginationData: {},
+            paginationData: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            },
             interfaceUrl: interfaceUrl,
             companyList: [],
             cityList: [],
@@ -215,10 +220,10 @@ export default {
             }
         },
         backFindmiscode (val) {
-            this.searchParams.misCode = val.value.misCode
+            this.queryParams.misCode = val.value.misCode
         },
         backFindcitycode (val) {
-            this.searchParams.cityCode = val.value.cityCode
+            this.queryParams.cityCode = val.value.cityCode
         },
         handleSizeChange (val) {
             this.queryParamsTemp.pageSize = val

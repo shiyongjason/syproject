@@ -2,22 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable :disabled="branchDisabled" placeholder="全部">
-                            <el-option v-for="item in branchList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -60,10 +54,13 @@ import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { AUTH_WIXDOM_BRANCH_SALE_EXPORT } from '@/utils/auth_const'
-import { DEPT_TYPE } from './store/const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'brandSale',
+    components: { branchSaleTable, HAutocomplete },
+    mixins: [departmentAuth],
     data: function () {
         return {
             exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
@@ -108,16 +105,23 @@ export default {
                 pageNumber: 1
             },
             tableData: [],
-            regionList: [],
-            branchList: [],
-            regionDisabled: false,
-            branchDisabled: false,
-            deptType: DEPT_TYPE
+            selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList,
+            branchList: state => state.branchList
         }),
         exportHref () {
             let url = interfaceUrl + 'rms/subsection-sale/export?'
@@ -129,10 +133,25 @@ export default {
             return url
         }
     },
-    components: {
-        branchSaleTable
-    },
     methods: {
+        linkage () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.queryParams.subsectionCode = ''
+            this.selectAuth.branchObj = { ...obj }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                // 清空分部区域
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+            }
+        },
         async onFindRegionList () {
             const { data } = await findRegionList()
             this.regionList = data.data
@@ -247,26 +266,8 @@ export default {
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        await this.onFindRegionList() // 大区
-        await this.onFindBranchList() // 分部
-        if (this.userInfo.deptType === this.deptType[1]) {
-            this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.oldDeptCode
-            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.deptType === this.deptType[0]) {
-            // 总部可查看所有
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            this.regionDisabled = true
-            this.branchDisabled = true
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
-            // this.queryParams.subsectionCode = "1aad7c94-2830-11e8-ace9-000c290bec91"
-            let region = this.branchList.find((val) => {
-                return val.crmDeptCode === this.queryParams.subsectionCode
-            })
-            await this.onFindRegion(region.pkFathedept) // 根据分部找大区
-        }
         await this.onQuery(this.queryParams)
+        await this.newBossAuth(['D', 'F'])
         this.getBranchSaleSum()
     }
 }

@@ -55,7 +55,7 @@ export const hexoList = (params) => {
 
 // 分部目标管理列表
 export const findBrandTargetTable = (params) => {
-    return axios.get('rms/subsectiontarget/queryPageList', {
+    return axios.get('rms/subsection/target/page', {
         params
     })
 }
