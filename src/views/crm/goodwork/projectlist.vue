@@ -67,8 +67,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -85,30 +85,60 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData?fundMoneys(loanData):0}} 元 </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
+            <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
+
                 <template slot="predictLoanAmount" slot-scope="scope">
-                    {{fundMoneys(scope.data.row.predictLoanAmount)}}
+                    {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
                 <template slot="progress" slot-scope="scope">
-                    {{scope.data.row.type&&statusList[scope.data.row.status-2]['value']}}
+                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
+                    <!-- {{scope.data.row.status&&statusList[scope.data.row.status-2]['value']}} -->
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
+                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
             </basicTable>
         </div>
         <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></projectDrawer>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
+        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
+            <div class="project-record" v-if="title=='项目审批记录'">
+                <el-timeline>
+                    <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
+                        <el-card>
+                            <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
+                            <p><span>操作内容：</span> {{item.remark}}</p>
+                        </el-card>
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
+            <div class="project-plant" v-if="title=='工地打卡记录'">
+                <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
+                    <img :src="item.punchImageUrl" alt="">
+                </div>
+
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="预览" :visible.sync="imgVisible">
+            <div class="previewimg">
+    <img :src="dialogImageUrl" alt="" >
+            </div>
+
+        </el-dialog>
     </div>
 </template>
 <script>
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
@@ -134,7 +164,10 @@ export default {
                 projectName: '',
                 projectNo: '',
                 typeList: '',
-                originType: 1
+                originType: 1,
+                deptDoc: '',
+                jobNumber: '',
+                authCode: ''
             },
             status: [],
             typeArr: [],
@@ -160,7 +193,13 @@ export default {
             typeList: TYPE_LIST,
             processList: PROCESS_LIST,
             statusList: STATUS_LIST,
-            loanData: {}
+            loanData: {},
+            dialogVisible: false,
+            dialogRecord: [],
+            title: '',
+            imgVisible: false,
+            dialogImageUrl: '',
+            plantList: []
         }
     },
     components: {
@@ -207,28 +246,42 @@ export default {
                 }
             }
         },
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         ...mapGetters({
             projectData: 'crmmanage/projectData',
             projectLoan: 'crmmanage/projectLoan',
-            branchList: 'branchList'
+            crmdepList: 'crmmanage/crmdepList',
+            punchList: 'crmmanage/punchList',
+            projectRecord: 'crmmanage/projectRecord'
         })
     },
     async mounted () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
     },
-
     methods: {
         ...mapActions({
             findProjetpage: 'crmmanage/findProjetpage',
             findProjectLoan: 'crmmanage/findProjectLoan',
-            findBranch: 'findBranch'
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
+            findProjectrecord: 'crmmanage/findProjectrecord',
+            findPunchlist: 'crmmanage/findPunchlist'
+
         }),
         fundMoneys (val) {
             if (val) {
                 return filters.money(val)
             }
+        },
+        onFiterStates (val) {
+            return this.statusList.filter((v) => {
+                return v.key == val
+            })
         },
         onRest () {
             this.categoryIdArr = []
@@ -247,6 +300,18 @@ export default {
         },
         productCategoryChange (val) {
             this.queryParams.categoryId = val
+        },
+        onChooseDep () {
+            // this.queryParams.deptDocList = []
+            // const depList = []
+            // if (!this.queryParams.subsectionCode) {
+            //     this.branchArr.map(val => {
+            //         depList.push(val.pkDeptDoc)
+            //     })
+            //     this.queryParams.deptDocList = depList.join(',')
+            // } else {
+            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
+            // }
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
@@ -270,9 +335,26 @@ export default {
             this.drawer = false
             this.searchList()
         },
+        async onLookrecord (val, type) {
+            if (type == 1) {
+                this.title = '项目审批记录'
+                await this.findProjectrecord(val.id)
+                this.dialogRecord = this.projectRecord
+            } else {
+                this.title = '工地打卡记录'
+                await this.findPunchlist({ projectId: val.id })
+                this.plantList = this.punchList
+            }
+
+            this.dialogVisible = true
+        },
+        onHandlePictureCardPreview (val) {
+            this.dialogImageUrl = val.punchImageUrl
+            this.imgVisible = true
+        },
         async onGetbranch () {
-            await this.findBranch()
-            this.branchArr = this.branchList
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            this.branchArr = this.crmdepList
         }
     }
 }
@@ -286,5 +368,41 @@ export default {
 }
 .eltagtop {
     margin-bottom: 10px;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
+}
+.project-record {
+    padding: 10px 0;
+    height: 400px;
+    overflow-y: scroll;
+    /deep/ .el-card__body {
+        padding: 5px;
+        span {
+            color: grey;
+        }
+    }
+}
+.project-plant {
+    display: flex;
+    flex-wrap: wrap;
+    .plantimg {
+        margin: 5px;
+        width:95px;
+        height: 95px;
+        overflow: hidden;
+        img {
+            width: 95px;
+            height: 100%;
+        }
+    }
+}
+.previewimg{
+    text-align: center;
+    img{
+        width: 500px;
+        padding: 10px;
+    }
 }
 </style>

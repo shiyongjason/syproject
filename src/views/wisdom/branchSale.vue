@@ -28,7 +28,7 @@
                     <div class="line ml5 mr5">-</div>
                     <el-date-picker v-model="queryParams.endDate" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery('btn')">
+                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1}, 'btn')">
                         查询
                     </el-button>
                     <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
@@ -207,7 +207,7 @@ export default {
                 return
             }
             this.total.type = 0
-            await this.onQuery()
+            await this.onQuery(this.queryParams)
             this.getBranchSaleSum()
         },
         async getRegionCode () {
@@ -217,18 +217,19 @@ export default {
         },
         async onSizeChange (val) {
             this.branchLoading = true
-            this.queryParams.pageSize = val
-            await this.onQuery()
+            this.queryParamsTemp.pageSize = val
+            await this.onQuery(this.queryParamsTemp)
             this.branchLoading = false
         },
         async onCurrentChange (val) {
             this.branchLoading = true
-            this.queryParams.pageNumber = val.pageNumber
-            await this.onQuery()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            await this.onQuery(this.queryParamsTemp)
             this.branchLoading = false
         },
-        async onQuery (event) {
-            if (this.queryParams.startDate === null || this.queryParams.endDate === null) {
+        async onQuery (params, event) {
+            this.queryParamsTemp = { ...params }
+            if (params.startDate === null || params.endDate === null) {
                 this.$message({
                     message: '时间不能为空哦',
                     type: 'warning'
@@ -239,7 +240,7 @@ export default {
                 this.branchLoading = true
                 this.total.type = 0
             }
-            await this.getBranchSale(this.queryParams)
+            await this.getBranchSale(params)
             if (event === 'btn') {
                 this.getBranchSaleSum()
             }
@@ -265,7 +266,7 @@ export default {
             })
             await this.onFindRegion(region.pkFathedept) // 根据分部找大区
         }
-        await this.onQuery()
+        await this.onQuery(this.queryParams)
         this.getBranchSaleSum()
     }
 }

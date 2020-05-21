@@ -7,7 +7,9 @@ export const makeMenus = (Route, Data) => {
         if (value.path === '') {
             return true
         }
-        const hasAuth = Data.includes(value.path)
+        // const hasAuth = Data.includes(value.path)
+        // [{url:url,authCode:authCoe}] 匹配 val
+        const hasAuth = Data.filter(val => val.url == value.path).length > 0
         if (value.children) {
             value.children = makeMenus(value.children, Data)
         }
@@ -20,7 +22,7 @@ export const handleMenuResources = (data, resourceList) => {
     data && data.forEach(item => {
         const url = item.authUri || item.resourceAddress
         if (url) {
-            resourceList.push(url)
+            resourceList.push({ url: url, authCode: item.authCode })
         }
         if (item.childAuthList) {
             handleMenuResources(item.childAuthList, resourceList)
@@ -30,3 +32,5 @@ export const handleMenuResources = (data, resourceList) => {
         }
     })
 }
+
+// 根据后端返回的URI，去authCode
