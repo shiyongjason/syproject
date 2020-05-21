@@ -181,7 +181,7 @@ export default {
             tableData: [],
             // regionList: [], // 大区
             // branchList: [], // 分部
-            // platList: [], // 平台公司
+            platList: [], // 平台公司
             regionDisabled: false,
             branchDisabled: false,
             platDisabled: false,
