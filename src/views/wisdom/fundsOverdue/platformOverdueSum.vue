@@ -278,7 +278,7 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         isSuccess (response) {
@@ -314,7 +314,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>

@@ -221,13 +221,13 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
+            await this.newBossAuth(['D', 'F'])
             this.onSearch()
         }
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth(['D', 'F'])
     }
 }
 </script>
