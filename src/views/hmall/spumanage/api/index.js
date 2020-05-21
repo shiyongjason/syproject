@@ -56,8 +56,6 @@ export const findCategoryByParent = (params) => axios.get(`product/api/categorie
 
 // 更新商品spu
 export const putSpu = (params) => axios.put('product/api/spu', params)
-// 启用禁用spu
-export const changeSpustatus = (params) => axios.put('product/api/spu/boss/enable', params)
 // 查询spu详情
 export const findSpudetails = (params) => axios.get('product/api/spu/spu-edit-info', { params })
 // 查询spu详情
@@ -84,5 +82,11 @@ export const offShlef = (params) => axios.put(B2bUrl + 'product/api/spu/off-shel
 
 // spu模板库列表
 export const findProductsTemplate = (params) => axios.get(B2bUrl + 'product/api/spu/template/page', { params })
+
+// 批量禁用spu模板
+export const templateDisable = (params) => axios.put(B2bUrl + 'product/api/spu/template/disable', params)
+
+// 批量启用spu模板
+export const templateEnable = (params) => axios.put(B2bUrl + 'product/api/spu/template/enable', params)
 
 /* 2020-05 商品改造 end */

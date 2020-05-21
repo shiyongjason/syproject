@@ -184,6 +184,10 @@ export default {
         },
         // 下架，分单个下架和批量下架
         async onOffShelves (spuId) {
+            if (!spuId && this.multiSelection.length < 1) {
+                this.$message.warning('请先选择商品！')
+                return
+            }
             await offShlef({ spuIdList: spuId ? [spuId] : this.multiSelection.map(v => v.spuId) })
             this.$message.success('操作成功')
             this.search()

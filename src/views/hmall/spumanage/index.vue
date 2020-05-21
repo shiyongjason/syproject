@@ -49,8 +49,8 @@
                     <el-button type="primary" class="ml20" @click="gotoProductAdd">
                         新建商品SPU
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量禁用</el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量启用</el-button>
+                    <el-button type="primary" class="ml20" @click="onDisable()">批量禁用</el-button>
+                    <el-button type="primary" class="ml20" @click="onEnable()">批量启用</el-button>
                 </div>
             </div>
         </div>
@@ -60,20 +60,24 @@
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
                 </template>
-                <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
+                <template slot="isEnable" slot-scope="scope">
+                    <span :class="scope.data.row.isEnable===1?'colred':'colgry'">{{scope.data.row.isEnable===1?'启用':'禁用'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
-                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '禁用' : '启用'">
-                    </el-button>
+                    <template v-if="scope.data.row.isEnable ===1">
+                        <el-button type="primary" size="mini" plain   @click="onDisable(scope.data.row.id)">禁用</el-button>
+                    </template>
+                    <template v-else>
+                        <el-button size="mini" plain @click="onEnable(scope.data.row.id)">启用</el-button>
+                    </template>
                 </template>
             </basicTable>
         </div>
     </div>
 </template>
 <script>
-import { changeSpustatus } from './api/index'
+import { templateDisable, templateEnable } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
@@ -100,7 +104,6 @@ export default {
                 { label: '商品名称', prop: 'name', width: '200' },
                 { label: '型号', prop: 'model' },
                 { label: '类目', prop: 'categoryName', width: '200' },
-                { label: '来源', prop: 'merchantName' },
                 { label: '维护人', prop: 'updateBy' },
                 { label: '维护时间', prop: 'lastModifyTime', width: '200' },
                 { label: '状态', prop: 'isEnable' }
@@ -163,32 +166,30 @@ export default {
         async searchList () {
             await this.findProductsTemplate(this.queryParams)
             this.tableData = this.productsTemplateInfo.records
-            console.log(this.tableData)
             this.paginationInfo = {
                 pageNumber: this.productsTemplateInfo.current,
                 pageSize: this.productsTemplateInfo.size,
                 total: this.productsTemplateInfo.total
             }
         },
-        async onChangeStatus (status) {
-            let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
-            if (multiSelection.length < 1) {
-                this.$message({
-                    message: '请先选择商品！',
-                    type: 'warning'
-                })
+        // 批量禁用，根据是否传递单独id区分批量
+        async onDisable (templateId) {
+            if (!templateId && this.multiSelection.length < 1) {
+                this.$message.warning('请先选择SPU模板')
                 return
             }
-            const params = {
-                spuIdList: multiSelection,
-                status: status,
-                operator: this.userInfo.employeeName
+            await templateDisable({ spuTemplateIdList: templateId ? [templateId] : this.multiSelection.map(v => v.id) })
+            this.$message.success('操作成功')
+            this.searchList()
+        },
+        // 批量启用，根据是否传递单独id区分批量
+        async onEnable (templateId) {
+            if (!templateId && this.multiSelection.length < 1) {
+                this.$message.warning('请先选择SPU模板')
+                return
             }
-            await changeSpustatus(params)
-            this.$message({
-                message: params.status === 2 ? '禁用成功！' : '启用成功！',
-                type: 'success'
-            })
+            await templateEnable({ spuTemplateIdList: templateId ? [templateId] : this.multiSelection.map(v => v.id) })
+            this.$message.success('操作成功')
             this.searchList()
         },
         gotoProductAdd () {
@@ -196,19 +197,6 @@ export default {
         },
         onEditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuCode: val.spuCode, status: val.status } })
-        },
-        async  onChangeSpu (val) {
-            const params = {
-                spuIdList: [val.id],
-                status: val.status === 1 ? 2 : 1,
-                operator: this.userInfo.employeeName
-            }
-            await changeSpustatus(params)
-            this.$message({
-                message: params.status === 2 ? '禁用成功！' : '启用成功！',
-                type: 'success'
-            })
-            this.searchList()
         },
         backFindcode (val) {
             this.queryParams.merchantCode = val.value.selectCode

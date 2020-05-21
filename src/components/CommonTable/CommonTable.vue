@@ -215,7 +215,6 @@ export default {
             }
         },
         handleSelectionChange (val) {
-            console.log(val)
             this.$emit('update:multiSelection', val)
         },
         handleCurrentChange (val) {
