@@ -12,7 +12,7 @@ const state = {
 
 const getters = {
     // 省市区遍历成级联树结构
-    areaOptions: state => {
+    countryOptions: state => {
         return state.chineseArea.map(item1 => {
             return {
                 value: item1.provinceId,
@@ -27,6 +27,20 @@ const getters = {
                                 label: item3.name
                             }
                         })
+                    }
+                })
+            }
+        })
+    },
+    cityOptions: state => {
+        return state.chineseArea.map(item1 => {
+            return {
+                value: item1.provinceId,
+                label: item1.name,
+                children: item1.cities.map(item2 => {
+                    return {
+                        value: item2.cityId,
+                        label: item2.name
                     }
                 })
             }

@@ -79,20 +79,27 @@
                 <el-form-item label="到期日：" class="mb-5">
                     {{drawerMsg.expiryDate}}
                 </el-form-item>
-                <el-form-item label="关联类目：" class="mb-5">
-                    <div>
+                <el-form-item label="关联类目：" class="mb-20 area-cascader">
+                    <!-- <div>
                         <span class="category-tip">一级类目</span>
                         <span class="category-tip">二级类目</span>
                         <span class="category-tip">三级类目</span>
-                    </div>
-                    <el-cascader-panel
+                    </div> -->
+                    <!-- <el-cascader-panel
                         v-model="drawerMsg.categoryIdsArr"
                         @change="cascaderPanelChange"
                         :options="categoryOptions"
                         :props="categoryProps">
-                    </el-cascader-panel>
+                    </el-cascader-panel> -->
+                    <el-cascader
+                        :options="categoryOptions"
+                        :props="categoryProps"
+                        v-model="drawerMsg.categoryIdsArr"
+                        disabled
+                    >
+                    </el-cascader>
                 </el-form-item>
-                <el-form-item label="售卖区域：" class="mb-5 area-cascader">
+                <el-form-item label="售卖区域：" class="mb-20 area-cascader">
                     <el-cascader
                         :options="areaOptions"
                         :props="areaProps"
@@ -198,7 +205,7 @@ export default {
             brandAreaInfo: 'brandAreaInfo'
         }),
         ...mapGetters('brand', {
-            areaOptions: 'areaOptions'
+            areaOptions: 'cityOptions'
         }),
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
@@ -277,7 +284,7 @@ export default {
                 ...this.brandAreaInfo,
                 categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || [],
                 areaArr: this.brandAreaInfo.brandAuthorizationSalesAreaList.map(item => {
-                    return [item.provinceId, item.cityId, item.areaId]
+                    return [item.provinceId, item.cityId]
                 })
             }
             this.suggest = {
@@ -358,6 +365,9 @@ export default {
 .mb-5 {
     margin-bottom: 5px;
 }
+.mb-20 {
+    margin-bottom: 20px;
+}
 .brand-drawer {
     color: #000000;
     /deep/ .el-form-item__label {
@@ -374,11 +384,14 @@ export default {
     }
     .area-cascader {
         /deep/ .el-cascader__tags {
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
         /deep/ .el-cascader {
-            max-height: 200px;
+            max-height: 150px;
+        }
+        /deep/ .el-input {
+            width: 300px;
         }
     }
     .category-tip {

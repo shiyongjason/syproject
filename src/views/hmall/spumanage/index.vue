@@ -44,7 +44,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
+                        <el-input v-model="queryParams.merchantCode" placeholder="输入商品来源" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
