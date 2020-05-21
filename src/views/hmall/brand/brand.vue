@@ -65,6 +65,7 @@
             @openMark="openMark">
         </brandTable>
         <el-dialog
+            width="700px"
             title="品牌编辑"
             :visible.sync="dialogBrandEdit"
             :close-on-click-modal="false">
@@ -234,6 +235,7 @@ export default {
             })
             this.onQuery()
         },
+        // 图片上传成功回调
         readUrl (val) {
             this.form.logoUrl = val.imageUrl
         },

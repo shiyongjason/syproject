@@ -181,6 +181,7 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.initParams }
+            this.search()
         },
         // 下架，分单个下架和批量下架
         async onOffShelves (spuId) {

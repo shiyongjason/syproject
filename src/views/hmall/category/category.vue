@@ -255,6 +255,7 @@ export default {
             })
         },
 
+        // 输入框获取焦点就设置选中行，防止bug
         inputFocus (row) {
             this.current = row
         },

@@ -275,9 +275,12 @@ export default {
                 total: this.brandAuthorizationInfo.total
             }
         },
-        cascaderPanelChange () {
 
-        },
+        // 级联面板回调
+        // cascaderPanelChange () {
+
+        // },
+
         async showDrawer (scope, type) {
             await this.findBrandAreaDetail({ id: scope.id })
             this.drawerMsg = {

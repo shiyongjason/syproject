@@ -36,7 +36,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">商品来源：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue' />
+                        <el-input v-model="queryParams.merchantName" placeholder="输入商品来源" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -136,7 +136,7 @@ export default {
                 brandId: '',
                 auditStatus: '',
                 source: 1,
-                merchantCode: '',
+                merchantName: '',
                 createTimeStart: '',
                 createTimeEnd: '',
                 checked: true
@@ -260,9 +260,6 @@ export default {
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
-        },
-        backFindcode (val) {
-            this.queryParams.merchantCode = val.value.selectCode
         }
     },
     beforeRouteEnter (to, from, next) {
