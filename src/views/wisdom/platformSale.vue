@@ -90,7 +90,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findBranchList, findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
+import { findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
 import platformSaleTable from './components/platformSaleTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { DEPT_TYPE } from './store/const'
@@ -251,6 +251,7 @@ export default {
             // console.log('选择大区，获取分部和平台公司')
             this.removeValue = !this.removeValue
             this.queryParams.companyCode = ''
+            this.queryParams.subsectionCode = ''
             this.subsectionCodeList = []
             await this.onFindBranchList(this.queryParams.regionCode)
         },
@@ -383,23 +384,23 @@ export default {
     async mounted () {
         await this.onFindRegionList() // 大区
         await this.onFindBranchList() // 分部
-        if (this.userInfo.deptType === this.deptType[1]) {
-            this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.oldDeptCode
-            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.deptType === this.deptType[0]) {
-            this.onFindPaltList() // 平台公司
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            this.regionDisabled = true
-            this.branchDisabled = true
-            this.regionInput = false
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-            this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
-            let region = this.branchList.find((val) => {
-                return val.crmDeptCode === this.queryParams.subsectionCode
-            })
-            await this.onFindRegion(region.pkFathedept) // 根据分部找大区
-        }
+        // if (this.userInfo.deptType === this.deptType[1]) {
+        //     this.regionDisabled = true
+        //     this.queryParams.regionCode = this.userInfo.oldDeptCode
+        //     this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
+        // } else if (this.userInfo.deptType === this.deptType[0]) {
+        //     this.onFindPaltList() // 平台公司
+        // } else if (this.userInfo.deptType === this.deptType[2]) {
+        //     this.regionDisabled = true
+        //     this.branchDisabled = true
+        //     this.regionInput = false
+        //     this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
+        //     this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
+        //     let region = this.branchList.find((val) => {
+        //         return val.crmDeptCode === this.queryParams.subsectionCode
+        //     })
+        //     await this.onFindRegion(region.pkFathedept) // 根据分部找大区
+        // }
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
     }

@@ -111,7 +111,6 @@ export default {
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
             // this.findProvinceAndCity(0, code)
             this.platList = await this.findPaltList(code)
-
         } else if (this.userInfo.deptType == 0) {
             this.findCompanyList(this.searchParams)
             this.platList = await this.findPaltList()

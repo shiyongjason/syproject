@@ -248,7 +248,7 @@ import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
 import {
-    developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
+    developBasicInfoList, findPaltList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
     updateDevelopsginInfo, triggerApply
 } from '../api/index.js'
 import { clearCache, newCache } from '@/utils/index'
