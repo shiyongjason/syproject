@@ -52,6 +52,28 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/riskManage/dataTemplate.vue')
+        },
+        {
+            path: 'projectInformation',
+            name: 'projectInformation',
+            meta: {
+                title: '好橙工项目资料',
+                tagName: '好橙工项目资料',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/projectInformation/list.vue')
+        },
+        {
+            path: 'informationDetail',
+            name: 'informationDetail',
+            meta: {
+                title: '好橙工项目资料详情',
+                tagName: '好橙工项目资料详情',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/projectInformation/detail.vue')
         }
     ]
 }
