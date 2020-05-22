@@ -6,44 +6,47 @@
                     <h3>商品信息（spu）</h3>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <el-form-item label="商品编码：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
-                    {{form.spuCode}}
-                </el-form-item>
-                <el-form-item label="商品类目：" style="width: 460px;" v-if="operate=='modify'|| operate=='audit'">
-                    {{form.categoryIdName}}
-                </el-form-item>
-                <el-form-item label="商品品牌：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'" ref="brandId">
-                    {{form.brandName}}
-                </el-form-item>
-                <el-form-item label="商品型号：" style="width: 460px;" v-if="operate=='modify'||operate=='audit'">
-                    <el-input v-model="form.model" :disabled="operate=='modify'||operate=='audit'"></el-input>
-                </el-form-item>
+                <template v-if="operate=='modify'||operate=='audit'">
+                    <el-form-item label="商品类目：" style="width: 460px;">
+                        {{form.categoryPathName}}
+                    </el-form-item>
+                    <el-form-item label="商品品牌：" style="width: 460px;">
+                        {{form.name}}
+                    </el-form-item>
+                    <el-form-item label="商品型号：" style="width: 460px;">
+                        <el-input v-model="form.model" disabled></el-input>
+                    </el-form-item>
+                </template>
                 <!-- 更新或者审核 end  -->
 
-                <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
-                    <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
-                </el-form-item>
-                <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
-                    <el-select v-model="form.brandId" filterable placeholder="请选择">
-                        <el-option
-                        v-for="item in brandOptions"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="商品型号：" prop="model" style="width: 460px;">
-                    <el-input placeholder="" maxlength="50" v-model="form.model">
-                    </el-input>
-                </el-form-item>
+                <!-- 新增 start -->
+                    <template v-if="operate=='add'">
+                        <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
+                            <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
+                        </el-form-item>
+                        <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
+                            <el-select v-model="form.brandId" filterable placeholder="请选择">
+                                <el-option
+                                v-for="item in brandOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="商品型号：" prop="model" style="width: 460px;">
+                            <el-input placeholder="" maxlength="50" v-model="form.model">
+                            </el-input>
+                        </el-form-item>
+                    </template>
+                <!-- 新增 end -->
 
                 <el-form-item label="商品名称：" style="width: 460px;">
                     <el-input placeholder="" maxlength="100" v-model="form.name" :disabled="operate=='audit'">
                         <template slot="prepend">{{brandName}}</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="reqPictureList" ref="reqPictureList">
+                <el-form-item label="商品主图：" prop="imgUrls">
                     <ul class="picture-container">
                         <template v-if="pictureContainer.length>0">
                             <li v-for="(item,index) in pictureContainer" :key="index">
@@ -65,25 +68,26 @@
                     </div>
                 </el-form-item>
 
-                <div class="page-body-title" v-if="form.reqParameterList.length>0">
+                <div class="page-body-title" v-if="form.specifications.length>0">
                     <h3>商品参数信息</h3>
                 </div>
-                <div :key="index" v-for="(item,index) in form.reqParameterList" class="el-form-item" style="width: 460px;">
+                <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px;">
+                    <!--  -->
                     <el-form-item
                         :label="item.k"
-                        :prop="'reqParameterList.'+ index + '.value'"
+                        :prop="'specifications.'+ index + '.v'"
                         :rules="{
                             required: item.isRequired === 1 ? true : false ,
                             whitespace: true,
                             message: '请输入'+ item.k,
                             trigger: item.isCombobox === 1 ? 'blur' : ''
                     }">
-                        <el-select v-model="item.value" v-if="item.isCombobox === 1">
+                        <el-select v-model="item.v" v-if="item.isCombobox === 1">
                             <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.options">
                             </el-option>
                         </el-select>
                         <template v-else-if="item.isCombobox === 0">
-                            <el-input placeholder="" maxlength="25" v-model="item.value">
+                            <el-input placeholder="" maxlength="25" v-model="item.v">
                                 <template slot="append" v-if="item.unit">{{item.unit}}</template>
                             </el-input>
                         </template>
@@ -127,7 +131,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { findSpuAttr, saveSpuTemplate, findSpudetail, putSpu, auditSpu } from './api/index'
+import { findSpuAttr, saveSpuTemplate, findSpudetail, putSpuTemplate, auditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'spudetail',
@@ -136,17 +140,15 @@ export default {
             form: {
                 brandId: '',
                 categoryId: '',
-                createBy: '',
                 model: '',
                 name: '',
-                status: '',
-                updateBy: '',
+                isEnable: '',
                 reqDetailList: [{
                     content: '',
                     spuDetailTabId: 1
                 }],
-                reqParameterList: [],
-                reqPictureList: []
+                specifications: [],
+                imgUrls: ''
             },
             categoryIdArr: [],
             menus: [
@@ -182,12 +184,12 @@ export default {
                 brandId: [
                     { type: 'number', required: true, whitespace: true, message: '请选择商品品牌' }
                 ],
-                reqPictureList: [
+                imgUrls: [
                     { required: true, message: '请选择商品主图' }
                 ]
             },
             pictureContainer: [], // 图片列表
-            operate: this.$route.query.type,
+            operate: '',
             categorySelect: [],
             relationBrand: [],
             deepForm: {},
@@ -211,16 +213,15 @@ export default {
         }
     },
     watch: {
+        // 图片数组变化，更新form中的字段
         pictureContainer (val) {
-            this.$nextTick(() => {
-                if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
-            })
-        },
-        'form.brandId' (val) {
-            this.$nextTick(() => {
-                if (val) this.$refs['brandId'].clearValidate()
-            })
+            this.form.imgUrls = val.map(v => v.url).join()
         }
+        // 'form.brandId' (val) {
+        //     // this.$nextTick(() => {
+        //     if (val) this.$refs['brandId'].clearValidate()
+        //     // })
+        // }
     },
     computed: {
         ...mapGetters('category', {
@@ -262,8 +263,8 @@ export default {
                 brandId: this.form.brandId || '',
                 categoryId: this.form.categoryId || '',
                 detail: this.form.reqDetailList[0].content || '',
-                id: this.$route.query.spuId || '',
-                imgUrls: this.form.reqPictureList.map(v => v.pictureUrl).join() || '',
+                id: this.$route.query.spuTemplateId || '',
+                imgUrls: this.form.imgUrls || '',
                 isEnable: this.form.isEnable || '',
                 model: this.form.model || '',
                 name: this.form.name || '',
@@ -277,9 +278,27 @@ export default {
         this.findAllCategory()
         this.findAllBrands()
     },
+
+    // 因为keepAlive的原因，需要做很多重置工作
     activated () {
+        this.operate = this.$route.query.type
         if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
             this.findSpuDetailAsync(this.$route.query.spuTemplateId)
+        } else {
+            this.form = {
+                brandId: '',
+                categoryId: '',
+                model: '',
+                name: '',
+                isEnable: '',
+                reqDetailList: [{
+                    content: '',
+                    spuDetailTabId: 1
+                }],
+                specifications: [],
+                imgUrls: ''
+            }
+            this.pictureContainer = []
         }
         // this.deepForm = deepCopy(this.form)
     },
@@ -303,13 +322,13 @@ export default {
         // 根据2级类目 查询 所有属性
         async findSpuAttr (categoryId) {
             const { data: { specifications } } = await findSpuAttr({ categoryId })
-            this.form.reqParameterList = deepCopy(specifications)
-        },
-
-        // 品牌选中后的回调
-        backFindBrand (val) {
-            this.brandName = val.value.value
-            this.form.brandId = val.value.selectCode
+            // 这里必须把对象的v字段添上，不然编辑的表单验证过不去
+            this.form.specifications = deepCopy(specifications).map(v => {
+                return {
+                    ...v,
+                    v: ''
+                }
+            })
         },
 
         /* 上传图片开始 */
@@ -347,13 +366,6 @@ export default {
         /* 图片上传结束 */
 
         onSave (val) {
-            this.pictureContainer.forEach((value, index) => {
-                this.form.reqPictureList.push({
-                    isDefault: index === 0 ? 1 : 0,
-                    pictureUrl: value.url,
-                    sort: index
-                })
-            })
             this.$refs['formmain'].validate(async (valid) => {
                 if (valid) {
                     if (this.operate == 'add') {
@@ -364,12 +376,12 @@ export default {
                         })
                         this.$router.push({ path: '/hmall/spumange' })
                     } else if (this.operate == 'modify') {
-                        await putSpu({ ...this.form, status: val || this.$route.query.status, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
+                        await putSpuTemplate(this.spuTemplateBo)
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        this.$router.push({ path: '/hmall/spumange' })
+                        // this.$router.push({ path: '/hmall/spumange' })
                     } else {
                         if (this.auditForm.approveStatus == 1) {
                             this.auditForm.approveDesc = ''
@@ -418,7 +430,40 @@ export default {
         // 查询spu的详情
         async findSpuDetailAsync (spuTemplateId) {
             const { data } = await findSpudetail({ spuTemplateId })
-            console.log(data)
+            this.form = {
+                brandId: data.brandId,
+                categoryId: data.categoryId,
+                categoryPathName: data.categoryPathName,
+                model: data.model,
+                name: data.name,
+                isEnable: data.isEnable,
+                reqDetailList: [
+                    {
+                        content: data.detail,
+                        spuDetailTabId: 1
+                    }
+                ],
+                specifications: [],
+                // 处理图片的信息
+                imgUrls: ''
+            }
+            // 处理图片的信息，设置pictureContainer，watch函数自动更新imgUrls字段
+            this.pictureContainer = data.imgUrls.split(',').map(v => {
+                return {
+                    url: v
+                }
+            })
+
+            // 额外处理参数信息，而且需要强制更新视图
+            await this.findSpuAttr(data.twoCategoryId)
+            this.form.specifications.forEach(v1 => {
+                data.specifications.forEach(v2 => {
+                    if (v2.k === v1.k) {
+                        v1.v = v2.v
+                    }
+                })
+            })
+            this.$forceUpdate()
         }
     }
 }
