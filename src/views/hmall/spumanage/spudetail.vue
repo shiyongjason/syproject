@@ -109,16 +109,16 @@
                 </el-row>
                 <el-form ref="auditForm" :model="auditForm" :rules="auditrules" label-width="110px">
                     <el-row v-if="operate=='audit'">
-                        <el-form-item prop="approveStatus">
-                            <el-radio v-model="auditForm.approveStatus" label="1">审核通过</el-radio>
-                            <el-radio v-model="auditForm.approveStatus" label="2">审核不通过</el-radio>
+                        <el-form-item prop="auditStatus">
+                            <el-radio v-model="auditForm.auditStatus" label="1">审核通过</el-radio>
+                            <el-radio v-model="auditForm.auditStatus" label="2">审核不通过</el-radio>
                         </el-form-item>
-                        <el-form-item style="width: 460px;" v-if="auditForm.approveStatus==2" prop="approveDesc">
-                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.approveDesc">
+                        <el-form-item style="width: 460px;" v-if="auditForm.auditStatus==2" prop="auditOpinion">
+                            <el-input type="textarea" maxlength="200" :rows="3" placeholder="理由说明" v-model="auditForm.auditOpinion">
                             </el-input>
                         </el-form-item>
                         <el-form-item style="text-align: center">
-                            <el-button type="primary" @click="onAudit(1)">确定</el-button>
+                            <el-button type="primary" @click="onAudit()">确定</el-button>
                             <el-button @click="onBack()">返回</el-button>
                         </el-form-item>
                     </el-row>
@@ -131,7 +131,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { findSpuAttr, saveSpuTemplate, findSpudetail, putSpuTemplate, auditSpu } from './api/index'
+import { findSpuAttr, saveSpuTemplate, findSpuTemplateDetail, putSpuTemplate, findSpudetail, AuditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
     name: 'spudetail',
@@ -195,17 +195,17 @@ export default {
             deepForm: {},
             categoryIdName: '',
             auditForm: {
-                approveStatus: '',
-                approveDesc: '',
+                auditStatus: '',
+                auditOpinion: '',
                 operator: '',
                 spuCode: this.$route.query.spuCode
             },
             auditStatus: this.$route.query.auditStatus,
             auditrules: {
-                approveStatus: [
+                auditStatus: [
                     { required: true, whitespace: true, message: '请选择审核状态' }
                 ],
-                approveDesc: [
+                auditOpinion: [
                     { required: true, whitespace: true, message: '请填写理由说明' }
                 ]
             },
@@ -278,7 +278,9 @@ export default {
     activated () {
         this.operate = this.$route.query.type
         if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
-            this.findSpuDetailAsync(this.$route.query.spuTemplateId)
+            this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
+        } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
+            this.findSpuDetailAsync(this.$route.query.spuId)
         } else {
             this.form = {
                 brandId: '',
@@ -295,7 +297,6 @@ export default {
             }
             this.pictureContainer = []
         }
-        // this.deepForm = deepCopy(this.form)
     },
     methods: {
         ...mapActions('category', [
@@ -360,7 +361,7 @@ export default {
         },
         /* 图片上传结束 */
 
-        onSave (val) {
+        onSave () {
             this.$refs['formmain'].validate(async (valid) => {
                 if (valid) {
                     if (this.operate == 'add') {
@@ -376,16 +377,20 @@ export default {
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        // this.$router.push({ path: '/hmall/spumange' })
+                        this.$router.push({ path: '/hmall/spumange' })
                     } else {
-                        if (this.auditForm.approveStatus == 1) {
-                            this.auditForm.approveDesc = ''
+                        if (this.auditForm.auditStatus == 1) {
+                            this.auditForm.auditOpinion = ''
                         }
-                        await putSpu({ ...this.form, status: val, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
-                        await auditSpu(this.auditForm)
+                        await AuditSpu({
+                            ...this.auditForm,
+                            spuId: this.$route.query.spuId,
+                            imgUrls: this.form.imgUrls || '',
+                            specifications: this.form.specifications || []
+                        })
                         this.$message({
                             type: 'success',
-                            message: this.auditForm.approveStatus == 1 ? '商品审核成功！' : '商品审核不成功'
+                            message: this.auditForm.auditStatus == 1 ? '商品审核成功！' : '商品审核不成功'
                         })
                         this.$router.go(-1)
                     }
@@ -396,39 +401,60 @@ export default {
             this.auditForm.operator = this.userInfo.employeeName
             this.$refs['auditForm'].validate(async (valid) => {
                 if (valid) {
-                    if (val == 1) {
-                        await this.onSave(this.auditStatus)
-                    } else {
-
-                    }
+                    await this.onSave()
                 }
             })
         },
         onBack () {
-            if (JSON.stringify(this.form) != JSON.stringify(this.deepForm)) {
-                this.$confirm('确认不保存当前操作?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.setNewTags((this.$route.fullPath).split('?')[0])
-                    this.$router.go(-1)
-                }).catch(() => {
-
-                })
-            } else {
-                this.setNewTags((this.$route.fullPath).split('?')[0])
-                this.$router.go(-1)
-            }
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.go(-1)
         },
 
-        // 查询spu的详情
-        async findSpuDetailAsync (spuTemplateId) {
-            const { data } = await findSpudetail({ spuTemplateId })
+        // 查询spu模板的详情
+        async findSpuTemplateDetailAsync (spuTemplateId) {
+            const { data } = await findSpuTemplateDetail({ spuTemplateId })
             this.form = {
                 brandId: data.brandId,
                 categoryId: data.categoryId,
                 categoryPathName: data.categoryPathName,
+                model: data.model,
+                name: data.name,
+                reqDetailList: [
+                    {
+                        content: data.detail,
+                        spuDetailTabId: 1
+                    }
+                ],
+                specifications: [],
+                // 处理图片的信息
+                imgUrls: ''
+            }
+            // 处理图片的信息，设置pictureContainer，watch函数自动更新imgUrls字段
+            this.pictureContainer = data.imgUrls.split(',').map(v => {
+                return {
+                    url: v
+                }
+            })
+
+            // 额外处理参数信息，而且需要强制更新视图
+            await this.findSpuAttr(data.twoCategoryId)
+            this.form.specifications.forEach(v1 => {
+                data.specifications.forEach(v2 => {
+                    if (v2.k === v1.k) {
+                        v1.v = v2.v
+                    }
+                })
+            })
+            this.$forceUpdate()
+        },
+
+        // 查询spu商品的详情
+        async findSpuDetailAsync (spuId) {
+            const { data } = await findSpudetail({ spuId })
+            this.form = {
+                brandId: data.brandId,
+                categoryId: data.categoryId,
+                categoryPathName: data.categoryPathName || data.category, // 注意和模板详情的字段不一样
                 model: data.model,
                 name: data.name,
                 isEnable: data.isEnable,

@@ -74,8 +74,14 @@ export const findSpuAttr = (params) => axios.get(B2bUrl + `product/api/categorie
 // 商品审核列表
 export const findAuditProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/audit-page', { params })
 
-// (集市)商品批量下架
+// 商品批量审核通过
 export const spuAuditBatch = (params) => axios.put(B2bUrl + 'product/api/spu/audit-batch', params)
+
+// 查询spu商品详情
+export const findSpudetail = (params) => axios.get(B2bUrl + `product/api/spu/${params.spuId}`)
+
+// 审核spu商品
+export const AuditSpu = (params) => axios.put(B2bUrl + `product/api/spu/audit`, params)
 
 // (集市)商品管理列表
 export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu/boss/manage-page', { params })
@@ -92,8 +98,8 @@ export const templateDisable = (params) => axios.put(B2bUrl + 'product/api/spu/t
 // 批量启用spu模板
 export const templateEnable = (params) => axios.put(B2bUrl + 'product/api/spu/template/enable', params)
 
-// 查询spu详情
-export const findSpudetail = (params) => axios.get(B2bUrl + `product/api/spu/template/${params.spuTemplateId}`)
+// 查询spu模板详情
+export const findSpuTemplateDetail = (params) => axios.get(B2bUrl + `product/api/spu/template/${params.spuTemplateId}`)
 
 // 修改spu模板
 export const putSpuTemplate = (params) => axios.put(B2bUrl + `product/api/spu/template`, params)
