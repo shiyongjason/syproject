@@ -52,6 +52,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/riskManage/dataTemplate.vue')
+        },
+        {
+            path: 'tempdetail',
+            name: 'tempdetail',
+            meta: {
+                title: '材料清单配置',
+                tagName: '材料清单配置',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/riskManage/templateDetail.vue')
         }
     ]
 }
