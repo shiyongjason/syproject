@@ -13,7 +13,7 @@ const getters = {
     categoryOptions: state => {
         return state.categoriesTree.map(item1 => {
             return {
-                value: item1.id + '',
+                value: item1.id,
                 label: item1.name,
                 children: item1.subCategoryList.map(item2 => {
                     return {

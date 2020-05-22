@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <el-form ref="formmain" :model="form" :rules="rules" label-width="110px">
                 <div class="page-body-title">
-                    <h3>商品信息（spu）</h3>
+                    <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
                 </div>
                 <!-- 更新或者审核 start  -->
                 <template v-if="operate=='modify'||operate=='audit'">
@@ -217,11 +217,6 @@ export default {
         pictureContainer (val) {
             this.form.imgUrls = val.map(v => v.url).join()
         }
-        // 'form.brandId' (val) {
-        //     // this.$nextTick(() => {
-        //     if (val) this.$refs['brandId'].clearValidate()
-        //     // })
-        // }
     },
     computed: {
         ...mapGetters('category', {
@@ -323,7 +318,7 @@ export default {
         async findSpuAttr (categoryId) {
             const { data: { specifications } } = await findSpuAttr({ categoryId })
             // 这里必须把对象的v字段添上，不然编辑的表单验证过不去
-            this.form.specifications = deepCopy(specifications).map(v => {
+            this.form.specifications = deepCopy(specifications || []).map(v => {
                 return {
                     ...v,
                     v: ''

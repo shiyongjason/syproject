@@ -46,17 +46,6 @@ export default [
                         component: () => import('@/views/hmall/brand/brand.vue')
                     },
                     {
-                        path: 'brandAreaAudit',
-                        name: 'brandAreaAudit',
-                        meta: {
-                            title: '品牌区域审核',
-                            tagName: '品牌区域审核',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
-                    },
-                    {
                         path: 'attribute',
                         name: 'attribute',
                         meta: {
@@ -441,17 +430,6 @@ export default [
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
             },
             {
-                path: 'brandAreaAudit',
-                name: 'brandAreaAudit',
-                meta: {
-                    title: '品牌区域审核列表',
-                    tagName: '品牌区域审核列表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
-            },
-            {
                 path: 'brandAudit',
                 name: 'brandAudit',
                 meta: {
@@ -488,8 +466,8 @@ export default [
                 path: 'spumange',
                 name: 'spumange',
                 meta: {
-                    title: 'SPU列表',
-                    tagName: 'SPU列表',
+                    title: 'SPU模板列表',
+                    tagName: 'SPU模板列表',
                     isMenu: true,
                     icon: ''
                 },
