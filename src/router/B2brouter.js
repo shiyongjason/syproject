@@ -90,17 +90,6 @@ export default [
                         component: () => import('@/views/hmall/spumanage/index')
                     },
                     {
-                        path: 'supplier',
-                        name: 'supplier',
-                        meta: {
-                            title: '供应商管理',
-                            tagName: '供应商管理',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/suppliermanage/index')
-                    },
-                    {
                         path: 'marketStore',
                         name: 'marketStore',
                         meta: {
@@ -580,17 +569,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/membership/memberManage')
-            },
-            {
-                path: 'supplier',
-                name: 'supplier',
-                meta: {
-                    title: '供应商管理',
-                    tagName: '供应商管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/suppliermanage/index')
             }
         ]
     },
