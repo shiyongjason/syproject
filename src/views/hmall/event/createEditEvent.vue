@@ -555,9 +555,7 @@ export default {
         },
         /** 保存 */
         async onSave (status, mark = '') {
-            console.log(this.pictureContainer)
             this.form.image = this.pictureContainer.length > 0 ? this.pictureContainer[0].url : ''
-            console.log(this.form)
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
                 if (!valid) {

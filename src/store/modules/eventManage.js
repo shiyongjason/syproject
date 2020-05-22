@@ -56,7 +56,7 @@ const mutations = {
 
 const actions = {
     async findListSku ({ commit }, params) {
-        const { data } = await instance.get('/product/api/sku', { params })
+        const { data } = await instance.get('/product/api/market/spike/sku/page', { params })
         commit(types.SKU_DATA, data)
     },
     /** 活动详情 */

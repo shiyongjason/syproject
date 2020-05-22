@@ -80,10 +80,10 @@ export default {
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
                 { label: '品牌', prop: 'brandName' },
-                { label: '所属商家', prop: 'merchantName' },
+                { label: '所属商家', prop: 'sourceMerchantName' },
                 { label: '建议零售价', prop: 'retailPrice' },
                 { label: '销售价', prop: 'sellPrice' },
-                { label: '库存', prop: 'inventoryNum' }
+                { label: '库存', prop: 'availableStock' }
             ],
             paginationInfo: {},
             multiSelection: []
