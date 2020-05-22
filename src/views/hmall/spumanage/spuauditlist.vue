@@ -75,7 +75,7 @@
                         <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
-                        <el-button type="primary" class="ml20"          @click="onChangeStatus(1)">批量审核</el-button>
+                        <el-button type="primary" class="ml20" @click="onChangeStatus()">批量审核</el-button>
                         <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
                     </div>
                 </div>
@@ -101,7 +101,9 @@
                     {{scope.data.row.brandName}}
                 </template>
                 <template slot="auditStatus" slot-scope="scope">
-                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">{{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}</span>
+                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
+                        {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
+                    </span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
@@ -111,16 +113,13 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { spuAuditBatch } from './api/index'
 import { AUDIT_STATUS } from './const'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
 import { B2bUrl } from '@/api/config'
 export default {
-    components: {
-        HAutocomplete
-    },
     name: 'spuauditlist',
     data () {
         return {
@@ -255,8 +254,26 @@ export default {
                 location.href = B2bUrl + 'product/api/spu/boss/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
         },
-        onChangeStatus (val) {
-
+        // 批量审核通过
+        onChangeStatus () {
+            if (this.multiSelection.length < 1) {
+                this.$message.warning('请先选择商品！')
+                return
+            }
+            this.$confirm('是否批量审核通过', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await spuAuditBatch({ spuIdList: this.multiSelection.map(v => v.spuId), auditStatus: '1' })
+                this.$message.success('操作成功')
+                this.searchList()
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                })
+            })
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })

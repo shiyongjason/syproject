@@ -74,6 +74,9 @@ export const findSpuAttr = (params) => axios.get(B2bUrl + `product/api/categorie
 // 商品审核列表
 export const findAuditProducts = (params) => axios.get(B2bUrl + 'product/api/spu/boss/audit-page', { params })
 
+// (集市)商品批量下架
+export const spuAuditBatch = (params) => axios.put(B2bUrl + 'product/api/spu/audit-batch', params)
+
 // (集市)商品管理列表
 export const findBazaarLists = (params) => axios.get(B2bUrl + 'product/api/spu/boss/manage-page', { params })
 
