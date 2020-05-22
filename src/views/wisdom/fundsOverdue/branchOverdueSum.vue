@@ -36,7 +36,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" height="600px" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
