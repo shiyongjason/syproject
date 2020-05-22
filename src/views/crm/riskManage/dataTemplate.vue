@@ -5,7 +5,7 @@
                 <div class="page-risk_title">
                     材料清单配置：
                     <div class="page-risk_btn">
-                        好橙工项目材料清单 <el-button size="mini" type="primary">编辑</el-button>
+                        好橙工项目材料清单 <el-button size="mini" type="primary" @click="onEdittemp">编辑</el-button>
                     </div>
                 </div>
                 <div class="page-risk_title">
@@ -32,7 +32,9 @@ export default {
         }
     },
     methods: {
-
+        onEdittemp () {
+            this.$router.push({ path: '/goodwork/tempdetail' })
+        }
     }
 }
 </script>
@@ -40,10 +42,12 @@ export default {
 .page-risk {
     .page-risk_title {
         font-size: 20px;
+        padding: 20px;
         .page-risk_btn {
             font-size: 15px;
             margin: 20px;
         }
     }
 }
+
 </style>
