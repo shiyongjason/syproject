@@ -55,7 +55,7 @@ export const hexoList = (params) => {
 
 // 分部目标管理列表
 export const findBrandTargetTable = (params) => {
-    return axios.get('rms/subsection/target/page', {
+    return axios.get('rms/api/subsection/target/page', {
         params
     })
 }
@@ -75,7 +75,7 @@ export const findRegionList = (params) => {
 }
 // 获取平台目标列表
 export const findTableList = (params) => {
-    return axios.get('rms/companyTarget/queryPageList', {
+    return axios.get('rms/api/company/target/pages', {
         params
     })
 }
@@ -147,12 +147,12 @@ export const findSubsectionList = (params) => {
     })
 }
 export const getCompany = (params) => {
-    return axios.get('rms/companyTarget/queryCompanyShortName', {
+    return axios.get('rms/api/company/target/short-names', {
         params
     })
 }
 export const getCityList = (params) => {
-    return axios.get('rms/companyTarget/queryCity', {
+    return axios.get('rms/api/company/target/cities', {
         params
     })
 }

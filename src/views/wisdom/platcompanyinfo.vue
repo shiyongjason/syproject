@@ -5,12 +5,12 @@
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlatBranch" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat" :placeholder="'选择平台公司'"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">城市：</div>
@@ -75,9 +75,15 @@ export default {
                 subsectionCode: ''
                 // sortInfos: [{ 'field': 'updateTime', 'sort': 'desc' }]
             },
-            branchObj: {
-                selectCode: '',
-                selectName: ''
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
             },
             tableData: [],
             paginationData: {},
@@ -178,15 +184,30 @@ export default {
             this.platList = data.data.pageContent
             return this.platList
         },
-        backPlat (value) {
-            this.searchParams.companyCode = value.value.companyCode ? value.value.companyCode : ''
+        backPlat (val, dis) {
+            if (val.value && dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (val.value && dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
         },
-        async backPlatBranch (value) {
-            this.searchParams.subsectionCode = value.value.pkDeptDoc ? value.value.pkDeptDoc : ''
-            this.searchParams.provinceCode = ''
-            this.searchParams.cityCode = ''
-            this.searchParams.companyCode = ''
-            this.platList = await this.findPaltList(this.searchParams.subsectionCode)
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
         },
         exportTable () {
             var url = ''

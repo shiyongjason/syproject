@@ -5,13 +5,13 @@
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindmiscode" :placeholder="'选择公司简称'" />
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload
                     :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
@@ -120,10 +120,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            branchObj: {
-                selectCode: '',
-                selectName: ''
-            },
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
                 otherParams: {
@@ -153,9 +149,18 @@ export default {
                 pageSize: 10
             },
             interfaceUrl: interfaceUrl,
-            companyList: [],
             cityList: [],
-            deptType: DEPT_TYPE
+            deptType: DEPT_TYPE,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     components: {
@@ -164,18 +169,20 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            branchList: state => state.branchList
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
-    mounted () {
+    async mounted () {
         if (this.userInfo.oldDeptCode !== 'top') {
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        this.onFindTableList(this.searchParams)
-        this.getCompanyList()
+        // this.onFindTableList(this.searchParams)
+        // this.getCompanyList()
         this.getCityList()
+        await this.newBossAuth(['F', 'P'])
     },
     methods: {
         uploadProcess () {
@@ -249,7 +256,7 @@ export default {
             for (var key in this.searchParams) {
                 url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
             }
-            location.href = interfaceUrl + 'rms/companyTarget/export?' + url
+            location.href = interfaceUrl + 'rms/api/company/target/export?' + url
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
@@ -270,8 +277,29 @@ export default {
                 item.selectCode = item.cityCode
             })
         },
-        backPlat (val) {
-            this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+        backPlat (val, dis) {
+            if (val.value && dis === 'F') {
+                // this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (val.value && dis === 'P') {
+                // this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
         }
     }
 }
