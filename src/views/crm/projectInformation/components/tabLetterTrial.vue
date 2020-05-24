@@ -32,7 +32,7 @@
                         </p>
                         <p style="flex:0.5">{{item.date}}</p>
                         <p>
-                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
                             <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                         </p>
                     </div>
@@ -43,10 +43,12 @@
 </template>
 
 <script>
+import { handleImgDownload } from '../utils'
 export default {
     name: 'tabLetterTrial',
     data () {
         return {
+            handleImgDownload,
             dd: [
                 { fileUrl: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg', fileName: '备注：原则上工商局打印（工商章）.jpg', date: '2020-05-22 14:29:00' }
             ]

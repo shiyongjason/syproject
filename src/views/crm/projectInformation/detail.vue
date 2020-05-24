@@ -43,7 +43,7 @@
                             <p style="flex:0.5">{{item.date}}</p>
                             <p>
                                 <font class="fileItemDownLoad" @click="onDelete">删除</font>
-                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="getUrlBase64(item.fileUrl, item.fileName)">下载</font>
+                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
                                 <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                             </p>
                         </div>
@@ -91,6 +91,7 @@
 <script>
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
+import { handleImgDownload } from './utils'
 
 export default {
     name: 'detail',
@@ -99,6 +100,7 @@ export default {
     },
     data () {
         return {
+            handleImgDownload,
             dialogVisible: true,
             action: interfaceUrl + 'tms/files/upload',
             // 上传时附带的额外参数同el-upload 的 data
@@ -149,27 +151,6 @@ export default {
             }).catch(() => {
                 // do nothing
             })
-        },
-        getUrlBase64 (url, fileName, ext = '') {
-            let _this = this
-            var canvas = document.createElement('canvas') // 创建canvas DOM元素
-            var ctx = canvas.getContext('2d')
-            var img = new Image()
-            img.setAttribute('crossOrigin', 'anonymous')
-            img.src = url + '?time=' + new Date().valueOf()
-            img.onload = function () {
-                canvas.height = img.height // 指定画板的高度,自定义
-                canvas.width = img.width // 指定画板的宽度，自定义
-                ctx.drawImage(img, 0, 0) // 参数可自定义
-                var dataURL = canvas.toDataURL('image/' + ext) // 传递的自定义的参数
-                canvas = null
-                var downDom = document.createElement('a') // 创建DOM元素
-                downDom.setAttribute('href', dataURL)
-                downDom.setAttribute('download', fileName)
-                _this.$nextTick(() => {
-                    downDom.click()
-                })
-            }
         }
     },
     mounted () {
