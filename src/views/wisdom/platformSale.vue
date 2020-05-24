@@ -311,12 +311,12 @@ export default {
             this.platformLoading = false // 等待合计接口返回数据停止loading
         },
         async backPlat (val, dis) {
-            if (val.value && dis === 'D') {
-                this.queryParams.regionCode = val.value.pkDeptDoc
-                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc })
-                this.linkage(dis)
-            } else if (val.value && dis === 'F') {
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({
                     deptType: 'Q',
@@ -425,7 +425,7 @@ export default {
         }
     },
     async mounted () {
-        await this.newBossAuth()
+        this.newBossAuth()
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
     }

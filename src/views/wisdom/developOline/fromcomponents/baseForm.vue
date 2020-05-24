@@ -27,16 +27,19 @@
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
             <el-form-item label="分部：" prop="subsectionCode">
-                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择分部">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>
-                </el-select>
+                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                <!--                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择分部">-->
+<!--                    <el-option label="请选择" value=""></el-option>-->
+<!--                    <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>-->
+<!--                </el-select>-->
             </el-form-item>
             <el-form-item label="区域：">
-                <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in regionalismList" :key="item.pkDeptDoc"></el-option>
-                </el-select>
+                <HAutocomplete :selectArr="areaListNew" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+
+                <!--                <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">-->
+<!--                    <el-option label="请选择" value=""></el-option>-->
+<!--                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in regionalismList" :key="item.pkDeptDoc"></el-option>-->
+<!--                </el-select>-->
             </el-form-item>
             <el-form-item label="地址：" required>
                 <el-col :span="4">
@@ -143,8 +146,15 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
+import { departmentAuth } from '@/mixins/userAuth'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff } from '../../api/index'
 export default {
+    name: 'baseForm',
+    mixins: [departmentAuth],
+    components: {
+        HAutocomplete
+    },
     props: {
         baseForm: {
             type: Object,
@@ -175,7 +185,7 @@ export default {
                     { required: true, message: '输入公司简称', trigger: 'blur' }
                 ],
                 subsectionCode: [
-                    { required: true, message: '请选择分部', trigger: 'change' }
+                    { required: true, message: '请选择分部' }
                 ],
                 areaCode: [
                     { required: true, message: '请选择区', trigger: 'change' }
@@ -219,14 +229,33 @@ export default {
             mainSystemList: [],
             radio: '',
             oneimageUrl: '',
-            twoimageUrl: ''
+            twoimageUrl: '',
+            selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                areaObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
             regionalismList: state => state.areaList,
-            devDepList: state => state.devDepList
+            branchList: state => state.branchList,
+            areaListNew: state => state.areaList
         }),
         ...mapGetters({
             nestDdata: 'nestDdata',
@@ -256,22 +285,14 @@ export default {
             }
         }
     },
-    watch: {
-
-    },
     mounted () {
-        this.onFinddevlist()
         this.onFindNest()
         this.onFindCompanyType()
         this.onFindSystemType()
-        this.findAuthList({
-            deptType: 'Q',
-            pkDeptDoc: this.userInfo.pkDeptDoc
-        })
+        this.newBossAuth(['F', 'Q'])
     },
     methods: {
         ...mapActions({
-            getDevdeplist: 'getDevdeplist',
             findAuthList: 'findAuthList',
             findNest: 'findNest',
             findCompanyType: 'developmodule/findCompanyType',
@@ -306,10 +327,6 @@ export default {
                     this.$set(this.baseForm.developSignInfoCreateForm, 'generalManager', item.name)
                 }
             })
-        },
-        async onFinddevlist () {
-            await this.getDevdeplist({ organizationType: 1 })
-            this.companyData = this.devDepList.data
         },
         async onFindCompanyType () {
             await this.findCompanyType({ 'dictCateName': 'company_type' })
@@ -366,6 +383,7 @@ export default {
             this.baseForm.subregionName = this.baseForm.subregionCode && this.regionalismList.filter(item => item.pkDeptDoc == this.baseForm.subregionCode)[0].deptName
             this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
             this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
+           console.log(this.areaList)
             this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
             this.loading = true
             this.$refs.baseForm.validate(async (valid) => {
@@ -382,6 +400,38 @@ export default {
                     this.loading = false
                 }
             })
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.baseForm.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // console.log(this.baseForm.subsectionCode)
+                this.$refs['baseForm'].clearValidate()
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
+                })
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.crmDeptCode) {
+                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.crmDeptCode && this.linkage(dis)
+            } else if (dis === 'Q') {
+                if (val.value.selectCode) {
+                    this.findPlatformslist({ subregionCode: val.value.selectCode })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.selectCode && this.linkage(dis)
+            }
+        },
+        linkage () {
+            this.baseForm.subregionCode = ''
+            this.selectAuth.areaObj = {
+                selectCode: '',
+                selectName: ''
+            }
         }
     }
 }

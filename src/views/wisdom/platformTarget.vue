@@ -278,9 +278,9 @@ export default {
             })
         },
         backPlat (val, dis) {
-            if (val.value && dis === 'F') {
+            if (dis === 'F') {
                 this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.linkage()
+                !val.value.pkDeptDoc && this.linkage()
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
