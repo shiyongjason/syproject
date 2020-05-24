@@ -1,5 +1,6 @@
 <template>
     <div>
+        {{baseForm}}
         <el-form :model="baseForm" :rules="baseRules" ref="baseForm" label-width="130px" class="demo-baseForm">
             <el-form-item label="mis编码：" prop="name">
                 <el-input v-model.trim="baseForm.misCode" placeholder="输入mis编码" maxlength="10" class="deveInput"></el-input>
@@ -236,12 +237,12 @@ export default {
                     selectName: ''
                 },
                 branchObj: {
-                    selectCode: '',
-                    selectName: ''
+                    selectCode: this.baseForm.subsectionCode || '',
+                    selectName: this.baseForm.subsectionName || ''
                 },
                 areaObj: {
-                    selectCode: '',
-                    selectName: ''
+                    selectCode: this.baseForm.subregionCode || '',
+                    selectName: this.baseForm.subregionName || ''
                 },
                 platformObj: {
                     selectCode: '',
@@ -282,6 +283,26 @@ export default {
 
                 },
                 accept: 'image/jpeg, image/jpg, image/png, image/gif'
+            }
+        }
+    },
+    watch: {
+        'baseForm.subsectionCode' (newVal) {
+            this.selectAuth.branchObj = {
+                selectCode: this.baseForm.subsectionCode || '',
+                selectName: this.baseForm.subsectionName || ''
+            }
+            if (newVal) {
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: newVal || this.userInfo.pkDeptDoc
+                })
+            }
+        },
+        'baseForm.subregionCode' (newVal) {
+            this.selectAuth.areaObj = {
+                selectCode: this.baseForm.subregionCode || '',
+                selectName: this.baseForm.subregionName || ''
             }
         }
     },
@@ -383,7 +404,6 @@ export default {
             this.baseForm.subregionName = this.baseForm.subregionCode && this.regionalismList.filter(item => item.pkDeptDoc == this.baseForm.subregionCode)[0].deptName
             this.baseForm.provinceName = this.baseForm.provinceCode && this.proviceList.filter(item => item.provinceId == this.baseForm.provinceCode)[0].name
             this.baseForm.cityName = this.baseForm.cityCode && this.cityList.filter(item => item.cityId == this.baseForm.cityCode)[0].name
-           console.log(this.areaList)
             this.baseForm.areaName = this.baseForm.areaCode && this.areaList.filter(item => item.countryId == this.baseForm.areaCode)[0].name
             this.loading = true
             this.$refs.baseForm.validate(async (valid) => {
@@ -410,20 +430,9 @@ export default {
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
                 })
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                } else {
-                    this.findPlatformslist()
-                }
                 !val.value.crmDeptCode && this.linkage(dis)
             } else if (dis === 'Q') {
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    this.findPlatformslist()
-                }
-                !val.value.selectCode && this.linkage(dis)
+                this.baseForm.subregionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
             }
         },
         linkage () {
