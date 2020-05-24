@@ -53,7 +53,6 @@
     </div>
 </template>
 <script>
-// import { findBranchList, findRegionList } from './api/index.js'
 import overallchild from './components/overallchild'
 import addchild from './components/addchild'
 import salechild from './components/salechild'
@@ -71,13 +70,10 @@ export default {
             formData: {
                 endDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
                 startDate: `${(new Date()).getFullYear() + '-' + (((new Date()).getMonth() + 1 > 9 ? (new Date()).getMonth() + 1 : '0' + ((new Date()).getMonth() + 1)))}`,
-                // companyCode: '',
                 regionCode: '',
                 subsectionCode: ''
             },
             activeName: 'first',
-            // branchList: [],
-            // regionList: [],
             deptType: DEPT_TYPE
         }
     },
@@ -127,22 +123,8 @@ export default {
         }
     },
     async mounted () {
-        // this.formData.companyCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-        console.log(this.userInfo.deptType, this.deptType)
-        // 如果 当前人大区 -1  总部 0  其他 1
-        // if (this.userInfo.deptType === this.deptType[1]) {
-        //     this.formData.regionCode = this.userInfo.oldDeptCode
-        // } else if (this.userInfo.deptType === this.deptType[2]) {
-        //     this.formData.regionCode = this.userInfo.oldDeptCode
-        //     this.formData.subsectionCode = this.userInfo.oldDeptCode
-        //     // this.formData.subsectionCode = this.userInfo.companyCode
-        // } else if (this.userInfo.deptType === this.deptType[0]) {
-        //     await this.onFindBranchList()
-        // }
         this.onFindRegionList()
         this.onFindBranchList()
-
-        // Watermark.set(this.userInfo.name)
     },
     methods: {
         ...mapActions({
@@ -151,19 +133,9 @@ export default {
         async onFindRegionList () {
             // 新的大区接口
             await this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc })
-            // const { data } = await findRegionList()
-            // // 数据问题，暂时这么改，后期再看是否要改数据库
-            // data.data.map((val, index) => {
-            //     if (val.deptname != '西南大区' && val.deptname != '华中大区') {
-            //         this.regionList.push(val)
-            //     }
-            // })
         },
         async onFindBranchList (value) {
-            // const { data } = await findBranchList({ crmDeptCode: value })
             await this.findAuthList({ deptType: 'F', pkDeptDoc: value || this.userInfo.pkDeptDoc })
-
-            // return data.data ? data.data : ''
         },
         onSearchForm () {
             if (this.activeName === 'first') {

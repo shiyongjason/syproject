@@ -51,7 +51,7 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
+import { getBranchSale, getBranchSaleSum } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { AUTH_WIXDOM_BRANCH_SALE_EXPORT } from '@/utils/auth_const'
